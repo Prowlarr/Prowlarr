@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
             requestBuilder.AddQueryParam("limit", "100");
             requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings));
             requestBuilder.AddQueryParam("format", "json_extended");
-            requestBuilder.AddQueryParam("app_id", "Radarr");
+            requestBuilder.AddQueryParam("app_id", "Prowlarr");
 
             yield return new IndexerRequest(requestBuilder.Build());
         }
@@ -87,17 +87,17 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
             requestBuilder.AddQueryParam("mode", "search");
 
-            if (searchCriteria.Movie.ImdbId.IsNotNullOrWhiteSpace())
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                requestBuilder.AddQueryParam("search_imdb", searchCriteria.Movie.ImdbId);
+                requestBuilder.AddQueryParam("search_imdb", searchCriteria.ImdbId);
             }
-            else if (searchCriteria.Movie.TmdbId > 0)
+            else if (searchCriteria.TmdbId > 0)
             {
-                requestBuilder.AddQueryParam("search_themoviedb", searchCriteria.Movie.TmdbId);
+                requestBuilder.AddQueryParam("search_themoviedb", searchCriteria.TmdbId);
             }
-            else
+            else if (searchCriteria.QueryTitles.Count > 0)
             {
-                requestBuilder.AddQueryParam("search_string", $"{searchCriteria.Movie.Title} {searchCriteria.Movie.Year}");
+                requestBuilder.AddQueryParam("search_string", $"{searchCriteria.QueryTitles.First()}");
             }
 
             if (!Settings.RankedOnly)

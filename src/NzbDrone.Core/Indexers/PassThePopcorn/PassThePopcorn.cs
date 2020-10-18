@@ -1,8 +1,7 @@
-﻿using NLog;
+using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
@@ -18,9 +17,8 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
             ICacheManager cacheManager,
             IIndexerStatusService indexerStatusService,
             IConfigService configService,
-            IParsingService parsingService,
             Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+            : base(httpClient, indexerStatusService, configService, logger)
         {
         }
 

@@ -5,7 +5,7 @@ root = true
 # NOTE: Requires **VS2019 16.3** or later
 
 # Stylecop.ruleset
-# Description: Rules for Radarr
+# Description: Rules for Prowlarr
 
 # Code files
 [*.cs]

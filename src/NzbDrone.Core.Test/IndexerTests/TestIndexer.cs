@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
@@ -15,8 +15,8 @@ namespace NzbDrone.Core.Test.IndexerTests
         public int _supportedPageSize;
         public override int PageSize => _supportedPageSize;
 
-        public TestIndexer(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+        public TestIndexer(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, indexerStatusService, configService, logger)
         {
         }
 

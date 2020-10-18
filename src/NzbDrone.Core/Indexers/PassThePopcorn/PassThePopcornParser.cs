@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                                          $"Leechers: {torrent.Leechers}" +
                                          $"ReleaseName: {torrent.ReleaseName}" +
                                          $"ID: {torrent.Id}" +
-                                         "}. Please immediately report this info on https://github.com/Radarr/Radarr/issues/1584.");
+                                         "}. Please immediately report this info on https://github.com/Prowlarr/Prowlarr/issues/1584.");
                         throw;
                     }
                 }

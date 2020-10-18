@@ -4,7 +4,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
     {
         public override string ToString()
         {
-            return string.Format("[{0}]", Movie.Title);
+            return string.Format("[{0}]", ImdbId);
         }
     }
 }

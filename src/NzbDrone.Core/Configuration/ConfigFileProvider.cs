@@ -135,7 +135,7 @@ namespace NzbDrone.Core.Configuration
             }
         }
 
-        public int Port => GetValueInt("Port", 7878);
+        public int Port => GetValueInt("Port", 9696);
 
         public int SslPort => GetValueInt("SslPort", 9898);
 
@@ -323,12 +323,12 @@ namespace NzbDrone.Core.Configuration
 
                         if (contents.IsNullOrWhiteSpace())
                         {
-                            throw new InvalidConfigFileException($"{_configFile} is empty. Please delete the config file and Radarr will recreate it.");
+                            throw new InvalidConfigFileException($"{_configFile} is empty. Please delete the config file and Prowlarr will recreate it.");
                         }
 
                         if (contents.All(char.IsControl))
                         {
-                            throw new InvalidConfigFileException($"{_configFile} is corrupt. Please delete the config file and Radarr will recreate it.");
+                            throw new InvalidConfigFileException($"{_configFile} is corrupt. Please delete the config file and Prowlarr will recreate it.");
                         }
 
                         return XDocument.Parse(_diskProvider.ReadAllText(_configFile));
@@ -342,7 +342,7 @@ namespace NzbDrone.Core.Configuration
             }
             catch (XmlException ex)
             {
-                throw new InvalidConfigFileException($"{_configFile} is corrupt is invalid. Please delete the config file and Radarr will recreate it.", ex);
+                throw new InvalidConfigFileException($"{_configFile} is corrupt is invalid. Please delete the config file and Prowlarr will recreate it.", ex);
             }
         }
 

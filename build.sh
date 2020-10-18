@@ -21,7 +21,7 @@ UpdateVersionNumber()
         echo "Updating Version Info"
         sed -i'' -e "s/<AssemblyVersion>[0-9.*]\+<\/AssemblyVersion>/<AssemblyVersion>$RADARRVERSION<\/AssemblyVersion>/g" src/Directory.Build.props
         sed -i'' -e "s/<AssemblyConfiguration>[\$()A-Za-z-]\+<\/AssemblyConfiguration>/<AssemblyConfiguration>${BUILD_SOURCEBRANCHNAME}<\/AssemblyConfiguration>/g" src/Directory.Build.props
-        sed -i'' -e "s/<string>10.0.0.0<\/string>/<string>$RADARRVERSION<\/string>/g" macOS/Radarr.app/Contents/Info.plist
+        sed -i'' -e "s/<string>10.0.0.0<\/string>/<string>$RADARRVERSION<\/string>/g" macOS/Prowlarr.app/Contents/Info.plist
     fi
 }
 
@@ -47,7 +47,7 @@ Build()
     rm -rf $outputFolder
     rm -rf $testPackageFolder
 
-    slnFile=src/Radarr.sln
+    slnFile=src/Prowlarr.sln
 
     if [ $os = "windows" ]; then
         platform=Windows
@@ -91,7 +91,7 @@ PackageFiles()
     rm -rf $folder
     mkdir -p $folder
     cp -r $outputFolder/$framework/$runtime/publish/* $folder
-    cp -r $outputFolder/Radarr.Update/$framework/$runtime/publish $folder/Radarr.Update
+    cp -r $outputFolder/Prowlarr.Update/$framework/$runtime/publish $folder/Prowlarr.Update
     cp -r $outputFolder/UI $folder
 
     echo "Adding LICENSE"
@@ -105,7 +105,7 @@ PackageLinux()
 
     ProgressStart "Creating $runtime Package for $framework"
 
-    local folder=$artifactsFolder/$runtime/$framework/Radarr
+    local folder=$artifactsFolder/$runtime/$framework/Prowlarr
 
     PackageFiles "$folder" "$framework" "$runtime"
 
@@ -113,14 +113,14 @@ PackageLinux()
     rm -f $folder/ServiceUninstall.*
     rm -f $folder/ServiceInstall.*
 
-    echo "Removing Radarr.Windows"
-    rm $folder/Radarr.Windows.*
+    echo "Removing Prowlarr.Windows"
+    rm $folder/Prowlarr.Windows.*
 
-    echo "Adding Radarr.Mono to UpdatePackage"
-    cp $folder/Radarr.Mono.* $folder/Radarr.Update
+    echo "Adding Prowlarr.Mono to UpdatePackage"
+    cp $folder/Prowlarr.Mono.* $folder/Prowlarr.Update
     if [ "$framework" = "netcoreapp3.1" ]; then
-        cp $folder/Mono.Posix.NETStandard.* $folder/Radarr.Update
-        cp $folder/libMonoPosixHelper.* $folder/Radarr.Update
+        cp $folder/Mono.Posix.NETStandard.* $folder/Prowlarr.Update
+        cp $folder/libMonoPosixHelper.* $folder/Prowlarr.Update
     fi
 
     ProgressEnd "Creating $runtime Package for $framework"
@@ -132,27 +132,27 @@ PackageMacOS()
     
     ProgressStart "Creating MacOS Package for $framework"
 
-    local folder=$artifactsFolder/macos/$framework/Radarr
+    local folder=$artifactsFolder/macos/$framework/Prowlarr
 
     PackageFiles "$folder" "$framework" "osx-x64"
 
     if [ "$framework" = "net462" ]; then
         echo "Adding Startup script"
-        cp macOS/Radarr $folder
+        cp macOS/Prowlarr $folder
     fi
 
     echo "Removing Service helpers"
     rm -f $folder/ServiceUninstall.*
     rm -f $folder/ServiceInstall.*
 
-    echo "Removing Radarr.Windows"
-    rm $folder/Radarr.Windows.*
+    echo "Removing Prowlarr.Windows"
+    rm $folder/Prowlarr.Windows.*
 
-    echo "Adding Radarr.Mono to UpdatePackage"
-    cp $folder/Radarr.Mono.* $folder/Radarr.Update
+    echo "Adding Prowlarr.Mono to UpdatePackage"
+    cp $folder/Prowlarr.Mono.* $folder/Prowlarr.Update
     if [ "$framework" = "netcoreapp3.1" ]; then
-        cp $folder/Mono.Posix.NETStandard.* $folder/Radarr.Update
-        cp $folder/libMonoPosixHelper.* $folder/Radarr.Update
+        cp $folder/Mono.Posix.NETStandard.* $folder/Prowlarr.Update
+        cp $folder/libMonoPosixHelper.* $folder/Prowlarr.Update
     fi
 
     ProgressEnd 'Creating MacOS Package'
@@ -168,14 +168,14 @@ PackageMacOSApp()
 
     rm -rf $folder
     mkdir -p $folder
-    cp -r macOS/Radarr.app $folder
-    mkdir -p $folder/Radarr.app/Contents/MacOS
+    cp -r macOS/Prowlarr.app $folder
+    mkdir -p $folder/Prowlarr.app/Contents/MacOS
 
     echo "Copying Binaries"
-    cp -r $artifactsFolder/macos/$framework/Radarr/* $folder/Radarr.app/Contents/MacOS
+    cp -r $artifactsFolder/macos/$framework/Prowlarr/* $folder/Prowlarr.app/Contents/MacOS
 
     echo "Removing Update Folder"
-    rm -r $folder/Radarr.app/Contents/MacOS/Radarr.Update
+    rm -r $folder/Prowlarr.app/Contents/MacOS/Prowlarr.Update
 
     ProgressEnd 'Creating macOS App Package'
 }
@@ -186,17 +186,17 @@ PackageWindows()
     
     ProgressStart "Creating Windows Package for $framework"
 
-    local folder=$artifactsFolder/windows/$framework/Radarr
+    local folder=$artifactsFolder/windows/$framework/Prowlarr
     
     PackageFiles "$folder" "$framework" "win-x64"
 
-    echo "Removing Radarr.Mono"
-    rm -f $folder/Radarr.Mono.*
+    echo "Removing Prowlarr.Mono"
+    rm -f $folder/Prowlarr.Mono.*
     rm -f $folder/Mono.Posix.NETStandard.*
     rm -f $folder/libMonoPosixHelper.*
 
-    echo "Adding Radarr.Windows to UpdatePackage"
-    cp $folder/Radarr.Windows.* $folder/Radarr.Update
+    echo "Adding Prowlarr.Windows to UpdatePackage"
+    cp $folder/Prowlarr.Windows.* $folder/Prowlarr.Update
 
     ProgressEnd 'Creating Windows Package'
 }

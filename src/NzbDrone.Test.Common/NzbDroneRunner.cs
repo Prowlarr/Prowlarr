@@ -24,10 +24,10 @@ namespace NzbDrone.Test.Common
         public string ApiKey { get; private set; }
         public int Port { get; private set; }
 
-        public NzbDroneRunner(Logger logger, int port = 7878)
+        public NzbDroneRunner(Logger logger, int port = 9696)
         {
             _processProvider = new ProcessProvider(logger);
-            _restClient = new RestClient($"http://localhost:{port}/api/v3");
+            _restClient = new RestClient($"http://localhost:{port}/api/v1");
 
             Port = port;
         }
@@ -42,15 +42,15 @@ namespace NzbDrone.Test.Common
             string consoleExe;
             if (OsInfo.IsWindows)
             {
-                consoleExe = "Radarr.Console.exe";
+                consoleExe = "Prowlarr.Console.exe";
             }
             else if (PlatformInfo.IsMono)
             {
-                consoleExe = "Radarr.exe";
+                consoleExe = "Prowlarr.exe";
             }
             else
             {
-                consoleExe = "Radarr";
+                consoleExe = "Prowlarr";
             }
 
             if (BuildInfo.IsDebug)
@@ -80,11 +80,11 @@ namespace NzbDrone.Test.Common
 
                 if (statusCall.ResponseStatus == ResponseStatus.Completed)
                 {
-                    TestContext.Progress.WriteLine($"Radarr {Port} is started. Running Tests");
+                    TestContext.Progress.WriteLine($"Prowlarr {Port} is started. Running Tests");
                     return;
                 }
 
-                TestContext.Progress.WriteLine("Waiting for Radarr to start. Response Status : {0}  [{1}] {2}", statusCall.ResponseStatus, statusCall.StatusDescription, statusCall.ErrorException.Message);
+                TestContext.Progress.WriteLine("Waiting for Prowlarr to start. Response Status : {0}  [{1}] {2}", statusCall.ResponseStatus, statusCall.StatusDescription, statusCall.ErrorException.Message);
 
                 Thread.Sleep(500);
             }
@@ -99,7 +99,7 @@ namespace NzbDrone.Test.Common
                     _nzbDroneProcess.Refresh();
                     if (_nzbDroneProcess.HasExited)
                     {
-                        var log = File.ReadAllLines(Path.Combine(AppData, "logs", "Radarr.trace.txt"));
+                        var log = File.ReadAllLines(Path.Combine(AppData, "logs", "Prowlarr.trace.txt"));
                         var output = log.Join(Environment.NewLine);
                         TestContext.Progress.WriteLine("Process has exited prematurely: ExitCode={0} Output:\n{1}", _nzbDroneProcess.ExitCode, output);
                     }

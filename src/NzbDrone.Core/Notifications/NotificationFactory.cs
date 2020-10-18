@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Composition;
@@ -9,12 +9,7 @@ namespace NzbDrone.Core.Notifications
 {
     public interface INotificationFactory : IProviderFactory<INotification, NotificationDefinition>
     {
-        List<INotification> OnGrabEnabled();
-        List<INotification> OnDownloadEnabled();
-        List<INotification> OnUpgradeEnabled();
-        List<INotification> OnRenameEnabled();
         List<INotification> OnHealthIssueEnabled();
-        List<INotification> OnDeleteEnabled();
     }
 
     public class NotificationFactory : ProviderFactory<INotification, NotificationDefinition>, INotificationFactory
@@ -24,46 +19,16 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
-        public List<INotification> OnGrabEnabled()
-        {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnGrab).ToList();
-        }
-
-        public List<INotification> OnDownloadEnabled()
-        {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnDownload).ToList();
-        }
-
-        public List<INotification> OnUpgradeEnabled()
-        {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnUpgrade).ToList();
-        }
-
-        public List<INotification> OnRenameEnabled()
-        {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnRename).ToList();
-        }
-
         public List<INotification> OnHealthIssueEnabled()
         {
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthIssue).ToList();
-        }
-
-        public List<INotification> OnDeleteEnabled()
-        {
-            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnDelete).ToList();
         }
 
         public override void SetProviderCharacteristics(INotification provider, NotificationDefinition definition)
         {
             base.SetProviderCharacteristics(provider, definition);
 
-            definition.SupportsOnGrab = provider.SupportsOnGrab;
-            definition.SupportsOnDownload = provider.SupportsOnDownload;
-            definition.SupportsOnUpgrade = provider.SupportsOnUpgrade;
-            definition.SupportsOnRename = provider.SupportsOnRename;
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
-            definition.SupportsOnDelete = provider.SupportsOnDelete;
         }
     }
 }

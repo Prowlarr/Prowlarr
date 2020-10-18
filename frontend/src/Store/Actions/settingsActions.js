@@ -7,9 +7,6 @@ import delayProfiles from './Settings/delayProfiles';
 import downloadClientOptions from './Settings/downloadClientOptions';
 import downloadClients from './Settings/downloadClients';
 import general from './Settings/general';
-import importExclusions from './Settings/importExclusions';
-import importListOptions from './Settings/importListOptions';
-import importLists from './Settings/importLists';
 import indexerFlags from './Settings/indexerFlags';
 import indexerOptions from './Settings/indexerOptions';
 import indexers from './Settings/indexers';
@@ -36,9 +33,6 @@ export * from './Settings/indexerFlags';
 export * from './Settings/indexerOptions';
 export * from './Settings/indexers';
 export * from './Settings/languages';
-export * from './Settings/importExclusions';
-export * from './Settings/importListOptions';
-export * from './Settings/importLists';
 export * from './Settings/mediaManagement';
 export * from './Settings/metadata';
 export * from './Settings/metadataOptions';
@@ -72,9 +66,6 @@ export const defaultState = {
   indexerOptions: indexerOptions.defaultState,
   indexers: indexers.defaultState,
   languages: languages.defaultState,
-  importExclusions: importExclusions.defaultState,
-  importListOptions: importListOptions.defaultState,
-  importLists: importLists.defaultState,
   mediaManagement: mediaManagement.defaultState,
   metadata: metadata.defaultState,
   metadataOptions: metadataOptions.defaultState,
@@ -116,9 +107,6 @@ export const actionHandlers = handleThunks({
   ...indexerOptions.actionHandlers,
   ...indexers.actionHandlers,
   ...languages.actionHandlers,
-  ...importExclusions.actionHandlers,
-  ...importListOptions.actionHandlers,
-  ...importLists.actionHandlers,
   ...mediaManagement.actionHandlers,
   ...metadata.actionHandlers,
   ...metadataOptions.actionHandlers,
@@ -151,9 +139,6 @@ export const reducers = createHandleActions({
   ...indexerOptions.reducers,
   ...indexers.reducers,
   ...languages.reducers,
-  ...importExclusions.reducers,
-  ...importListOptions.reducers,
-  ...importLists.reducers,
   ...mediaManagement.reducers,
   ...metadata.reducers,
   ...metadataOptions.reducers,

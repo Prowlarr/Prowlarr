@@ -29,15 +29,15 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            if (searchCriteria.Movie.ImdbId.IsNotNullOrWhiteSpace())
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest(searchCriteria.Movie.ImdbId));
+                pageableRequests.Add(GetRequest(searchCriteria.ImdbId));
             }
-            else if (searchCriteria.Movie.Year > 0)
+            else
             {
                 foreach (var queryTitle in searchCriteria.QueryTitles)
                 {
-                    pageableRequests.Add(GetRequest(string.Format("{0}&year={1}", queryTitle, searchCriteria.Movie.Year)));
+                    pageableRequests.Add(GetRequest(string.Format("{0}", queryTitle)));
                 }
             }
 

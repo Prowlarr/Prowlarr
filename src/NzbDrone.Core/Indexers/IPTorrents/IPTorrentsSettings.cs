@@ -20,8 +20,6 @@ namespace NzbDrone.Core.Indexers.IPTorrents
             RuleFor(c => c.BaseUrl).Matches(@"(?:/|t\.)rss\?.+;download(?:;|$)")
                 .WithMessage("Use Direct Download Url (;download)")
                 .When(v => v.BaseUrl.IsNotNullOrWhiteSpace() && Regex.IsMatch(v.BaseUrl, @"(?:/|t\.)rss\?.+$"));
-
-            RuleFor(c => c.SeedCriteria).SetValidator(_ => new SeedCriteriaSettingsValidator());
         }
     }
 
@@ -46,11 +44,8 @@ namespace NzbDrone.Core.Indexers.IPTorrents
         [FieldDefinition(2, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
         public int MinimumSeeders { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Radarr/Radarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
+        [FieldDefinition(3, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
         public IEnumerable<int> RequiredFlags { get; set; }
-
-        [FieldDefinition(4)]
-        public SeedCriteriaSettings SeedCriteria { get; set; } = new SeedCriteriaSettings();
 
         public NzbDroneValidationResult Validate()
         {

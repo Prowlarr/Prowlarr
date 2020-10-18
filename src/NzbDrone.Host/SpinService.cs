@@ -3,7 +3,7 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public interface IWaitForExit
     {

@@ -97,7 +97,7 @@ class BackupRow extends Component {
 
         <TableRowCell>
           <Link
-            to={`${window.Radarr.urlBase}${path}`}
+            to={`${window.Prowlarr.urlBase}${path}`}
             noRouter={true}
           >
             {name}

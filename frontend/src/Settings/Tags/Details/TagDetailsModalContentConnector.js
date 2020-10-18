@@ -61,28 +61,18 @@ function createMatchingRestrictionsSelector() {
   );
 }
 
-function createMatchingImportListsSelector() {
-  return createSelector(
-    (state, { importListIds }) => importListIds,
-    (state) => state.settings.importLists.items,
-    findMatchingItems
-  );
-}
-
 function createMapStateToProps() {
   return createSelector(
     createMatchingMoviesSelector(),
     createMatchingDelayProfilesSelector(),
     createMatchingNotificationsSelector(),
     createMatchingRestrictionsSelector(),
-    createMatchingImportListsSelector(),
-    (movies, delayProfiles, notifications, restrictions, importLists) => {
+    (movies, delayProfiles, notifications, restrictions) => {
       return {
         movies,
         delayProfiles,
         notifications,
-        restrictions,
-        importLists
+        restrictions
       };
     }
   );

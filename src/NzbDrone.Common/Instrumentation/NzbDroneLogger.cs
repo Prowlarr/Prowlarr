@@ -66,13 +66,13 @@ namespace NzbDrone.Common.Instrumentation
 
             if (updateClient)
             {
-                dsn = "https://fdefcf5a6a4a4a0db914b5712b5480e0@sentry.servarr.com/11";
+                dsn = "https://d62a0313c35f4afc932b4a20e1072793@sentry.servarr.com/27";
             }
             else
             {
                 dsn = RuntimeInfo.IsProduction
-                    ? "https://39b572f7f3f04899b2c3254c7ac126d0@sentry.servarr.com/9"
-                    : "https://998b4673d4c849ccb5277b5966ed5bc2@sentry.servarr.com/10";
+                    ? "https://d62a0313c35f4afc932b4a20e1072793@sentry.servarr.com/27"
+                    : "https://d62a0313c35f4afc932b4a20e1072793@sentry.servarr.com/27";
             }
 
             var target = new SentryTarget(dsn)
@@ -118,9 +118,9 @@ namespace NzbDrone.Common.Instrumentation
 
         private static void RegisterAppFile(IAppFolderInfo appFolderInfo)
         {
-            RegisterAppFile(appFolderInfo, "appFileInfo", "radarr.txt", 50, LogLevel.Info);
-            RegisterAppFile(appFolderInfo, "appFileDebug", "radarr.debug.txt", 500, LogLevel.Off);
-            RegisterAppFile(appFolderInfo, "appFileTrace", "radarr.trace.txt", 500, LogLevel.Off);
+            RegisterAppFile(appFolderInfo, "appFileInfo", "prowlarr.txt", 50, LogLevel.Info);
+            RegisterAppFile(appFolderInfo, "appFileDebug", "prowlarr.debug.txt", 500, LogLevel.Off);
+            RegisterAppFile(appFolderInfo, "appFileTrace", "prowlarr.trace.txt", 500, LogLevel.Off);
         }
 
         private static void RegisterAppFile(IAppFolderInfo appFolderInfo, string name, string fileName, int maxArchiveFiles, LogLevel minLogLevel)

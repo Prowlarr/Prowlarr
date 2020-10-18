@@ -14,7 +14,7 @@ import createHandleActions from './Creators/createHandleActions';
 // Variables
 
 export const section = 'oAuth';
-const callbackUrl = `${window.location.origin}${window.Radarr.urlBase}/oauth.html`;
+const callbackUrl = `${window.location.origin}${window.Prowlarr.urlBase}/oauth.html`;
 
 //
 // State

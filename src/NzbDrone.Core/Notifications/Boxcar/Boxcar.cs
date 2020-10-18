@@ -15,17 +15,6 @@ namespace NzbDrone.Core.Notifications.Boxcar
 
         public override string Link => "https://boxcar.io/client";
         public override string Name => "Boxcar";
-
-        public override void OnGrab(GrabMessage grabMessage)
-        {
-            _proxy.SendNotification(MOVIE_GRABBED_TITLE, grabMessage.Message, Settings);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            _proxy.SendNotification(MOVIE_DOWNLOADED_TITLE, message.Message, Settings);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck message)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, message.Message, Settings);

@@ -2,10 +2,10 @@ using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
-using Radarr.Host.AccessControl;
+using Prowlarr.Host.AccessControl;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public class Router
     {
@@ -71,7 +71,7 @@ namespace Radarr.Host
                             _serviceProvider.SetPermissions(ServiceProvider.SERVICE_NAME);
 
                             // Start the service and exit.
-                            // Ensures that there isn't an instance of Radarr already running that the service account cannot stop.
+                            // Ensures that there isn't an instance of Prowlarr already running that the service account cannot stop.
                             _processProvider.SpawnNewProcess("sc.exe", $"start {ServiceProvider.SERVICE_NAME}", null, true);
                         }
 

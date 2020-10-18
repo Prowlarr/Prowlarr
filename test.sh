@@ -4,7 +4,7 @@ TYPE=$2
 COVERAGE=$3
 WHERE="Category!=ManualTest"
 TEST_PATTERN="*Test.dll"
-FILES=( "Radarr.Api.Test.dll" "Radarr.Automation.Test.dll" "Radarr.Common.Test.dll" "Radarr.Core.Test.dll" "Radarr.Host.Test.dll" "Radarr.Integration.Test.dll" "Radarr.Libraries.Test.dll" "Radarr.Mono.Test.dll" "Radarr.Update.Test.dll" "Radarr.Windows.Test.dll" )
+FILES=( "Prowlarr.Api.Test.dll" "Prowlarr.Automation.Test.dll" "Prowlarr.Common.Test.dll" "Prowlarr.Core.Test.dll" "Prowlarr.Host.Test.dll" "Prowlarr.Integration.Test.dll" "Prowlarr.Libraries.Test.dll" "Prowlarr.Mono.Test.dll" "Prowlarr.Update.Test.dll" "Prowlarr.Windows.Test.dll" )
 ASSMEBLIES=""
 TEST_LOG_FILE="TestLog.txt"
 
@@ -35,10 +35,10 @@ if [ "$PLATFORM" = "Mac" ]; then
 fi
 
 if [ "$PLATFORM" = "Windows" ]; then
-  mkdir -p "$ProgramData/Radarr"
+  mkdir -p "$ProgramData/Prowlarr"
   WHERE="$WHERE&Category!=LINUX"
 elif [ "$PLATFORM" = "Linux" ] || [ "$PLATFORM" = "Mac" ] ; then
-  mkdir -p ~/.config/Radarr
+  mkdir -p ~/.config/Prowlarr
   WHERE="$WHERE&Category!=WINDOWS"
 else
   echo "Platform must be provided as first arguement: Windows, Linux or Mac"

@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.MediaCover;
-using NzbDrone.Core.MediaFiles.MediaInfo;
-using NzbDrone.Core.Movies;
 using NzbDrone.Core.Notifications.Discord.Payloads;
 using NzbDrone.Core.Validation;
 
@@ -23,195 +19,6 @@ namespace NzbDrone.Core.Notifications.Discord
         public override string Name => "Discord";
         public override string Link => "https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks";
 
-        public override void OnGrab(GrabMessage message)
-        {
-            var embed = new Embed
-            {
-                Author = new DiscordAuthor
-                {
-                    Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                    IconUrl = "https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png"
-                },
-                Url = $"https://www.themoviedb.org/movie/{message.Movie.TmdbId}",
-                Description = "Movie Grabbed",
-                Title = message.Movie.Year > 0 ? $"{message.Movie.Title} ({message.Movie.Year})" : message.Movie.Title,
-                Color = (int)DiscordColors.Standard,
-                Fields = new List<DiscordField>(),
-                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-            };
-
-            if (Settings.GrabFields.Contains((int)DiscordGrabFieldType.Poster))
-            {
-                embed.Thumbnail = new DiscordImage
-                {
-                    Url = message.Movie.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Poster).Url
-                };
-            }
-
-            if (Settings.GrabFields.Contains((int)DiscordGrabFieldType.Fanart))
-            {
-                embed.Image = new DiscordImage
-                {
-                    Url = message.Movie.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart).Url
-                };
-            }
-
-            foreach (var field in Settings.GrabFields)
-            {
-                var discordField = new DiscordField();
-
-                switch ((DiscordGrabFieldType)field)
-                {
-                    case DiscordGrabFieldType.Overview:
-                        discordField.Name = "Overview";
-                        discordField.Value = message.Movie.Overview.Length <= 300 ? message.Movie.Overview : message.Movie.Overview.Substring(0, 300) + "...";
-                        break;
-                    case DiscordGrabFieldType.Rating:
-                        discordField.Name = "Rating";
-                        discordField.Value = message.Movie.Ratings.Value.ToString();
-                        break;
-                    case DiscordGrabFieldType.Genres:
-                        discordField.Name = "Genres";
-                        discordField.Value = message.Movie.Genres.Take(5).Join(", ");
-                        break;
-                    case DiscordGrabFieldType.Quality:
-                        discordField.Name = "Quality";
-                        discordField.Inline = true;
-                        discordField.Value = message.Quality.Quality.Name;
-                        break;
-                    case DiscordGrabFieldType.Group:
-                        discordField.Name = "Group";
-                        discordField.Value = message.RemoteMovie.ParsedMovieInfo.ReleaseGroup;
-                        break;
-                    case DiscordGrabFieldType.Size:
-                        discordField.Name = "Size";
-                        discordField.Value = BytesToString(message.RemoteMovie.Release.Size);
-                        discordField.Inline = true;
-                        break;
-                    case DiscordGrabFieldType.Release:
-                        discordField.Name = "Release";
-                        discordField.Value = string.Format("```{0}```", message.RemoteMovie.Release.Title);
-                        break;
-                    case DiscordGrabFieldType.Links:
-                        discordField.Name = "Links";
-                        discordField.Value = GetLinksString(message.Movie);
-                        break;
-                }
-
-                if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())
-                {
-                    embed.Fields.Add(discordField);
-                }
-            }
-
-            var payload = CreatePayload(null, new List<Embed> { embed });
-
-            _proxy.SendPayload(payload, Settings);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            var isUpgrade = message.OldMovieFiles.Count > 0;
-            var embed = new Embed
-            {
-                Author = new DiscordAuthor
-                {
-                    Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                    IconUrl = "https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png"
-                },
-                Url = $"https://www.themoviedb.org/movie/{message.Movie.TmdbId}",
-                Description = isUpgrade ? "Movie Upgraded" : "Movie Imported",
-                Title = message.Movie.Year > 0 ? $"{message.Movie.Title} ({message.Movie.Year})" : message.Movie.Title,
-                Color = isUpgrade ? (int)DiscordColors.Upgrade : (int)DiscordColors.Standard,
-                Fields = new List<DiscordField>(),
-                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-            };
-
-            if (Settings.ImportFields.Contains((int)DiscordImportFieldType.Poster))
-            {
-                embed.Thumbnail = new DiscordImage
-                {
-                    Url = message.Movie.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Poster).Url
-                };
-            }
-
-            if (Settings.ImportFields.Contains((int)DiscordImportFieldType.Fanart))
-            {
-                embed.Image = new DiscordImage
-                {
-                    Url = message.Movie.Images.FirstOrDefault(x => x.CoverType == MediaCoverTypes.Fanart).Url
-                };
-            }
-
-            foreach (var field in Settings.ImportFields)
-            {
-                var discordField = new DiscordField();
-
-                switch ((DiscordImportFieldType)field)
-                {
-                    case DiscordImportFieldType.Overview:
-                        discordField.Name = "Overview";
-                        discordField.Value = message.Movie.Overview.Length <= 300 ? message.Movie.Overview : message.Movie.Overview.Substring(0, 300) + "...";
-                        break;
-                    case DiscordImportFieldType.Rating:
-                        discordField.Name = "Rating";
-                        discordField.Value = message.Movie.Ratings.Value.ToString();
-                        break;
-                    case DiscordImportFieldType.Genres:
-                        discordField.Name = "Genres";
-                        discordField.Value = message.Movie.Genres.Take(5).Join(", ");
-                        break;
-                    case DiscordImportFieldType.Quality:
-                        discordField.Name = "Quality";
-                        discordField.Inline = true;
-                        discordField.Value = message.MovieFile.Quality.Quality.Name;
-                        break;
-                    case DiscordImportFieldType.Codecs:
-                        discordField.Name = "Codecs";
-                        discordField.Inline = true;
-                        discordField.Value = string.Format("{0} / {1} {2}",
-                            MediaInfoFormatter.FormatVideoCodec(message.MovieFile.MediaInfo, null),
-                            MediaInfoFormatter.FormatAudioCodec(message.MovieFile.MediaInfo, null),
-                            MediaInfoFormatter.FormatAudioChannels(message.MovieFile.MediaInfo));
-                        break;
-                    case DiscordImportFieldType.Group:
-                        discordField.Name = "Group";
-                        discordField.Value = message.MovieFile.ReleaseGroup;
-                        break;
-                    case DiscordImportFieldType.Size:
-                        discordField.Name = "Size";
-                        discordField.Value = BytesToString(message.MovieFile.Size);
-                        discordField.Inline = true;
-                        break;
-                    case DiscordImportFieldType.Languages:
-                        discordField.Name = "Languages";
-                        discordField.Value = message.MovieFile.MediaInfo.AudioLanguages;
-                        break;
-                    case DiscordImportFieldType.Subtitles:
-                        discordField.Name = "Subtitles";
-                        discordField.Value = message.MovieFile.MediaInfo.Subtitles;
-                        break;
-                    case DiscordImportFieldType.Release:
-                        discordField.Name = "Release";
-                        discordField.Value = string.Format("```{0}```", message.MovieFile.SceneName);
-                        break;
-                    case DiscordImportFieldType.Links:
-                        discordField.Name = "Links";
-                        discordField.Value = GetLinksString(message.Movie);
-                        break;
-                }
-
-                if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())
-                {
-                    embed.Fields.Add(discordField);
-                }
-            }
-
-            var payload = CreatePayload(null, new List<Embed> { embed });
-
-            _proxy.SendPayload(payload, Settings);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var attachments = new List<Embed>
@@ -221,7 +28,7 @@ namespace NzbDrone.Core.Notifications.Discord
                                       Author = new DiscordAuthor
                                       {
                                           Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
-                                          IconUrl = "https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png"
+                                          IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
                                       },
                                       Title = healthCheck.Source.Name,
                                       Description = healthCheck.Message,
@@ -248,7 +55,7 @@ namespace NzbDrone.Core.Notifications.Discord
         {
             try
             {
-                var message = $"Test message from Radarr posted at {DateTime.Now}";
+                var message = $"Test message from Prowlarr posted at {DateTime.Now}";
                 var payload = CreatePayload(message);
 
                 _proxy.SendPayload(payload, Settings);
@@ -297,28 +104,6 @@ namespace NzbDrone.Core.Notifications.Discord
             var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
             var num = Math.Round(bytes / Math.Pow(1024, place), 1);
             return string.Format("{0} {1}", (Math.Sign(byteCount) * num).ToString(), suf[place]);
-        }
-
-        private static string GetLinksString(Movie movie)
-        {
-            var links = string.Format("[{0}]({1})", "TMDb", $"https://themoviedb.com/movie/{movie.TmdbId}");
-            links += string.Format(" / [{0}]({1})", "Trakt", $"https://trakt.tv/search/tmdb/{movie.TmdbId}?id_type=movie");
-            if (movie.ImdbId.IsNotNullOrWhiteSpace())
-            {
-                links += string.Format(" / [{0}]({1})", "IMDb", $"https://imdb.com/title/{movie.ImdbId}/");
-            }
-
-            if (movie.YouTubeTrailerId.IsNotNullOrWhiteSpace())
-            {
-                links += string.Format(" / [{0}]({1})", "YouTube", $"https://www.youtube.com/watch?v={movie.YouTubeTrailerId}");
-            }
-
-            if (movie.Website.IsNotNullOrWhiteSpace())
-            {
-                links += string.Format(" / [{0}]({1})", "Website", movie.Website);
-            }
-
-            return links;
         }
     }
 }

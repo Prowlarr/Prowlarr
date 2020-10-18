@@ -26,12 +26,12 @@ function AppUpdatedModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        Radarr Updated
+        Prowlarr Updated
       </ModalHeader>
 
       <ModalBody>
         <div>
-          Version <span className={styles.version}>{version}</span> of Radarr has been installed, in order to get the latest changes you'll need to reload Radarr.
+          Version <span className={styles.version}>{version}</span> of Prowlarr has been installed, in order to get the latest changes you'll need to reload Prowlarr.
         </div>
 
         {

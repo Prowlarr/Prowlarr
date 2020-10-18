@@ -32,7 +32,7 @@ namespace NzbDrone.Update
                 var startupArgument = new StartupContext(args);
                 NzbDroneLogger.Register(startupArgument, true, true);
 
-                Logger.Info("Starting Radarr Update Client");
+                Logger.Info("Starting Prowlarr Update Client");
 
                 _container = UpdateContainerBuilder.Build(startupArgument);
                 _container.Resolve<InitializeLogger>().Initialize();

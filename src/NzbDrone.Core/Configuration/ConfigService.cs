@@ -5,13 +5,9 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Languages;
-using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.MetadataSource.SkyHook.Resource;
-using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Security;
 
 namespace NzbDrone.Core.Configuration
@@ -137,13 +133,6 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("ImportExclusions", value); }
         }
 
-        public TMDbCountryCode CertificationCountry
-        {
-            get { return GetValueEnum("CertificationCountry", TMDbCountryCode.US); }
-
-            set { SetValue("CertificationCountry", value); }
-        }
-
         public int MaximumSize
         {
             get { return GetValueInt("MaximumSize", 0); }
@@ -155,13 +144,6 @@ namespace NzbDrone.Core.Configuration
             get { return GetValueInt("MinimumAge", 0); }
 
             set { SetValue("MinimumAge", value); }
-        }
-
-        public ProperDownloadTypes DownloadPropersAndRepacks
-        {
-            get { return GetValueEnum("DownloadPropersAndRepacks", ProperDownloadTypes.PreferAndUpgrade); }
-
-            set { SetValue("DownloadPropersAndRepacks", value); }
         }
 
         public bool EnableCompletedDownloadHandling
@@ -225,13 +207,6 @@ namespace NzbDrone.Core.Configuration
             get { return GetValueBoolean("DeleteEmptyFolders", false); }
 
             set { SetValue("DeleteEmptyFolders", value); }
-        }
-
-        public FileDateType FileDate
-        {
-            get { return GetValueEnum("FileDate", FileDateType.None); }
-
-            set { SetValue("FileDate", value); }
         }
 
         public string DownloadClientWorkingFolders

@@ -36,7 +36,7 @@ function NotificationEventItems(props) {
       <div>
         <FormInputHelpText
           text="Select which events should trigger this notification"
-          link="https://github.com/Radarr/Radarr/wiki/Connections"
+          link="https://github.com/Prowlarr/Prowlarr/wiki/Connections"
         />
         <div className={styles.events}>
           <div>

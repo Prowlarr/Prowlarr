@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Movies;
 using NzbDrone.Core.Notifications.Slack.Payloads;
 using NzbDrone.Core.Validation;
 
@@ -19,55 +18,6 @@ namespace NzbDrone.Core.Notifications.Slack
 
         public override string Name => "Slack";
         public override string Link => "https://my.slack.com/services/new/incoming-webhook/";
-
-        public override void OnGrab(GrabMessage message)
-        {
-            var attachments = new List<Attachment>
-                            {
-                                new Attachment
-                                {
-                                    Fallback = message.Message,
-                                    Title = message.Movie.Title,
-                                    Text = message.Message,
-                                    Color = "warning"
-                                }
-                            };
-            var payload = CreatePayload($"Grabbed: {message.Message}", attachments);
-
-            _proxy.SendPayload(payload, Settings);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            var attachments = new List<Attachment>
-                                {
-                                    new Attachment
-                                    {
-                                        Fallback = message.Message,
-                                        Title = message.Movie.Title,
-                                        Text = message.Message,
-                                        Color = "good"
-                                    }
-                                };
-            var payload = CreatePayload($"Imported: {message.Message}", attachments);
-
-            _proxy.SendPayload(payload, Settings);
-        }
-
-        public override void OnMovieRename(Movie movie)
-        {
-            var attachments = new List<Attachment>
-                                {
-                                    new Attachment
-                                    {
-                                        Title = movie.Title,
-                                    }
-                                };
-
-            var payload = CreatePayload("Renamed", attachments);
-
-            _proxy.SendPayload(payload, Settings);
-        }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
@@ -99,7 +49,7 @@ namespace NzbDrone.Core.Notifications.Slack
         {
             try
             {
-                var message = $"Test message from Radarr posted at {DateTime.Now}";
+                var message = $"Test message from Prowlarr posted at {DateTime.Now}";
 
                 var payload = CreatePayload(message);
 

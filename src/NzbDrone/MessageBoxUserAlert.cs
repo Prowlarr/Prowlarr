@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using Radarr.Host;
+using Prowlarr.Host;
 
 namespace NzbDrone
 {

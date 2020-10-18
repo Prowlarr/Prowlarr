@@ -59,11 +59,11 @@ function createMapStateToProps() {
 function createMapDispatchToProps(dispatch, props) {
   return {
     onGoToMovie(titleSlug) {
-      dispatch(push(`${window.Radarr.urlBase}/movie/${titleSlug}`));
+      dispatch(push(`${window.Prowlarr.urlBase}/movie/${titleSlug}`));
     },
 
     onGoToAddNewMovie(query) {
-      dispatch(push(`${window.Radarr.urlBase}/add/new?term=${encodeURIComponent(query)}`));
+      dispatch(push(`${window.Prowlarr.urlBase}/add/new?term=${encodeURIComponent(query)}`));
     }
   };
 }

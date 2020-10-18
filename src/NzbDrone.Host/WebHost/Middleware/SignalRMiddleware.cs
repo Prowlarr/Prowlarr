@@ -8,7 +8,7 @@ using NzbDrone.Common.Composition;
 using NzbDrone.Core.Configuration;
 using NzbDrone.SignalR;
 
-namespace Radarr.Host.Middleware
+namespace Prowlarr.Host.Middleware
 {
     public class SignalRMiddleware : IAspNetCoreMiddleware
     {

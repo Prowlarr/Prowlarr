@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 using NzbDrone.Common.Http.Proxy;
-using NzbDrone.Core.Configuration;
-using NzbDrone.Core.MediaFiles;
-using NzbDrone.Core.MetadataSource.SkyHook.Resource;
-using NzbDrone.Core.Qualities;
 using NzbDrone.Core.Security;
 
 namespace NzbDrone.Core.Configuration
@@ -30,10 +26,8 @@ namespace NzbDrone.Core.Configuration
         bool AutoUnmonitorPreviouslyDownloadedMovies { get; set; }
         string RecycleBin { get; set; }
         int RecycleBinCleanupDays { get; set; }
-        ProperDownloadTypes DownloadPropersAndRepacks { get; set; }
         bool CreateEmptyMovieFolders { get; set; }
         bool DeleteEmptyFolders { get; set; }
-        FileDateType FileDate { get; set; }
         bool SkipFreeSpaceCheckWhenImporting { get; set; }
         int MinimumFreeSpaceWhenImporting { get; set; }
         bool CopyUsingHardlinks { get; set; }
@@ -63,9 +57,6 @@ namespace NzbDrone.Core.Configuration
         int ImportListSyncInterval { get; set; }
         string ListSyncLevel { get; set; }
         string ImportExclusions { get; set; }
-
-        //Metadata Provider
-        TMDbCountryCode CertificationCountry { get; set; }
 
         //UI
         int FirstDayOfWeek { get; set; }

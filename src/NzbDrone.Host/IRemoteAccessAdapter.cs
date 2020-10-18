@@ -1,4 +1,4 @@
-namespace Radarr.Host.AccessControl
+namespace Prowlarr.Host.AccessControl
 {
     public interface IRemoteAccessAdapter
     {

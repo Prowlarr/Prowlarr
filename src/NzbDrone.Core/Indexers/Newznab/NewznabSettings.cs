@@ -83,7 +83,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         [FieldDefinition(6,
             Label = "Remove year from search string",
-            HelpText = "Should Radarr remove the year after the title when searching this indexer?",
+            HelpText = "Should Prowlarr remove the year after the title when searching this indexer?",
             Advanced = true,
             Type = FieldType.Checkbox)]
         public bool RemoveYear { get; set; }

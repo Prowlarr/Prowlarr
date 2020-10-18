@@ -49,7 +49,7 @@ namespace NzbDrone.Common.Test
         public void GetValue_Success()
         {
             const string key = "Port";
-            const string value = "7878";
+            const string value = "9696";
 
             var result = Subject.GetValue(key, value);
 
@@ -60,7 +60,7 @@ namespace NzbDrone.Common.Test
         public void GetInt_Success()
         {
             const string key = "Port";
-            const int value = 7878;
+            const int value = 9696;
 
             var result = Subject.GetValueInt(key, value);
 
@@ -89,7 +89,7 @@ namespace NzbDrone.Common.Test
         [Test]
         public void GetPort_Success()
         {
-            const int value = 7878;
+            const int value = 9696;
 
             var result = Subject.Port;
 

@@ -203,16 +203,6 @@ namespace NzbDrone.Core.Parser
 
                 simpleTitle = CleanTorrentSuffixRegex.Replace(simpleTitle);
 
-                simpleTitle = CleanQualityBracketsRegex.Replace(simpleTitle, m =>
-                {
-                    if (QualityParser.ParseQualityName(m.Value).Quality != Qualities.Quality.Unknown)
-                    {
-                        return string.Empty;
-                    }
-
-                    return m.Value;
-                });
-
                 var allRegexes = ReportMovieTitleRegex.ToList();
 
                 if (isDir)
@@ -255,9 +245,6 @@ namespace NzbDrone.Core.Parser
 
                                 result.Languages = LanguageParser.ParseLanguages(result.ReleaseGroup.IsNotNullOrWhiteSpace() ? simpleReleaseTitle.Replace(result.ReleaseGroup, "RlsGrp") : simpleReleaseTitle);
                                 Logger.Debug("Languages parsed: {0}", string.Join(", ", result.Languages));
-
-                                result.Quality = QualityParser.ParseQuality(title);
-                                Logger.Debug("Quality parsed: {0}", result.Quality);
 
                                 if (result.Edition.IsNullOrWhiteSpace())
                                 {
@@ -454,10 +441,6 @@ namespace NzbDrone.Core.Parser
             title = FileExtensionRegex.Replace(title, m =>
                 {
                     var extension = m.Value.ToLower();
-                    if (MediaFiles.MediaFileExtensions.Extensions.Contains(extension) || new[] { ".par2", ".nzb" }.Contains(extension))
-                    {
-                        return string.Empty;
-                    }
 
                     return m.Value;
                 });

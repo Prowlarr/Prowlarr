@@ -34,12 +34,12 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         private bool TryAddSearchParameters(TorrentQuery query, SearchCriteriaBase searchCriteria)
         {
-            if (searchCriteria.Movie.ImdbId.IsNullOrWhiteSpace())
+            if (searchCriteria.ImdbId.IsNullOrWhiteSpace())
             {
                 return false;
             }
 
-            var imdbId = int.Parse(searchCriteria.Movie.ImdbId.Substring(2));
+            var imdbId = int.Parse(searchCriteria.ImdbId.Substring(2));
 
             if (imdbId != 0)
             {

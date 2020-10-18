@@ -16,16 +16,6 @@ namespace NzbDrone.Core.Notifications.Prowl
         public override string Link => "https://www.prowlapp.com/";
         public override string Name => "Prowl";
 
-        public override void OnGrab(GrabMessage grabMessage)
-        {
-            _prowlProxy.SendNotification(MOVIE_GRABBED_TITLE, grabMessage.Message, Settings.ApiKey, (ProwlPriority)Settings.Priority);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            _prowlProxy.SendNotification(MOVIE_DOWNLOADED_TITLE, message.Message, Settings.ApiKey, (ProwlPriority)Settings.Priority);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings.ApiKey, (ProwlPriority)Settings.Priority);

@@ -203,7 +203,7 @@ class RestoreBackupModalContent extends Component {
 
         <ModalFooter>
           <div className={styles.additionalInfo}>
-            Note: Radarr will automatically restart and reload the UI during the restore process.
+            Note: Prowlarr will automatically restart and reload the UI during the restore process.
           </div>
 
           <Button onPress={onModalClose}>

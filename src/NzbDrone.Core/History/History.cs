@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Languages;
-using NzbDrone.Core.Movies;
-using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.History
 {
@@ -18,9 +16,7 @@ namespace NzbDrone.Core.History
 
         public int MovieId { get; set; }
         public string SourceTitle { get; set; }
-        public QualityModel Quality { get; set; }
         public DateTime Date { get; set; }
-        public Movie Movie { get; set; }
         public MovieHistoryEventType EventType { get; set; }
         public Dictionary<string, string> Data { get; set; }
         public List<Language> Languages { get; set; }

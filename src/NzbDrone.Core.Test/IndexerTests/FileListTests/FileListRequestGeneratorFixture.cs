@@ -25,14 +25,13 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                Movie = new Movies.Movie { ImdbId = "tt0076759", Title = "Star Wars", Year = 1977 },
                 SceneTitles = new List<string> { "Star Wars" }
             };
         }
 
         private void MovieWithoutIMDB()
         {
-            _movieSearchCriteria.Movie.ImdbId = null;
+            _movieSearchCriteria.ImdbId = null;
         }
 
         [Test]

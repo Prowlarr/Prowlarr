@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 
                     if (torrent.Encoding.ToLower() == "x265")
                     {
-                        //Per AHD staff they only allow HDR x265 encodes (https://github.com/Radarr/Radarr/issues/4386)
+                        //Per AHD staff they only allow HDR x265 encodes (https://github.com/Prowlarr/Prowlarr/issues/4386)
                         title = $"{torrent.Name}.{torrent.Year}.{torrent.Resolution}.{torrent.Media}.HDR.{torrent.Encoding}.{torrent.AudioFormat}-{torrent.ReleaseGroup}";
                     }
 

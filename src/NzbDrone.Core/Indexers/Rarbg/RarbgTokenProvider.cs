@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 {
                     var requestBuilder = new HttpRequestBuilder(settings.BaseUrl.Trim('/'))
                         .WithRateLimit(3.0)
-                        .Resource("/pubapi_v2.php?get_token=get_token&app_id=Radarr")
+                        .Resource("/pubapi_v2.php?get_token=get_token&app_id=Prowlarr")
                         .Accept(HttpAccept.Json);
 
                     if (settings.CaptchaToken.IsNotNullOrWhiteSpace())

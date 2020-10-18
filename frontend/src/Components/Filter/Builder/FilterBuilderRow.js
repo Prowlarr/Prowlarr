@@ -6,7 +6,6 @@ import { filterBuilderTypes, filterBuilderValueTypes, icons } from 'Helpers/Prop
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
 import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
-import ImportListFilterBuilderRowValueConnector from './ImportListFilterBuilderRowValueConnector';
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
 import MovieStatusFilterBuilderRowValue from './MovieStatusFilterBuilderRowValue';
 import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
@@ -74,9 +73,6 @@ function getRowValueConnector(selectedFilterBuilderProp) {
 
     case filterBuilderValueTypes.TAG:
       return TagFilterBuilderRowValueConnector;
-
-    case filterBuilderValueTypes.IMPORTLIST:
-      return ImportListFilterBuilderRowValueConnector;
 
     default:
       return FilterBuilderRowValueConnector;

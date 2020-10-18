@@ -21,7 +21,7 @@ const SIDEBAR_WIDTH = parseInt(dimensions.sidebarWidth);
 const links = [
   {
     iconName: icons.MOVIE_CONTINUING,
-    title: translate('Movies'),
+    title: 'Indexers',
     to: '/',
     alias: '/movies',
     children: [
@@ -32,23 +32,13 @@ const links = [
       {
         title: translate('Import'),
         to: '/add/import'
-      },
-      {
-        title: translate('Discover'),
-        to: '/add/discover'
       }
     ]
   },
 
   {
-    iconName: icons.CALENDAR,
-    title: translate('Calendar'),
-    to: '/calendar'
-  },
-
-  {
     iconName: icons.ACTIVITY,
-    title: translate('Activity'),
+    title: 'Search',
     to: '/activity/queue',
     children: [
       {
@@ -73,40 +63,12 @@ const links = [
     to: '/settings',
     children: [
       {
-        title: translate('MediaManagement'),
-        to: '/settings/mediamanagement'
-      },
-      {
-        title: translate('Profiles'),
-        to: '/settings/profiles'
-      },
-      {
-        title: translate('Quality'),
-        to: '/settings/quality'
-      },
-      {
-        title: translate('CustomFormats'),
-        to: '/settings/customformats'
-      },
-      {
         title: translate('Indexers'),
         to: '/settings/indexers'
       },
       {
-        title: translate('DownloadClients'),
-        to: '/settings/downloadclients'
-      },
-      {
-        title: translate('Lists'),
-        to: '/settings/importlists'
-      },
-      {
         title: translate('Connect'),
         to: '/settings/connect'
-      },
-      {
-        title: translate('Metadata'),
-        to: '/settings/metadata'
       },
       {
         title: translate('Tags'),
@@ -415,7 +377,7 @@ class PageSidebar extends Component {
       transform
     } = this.state;
 
-    const urlBase = window.Radarr.urlBase;
+    const urlBase = window.Prowlarr.urlBase;
     const pathname = urlBase ? location.pathname.substr(urlBase.length) || '/' : location.pathname;
     const activeParent = getActiveParent(pathname);
 

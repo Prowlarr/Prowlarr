@@ -24,8 +24,8 @@ namespace NzbDrone.Common.Composition
         {
             _loadedTypes = new List<Type>();
 
-            assemblies.Add(OsInfo.IsWindows ? "Radarr.Windows" : "Radarr.Mono");
-            assemblies.Add("Radarr.Common");
+            assemblies.Add(OsInfo.IsWindows ? "Prowlarr.Windows" : "Prowlarr.Mono");
+            assemblies.Add("Prowlarr.Common");
 
 #if !NETCOREAPP
             foreach (var assembly in assemblies)
@@ -41,7 +41,7 @@ namespace NzbDrone.Common.Composition
             }
 
             var toRegisterResolver = new List<string> { "System.Data.SQLite" };
-            toRegisterResolver.AddRange(assemblies.Intersect(new[] { "Radarr.Core" }));
+            toRegisterResolver.AddRange(assemblies.Intersect(new[] { "Prowlarr.Core" }));
             RegisterNativeResolver(toRegisterResolver);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ContainerResolveEventHandler);
 #endif

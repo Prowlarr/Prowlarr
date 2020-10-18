@@ -25,7 +25,7 @@ class UpdateChanges extends Component {
           {
             changes.map((change, index) => {
               const checkChange = change.replace(/#\d{4,5}\b/g, (match, contents) => {
-                return `[${match}](https://github.com/Radarr/Radarr/issues/${match.substring(1)})`;
+                return `[${match}](https://github.com/Prowlarr/Prowlarr/issues/${match.substring(1)})`;
               });
 
               return (

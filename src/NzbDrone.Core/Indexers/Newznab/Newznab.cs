@@ -6,7 +6,6 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
@@ -56,8 +55,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
         }
 
-        public Newznab(INewznabCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+        public Newznab(INewznabCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, indexerStatusService, configService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
         }

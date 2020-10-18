@@ -11,15 +11,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>Radarr</string>
+	<string>Prowlarr</string>
 	<key>CFBundleIconFile</key>
-	<string>radarr.icns</string>
+	<string>prowlarr.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.osx.radarr.video</string>
+	<string>com.osx.prowlarr.video</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Radarr</string>
+	<string>Prowlarr</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

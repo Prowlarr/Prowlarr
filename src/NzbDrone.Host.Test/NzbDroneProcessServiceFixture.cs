@@ -4,7 +4,7 @@ using NUnit.Framework;
 using NzbDrone.Common.Model;
 using NzbDrone.Common.Processes;
 using NzbDrone.Test.Common;
-using Radarr.Host;
+using Prowlarr.Host;
 
 namespace NzbDrone.App.Test
 {
@@ -32,7 +32,7 @@ namespace NzbDrone.App.Test
         public void should_continue_if_only_instance()
         {
             Mocker.GetMock<IProcessProvider>()
-                  .Setup(c => c.FindProcessByName(It.Is<string>(f => f.Contains("Radarr"))))
+                  .Setup(c => c.FindProcessByName(It.Is<string>(f => f.Contains("Prowlarr"))))
                   .Returns(new List<ProcessInfo>
                            {
                                new ProcessInfo { Id = CURRENT_PROCESS_ID }

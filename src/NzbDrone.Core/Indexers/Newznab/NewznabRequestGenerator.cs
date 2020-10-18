@@ -95,8 +95,8 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         private void AddMovieIdPageableRequests(IndexerPageableRequestChain chain, int maxPages, IEnumerable<int> categories, SearchCriteriaBase searchCriteria)
         {
-            var includeTmdbSearch = SupportsTmdbSearch && searchCriteria.Movie.TmdbId > 0;
-            var includeImdbSearch = SupportsImdbSearch && searchCriteria.Movie.ImdbId.IsNotNullOrWhiteSpace();
+            var includeTmdbSearch = SupportsTmdbSearch && searchCriteria.TmdbId > 0;
+            var includeImdbSearch = SupportsImdbSearch && searchCriteria.ImdbId.IsNotNullOrWhiteSpace();
 
             if (SupportsAggregatedIdSearch && (includeTmdbSearch || includeImdbSearch))
             {
@@ -104,12 +104,12 @@ namespace NzbDrone.Core.Indexers.Newznab
 
                 if (includeTmdbSearch)
                 {
-                    ids += "&tmdbid=" + searchCriteria.Movie.TmdbId;
+                    ids += "&tmdbid=" + searchCriteria.TmdbId;
                 }
 
                 if (includeImdbSearch)
                 {
-                    ids += "&imdbid=" + searchCriteria.Movie.ImdbId.Substring(2);
+                    ids += "&imdbid=" + searchCriteria.ImdbId.Substring(2);
                 }
 
                 chain.Add(GetPagedRequests(maxPages, categories, "movie", ids));
@@ -121,14 +121,14 @@ namespace NzbDrone.Core.Indexers.Newznab
                     chain.Add(GetPagedRequests(maxPages,
                         categories,
                         "movie",
-                        string.Format("&tmdbid={0}", searchCriteria.Movie.TmdbId)));
+                        string.Format("&tmdbid={0}", searchCriteria.TmdbId)));
                 }
                 else if (includeImdbSearch)
                 {
                     chain.Add(GetPagedRequests(maxPages,
                         categories,
                         "movie",
-                        string.Format("&imdbid={0}", searchCriteria.Movie.ImdbId.Substring(2))));
+                        string.Format("&imdbid={0}", searchCriteria.ImdbId.Substring(2))));
                 }
             }
 
@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
                     if (!Settings.RemoveYear)
                     {
-                        searchQuery = string.Format("{0} {1}", searchQuery, searchCriteria.Movie.Year);
+                        searchQuery = string.Format("{0}", searchQuery);
                     }
 
                     chain.Add(GetPagedRequests(MaxPages,

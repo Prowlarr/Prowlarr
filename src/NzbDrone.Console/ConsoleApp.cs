@@ -6,8 +6,8 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Instrumentation;
-using Radarr.Host;
-using Radarr.Host.AccessControl;
+using Prowlarr.Host;
+using Prowlarr.Host.AccessControl;
 
 namespace NzbDrone.Console
 {
@@ -51,7 +51,7 @@ namespace NzbDrone.Console
             {
                 System.Console.WriteLine("");
                 System.Console.WriteLine("");
-                Logger.Fatal(ex.Message + " This can happen if another instance of Radarr is already running another application is using the same port (default: 7878) or the user has insufficient permissions");
+                Logger.Fatal(ex.Message + " This can happen if another instance of Prowlarr is already running another application is using the same port (default: 9696) or the user has insufficient permissions");
                 Exit(ExitCodes.RecoverableFailure);
             }
             catch (IOException ex)
@@ -60,7 +60,7 @@ namespace NzbDrone.Console
                 {
                     System.Console.WriteLine("");
                     System.Console.WriteLine("");
-                    Logger.Fatal(ex.Message + " This can happen if another instance of Radarr is already running another application is using the same port (default: 7878) or the user has insufficient permissions");
+                    Logger.Fatal(ex.Message + " This can happen if another instance of Prowlarr is already running another application is using the same port (default: 9696) or the user has insufficient permissions");
                     Exit(ExitCodes.RecoverableFailure);
                 }
                 else

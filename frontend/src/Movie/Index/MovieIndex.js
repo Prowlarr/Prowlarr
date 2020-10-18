@@ -610,7 +610,7 @@ class MovieIndex extends Component {
                 Are you sure you want to perform mass movie search for {isMovieEditorActive && selectedMovieIds.length > 0 ? selectedMovieIds.length : this.props.items.length} movies?
               </div>
               <div>
-                This cannot be cancelled once started without restarting Radarr.
+                This cannot be cancelled once started without restarting Prowlarr.
               </div>
             </div>
           }

@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Backup
 
         private string _backupTempFolder;
 
-        public static readonly Regex BackupFileRegex = new Regex(@"(nzbdrone|radarr)_backup_v?[._0-9]+\.zip", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex BackupFileRegex = new Regex(@"(nzbdrone|prowlarr)_backup_v?[._0-9]+\.zip", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public BackupService(IMainDatabase maindDb,
                              IMakeDatabaseBackup makeDatabaseBackup,
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Backup
             _logger.ProgressDebug("Creating backup zip");
 
             // Delete journal file created during database backup
-            _diskProvider.DeleteFile(Path.Combine(_backupTempFolder, "radarr.db-journal"));
+            _diskProvider.DeleteFile(Path.Combine(_backupTempFolder, "prowlarr.db-journal"));
 
             _archiveService.CreateZip(backupPath, _diskProvider.GetFiles(_backupTempFolder, SearchOption.TopDirectoryOnly));
 
@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Backup
                         restoredFile = true;
                     }
 
-                    if (fileName.Equals("radarr.db", StringComparison.InvariantCultureIgnoreCase))
+                    if (fileName.Equals("prowlarr.db", StringComparison.InvariantCultureIgnoreCase))
                     {
                         _diskProvider.MoveFile(file, _appFolderInfo.GetDatabaseRestore(), true);
                         restoredFile = true;

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -26,13 +26,12 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                Movie = new Movies.Movie { ImdbId = "tt0076759", Title = "Star Wars", Year = 1977 }
             };
         }
 
         private void MovieWithoutIMDB()
         {
-            _movieSearchCriteria.Movie.ImdbId = null;
+            _movieSearchCriteria.ImdbId = null;
         }
 
         [Test]
@@ -58,7 +57,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
         public void should_search_by_imdbid_if_supported()
         {
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            var imdbQuery = int.Parse(_movieSearchCriteria.Movie.ImdbId.Substring(2));
+            var imdbQuery = int.Parse(_movieSearchCriteria.ImdbId.Substring(2));
 
             results.GetAllTiers().Should().HaveCount(1);
 

@@ -6,7 +6,6 @@ import Label from 'Components/Label';
 import Link from 'Components/Link/Link';
 import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds, sizes, tooltipPositions } from 'Helpers/Props';
-import MovieDetailsLinks from 'Movie/Details/MovieDetailsLinks';
 import MoviePoster from 'Movie/MoviePoster';
 import translate from 'Utilities/String/translate';
 import AddNewMovieModal from './AddNewMovieModal';
@@ -52,8 +51,6 @@ class AddNewMovieSearchResult extends Component {
   render() {
     const {
       tmdbId,
-      imdbId,
-      youTubeTrailerId,
       title,
       titleSlug,
       year,
@@ -162,13 +159,6 @@ class AddNewMovieSearchResult extends Component {
                       Links
                     </span>
                   </Label>
-                }
-                tooltip={
-                  <MovieDetailsLinks
-                    tmdbId={tmdbId}
-                    youTubeTrailerId={youTubeTrailerId}
-                    imdbId={imdbId}
-                  />
                 }
                 canFlip={true}
                 kind={kinds.INVERSE}

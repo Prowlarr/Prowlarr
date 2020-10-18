@@ -72,11 +72,11 @@ namespace NzbDrone.Properties
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Radarr
+        internal static System.Drawing.Icon Prowlarr
         {
             get
             {
-                object obj = ResourceManager.GetObject("Radarr", resourceCulture);
+                object obj = ResourceManager.GetObject("Prowlarr", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

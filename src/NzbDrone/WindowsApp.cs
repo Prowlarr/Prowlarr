@@ -4,7 +4,7 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.SysTray;
-using Radarr.Host;
+using Prowlarr.Host;
 
 namespace NzbDrone
 {

@@ -53,10 +53,10 @@ class PageHeader extends Component {
     return (
       <div className={styles.header}>
         <div className={styles.logoContainer}>
-          <Link to={`${window.Radarr.urlBase}/`}>
+          <Link to={`${window.Prowlarr.urlBase}/`}>
             <img
               className={isSmallScreen ? styles.logo : styles.logoFull}
-              src={isSmallScreen ? `${window.Radarr.urlBase}/Content/Images/logo.png` : `${window.Radarr.urlBase}/Content/Images/logo-full.png`}
+              src={isSmallScreen ? `${window.Prowlarr.urlBase}/Content/Images/logo.png` : `${window.Prowlarr.urlBase}/Content/Images/logo-full.png`}
             />
           </Link>
         </div>
@@ -75,14 +75,14 @@ class PageHeader extends Component {
           <IconButton
             className={styles.donate}
             name={icons.HEART}
-            to="https://opencollective.com/radarr"
+            to="https://opencollective.com/prowlarr"
             size={14}
           />
           <IconButton
             className={styles.translate}
             title={translate('SuggestTranslationChange')}
             name={icons.TRANSLATE}
-            to="https://translate.servarr.com/projects/radarr/radarr/"
+            to="https://translate.servarr.com/projects/prowlarr/prowlarr/"
             size={24}
           />
           <PageHeaderActionsMenuConnector

@@ -3,9 +3,9 @@ using Nancy.Bootstrapper;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.SignalR;
-using Radarr.Http;
+using Prowlarr.Http;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public class MainAppContainerBuilder : ContainerBuilderBase
     {
@@ -13,12 +13,11 @@ namespace Radarr.Host
         {
             var assemblies = new List<string>
                              {
-                                 "Radarr.Host",
-                                 "Radarr.Core",
-                                 "Radarr.Api",
-                                 "Radarr.SignalR",
-                                 "Radarr.Api.V3",
-                                 "Radarr.Http"
+                                 "Prowlarr.Host",
+                                 "Prowlarr.Core",
+                                 "Prowlarr.SignalR",
+                                 "Prowlarr.Api.V1",
+                                 "Prowlarr.Http"
                              };
 
             return new MainAppContainerBuilder(args, assemblies).Container;

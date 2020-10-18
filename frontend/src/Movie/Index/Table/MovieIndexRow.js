@@ -11,7 +11,6 @@ import TagListConnector from 'Components/TagListConnector';
 import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds } from 'Helpers/Props';
 import DeleteMovieModal from 'Movie/Delete/DeleteMovieModal';
-import MovieDetailsLinks from 'Movie/Details/MovieDetailsLinks';
 import EditMovieModalConnector from 'Movie/Edit/EditMovieModalConnector';
 import MovieFileStatusConnector from 'Movie/MovieFileStatusConnector';
 import MovieTitleLink from 'Movie/MovieTitleLink';
@@ -374,13 +373,6 @@ class MovieIndexRow extends Component {
                         <Icon
                           name={icons.EXTERNAL_LINK}
                           size={12}
-                        />
-                      }
-                      tooltip={
-                        <MovieDetailsLinks
-                          tmdbId={tmdbId}
-                          imdbId={imdbId}
-                          youTubeTrailerId={youTubeTrailerId}
                         />
                       }
                       canFlip={true}

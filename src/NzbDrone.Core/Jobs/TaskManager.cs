@@ -4,17 +4,11 @@ using System.Linq;
 using NLog;
 using NzbDrone.Core.Backup;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Download;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Housekeeping;
-using NzbDrone.Core.ImportLists;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Lifecycle;
-using NzbDrone.Core.MediaFiles.Commands;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Movies.Commands;
 using NzbDrone.Core.Update.Commands;
 
 namespace NzbDrone.Core.Jobs
@@ -26,7 +20,7 @@ namespace NzbDrone.Core.Jobs
         DateTime GetNextExecution(Type type);
     }
 
-    public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>, IHandleAsync<ConfigSavedEvent>
+    public class TaskManager : ITaskManager, IHandle<ApplicationStartedEvent>, IHandle<CommandExecutedEvent>
     {
         private readonly IScheduledTaskRepository _scheduledTaskRepository;
         private readonly IConfigService _configService;
@@ -64,32 +58,12 @@ namespace NzbDrone.Core.Jobs
                     new ScheduledTask { Interval = 5, TypeName = typeof(MessagingCleanupCommand).FullName },
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationCheckUpdateCommand).FullName },
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
-                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(RefreshMovieCommand).FullName },
                     new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
-                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(CleanUpRecycleBinCommand).FullName },
 
                     new ScheduledTask
                     {
                         Interval = GetBackupInterval(),
                         TypeName = typeof(BackupCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetRssSyncInterval(),
-                        TypeName = typeof(RssSyncCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = GetImportListSyncInterval(),
-                        TypeName = typeof(ImportListSyncCommand).FullName
-                    },
-
-                    new ScheduledTask
-                    {
-                        Interval = Math.Max(_configService.CheckForFinishedDownloadInterval, 1),
-                        TypeName = typeof(RefreshMonitoredDownloadsCommand).FullName
                     }
                 };
 
@@ -171,20 +145,6 @@ namespace NzbDrone.Core.Jobs
                 _logger.Trace("Updating last run time for: {0}", scheduledTask.TypeName);
                 _scheduledTaskRepository.SetLastExecutionTime(scheduledTask.Id, DateTime.UtcNow, message.Command.StartedAt.Value);
             }
-        }
-
-        public void HandleAsync(ConfigSavedEvent message)
-        {
-            var rss = _scheduledTaskRepository.GetDefinition(typeof(RssSyncCommand));
-            rss.Interval = _configService.RssSyncInterval;
-
-            var importList = _scheduledTaskRepository.GetDefinition(typeof(ImportListSyncCommand));
-            importList.Interval = _configService.ImportListSyncInterval;
-
-            var refreshMonitoredDownloads = _scheduledTaskRepository.GetDefinition(typeof(RefreshMonitoredDownloadsCommand));
-            refreshMonitoredDownloads.Interval = _configService.CheckForFinishedDownloadInterval;
-
-            _scheduledTaskRepository.UpdateMany(new List<ScheduledTask> { rss, importList, refreshMonitoredDownloads });
         }
     }
 }

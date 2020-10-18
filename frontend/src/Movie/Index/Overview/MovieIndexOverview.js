@@ -9,7 +9,6 @@ import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import Popover from 'Components/Tooltip/Popover';
 import { icons } from 'Helpers/Props';
 import DeleteMovieModal from 'Movie/Delete/DeleteMovieModal';
-import MovieDetailsLinks from 'Movie/Details/MovieDetailsLinks';
 import EditMovieModalConnector from 'Movie/Edit/EditMovieModalConnector';
 import MovieIndexProgressBar from 'Movie/Index/ProgressBar/MovieIndexProgressBar';
 import MoviePoster from 'Movie/MoviePoster';
@@ -199,11 +198,7 @@ class MovieIndexOverview extends Component {
                     }
                     title={translate('Links')}
                     body={
-                      <MovieDetailsLinks
-                        tmdbId={tmdbId}
-                        imdbId={imdbId}
-                        youTubeTrailerId={youTubeTrailerId}
-                      />
+                      'place'
                     }
                   />
                 </span>

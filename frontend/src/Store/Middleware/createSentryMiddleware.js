@@ -36,8 +36,8 @@ function identity(stuff) {
 }
 
 function stripUrlBase(frame) {
-  if (frame.filename && window.Radarr.urlBase) {
-    frame.filename = frame.filename.replace(window.Radarr.urlBase, '');
+  if (frame.filename && window.Prowlarr.urlBase) {
+    frame.filename = frame.filename.replace(window.Prowlarr.urlBase, '');
   }
   return frame;
 }
@@ -74,7 +74,7 @@ export default function createSentryMiddleware() {
     release,
     userHash,
     isProduction
-  } = window.Radarr;
+  } = window.Prowlarr;
 
   if (!analytics) {
     return;

@@ -1,4 +1,4 @@
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public interface IHostController
     {

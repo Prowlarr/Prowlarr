@@ -8,7 +8,7 @@ namespace ServiceUninstall
 {
     public static class ServiceHelper
     {
-        private static string RadarrExe => Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "Radarr.Console.exe");
+        private static string RadarrExe => Path.Combine(new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName, "Prowlarr.Console.exe");
 
         private static bool IsAnAdministrator()
         {
@@ -20,7 +20,7 @@ namespace ServiceUninstall
         {
             if (!File.Exists(RadarrExe))
             {
-                Console.WriteLine("Unable to find Radarr.exe in the current directory.");
+                Console.WriteLine("Unable to find Prowlarr.exe in the current directory.");
                 return;
             }
 

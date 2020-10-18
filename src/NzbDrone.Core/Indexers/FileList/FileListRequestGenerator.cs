@@ -24,15 +24,15 @@ namespace NzbDrone.Core.Indexers.FileList
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            if (searchCriteria.Movie.ImdbId.IsNotNullOrWhiteSpace())
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=imdb&query={0}", searchCriteria.Movie.ImdbId)));
+                pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=imdb&query={0}", searchCriteria.ImdbId)));
             }
             else
             {
                 foreach (var queryTitle in searchCriteria.QueryTitles)
                 {
-                    var titleYearSearchQuery = string.Format("{0}+{1}", queryTitle, searchCriteria.Movie.Year);
+                    var titleYearSearchQuery = string.Format("{0}", queryTitle);
                     pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
                 }
             }

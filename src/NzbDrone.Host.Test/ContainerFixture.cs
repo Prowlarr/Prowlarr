@@ -7,8 +7,6 @@ using NzbDrone.Common;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Download;
-using NzbDrone.Core.Download.TrackedDownloads;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Jobs;
 using NzbDrone.Core.Lifecycle;
@@ -16,7 +14,7 @@ using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.SignalR;
 using NzbDrone.Test.Common;
-using Radarr.Host;
+using Prowlarr.Host;
 
 namespace NzbDrone.App.Test
 {
@@ -46,12 +44,6 @@ namespace NzbDrone.App.Test
         }
 
         [Test]
-        public void should_be_able_to_resolve_downloadclients()
-        {
-            _container.Resolve<IEnumerable<IDownloadClient>>().Should().NotBeEmpty();
-        }
-
-        [Test]
         public void container_should_inject_itself()
         {
             var factory = _container.Resolve<IServiceFactory>();
@@ -60,40 +52,11 @@ namespace NzbDrone.App.Test
         }
 
         [Test]
-        public void should_resolve_command_executor_by_name()
-        {
-            var genericExecutor = typeof(IExecute<>).MakeGenericType(typeof(RssSyncCommand));
-
-            var executor = _container.Resolve(genericExecutor);
-
-            executor.Should().NotBeNull();
-            executor.Should().BeAssignableTo<IExecute<RssSyncCommand>>();
-        }
-
-        [Test]
         [Ignore("Shit appveyor")]
         public void should_return_same_instance_of_singletons()
         {
             var first = _container.ResolveAll<IHandle<ApplicationShutdownRequested>>().OfType<Scheduler>().Single();
             var second = _container.ResolveAll<IHandle<ApplicationShutdownRequested>>().OfType<Scheduler>().Single();
-
-            first.Should().BeSameAs(second);
-        }
-
-        [Test]
-        public void should_return_same_instance_of_singletons_by_different_same_interface()
-        {
-            var first = _container.ResolveAll<IHandle<MovieGrabbedEvent>>().OfType<DownloadMonitoringService>().Single();
-            var second = _container.ResolveAll<IHandle<MovieGrabbedEvent>>().OfType<DownloadMonitoringService>().Single();
-
-            first.Should().BeSameAs(second);
-        }
-
-        [Test]
-        public void should_return_same_instance_of_singletons_by_different_interfaces()
-        {
-            var first = _container.ResolveAll<IHandle<MovieGrabbedEvent>>().OfType<DownloadMonitoringService>().Single();
-            var second = (DownloadMonitoringService)_container.Resolve<IExecute<RefreshMonitoredDownloadsCommand>>();
 
             first.Should().BeSameAs(second);
         }

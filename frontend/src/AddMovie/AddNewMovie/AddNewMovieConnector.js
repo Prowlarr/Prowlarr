@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { clearAddMovie, lookupMovie } from 'Store/Actions/addMovieActions';
 import { fetchRootFolders } from 'Store/Actions/rootFolderActions';
-import { fetchImportExclusions } from 'Store/Actions/Settings/importExclusions';
 import parseUrl from 'Utilities/String/parseUrl';
 import AddNewMovie from './AddNewMovie';
 
@@ -28,8 +27,7 @@ function createMapStateToProps() {
 const mapDispatchToProps = {
   lookupMovie,
   clearAddMovie,
-  fetchRootFolders,
-  fetchImportExclusions
+  fetchRootFolders
 };
 
 class AddNewMovieConnector extends Component {
@@ -45,7 +43,6 @@ class AddNewMovieConnector extends Component {
 
   componentDidMount() {
     this.props.fetchRootFolders();
-    this.props.fetchImportExclusions();
   }
 
   componentWillUnmount() {
@@ -101,8 +98,7 @@ AddNewMovieConnector.propTypes = {
   term: PropTypes.string,
   lookupMovie: PropTypes.func.isRequired,
   clearAddMovie: PropTypes.func.isRequired,
-  fetchRootFolders: PropTypes.func.isRequired,
-  fetchImportExclusions: PropTypes.func.isRequired
+  fetchRootFolders: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(AddNewMovieConnector);

@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                Movie = new Movies.Movie { ImdbId = "tt0076759", Title = "Star Wars", Year = 1977, TmdbId = 11 },
                 SceneTitles = new List<string> { "Star Wars" }
             };
 
@@ -180,7 +179,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.SupportedMovieSearchParameters = new[] { "q", "imdbid" };
             _capabilities.SupportsAggregateIdSearch = true; // Turns true if indexer supplies supportedParams.
 
-            _movieSearchCriteria.Movie.ImdbId = null;
+            _movieSearchCriteria.ImdbId = null;
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 

@@ -6,7 +6,6 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -17,7 +16,6 @@ namespace NzbDrone.Core.Indexers
     {
         protected readonly IIndexerStatusService _indexerStatusService;
         protected readonly IConfigService _configService;
-        protected readonly IParsingService _parsingService;
         protected readonly Logger _logger;
 
         public abstract string Name { get; }
@@ -27,11 +25,10 @@ namespace NzbDrone.Core.Indexers
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
 
-        public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
+        public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
         {
             _indexerStatusService = indexerStatusService;
             _configService = configService;
-            _parsingService = parsingService;
             _logger = logger;
         }
 

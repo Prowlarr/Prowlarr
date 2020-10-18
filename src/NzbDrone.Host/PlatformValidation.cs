@@ -5,7 +5,7 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public static class PlatformValidation
     {

@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Test.UpdateTests
 
             recent.Should().NotBeEmpty();
             recent.Should().OnlyContain(c => c.Hash.IsNotNullOrWhiteSpace());
-            recent.Should().OnlyContain(c => c.FileName.Contains("Radarr"));
+            recent.Should().OnlyContain(c => c.FileName.Contains("Prowlarr"));
             recent.Should().OnlyContain(c => c.ReleaseDate.Year >= 2014);
 
             if (recentWithChanges.Any())

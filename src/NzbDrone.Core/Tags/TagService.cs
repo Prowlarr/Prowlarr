@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.ImportLists;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Movies;
 using NzbDrone.Core.Notifications;
-using NzbDrone.Core.Profiles.Delay;
 using NzbDrone.Core.Restrictions;
 
 namespace NzbDrone.Core.Tags
@@ -27,27 +24,18 @@ namespace NzbDrone.Core.Tags
     {
         private readonly ITagRepository _repo;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IDelayProfileService _delayProfileService;
-        private readonly IImportListFactory _importListFactory;
         private readonly INotificationFactory _notificationFactory;
         private readonly IRestrictionService _restrictionService;
-        private readonly IMovieService _movieService;
 
         public TagService(ITagRepository repo,
                           IEventAggregator eventAggregator,
-                          IDelayProfileService delayProfileService,
-                          IImportListFactory importListFactory,
                           INotificationFactory notificationFactory,
-                          IRestrictionService restrictionService,
-                          IMovieService movieService)
+                          IRestrictionService restrictionService)
         {
             _repo = repo;
             _eventAggregator = eventAggregator;
-            _delayProfileService = delayProfileService;
-            _importListFactory = importListFactory;
             _notificationFactory = notificationFactory;
             _restrictionService = restrictionService;
-            _movieService = movieService;
         }
 
         public Tag GetTag(int tagId)
@@ -75,32 +63,23 @@ namespace NzbDrone.Core.Tags
         public TagDetails Details(int tagId)
         {
             var tag = GetTag(tagId);
-            var delayProfiles = _delayProfileService.AllForTag(tagId);
-            var importLists = _importListFactory.AllForTag(tagId);
             var notifications = _notificationFactory.AllForTag(tagId);
             var restrictions = _restrictionService.AllForTag(tagId);
-            var movies = _movieService.AllForTag(tagId);
 
             return new TagDetails
             {
                 Id = tagId,
                 Label = tag.Label,
-                DelayProfileIds = delayProfiles.Select(c => c.Id).ToList(),
-                ImportListIds = importLists.Select(c => c.Id).ToList(),
                 NotificationIds = notifications.Select(c => c.Id).ToList(),
-                RestrictionIds = restrictions.Select(c => c.Id).ToList(),
-                MovieIds = movies.Select(c => c.Id).ToList()
+                RestrictionIds = restrictions.Select(c => c.Id).ToList()
             };
         }
 
         public List<TagDetails> Details()
         {
             var tags = All();
-            var delayProfiles = _delayProfileService.All();
-            var importLists = _importListFactory.All();
             var notifications = _notificationFactory.All();
             var restrictions = _restrictionService.All();
-            var movies = _movieService.GetAllMovies();
 
             var details = new List<TagDetails>();
 
@@ -110,11 +89,8 @@ namespace NzbDrone.Core.Tags
                 {
                     Id = tag.Id,
                     Label = tag.Label,
-                    DelayProfileIds = delayProfiles.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    ImportListIds = importLists.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
                     NotificationIds = notifications.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    RestrictionIds = restrictions.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList(),
-                    MovieIds = movies.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList()
+                    RestrictionIds = restrictions.Where(c => c.Tags.Contains(tag.Id)).Select(c => c.Id).ToList()
                 });
             }
 

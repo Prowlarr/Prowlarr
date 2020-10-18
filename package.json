@@ -1,7 +1,7 @@
 {
-  "name": "radarr",
-  "version": "1.0.0",
-  "description": "Radarr is a PVR for Usenet and BitTorrent users",
+  "name": "prowlarr",
+  "version": "0.1.0",
+  "description": "Prowlarr is a Indexer/Tracker manager for with seamless integration for your favorite PVR apps",
   "scripts": {
     "build": "gulp build",
     "start": "gulp watch",
@@ -12,8 +12,8 @@
     "stylelint-linux": "stylelint $(find frontend -name '*.css') --config frontend/.stylelintrc",
     "stylelint-windows": "stylelint frontend/**/*.css --config frontend/.stylelintrc"
   },
-  "repository": "https://github.com/Radarr/Radarr",
-  "author": "Team Radarr",
+  "repository": "https://github.com/Prowlarr/Prowlarr",
+  "author": "Team Prowlarr",
   "license": "GPL-3.0",
   "readmeFilename": "readme.md",
   "dependencies": {

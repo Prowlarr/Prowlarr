@@ -1,5 +1,5 @@
 <Project>
-  <!-- Common to all Radarr Projects -->
+  <!-- Common to all Prowlarr Projects -->
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
@@ -15,13 +15,13 @@
     <RadarrOutputType Condition="$(MSBuildProjectName.Contains('.Test'))">Test</RadarrOutputType>
     <RadarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceInstall'">Exe</RadarrOutputType>
     <RadarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceUninstall'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Radarr'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Radarr.Console'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Radarr.Update'">Update</RadarrOutputType>
+    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr'">Exe</RadarrOutputType>
+    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr.Console'">Exe</RadarrOutputType>
+    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr.Update'">Update</RadarrOutputType>
 
     <!-- Specifies whether it's one of our own libraries -->
     <RadarrProject>false</RadarrProject>
-    <RadarrProject Condition="$(MSBuildProjectName.StartsWith('Radarr'))">true</RadarrProject>
+    <RadarrProject Condition="$(MSBuildProjectName.StartsWith('Prowlarr'))">true</RadarrProject>
     <RadarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</RadarrProject>
     <RadarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</RadarrProject>
   </PropertyGroup>
@@ -36,7 +36,7 @@
     <!-- Output to _output and _tests respectively -->
     <OutputPath Condition="'$(RadarrProject)'=='true'">$(RadarrRootDir)_output\</OutputPath>
     <OutputPath Condition="'$(RadarrOutputType)'=='Test'">$(RadarrRootDir)_tests\</OutputPath>
-    <OutputPath Condition="'$(RadarrOutputType)'=='Update'">$(RadarrRootDir)_output\Radarr.Update\</OutputPath>
+    <OutputPath Condition="'$(RadarrOutputType)'=='Update'">$(RadarrRootDir)_output\Prowlarr.Update\</OutputPath>
 
     <!-- Paths relative to project file for better readability -->
     <BaseIntermediateOutputPath>$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)'))</BaseIntermediateOutputPath>
@@ -55,9 +55,9 @@
 
   <!-- Set the Product and Version info for our own projects -->
   <PropertyGroup Condition="'$(RadarrProject)'=='true'">
-    <Product>Radarr</Product>
-    <Company>radarr.video</Company>
-    <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) radarr.video (GNU General Public v3)</Copyright>
+    <Product>Prowlarr</Product>
+    <Company>prowlarr.video</Company>
+    <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) prowlarr.video (GNU General Public v3)</Copyright>
     
     <!-- Should be replaced by CI -->
     <AssemblyVersion>10.0.0.*</AssemblyVersion>
@@ -79,7 +79,7 @@
 
   <PropertyGroup>
     <!-- For now keep the NzbDrone namespace -->
-    <RootNamespace Condition="'$(RadarrProject)'=='true'">$(MSBuildProjectName.Replace('Radarr','NzbDrone'))</RootNamespace>
+    <RootNamespace Condition="'$(RadarrProject)'=='true'">$(MSBuildProjectName.Replace('Prowlarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
 
   <!-- Allow building net framework using mono -->

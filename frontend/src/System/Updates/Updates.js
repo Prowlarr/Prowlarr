@@ -41,9 +41,9 @@ class Updates extends Component {
     const hasUpdateToInstall = hasUpdates && _.some(items, { installable: true, latest: true });
     const noUpdateToInstall = hasUpdates && !hasUpdateToInstall;
 
-    const externalUpdaterPrefix = 'Unable to update Radarr directly,';
+    const externalUpdaterPrefix = 'Unable to update Prowlarr directly,';
     const externalUpdaterMessages = {
-      external: 'Radarr is configured to use an external update mechanism',
+      external: 'Prowlarr is configured to use an external update mechanism',
       apt: 'use apt to install the update',
       docker: 'update the docker container to receive the update'
     };
@@ -110,7 +110,7 @@ class Updates extends Component {
                 />
 
                 <div className={styles.message}>
-                  The latest version of Radarr is already installed
+                  The latest version of Prowlarr is already installed
                 </div>
 
                 {

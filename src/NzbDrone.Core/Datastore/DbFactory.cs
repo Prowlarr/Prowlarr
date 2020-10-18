@@ -120,10 +120,10 @@ namespace NzbDrone.Core.Datastore
 
                 if (OsInfo.IsOsx)
                 {
-                    throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://github.com/Radarr/Radarr/wiki/FAQ#i-use-radarr-on-a-mac-and-it-suddenly-stopped-working-what-happened", e, fileName);
+                    throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://github.com/Prowlarr/Prowlarr/wiki/FAQ#i-use-prowlarr-on-a-mac-and-it-suddenly-stopped-working-what-happened", e, fileName);
                 }
 
-                throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://github.com/Radarr/Radarr/wiki/FAQ#i-am-getting-an-error-database-disk-image-is-malformed", e, fileName);
+                throw new CorruptDatabaseException("Database file: {0} is corrupt, restore from backup if available. See: https://github.com/Prowlarr/Prowlarr/wiki/FAQ#i-am-getting-an-error-database-disk-image-is-malformed", e, fileName);
             }
             catch (Exception e)
             {

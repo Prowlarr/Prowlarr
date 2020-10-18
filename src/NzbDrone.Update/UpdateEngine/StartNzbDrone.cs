@@ -31,7 +31,7 @@ namespace NzbDrone.Update.UpdateEngine
 
         public void Start(AppType appType, string installationFolder)
         {
-            _logger.Info("Starting Radarr");
+            _logger.Info("Starting Prowlarr");
             if (appType == AppType.Service)
             {
                 try
@@ -40,7 +40,7 @@ namespace NzbDrone.Update.UpdateEngine
                 }
                 catch (InvalidOperationException e)
                 {
-                    _logger.Warn("Couldn't start Radarr Service (Most likely due to permission issues). falling back to console.", e);
+                    _logger.Warn("Couldn't start Prowlarr Service (Most likely due to permission issues). falling back to console.", e);
                     StartConsole(installationFolder);
                 }
             }
@@ -56,18 +56,18 @@ namespace NzbDrone.Update.UpdateEngine
 
         private void StartService()
         {
-            _logger.Info("Starting Radarr service");
+            _logger.Info("Starting Prowlarr service");
             _serviceProvider.Start(ServiceProvider.SERVICE_NAME);
         }
 
         private void StartWinform(string installationFolder)
         {
-            Start(installationFolder, "Radarr".ProcessNameToExe());
+            Start(installationFolder, "Prowlarr".ProcessNameToExe());
         }
 
         private void StartConsole(string installationFolder)
         {
-            Start(installationFolder, "Radarr.Console".ProcessNameToExe());
+            Start(installationFolder, "Prowlarr.Console".ProcessNameToExe());
         }
 
         private void Start(string installationFolder, string fileName)

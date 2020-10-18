@@ -96,7 +96,7 @@ namespace NzbDrone.Common.EnvironmentInfo
                     RemovePidFile();
                 }
 
-                // Exit if a radarr.db already exists
+                // Exit if a prowlarr.db already exists
                 if (_diskProvider.FileExists(_appFolderInfo.GetDatabase()))
                 {
                     return;
@@ -171,7 +171,7 @@ namespace NzbDrone.Common.EnvironmentInfo
         {
             if (OsInfo.IsNotWindows)
             {
-                _diskProvider.DeleteFile(Path.Combine(_appFolderInfo.AppDataFolder, "radarr.pid"));
+                _diskProvider.DeleteFile(Path.Combine(_appFolderInfo.AppDataFolder, "prowlarr.pid"));
             }
         }
     }

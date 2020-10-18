@@ -6,7 +6,6 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
@@ -20,8 +19,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
-        public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, parsingService, logger)
+        public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, indexerStatusService, configService, logger)
         {
             _tokenProvider = tokenProvider;
         }

@@ -3,14 +3,14 @@ using NLog;
 using NUnit.Framework;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Test.Common;
-using Radarr.Http.ClientSchema;
+using Prowlarr.Http.ClientSchema;
 
 namespace NzbDrone.Integration.Test
 {
     [Parallelizable(ParallelScope.Fixtures)]
     public abstract class IntegrationTest : IntegrationTestBase
     {
-        protected static int StaticPort = 7878;
+        protected static int StaticPort = 9696;
 
         protected NzbDroneRunner _runner;
 
@@ -34,7 +34,7 @@ namespace NzbDrone.Integration.Test
 
         protected override void InitializeTestTarget()
         {
-            Indexers.Post(new Radarr.Api.V3.Indexers.IndexerResource
+            Indexers.Post(new Prowlarr.Api.V1.Indexers.IndexerResource
             {
                 EnableRss = false,
                 EnableInteractiveSearch = false,

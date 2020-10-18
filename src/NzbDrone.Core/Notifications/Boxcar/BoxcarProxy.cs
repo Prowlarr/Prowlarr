@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Notifications.Boxcar
             try
             {
                 const string title = "Test Notification";
-                const string body = "This is a test message from Radarr";
+                const string body = "This is a test message from Prowlarr";
 
                 SendNotification(title, body, settings);
                 return null;
@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Notifications.Boxcar
                     .AddFormParameter("notification[title]", title)
                     .AddFormParameter("notification[long_message]", message)
                     .AddFormParameter("notification[source_name]", BuildInfo.AppName)
-                    .AddFormParameter("notification[icon_url]", "https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/64.png")
+                    .AddFormParameter("notification[icon_url]", "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/64.png")
                     .Build();
 
                 _httpClient.Post(request);

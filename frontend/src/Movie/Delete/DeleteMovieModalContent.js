@@ -124,7 +124,7 @@ class DeleteMovieModalContent extends Component {
               type={inputTypes.CHECK}
               name="addImportExclusion"
               value={addImportExclusion}
-              helpText="Prevent movie from being added to Radarr by lists"
+              helpText="Prevent movie from being added to Prowlarr by lists"
               kind={kinds.DANGER}
               onChange={this.onAddImportExclusionChange}
             />

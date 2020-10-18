@@ -82,7 +82,7 @@ class QualityProfileFormatItems extends Component {
 
         <div>
           <FormInputHelpText
-            text='Radarr scores each release using the sum of scores for matching custom formats. If a new release would improve the score, at the same or better quality, then Radarr will grab it.'
+            text='Prowlarr scores each release using the sum of scores for matching custom formats. If a new release would improve the score, at the same or better quality, then Prowlarr will grab it.'
           />
 
           {

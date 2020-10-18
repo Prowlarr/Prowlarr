@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchDelayProfiles, fetchImportLists, fetchNotifications, fetchRestrictions } from 'Store/Actions/settingsActions';
+import { fetchDelayProfiles, fetchNotifications, fetchRestrictions } from 'Store/Actions/settingsActions';
 import { fetchTagDetails } from 'Store/Actions/tagActions';
 import Tags from './Tags';
 
@@ -28,8 +28,7 @@ const mapDispatchToProps = {
   dispatchFetchTagDetails: fetchTagDetails,
   dispatchFetchDelayProfiles: fetchDelayProfiles,
   dispatchFetchNotifications: fetchNotifications,
-  dispatchFetchRestrictions: fetchRestrictions,
-  dispatchFetchImportLists: fetchImportLists
+  dispatchFetchRestrictions: fetchRestrictions
 };
 
 class MetadatasConnector extends Component {
@@ -42,15 +41,13 @@ class MetadatasConnector extends Component {
       dispatchFetchTagDetails,
       dispatchFetchDelayProfiles,
       dispatchFetchNotifications,
-      dispatchFetchRestrictions,
-      dispatchFetchImportLists
+      dispatchFetchRestrictions
     } = this.props;
 
     dispatchFetchTagDetails();
     dispatchFetchDelayProfiles();
     dispatchFetchNotifications();
     dispatchFetchRestrictions();
-    dispatchFetchImportLists();
   }
 
   //
@@ -69,8 +66,7 @@ MetadatasConnector.propTypes = {
   dispatchFetchTagDetails: PropTypes.func.isRequired,
   dispatchFetchDelayProfiles: PropTypes.func.isRequired,
   dispatchFetchNotifications: PropTypes.func.isRequired,
-  dispatchFetchRestrictions: PropTypes.func.isRequired,
-  dispatchFetchImportLists: PropTypes.func.isRequired
+  dispatchFetchRestrictions: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(MetadatasConnector);

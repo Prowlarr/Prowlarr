@@ -16,50 +16,6 @@ function Settings() {
       <PageContentBody>
         <Link
           className={styles.link}
-          to="/settings/mediamanagement"
-        >
-          {translate('MediaManagement')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('MediaManagementSettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
-          to="/settings/profiles"
-        >
-          {translate('Profiles')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('ProfilesSettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
-          to="/settings/quality"
-        >
-          {translate('Quality')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('QualitySettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
-          to="/settings/customformats"
-        >
-          {translate('CustomFormats')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('CustomFormatsSettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
           to="/settings/indexers"
         >
           {translate('Indexers')}
@@ -71,28 +27,6 @@ function Settings() {
 
         <Link
           className={styles.link}
-          to="/settings/downloadclients"
-        >
-          {translate('DownloadClients')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('DownloadClientsSettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
-          to="/settings/importlists"
-        >
-          {translate('Lists')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('ListsSettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
           to="/settings/connect"
         >
           {translate('Connect')}
@@ -100,17 +34,6 @@ function Settings() {
 
         <div className={styles.summary}>
           {translate('ConnectSettingsSummary')}
-        </div>
-
-        <Link
-          className={styles.link}
-          to="/settings/metadata"
-        >
-          {translate('Metadata')}
-        </Link>
-
-        <div className={styles.summary}>
-          {translate('MetadataSettingsSummary')}
         </div>
 
         <Link

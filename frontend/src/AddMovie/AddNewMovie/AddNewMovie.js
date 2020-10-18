@@ -159,7 +159,7 @@ class AddNewMovie extends Component {
                   {translate('YouCanAlsoSearch')}
                 </div>
                 <div>
-                  <Link to="https://github.com/Radarr/Radarr/wiki/FAQ#why-cant-i-add-a-new-movie-when-i-know-the-tmdb-id">
+                  <Link to="https://github.com/Prowlarr/Prowlarr/wiki/FAQ#why-cant-i-add-a-new-movie-when-i-know-the-tmdb-id">
                     {translate('CantFindMovie')}
                   </Link>
                 </div>

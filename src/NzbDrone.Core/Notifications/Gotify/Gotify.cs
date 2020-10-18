@@ -19,16 +19,6 @@ namespace NzbDrone.Core.Notifications.Gotify
         public override string Name => "Gotify";
         public override string Link => "https://gotify.net/";
 
-        public override void OnGrab(GrabMessage grabMessage)
-        {
-            _proxy.SendNotification(MOVIE_GRABBED_TITLE, grabMessage.Message, Settings);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            _proxy.SendNotification(MOVIE_DOWNLOADED_TITLE, message.Message, Settings);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
@@ -41,7 +31,7 @@ namespace NzbDrone.Core.Notifications.Gotify
             try
             {
                 const string title = "Test Notification";
-                const string body = "This is a test message from Radarr";
+                const string body = "This is a test message from Prowlarr";
 
                 _proxy.SendNotification(title, body, Settings);
             }

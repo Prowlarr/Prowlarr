@@ -4,7 +4,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Common.Processes;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public interface ISingleInstancePolicy
     {
@@ -32,7 +32,7 @@ namespace Radarr.Host
         {
             if (IsAlreadyRunning())
             {
-                _logger.Warn("Another instance of Radarr is already running.");
+                _logger.Warn("Another instance of Prowlarr is already running.");
                 _browserService.LaunchWebUI();
                 throw new TerminateApplicationException("Another instance is already running");
             }
@@ -50,7 +50,7 @@ namespace Radarr.Host
         {
             if (IsAlreadyRunning())
             {
-                _logger.Debug("Another instance of Radarr is already running.");
+                _logger.Debug("Another instance of Prowlarr is already running.");
             }
         }
 
@@ -73,14 +73,14 @@ namespace Radarr.Host
 
                 if (otherProcesses.Any())
                 {
-                    _logger.Info("{0} instance(s) of Radarr are running", otherProcesses.Count);
+                    _logger.Info("{0} instance(s) of Prowlarr are running", otherProcesses.Count);
                 }
 
                 return otherProcesses;
             }
             catch (Exception ex)
             {
-                _logger.Warn(ex, "Failed to check for multiple instances of Radarr.");
+                _logger.Warn(ex, "Failed to check for multiple instances of Prowlarr.");
                 return new List<int>();
             }
         }

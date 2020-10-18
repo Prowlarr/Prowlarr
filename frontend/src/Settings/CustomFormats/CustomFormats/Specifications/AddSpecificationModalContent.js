@@ -57,7 +57,7 @@ class AddSpecificationModalContent extends Component {
                   </div>
                   <div>
                     {translate('VisitGithubCustomFormatsAphrodite')}
-                    <Link to="https://github.com/Radarr/Radarr/wiki/Custom-Formats-Aphrodite">GitHub</Link>
+                    <Link to="https://github.com/Prowlarr/Prowlarr/wiki/Custom-Formats-Aphrodite">GitHub</Link>
                   </div>
                 </Alert>
 

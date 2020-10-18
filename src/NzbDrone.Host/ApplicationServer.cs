@@ -7,7 +7,7 @@ using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public interface INzbDroneServiceFactory
     {

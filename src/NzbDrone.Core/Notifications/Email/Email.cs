@@ -17,20 +17,6 @@ namespace NzbDrone.Core.Notifications.Email
 
         public override string Link => null;
 
-        public override void OnGrab(GrabMessage grabMessage)
-        {
-            var body = $"{grabMessage.Message} sent to queue.";
-
-            _emailService.SendEmail(Settings, MOVIE_GRABBED_TITLE_BRANDED, body);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            var body = $"{message.Message} Downloaded and sorted.";
-
-            _emailService.SendEmail(Settings, MOVIE_DOWNLOADED_TITLE_BRANDED, body);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck message)
         {
             _emailService.SendEmail(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);

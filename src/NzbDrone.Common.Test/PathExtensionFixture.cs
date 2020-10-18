@@ -19,7 +19,7 @@ namespace NzbDrone.Common.Test
         {
             var fakeEnvironment = new Mock<IAppFolderInfo>();
 
-            fakeEnvironment.SetupGet(c => c.AppDataFolder).Returns(@"C:\Radarr\".AsOsAgnostic());
+            fakeEnvironment.SetupGet(c => c.AppDataFolder).Returns(@"C:\Prowlarr\".AsOsAgnostic());
 
             fakeEnvironment.SetupGet(c => c.TempFolder).Returns(@"C:\Temp\".AsOsAgnostic());
 
@@ -248,13 +248,13 @@ namespace NzbDrone.Common.Test
         [Test]
         public void AppDataDirectory_path_test()
         {
-            GetIAppDirectoryInfo().GetAppDataPath().Should().BeEquivalentTo(@"C:\Radarr\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetAppDataPath().Should().BeEquivalentTo(@"C:\Prowlarr\".AsOsAgnostic());
         }
 
         [Test]
         public void Config_path_test()
         {
-            GetIAppDirectoryInfo().GetConfigPath().Should().BeEquivalentTo(@"C:\Radarr\Config.xml".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetConfigPath().Should().BeEquivalentTo(@"C:\Prowlarr\Config.xml".AsOsAgnostic());
         }
 
         [Test]
@@ -266,25 +266,25 @@ namespace NzbDrone.Common.Test
         [Test]
         public void GetUpdatePackageFolder()
         {
-            GetIAppDirectoryInfo().GetUpdatePackageFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\Radarr\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdatePackageFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\Prowlarr\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateClientFolder()
         {
-            GetIAppDirectoryInfo().GetUpdateClientFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\Radarr\Radarr.Update\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\Prowlarr\Prowlarr.Update\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateClientExePath()
         {
-            GetIAppDirectoryInfo().GetUpdateClientExePath(PlatformType.DotNet).Should().BeEquivalentTo(@"C:\Temp\radarr_update\Radarr.Update.exe".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientExePath(PlatformType.DotNet).Should().BeEquivalentTo(@"C:\Temp\radarr_update\Prowlarr.Update.exe".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateLogFolder()
         {
-            GetIAppDirectoryInfo().GetUpdateLogFolder().Should().BeEquivalentTo(@"C:\Radarr\UpdateLogs\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateLogFolder().Should().BeEquivalentTo(@"C:\Prowlarr\UpdateLogs\".AsOsAgnostic());
         }
 
         [Test]

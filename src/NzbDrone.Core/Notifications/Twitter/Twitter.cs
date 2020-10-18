@@ -18,16 +18,6 @@ namespace NzbDrone.Core.Notifications.Twitter
         public override string Name => "Twitter";
         public override string Link => "https://twitter.com/";
 
-        public override void OnGrab(GrabMessage message)
-        {
-            _twitterService.SendNotification($"[Radarr] Grabbed: {message.Message}", Settings);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            _twitterService.SendNotification($"[Radarr] Imported: {message.Message}", Settings);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _twitterService.SendNotification($"Health Issue: {healthCheck.Message}", Settings);

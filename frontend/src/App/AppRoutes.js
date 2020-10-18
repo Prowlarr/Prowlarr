@@ -6,22 +6,12 @@ import HistoryConnector from 'Activity/History/HistoryConnector';
 import QueueConnector from 'Activity/Queue/QueueConnector';
 import AddNewMovieConnector from 'AddMovie/AddNewMovie/AddNewMovieConnector';
 import ImportMovies from 'AddMovie/ImportMovie/ImportMovies';
-import CalendarPageConnector from 'Calendar/CalendarPageConnector';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
-import DiscoverMovieConnector from 'DiscoverMovie/DiscoverMovieConnector';
-import MovieDetailsPageConnector from 'Movie/Details/MovieDetailsPageConnector';
 import MovieIndexConnector from 'Movie/Index/MovieIndexConnector';
-import CustomFormatSettingsConnector from 'Settings/CustomFormats/CustomFormatSettingsConnector';
-import DownloadClientSettingsConnector from 'Settings/DownloadClients/DownloadClientSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
-import ImportListSettingsConnector from 'Settings/ImportLists/ImportListSettingsConnector';
 import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
-import MediaManagementConnector from 'Settings/MediaManagement/MediaManagementConnector';
-import MetadataSettings from 'Settings/Metadata/MetadataSettings';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
-import Profiles from 'Settings/Profiles/Profiles';
-import Quality from 'Settings/Quality/Quality';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
 import UISettingsConnector from 'Settings/UI/UISettingsConnector';
@@ -51,7 +41,7 @@ function AppRoutes(props) {
       />
 
       {
-        window.Radarr.urlBase &&
+        window.Prowlarr.urlBase &&
           <Route
             exact={true}
             path="/"
@@ -75,25 +65,6 @@ function AppRoutes(props) {
       <Route
         path="/add/import"
         component={ImportMovies}
-      />
-
-      <Route
-        path="/add/discover"
-        component={DiscoverMovieConnector}
-      />
-
-      <Route
-        path="/movie/:titleSlug"
-        component={MovieDetailsPageConnector}
-      />
-
-      {/*
-        Calendar
-      */}
-
-      <Route
-        path="/calendar"
-        component={CalendarPageConnector}
       />
 
       {/*
@@ -126,48 +97,13 @@ function AppRoutes(props) {
       />
 
       <Route
-        path="/settings/mediamanagement"
-        component={MediaManagementConnector}
-      />
-
-      <Route
-        path="/settings/profiles"
-        component={Profiles}
-      />
-
-      <Route
-        path="/settings/quality"
-        component={Quality}
-      />
-
-      <Route
-        path="/settings/customformats"
-        component={CustomFormatSettingsConnector}
-      />
-
-      <Route
         path="/settings/indexers"
         component={IndexerSettingsConnector}
       />
 
       <Route
-        path="/settings/downloadclients"
-        component={DownloadClientSettingsConnector}
-      />
-
-      <Route
-        path="/settings/importlists"
-        component={ImportListSettingsConnector}
-      />
-
-      <Route
         path="/settings/connect"
         component={NotificationSettings}
-      />
-
-      <Route
-        path="/settings/metadata"
-        component={MetadataSettings}
       />
 
       <Route

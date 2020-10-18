@@ -14,8 +14,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
             RuleFor(c => c.BaseUrl).ValidRootUrl();
 
             RuleFor(c => c.Categories).NotEmpty();
-
-            RuleFor(c => c.SeedCriteria).SetValidator(_ => new SeedCriteriaSettingsValidator());
         }
     }
 
@@ -48,14 +46,11 @@ namespace NzbDrone.Core.Indexers.Rarbg
         [FieldDefinition(4, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
         public int MinimumSeeders { get; set; }
 
-        [FieldDefinition(5, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Radarr/Radarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
+        [FieldDefinition(5, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
         public IEnumerable<int> RequiredFlags { get; set; }
 
         [FieldDefinition(6, Type = FieldType.Textbox, Label = "Categories", HelpText = "Comma Separated list, you can retrieve the ID by checking the URL behind the category on the website (i.e. Movie/x264/1080 = 44)", HelpLink = "https://rarbgmirror.org/torrents.php?category=movies", Advanced = true)]
         public IEnumerable<int> Categories { get; set; }
-
-        [FieldDefinition(7)]
-        public SeedCriteriaSettings SeedCriteria { get; set; } = new SeedCriteriaSettings();
 
         public NzbDroneValidationResult Validate()
         {

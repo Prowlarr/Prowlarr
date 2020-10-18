@@ -15,11 +15,11 @@ using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
-using Radarr.Host.AccessControl;
-using Radarr.Host.Middleware;
+using Prowlarr.Host.AccessControl;
+using Prowlarr.Host.Middleware;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public class WebHostController : IHostController
     {

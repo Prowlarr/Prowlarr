@@ -17,7 +17,7 @@ class MoreInfo extends Component {
         <DescriptionList>
           <DescriptionListItemTitle>Home page</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://radarr.video/">radarr.video</Link>
+            <Link to="https://prowlarr.video/">prowlarr.video</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Discord</DescriptionListItemTitle>
@@ -27,22 +27,22 @@ class MoreInfo extends Component {
 
           <DescriptionListItemTitle>Wiki</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://github.com/Radarr/Radarr/wiki">github.com/Radarr/Radarr/wiki</Link>
+            <Link to="https://github.com/Prowlarr/Prowlarr/wiki">github.com/Prowlarr/Prowlarr/wiki</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Donations</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://opencollective.com/radarr">opencollective.com/radarr</Link>
+            <Link to="https://opencollective.com/prowlarr">opencollective.com/prowlarr</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Source</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://github.com/Radarr/Radarr/">github.com/Radarr/Radarr</Link>
+            <Link to="https://github.com/Prowlarr/Prowlarr/">github.com/Prowlarr/Prowlarr</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Feature Requests</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://github.com/Radarr/Radarr/issues">github.com/Radarr/Radarr/issues</Link>
+            <Link to="https://github.com/Prowlarr/Prowlarr/issues">github.com/Prowlarr/Prowlarr/issues</Link>
           </DescriptionListItemDescription>
 
         </DescriptionList>

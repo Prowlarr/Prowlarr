@@ -6,13 +6,12 @@ function createProfileInUseSelector(profileProp) {
   return createSelector(
     (state, { id }) => id,
     createAllMoviesSelector(),
-    (state) => state.settings.importLists.items,
-    (id, movies, lists) => {
+    (id, movies) => {
       if (!id) {
         return false;
       }
 
-      if (_.some(movies, { [profileProp]: id }) || _.some(lists, { [profileProp]: id })) {
+      if (_.some(movies, { [profileProp]: id })) {
         return true;
       }
 

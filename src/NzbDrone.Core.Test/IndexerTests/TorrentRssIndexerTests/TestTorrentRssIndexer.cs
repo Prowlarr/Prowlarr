@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentValidation.Results;
 using NLog;
 using NLog.Config;
@@ -13,8 +13,8 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
 {
     public class TestTorrentRssIndexer : TorrentRssIndexer
     {
-        public TestTorrentRssIndexer(ITorrentRssParserFactory torrentRssParserFactory, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, IParsingService parsingService, Logger logger)
-            : base(torrentRssParserFactory, httpClient, indexerStatusService, configService, parsingService, logger)
+        public TestTorrentRssIndexer(ITorrentRssParserFactory torrentRssParserFactory, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(torrentRssParserFactory, httpClient, indexerStatusService, configService, logger)
         {
         }
 

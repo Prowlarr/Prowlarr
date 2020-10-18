@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 
-namespace Radarr.Host.Middleware
+namespace Prowlarr.Host.Middleware
 {
     public interface IAspNetCoreMiddleware
     {

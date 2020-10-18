@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
-using NzbDrone.Core.Movies;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Notifications
@@ -9,13 +8,9 @@ namespace NzbDrone.Core.Notifications
     public abstract class NotificationBase<TSettings> : INotification
         where TSettings : IProviderConfig, new()
     {
-        protected const string MOVIE_GRABBED_TITLE = "Movie Grabbed";
-        protected const string MOVIE_DOWNLOADED_TITLE = "Movie Downloaded";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
 
-        protected const string MOVIE_GRABBED_TITLE_BRANDED = "Radarr - " + MOVIE_GRABBED_TITLE;
-        protected const string MOVIE_DOWNLOADED_TITLE_BRANDED = "Radarr - " + MOVIE_DOWNLOADED_TITLE;
-        protected const string HEALTH_ISSUE_TITLE_BRANDED = "Radarr - " + HEALTH_ISSUE_TITLE;
+        protected const string HEALTH_ISSUE_TITLE_BRANDED = "Prowlarr - " + HEALTH_ISSUE_TITLE;
 
         public abstract string Name { get; }
 
@@ -30,23 +25,7 @@ namespace NzbDrone.Core.Notifications
 
         public abstract string Link { get; }
 
-        public virtual void OnGrab(GrabMessage grabMessage)
-        {
-        }
-
-        public virtual void OnDownload(DownloadMessage message)
-        {
-        }
-
-        public virtual void OnMovieRename(Movie movie)
-        {
-        }
-
         public virtual void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
-        {
-        }
-
-        public virtual void OnDelete(DeleteMessage deleteMessage)
         {
         }
 
@@ -54,12 +33,7 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
-        public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
-        public bool SupportsOnRename => HasConcreteImplementation("OnMovieRename");
-        public bool SupportsOnDownload => HasConcreteImplementation("OnDownload");
-        public bool SupportsOnUpgrade => SupportsOnDownload;
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
-        public bool SupportsOnDelete => HasConcreteImplementation("OnDelete");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

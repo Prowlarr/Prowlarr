@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using NzbDrone.Core.Languages;
-using NzbDrone.Core.Qualities;
 
 namespace NzbDrone.Core.Parser.Model
 {
@@ -11,7 +10,6 @@ namespace NzbDrone.Core.Parser.Model
         public string OriginalTitle { get; set; }
         public string ReleaseTitle { get; set; }
         public string SimpleReleaseTitle { get; set; }
-        public QualityModel Quality { get; set; }
         public List<Language> Languages { get; set; } = new List<Language>();
         public string ReleaseGroup { get; set; }
         public string ReleaseHash { get; set; }
@@ -23,37 +21,7 @@ namespace NzbDrone.Core.Parser.Model
 
         public override string ToString()
         {
-            return string.Format("{0} - {1} {2}", MovieTitle, Year, Quality);
+            return string.Format("{0} - {1}", MovieTitle, Year);
         }
-
-#if LIBRARY
-        public static ParsedMovieInfo ParseMovieInfo(string title)
-        {
-            var parsedMovie = Parser.ParseMovieTitle(title, false);
-
-            if (parsedMovie == null) return null;
-
-            parsedMovie.Languages = LanguageParser.ParseLanguages(parsedMovie.SimpleReleaseTitle);
-
-            parsedMovie.Quality = QualityParser.ParseQuality(parsedMovie.SimpleReleaseTitle);
-
-            if (parsedMovie.Edition.IsNullOrWhiteSpace())
-            {
-                parsedMovie.Edition = Parser.ParseEdition(parsedMovie.SimpleReleaseTitle);
-            }
-
-            parsedMovie.ReleaseGroup = Parser.ParseReleaseGroup(parsedMovie.SimpleReleaseTitle);
-
-            parsedMovie.ImdbId = Parser.ParseImdbId(parsedMovie.SimpleReleaseTitle);
-
-            parsedMovie.Languages =
-                LanguageParser.EnhanceLanguages(parsedMovie.SimpleReleaseTitle, parsedMovie.Languages);
-
-            parsedMovie.Quality.Quality = Qualities.Quality.FindByInfo(parsedMovie.Quality.Source, parsedMovie.Quality.Resolution,
-                parsedMovie.Quality.Modifier);
-
-            return parsedMovie;
-        }
-#endif
     }
 }

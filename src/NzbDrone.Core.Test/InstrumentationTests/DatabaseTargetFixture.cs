@@ -6,7 +6,6 @@ using NUnit.Framework;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Core.Datastore.Migration.Framework;
 using NzbDrone.Core.Instrumentation;
-using NzbDrone.Core.MediaFiles;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
 
@@ -94,17 +93,6 @@ namespace NzbDrone.Core.Test.InstrumentationTests
             VerifyLog(StoredModel, LogLevel.Error);
 
             ExceptionVerification.ExpectedErrors(1);
-        }
-
-        [Test]
-        public void null_string_as_arg_should_not_fail()
-        {
-            var epFile = new MovieFile();
-            _logger.Debug("File {0} no longer exists on disk. removing from database.", epFile.RelativePath);
-
-            Thread.Sleep(1000);
-
-            epFile.RelativePath.Should().BeNull();
         }
 
         [TearDown]

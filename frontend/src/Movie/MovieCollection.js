@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MonitorToggleButton from 'Components/MonitorToggleButton';
-import EditImportListModalConnector from 'Settings/ImportLists/ImportLists/EditImportListModalConnector';
 import styles from './MovieCollection.css';
 
 class MovieCollection extends Component {
@@ -39,7 +38,6 @@ class MovieCollection extends Component {
     } = this.props;
 
     const monitored = collectionList !== undefined && collectionList.enabled && collectionList.enableAuto;
-    const importListId = collectionList ? collectionList.id : 0;
 
     return (
       <div>
@@ -51,12 +49,6 @@ class MovieCollection extends Component {
           onPress={this.onAddImportListPress}
         />
         {name}
-        <EditImportListModalConnector
-          id={importListId}
-          isOpen={this.state.isEditImportListModalOpen}
-          onModalClose={this.onEditImportListModalClose}
-          onDeleteImportListPress={this.onDeleteImportListPress}
-        />
       </div>
     );
   }

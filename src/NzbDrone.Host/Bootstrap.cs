@@ -10,7 +10,7 @@ using NzbDrone.Common.Processes;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Instrumentation;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public static class Bootstrap
     {
@@ -21,7 +21,7 @@ namespace Radarr.Host
         {
             try
             {
-                Logger.Info("Starting Radarr - {0} - Version {1}", Assembly.GetCallingAssembly().Location, Assembly.GetExecutingAssembly().GetName().Version);
+                Logger.Info("Starting Prowlarr - {0} - Version {1}", Assembly.GetCallingAssembly().Location, Assembly.GetExecutingAssembly().GetName().Version);
 
                 if (!PlatformValidation.IsValidate(userAlert))
                 {

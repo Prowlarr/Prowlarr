@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.Movie.ImdbId));
+            pageableRequests.Add(GetRequest(searchCriteria.ImdbId));
             return pageableRequests;
         }
 

@@ -28,7 +28,7 @@ If applicable, add screenshots to help explain your problem.
  - OS: [e.g. Windows]
  - Mono Version: [e.g. Mono 5.8] (Only needed under Linux and Mac, found under System -> Status)
  - Browser and Version [e.g. chrome, safari] (Only needed for UI issues)
- - Radarr Version [e.g. 3.0.0.2956]
+ - Prowlarr Version [e.g. 3.0.0.2956]
 
 **Debug Logs**
 Turn on debug logs under Settings -> General and wait for the bug to occur again. **Upload the full log file here (or another site and link it). Issues will be closed, if they do not include this!**

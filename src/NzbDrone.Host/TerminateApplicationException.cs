@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Radarr.Host
+namespace Prowlarr.Host
 {
     public class TerminateApplicationException : ApplicationException
     {

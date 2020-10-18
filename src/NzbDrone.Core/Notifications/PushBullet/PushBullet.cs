@@ -19,16 +19,6 @@ namespace NzbDrone.Core.Notifications.PushBullet
         public override string Name => "Pushbullet";
         public override string Link => "https://www.pushbullet.com/";
 
-        public override void OnGrab(GrabMessage grabMessage)
-        {
-            _proxy.SendNotification(MOVIE_GRABBED_TITLE_BRANDED, grabMessage.Message, Settings);
-        }
-
-        public override void OnDownload(DownloadMessage message)
-        {
-            _proxy.SendNotification(MOVIE_DOWNLOADED_TITLE_BRANDED, message.Message, Settings);
-        }
-
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message, Settings);

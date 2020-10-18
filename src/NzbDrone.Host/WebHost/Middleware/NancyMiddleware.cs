@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Nancy.Bootstrapper;
 using Nancy.Owin;
 
-namespace Radarr.Host.Middleware
+namespace Prowlarr.Host.Middleware
 {
     public class NancyMiddleware : IAspNetCoreMiddleware
     {

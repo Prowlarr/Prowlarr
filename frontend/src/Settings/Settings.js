@@ -16,20 +16,20 @@ function Settings() {
       <PageContentBody>
         <Link
           className={styles.link}
-          to="/settings/indexers"
+          to="/settings/applications"
         >
-          {translate('Indexers')}
+          Applications
         </Link>
 
         <div className={styles.summary}>
-          {translate('IndexersSettingsSummary')}
+          Applications and settings to configure how prowlarr interacts with your PVR programs
         </div>
 
         <Link
           className={styles.link}
           to="/settings/connect"
         >
-          {translate('Connect')}
+          Notifications
         </Link>
 
         <div className={styles.summary}>

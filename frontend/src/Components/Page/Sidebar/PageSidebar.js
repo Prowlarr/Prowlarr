@@ -49,8 +49,8 @@ const links = [
     to: '/settings',
     children: [
       {
-        title: translate('Indexers'),
-        to: '/settings/indexers'
+        title: translate('Apps'),
+        to: '/settings/applications'
       },
       {
         title: translate('Connect'),

@@ -4,7 +4,8 @@
   align-items: center;
   flex: 0 0 auto;
   height: $headerHeight;
-  background-color: #464b51;
+  background-color: $prowlarrOrange;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   color: $white;
 }
 
@@ -16,8 +17,9 @@
 }
 
 .appTitle {
+  display: none;
+  color: #555;
   font-size: 30px;
-  color: #fff
 }
 
 .logoFull,

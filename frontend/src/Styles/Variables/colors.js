@@ -1,4 +1,4 @@
-const prowlarrYellow = '#aaa';
+const prowlarrOrange = '#e66000';
 
 module.exports = {
   textColor: '#515253',
@@ -17,7 +17,7 @@ module.exports = {
   queueColor: '#7a43b6',
   purple: '#7a43b6',
   pink: '#ff69b4',
-  prowlarrYellow,
+  prowlarrOrange,
   helpTextColor: '#909293',
   darkGray: '#888',
   gray: '#adadad',
@@ -26,7 +26,7 @@ module.exports = {
 
   // Theme Colors
 
-  themeBlue: prowlarrYellow,
+  themeBlue: prowlarrOrange,
   themeRed: '#c4273c',
   themeDarkColor: '#595959',
   themeLightColor: '#707070',

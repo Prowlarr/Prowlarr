@@ -65,9 +65,6 @@ class MovieIndexRow extends Component {
   render() {
     const {
       id,
-      tmdbId,
-      imdbId,
-      youTubeTrailerId,
       monitored,
       status,
       title,

@@ -4,7 +4,7 @@ TYPE=$2
 COVERAGE=$3
 WHERE="Category!=ManualTest"
 TEST_PATTERN="*Test.dll"
-FILES=( "Prowlarr.Api.Test.dll" "Prowlarr.Automation.Test.dll" "Prowlarr.Common.Test.dll" "Prowlarr.Core.Test.dll" "Prowlarr.Host.Test.dll" "Prowlarr.Integration.Test.dll" "Prowlarr.Libraries.Test.dll" "Prowlarr.Mono.Test.dll" "Prowlarr.Update.Test.dll" "Prowlarr.Windows.Test.dll" )
+FILES=( "Prowlarr.Api.V1.Test.dll" "Prowlarr.Automation.Test.dll" "Prowlarr.Common.Test.dll" "Prowlarr.Core.Test.dll" "Prowlarr.Host.Test.dll" "Prowlarr.Integration.Test.dll" "Prowlarr.Libraries.Test.dll" "Prowlarr.Mono.Test.dll" "Prowlarr.Update.Test.dll" "Prowlarr.Windows.Test.dll" )
 ASSMEBLIES=""
 TEST_LOG_FILE="TestLog.txt"
 

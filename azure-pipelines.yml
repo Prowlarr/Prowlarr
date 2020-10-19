@@ -638,17 +638,17 @@ stages:
             osName: 'Linux'
             imageName: 'ubuntu-18.04'
             pattern: 'Prowlarr.**.linux-core-x64.tar.gz'
-            failBuild: true
+            failBuild: false
           Mac:
             osName: 'Mac'
             imageName: 'macos-10.14'
             pattern: 'Prowlarr.**.osx-core-x64.tar.gz'
-            failBuild: true
+            failBuild: false
           Windows:
             osName: 'Windows'
             imageName: 'windows-2019'
             pattern: 'Prowlarr.**.windows-core-x64.zip'
-            failBuild: true
+            failBuild: false
 
       pool:
         vmImage: $(imageName)

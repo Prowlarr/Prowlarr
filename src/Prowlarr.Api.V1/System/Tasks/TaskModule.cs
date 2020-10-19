@@ -9,7 +9,7 @@ using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.System.Tasks
 {
-    public class TaskModule : RadarrRestModuleWithSignalR<TaskResource, ScheduledTask>, IHandle<CommandExecutedEvent>
+    public class TaskModule : ProwlarrRestModuleWithSignalR<TaskResource, ScheduledTask>, IHandle<CommandExecutedEvent>
     {
         private readonly ITaskManager _taskManager;
 

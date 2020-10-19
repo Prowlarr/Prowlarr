@@ -4,7 +4,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.Omgwtfnzbs
 {
-    public class Omgwtfnzbs : HttpIndexerBase<OmgwtfnzbsSettings>
+    public class Omgwtfnzbs : HttpApplicationBase<OmgwtfnzbsSettings>
     {
         public override string Name => "omgwtfnzbs";
 

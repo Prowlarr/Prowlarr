@@ -11,7 +11,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
-    public class Newznab : HttpIndexerBase<NewznabSettings>
+    public class Newznab : HttpApplicationBase<NewznabSettings>
     {
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 

@@ -84,10 +84,10 @@ namespace Prowlarr.Host
                             {
                                 if (ex.HResult == 0x2 || ex.HResult == 0x2006D080)
                                 {
-                                    throw new RadarrStartupException(ex, $"The SSL certificate file {sslCertPath} does not exist");
+                                    throw new ProwlarrStartupException(ex, $"The SSL certificate file {sslCertPath} does not exist");
                                 }
 
-                                throw new RadarrStartupException(ex);
+                                throw new ProwlarrStartupException(ex);
                             }
 
                             configureOptions.ServerCertificate = certificate;

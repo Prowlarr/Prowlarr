@@ -15,7 +15,6 @@ using NzbDrone.Core.Languages;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Notifications;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Restrictions;
 using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
 using static Dapper.SqlMapper;
@@ -56,7 +55,6 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<Log>("Logs").RegisterModel();
 
             Mapper.Entity<Tag>("Tags").RegisterModel();
-            Mapper.Entity<Restriction>("Restrictions").RegisterModel();
 
             Mapper.Entity<User>("Users").RegisterModel();
             Mapper.Entity<CommandModel>("Commands").RegisterModel()

@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Notifications.DiscordNotifier
             try
             {
                 var variables = new StringDictionary();
-                variables.Add("Radarr_EventType", "Test");
+                variables.Add("Prowlarr_EventType", "Test");
 
                 SendNotification(variables, settings);
                 return null;

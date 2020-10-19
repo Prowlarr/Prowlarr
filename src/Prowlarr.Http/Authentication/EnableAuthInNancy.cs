@@ -71,7 +71,7 @@ namespace Prowlarr.Http.Authentication
 
         private void RegisterFormsAuth(IPipelines pipelines)
         {
-            FormsAuthentication.FormsAuthenticationCookieName = "RadarrAuth";
+            FormsAuthentication.FormsAuthenticationCookieName = "ProwlarrAuth";
 
             var cryptographyConfiguration = new CryptographyConfiguration(
                     new AesEncryptionProvider(new PassphraseKeyGenerator(_configService.RijndaelPassphrase, Encoding.ASCII.GetBytes(_configService.RijndaelSalt))),

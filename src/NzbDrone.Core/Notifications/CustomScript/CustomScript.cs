@@ -34,11 +34,11 @@ namespace NzbDrone.Core.Notifications.CustomScript
         {
             var environmentVariables = new StringDictionary();
 
-            environmentVariables.Add("Radarr_EventType", "HealthIssue");
-            environmentVariables.Add("Radarr_Health_Issue_Level", nameof(healthCheck.Type));
-            environmentVariables.Add("Radarr_Health_Issue_Message", healthCheck.Message);
-            environmentVariables.Add("Radarr_Health_Issue_Type", healthCheck.Source.Name);
-            environmentVariables.Add("Radarr_Health_Issue_Wiki", healthCheck.WikiUrl.ToString() ?? string.Empty);
+            environmentVariables.Add("Prowlarr_EventType", "HealthIssue");
+            environmentVariables.Add("Prowlarr_Health_Issue_Level", nameof(healthCheck.Type));
+            environmentVariables.Add("Prowlarr_Health_Issue_Message", healthCheck.Message);
+            environmentVariables.Add("Prowlarr_Health_Issue_Type", healthCheck.Source.Name);
+            environmentVariables.Add("Prowlarr_Health_Issue_Wiki", healthCheck.WikiUrl.ToString() ?? string.Empty);
 
             ExecuteScript(environmentVariables);
         }
@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
                 try
                 {
                     var environmentVariables = new StringDictionary();
-                    environmentVariables.Add("Radarr_EventType", "Test");
+                    environmentVariables.Add("Prowlarr_EventType", "Test");
 
                     var processOutput = ExecuteScript(environmentVariables);
 

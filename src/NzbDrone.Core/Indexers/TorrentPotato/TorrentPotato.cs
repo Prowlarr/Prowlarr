@@ -5,7 +5,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.TorrentPotato
 {
-    public class TorrentPotato : HttpIndexerBase<TorrentPotatoSettings>
+    public class TorrentPotato : HttpApplicationBase<TorrentPotatoSettings>
     {
         public override string Name => "TorrentPotato";
 

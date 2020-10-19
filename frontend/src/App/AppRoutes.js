@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import BlacklistConnector from 'Activity/Blacklist/BlacklistConnector';
-import HistoryConnector from 'Activity/History/HistoryConnector';
-import QueueConnector from 'Activity/Queue/QueueConnector';
-import AddNewMovieConnector from 'AddMovie/AddNewMovie/AddNewMovieConnector';
-import ImportMovies from 'AddMovie/ImportMovie/ImportMovies';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
-import MovieIndexConnector from 'Movie/Index/MovieIndexConnector';
+import HistoryConnector from 'History/HistoryConnector';
+import MovieIndexConnector from 'Indexer/Index/MovieIndexConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
@@ -58,13 +54,17 @@ function AppRoutes(props) {
       }
 
       <Route
-        path="/add/new"
-        component={AddNewMovieConnector}
+        path="/indexers/stats"
+        component={MovieIndexConnector}
       />
 
+      {/*
+        Search
+      */}
+
       <Route
-        path="/add/import"
-        component={ImportMovies}
+        path="/search"
+        component={MovieIndexConnector}
       />
 
       {/*
@@ -72,18 +72,8 @@ function AppRoutes(props) {
       */}
 
       <Route
-        path="/activity/history"
+        path="/history"
         component={HistoryConnector}
-      />
-
-      <Route
-        path="/activity/queue"
-        component={QueueConnector}
-      />
-
-      <Route
-        path="/activity/blacklist"
-        component={BlacklistConnector}
       />
 
       {/*

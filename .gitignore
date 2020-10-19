@@ -139,9 +139,9 @@ artifacts/
 **/Properties/launchSettings.json
 
 # Packages
-Radarr_*/
-Radarr_*.zip
-Radarr_*.gz
+Prowlarr_*/
+Prowlarr_*.zip
+Prowlarr_*.gz
 gecko.zip
 geckodriver.exe
 

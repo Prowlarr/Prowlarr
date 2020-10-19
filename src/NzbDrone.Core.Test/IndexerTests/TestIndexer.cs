@@ -6,7 +6,7 @@ using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Test.IndexerTests
 {
-    public class TestIndexer : HttpIndexerBase<TestIndexerSettings>
+    public class TestIndexer : HttpApplicationBase<TestIndexerSettings>
     {
         public override string Name => "Test Indexer";
 

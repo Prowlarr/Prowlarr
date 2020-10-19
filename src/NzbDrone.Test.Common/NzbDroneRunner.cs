@@ -124,8 +124,8 @@ namespace NzbDrone.Test.Common
                     _processProvider.Kill(_nzbDroneProcess.Id);
                 }
 
-                _processProvider.KillAll(ProcessProvider.RADARR_CONSOLE_PROCESS_NAME);
-                _processProvider.KillAll(ProcessProvider.RADARR_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME);
+                _processProvider.KillAll(ProcessProvider.PROWLARR_PROCESS_NAME);
             }
             catch (InvalidOperationException)
             {
@@ -135,11 +135,11 @@ namespace NzbDrone.Test.Common
             TestBase.DeleteTempFolder(AppData);
         }
 
-        private void Start(string outputRadarrConsoleExe)
+        private void Start(string outputProwlarrConsoleExe)
         {
-            TestContext.Progress.WriteLine("Starting instance from {0} on port {1}", outputRadarrConsoleExe, Port);
+            TestContext.Progress.WriteLine("Starting instance from {0} on port {1}", outputProwlarrConsoleExe, Port);
             var args = "-nobrowser -nosingleinstancecheck -data=\"" + AppData + "\"";
-            _nzbDroneProcess = _processProvider.Start(outputRadarrConsoleExe, args, null, OnOutputDataReceived, OnOutputDataReceived);
+            _nzbDroneProcess = _processProvider.Start(outputProwlarrConsoleExe, args, null, OnOutputDataReceived, OnOutputDataReceived);
         }
 
         private void OnOutputDataReceived(string data)

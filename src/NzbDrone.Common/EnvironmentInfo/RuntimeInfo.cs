@@ -33,7 +33,7 @@ namespace NzbDrone.Common.EnvironmentInfo
             if (entry != null)
             {
                 ExecutingApplication = entry.Location;
-                IsWindowsTray = OsInfo.IsWindows && entry.ManifestModule.Name == $"{ProcessProvider.RADARR_PROCESS_NAME}.exe";
+                IsWindowsTray = OsInfo.IsWindows && entry.ManifestModule.Name == $"{ProcessProvider.PROWLARR_PROCESS_NAME}.exe";
             }
         }
 
@@ -99,7 +99,7 @@ namespace NzbDrone.Common.EnvironmentInfo
             {
                 if (OsInfo.IsWindows)
                 {
-                    return IsUserInteractive && Process.GetCurrentProcess().ProcessName.Equals(ProcessProvider.RADARR_PROCESS_NAME, StringComparison.InvariantCultureIgnoreCase);
+                    return IsUserInteractive && Process.GetCurrentProcess().ProcessName.Equals(ProcessProvider.PROWLARR_PROCESS_NAME, StringComparison.InvariantCultureIgnoreCase);
                 }
 
                 return false;

@@ -10,7 +10,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
 {
-    public class Rarbg : HttpIndexerBase<RarbgSettings>
+    public class Rarbg : HttpApplicationBase<RarbgSettings>
     {
         private readonly IRarbgTokenProvider _tokenProvider;
 

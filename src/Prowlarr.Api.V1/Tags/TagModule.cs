@@ -7,7 +7,7 @@ using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.Tags
 {
-    public class TagModule : RadarrRestModuleWithSignalR<TagResource, Tag>, IHandle<TagsUpdatedEvent>
+    public class TagModule : ProwlarrRestModuleWithSignalR<TagResource, Tag>, IHandle<TagsUpdatedEvent>
     {
         private readonly ITagService _tagService;
 

@@ -2,7 +2,7 @@ using NzbDrone.Core.Configuration;
 
 namespace Prowlarr.Api.V1.Config
 {
-    public class DownloadClientConfigModule : RadarrConfigModule<DownloadClientConfigResource>
+    public class DownloadClientConfigModule : ProwlarrConfigModule<DownloadClientConfigResource>
     {
         public DownloadClientConfigModule(IConfigService configService)
             : base(configService)

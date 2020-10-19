@@ -7,13 +7,13 @@ variables:
   outputFolder: './_output'
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
-  majorVersion: '3.0.0'
-  minorVersion: $[counter('minorVersion', 2000)]
-  radarrVersion: '$(majorVersion).$(minorVersion)'
-  buildName: '$(Build.SourceBranchName).$(radarrVersion)'
+  majorVersion: '0.1.0'
+  minorVersion: $[counter('minorVersion', 1)]
+  prowlarrVersion: '$(majorVersion).$(minorVersion)'
+  buildName: '$(Build.SourceBranchName).$(prowlarrVersion)'
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
-  dotnetVersion: '3.1.401'
+  dotnetVersion: '3.1.403'
   yarnCacheFolder: $(Pipeline.Workspace)/.yarn
 
 trigger:
@@ -35,7 +35,7 @@ stages:
         vmImage: 'ubuntu-18.04'
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
-      - bash: echo "##vso[build.updatebuildnumber]$RADARRVERSION"
+      - bash: echo "##vso[build.updatebuildnumber]$PROWLARRVERSION"
         displayName: Set Build Name
       - bash: |
           if [[ $BUILD_REASON == "PullRequest" ]]; then
@@ -297,7 +297,7 @@ stages:
       - bash: |
           echo "Uploading source maps to sentry"
           curl -sL https://sentry.io/get-cli/ | bash
-          RELEASENAME="${RADARRVERSION}-${BUILD_SOURCEBRANCHNAME}"
+          RELEASENAME="${PROWLARRVERSION}-${BUILD_SOURCEBRANCHNAME}"
           sentry-cli releases new --finalize -p prowlarr -p prowlarr-ui -p prowlarr-update "${RELEASENAME}"
           sentry-cli releases -p prowlarr-ui files "${RELEASENAME}" upload-sourcemaps _output/UI/ --rewrite
           sentry-cli releases set-commits --auto "${RELEASENAME}"
@@ -376,13 +376,6 @@ stages:
           buildType: 'current'
           artifactName: '$(testName)Tests'
           targetPath: $(testsFolder)
-      - bash: |
-          wget https://mediaarea.net/repo/deb/repo-mediaarea_1.0-11_all.deb
-          sudo dpkg -i repo-mediaarea_1.0-11_all.deb
-          sudo apt-get update
-          sudo apt-get install -y --allow-unauthenticated libmediainfo-dev libmediainfo0v5 mediainfo
-        displayName: Install mediainfo
-        condition: and(succeeded(), eq(variables['osName'], 'Linux'))
       - powershell: Set-Service SCardSvr -StartupType Manual
         displayName: Enable Windows Test Service
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
@@ -764,27 +757,6 @@ stages:
           FORCE_COLOR: 0
           YARN_CACHE_FOLDER: $(yarnCacheFolder)
 
-    - job: Analyze_Frontend
-      displayName: Frontend
-      condition: eq(variables['System.PullRequest.IsFork'], 'False')
-      pool:
-        vmImage: windows-2019
-      steps:
-      - checkout: self # Need history for Sonar analysis
-      - task: SonarCloudPrepare@1
-        env:
-          SONAR_SCANNER_OPTS: ''
-        inputs:
-          SonarCloud: 'SonarCloud'
-          organization: 'prowlarr'
-          scannerMode: 'CLI'
-          configMode: 'manual'
-          cliProjectKey: 'Radarr_Radarr.UI'
-          cliProjectName: 'RadarrUI'
-          cliProjectVersion: '$(radarrVersion)'
-          cliSources: './frontend'
-      - task: SonarCloudAnalyze@1
-
     - job: Analyze_Backend
       displayName: Backend
       dependsOn: Prepare
@@ -805,27 +777,10 @@ stages:
         submodules: true
       - powershell: Set-Service SCardSvr -StartupType Manual
         displayName: Enable Windows Test Service
-      - task: SonarCloudPrepare@1
-        condition: eq(variables['System.PullRequest.IsFork'], 'False')
-        inputs:
-          SonarCloud: 'SonarCloud'
-          organization: 'prowlarr'
-          scannerMode: 'MSBuild'
-          projectKey: 'Radarr_Radarr'
-          projectName: 'Prowlarr'
-          projectVersion: '$(radarrVersion)'
-          extraProperties: |
-            sonar.exclusions=**/obj/**,**/*.dll,**/NzbDrone.Core.Test/Files/**/*,./frontend/**,**/ExternalModules/**,./src/Libraries/**
-            sonar.coverage.exclusions=**/Prowlarr.Api.V1/**/*,**/NzbDrone.Api/**/*,**/MonoTorrent/**/*,**/Marr.Data/**/*
-            sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.opencover.xml
-            sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResult.xml
       - bash: |
           ./build.sh --backend -f netcoreapp3.1 -r win-x64
           TEST_DIR=_tests/netcoreapp3.1/win-x64/publish/ ./test.sh Windows Unit Coverage
         displayName: Coverage Unit Tests
-      - task: SonarCloudAnalyze@1
-        condition: eq(variables['System.PullRequest.IsFork'], 'False')
-        displayName: Publish SonarCloud Results
       - task: reportgenerator@4
         displayName: Generate Coverage Report
         inputs:

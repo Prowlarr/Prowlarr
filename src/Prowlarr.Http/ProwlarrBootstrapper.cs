@@ -13,12 +13,12 @@ using TinyIoC;
 
 namespace Prowlarr.Http
 {
-    public class RadarrBootstrapper : TinyIoCNancyBootstrapper
+    public class ProwlarrBootstrapper : TinyIoCNancyBootstrapper
     {
         private readonly TinyIoCContainer _tinyIoCContainer;
-        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(RadarrBootstrapper));
+        private static readonly Logger Logger = NzbDroneLogger.GetLogger(typeof(ProwlarrBootstrapper));
 
-        public RadarrBootstrapper(TinyIoCContainer tinyIoCContainer)
+        public ProwlarrBootstrapper(TinyIoCContainer tinyIoCContainer)
         {
             _tinyIoCContainer = tinyIoCContainer;
         }

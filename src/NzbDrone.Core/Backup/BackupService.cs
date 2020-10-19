@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Backup
             _configService = configService;
             _logger = logger;
 
-            _backupTempFolder = Path.Combine(_appFolderInfo.TempFolder, "radarr_backup");
+            _backupTempFolder = Path.Combine(_appFolderInfo.TempFolder, "prowlarr_backup");
         }
 
         public void Backup(BackupType backupType)
@@ -69,7 +69,7 @@ namespace NzbDrone.Core.Backup
             _diskProvider.EnsureFolder(_backupTempFolder);
             _diskProvider.EnsureFolder(GetBackupFolder(backupType));
 
-            var backupFilename = string.Format("radarr_backup_v{0}_{1:yyyy.MM.dd_HH.mm.ss}.zip", BuildInfo.Version, DateTime.Now);
+            var backupFilename = string.Format("prowlarr_backup_v{0}_{1:yyyy.MM.dd_HH.mm.ss}.zip", BuildInfo.Version, DateTime.Now);
             var backupPath = Path.Combine(GetBackupFolder(backupType), backupFilename);
 
             Cleanup();
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Backup
             if (backupFileName.EndsWith(".zip"))
             {
                 var restoredFile = false;
-                var temporaryPath = Path.Combine(_appFolderInfo.TempFolder, "radarr_backup_restore");
+                var temporaryPath = Path.Combine(_appFolderInfo.TempFolder, "prowlarr_backup_restore");
 
                 _archiveService.Extract(backupFileName, temporaryPath);
 

@@ -11,11 +11,11 @@ using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace Prowlarr.Http.ErrorManagement
 {
-    public class RadarrErrorPipeline
+    public class ProwlarrErrorPipeline
     {
         private readonly Logger _logger;
 
-        public RadarrErrorPipeline(Logger logger)
+        public ProwlarrErrorPipeline(Logger logger)
         {
             _logger = logger;
         }

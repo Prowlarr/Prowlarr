@@ -3,7 +3,6 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import QueueStatusConnector from 'Activity/Queue/Status/QueueStatusConnector';
 import OverlayScroller from 'Components/Scroller/OverlayScroller';
 import Scroller from 'Components/Scroller/Scroller';
 import { icons } from 'Helpers/Props';
@@ -26,35 +25,22 @@ const links = [
     alias: '/movies',
     children: [
       {
-        title: translate('AddNew'),
-        to: '/add/new'
-      },
-      {
-        title: translate('Import'),
-        to: '/add/import'
+        title: translate('Stats'),
+        to: '/indexer/stats'
       }
     ]
   },
 
   {
-    iconName: icons.ACTIVITY,
+    iconName: icons.SEARCH,
     title: 'Search',
-    to: '/activity/queue',
-    children: [
-      {
-        title: translate('Queue'),
-        to: '/activity/queue',
-        statusComponent: QueueStatusConnector
-      },
-      {
-        title: translate('History'),
-        to: '/activity/history'
-      },
-      {
-        title: translate('Blacklist'),
-        to: '/activity/blacklist'
-      }
-    ]
+    to: '/search'
+  },
+
+  {
+    iconName: icons.ACTIVITY,
+    title: 'History',
+    to: '/history'
   },
 
   {

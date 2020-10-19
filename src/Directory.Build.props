@@ -8,35 +8,35 @@
     <RuntimeIdentifiers>win-x64;osx-x64;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
     <ExcludedRuntimeFrameworkPairs>win-x64:net462;osx-x64:net462;linux-arm:net462;linux-arm64:net462;linux-musl-x64:net462;linux-musl-arm64:net462</ExcludedRuntimeFrameworkPairs>
 
-    <RadarrRootDir>$(MSBuildThisFileDirectory)..\</RadarrRootDir>
+    <ProwlarrRootDir>$(MSBuildThisFileDirectory)..\</ProwlarrRootDir>
 
     <!-- Specifies the type of output -->
-    <RadarrOutputType>Library</RadarrOutputType>
-    <RadarrOutputType Condition="$(MSBuildProjectName.Contains('.Test'))">Test</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceInstall'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceUninstall'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr.Console'">Exe</RadarrOutputType>
-    <RadarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr.Update'">Update</RadarrOutputType>
+    <ProwlarrOutputType>Library</ProwlarrOutputType>
+    <ProwlarrOutputType Condition="$(MSBuildProjectName.Contains('.Test'))">Test</ProwlarrOutputType>
+    <ProwlarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceInstall'">Exe</ProwlarrOutputType>
+    <ProwlarrOutputType Condition="'$(MSBuildProjectName)'=='ServiceUninstall'">Exe</ProwlarrOutputType>
+    <ProwlarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr'">Exe</ProwlarrOutputType>
+    <ProwlarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr.Console'">Exe</ProwlarrOutputType>
+    <ProwlarrOutputType Condition="'$(MSBuildProjectName)'=='Prowlarr.Update'">Update</ProwlarrOutputType>
 
     <!-- Specifies whether it's one of our own libraries -->
-    <RadarrProject>false</RadarrProject>
-    <RadarrProject Condition="$(MSBuildProjectName.StartsWith('Prowlarr'))">true</RadarrProject>
-    <RadarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</RadarrProject>
-    <RadarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</RadarrProject>
+    <ProwlarrProject>false</ProwlarrProject>
+    <ProwlarrProject Condition="$(MSBuildProjectName.StartsWith('Prowlarr'))">true</ProwlarrProject>
+    <ProwlarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</ProwlarrProject>
+    <ProwlarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</ProwlarrProject>
   </PropertyGroup>
 
   <PropertyGroup>
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <!-- Centralize intermediate and default outputs -->
-    <BaseIntermediateOutputPath>$(RadarrRootDir)_temp\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(RadarrRootDir)_temp\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
-    <OutputPath>$(RadarrRootDir)_temp\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <BaseIntermediateOutputPath>$(ProwlarrRootDir)_temp\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(ProwlarrRootDir)_temp\obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>$(ProwlarrRootDir)_temp\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
 
     <!-- Output to _output and _tests respectively -->
-    <OutputPath Condition="'$(RadarrProject)'=='true'">$(RadarrRootDir)_output\</OutputPath>
-    <OutputPath Condition="'$(RadarrOutputType)'=='Test'">$(RadarrRootDir)_tests\</OutputPath>
-    <OutputPath Condition="'$(RadarrOutputType)'=='Update'">$(RadarrRootDir)_output\Prowlarr.Update\</OutputPath>
+    <OutputPath Condition="'$(ProwlarrProject)'=='true'">$(ProwlarrRootDir)_output\</OutputPath>
+    <OutputPath Condition="'$(ProwlarrOutputType)'=='Test'">$(ProwlarrRootDir)_tests\</OutputPath>
+    <OutputPath Condition="'$(ProwlarrOutputType)'=='Update'">$(ProwlarrRootDir)_output\Prowlarr.Update\</OutputPath>
 
     <!-- Paths relative to project file for better readability -->
     <BaseIntermediateOutputPath>$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)'))</BaseIntermediateOutputPath>
@@ -47,14 +47,14 @@
   </PropertyGroup>
   
   <!-- Test projects need bindingRedirects -->
-  <PropertyGroup Condition="'$(RadarrOutputType)'=='Test'">
+  <PropertyGroup Condition="'$(ProwlarrOutputType)'=='Test'">
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <!-- Set the Product and Version info for our own projects -->
-  <PropertyGroup Condition="'$(RadarrProject)'=='true'">
+  <PropertyGroup Condition="'$(ProwlarrProject)'=='true'">
     <Product>Prowlarr</Product>
     <Company>prowlarr.video</Company>
     <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) prowlarr.video (GNU General Public v3)</Copyright>
@@ -71,7 +71,7 @@
   </PropertyGroup>
 
   <!-- Set the AssemblyConfiguration attribute for projects -->
-  <ItemGroup Condition="'$(RadarrProject)'=='true'">
+  <ItemGroup Condition="'$(ProwlarrProject)'=='true'">
     <AssemblyAttribute Include="System.Reflection.AssemblyConfigurationAttribute">
       <_Parameter1>$(AssemblyConfiguration)</_Parameter1>
     </AssemblyAttribute>
@@ -79,7 +79,7 @@
 
   <PropertyGroup>
     <!-- For now keep the NzbDrone namespace -->
-    <RootNamespace Condition="'$(RadarrProject)'=='true'">$(MSBuildProjectName.Replace('Prowlarr','NzbDrone'))</RootNamespace>
+    <RootNamespace Condition="'$(ProwlarrProject)'=='true'">$(MSBuildProjectName.Replace('Prowlarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
 
   <!-- Allow building net framework using mono -->
@@ -91,7 +91,7 @@
   </ItemGroup>
 
   <!-- Set up stylecop -->
-  <ItemGroup Condition="'$(RadarrProject)'=='true' and '$(EnableAnalyzers)'!='false'">
+  <ItemGroup Condition="'$(ProwlarrProject)'=='true' and '$(EnableAnalyzers)'!='false'">
     <!-- StyleCop analysis -->
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>

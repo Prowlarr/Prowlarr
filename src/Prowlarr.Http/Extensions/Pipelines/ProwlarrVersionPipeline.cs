@@ -5,7 +5,7 @@ using NzbDrone.Common.EnvironmentInfo;
 
 namespace Prowlarr.Http.Extensions.Pipelines
 {
-    public class RadarrVersionPipeline : IRegisterNancyPipeline
+    public class ProwlarrVersionPipeline : IRegisterNancyPipeline
     {
         public int Order => 0;
 

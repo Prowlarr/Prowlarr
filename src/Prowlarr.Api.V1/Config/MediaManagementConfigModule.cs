@@ -6,7 +6,7 @@ using NzbDrone.Core.Validation.Paths;
 
 namespace Prowlarr.Api.V1.Config
 {
-    public class MediaManagementConfigModule : RadarrConfigModule<MediaManagementConfigResource>
+    public class MediaManagementConfigModule : ProwlarrConfigModule<MediaManagementConfigResource>
     {
         public MediaManagementConfigModule(IConfigService configService, PathExistsValidator pathExistsValidator, FileChmodValidator fileChmodValidator)
             : base(configService)

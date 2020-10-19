@@ -28,7 +28,7 @@ namespace Prowlarr.Host
         {
             AutoRegisterImplementations<MessageHub>();
 
-            Container.Register<INancyBootstrapper, RadarrBootstrapper>();
+            Container.Register<INancyBootstrapper, ProwlarrBootstrapper>();
 
             if (OsInfo.IsWindows)
             {

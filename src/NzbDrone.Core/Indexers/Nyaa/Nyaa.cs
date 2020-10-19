@@ -4,7 +4,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.Nyaa
 {
-    public class Nyaa : HttpIndexerBase<NyaaSettings>
+    public class Nyaa : HttpApplicationBase<NyaaSettings>
     {
         public override string Name => "Nyaa";
 

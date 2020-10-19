@@ -92,8 +92,8 @@ namespace NzbDrone.Update.UpdateEngine
 
             var appType = _detectApplicationType.GetAppType();
 
-            _processProvider.FindProcessByName(ProcessProvider.RADARR_CONSOLE_PROCESS_NAME);
-            _processProvider.FindProcessByName(ProcessProvider.RADARR_PROCESS_NAME);
+            _processProvider.FindProcessByName(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME);
+            _processProvider.FindProcessByName(ProcessProvider.PROWLARR_PROCESS_NAME);
 
             if (OsInfo.IsWindows)
             {
@@ -107,7 +107,7 @@ namespace NzbDrone.Update.UpdateEngine
 
                 if (OsInfo.IsWindows)
                 {
-                    if (_processProvider.Exists(ProcessProvider.RADARR_CONSOLE_PROCESS_NAME) || _processProvider.Exists(ProcessProvider.RADARR_PROCESS_NAME))
+                    if (_processProvider.Exists(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME) || _processProvider.Exists(ProcessProvider.PROWLARR_PROCESS_NAME))
                     {
                         _logger.Error("Prowlarr was restarted prematurely by external process.");
                         return;
@@ -150,14 +150,14 @@ namespace NzbDrone.Update.UpdateEngine
                     {
                         System.Threading.Thread.Sleep(1000);
 
-                        if (_processProvider.Exists(ProcessProvider.RADARR_PROCESS_NAME))
+                        if (_processProvider.Exists(ProcessProvider.PROWLARR_PROCESS_NAME))
                         {
                             _logger.Info("Prowlarr was restarted by external process.");
                             break;
                         }
                     }
 
-                    if (!_processProvider.Exists(ProcessProvider.RADARR_PROCESS_NAME))
+                    if (!_processProvider.Exists(ProcessProvider.PROWLARR_PROCESS_NAME))
                     {
                         _startNzbDrone.Start(appType, installationFolder);
                     }

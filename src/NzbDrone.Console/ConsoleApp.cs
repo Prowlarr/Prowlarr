@@ -40,7 +40,7 @@ namespace NzbDrone.Console
 
                 Bootstrap.Start(startupArgs, new ConsoleAlerts());
             }
-            catch (RadarrStartupException ex)
+            catch (ProwlarrStartupException ex)
             {
                 System.Console.WriteLine("");
                 System.Console.WriteLine("");

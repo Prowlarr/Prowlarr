@@ -4,7 +4,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.TorrentRss
 {
-    public class TorrentRssIndexer : HttpIndexerBase<TorrentRssIndexerSettings>
+    public class TorrentRssIndexer : HttpApplicationBase<TorrentRssIndexerSettings>
     {
         public override string Name => "Torrent RSS Feed";
 

@@ -46,6 +46,12 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("EnableRss").AsBoolean().Nullable()
                 .WithColumn("EnableSearch").AsBoolean().Nullable();
 
+            Create.TableForModel("Applications")
+                .WithColumn("Name").AsString().Unique()
+                .WithColumn("Implementation").AsString()
+                .WithColumn("Settings").AsString().Nullable()
+                .WithColumn("ConfigContract").AsString().Nullable();
+
             Create.TableForModel("Tags")
                 .WithColumn("Label").AsString().Unique();
 

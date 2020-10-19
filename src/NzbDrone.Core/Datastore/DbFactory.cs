@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Datastore
             }
             catch (Exception e)
             {
-                throw new RadarrStartupException(e, "Error creating main database");
+                throw new ProwlarrStartupException(e, "Error creating main database");
             }
         }
 
@@ -159,7 +159,7 @@ namespace NzbDrone.Core.Datastore
             }
             catch (Exception e)
             {
-                throw new RadarrStartupException(e, "Error creating log database");
+                throw new ProwlarrStartupException(e, "Error creating log database");
             }
         }
     }

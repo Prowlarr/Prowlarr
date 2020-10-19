@@ -7,8 +7,6 @@ import { setAppValue, setVersion } from 'Store/Actions/appActions';
 import { removeItem, update, updateItem } from 'Store/Actions/baseActions';
 import { fetchCommands, finishCommand, updateCommand } from 'Store/Actions/commandActions';
 import { fetchMovies } from 'Store/Actions/movieActions';
-import { fetchQueue, fetchQueueDetails } from 'Store/Actions/queueActions';
-import { fetchRootFolders } from 'Store/Actions/rootFolderActions';
 import { fetchHealth } from 'Store/Actions/systemActions';
 import { fetchTagDetails, fetchTags } from 'Store/Actions/tagActions';
 import { repopulatePage } from 'Utilities/pagePopulator';
@@ -25,12 +23,10 @@ function createMapStateToProps() {
   return createSelector(
     (state) => state.app.isReconnecting,
     (state) => state.app.isDisconnected,
-    (state) => state.queue.paged.isPopulated,
-    (isReconnecting, isDisconnected, isQueuePopulated) => {
+    (isReconnecting, isDisconnected) => {
       return {
         isReconnecting,
-        isDisconnected,
-        isQueuePopulated
+        isDisconnected
       };
     }
   );
@@ -46,9 +42,6 @@ const mapDispatchToProps = {
   dispatchUpdateItem: updateItem,
   dispatchRemoveItem: removeItem,
   dispatchFetchHealth: fetchHealth,
-  dispatchFetchQueue: fetchQueue,
-  dispatchFetchQueueDetails: fetchQueueDetails,
-  dispatchFetchRootFolders: fetchRootFolders,
   dispatchFetchMovies: fetchMovies,
   dispatchFetchTags: fetchTags,
   dispatchFetchTagDetails: fetchTagDetails
@@ -146,16 +139,6 @@ class SignalRConnector extends Component {
     console.error(`signalR: Unable to find handler for ${name}`);
   }
 
-  handleCalendar = (body) => {
-    if (body.action === 'updated') {
-      this.props.dispatchUpdateItem({
-        section: 'calendar',
-        updateOnly: true,
-        ...body.resource
-      });
-    }
-  }
-
   handleCommand = (body) => {
     if (body.action === 'sync') {
       this.props.dispatchFetchCommands();
@@ -175,19 +158,6 @@ class SignalRConnector extends Component {
     }
   }
 
-  handleMoviefile = (body) => {
-    const section = 'movieFiles';
-
-    if (body.action === 'updated') {
-      this.props.dispatchUpdateItem({ section, ...body.resource });
-
-      // Repopulate the page to handle recently imported file
-      repopulatePage('movieFileUpdated');
-    } else if (body.action === 'deleted') {
-      this.props.dispatchRemoveItem({ section, id: body.resource.id });
-    }
-  }
-
   handleHealth = () => {
     this.props.dispatchFetchHealth();
   }
@@ -203,20 +173,6 @@ class SignalRConnector extends Component {
     }
   }
 
-  handleQueue = () => {
-    if (this.props.isQueuePopulated) {
-      this.props.dispatchFetchQueue();
-    }
-  }
-
-  handleQueueDetails = () => {
-    this.props.dispatchFetchQueueDetails();
-  }
-
-  handleQueueStatus = (body) => {
-    this.props.dispatchUpdate({ section: 'queue.status', data: body.resource });
-  }
-
   handleVersion = (body) => {
     const version = body.version;
 
@@ -225,10 +181,6 @@ class SignalRConnector extends Component {
 
   handleSystemTask = () => {
     this.props.dispatchFetchCommands();
-  }
-
-  handleRootfolder = () => {
-    this.props.dispatchFetchRootFolders();
   }
 
   handleTag = (body) => {
@@ -312,7 +264,6 @@ class SignalRConnector extends Component {
 SignalRConnector.propTypes = {
   isReconnecting: PropTypes.bool.isRequired,
   isDisconnected: PropTypes.bool.isRequired,
-  isQueuePopulated: PropTypes.bool.isRequired,
   dispatchFetchCommands: PropTypes.func.isRequired,
   dispatchUpdateCommand: PropTypes.func.isRequired,
   dispatchFinishCommand: PropTypes.func.isRequired,
@@ -322,9 +273,6 @@ SignalRConnector.propTypes = {
   dispatchUpdateItem: PropTypes.func.isRequired,
   dispatchRemoveItem: PropTypes.func.isRequired,
   dispatchFetchHealth: PropTypes.func.isRequired,
-  dispatchFetchQueue: PropTypes.func.isRequired,
-  dispatchFetchQueueDetails: PropTypes.func.isRequired,
-  dispatchFetchRootFolders: PropTypes.func.isRequired,
   dispatchFetchMovies: PropTypes.func.isRequired,
   dispatchFetchTags: PropTypes.func.isRequired,
   dispatchFetchTagDetails: PropTypes.func.isRequired

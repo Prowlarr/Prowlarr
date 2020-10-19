@@ -6,18 +6,18 @@ using Prowlarr.Http.REST;
 
 namespace Prowlarr.Http
 {
-    public abstract class RadarrRestModuleWithSignalR<TResource, TModel> : ProwlarrRestModule<TResource>, IHandle<ModelEvent<TModel>>
+    public abstract class ProwlarrRestModuleWithSignalR<TResource, TModel> : ProwlarrRestModule<TResource>, IHandle<ModelEvent<TModel>>
         where TResource : RestResource, new()
         where TModel : ModelBase, new()
     {
         private readonly IBroadcastSignalRMessage _signalRBroadcaster;
 
-        protected RadarrRestModuleWithSignalR(IBroadcastSignalRMessage signalRBroadcaster)
+        protected ProwlarrRestModuleWithSignalR(IBroadcastSignalRMessage signalRBroadcaster)
         {
             _signalRBroadcaster = signalRBroadcaster;
         }
 
-        protected RadarrRestModuleWithSignalR(IBroadcastSignalRMessage signalRBroadcaster, string resource)
+        protected ProwlarrRestModuleWithSignalR(IBroadcastSignalRMessage signalRBroadcaster, string resource)
             : base(resource)
         {
             _signalRBroadcaster = signalRBroadcaster;

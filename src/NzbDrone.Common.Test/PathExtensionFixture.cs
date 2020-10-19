@@ -260,25 +260,25 @@ namespace NzbDrone.Common.Test
         [Test]
         public void Sandbox()
         {
-            GetIAppDirectoryInfo().GetUpdateSandboxFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateSandboxFolder().Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdatePackageFolder()
         {
-            GetIAppDirectoryInfo().GetUpdatePackageFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\Prowlarr\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdatePackageFolder().Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateClientFolder()
         {
-            GetIAppDirectoryInfo().GetUpdateClientFolder().Should().BeEquivalentTo(@"C:\Temp\radarr_update\Prowlarr\Prowlarr.Update\".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientFolder().Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr\Prowlarr.Update\".AsOsAgnostic());
         }
 
         [Test]
         public void GetUpdateClientExePath()
         {
-            GetIAppDirectoryInfo().GetUpdateClientExePath(PlatformType.DotNet).Should().BeEquivalentTo(@"C:\Temp\radarr_update\Prowlarr.Update.exe".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientExePath(PlatformType.DotNet).Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr.Update.exe".AsOsAgnostic());
         }
 
         [Test]

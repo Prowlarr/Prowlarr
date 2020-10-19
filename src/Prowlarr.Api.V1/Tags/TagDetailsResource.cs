@@ -8,11 +8,7 @@ namespace Prowlarr.Api.V1.Tags
     public class TagDetailsResource : RestResource
     {
         public string Label { get; set; }
-        public List<int> DelayProfileIds { get; set; }
         public List<int> NotificationIds { get; set; }
-        public List<int> RestrictionIds { get; set; }
-        public List<int> ImportListIds { get; set; }
-        public List<int> MovieIds { get; set; }
     }
 
     public static class TagDetailsResourceMapper
@@ -28,11 +24,7 @@ namespace Prowlarr.Api.V1.Tags
             {
                 Id = model.Id,
                 Label = model.Label,
-                DelayProfileIds = model.DelayProfileIds,
-                NotificationIds = model.NotificationIds,
-                RestrictionIds = model.RestrictionIds,
-                ImportListIds = model.ImportListIds,
-                MovieIds = model.MovieIds
+                NotificationIds = model.NotificationIds
             };
         }
 

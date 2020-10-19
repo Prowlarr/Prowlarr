@@ -20,7 +20,7 @@ fi
 rm -f "$TEST_LOG_FILE"
 
 # Uncomment to log test output to a file instead of the console
-export RADARR_TESTS_LOG_OUTPUT="File"
+export PROWLARR_TESTS_LOG_OUTPUT="File"
 
 VSTEST_PARAMS="--logger:nunit;LogFilePath=TestResult.xml"
 

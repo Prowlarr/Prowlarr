@@ -4,7 +4,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.HDBits
 {
-    public class HDBits : HttpIndexerBase<HDBitsSettings>
+    public class HDBits : HttpApplicationBase<HDBitsSettings>
     {
         public override string Name => "HDBits";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

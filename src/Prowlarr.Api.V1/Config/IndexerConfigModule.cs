@@ -4,7 +4,7 @@ using Prowlarr.Http.Validation;
 
 namespace Prowlarr.Api.V1.Config
 {
-    public class IndexerConfigModule : RadarrConfigModule<IndexerConfigResource>
+    public class IndexerConfigModule : ProwlarrConfigModule<IndexerConfigResource>
     {
         public IndexerConfigModule(IConfigService configService)
             : base(configService)

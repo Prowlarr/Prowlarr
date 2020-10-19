@@ -14,7 +14,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers
 {
-    public abstract class HttpIndexerBase<TSettings> : IndexerBase<TSettings>
+    public abstract class HttpApplicationBase<TSettings> : IndexerBase<TSettings>
         where TSettings : IIndexerSettings, new()
     {
         protected const int MaxNumResultsPerQuery = 1000;
@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers
         public abstract IIndexerRequestGenerator GetRequestGenerator();
         public abstract IParseIndexerResponse GetParser();
 
-        public HttpIndexerBase(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public HttpApplicationBase(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerStatusService, configService, logger)
         {
             _httpClient = httpClient;

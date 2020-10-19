@@ -7,7 +7,7 @@ using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.Health
 {
-    public class HealthModule : RadarrRestModuleWithSignalR<HealthResource, HealthCheck>,
+    public class HealthModule : ProwlarrRestModuleWithSignalR<HealthResource, HealthCheck>,
                                 IHandle<HealthCheckCompleteEvent>
     {
         private readonly IHealthCheckService _healthCheckService;

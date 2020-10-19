@@ -17,8 +17,6 @@ import NumberInput from './NumberInput';
 import OAuthInputConnector from './OAuthInputConnector';
 import PasswordInput from './PasswordInput';
 import PathInputConnector from './PathInputConnector';
-import QualityProfileSelectInputConnector from './QualityProfileSelectInputConnector';
-import RootFolderSelectInputConnector from './RootFolderSelectInputConnector';
 import TagInputConnector from './TagInputConnector';
 import TagSelectInputConnector from './TagSelectInputConnector';
 import TextArea from './TextArea';
@@ -58,14 +56,8 @@ function getComponent(type) {
     case inputTypes.PATH:
       return PathInputConnector;
 
-    case inputTypes.QUALITY_PROFILE_SELECT:
-      return QualityProfileSelectInputConnector;
-
     case inputTypes.MOVIE_MONITORED_SELECT:
       return MovieMonitoredSelectInput;
-
-    case inputTypes.ROOT_FOLDER_SELECT:
-      return RootFolderSelectInputConnector;
 
     case inputTypes.INDEXER_FLAGS_SELECT:
       return IndexerFlagsSelectInputConnector;

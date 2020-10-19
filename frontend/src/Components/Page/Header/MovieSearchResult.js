@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Label from 'Components/Label';
 import { kinds } from 'Helpers/Props';
-import MoviePoster from 'Movie/MoviePoster';
+import MoviePoster from 'Indexer/MoviePoster';
 import styles from './MovieSearchResult.css';
 
 function MovieSearchResult(props) {

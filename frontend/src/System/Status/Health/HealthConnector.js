@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { testAllDownloadClients, testAllIndexers } from 'Store/Actions/settingsActions';
+import { testAllIndexers } from 'Store/Actions/settingsActions';
 import { fetchHealth } from 'Store/Actions/systemActions';
 import createHealthCheckSelector from 'Store/Selectors/createHealthCheckSelector';
 import Health from './Health';
@@ -11,9 +11,8 @@ function createMapStateToProps() {
   return createSelector(
     createHealthCheckSelector(),
     (state) => state.system.health,
-    (state) => state.settings.downloadClients.isTestingAll,
     (state) => state.settings.indexers.isTestingAll,
-    (items, health, isTestingAllDownloadClients, isTestingAllIndexers) => {
+    (items, health, isTestingAllIndexers) => {
       const {
         isFetching,
         isPopulated
@@ -23,7 +22,6 @@ function createMapStateToProps() {
         isFetching,
         isPopulated,
         items,
-        isTestingAllDownloadClients,
         isTestingAllIndexers
       };
     }
@@ -32,7 +30,6 @@ function createMapStateToProps() {
 
 const mapDispatchToProps = {
   dispatchFetchHealth: fetchHealth,
-  dispatchTestAllDownloadClients: testAllDownloadClients,
   dispatchTestAllIndexers: testAllIndexers
 };
 

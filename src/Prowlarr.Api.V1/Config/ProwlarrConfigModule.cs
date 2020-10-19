@@ -6,17 +6,17 @@ using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1.Config
 {
-    public abstract class RadarrConfigModule<TResource> : ProwlarrRestModule<TResource>
+    public abstract class ProwlarrConfigModule<TResource> : ProwlarrRestModule<TResource>
         where TResource : RestResource, new()
     {
         private readonly IConfigService _configService;
 
-        protected RadarrConfigModule(IConfigService configService)
+        protected ProwlarrConfigModule(IConfigService configService)
             : this(new TResource().ResourceName.Replace("config", ""), configService)
         {
         }
 
-        protected RadarrConfigModule(string resource, IConfigService configService)
+        protected ProwlarrConfigModule(string resource, IConfigService configService)
             : base("config/" + resource.Trim('/'))
         {
             _configService = configService;

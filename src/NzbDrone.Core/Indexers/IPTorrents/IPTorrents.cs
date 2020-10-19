@@ -4,7 +4,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.IPTorrents
 {
-    public class IPTorrents : HttpIndexerBase<IPTorrentsSettings>
+    public class IPTorrents : HttpApplicationBase<IPTorrentsSettings>
     {
         public override string Name => "IP Torrents";
 

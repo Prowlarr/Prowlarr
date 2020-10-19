@@ -14,7 +14,7 @@ using Prowlarr.Http.Validation;
 
 namespace Prowlarr.Api.V1.Commands
 {
-    public class CommandModule : RadarrRestModuleWithSignalR<CommandResource, CommandModel>, IHandle<CommandUpdatedEvent>
+    public class CommandModule : ProwlarrRestModuleWithSignalR<CommandResource, CommandModel>, IHandle<CommandUpdatedEvent>
     {
         private readonly IManageCommandQueue _commandQueueManager;
         private readonly IServiceFactory _serviceFactory;

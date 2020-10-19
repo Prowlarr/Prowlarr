@@ -99,7 +99,7 @@ namespace Prowlarr.Api.V1.System.Backup
                 throw new UnsupportedMediaTypeException($"Invalid extension, must be one of: {ValidExtensions.Join(", ")}");
             }
 
-            var path = Path.Combine(_appFolderInfo.TempFolder, $"radarr_backup_restore{extension}");
+            var path = Path.Combine(_appFolderInfo.TempFolder, $"prowlarr_backup_restore{extension}");
 
             _diskProvider.SaveStream(file.Value, path);
             _backupService.Restore(path);

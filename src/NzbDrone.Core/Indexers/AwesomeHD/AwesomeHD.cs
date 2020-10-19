@@ -4,7 +4,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.AwesomeHD
 {
-    public class AwesomeHD : HttpIndexerBase<AwesomeHDSettings>
+    public class AwesomeHD : HttpApplicationBase<AwesomeHDSettings>
     {
         public override string Name => "AwesomeHD";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

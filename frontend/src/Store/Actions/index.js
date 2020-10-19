@@ -1,54 +1,30 @@
-import * as addMovie from './addMovieActions';
 import * as app from './appActions';
-import * as blacklist from './blacklistActions';
 import * as captcha from './captchaActions';
 import * as commands from './commandActions';
 import * as customFilters from './customFilterActions';
-import * as extraFiles from './extraFileActions';
 import * as history from './historyActions';
-import * as importMovie from './importMovieActions';
-import * as interactiveImportActions from './interactiveImportActions';
 import * as movies from './movieActions';
-import * as movieBlacklist from './movieBlacklistActions';
-import * as movieCredits from './movieCreditsActions';
-import * as movieFiles from './movieFileActions';
-import * as movieHistory from './movieHistoryActions';
 import * as movieIndex from './movieIndexActions';
 import * as oAuth from './oAuthActions';
-import * as organizePreview from './organizePreviewActions';
 import * as paths from './pathActions';
 import * as providerOptions from './providerOptionActions';
-import * as queue from './queueActions';
 import * as releases from './releaseActions';
-import * as rootFolders from './rootFolderActions';
 import * as settings from './settingsActions';
 import * as system from './systemActions';
 import * as tags from './tagActions';
 
 export default [
-  addMovie,
   app,
-  blacklist,
   captcha,
   commands,
   customFilters,
-  movieFiles,
-  extraFiles,
   history,
-  importMovie,
-  interactiveImportActions,
   oAuth,
-  organizePreview,
   paths,
   providerOptions,
-  queue,
   releases,
-  rootFolders,
   movies,
-  movieBlacklist,
-  movieHistory,
   movieIndex,
-  movieCredits,
   settings,
   system,
   tags

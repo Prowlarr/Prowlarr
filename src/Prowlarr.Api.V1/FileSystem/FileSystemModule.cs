@@ -8,7 +8,7 @@ using Prowlarr.Http.Extensions;
 
 namespace Prowlarr.Api.V1.FileSystem
 {
-    public class FileSystemModule : RadarrV3Module
+    public class FileSystemModule : ProwlarrV3Module
     {
         private readonly IFileSystemLookupService _fileSystemLookupService;
         private readonly IDiskProvider _diskProvider;

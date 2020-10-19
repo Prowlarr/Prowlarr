@@ -34,7 +34,7 @@ namespace NzbDrone.Update.UpdateEngine
                 return AppType.Service;
             }
 
-            if (_processProvider.Exists(ProcessProvider.RADARR_CONSOLE_PROCESS_NAME))
+            if (_processProvider.Exists(ProcessProvider.PROWLARR_CONSOLE_PROCESS_NAME))
             {
                 return AppType.Console;
             }

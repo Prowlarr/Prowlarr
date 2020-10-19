@@ -3,9 +3,9 @@ using Nancy.Responses.Negotiation;
 
 namespace Prowlarr.Http
 {
-    public abstract class RadarrModule : NancyModule
+    public abstract class ProwlarrModule : NancyModule
     {
-        protected RadarrModule(string resource)
+        protected ProwlarrModule(string resource)
         : base(resource)
         {
         }

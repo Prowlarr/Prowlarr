@@ -50,7 +50,7 @@ namespace Prowlarr.Host
             }
             catch (InvalidConfigFileException ex)
             {
-                throw new RadarrStartupException(ex);
+                throw new ProwlarrStartupException(ex);
             }
             catch (TerminateApplicationException e)
             {

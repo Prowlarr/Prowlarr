@@ -9,7 +9,6 @@ import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import translate from 'Utilities/String/translate';
 import IndexersConnector from './Indexers/IndexersConnector';
 import IndexerOptionsConnector from './Options/IndexerOptionsConnector';
-import RestrictionsConnector from './Restrictions/RestrictionsConnector';
 
 class IndexerSettings extends Component {
 
@@ -85,8 +84,6 @@ class IndexerSettings extends Component {
             onChildMounted={this.onChildMounted}
             onChildStateChange={this.onChildStateChange}
           />
-
-          <RestrictionsConnector />
         </PageContentBody>
       </PageContent>
     );

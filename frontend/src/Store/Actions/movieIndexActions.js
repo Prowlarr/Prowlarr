@@ -29,28 +29,6 @@ export const defaultState = {
   sortDirection: sortDirections.ASCENDING,
   secondarySortKey: 'sortTitle',
   secondarySortDirection: sortDirections.ASCENDING,
-  view: 'posters',
-
-  posterOptions: {
-    detailedProgressBar: false,
-    size: 'large',
-    showTitle: false,
-    showMonitored: true,
-    showQualityProfile: true,
-    showSearchAction: false
-  },
-
-  overviewOptions: {
-    detailedProgressBar: false,
-    size: 'medium',
-    showMonitored: true,
-    showStudio: true,
-    showQualityProfile: true,
-    showAdded: false,
-    showPath: false,
-    showSizeOnDisk: false,
-    showSearchAction: false
-  },
 
   tableOptions: {
     showSearchAction: false

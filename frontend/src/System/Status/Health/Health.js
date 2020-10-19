@@ -27,24 +27,6 @@ function getInternalLink(source) {
           to="/settings/indexers"
         />
       );
-    case 'DownloadClientCheck':
-    case 'DownloadClientStatusCheck':
-    case 'ImportMechanismCheck':
-      return (
-        <IconButton
-          name={icons.SETTINGS}
-          title={translate('Settings')}
-          to="/settings/downloadclients"
-        />
-      );
-    case 'RootFolderCheck':
-      return (
-        <IconButton
-          name={icons.PLAY}
-          title={translate('MovieEditor')}
-          to="/movieeditor"
-        />
-      );
     case 'UpdateCheck':
       return (
         <IconButton
@@ -67,16 +49,6 @@ function getTestLink(source, props) {
           title={translate('TestAll')}
           isSpinning={props.isTestingAllIndexers}
           onPress={props.dispatchTestAllIndexers}
-        />
-      );
-    case 'DownloadClientCheck':
-    case 'DownloadClientStatusCheck':
-      return (
-        <SpinnerIconButton
-          name={icons.TEST}
-          title={translate('TestAll')}
-          isSpinning={props.isTestingAllDownloadClients}
-          onPress={props.dispatchTestAllDownloadClients}
         />
       );
 
@@ -215,9 +187,7 @@ Health.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   items: PropTypes.array.isRequired,
-  isTestingAllDownloadClients: PropTypes.bool.isRequired,
   isTestingAllIndexers: PropTypes.bool.isRequired,
-  dispatchTestAllDownloadClients: PropTypes.func.isRequired,
   dispatchTestAllIndexers: PropTypes.func.isRequired
 };
 

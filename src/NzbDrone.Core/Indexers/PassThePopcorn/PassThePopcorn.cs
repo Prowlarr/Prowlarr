@@ -5,7 +5,7 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
-    public class PassThePopcorn : HttpIndexerBase<PassThePopcornSettings>
+    public class PassThePopcorn : HttpApplicationBase<PassThePopcornSettings>
     {
         public override string Name => "PassThePopcorn";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

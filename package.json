@@ -1,7 +1,7 @@
 {
   "name": "prowlarr",
   "version": "0.1.0",
-  "description": "Prowlarr is a Indexer/Tracker manager for with seamless integration for your favorite PVR apps",
+  "description": "Prowlarr is an Indexer/Tracker manager with seamless integration for your favorite PVR apps",
   "scripts": {
     "build": "gulp build",
     "start": "gulp watch",

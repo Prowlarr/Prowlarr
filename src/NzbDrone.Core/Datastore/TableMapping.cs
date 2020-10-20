@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using NzbDrone.Common.Reflection;
+using NzbDrone.Core.Applications;
 using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.CustomFilters;
@@ -50,6 +51,9 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
                   .Ignore(x => x.ImplementationName)
                   .Ignore(i => i.SupportsOnHealthIssue);
+
+            Mapper.Entity<ApplicationDefinition>("Applications").RegisterModel()
+                  .Ignore(x => x.ImplementationName);
 
             Mapper.Entity<History.History>("History").RegisterModel();
 

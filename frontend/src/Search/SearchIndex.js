@@ -16,14 +16,14 @@ import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
 import translate from 'Utilities/String/translate';
-import MovieIndexFilterMenu from './Menus/MovieIndexFilterMenu';
-import MovieIndexSortMenu from './Menus/MovieIndexSortMenu';
-import MovieEditorFooter from './MovieEditorFooter.js';
-import MovieIndexTableConnector from './Table/MovieIndexTableConnector';
-import styles from './IndexerIndex.css';
+import SearchIndexFilterMenu from './Menus/SearchIndexFilterMenu';
+import SearchIndexSortMenu from './Menus/SearchIndexSortMenu';
+import SearchFooter from './SearchFooter.js';
+import SearchIndexTableConnector from './Table/SearchIndexTableConnector';
+import styles from './SearchIndex.css';
 
 function getViewComponent() {
-  return MovieIndexTableConnector;
+  return SearchIndexTableConnector;
 }
 
 class SearchIndex extends Component {
@@ -194,14 +194,14 @@ class SearchIndex extends Component {
 
             <PageToolbarSeparator />
 
-            <MovieIndexSortMenu
+            <SearchIndexSortMenu
               sortKey={sortKey}
               sortDirection={sortDirection}
               isDisabled={hasNoIndexer}
               onSortSelect={onSortSelect}
             />
 
-            <MovieIndexFilterMenu
+            <SearchIndexFilterMenu
               selectedFilterKey={selectedFilterKey}
               filters={filters}
               customFilters={customFilters}
@@ -260,7 +260,7 @@ class SearchIndex extends Component {
           }
         </div>
 
-        <MovieEditorFooter
+        <SearchFooter
           isFetching={isFetching}
           onSearchPress={this.onSearchPress}
         />

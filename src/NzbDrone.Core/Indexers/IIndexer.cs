@@ -9,10 +9,7 @@ namespace NzbDrone.Core.Indexers
     {
         bool SupportsRss { get; }
         bool SupportsSearch { get; }
-        bool SupportsMusic { get; }
-        bool SupportsTv { get; }
-        bool SupportsMovies { get; }
-        bool SupportsBooks { get; }
+        IndexerCapabilities Capabilities { get; }
 
         DownloadProtocol Protocol { get; }
         IndexerPrivacy Privacy { get; }

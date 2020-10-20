@@ -45,7 +45,7 @@ function createMapDispatchToProps(dispatch, props) {
   };
 }
 
-class SearchConnector extends Component {
+class SearchIndexConnector extends Component {
 
   onScroll = ({ scrollTop }) => {
     scrollPositions.movieIndex = scrollTop;
@@ -64,13 +64,13 @@ class SearchConnector extends Component {
   }
 }
 
-SearchConnector.propTypes = {
+SearchIndexConnector.propTypes = {
   isSmallScreen: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default withScrollPosition(
-  connect(createMapStateToProps, createMapDispatchToProps)(SearchConnector),
+  connect(createMapStateToProps, createMapDispatchToProps)(SearchIndexConnector),
   'releases'
 );

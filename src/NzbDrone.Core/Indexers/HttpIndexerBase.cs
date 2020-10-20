@@ -23,10 +23,7 @@ namespace NzbDrone.Core.Indexers
 
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
-        public override bool SupportsMusic => true;
-        public override bool SupportsTv => true;
-        public override bool SupportsMovies => true;
-        public override bool SupportsBooks => true;
+        public override IndexerCapabilities Capabilities => new IndexerCapabilities();
 
         public bool SupportsPaging => PageSize > 0;
 

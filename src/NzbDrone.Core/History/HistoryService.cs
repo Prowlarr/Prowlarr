@@ -8,15 +8,15 @@ namespace NzbDrone.Core.History
 {
     public interface IHistoryService
     {
-        PagingSpec<MovieHistory> Paged(PagingSpec<MovieHistory> pagingSpec);
-        MovieHistory MostRecentForMovie(int movieId);
-        MovieHistory MostRecentForDownloadId(string downloadId);
-        MovieHistory Get(int historyId);
-        List<MovieHistory> Find(string downloadId, MovieHistoryEventType eventType);
-        List<MovieHistory> FindByDownloadId(string downloadId);
-        List<MovieHistory> GetByMovieId(int movieId, MovieHistoryEventType? eventType);
-        void UpdateMany(List<MovieHistory> toUpdate);
-        List<MovieHistory> Since(DateTime date, MovieHistoryEventType? eventType);
+        PagingSpec<History> Paged(PagingSpec<History> pagingSpec);
+        History MostRecentForIndexer(int indexerId);
+        History MostRecentForDownloadId(string downloadId);
+        History Get(int historyId);
+        List<History> Find(string downloadId, HistoryEventType eventType);
+        List<History> FindByDownloadId(string downloadId);
+        List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType);
+        void UpdateMany(List<History> toUpdate);
+        List<History> Since(DateTime date, HistoryEventType? eventType);
     }
 
     public class HistoryService : IHistoryService
@@ -30,47 +30,47 @@ namespace NzbDrone.Core.History
             _logger = logger;
         }
 
-        public PagingSpec<MovieHistory> Paged(PagingSpec<MovieHistory> pagingSpec)
+        public PagingSpec<History> Paged(PagingSpec<History> pagingSpec)
         {
             return _historyRepository.GetPaged(pagingSpec);
         }
 
-        public MovieHistory MostRecentForMovie(int movieId)
+        public History MostRecentForIndexer(int indexerId)
         {
-            return _historyRepository.MostRecentForMovie(movieId);
+            return _historyRepository.MostRecentForIndexer(indexerId);
         }
 
-        public MovieHistory MostRecentForDownloadId(string downloadId)
+        public History MostRecentForDownloadId(string downloadId)
         {
             return _historyRepository.MostRecentForDownloadId(downloadId);
         }
 
-        public MovieHistory Get(int historyId)
+        public History Get(int historyId)
         {
             return _historyRepository.Get(historyId);
         }
 
-        public List<MovieHistory> Find(string downloadId, MovieHistoryEventType eventType)
+        public List<History> Find(string downloadId, HistoryEventType eventType)
         {
             return _historyRepository.FindByDownloadId(downloadId).Where(c => c.EventType == eventType).ToList();
         }
 
-        public List<MovieHistory> FindByDownloadId(string downloadId)
+        public List<History> FindByDownloadId(string downloadId)
         {
             return _historyRepository.FindByDownloadId(downloadId);
         }
 
-        public List<MovieHistory> GetByMovieId(int movieId, MovieHistoryEventType? eventType)
+        public List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType)
         {
-            return _historyRepository.GetByMovieId(movieId, eventType);
+            return _historyRepository.GetByIndexerId(indexerId, eventType);
         }
 
-        public void UpdateMany(List<MovieHistory> toUpdate)
+        public void UpdateMany(List<History> toUpdate)
         {
             _historyRepository.UpdateMany(toUpdate);
         }
 
-        public List<MovieHistory> Since(DateTime date, MovieHistoryEventType? eventType)
+        public List<History> Since(DateTime date, HistoryEventType? eventType)
         {
             return _historyRepository.Since(date, eventType);
         }

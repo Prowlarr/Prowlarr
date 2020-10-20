@@ -75,11 +75,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 Protocol = DownloadProtocol.Usenet,
                 Privacy = IndexerPrivacy.Private,
                 SupportsRss = SupportsRss,
-                SupportsSearch = SupportsSearch,
-                SupportsBooks = SupportsBooks,
-                SupportsMovies = SupportsMovies,
-                SupportsMusic = SupportsMusic,
-                SupportsTv = SupportsTv
+                SupportsSearch = SupportsSearch
             };
         }
 

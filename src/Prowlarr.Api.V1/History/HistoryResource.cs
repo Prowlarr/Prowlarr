@@ -10,19 +10,18 @@ namespace Prowlarr.Api.V1.History
     {
         public int MovieId { get; set; }
         public string SourceTitle { get; set; }
-        public List<Language> Languages { get; set; }
         public bool QualityCutoffNotMet { get; set; }
         public DateTime Date { get; set; }
         public string DownloadId { get; set; }
 
-        public MovieHistoryEventType EventType { get; set; }
+        public HistoryEventType EventType { get; set; }
 
         public Dictionary<string, string> Data { get; set; }
     }
 
     public static class HistoryResourceMapper
     {
-        public static HistoryResource ToResource(this MovieHistory model)
+        public static HistoryResource ToResource(this NzbDrone.Core.History.History model)
         {
             if (model == null)
             {
@@ -33,9 +32,8 @@ namespace Prowlarr.Api.V1.History
             {
                 Id = model.Id,
 
-                MovieId = model.MovieId,
+                MovieId = model.IndexerId,
                 SourceTitle = model.SourceTitle,
-                Languages = model.Languages,
 
                 //QualityCutoffNotMet
                 Date = model.Date,

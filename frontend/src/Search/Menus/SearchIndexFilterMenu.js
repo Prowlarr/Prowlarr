@@ -4,7 +4,7 @@ import FilterMenu from 'Components/Menu/FilterMenu';
 import { align } from 'Helpers/Props';
 import MovieIndexFilterModalConnector from 'Indexer/Index/MovieIndexFilterModalConnector';
 
-function MovieIndexFilterMenu(props) {
+function SearchIndexFilterMenu(props) {
   const {
     selectedFilterKey,
     filters,
@@ -26,7 +26,7 @@ function MovieIndexFilterMenu(props) {
   );
 }
 
-MovieIndexFilterMenu.propTypes = {
+SearchIndexFilterMenu.propTypes = {
   selectedFilterKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -34,8 +34,8 @@ MovieIndexFilterMenu.propTypes = {
   onFilterSelect: PropTypes.func.isRequired
 };
 
-MovieIndexFilterMenu.defaultProps = {
+SearchIndexFilterMenu.defaultProps = {
   showCustomFilters: false
 };
 
-export default MovieIndexFilterMenu;
+export default SearchIndexFilterMenu;

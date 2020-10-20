@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
@@ -12,10 +13,15 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
-        public override bool SupportsMusic => false;
-        public override bool SupportsTv => false;
-        public override bool SupportsMovies => true;
-        public override bool SupportsBooks => false;
+
+        public override IndexerCapabilities Capabilities => new IndexerCapabilities
+        {
+            MovieSearchParams = new List<MovieSearchParam>
+            {
+                MovieSearchParam.Q, MovieSearchParam.ImdbId
+            }
+        };
+
         public override int PageSize => 50;
 
         public PassThePopcorn(IHttpClient httpClient,

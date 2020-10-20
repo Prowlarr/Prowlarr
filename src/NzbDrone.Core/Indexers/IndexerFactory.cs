@@ -45,11 +45,7 @@ namespace NzbDrone.Core.Indexers
             definition.Protocol = provider.Protocol;
             definition.Privacy = provider.Privacy;
             definition.SupportsRss = provider.SupportsRss;
-            definition.SupportsSearch = provider.SupportsSearch;
-            definition.SupportsBooks = provider.SupportsBooks;
-            definition.SupportsMovies = provider.SupportsMovies;
-            definition.SupportsMusic = provider.SupportsMusic;
-            definition.SupportsTv = provider.SupportsTv;
+            definition.Capabilities = provider.Capabilities;
         }
 
         public List<IIndexer> RssEnabled(bool filterBlockedIndexers = true)

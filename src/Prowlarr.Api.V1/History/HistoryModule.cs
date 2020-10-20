@@ -23,7 +23,7 @@ namespace Prowlarr.Api.V1.History
             Get("/movie", x => GetMovieHistory());
         }
 
-        protected HistoryResource MapToResource(MovieHistory model, bool includeMovie)
+        protected HistoryResource MapToResource(NzbDrone.Core.History.History model, bool includeMovie)
         {
             var resource = model.ToResource();
 
@@ -32,7 +32,7 @@ namespace Prowlarr.Api.V1.History
 
         private PagingResource<HistoryResource> GetHistory(PagingResource<HistoryResource> pagingResource)
         {
-            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, MovieHistory>("date", SortDirection.Descending);
+            var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>("date", SortDirection.Descending);
             var includeMovie = Request.GetBooleanQueryParameter("includeMovie");
 
             var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
@@ -40,7 +40,7 @@ namespace Prowlarr.Api.V1.History
 
             if (eventTypeFilter != null)
             {
-                var filterValue = (MovieHistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
+                var filterValue = (HistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
                 pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
             }
 
@@ -64,12 +64,12 @@ namespace Prowlarr.Api.V1.History
             }
 
             DateTime date = DateTime.Parse(queryDate.Value);
-            MovieHistoryEventType? eventType = null;
+            HistoryEventType? eventType = null;
             var includeMovie = Request.GetBooleanQueryParameter("includeMovie");
 
             if (queryEventType.HasValue)
             {
-                eventType = (MovieHistoryEventType)Convert.ToInt32(queryEventType.Value);
+                eventType = (HistoryEventType)Convert.ToInt32(queryEventType.Value);
             }
 
             return _historyService.Since(date, eventType).Select(h => MapToResource(h, includeMovie)).ToList();
@@ -86,15 +86,15 @@ namespace Prowlarr.Api.V1.History
             }
 
             int movieId = Convert.ToInt32(queryMovieId.Value);
-            MovieHistoryEventType? eventType = null;
+            HistoryEventType? eventType = null;
             var includeMovie = Request.GetBooleanQueryParameter("includeMovie");
 
             if (queryEventType.HasValue)
             {
-                eventType = (MovieHistoryEventType)Convert.ToInt32(queryEventType.Value);
+                eventType = (HistoryEventType)Convert.ToInt32(queryEventType.Value);
             }
 
-            return _historyService.GetByMovieId(movieId, eventType).Select(h => MapToResource(h, includeMovie)).ToList();
+            return _historyService.GetByIndexerId(movieId, eventType).Select(h => MapToResource(h, includeMovie)).ToList();
         }
     }
 }

@@ -25,11 +25,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
-
-        public abstract bool SupportsMusic { get; }
-        public abstract bool SupportsTv { get; }
-        public abstract bool SupportsMovies { get; }
-        public abstract bool SupportsBooks { get; }
+        public abstract IndexerCapabilities Capabilities { get; }
 
         public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
         {

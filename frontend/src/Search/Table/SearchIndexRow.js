@@ -12,9 +12,9 @@ import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
 import Peers from './Peers';
 import ProtocolLabel from './ProtocolLabel';
-import styles from './MovieIndexRow.css';
+import styles from './SearchIndexRow.css';
 
-class MovieIndexRow extends Component {
+class SearchIndexRow extends Component {
 
   //
   // Render
@@ -190,7 +190,7 @@ class MovieIndexRow extends Component {
   }
 }
 
-MovieIndexRow.propTypes = {
+SearchIndexRow.propTypes = {
   guid: PropTypes.string.isRequired,
   protocol: PropTypes.string.isRequired,
   age: PropTypes.number.isRequired,
@@ -210,4 +210,4 @@ MovieIndexRow.propTypes = {
   timeFormat: PropTypes.string.isRequired
 };
 
-export default MovieIndexRow;
+export default SearchIndexRow;

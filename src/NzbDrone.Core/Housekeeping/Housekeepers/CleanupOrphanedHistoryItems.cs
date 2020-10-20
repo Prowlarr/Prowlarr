@@ -14,19 +14,19 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         public void Clean()
         {
-            CleanupOrphanedByMovie();
+            CleanupOrphanedByIndexer();
         }
 
-        private void CleanupOrphanedByMovie()
+        private void CleanupOrphanedByIndexer()
         {
             using (var mapper = _database.OpenConnection())
             {
                 mapper.Execute(@"DELETE FROM History
                                      WHERE Id IN (
                                      SELECT History.Id FROM History
-                                     LEFT OUTER JOIN Movies
-                                     ON History.MovieId = Movies.Id
-                                     WHERE Movies.Id IS NULL)");
+                                     LEFT OUTER JOIN Indexers
+                                     ON History.IndexerId = Indexers.Id
+                                     WHERE Indexers.Id IS NULL)");
             }
         }
     }

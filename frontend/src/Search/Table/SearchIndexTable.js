@@ -4,12 +4,12 @@ import VirtualTable from 'Components/Table/VirtualTable';
 import VirtualTableRow from 'Components/Table/VirtualTableRow';
 import { sortDirections } from 'Helpers/Props';
 import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
-import MovieIndexHeaderConnector from './MovieIndexHeaderConnector';
-import MovieIndexItemConnector from './MovieIndexItemConnector';
-import MovieIndexRow from './MovieIndexRow';
-import styles from './MovieIndexTable.css';
+import SearchIndexHeaderConnector from './SearchIndexHeaderConnector';
+import SearchIndexItemConnector from './SearchIndexItemConnector';
+import SearchIndexRow from './SearchIndexRow';
+import styles from './SearchIndexTable.css';
 
-class MovieIndexTable extends Component {
+class SearchIndexTable extends Component {
 
   //
   // Lifecycle
@@ -58,9 +58,9 @@ class MovieIndexTable extends Component {
         key={key}
         style={style}
       >
-        <MovieIndexItemConnector
+        <SearchIndexItemConnector
           key={release.guid}
-          component={MovieIndexRow}
+          component={SearchIndexRow}
           columns={columns}
           guid={release.guid}
           longDateFormat={longDateFormat}
@@ -95,7 +95,7 @@ class MovieIndexTable extends Component {
         overscanRowCount={2}
         rowRenderer={this.rowRenderer}
         header={
-          <MovieIndexHeaderConnector
+          <SearchIndexHeaderConnector
             columns={columns}
             sortKey={sortKey}
             sortDirection={sortDirection}
@@ -108,7 +108,7 @@ class MovieIndexTable extends Component {
   }
 }
 
-MovieIndexTable.propTypes = {
+SearchIndexTable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
@@ -121,4 +121,4 @@ MovieIndexTable.propTypes = {
   onSortPress: PropTypes.func.isRequired
 };
 
-export default MovieIndexTable;
+export default SearchIndexTable;

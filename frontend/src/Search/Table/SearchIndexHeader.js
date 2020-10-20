@@ -5,9 +5,9 @@ import TableOptionsModal from 'Components/Table/TableOptions/TableOptionsModal';
 import VirtualTableHeader from 'Components/Table/VirtualTableHeader';
 import VirtualTableHeaderCell from 'Components/Table/VirtualTableHeaderCell';
 import { icons } from 'Helpers/Props';
-import styles from './MovieIndexHeader.css';
+import styles from './SearchIndexHeader.css';
 
-class MovieIndexHeader extends Component {
+class SearchIndexHeader extends Component {
 
   //
   // Lifecycle
@@ -98,9 +98,9 @@ class MovieIndexHeader extends Component {
   }
 }
 
-MovieIndexHeader.propTypes = {
+SearchIndexHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   onTableOptionChange: PropTypes.func.isRequired
 };
 
-export default MovieIndexHeader;
+export default SearchIndexHeader;

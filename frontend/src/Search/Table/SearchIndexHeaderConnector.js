@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { setMovieTableOption } from 'Store/Actions/indexerIndexActions';
-import MovieIndexHeader from './MovieIndexHeader';
+import SearchIndexHeader from './SearchIndexHeader';
 
 function createMapDispatchToProps(dispatch, props) {
   return {
@@ -10,4 +10,4 @@ function createMapDispatchToProps(dispatch, props) {
   };
 }
 
-export default connect(undefined, createMapDispatchToProps)(MovieIndexHeader);
+export default connect(undefined, createMapDispatchToProps)(SearchIndexHeader);

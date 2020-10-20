@@ -5,7 +5,7 @@ import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import HistoryConnector from 'History/HistoryConnector';
 import IndexerIndexConnector from 'Indexer/Index/IndexerIndexConnector';
-import SearchConnector from 'Search/SearchConnector';
+import SearchIndexConnector from 'Search/SearchIndexConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
@@ -65,7 +65,7 @@ function AppRoutes(props) {
 
       <Route
         path="/search"
-        component={SearchConnector}
+        component={SearchIndexConnector}
       />
 
       {/*

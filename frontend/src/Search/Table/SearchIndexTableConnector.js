@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { setMovieSort } from 'Store/Actions/indexerIndexActions';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
-import MovieIndexTable from './MovieIndexTable';
+import SearchIndexTable from './SearchIndexTable';
 
 function createMapStateToProps() {
   return createSelector(
@@ -28,4 +28,4 @@ function createMapDispatchToProps(dispatch, props) {
   };
 }
 
-export default connect(createMapStateToProps, createMapDispatchToProps)(MovieIndexTable);
+export default connect(createMapStateToProps, createMapDispatchToProps)(SearchIndexTable);

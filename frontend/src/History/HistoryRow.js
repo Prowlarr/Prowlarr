@@ -5,7 +5,6 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
-import MovieFormats from 'Indexer/MovieFormats';
 import MovieLanguage from 'Indexer/MovieLanguage';
 import MovieQuality from 'Indexer/MovieQuality';
 import MovieTitleLink from 'Indexer/MovieTitleLink';
@@ -54,7 +53,6 @@ class HistoryRow extends Component {
     const {
       movie,
       quality,
-      customFormats,
       languages,
       qualityCutoffNotMet,
       eventType,
@@ -122,16 +120,6 @@ class HistoryRow extends Component {
                   <MovieQuality
                     quality={quality}
                     isCutoffMet={qualityCutoffNotMet}
-                  />
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'customFormats') {
-              return (
-                <TableRowCell key={name}>
-                  <MovieFormats
-                    formats={customFormats}
                   />
                 </TableRowCell>
               );
@@ -220,7 +208,6 @@ HistoryRow.propTypes = {
   languages: PropTypes.arrayOf(PropTypes.object).isRequired,
   quality: PropTypes.object.isRequired,
   qualityCutoffNotMet: PropTypes.bool.isRequired,
-  customFormats: PropTypes.arrayOf(PropTypes.object).isRequired,
   eventType: PropTypes.string.isRequired,
   sourceTitle: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,

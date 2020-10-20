@@ -6,47 +6,47 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.History
 {
-    public interface IHistoryRepository : IBasicRepository<MovieHistory>
+    public interface IHistoryRepository : IBasicRepository<History>
     {
-        MovieHistory MostRecentForDownloadId(string downloadId);
-        List<MovieHistory> FindByDownloadId(string downloadId);
-        List<MovieHistory> FindDownloadHistory(int movieId);
-        List<MovieHistory> GetByMovieId(int movieId, MovieHistoryEventType? eventType);
-        void DeleteForMovies(List<int> movieIds);
-        MovieHistory MostRecentForMovie(int movieId);
-        List<MovieHistory> Since(DateTime date, MovieHistoryEventType? eventType);
+        History MostRecentForDownloadId(string downloadId);
+        List<History> FindByDownloadId(string downloadId);
+        List<History> FindDownloadHistory(int indexerId);
+        List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType);
+        void DeleteForIndexers(List<int> indexerIds);
+        History MostRecentForIndexer(int indexerId);
+        List<History> Since(DateTime date, HistoryEventType? eventType);
     }
 
-    public class HistoryRepository : BasicRepository<MovieHistory>, IHistoryRepository
+    public class HistoryRepository : BasicRepository<History>, IHistoryRepository
     {
         public HistoryRepository(IMainDatabase database, IEventAggregator eventAggregator)
             : base(database, eventAggregator)
         {
         }
 
-        public MovieHistory MostRecentForDownloadId(string downloadId)
+        public History MostRecentForDownloadId(string downloadId)
         {
             return FindByDownloadId(downloadId)
                 .OrderByDescending(h => h.Date)
                 .FirstOrDefault();
         }
 
-        public List<MovieHistory> FindByDownloadId(string downloadId)
+        public List<History> FindByDownloadId(string downloadId)
         {
             return Query(x => x.DownloadId == downloadId);
         }
 
-        public List<MovieHistory> FindDownloadHistory(int movieId)
+        public List<History> FindDownloadHistory(int indexerId)
         {
-            var allowed = new[] { MovieHistoryEventType.Grabbed, MovieHistoryEventType.DownloadFailed, MovieHistoryEventType.DownloadFolderImported };
+            var allowed = new[] { HistoryEventType.ReleaseGrabbed };
 
-            return Query(h => h.MovieId == movieId &&
+            return Query(h => h.IndexerId == indexerId &&
                          allowed.Contains(h.EventType));
         }
 
-        public List<MovieHistory> GetByMovieId(int movieId, MovieHistoryEventType? eventType)
+        public List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType)
         {
-            var query = Query(x => x.MovieId == movieId);
+            var query = Query(x => x.IndexerId == indexerId);
 
             if (eventType.HasValue)
             {
@@ -56,25 +56,25 @@ namespace NzbDrone.Core.History
             return query.OrderByDescending(h => h.Date).ToList();
         }
 
-        public void DeleteForMovies(List<int> movieIds)
+        public void DeleteForIndexers(List<int> indexerIds)
         {
-            Delete(c => movieIds.Contains(c.MovieId));
+            Delete(c => indexerIds.Contains(c.IndexerId));
         }
 
-        public MovieHistory MostRecentForMovie(int movieId)
+        public History MostRecentForIndexer(int indexerId)
         {
-            return Query(x => x.MovieId == movieId)
+            return Query(x => x.IndexerId == indexerId)
                 .OrderByDescending(h => h.Date)
                 .FirstOrDefault();
         }
 
-        public List<MovieHistory> Since(DateTime date, MovieHistoryEventType? eventType)
+        public List<History> Since(DateTime date, HistoryEventType? eventType)
         {
-            var builder = Builder().Where<MovieHistory>(x => x.Date >= date);
+            var builder = Builder().Where<History>(x => x.Date >= date);
 
             if (eventType.HasValue)
             {
-                builder.Where<MovieHistory>(h => h.EventType == eventType);
+                builder.Where<History>(h => h.EventType == eventType);
             }
 
             return Query(builder).OrderBy(h => h.Date).ToList();

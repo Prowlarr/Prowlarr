@@ -16,6 +16,7 @@ namespace Prowlarr.Api.V1.Indexers
         public bool SupportsBooks { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
+        public IndexerCapabilities Capabilities { get; set; }
         public int Priority { get; set; }
         public DateTime Added { get; set; }
     }
@@ -36,10 +37,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.EnableInteractiveSearch = definition.EnableInteractiveSearch;
             resource.SupportsRss = definition.SupportsRss;
             resource.SupportsSearch = definition.SupportsSearch;
-            resource.SupportsBooks = definition.SupportsBooks;
-            resource.SupportsMovies = definition.SupportsMovies;
-            resource.SupportsMusic = definition.SupportsMusic;
-            resource.SupportsTv = definition.SupportsTv;
+            resource.Capabilities = definition.Capabilities;
             resource.Protocol = definition.Protocol;
             resource.Privacy = definition.Privacy;
             resource.Priority = definition.Priority;

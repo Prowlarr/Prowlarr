@@ -8,7 +8,6 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons, kinds } from 'Helpers/Props';
-import MovieFormats from 'Indexer/MovieFormats';
 import MovieLanguage from 'Indexer/MovieLanguage';
 import MovieQuality from 'Indexer/MovieQuality';
 import translate from 'Utilities/String/translate';
@@ -60,7 +59,6 @@ class MovieHistoryRow extends Component {
       eventType,
       sourceTitle,
       quality,
-      customFormats,
       languages,
       qualityCutoffNotMet,
       date,
@@ -96,12 +94,6 @@ class MovieHistoryRow extends Component {
           <MovieQuality
             quality={quality}
             isCutoffNotMet={qualityCutoffNotMet}
-          />
-        </TableRowCell>
-
-        <TableRowCell key={name}>
-          <MovieFormats
-            formats={customFormats}
           />
         </TableRowCell>
 
@@ -157,7 +149,6 @@ MovieHistoryRow.propTypes = {
   sourceTitle: PropTypes.string.isRequired,
   languages: PropTypes.arrayOf(PropTypes.object).isRequired,
   quality: PropTypes.object.isRequired,
-  customFormats: PropTypes.arrayOf(PropTypes.object).isRequired,
   qualityCutoffNotMet: PropTypes.bool.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,

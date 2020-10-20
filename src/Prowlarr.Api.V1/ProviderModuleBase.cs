@@ -16,7 +16,7 @@ namespace Prowlarr.Api.V1
         where TProvider : IProvider
         where TProviderResource : ProviderResource, new()
     {
-        private readonly IProviderFactory<TProvider, TProviderDefinition> _providerFactory;
+        protected readonly IProviderFactory<TProvider, TProviderDefinition> _providerFactory;
         private readonly ProviderResourceMapper<TProviderResource, TProviderDefinition> _resourceMapper;
 
         protected ProviderModuleBase(IProviderFactory<TProvider, TProviderDefinition> providerFactory, string resource, ProviderResourceMapper<TProviderResource, TProviderDefinition> resourceMapper)

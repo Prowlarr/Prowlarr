@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.TPL;
 using NzbDrone.Core.Indexers;
@@ -56,7 +57,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             var reports = new List<ReleaseInfo>();
 
-            _logger.ProgressInfo("Searching {0} indexers for {1}", indexers.Count, criteriaBase);
+            _logger.ProgressInfo("Searching {0} indexers for {1}", indexers.Count, criteriaBase.QueryTitles.Join(", "));
 
             var taskList = new List<Task>();
             var taskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);

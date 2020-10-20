@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import TextInput from 'Components/Form/TextInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
-import styles from './MovieEditorFooter.css';
+import styles from './SearchFooter.css';
 
-class MovieEditorFooter extends Component {
+class SearchFooter extends Component {
 
   //
   // Lifecycle
@@ -87,10 +87,10 @@ class MovieEditorFooter extends Component {
   }
 }
 
-MovieEditorFooter.propTypes = {
+SearchFooter.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   searchError: PropTypes.object
 };
 
-export default MovieEditorFooter;
+export default SearchFooter;

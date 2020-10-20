@@ -12,10 +12,7 @@ namespace NzbDrone.Core.Indexers
         public IndexerPrivacy Privacy { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
-        public bool SupportsMusic { get; set; }
-        public bool SupportsTv { get; set; }
-        public bool SupportsMovies { get; set; }
-        public bool SupportsBooks { get; set; }
+        public IndexerCapabilities Capabilities { get; set; }
         public int Priority { get; set; } = 25;
         public DateTime Added { get; set; }
 

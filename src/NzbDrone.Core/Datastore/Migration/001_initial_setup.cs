@@ -52,7 +52,9 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Name").AsString().Unique()
                 .WithColumn("Implementation").AsString()
                 .WithColumn("Settings").AsString().Nullable()
-                .WithColumn("ConfigContract").AsString().Nullable();
+                .WithColumn("ConfigContract").AsString().Nullable()
+                .WithColumn("SyncLevel").AsInt32()
+                .WithColumn("Tags").AsString().Nullable();
 
             Create.TableForModel("Tags")
                 .WithColumn("Label").AsString().Unique();

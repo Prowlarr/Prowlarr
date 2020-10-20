@@ -6,6 +6,7 @@ import Switch from 'Components/Router/Switch';
 import HistoryConnector from 'History/HistoryConnector';
 import IndexerIndexConnector from 'Indexer/Index/IndexerIndexConnector';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
+import ApplicationSettings from 'Settings/Applications/ApplicationSettings';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
@@ -28,7 +29,7 @@ function AppRoutes(props) {
   return (
     <Switch>
       {/*
-        Movies
+        Indexers
       */}
 
       <Route
@@ -85,6 +86,11 @@ function AppRoutes(props) {
         exact={true}
         path="/settings"
         component={Settings}
+      />
+
+      <Route
+        path="/settings/applications"
+        component={ApplicationSettings}
       />
 
       <Route

@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
 import { handleThunks } from 'Store/thunks';
 import createHandleActions from './Creators/createHandleActions';
+import applications from './Settings/applications';
 import general from './Settings/general';
 import indexerFlags from './Settings/indexerFlags';
 import indexerOptions from './Settings/indexerOptions';
@@ -13,6 +14,7 @@ export * from './Settings/indexerFlags';
 export * from './Settings/indexerOptions';
 export * from './Settings/languages';
 export * from './Settings/notifications';
+export * from './Settings/applications';
 export * from './Settings/ui';
 
 //
@@ -31,6 +33,7 @@ export const defaultState = {
   indexerOptions: indexerOptions.defaultState,
   languages: languages.defaultState,
   notifications: notifications.defaultState,
+  applications: applications.defaultState,
   ui: ui.defaultState
 };
 
@@ -57,6 +60,7 @@ export const actionHandlers = handleThunks({
   ...indexerOptions.actionHandlers,
   ...languages.actionHandlers,
   ...notifications.actionHandlers,
+  ...applications.actionHandlers,
   ...ui.actionHandlers
 });
 
@@ -74,6 +78,7 @@ export const reducers = createHandleActions({
   ...indexerOptions.reducers,
   ...languages.reducers,
   ...notifications.reducers,
+  ...applications.reducers,
   ...ui.reducers
 
 }, defaultState, section);

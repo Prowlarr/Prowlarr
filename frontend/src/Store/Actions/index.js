@@ -3,8 +3,9 @@ import * as captcha from './captchaActions';
 import * as commands from './commandActions';
 import * as customFilters from './customFilterActions';
 import * as history from './historyActions';
+import * as indexers from './indexerActions';
+import * as indexerIndex from './indexerIndexActions';
 import * as movies from './movieActions';
-import * as movieIndex from './movieIndexActions';
 import * as oAuth from './oAuthActions';
 import * as paths from './pathActions';
 import * as providerOptions from './providerOptionActions';
@@ -24,7 +25,8 @@ export default [
   providerOptions,
   releases,
   movies,
-  movieIndex,
+  indexers,
+  indexerIndex,
   settings,
   system,
   tags

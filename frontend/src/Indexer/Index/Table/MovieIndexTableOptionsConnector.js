@@ -4,7 +4,7 @@ import MovieIndexTableOptions from './MovieIndexTableOptions';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.movieIndex.tableOptions,
+    (state) => state.indexerIndex.tableOptions,
     (tableOptions) => {
       return tableOptions;
     }

@@ -14,7 +14,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers
 {
-    public abstract class HttpApplicationBase<TSettings> : IndexerBase<TSettings>
+    public abstract class HttpIndexerBase<TSettings> : IndexerBase<TSettings>
         where TSettings : IIndexerSettings, new()
     {
         protected const int MaxNumResultsPerQuery = 1000;
@@ -23,6 +23,11 @@ namespace NzbDrone.Core.Indexers
 
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+        public override bool SupportsMusic => true;
+        public override bool SupportsTv => true;
+        public override bool SupportsMovies => true;
+        public override bool SupportsBooks => true;
+
         public bool SupportsPaging => PageSize > 0;
 
         public virtual int PageSize => 0;
@@ -31,7 +36,7 @@ namespace NzbDrone.Core.Indexers
         public abstract IIndexerRequestGenerator GetRequestGenerator();
         public abstract IParseIndexerResponse GetParser();
 
-        public HttpApplicationBase(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public HttpIndexerBase(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerStatusService, configService, logger)
         {
             _httpClient = httpClient;

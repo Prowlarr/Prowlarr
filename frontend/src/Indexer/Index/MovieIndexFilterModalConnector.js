@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import FilterModal from 'Components/Filter/FilterModal';
-import { setMovieFilter } from 'Store/Actions/movieIndexActions';
+import { setMovieFilter } from 'Store/Actions/indexerIndexActions';
 
 function createMapStateToProps() {
   return createSelector(
     (state) => state.movies.items,
-    (state) => state.movieIndex.filterBuilderProps,
+    (state) => state.indexerIndex.filterBuilderProps,
     (sectionItems, filterBuilderProps) => {
       return {
         sectionItems,
         filterBuilderProps,
-        customFilterType: 'movieIndex'
+        customFilterType: 'indexerIndex'
       };
     }
   );

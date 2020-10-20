@@ -4,12 +4,14 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.IPTorrents
 {
-    public class IPTorrents : HttpApplicationBase<IPTorrentsSettings>
+    public class IPTorrents : HttpIndexerBase<IPTorrentsSettings>
     {
         public override string Name => "IP Torrents";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsSearch => false;
+
         public override int PageSize => 0;
 
         public IPTorrents(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

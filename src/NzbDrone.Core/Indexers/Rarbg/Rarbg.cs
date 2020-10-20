@@ -10,13 +10,15 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
 {
-    public class Rarbg : HttpApplicationBase<RarbgSettings>
+    public class Rarbg : HttpIndexerBase<RarbgSettings>
     {
         private readonly IRarbgTokenProvider _tokenProvider;
 
         public override string Name => "Rarbg";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
         public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

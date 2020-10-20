@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import createMovieCollectionListSelector from 'Store/Selectors/createMovieCollectionListSelector';
-import createMovieSelector from 'Store/Selectors/createMovieSelector';
 import MovieCollection from './MovieCollection';
 
 function createMapStateToProps() {
   return createSelector(
-    createMovieSelector(),
+    createIndexerSelector(),
     createMovieCollectionListSelector(),
     (movie, collectionList) => {
       const {

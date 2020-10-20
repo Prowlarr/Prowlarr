@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { saveMovie, setMovieValue } from 'Store/Actions/movieActions';
-import createMovieSelector from 'Store/Selectors/createMovieSelector';
+import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import selectSettings from 'Store/Selectors/selectSettings';
 import EditMovieModalContent from './EditMovieModalContent';
 
 function createIsPathChangingSelector() {
   return createSelector(
     (state) => state.movies.pendingChanges,
-    createMovieSelector(),
+    createIndexerSelector(),
     (pendingChanges, movie) => {
       const path = pendingChanges.path;
 
@@ -26,7 +26,7 @@ function createIsPathChangingSelector() {
 function createMapStateToProps() {
   return createSelector(
     (state) => state.movies,
-    createMovieSelector(),
+    createIndexerSelector(),
     createIsPathChangingSelector(),
     (moviesState, movie, isPathChanging) => {
       const {

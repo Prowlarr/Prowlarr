@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { setMovieSort } from 'Store/Actions/movieIndexActions';
+import { setMovieSort } from 'Store/Actions/indexerIndexActions';
 import MovieIndexTable from './MovieIndexTable';
 
 function createMapStateToProps() {
   return createSelector(
     (state) => state.app.dimensions,
-    (state) => state.movieIndex.tableOptions,
-    (state) => state.movieIndex.columns,
+    (state) => state.indexerIndex.tableOptions,
+    (state) => state.indexerIndex.columns,
     (state) => state.settings.ui.item.movieRuntimeFormat,
     (dimensions, tableOptions, columns, movieRuntimeFormat) => {
       return {

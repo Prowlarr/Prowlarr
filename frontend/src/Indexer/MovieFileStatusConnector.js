@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createMovieSelector from 'Store/Selectors/createMovieSelector';
+import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import MovieFileStatus from './MovieFileStatus';
 
 function createMapStateToProps() {
   return createSelector(
-    createMovieSelector(),
+    createIndexerSelector(),
     (movie) => {
       return {
         inCinemas: movie.inCinemas,

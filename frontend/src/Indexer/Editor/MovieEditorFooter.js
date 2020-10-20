@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import AvailabilitySelectInput from 'Components/Form/AvailabilitySelectInput';
-import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import { kinds } from 'Helpers/Props';
@@ -22,10 +20,6 @@ class MovieEditorFooter extends Component {
     super(props, context);
 
     this.state = {
-      monitored: NO_CHANGE,
-      qualityProfileId: NO_CHANGE,
-      minimumAvailability: NO_CHANGE,
-      rootFolderPath: NO_CHANGE,
       savingTags: false,
       isDeleteMovieModalOpen: false,
       isTagsModalOpen: false
@@ -40,10 +34,6 @@ class MovieEditorFooter extends Component {
 
     if (prevProps.isSaving && !isSaving && !saveError) {
       this.setState({
-        monitored: NO_CHANGE,
-        qualityProfileId: NO_CHANGE,
-        minimumAvailability: NO_CHANGE,
-        rootFolderPath: NO_CHANGE,
         savingTags: false
       });
     }
@@ -60,15 +50,6 @@ class MovieEditorFooter extends Component {
     }
 
     switch (name) {
-      case 'rootFolderPath':
-        this.setState({
-          isConfirmMoveModalOpen: true,
-          destinationRootFolder: value
-        });
-        break;
-      case 'monitored':
-        this.props.onSaveSelected({ [name]: value === 'monitored' });
-        break;
       default:
         this.props.onSaveSelected({ [name]: value });
     }
@@ -102,15 +83,6 @@ class MovieEditorFooter extends Component {
     this.setState({ isTagsModalOpen: false });
   }
 
-  onSaveRootFolderPress = () => {
-    this.setState({
-      isConfirmMoveModalOpen: false,
-      destinationRootFolder: null
-    });
-
-    this.props.onSaveSelected({ rootFolderPath: this.state.destinationRootFolder });
-  }
-
   //
   // Render
 
@@ -119,96 +91,30 @@ class MovieEditorFooter extends Component {
       movieIds,
       selectedCount,
       isSaving,
-      isDeleting,
-      isOrganizingMovie,
-      onOrganizeMoviePress
+      isDeleting
     } = this.props;
 
     const {
-      monitored,
-      qualityProfileId,
-      minimumAvailability,
-      rootFolderPath,
       savingTags,
       isTagsModalOpen,
       isDeleteMovieModalOpen
     } = this.state;
 
-    const monitoredOptions = [
-      { key: NO_CHANGE, value: 'No Change', disabled: true },
-      { key: 'monitored', value: 'Monitored' },
-      { key: 'unmonitored', value: 'Unmonitored' }
-    ];
-
     return (
       <PageContentFooter>
-        <div className={styles.inputContainer}>
-          <MovieEditorFooterLabel
-            label={translate('MonitorMovie')}
-            isSaving={isSaving && monitored !== NO_CHANGE}
-          />
-
-          <SelectInput
-            name="monitored"
-            value={monitored}
-            values={monitoredOptions}
-            isDisabled={!selectedCount}
-            onChange={this.onInputChange}
-          />
-        </div>
-
-        <div className={styles.inputContainer}>
-          <MovieEditorFooterLabel
-            label={translate('QualityProfile')}
-            isSaving={isSaving && qualityProfileId !== NO_CHANGE}
-          />
-        </div>
-
-        <div className={styles.inputContainer}>
-          <MovieEditorFooterLabel
-            label={translate('MinimumAvailability')}
-            isSaving={isSaving && minimumAvailability !== NO_CHANGE}
-          />
-
-          <AvailabilitySelectInput
-            name="minimumAvailability"
-            value={minimumAvailability}
-            includeNoChange={true}
-            isDisabled={!selectedCount}
-            onChange={this.onInputChange}
-          />
-        </div>
-
-        <div className={styles.inputContainer}>
-          <MovieEditorFooterLabel
-            label={translate('RootFolder')}
-            isSaving={isSaving && rootFolderPath !== NO_CHANGE}
-          />
-        </div>
-
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
             <MovieEditorFooterLabel
-              label={translate('MoviesSelectedInterp', [selectedCount])}
+              label={translate('IndexersSelectedInterp', [selectedCount])}
               isSaving={false}
             />
 
             <div className={styles.buttons}>
               <div>
                 <SpinnerButton
-                  className={styles.organizeSelectedButton}
-                  kind={kinds.WARNING}
-                  isSpinning={isOrganizingMovie}
-                  isDisabled={!selectedCount || isOrganizingMovie}
-                  onPress={onOrganizeMoviePress}
-                >
-                  {translate('RenameFiles')}
-                </SpinnerButton>
-
-                <SpinnerButton
                   className={styles.tagsButton}
                   isSpinning={isSaving && savingTags}
-                  isDisabled={!selectedCount || isOrganizingMovie}
+                  isDisabled={!selectedCount}
                   onPress={this.onTagsPress}
                 >
                   {translate('SetTags')}
@@ -252,7 +158,6 @@ MovieEditorFooter.propTypes = {
   saveError: PropTypes.object,
   isDeleting: PropTypes.bool.isRequired,
   deleteError: PropTypes.object,
-  isOrganizingMovie: PropTypes.bool.isRequired,
   onSaveSelected: PropTypes.func.isRequired,
   onOrganizeMoviePress: PropTypes.func.isRequired
 };

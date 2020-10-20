@@ -20,10 +20,16 @@ namespace NzbDrone.Core.Indexers
 
         public abstract string Name { get; }
         public abstract DownloadProtocol Protocol { get; }
+        public abstract IndexerPrivacy Privacy { get; }
         public int Priority { get; set; }
 
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
+
+        public abstract bool SupportsMusic { get; }
+        public abstract bool SupportsTv { get; }
+        public abstract bool SupportsMovies { get; }
+        public abstract bool SupportsBooks { get; }
 
         public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
         {

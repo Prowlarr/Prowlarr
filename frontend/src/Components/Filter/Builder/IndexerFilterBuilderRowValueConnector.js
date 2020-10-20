@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import tagShape from 'Helpers/Props/Shapes/tagShape';
-import { fetchIndexers } from 'Store/Actions/settingsActions';
+import { fetchIndexers } from 'Store/Actions/indexerActions';
 import FilterBuilderRowValue from './FilterBuilderRowValue';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.settings.indexers,
+    (state) => state.indexers,
     (qualityProfiles) => {
       const {
         isFetching,

@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { saveIndexer, setIndexerFieldValue, setIndexerValue, testIndexer } from 'Store/Actions/settingsActions';
-import createProviderSettingsSelector from 'Store/Selectors/createProviderSettingsSelector';
+import { saveIndexer, setIndexerFieldValue, setIndexerValue, testIndexer } from 'Store/Actions/indexerActions';
+import createProviderSelector from 'Store/Selectors/createProviderSelector';
 import EditIndexerModalContent from './EditIndexerModalContent';
 
 function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
-    createProviderSettingsSelector('indexers'),
+    createProviderSelector('indexers'),
     (advancedSettings, indexer) => {
       return {
         advancedSettings,

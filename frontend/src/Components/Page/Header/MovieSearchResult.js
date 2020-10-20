@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Label from 'Components/Label';
 import { kinds } from 'Helpers/Props';
-import MoviePoster from 'Indexer/MoviePoster';
 import styles from './MovieSearchResult.css';
 
 function MovieSearchResult(props) {
@@ -10,7 +9,6 @@ function MovieSearchResult(props) {
     match,
     title,
     year,
-    images,
     alternateTitles,
     tags
   } = props;
@@ -26,14 +24,6 @@ function MovieSearchResult(props) {
 
   return (
     <div className={styles.result}>
-      <MoviePoster
-        className={styles.poster}
-        images={images}
-        size={250}
-        lazy={false}
-        overflow={true}
-      />
-
       <div className={styles.titles}>
         <div className={styles.title}>
           {title} { year > 0 ? `(${year})` : ''}
@@ -67,7 +57,6 @@ function MovieSearchResult(props) {
 MovieSearchResult.propTypes = {
   title: PropTypes.string.isRequired,
   year: PropTypes.number.isRequired,
-  images: PropTypes.arrayOf(PropTypes.object).isRequired,
   alternateTitles: PropTypes.arrayOf(PropTypes.object).isRequired,
   tags: PropTypes.arrayOf(PropTypes.object).isRequired,
   match: PropTypes.object.isRequired

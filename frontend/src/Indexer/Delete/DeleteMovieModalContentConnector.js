@@ -4,12 +4,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { deleteMovie } from 'Store/Actions/movieActions';
-import createMovieSelector from 'Store/Selectors/createMovieSelector';
+import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import DeleteMovieModalContent from './DeleteMovieModalContent';
 
 function createMapStateToProps() {
   return createSelector(
-    createMovieSelector(),
+    createIndexerSelector(),
     (movie) => {
       return movie;
     }

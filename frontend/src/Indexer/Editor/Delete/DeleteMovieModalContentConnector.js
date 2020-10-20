@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { bulkDeleteMovie } from 'Store/Actions/movieIndexActions';
+import { bulkDeleteMovie } from 'Store/Actions/indexerIndexActions';
 import createAllMoviesSelector from 'Store/Selectors/createAllMoviesSelector';
 import DeleteMovieModalContent from './DeleteMovieModalContent';
 

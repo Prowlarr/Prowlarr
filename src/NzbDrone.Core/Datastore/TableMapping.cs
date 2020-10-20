@@ -42,8 +42,13 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(x => x.ImplementationName)
                   .Ignore(i => i.Enable)
                   .Ignore(i => i.Protocol)
+                  .Ignore(i => i.Privacy)
                   .Ignore(i => i.SupportsRss)
                   .Ignore(i => i.SupportsSearch)
+                  .Ignore(i => i.SupportsBooks)
+                  .Ignore(i => i.SupportsMusic)
+                  .Ignore(i => i.SupportsMovies)
+                  .Ignore(i => i.SupportsTv)
                   .Ignore(d => d.Tags);
 
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()

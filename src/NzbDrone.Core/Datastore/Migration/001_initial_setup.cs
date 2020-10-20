@@ -44,7 +44,10 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Settings").AsString().Nullable()
                 .WithColumn("ConfigContract").AsString().Nullable()
                 .WithColumn("EnableRss").AsBoolean().Nullable()
-                .WithColumn("EnableSearch").AsBoolean().Nullable();
+                .WithColumn("EnableAutomaticSearch").AsBoolean().Nullable()
+                .WithColumn("EnableInteractiveSearch").AsBoolean().NotNullable()
+                .WithColumn("Priority").AsInt32().NotNullable().WithDefaultValue(25)
+                .WithColumn("Added").AsDateTime();
 
             Create.TableForModel("Applications")
                 .WithColumn("Name").AsString().Unique()
@@ -73,7 +76,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Trigger").AsInt32().NotNullable();
 
             Create.TableForModel("IndexerStatus")
-                .WithColumn("IndexerId").AsInt32().NotNullable().Unique()
+                .WithColumn("ProviderId").AsInt32().NotNullable().Unique()
                 .WithColumn("InitialFailure").AsDateTime().Nullable()
                 .WithColumn("MostRecentFailure").AsDateTime().Nullable()
                 .WithColumn("EscalationLevel").AsInt32().NotNullable()

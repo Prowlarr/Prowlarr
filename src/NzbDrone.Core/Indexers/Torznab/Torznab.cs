@@ -12,13 +12,14 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Torznab
 {
-    public class Torznab : HttpApplicationBase<TorznabSettings>
+    public class Torznab : HttpIndexerBase<TorznabSettings>
     {
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
         public override string Name => "Torznab";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
 
         public override IIndexerRequestGenerator GetRequestGenerator()

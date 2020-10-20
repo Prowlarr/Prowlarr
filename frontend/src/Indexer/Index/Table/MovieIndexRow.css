@@ -11,76 +11,29 @@
   flex: 0 0 60px;
 }
 
-.collection,
-.sortTitle {
+.name {
   composes: cell;
 
   flex: 4 0 110px;
 }
 
-.minimumAvailability {
+.protocol,
+.privacy {
   composes: cell;
 
-  flex: 0 0 140px;
+  flex: 0 0 90px;
 }
 
-.studio {
-  composes: cell;
-
-  flex: 2 0 90px;
-}
-
-.qualityProfileId {
-  composes: cell;
-
-  flex: 1 0 125px;
-}
-
-.inCinemas,
-.physicalRelease,
-.digitalRelease,
-.genres {
+.capabilities {
   composes: cell;
 
   flex: 0 0 180px;
 }
 
-.added,
-.runtime {
+.added {
   composes: cell;
 
   flex: 0 0 100px;
-}
-
-.movieStatus,
-.certification {
-  composes: cell;
-
-  flex: 0 0 100px;
-}
-
-.year {
-  composes: cell;
-
-  flex: 0 0 80px;
-}
-
-.path {
-  composes: cell;
-
-  flex: 1 0 150px;
-}
-
-.sizeOnDisk {
-  composes: cell;
-
-  flex: 0 0 120px;
-}
-
-.ratings {
-  composes: cell;
-
-  flex: 0 0 80px;
 }
 
 .tags {

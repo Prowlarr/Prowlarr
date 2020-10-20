@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
-import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
 import styles from './MovieIndexFooter.css';
 
@@ -17,8 +16,7 @@ class MovieIndexFooter extends PureComponent {
 
     const count = movies.length;
     let movieFiles = 0;
-    let monitored = 0;
-    let totalFileSize = 0;
+    let torrent = 0;
 
     movies.forEach((s) => {
 
@@ -26,11 +24,9 @@ class MovieIndexFooter extends PureComponent {
         movieFiles += 1;
       }
 
-      if (s.monitored) {
-        monitored++;
+      if (s.protocol === 'torrent') {
+        torrent++;
       }
-
-      totalFileSize += s.sizeOnDisk;
     });
 
     return (
@@ -39,14 +35,14 @@ class MovieIndexFooter extends PureComponent {
           <div className={styles.legendItem}>
             <div className={styles.ended} />
             <div>
-              {translate('DownloadedAndMonitored')}
+              Enabled
             </div>
           </div>
 
           <div className={styles.legendItem}>
             <div className={styles.availNotMonitored} />
             <div>
-              {translate('DownloadedButNotMonitored')}
+              Disabled
             </div>
           </div>
 
@@ -57,32 +53,7 @@ class MovieIndexFooter extends PureComponent {
             )}
             />
             <div>
-              {translate('MissingMonitoredAndConsideredAvailable')}
-            </div>
-          </div>
-
-          <div className={styles.legendItem}>
-            <div className={classNames(
-              styles.missingUnmonitored,
-              colorImpairedMode && 'colorImpaired'
-            )}
-            />
-            <div>
-              {translate('MissingNotMonitored')}
-            </div>
-          </div>
-
-          <div className={styles.legendItem}>
-            <div className={styles.queue} />
-            <div>
-              {translate('Queued')}
-            </div>
-          </div>
-
-          <div className={styles.legendItem}>
-            <div className={styles.continuing} />
-            <div>
-              {translate('Unreleased')}
+              Error
             </div>
           </div>
         </div>
@@ -90,32 +61,25 @@ class MovieIndexFooter extends PureComponent {
         <div className={styles.statistics}>
           <DescriptionList>
             <DescriptionListItem
-              title={translate('Movies')}
+              title={translate('Indexers')}
               data={count}
             />
 
             <DescriptionListItem
-              title={translate('MovieFiles')}
+              title={translate('Enabled')}
               data={movieFiles}
             />
           </DescriptionList>
 
           <DescriptionList>
             <DescriptionListItem
-              title={translate('Monitored')}
-              data={monitored}
+              title={translate('Torrent')}
+              data={torrent}
             />
 
             <DescriptionListItem
-              title={translate('Unmonitored')}
-              data={count - monitored}
-            />
-          </DescriptionList>
-
-          <DescriptionList>
-            <DescriptionListItem
-              title={translate('TotalFileSize')}
-              data={formatBytes(totalFileSize)}
+              title={translate('Usenet')}
+              data={count - torrent}
             />
           </DescriptionList>
         </div>

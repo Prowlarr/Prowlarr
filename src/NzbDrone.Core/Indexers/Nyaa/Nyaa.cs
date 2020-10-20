@@ -4,11 +4,13 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.Nyaa
 {
-    public class Nyaa : HttpApplicationBase<NyaaSettings>
+    public class Nyaa : HttpIndexerBase<NyaaSettings>
     {
         public override string Name => "Nyaa";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override int PageSize => 100;
 
         public Nyaa(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

@@ -4,10 +4,11 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.FileList
 {
-    public class FileList : HttpApplicationBase<FileListSettings>
+    public class FileList : HttpIndexerBase<FileListSettings>
     {
         public override string Name => "FileList.io";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
 

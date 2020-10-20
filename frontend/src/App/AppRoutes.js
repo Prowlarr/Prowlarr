@@ -4,7 +4,8 @@ import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import HistoryConnector from 'History/HistoryConnector';
-import MovieIndexConnector from 'Indexer/Index/MovieIndexConnector';
+import IndexerIndexConnector from 'Indexer/Index/IndexerIndexConnector';
+import SearchConnector from 'Search/SearchConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
@@ -33,7 +34,7 @@ function AppRoutes(props) {
       <Route
         exact={true}
         path="/"
-        component={MovieIndexConnector}
+        component={IndexerIndexConnector}
       />
 
       {
@@ -55,7 +56,7 @@ function AppRoutes(props) {
 
       <Route
         path="/indexers/stats"
-        component={MovieIndexConnector}
+        component={IndexerIndexConnector}
       />
 
       {/*
@@ -64,7 +65,7 @@ function AppRoutes(props) {
 
       <Route
         path="/search"
-        component={MovieIndexConnector}
+        component={SearchConnector}
       />
 
       {/*

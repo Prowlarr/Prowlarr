@@ -7,23 +7,17 @@ import MovieIndexFooter from './MovieIndexFooter';
 
 function createUnoptimizedSelector() {
   return createSelector(
-    createClientSideCollectionSelector('movies', 'movieIndex'),
-    (movies) => {
-      return movies.items.map((s) => {
+    createClientSideCollectionSelector('indexers', 'indexerIndex'),
+    (indexers) => {
+      return indexers.items.map((s) => {
         const {
-          monitored,
-          status,
-          statistics,
-          sizeOnDisk,
-          hasFile
+          protocol,
+          privacy
         } = s;
 
         return {
-          monitored,
-          status,
-          statistics,
-          sizeOnDisk,
-          hasFile
+          protocol,
+          privacy
         };
       });
     }

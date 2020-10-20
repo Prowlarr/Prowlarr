@@ -1,24 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import HeartRating from 'Components/HeartRating';
-import Icon from 'Components/Icon';
+import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
-import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
-import TagListConnector from 'Components/TagListConnector';
-import Tooltip from 'Components/Tooltip/Tooltip';
 import { icons, kinds } from 'Helpers/Props';
 import DeleteMovieModal from 'Indexer/Delete/DeleteMovieModal';
-import EditMovieModalConnector from 'Indexer/Edit/EditMovieModalConnector';
-import MovieFileStatusConnector from 'Indexer/MovieFileStatusConnector';
-import MovieTitleLink from 'Indexer/MovieTitleLink';
-import formatRuntime from 'Utilities/Date/formatRuntime';
-import formatBytes from 'Utilities/Number/formatBytes';
-import titleCase from 'Utilities/String/titleCase';
+import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
 import translate from 'Utilities/String/translate';
-import MovieStatusCell from './MovieStatusCell';
+import CapabilitiesLabel from './CapabilitiesLabel';
+import ProtocolLabel from './ProtocolLabel';
 import styles from './MovieIndexRow.css';
 
 class MovieIndexRow extends Component {
@@ -30,22 +22,22 @@ class MovieIndexRow extends Component {
     super(props, context);
 
     this.state = {
-      isEditMovieModalOpen: false,
+      isEditIndexerModalOpen: false,
       isDeleteMovieModalOpen: false
     };
   }
 
-  onEditMoviePress = () => {
-    this.setState({ isEditMovieModalOpen: true });
+  onEditIndexerPress = () => {
+    this.setState({ isEditIndexerModalOpen: true });
   }
 
-  onEditMovieModalClose = () => {
-    this.setState({ isEditMovieModalOpen: false });
+  onEditIndexerModalClose = () => {
+    this.setState({ isEditIndexerModalOpen: false });
   }
 
   onDeleteMoviePress = () => {
     this.setState({
-      isEditMovieModalOpen: false,
+      isEditIndexerModalOpen: false,
       isDeleteMovieModalOpen: true
     });
   }
@@ -65,42 +57,25 @@ class MovieIndexRow extends Component {
   render() {
     const {
       id,
-      monitored,
-      status,
-      title,
-      titleSlug,
-      collection,
-      studio,
-      qualityProfile,
+      name,
+      enableRss,
+      enableAutomaticSearch,
+      enableInteractiveSearch,
+      protocol,
+      privacy,
       added,
-      year,
-      inCinemas,
-      physicalRelease,
-      digitalRelease,
-      runtime,
-      minimumAvailability,
-      path,
-      sizeOnDisk,
-      genres,
-      ratings,
-      certification,
-      tags,
-      showSearchAction,
+      supportsTv,
+      supportsBooks,
+      supportsMusic,
+      supportsMovies,
       columns,
-      isRefreshingMovie,
-      isSearchingMovie,
       isMovieEditorActive,
       isSelected,
-      onRefreshMoviePress,
-      onSearchPress,
-      onSelectedChange,
-      queueStatus,
-      queueState,
-      movieRuntimeFormat
+      onSelectedChange
     } = this.props;
 
     const {
-      isEditMovieModalOpen,
+      isEditIndexerModalOpen,
       isDeleteMovieModalOpen
     } = this.state;
 
@@ -109,7 +84,6 @@ class MovieIndexRow extends Component {
         {
           columns.map((column) => {
             const {
-              name,
               isVisible
             } = column;
 
@@ -117,12 +91,12 @@ class MovieIndexRow extends Component {
               return null;
             }
 
-            if (isMovieEditorActive && name === 'select') {
+            if (isMovieEditorActive && column.name === 'select') {
               return (
                 <VirtualTableSelectCell
                   inputClassName={styles.checkInput}
                   id={id}
-                  key={name}
+                  key={column.name}
                   isSelected={isSelected}
                   isDisabled={false}
                   onSelectedChange={onSelectedChange}
@@ -130,275 +104,112 @@ class MovieIndexRow extends Component {
               );
             }
 
-            if (name === 'status') {
+            if (column.name === 'status') {
               return (
-                <MovieStatusCell
-                  key={name}
-                  className={styles[name]}
-                  monitored={monitored}
-                  status={status}
-                  component={VirtualTableRowCell}
-                />
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  {
+                    enableRss || enableAutomaticSearch || enableInteractiveSearch ?
+                      <Label kind={kinds.SUCCESS}>
+                        {'Enabled'}
+                      </Label>:
+                      null
+                  }
+                  {
+                    !enableRss && !enableAutomaticSearch && !enableInteractiveSearch ?
+                      <Label
+                        kind={kinds.DISABLED}
+                        outline={true}
+                      >
+                        {translate('Disabled')}
+                      </Label> :
+                      null
+                  }
+                </VirtualTableRowCell>
               );
             }
 
-            if (name === 'sortTitle') {
+            if (column.name === 'name') {
               return (
                 <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
+                  key={column.name}
+                  className={styles[column.name]}
                 >
+                  {name}
+                </VirtualTableRowCell>
+              );
+            }
 
-                  <MovieTitleLink
-                    titleSlug={titleSlug}
-                    title={title}
+            if (column.name === 'privacy') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  <Label>
+                    {privacy}
+                  </Label>
+                </VirtualTableRowCell>
+              );
+            }
+
+            if (column.name === 'protocol') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  <ProtocolLabel
+                    protocol={protocol}
                   />
-
                 </VirtualTableRowCell>
               );
             }
 
-            if (name === 'collection') {
+            if (column.name === 'capabilities') {
               return (
                 <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
+                  key={column.name}
+                  className={styles[column.name]}
                 >
-                  {collection ? collection.name : null }
+                  <CapabilitiesLabel
+                    supportsBooks={supportsBooks}
+                    supportsMovies={supportsMovies}
+                    supportsMusic={supportsMusic}
+                    supportsTv={supportsTv}
+                  />
                 </VirtualTableRowCell>
               );
             }
 
-            if (name === 'studio') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  {studio}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'qualityProfileId') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  {qualityProfile.name}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'added') {
+            if (column.name === 'added') {
               return (
                 <RelativeDateCellConnector
-                  key={name}
-                  className={styles[name]}
+                  key={column.name}
+                  className={styles[column.name]}
                   date={added}
                   component={VirtualTableRowCell}
                 />
               );
             }
 
-            if (name === 'year') {
+            if (column.name === 'actions') {
               return (
                 <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
+                  key={column.name}
+                  className={styles[column.name]}
                 >
-                  {year}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'inCinemas') {
-              return (
-                <RelativeDateCellConnector
-                  key={name}
-                  className={styles[name]}
-                  date={inCinemas}
-                  component={VirtualTableRowCell}
-                />
-              );
-            }
-
-            if (name === 'digitalRelease') {
-              return (
-                <RelativeDateCellConnector
-                  key={name}
-                  className={styles[name]}
-                  date={digitalRelease}
-                  component={VirtualTableRowCell}
-                />
-              );
-            }
-
-            if (name === 'physicalRelease') {
-              return (
-                <RelativeDateCellConnector
-                  key={name}
-                  className={styles[name]}
-                  date={physicalRelease}
-                  component={VirtualTableRowCell}
-                />
-              );
-            }
-
-            if (name === 'runtime') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  {formatRuntime(runtime, movieRuntimeFormat)}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'minimumAvailability') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  {titleCase(minimumAvailability)}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'path') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                  title={path}
-                >
-                  {path}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'sizeOnDisk') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  {formatBytes(sizeOnDisk)}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'genres') {
-              const joinedGenres = genres.join(', ');
-
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  <span title={joinedGenres}>
-                    {joinedGenres}
-                  </span>
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'movieStatus') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  <MovieFileStatusConnector
-                    movieId={id}
-                    queueStatus={queueStatus}
-                    queueState={queueState}
+                  <IconButton
+                    name={icons.EXTERNAL_LINK}
+                    title={'Website'}
                   />
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'ratings') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  <HeartRating
-                    rating={ratings.value}
-                  />
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'certification') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  {certification}
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'tags') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  <TagListConnector
-                    tags={tags}
-                  />
-                </VirtualTableRowCell>
-              );
-            }
-
-            if (name === 'actions') {
-              return (
-                <VirtualTableRowCell
-                  key={name}
-                  className={styles[name]}
-                >
-                  <span className={styles.externalLinks}>
-                    <Tooltip
-                      anchor={
-                        <Icon
-                          name={icons.EXTERNAL_LINK}
-                          size={12}
-                        />
-                      }
-                      canFlip={true}
-                      kind={kinds.INVERSE}
-                    />
-                  </span>
-
-                  <SpinnerIconButton
-                    name={icons.REFRESH}
-                    title={translate('RefreshMovie')}
-                    isSpinning={isRefreshingMovie}
-                    onPress={onRefreshMoviePress}
-                  />
-
-                  {
-                    showSearchAction &&
-                      <SpinnerIconButton
-                        className={styles.action}
-                        name={icons.SEARCH}
-                        title={translate('SearchForMovie')}
-                        isSpinning={isSearchingMovie}
-                        onPress={onSearchPress}
-                      />
-                  }
 
                   <IconButton
                     name={icons.EDIT}
                     title={translate('EditMovie')}
-                    onPress={this.onEditMoviePress}
+                    onPress={this.onEditIndexerPress}
                   />
                 </VirtualTableRowCell>
               );
@@ -408,11 +219,10 @@ class MovieIndexRow extends Component {
           })
         }
 
-        <EditMovieModalConnector
-          isOpen={isEditMovieModalOpen}
-          movieId={id}
-          onModalClose={this.onEditMovieModalClose}
-          onDeleteMoviePress={this.onDeleteMoviePress}
+        <EditIndexerModalConnector
+          id={id}
+          isOpen={isEditIndexerModalOpen}
+          onModalClose={this.onEditIndexerModalClose}
         />
 
         <DeleteMovieModal
@@ -427,46 +237,23 @@ class MovieIndexRow extends Component {
 
 MovieIndexRow.propTypes = {
   id: PropTypes.number.isRequired,
-  monitored: PropTypes.bool.isRequired,
-  status: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  titleSlug: PropTypes.string.isRequired,
-  studio: PropTypes.string,
-  collection: PropTypes.object,
-  qualityProfile: PropTypes.object.isRequired,
-  added: PropTypes.string,
-  year: PropTypes.number,
-  inCinemas: PropTypes.string,
-  physicalRelease: PropTypes.string,
-  digitalRelease: PropTypes.string,
-  runtime: PropTypes.number,
-  minimumAvailability: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
-  sizeOnDisk: PropTypes.number.isRequired,
-  genres: PropTypes.arrayOf(PropTypes.string).isRequired,
-  ratings: PropTypes.object.isRequired,
-  certification: PropTypes.string,
+  protocol: PropTypes.string.isRequired,
+  privacy: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  enableRss: PropTypes.bool.isRequired,
+  enableAutomaticSearch: PropTypes.bool.isRequired,
+  enableInteractiveSearch: PropTypes.bool.isRequired,
+  supportsTv: PropTypes.bool.isRequired,
+  supportsBooks: PropTypes.bool.isRequired,
+  supportsMusic: PropTypes.bool.isRequired,
+  supportsMovies: PropTypes.bool.isRequired,
+  added: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
-  showSearchAction: PropTypes.bool.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  isRefreshingMovie: PropTypes.bool.isRequired,
   isSearchingMovie: PropTypes.bool.isRequired,
-  onRefreshMoviePress: PropTypes.func.isRequired,
-  onSearchPress: PropTypes.func.isRequired,
   isMovieEditorActive: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool,
-  onSelectedChange: PropTypes.func.isRequired,
-  tmdbId: PropTypes.number.isRequired,
-  imdbId: PropTypes.string,
-  youTubeTrailerId: PropTypes.string,
-  queueStatus: PropTypes.string,
-  queueState: PropTypes.string,
-  movieRuntimeFormat: PropTypes.string.isRequired
-};
-
-MovieIndexRow.defaultProps = {
-  genres: [],
-  tags: []
+  onSelectedChange: PropTypes.func.isRequired
 };
 
 export default MovieIndexRow;

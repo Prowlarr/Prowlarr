@@ -1,5 +1,7 @@
+import React from 'react';
 import { createAction } from 'redux-actions';
-import { filterBuilderTypes, filterBuilderValueTypes, filterTypes, sortDirections } from 'Helpers/Props';
+import Icon from 'Components/Icon';
+import { filterBuilderTypes, filterBuilderValueTypes, filterTypes, icons, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import translate from 'Utilities/String/translate';
@@ -7,6 +9,7 @@ import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
+import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
 
 //
 // Variables
@@ -25,6 +28,59 @@ export const defaultState = {
   items: [],
   sortKey: 'releaseWeight',
   sortDirection: sortDirections.ASCENDING,
+
+  columns: [
+    {
+      name: 'protocol',
+      label: translate('Source'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'age',
+      label: translate('Age'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'title',
+      label: translate('Title'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'indexer',
+      label: translate('Indexer'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'size',
+      label: translate('Size'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'peers',
+      label: translate('Peers'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'indexerFlags',
+      label: React.createElement(Icon, { name: icons.FLAG }),
+      columnLabel: 'Indexer Flags',
+      isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'actions',
+      columnLabel: translate('Actions'),
+      isVisible: true,
+      isModifiable: false
+    }
+  ],
+
   sortPredicates: {
     age: function(item, direction) {
       return item.ageMinutes;
@@ -180,6 +236,7 @@ export const CLEAR_RELEASES = 'releases/clearReleases';
 export const GRAB_RELEASE = 'releases/grabRelease';
 export const UPDATE_RELEASE = 'releases/updateRelease';
 export const SET_RELEASES_FILTER = 'releases/setMovieReleasesFilter';
+export const SET_RELEASES_TABLE_OPTION = 'releases/setReleasesTableOption';
 
 //
 // Action Creators
@@ -191,11 +248,12 @@ export const clearReleases = createAction(CLEAR_RELEASES);
 export const grabRelease = createThunk(GRAB_RELEASE);
 export const updateRelease = createAction(UPDATE_RELEASE);
 export const setReleasesFilter = createAction(SET_RELEASES_FILTER);
+export const setReleasesTableOption = createAction(SET_RELEASES_TABLE_OPTION);
 
 //
 // Helpers
 
-const fetchReleasesHelper = createFetchHandler(section, '/release');
+const fetchReleasesHelper = createFetchHandler(section, '/search');
 
 //
 // Action Handlers
@@ -275,6 +333,8 @@ export const reducers = createHandleActions({
   },
 
   [SET_RELEASES_FILTER]: createSetClientSideCollectionFilterReducer(section),
-  [SET_RELEASES_SORT]: createSetClientSideCollectionSortReducer(section)
+  [SET_RELEASES_SORT]: createSetClientSideCollectionSortReducer(section),
+
+  [SET_RELEASES_TABLE_OPTION]: createSetTableOptionReducer(section)
 
 }, defaultState, section);

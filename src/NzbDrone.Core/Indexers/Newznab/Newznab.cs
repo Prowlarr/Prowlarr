@@ -11,13 +11,14 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
-    public class Newznab : HttpApplicationBase<NewznabSettings>
+    public class Newznab : HttpIndexerBase<NewznabSettings>
     {
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
         public override string Name => "Newznab";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
 
@@ -72,8 +73,13 @@ namespace NzbDrone.Core.Indexers.Newznab
                 Implementation = GetType().Name,
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,
+                Privacy = IndexerPrivacy.Private,
                 SupportsRss = SupportsRss,
-                SupportsSearch = SupportsSearch
+                SupportsSearch = SupportsSearch,
+                SupportsBooks = SupportsBooks,
+                SupportsMovies = SupportsMovies,
+                SupportsMusic = SupportsMusic,
+                SupportsTv = SupportsTv
             };
         }
 

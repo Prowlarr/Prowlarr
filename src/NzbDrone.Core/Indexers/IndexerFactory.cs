@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
@@ -42,8 +43,13 @@ namespace NzbDrone.Core.Indexers
             base.SetProviderCharacteristics(provider, definition);
 
             definition.Protocol = provider.Protocol;
+            definition.Privacy = provider.Privacy;
             definition.SupportsRss = provider.SupportsRss;
             definition.SupportsSearch = provider.SupportsSearch;
+            definition.SupportsBooks = provider.SupportsBooks;
+            definition.SupportsMovies = provider.SupportsMovies;
+            definition.SupportsMusic = provider.SupportsMusic;
+            definition.SupportsTv = provider.SupportsTv;
         }
 
         public List<IIndexer> RssEnabled(bool filterBlockedIndexers = true)
@@ -109,6 +115,13 @@ namespace NzbDrone.Core.Indexers
             }
 
             return result;
+        }
+
+        public override IndexerDefinition Create(IndexerDefinition definition)
+        {
+            definition.Added = DateTime.UtcNow;
+
+            return base.Create(definition);
         }
     }
 }

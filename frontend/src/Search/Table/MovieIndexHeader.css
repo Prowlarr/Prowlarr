@@ -1,0 +1,37 @@
+.status {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 0 0 60px;
+}
+
+.title {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 4 0 110px;
+}
+
+.indexer {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 0 0 85px;
+}
+
+.age,
+.size,
+.peers {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 0 0 75px;
+}
+
+.indexerFlags {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 0 0 50px;
+}
+
+.actions {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 0 1 90px;
+}

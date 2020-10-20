@@ -5,20 +5,20 @@ import { createSelector } from 'reselect';
 import * as commandNames from 'Commands/commandNames';
 import { executeCommand } from 'Store/Actions/commandActions';
 import createExecutingCommandsSelector from 'Store/Selectors/createExecutingCommandsSelector';
-import createMovieSelector from 'Store/Selectors/createMovieSelector';
+import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 
 function selectShowSearchAction() {
   return createSelector(
-    (state) => state.movieIndex,
-    (movieIndex) => {
-      return movieIndex.tableOptions.showSearchAction;
+    (state) => state.indexerIndex,
+    (indexerIndex) => {
+      return indexerIndex.tableOptions.showSearchAction;
     }
   );
 }
 
 function createMapStateToProps() {
   return createSelector(
-    createMovieSelector(),
+    createIndexerSelector(),
     selectShowSearchAction(),
     createExecutingCommandsSelector(),
     (

@@ -4,12 +4,12 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.HDBits
 {
-    public class HDBits : HttpApplicationBase<HDBitsSettings>
+    public class HDBits : HttpIndexerBase<HDBitsSettings>
     {
         public override string Name => "HDBits";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override bool SupportsRss => true;
-        public override bool SupportsSearch => true;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+
         public override int PageSize => 30;
 
         public HDBits(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

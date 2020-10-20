@@ -5,11 +5,12 @@ using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Indexers.TorrentPotato
 {
-    public class TorrentPotato : HttpApplicationBase<TorrentPotatoSettings>
+    public class TorrentPotato : HttpIndexerBase<TorrentPotatoSettings>
     {
         public override string Name => "TorrentPotato";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
         public TorrentPotato(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

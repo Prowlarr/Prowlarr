@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { saveDimensions, setIsSidebarVisible } from 'Store/Actions/appActions';
 import { fetchCustomFilters } from 'Store/Actions/customFilterActions';
+import { fetchIndexers } from 'Store/Actions/indexerActions';
 import { fetchIndexerFlags, fetchLanguages, fetchUISettings } from 'Store/Actions/settingsActions';
 import { fetchStatus } from 'Store/Actions/systemActions';
 import { fetchTags } from 'Store/Actions/tagActions';
@@ -46,6 +47,7 @@ const selectIsPopulated = createSelector(
   (state) => state.tags.isPopulated,
   (state) => state.settings.ui.isPopulated,
   (state) => state.settings.languages.isPopulated,
+  (state) => state.indexers.isPopulated,
   (state) => state.settings.indexerFlags.isPopulated,
   (state) => state.system.status.isPopulated,
   (
@@ -53,6 +55,7 @@ const selectIsPopulated = createSelector(
     tagsIsPopulated,
     uiSettingsIsPopulated,
     languagesIsPopulated,
+    indexersIsPopulated,
     indexerFlagsIsPopulated,
     systemStatusIsPopulated
   ) => {
@@ -61,6 +64,7 @@ const selectIsPopulated = createSelector(
       tagsIsPopulated &&
       uiSettingsIsPopulated &&
       languagesIsPopulated &&
+      indexersIsPopulated &&
       indexerFlagsIsPopulated &&
       systemStatusIsPopulated
     );
@@ -72,6 +76,7 @@ const selectErrors = createSelector(
   (state) => state.tags.error,
   (state) => state.settings.ui.error,
   (state) => state.settings.languages.error,
+  (state) => state.indexers.error,
   (state) => state.settings.indexerFlags.error,
   (state) => state.system.status.error,
   (
@@ -79,6 +84,7 @@ const selectErrors = createSelector(
     tagsError,
     uiSettingsError,
     languagesError,
+    indexersError,
     indexerFlagsError,
     systemStatusError
   ) => {
@@ -87,6 +93,7 @@ const selectErrors = createSelector(
       tagsError ||
       uiSettingsError ||
       languagesError ||
+      indexersError ||
       indexerFlagsError ||
       systemStatusError
     );
@@ -97,6 +104,7 @@ const selectErrors = createSelector(
       tagsError,
       uiSettingsError,
       languagesError,
+      indexersError,
       indexerFlagsError,
       systemStatusError
     };
@@ -139,6 +147,9 @@ function createMapDispatchToProps(dispatch, props) {
     dispatchFetchLanguages() {
       dispatch(fetchLanguages());
     },
+    dispatchFetchIndexers() {
+      dispatch(fetchIndexers());
+    },
     dispatchFetchIndexerFlags() {
       dispatch(fetchIndexerFlags());
     },
@@ -175,6 +186,7 @@ class PageConnector extends Component {
       this.props.dispatchFetchCustomFilters();
       this.props.dispatchFetchTags();
       this.props.dispatchFetchLanguages();
+      this.props.dispatchFetchIndexers();
       this.props.dispatchFetchIndexerFlags();
       this.props.dispatchFetchUISettings();
       this.props.dispatchFetchStatus();
@@ -197,6 +209,7 @@ class PageConnector extends Component {
       hasError,
       dispatchFetchTags,
       dispatchFetchLanguages,
+      dispatchFetchIndexers,
       dispatchFetchIndexerFlags,
       dispatchFetchUISettings,
       dispatchFetchStatus,
@@ -234,6 +247,7 @@ PageConnector.propTypes = {
   dispatchFetchCustomFilters: PropTypes.func.isRequired,
   dispatchFetchTags: PropTypes.func.isRequired,
   dispatchFetchLanguages: PropTypes.func.isRequired,
+  dispatchFetchIndexers: PropTypes.func.isRequired,
   dispatchFetchIndexerFlags: PropTypes.func.isRequired,
   dispatchFetchUISettings: PropTypes.func.isRequired,
   dispatchFetchStatus: PropTypes.func.isRequired,

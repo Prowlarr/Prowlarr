@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { fetchHistory, markAsFailed } from 'Store/Actions/historyActions';
-import createMovieSelector from 'Store/Selectors/createMovieSelector';
+import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import HistoryRow from './HistoryRow';
 
 function createMapStateToProps() {
   return createSelector(
-    createMovieSelector(),
+    createIndexerSelector(),
     createUISettingsSelector(),
     (movie, uiSettings) => {
       return {

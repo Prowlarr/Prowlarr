@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchIndexerSchema, selectIndexerSchema } from 'Store/Actions/settingsActions';
+import { fetchIndexerSchema, selectIndexerSchema } from 'Store/Actions/indexerActions';
 import AddIndexerModalContent from './AddIndexerModalContent';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.settings.indexers,
+    (state) => state.indexers,
     (indexers) => {
       const {
         isSchemaFetching,

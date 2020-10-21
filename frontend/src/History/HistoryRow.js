@@ -5,7 +5,6 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
-import MovieTitleLink from 'Indexer/MovieTitleLink';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
 import styles from './HistoryRow.css';

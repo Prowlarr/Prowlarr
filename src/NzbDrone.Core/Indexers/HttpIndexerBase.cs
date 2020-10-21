@@ -86,6 +86,11 @@ namespace NzbDrone.Core.Indexers
             return requests;
         }
 
+        public override IndexerCapabilities GetCapabilities()
+        {
+            return Capabilities;
+        }
+
         protected virtual IList<ReleaseInfo> FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
         {
             var releases = new List<ReleaseInfo>();

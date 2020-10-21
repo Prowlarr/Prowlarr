@@ -64,10 +64,7 @@ class MovieIndexRow extends Component {
       protocol,
       privacy,
       added,
-      supportsTv,
-      supportsBooks,
-      supportsMusic,
-      supportsMovies,
+      capabilities,
       columns,
       isMovieEditorActive,
       isSelected,
@@ -175,10 +172,7 @@ class MovieIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   <CapabilitiesLabel
-                    supportsBooks={supportsBooks}
-                    supportsMovies={supportsMovies}
-                    supportsMusic={supportsMusic}
-                    supportsTv={supportsTv}
+                    capabilities={capabilities}
                   />
                 </VirtualTableRowCell>
               );
@@ -243,10 +237,7 @@ MovieIndexRow.propTypes = {
   enableRss: PropTypes.bool.isRequired,
   enableAutomaticSearch: PropTypes.bool.isRequired,
   enableInteractiveSearch: PropTypes.bool.isRequired,
-  supportsTv: PropTypes.bool.isRequired,
-  supportsBooks: PropTypes.bool.isRequired,
-  supportsMusic: PropTypes.bool.isRequired,
-  supportsMovies: PropTypes.bool.isRequired,
+  capabilities: PropTypes.object.isRequired,
   added: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

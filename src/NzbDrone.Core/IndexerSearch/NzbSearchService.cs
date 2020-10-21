@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -13,7 +14,8 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface ISearchForNzb
     {
-        List<ReleaseInfo> MovieSearch(string movieId, bool userInvokedSearch, bool interactiveSearch);
+        List<ReleaseInfo> Search(string query, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch);
+        NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch);
     }
 
     public class NzbSearchService : ISearchForNzb
@@ -28,14 +30,21 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        public List<ReleaseInfo> MovieSearch(string movie, bool userInvokedSearch, bool interactiveSearch)
+        public List<ReleaseInfo> Search(string query, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch)
         {
-            var searchSpec = Get<MovieSearchCriteria>(movie, userInvokedSearch, interactiveSearch);
+            var searchSpec = Get<MovieSearchCriteria>(query, indexerIds, userInvokedSearch, interactiveSearch);
 
             return Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
         }
 
-        private TSpec Get<TSpec>(string movie, bool userInvokedSearch, bool interactiveSearch)
+        public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch)
+        {
+            var searchSpec = Get<MovieSearchCriteria>(request.q, indexerIds, userInvokedSearch, interactiveSearch);
+
+            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+        }
+
+        private TSpec Get<TSpec>(string query, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch)
             where TSpec : SearchCriteriaBase, new()
         {
             var spec = new TSpec()
@@ -44,7 +53,8 @@ namespace NzbDrone.Core.IndexerSearch
                 InteractiveSearch = interactiveSearch
             };
 
-            spec.SceneTitles = new List<string> { movie };
+            spec.SceneTitles = new List<string> { query };
+            spec.IndexerIds = indexerIds;
 
             return spec;
         }
@@ -54,6 +64,11 @@ namespace NzbDrone.Core.IndexerSearch
             var indexers = criteriaBase.InteractiveSearch ?
                 _indexerFactory.InteractiveSearchEnabled() :
                 _indexerFactory.AutomaticSearchEnabled();
+
+            if (criteriaBase.IndexerIds != null && criteriaBase.IndexerIds.Count > 0)
+            {
+                indexers = indexers.Where(i => criteriaBase.IndexerIds.Contains(i.Definition.Id)).ToList();
+            }
 
             var reports = new List<ReleaseInfo>();
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
 import TextInput from 'Components/Form/TextInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
@@ -15,7 +16,8 @@ class SearchFooter extends Component {
 
     this.state = {
       searchingReleases: false,
-      searchQuery: ''
+      searchQuery: '',
+      indexerIds: []
     };
   }
 
@@ -40,7 +42,7 @@ class SearchFooter extends Component {
   }
 
   onSearchPress = () => {
-    this.props.onSearchPress(this.state.searchQuery);
+    this.props.onSearchPress(this.state.searchQuery, this.state.indexerIds);
   }
 
   //
@@ -52,7 +54,8 @@ class SearchFooter extends Component {
     } = this.props;
 
     const {
-      searchQuery
+      searchQuery,
+      indexerIds
     } = this.state;
 
     return (
@@ -62,6 +65,16 @@ class SearchFooter extends Component {
             name='searchQuery'
             placeholder='Query'
             value={searchQuery}
+            isDisabled={isFetching}
+            onChange={this.onInputChange}
+          />
+        </div>
+
+        <div className={styles.indexerContainer}>
+          <IndexersSelectInputConnector
+            name='indexerIds'
+            placeholder='Indexers'
+            value={indexerIds}
             isDisabled={isFetching}
             onChange={this.onInputChange}
           />

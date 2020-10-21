@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using FluentAssertions;
 using Moq;
@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
     [TestFixture]
     public class NewznabFixture : CoreTest<Newznab>
     {
-        private NewznabCapabilities _caps;
+        private IndexerCapabilities _caps;
 
         [SetUp]
         public void Setup()
@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
                 }
             };
 
-            _caps = new NewznabCapabilities();
+            _caps = new IndexerCapabilities();
             Mocker.GetMock<INewznabCapabilitiesProvider>()
                 .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>()))
                 .Returns(_caps);
@@ -64,8 +64,8 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_use_pagesize_reported_by_caps()
         {
-            _caps.MaxPageSize = 30;
-            _caps.DefaultPageSize = 25;
+            _caps.LimitsMax = 30;
+            _caps.LimitsDefault = 25;
 
             Subject.PageSize.Should().Be(25);
         }

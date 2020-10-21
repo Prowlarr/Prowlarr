@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using NzbDrone.Core.Indexers;
 
@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Parser.Model
         public int TvdbId { get; set; }
         public int TvRageId { get; set; }
         public int ImdbId { get; set; }
+        public int TmdbId { get; set; }
         public DateTime PublishDate { get; set; }
 
         public string Origin { get; set; }

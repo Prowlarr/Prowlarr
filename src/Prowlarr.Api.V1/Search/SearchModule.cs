@@ -26,17 +26,26 @@ namespace Prowlarr.Api.V1.Search
         {
             if (Request.Query.query.HasValue)
             {
-                return GetSearchReleases(Request.Query.query);
+                var indexerIds = Request.Query.indexerIds.HasValue ? (List<int>)Request.Query.indexerIds.split(',') : new List<int>();
+
+                if (indexerIds.Count > 0)
+                {
+                    return GetSearchReleases(Request.Query.query, indexerIds);
+                }
+                else
+                {
+                    return GetSearchReleases(Request.Query.query, null);
+                }
             }
 
             return new List<SearchResource>();
         }
 
-        private List<SearchResource> GetSearchReleases(string query)
+        private List<SearchResource> GetSearchReleases(string query, List<int> indexerIds)
         {
             try
             {
-                var decisions = _nzbSearhService.MovieSearch(query, true, true);
+                var decisions = _nzbSearhService.Search(query, indexerIds, true, true);
 
                 return MapDecisions(decisions);
             }

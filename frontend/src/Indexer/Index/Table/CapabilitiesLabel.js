@@ -4,16 +4,16 @@ import Label from 'Components/Label';
 
 function CapabilitiesLabel(props) {
   const {
-    supportsBooks,
-    supportsMovies,
-    supportsMusic,
-    supportsTv
-  } = props;
+    movieSearchAvailable,
+    tvSearchAvailable,
+    musicSearchAvailable,
+    bookSearchAvailable
+  } = props.capabilities;
 
   return (
     <span>
       {
-        supportsBooks ?
+        bookSearchAvailable ?
           <Label>
             {'Books'}
           </Label> :
@@ -21,7 +21,7 @@ function CapabilitiesLabel(props) {
       }
 
       {
-        supportsMovies ?
+        movieSearchAvailable ?
           <Label>
             {'Movies'}
           </Label> :
@@ -29,7 +29,7 @@ function CapabilitiesLabel(props) {
       }
 
       {
-        supportsMusic ?
+        musicSearchAvailable ?
           <Label>
             {'Music'}
           </Label> :
@@ -37,7 +37,7 @@ function CapabilitiesLabel(props) {
       }
 
       {
-        supportsTv ?
+        tvSearchAvailable ?
           <Label>
             {'TV'}
           </Label> :
@@ -45,7 +45,7 @@ function CapabilitiesLabel(props) {
       }
 
       {
-        !supportsTv && !supportsMusic && !supportsMovies && !supportsBooks ?
+        !tvSearchAvailable && !musicSearchAvailable && !movieSearchAvailable && !bookSearchAvailable ?
           <Label>
             {'None'}
           </Label> :
@@ -56,10 +56,7 @@ function CapabilitiesLabel(props) {
 }
 
 CapabilitiesLabel.propTypes = {
-  supportsTv: PropTypes.bool.isRequired,
-  supportsBooks: PropTypes.bool.isRequired,
-  supportsMusic: PropTypes.bool.isRequired,
-  supportsMovies: PropTypes.bool.isRequired
+  capabilities: PropTypes.object.isRequired
 };
 
 export default CapabilitiesLabel;

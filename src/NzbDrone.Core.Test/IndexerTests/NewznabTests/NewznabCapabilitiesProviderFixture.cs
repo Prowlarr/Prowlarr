@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Xml;
 using FluentAssertions;
 using Moq;
@@ -6,7 +6,6 @@ using NUnit.Framework;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 {
@@ -53,8 +52,8 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             var caps = Subject.GetCapabilities(_settings);
 
-            caps.DefaultPageSize.Should().Be(25);
-            caps.MaxPageSize.Should().Be(60);
+            caps.LimitsDefault.Value.Should().Be(25);
+            caps.LimitsMax.Value.Should().Be(60);
         }
 
         [Test]
@@ -64,8 +63,8 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             var caps = Subject.GetCapabilities(_settings);
 
-            caps.DefaultPageSize.Should().Be(100);
-            caps.MaxPageSize.Should().Be(100);
+            caps.LimitsDefault.Value.Should().Be(100);
+            caps.LimitsMax.Value.Should().Be(100);
         }
 
         [Test]

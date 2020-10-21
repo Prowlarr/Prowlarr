@@ -16,5 +16,7 @@ namespace NzbDrone.Core.Indexers
 
         IList<ReleaseInfo> FetchRecent();
         IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
+
+        IndexerCapabilities GetCapabilities();
     }
 }

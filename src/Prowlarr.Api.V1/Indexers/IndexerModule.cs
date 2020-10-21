@@ -1,5 +1,9 @@
+using System.Collections.Generic;
 using Nancy;
+using Nancy.ModelBinding;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.IndexerSearch;
 using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1.Indexers
@@ -9,13 +13,19 @@ namespace Prowlarr.Api.V1.Indexers
         public static readonly IndexerResourceMapper ResourceMapper = new IndexerResourceMapper();
 
         private IIndexerFactory _indexerFactory { get; set; }
+        private ISearchForNzb _nzbSearchService { get; set; }
 
-        public IndexerModule(IndexerFactory indexerFactory)
+        public IndexerModule(IndexerFactory indexerFactory, ISearchForNzb nzbSearchService)
             : base(indexerFactory, "indexer", ResourceMapper)
         {
             _indexerFactory = indexerFactory;
+            _nzbSearchService = nzbSearchService;
 
-            Get("{id}/newznab", x => GetNewznabResponse(x.id));
+            Get("{id}/newznab", x =>
+            {
+                var request = this.Bind<NewznabRequest>();
+                return GetNewznabResponse(request);
+            });
         }
 
         protected override void Validate(IndexerDefinition definition, bool includeWarnings)
@@ -28,25 +38,36 @@ namespace Prowlarr.Api.V1.Indexers
             base.Validate(definition, includeWarnings);
         }
 
-        private object GetNewznabResponse(int id)
+        private object GetNewznabResponse(NewznabRequest request)
         {
-            var requestType = Request.Query.t;
+            var requestType = request.t;
 
-            if (!requestType.HasValue)
+            if (requestType.IsNullOrWhiteSpace())
             {
                 throw new BadRequestException("Missing Function Parameter");
             }
 
-            if (requestType.Value == "caps")
+            var indexer = _indexerFactory.Get(request.id);
+
+            if (indexer == null)
             {
-                var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(id));
-                Response response = indexer.Capabilities.ToXml();
-                response.ContentType = "application/rss+xml";
-                return response;
+                throw new NotFoundException("Indexer Not Found");
             }
-            else
+
+            var indexerInstance = _indexerFactory.GetInstance(indexer);
+
+            switch (requestType)
             {
-                throw new BadRequestException("Function Not Available");
+                case "caps":
+                    Response response = indexerInstance.GetCapabilities().ToXml();
+                    response.ContentType = "application/rss+xml";
+                    return response;
+                case "movie":
+                    Response movieResponse = _nzbSearchService.Search(request, new List<int> { indexer.Id }, true, false).ToXml();
+                    movieResponse.ContentType = "application/rss+xml";
+                    return movieResponse;
+                default:
+                    throw new BadRequestException("Function Not Available");
             }
         }
     }

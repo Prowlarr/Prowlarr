@@ -20,7 +20,8 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).DefaultPageSize;
+
+        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).LimitsDefault.Value;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
@@ -63,7 +64,8 @@ namespace NzbDrone.Core.Indexers.Torznab
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,
                 SupportsRss = SupportsRss,
-                SupportsSearch = SupportsSearch
+                SupportsSearch = SupportsSearch,
+                Capabilities = new IndexerCapabilities()
             };
         }
 
@@ -95,15 +97,15 @@ namespace NzbDrone.Core.Indexers.Torznab
             failures.AddIfNotNull(TestCapabilities());
         }
 
-        protected static List<int> CategoryIds(List<NewznabCategory> categories)
+        protected static List<int> CategoryIds(List<IndexerCategory> categories)
         {
             var l = categories.Select(c => c.Id).ToList();
 
             foreach (var category in categories)
             {
-                if (category.Subcategories != null)
+                if (category.SubCategories != null)
                 {
-                    l.AddRange(CategoryIds(category.Subcategories));
+                    l.AddRange(CategoryIds(category.SubCategories));
                 }
             }
 
@@ -127,14 +129,14 @@ namespace NzbDrone.Core.Indexers.Torznab
                     }
                 }
 
-                if (capabilities.SupportedSearchParameters != null && capabilities.SupportedSearchParameters.Contains("q"))
+                if (capabilities.SearchParams != null && capabilities.SearchParams.Contains(SearchParam.Q))
                 {
                     return null;
                 }
 
-                if (capabilities.SupportedMovieSearchParameters != null &&
-                    new[] { "q", "imdbid" }.Any(v => capabilities.SupportedMovieSearchParameters.Contains(v)) &&
-                    new[] { "imdbtitle", "imdbyear" }.All(v => capabilities.SupportedMovieSearchParameters.Contains(v)))
+                if (capabilities.MovieSearchParams != null &&
+                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)) &&
+                    new[] { MovieSearchParam.ImdbTitle, MovieSearchParam.ImdbYear }.All(v => capabilities.MovieSearchParams.Contains(v)))
                 {
                     return null;
                 }

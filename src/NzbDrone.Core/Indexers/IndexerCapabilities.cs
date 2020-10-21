@@ -13,13 +13,16 @@ namespace NzbDrone.Core.Indexers
         ImdbId,
         TvdbId,
         RId,
+        TvMazeId
     }
 
     public enum MovieSearchParam
     {
         Q,
         ImdbId,
-        TmdbId
+        TmdbId,
+        ImdbTitle,
+        ImdbYear
     }
 
     public enum MusicSearchParam
@@ -31,12 +34,23 @@ namespace NzbDrone.Core.Indexers
         Year
     }
 
+    public enum SearchParam
+    {
+        Q
+    }
+
+    public enum BookSearchParam
+    {
+        Q
+    }
+
     public class IndexerCapabilities
     {
         public int? LimitsMax { get; set; }
         public int? LimitsDefault { get; set; }
 
-        public bool SearchAvailable { get; set; }
+        public List<SearchParam> SearchParams;
+        public bool SearchAvailable => SearchParams.Count > 0;
 
         public List<TvSearchParam> TvSearchParams;
         public bool TvSearchAvailable => TvSearchParams.Count > 0;
@@ -45,6 +59,7 @@ namespace NzbDrone.Core.Indexers
         public bool TvSearchImdbAvailable => TvSearchParams.Contains(TvSearchParam.ImdbId);
         public bool TvSearchTvdbAvailable => TvSearchParams.Contains(TvSearchParam.TvdbId);
         public bool TvSearchTvRageAvailable => TvSearchParams.Contains(TvSearchParam.RId);
+        public bool TvSearchTvMazeAvailable => TvSearchParams.Contains(TvSearchParam.TvMazeId);
 
         public List<MovieSearchParam> MovieSearchParams;
         public bool MovieSearchAvailable => MovieSearchParams.Count > 0;
@@ -58,17 +73,18 @@ namespace NzbDrone.Core.Indexers
         public bool MusicSearchLabelAvailable => MusicSearchParams.Contains(MusicSearchParam.Label);
         public bool MusicSearchYearAvailable => MusicSearchParams.Contains(MusicSearchParam.Year);
 
-        public bool BookSearchAvailable { get; set; }
+        public List<BookSearchParam> BookSearchParams;
+        public bool BookSearchAvailable => BookSearchParams.Count > 0;
 
         public List<IndexerCategory> Categories { get; private set; }
 
         public IndexerCapabilities()
         {
-            SearchAvailable = true;
+            SearchParams = new List<SearchParam>();
             TvSearchParams = new List<TvSearchParam>();
             MovieSearchParams = new List<MovieSearchParam>();
             MusicSearchParams = new List<MusicSearchParam>();
-            BookSearchAvailable = false;
+            BookSearchParams = new List<BookSearchParam>();
             Categories = new List<IndexerCategory>();
         }
 
@@ -181,6 +197,11 @@ namespace NzbDrone.Core.Indexers
                 parameters.Add("rid");
             }
 
+            if (TvSearchTvMazeAvailable)
+            {
+                parameters.Add("tvmazeid");
+            }
+
             return string.Join(",", parameters);
         }
 
@@ -244,7 +265,7 @@ namespace NzbDrone.Core.Indexers
         {
             var subCategories = Categories.SelectMany(c => c.SubCategories);
             var allCategories = Categories.Concat(subCategories);
-            var supportsCategory = allCategories.Any(i => categories.Any(c => c == i.ID));
+            var supportsCategory = allCategories.Any(i => categories.Any(c => c == i.Id));
             return supportsCategory;
         }
 
@@ -280,13 +301,13 @@ namespace NzbDrone.Core.Indexers
                             new XAttribute("available", BookSearchAvailable ? "yes" : "no"),
                             new XAttribute("supportedParams", SupportedBookSearchParams))),
                     new XElement("categories",
-                        from c in Categories.OrderBy(x => x.ID < 100000 ? "z" + x.ID.ToString() : x.Name)
+                        from c in Categories.OrderBy(x => x.Id < 100000 ? "z" + x.Id.ToString() : x.Name)
                         select new XElement("category",
-                            new XAttribute("id", c.ID),
+                            new XAttribute("id", c.Id),
                             new XAttribute("name", c.Name),
                             from sc in c.SubCategories
                             select new XElement("subcat",
-                                new XAttribute("id", sc.ID),
+                                new XAttribute("id", sc.Id),
                                 new XAttribute("name", sc.Name))))));
             return xdoc;
         }
@@ -296,12 +317,12 @@ namespace NzbDrone.Core.Indexers
 
         public static IndexerCapabilities Concat(IndexerCapabilities left, IndexerCapabilities right)
         {
-            left.SearchAvailable = left.SearchAvailable || right.SearchAvailable;
+            left.SearchParams = left.SearchParams.Union(right.SearchParams).ToList();
             left.TvSearchParams = left.TvSearchParams.Union(right.TvSearchParams).ToList();
             left.MovieSearchParams = left.MovieSearchParams.Union(right.MovieSearchParams).ToList();
             left.MusicSearchParams = left.MusicSearchParams.Union(right.MusicSearchParams).ToList();
-            left.BookSearchAvailable = left.BookSearchAvailable || right.BookSearchAvailable;
-            left.Categories.AddRange(right.Categories.Where(x => x.ID < 100000).Except(left.Categories)); // exclude indexer specific categories (>= 100000)
+            left.BookSearchParams = left.BookSearchParams.Union(right.BookSearchParams).ToList();
+            left.Categories.AddRange(right.Categories.Where(x => x.Id < 100000).Except(left.Categories)); // exclude indexer specific categories (>= 100000)
             return left;
         }
     }

@@ -12,23 +12,23 @@ namespace NzbDrone.Core.Indexers.Newznab
 {
     public interface INewznabCapabilitiesProvider
     {
-        NewznabCapabilities GetCapabilities(NewznabSettings settings);
+        IndexerCapabilities GetCapabilities(NewznabSettings settings);
     }
 
     public class NewznabCapabilitiesProvider : INewznabCapabilitiesProvider
     {
-        private readonly ICached<NewznabCapabilities> _capabilitiesCache;
+        private readonly ICached<IndexerCapabilities> _capabilitiesCache;
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
 
         public NewznabCapabilitiesProvider(ICacheManager cacheManager, IHttpClient httpClient, Logger logger)
         {
-            _capabilitiesCache = cacheManager.GetCache<NewznabCapabilities>(GetType());
+            _capabilitiesCache = cacheManager.GetCache<IndexerCapabilities>(GetType());
             _httpClient = httpClient;
             _logger = logger;
         }
 
-        public NewznabCapabilities GetCapabilities(NewznabSettings indexerSettings)
+        public IndexerCapabilities GetCapabilities(NewznabSettings indexerSettings)
         {
             var key = indexerSettings.ToJson();
             var capabilities = _capabilitiesCache.Get(key, () => FetchCapabilities(indexerSettings), TimeSpan.FromDays(7));
@@ -36,9 +36,9 @@ namespace NzbDrone.Core.Indexers.Newznab
             return capabilities;
         }
 
-        private NewznabCapabilities FetchCapabilities(NewznabSettings indexerSettings)
+        private IndexerCapabilities FetchCapabilities(NewznabSettings indexerSettings)
         {
-            var capabilities = new NewznabCapabilities();
+            var capabilities = new IndexerCapabilities();
 
             var url = string.Format("{0}{1}?t=caps", indexerSettings.BaseUrl.TrimEnd('/'), indexerSettings.ApiPath.TrimEnd('/'));
 
@@ -81,9 +81,9 @@ namespace NzbDrone.Core.Indexers.Newznab
             return capabilities;
         }
 
-        private NewznabCapabilities ParseCapabilities(HttpResponse response)
+        private IndexerCapabilities ParseCapabilities(HttpResponse response)
         {
-            var capabilities = new NewznabCapabilities();
+            var capabilities = new IndexerCapabilities();
 
             var xDoc = XDocument.Parse(response.Content);
 
@@ -104,8 +104,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             var xmlLimits = xmlRoot.Element("limits");
             if (xmlLimits != null)
             {
-                capabilities.DefaultPageSize = int.Parse(xmlLimits.Attribute("default").Value);
-                capabilities.MaxPageSize = int.Parse(xmlLimits.Attribute("max").Value);
+                capabilities.LimitsDefault = int.Parse(xmlLimits.Attribute("default").Value);
+                capabilities.LimitsMax = int.Parse(xmlLimits.Attribute("max").Value);
             }
 
             var xmlSearching = xmlRoot.Element("searching");
@@ -114,22 +114,81 @@ namespace NzbDrone.Core.Indexers.Newznab
                 var xmlBasicSearch = xmlSearching.Element("search");
                 if (xmlBasicSearch == null || xmlBasicSearch.Attribute("available").Value != "yes")
                 {
-                    capabilities.SupportedSearchParameters = null;
+                    capabilities.SearchParams = new List<SearchParam>();
                 }
                 else if (xmlBasicSearch.Attribute("supportedParams") != null)
                 {
-                    capabilities.SupportedSearchParameters = xmlBasicSearch.Attribute("supportedParams").Value.Split(',');
+                    foreach (var param in xmlBasicSearch.Attribute("supportedParams").Value.Split(','))
+                    {
+                        if (Enum.TryParse(param, true, out SearchParam searchParam))
+                        {
+                            capabilities.SearchParams.AddIfNotNull(searchParam);
+                        }
+                    }
                 }
 
                 var xmlMovieSearch = xmlSearching.Element("movie-search");
                 if (xmlMovieSearch == null || xmlMovieSearch.Attribute("available").Value != "yes")
                 {
-                    capabilities.SupportedMovieSearchParameters = null;
+                    capabilities.MovieSearchParams = new List<MovieSearchParam>();
                 }
                 else if (xmlMovieSearch.Attribute("supportedParams") != null)
                 {
-                    capabilities.SupportedMovieSearchParameters = xmlMovieSearch.Attribute("supportedParams").Value.Split(',');
-                    capabilities.SupportsAggregateIdSearch = true;
+                    foreach (var param in xmlMovieSearch.Attribute("supportedParams").Value.Split(','))
+                    {
+                        if (Enum.TryParse(param, true, out MovieSearchParam searchParam))
+                        {
+                            capabilities.MovieSearchParams.AddIfNotNull(searchParam);
+                        }
+                    }
+                }
+
+                var xmlTvSearch = xmlSearching.Element("tv-search");
+                if (xmlTvSearch == null || xmlTvSearch.Attribute("available").Value != "yes")
+                {
+                    capabilities.TvSearchParams = new List<TvSearchParam>();
+                }
+                else if (xmlTvSearch.Attribute("supportedParams") != null)
+                {
+                    foreach (var param in xmlTvSearch.Attribute("supportedParams").Value.Split(','))
+                    {
+                        if (Enum.TryParse(param, true, out TvSearchParam searchParam))
+                        {
+                            capabilities.TvSearchParams.AddIfNotNull(searchParam);
+                        }
+                    }
+                }
+
+                var xmlAudioSearch = xmlSearching.Element("audio-search");
+                if (xmlAudioSearch == null || xmlAudioSearch.Attribute("available").Value != "yes")
+                {
+                    capabilities.MusicSearchParams = new List<MusicSearchParam>();
+                }
+                else if (xmlAudioSearch.Attribute("supportedParams") != null)
+                {
+                    foreach (var param in xmlAudioSearch.Attribute("supportedParams").Value.Split(','))
+                    {
+                        if (Enum.TryParse(param, true, out MusicSearchParam searchParam))
+                        {
+                            capabilities.MusicSearchParams.AddIfNotNull(searchParam);
+                        }
+                    }
+                }
+
+                var xmlBookSearch = xmlSearching.Element("book-search");
+                if (xmlBookSearch == null || xmlBookSearch.Attribute("available").Value != "yes")
+                {
+                    capabilities.BookSearchParams = new List<BookSearchParam>();
+                }
+                else if (xmlBookSearch.Attribute("supportedParams") != null)
+                {
+                    foreach (var param in xmlBookSearch.Attribute("supportedParams").Value.Split(','))
+                    {
+                        if (Enum.TryParse(param, true, out BookSearchParam searchParam))
+                        {
+                            capabilities.BookSearchParams.AddIfNotNull(searchParam);
+                        }
+                    }
                 }
             }
 
@@ -138,17 +197,16 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 foreach (var xmlCategory in xmlCategories.Elements("category"))
                 {
-                    var cat = new NewznabCategory
+                    var cat = new IndexerCategory
                     {
                         Id = int.Parse(xmlCategory.Attribute("id").Value),
                         Name = xmlCategory.Attribute("name").Value,
-                        Description = xmlCategory.Attribute("description") != null ? xmlCategory.Attribute("description").Value : string.Empty,
-                        Subcategories = new List<NewznabCategory>()
+                        Description = xmlCategory.Attribute("description") != null ? xmlCategory.Attribute("description").Value : string.Empty
                     };
 
                     foreach (var xmlSubcat in xmlCategory.Elements("subcat"))
                     {
-                        cat.Subcategories.Add(new NewznabCategory
+                        cat.SubCategories.Add(new IndexerCategory
                         {
                             Id = int.Parse(xmlSubcat.Attribute("id").Value),
                             Name = xmlSubcat.Attribute("name").Value,

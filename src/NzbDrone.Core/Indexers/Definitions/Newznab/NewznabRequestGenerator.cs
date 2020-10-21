@@ -28,8 +28,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
-                return capabilities.SupportedSearchParameters != null &&
-                       capabilities.SupportedSearchParameters.Contains("q");
+                return capabilities.SearchParams != null &&
+                       capabilities.SearchParams.Contains(SearchParam.Q);
             }
         }
 
@@ -39,8 +39,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
-                return capabilities.SupportedMovieSearchParameters != null &&
-                       capabilities.SupportedMovieSearchParameters.Contains("imdbid");
+                return capabilities.MovieSearchParams != null &&
+                       capabilities.MovieSearchParams.Contains(MovieSearchParam.ImdbId);
             }
         }
 
@@ -50,8 +50,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
-                return capabilities.SupportedMovieSearchParameters != null &&
-                       capabilities.SupportedMovieSearchParameters.Contains("tmdbid");
+                return capabilities.MovieSearchParams != null &&
+                       capabilities.MovieSearchParams.Contains(MovieSearchParam.TmdbId);
             }
         }
 
@@ -61,7 +61,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
-                return capabilities.SupportsAggregateIdSearch;
+                // TODO: Fix this, return capabilities.SupportsAggregateIdSearch;
+                return true;
             }
         }
 
@@ -72,11 +73,11 @@ namespace NzbDrone.Core.Indexers.Newznab
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
             // Some indexers might forget to enable movie search, but normal search still works fine. Thus we force a normal search.
-            if (capabilities.SupportedMovieSearchParameters != null)
+            if (capabilities.MovieSearchParams != null)
             {
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "movie", ""));
             }
-            else if (capabilities.SupportedSearchParameters != null)
+            else if (capabilities.SearchParams != null)
             {
                 pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", ""));
             }

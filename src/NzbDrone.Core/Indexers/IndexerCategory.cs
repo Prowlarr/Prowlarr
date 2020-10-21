@@ -5,8 +5,9 @@ namespace NzbDrone.Core.Indexers
 {
     public class IndexerCategory
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
 
         public List<IndexerCategory> SubCategories { get; private set; }
 
@@ -14,7 +15,7 @@ namespace NzbDrone.Core.Indexers
 
         public IndexerCategory(int id, string name)
         {
-            ID = id;
+            Id = id;
             Name = name;
             SubCategories = new List<IndexerCategory>();
         }
@@ -25,14 +26,14 @@ namespace NzbDrone.Core.Indexers
         public JToken ToJson() =>
             new JObject
             {
-                ["ID"] = ID,
+                ["ID"] = Id,
                 ["Name"] = Name
             };
 
-        public override bool Equals(object obj) => (obj as IndexerCategory)?.ID == ID;
+        public override bool Equals(object obj) => (obj as IndexerCategory)?.Id == Id;
 
         // Get Hash code should be calculated off read only properties.
         // ID is not readonly
-        public override int GetHashCode() => ID;
+        public override int GetHashCode() => Id;
     }
 }

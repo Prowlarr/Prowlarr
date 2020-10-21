@@ -68,6 +68,8 @@ namespace NzbDrone.Core.Indexers
         public abstract IList<ReleaseInfo> FetchRecent();
         public abstract IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
 
+        public abstract IndexerCapabilities GetCapabilities();
+
         protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
         {
             var result = releases.DistinctBy(v => v.Guid).ToList();

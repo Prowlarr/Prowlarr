@@ -95,25 +95,7 @@ export const defaultState = {
   ],
 
   sortPredicates: {
-    ...sortPredicates,
-
-    studio: function(item) {
-      const studio = item.studio;
-
-      return studio ? studio.toLowerCase() : '';
-    },
-
-    collection: function(item) {
-      const { collection ={} } = item;
-
-      return collection.name;
-    },
-
-    ratings: function(item) {
-      const { ratings = {} } = item;
-
-      return ratings.value;
-    }
+    ...sortPredicates
   },
 
   selectedFilterKey: 'all',
@@ -122,12 +104,6 @@ export const defaultState = {
   filterPredicates,
 
   filterBuilderProps: [
-    {
-      name: 'monitored',
-      label: translate('Monitored'),
-      type: filterBuilderTypes.EXACT,
-      valueType: filterBuilderValueTypes.BOOL
-    },
     {
       name: 'title',
       label: 'Indexer Name',

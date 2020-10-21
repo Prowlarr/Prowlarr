@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import { createAction } from 'redux-actions';
-import { filterTypePredicates, filterTypes, sortDirections } from 'Helpers/Props';
+import { sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 // import { batchActions } from 'redux-batched-actions';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import dateFilterPredicate from 'Utilities/Date/dateFilterPredicate';
-import padNumber from 'Utilities/Number/padNumber';
 import translate from 'Utilities/String/translate';
 import { updateItem } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
@@ -24,123 +23,12 @@ export const filters = [
     key: 'all',
     label: translate('All'),
     filters: []
-  },
-  {
-    key: 'monitored',
-    label: translate('MonitoredOnly'),
-    filters: [
-      {
-        key: 'monitored',
-        value: true,
-        type: filterTypes.EQUAL
-      }
-    ]
-  },
-  {
-    key: 'unmonitored',
-    label: translate('Unmonitored'),
-    filters: [
-      {
-        key: 'monitored',
-        value: false,
-        type: filterTypes.EQUAL
-      }
-    ]
-  },
-  {
-    key: 'missing',
-    label: translate('Missing'),
-    filters: [
-      {
-        key: 'monitored',
-        value: true,
-        type: filterTypes.EQUAL
-      },
-      {
-        key: 'hasFile',
-        value: false,
-        type: filterTypes.EQUAL
-      }
-    ]
-  },
-  {
-    key: 'wanted',
-    label: translate('Wanted'),
-    filters: [
-      {
-        key: 'monitored',
-        value: true,
-        type: filterTypes.EQUAL
-      },
-      {
-        key: 'hasFile',
-        value: false,
-        type: filterTypes.EQUAL
-      },
-      {
-        key: 'isAvailable',
-        value: true,
-        type: filterTypes.EQUAL
-      }
-    ]
-  },
-  {
-    key: 'cutoffunmet',
-    label: translate('CutoffUnmet'),
-    filters: [
-      {
-        key: 'monitored',
-        value: true,
-        type: filterTypes.EQUAL
-      },
-      {
-        key: 'hasFile',
-        value: true,
-        type: filterTypes.EQUAL
-      },
-      {
-        key: 'qualityCutoffNotMet',
-        value: true,
-        type: filterTypes.EQUAL
-      }
-    ]
   }
 ];
 
 export const filterPredicates = {
   added: function(item, filterValue, type) {
     return dateFilterPredicate(item.added, filterValue, type);
-  },
-
-  collection: function(item, filterValue, type) {
-    const predicate = filterTypePredicates[type];
-    const { collection } = item;
-
-    return predicate(collection ? collection.name : '', filterValue);
-  },
-
-  inCinemas: function(item, filterValue, type) {
-    return dateFilterPredicate(item.inCinemas, filterValue, type);
-  },
-
-  physicalRelease: function(item, filterValue, type) {
-    return dateFilterPredicate(item.physicalRelease, filterValue, type);
-  },
-
-  digitalRelease: function(item, filterValue, type) {
-    return dateFilterPredicate(item.digitalRelease, filterValue, type);
-  },
-
-  ratings: function(item, filterValue, type) {
-    const predicate = filterTypePredicates[type];
-
-    return predicate(item.ratings.value * 10, filterValue);
-  },
-
-  qualityCutoffNotMet: function(item) {
-    const { movieFile = {} } = item;
-
-    return movieFile.qualityCutoffNotMet;
   }
 };
 
@@ -165,33 +53,6 @@ export const sortPredicates = {
     }
 
     return result;
-  },
-
-  movieStatus: function(item) {
-    let result = 0;
-    let qualityName = '';
-
-    const hasMovieFile = !!item.movieFile;
-
-    if (item.isAvailable) {
-      result++;
-    }
-
-    if (item.monitored) {
-      result += 2;
-    }
-
-    if (hasMovieFile) {
-      // TODO: Consider Quality Weight for Sorting within status of hasMovie
-      if (item.movieFile.qualityCutoffNotMet) {
-        result += 4;
-      } else {
-        result += 8;
-      }
-      qualityName = item.movieFile.quality.quality.name;
-    }
-
-    return padNumber(result.toString(), 2) + qualityName;
   }
 };
 
@@ -205,7 +66,7 @@ export const defaultState = {
   isSaving: false,
   saveError: null,
   items: [],
-  sortKey: 'sortTitle',
+  sortKey: 'name',
   sortDirection: sortDirections.ASCENDING,
   pendingChanges: {}
 };

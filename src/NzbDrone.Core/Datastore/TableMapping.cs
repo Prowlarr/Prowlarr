@@ -7,7 +7,6 @@ using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.CustomFilters;
 using NzbDrone.Core.Datastore.Converters;
-using NzbDrone.Core.History;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Jobs;
@@ -82,7 +81,6 @@ namespace NzbDrone.Core.Datastore
             SqlMapper.AddTypeHandler(new DapperLanguageIntConverter());
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<Language>>(new LanguageIntConverter()));
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<string>>());
-            SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<ParsedMovieInfo>(new LanguageIntConverter()));
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<ReleaseInfo>());
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<HashSet<int>>());
             SqlMapper.AddTypeHandler(new OsPathConverter());

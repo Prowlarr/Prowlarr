@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Test.Framework;
@@ -12,7 +13,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
     public class NewznabRequestGeneratorFixture : CoreTest<NewznabRequestGenerator>
     {
         private MovieSearchCriteria _movieSearchCriteria;
-        private NewznabCapabilities _capabilities;
+        private IndexerCapabilities _capabilities;
 
         [SetUp]
         public void SetUp()
@@ -29,7 +30,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
                 SceneTitles = new List<string> { "Star Wars" }
             };
 
-            _capabilities = new NewznabCapabilities();
+            _capabilities = new IndexerCapabilities();
 
             Mocker.GetMock<INewznabCapabilitiesProvider>()
                 .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>()))
@@ -91,7 +92,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_not_search_by_imdbid_if_not_supported()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q" };
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
@@ -106,7 +107,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_search_by_imdbid_if_supported()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q", "imdbid" };
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             results.GetTier(0).Should().HaveCount(1);
@@ -119,7 +120,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_search_by_tmdbid_if_supported()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q", "tmdbid" };
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             results.GetTier(0).Should().HaveCount(1);
@@ -132,7 +133,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_prefer_search_by_tmdbid_if_rid_supported()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q", "tmdbid", "imdbid" };
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             results.GetTier(0).Should().HaveCount(1);
@@ -146,8 +147,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_use_aggregrated_id_search_if_supported()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q", "tmdbid", "imdbid" };
-            _capabilities.SupportsAggregateIdSearch = true;
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             results.GetTier(0).Should().HaveCount(1);
@@ -161,8 +161,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_not_use_aggregrated_id_search_if_no_ids_supported()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q" };
-            _capabilities.SupportsAggregateIdSearch = true; // Turns true if indexer supplies supportedParams.
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             results.Tiers.Should().Be(1);
@@ -176,8 +175,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_not_use_aggregrated_id_search_if_no_ids_are_known()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q", "imdbid" };
-            _capabilities.SupportsAggregateIdSearch = true; // Turns true if indexer supplies supportedParams.
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId };
 
             _movieSearchCriteria.ImdbId = null;
 
@@ -191,8 +189,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_fallback_to_q()
         {
-            _capabilities.SupportedMovieSearchParameters = new[] { "q", "tmdbid", "imdbid" };
-            _capabilities.SupportsAggregateIdSearch = true;
+            _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             results.Tiers.Should().Be(2);

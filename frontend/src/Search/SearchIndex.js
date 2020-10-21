@@ -11,13 +11,13 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
-import NoIndexer from 'Indexer/NoIndexer';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
 import translate from 'Utilities/String/translate';
 import SearchIndexFilterMenu from './Menus/SearchIndexFilterMenu';
 import SearchIndexSortMenu from './Menus/SearchIndexSortMenu';
+import NoSearchResults from './NoSearchResults';
 import SearchFooter from './SearchFooter.js';
 import SearchIndexTableConnector from './Table/SearchIndexTableConnector';
 import styles from './SearchIndex.css';
@@ -126,9 +126,8 @@ class SearchIndex extends Component {
     this.setState({ jumpToCharacter });
   }
 
-  onSearchPress = (query) => {
-    console.log('index', query);
-    this.props.onSearchPress({ query });
+  onSearchPress = (query, indexerIds) => {
+    this.props.onSearchPress({ query, indexerIds });
   }
 
   onKeyUp = (event) => {
@@ -174,6 +173,8 @@ class SearchIndex extends Component {
     const ViewComponent = getViewComponent();
     const isLoaded = !!(!error && isPopulated && items.length && scroller);
     const hasNoIndexer = !totalItems;
+
+    console.log(hasNoIndexer);
 
     return (
       <PageContent>
@@ -246,8 +247,8 @@ class SearchIndex extends Component {
             }
 
             {
-              !error && isPopulated && !items.length &&
-                <NoIndexer totalItems={totalItems} />
+              !error && !isFetching && !items.length &&
+                <NoSearchResults totalItems={totalItems} />
             }
           </PageContentBody>
 

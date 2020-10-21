@@ -13,11 +13,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         private static readonly Regex BeginningThe = new Regex(@"^the\s", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public List<string> SceneTitles { get; set; }
-        public virtual bool MonitoredEpisodesOnly { get; set; }
         public virtual bool UserInvokedSearch { get; set; }
         public virtual bool InteractiveSearch { get; set; }
         public string ImdbId { get; set; }
         public int TmdbId { get; set; }
+        public List<int> IndexerIds { get; set; }
 
         public List<string> QueryTitles => SceneTitles.Select(GetQueryTitle).ToList();
 

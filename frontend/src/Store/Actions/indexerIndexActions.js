@@ -60,25 +60,25 @@ export const defaultState = {
       name: 'protocol',
       label: translate('Protocol'),
       isSortable: true,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'privacy',
       label: translate('Privacy'),
       isSortable: true,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'added',
       label: translate('Added'),
       isSortable: true,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'capabilities',
-      label: 'Capabilities',
+      label: 'Categories',
       isSortable: false,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'tags',

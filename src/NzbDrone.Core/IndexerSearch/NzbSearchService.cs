@@ -15,8 +15,8 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface ISearchForNzb
     {
-        List<ReleaseInfo> Search(string query, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch);
-        NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch);
+        List<ReleaseInfo> Search(string query, List<int> indexerIds, bool interactiveSearch);
+        NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch);
     }
 
     public class NzbSearchService : ISearchForNzb
@@ -34,26 +34,25 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        public List<ReleaseInfo> Search(string query, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch)
+        public List<ReleaseInfo> Search(string query, List<int> indexerIds, bool interactiveSearch)
         {
-            var searchSpec = Get<MovieSearchCriteria>(query, indexerIds, userInvokedSearch, interactiveSearch);
+            var searchSpec = Get<MovieSearchCriteria>(query, indexerIds, interactiveSearch);
 
             return Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
         }
 
-        public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch)
+        public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            var searchSpec = Get<MovieSearchCriteria>(request.q, indexerIds, userInvokedSearch, interactiveSearch);
+            var searchSpec = Get<MovieSearchCriteria>(request.q, indexerIds, interactiveSearch);
 
             return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
-        private TSpec Get<TSpec>(string query, List<int> indexerIds, bool userInvokedSearch, bool interactiveSearch)
+        private TSpec Get<TSpec>(string query, List<int> indexerIds, bool interactiveSearch)
             where TSpec : SearchCriteriaBase, new()
         {
             var spec = new TSpec()
             {
-                UserInvokedSearch = userInvokedSearch,
                 InteractiveSearch = interactiveSearch
             };
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Nancy.ModelBinding;
 using NLog;
@@ -50,7 +49,7 @@ namespace Prowlarr.Api.V1.Search
         {
             try
             {
-                var decisions = _nzbSearhService.Search(query, indexerIds, true, true);
+                var decisions = _nzbSearhService.Search(query, indexerIds, true);
 
                 return MapDecisions(decisions);
             }

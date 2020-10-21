@@ -158,8 +158,7 @@ MovieEditorFooter.propTypes = {
   saveError: PropTypes.object,
   isDeleting: PropTypes.bool.isRequired,
   deleteError: PropTypes.object,
-  onSaveSelected: PropTypes.func.isRequired,
-  onOrganizeMoviePress: PropTypes.func.isRequired
+  onSaveSelected: PropTypes.func.isRequired
 };
 
 export default MovieEditorFooter;

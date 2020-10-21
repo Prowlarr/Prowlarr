@@ -6,19 +6,23 @@ import withScrollPosition from 'Components/withScrollPosition';
 import { fetchReleases, setReleasesFilter, setReleasesSort, setReleasesTableOption } from 'Store/Actions/releaseActions';
 import scrollPositions from 'Store/scrollPositions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
+import createIndexerClientSideCollectionItemsSelector from 'Store/Selectors/createIndexerClientSideCollectionItemsSelector';
 import createReleaseClientSideCollectionItemsSelector from 'Store/Selectors/createReleaseClientSideCollectionItemsSelector';
 import SearchIndex from './SearchIndex';
 
 function createMapStateToProps() {
   return createSelector(
+    createIndexerClientSideCollectionItemsSelector('indexerIndex'),
     createReleaseClientSideCollectionItemsSelector('releases'),
     createDimensionsSelector(),
     (
-      movies,
+      indexers,
+      releases,
       dimensionsState
     ) => {
       return {
-        ...movies,
+        ...releases,
+        hasIndexers: indexers.items.length > 0,
         isSmallScreen: dimensionsState.isSmallScreen
       };
     }

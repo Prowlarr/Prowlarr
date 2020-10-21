@@ -27,6 +27,7 @@ class AddIndexerItem extends Component {
 
   render() {
     const {
+      name,
       implementation,
       implementationName,
       infoLink,
@@ -47,7 +48,7 @@ class AddIndexerItem extends Component {
 
         <div className={styles.overlay}>
           <div className={styles.name}>
-            {implementationName}
+            {name}
           </div>
 
           <div className={styles.actions}>
@@ -101,6 +102,7 @@ class AddIndexerItem extends Component {
 }
 
 AddIndexerItem.propTypes = {
+  name: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
   implementationName: PropTypes.string.isRequired,
   infoLink: PropTypes.string.isRequired,

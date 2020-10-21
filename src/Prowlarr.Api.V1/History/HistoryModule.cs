@@ -20,7 +20,7 @@ namespace Prowlarr.Api.V1.History
             GetResourcePaged = GetHistory;
 
             Get("/since", x => GetHistorySince());
-            Get("/movie", x => GetMovieHistory());
+            Get("/indexer", x => GetIndexerHistory());
         }
 
         protected HistoryResource MapToResource(NzbDrone.Core.History.History model, bool includeMovie)
@@ -75,26 +75,26 @@ namespace Prowlarr.Api.V1.History
             return _historyService.Since(date, eventType).Select(h => MapToResource(h, includeMovie)).ToList();
         }
 
-        private List<HistoryResource> GetMovieHistory()
+        private List<HistoryResource> GetIndexerHistory()
         {
-            var queryMovieId = Request.Query.MovieId;
+            var queryIndexerId = Request.Query.IndexerId;
             var queryEventType = Request.Query.EventType;
 
-            if (!queryMovieId.HasValue)
+            if (!queryIndexerId.HasValue)
             {
-                throw new BadRequestException("movieId is missing");
+                throw new BadRequestException("indexerId is missing");
             }
 
-            int movieId = Convert.ToInt32(queryMovieId.Value);
+            int indexerId = Convert.ToInt32(queryIndexerId.Value);
             HistoryEventType? eventType = null;
-            var includeMovie = Request.GetBooleanQueryParameter("includeMovie");
+            var includeIndexer = Request.GetBooleanQueryParameter("includeIndexer");
 
             if (queryEventType.HasValue)
             {
                 eventType = (HistoryEventType)Convert.ToInt32(queryEventType.Value);
             }
 
-            return _historyService.GetByIndexerId(movieId, eventType).Select(h => MapToResource(h, includeMovie)).ToList();
+            return _historyService.GetByIndexerId(indexerId, eventType).Select(h => MapToResource(h, includeIndexer)).ToList();
         }
     }
 }

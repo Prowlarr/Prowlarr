@@ -88,33 +88,6 @@ class UISettings extends Component {
                 id="uiSettings"
                 {...otherProps}
               >
-                <FieldSet legend={translate('Calendar')}>
-                  <FormGroup>
-                    <FormLabel>{translate('SettingsFirstDayOfWeek')}</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.SELECT}
-                      name="firstDayOfWeek"
-                      values={firstDayOfWeekOptions}
-                      onChange={onInputChange}
-                      {...settings.firstDayOfWeek}
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <FormLabel>{translate('SettingsWeekColumnHeader')}</FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.SELECT}
-                      name="calendarWeekColumnHeader"
-                      values={weekColumnOptions}
-                      onChange={onInputChange}
-                      helpText={translate('SettingsWeekColumnHeaderHelpText')}
-                      {...settings.calendarWeekColumnHeader}
-                    />
-                  </FormGroup>
-                </FieldSet>
-
                 <FieldSet legend={translate('Dates')}>
                   <FormGroup>
                     <FormLabel>{translate('SettingsShortDateFormat')}</FormLabel>

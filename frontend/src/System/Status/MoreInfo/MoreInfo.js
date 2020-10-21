@@ -17,7 +17,7 @@ class MoreInfo extends Component {
         <DescriptionList>
           <DescriptionListItemTitle>Home page</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://prowlarr.video/">prowlarr.video</Link>
+            <Link to="https://prowlarr.com/">prowlarr.com</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Discord</DescriptionListItemTitle>

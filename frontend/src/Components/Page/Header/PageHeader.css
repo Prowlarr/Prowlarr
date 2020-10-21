@@ -51,6 +51,12 @@
   flex-grow: 1;
 }
 
+.actionMenu {
+  &:hover {
+    color: #515253;
+  }
+}
+
 .translate {
   composes: link from '~Components/Link/Link.css';
 
@@ -63,7 +69,7 @@
   line-height: 60px;
 
   &:hover {
-    color: $toobarButtonHoverColor;
+    color: #515253;
   }
 }
 

@@ -17,6 +17,7 @@
     <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.113.0-0" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="MonoTorrent" Version="1.0.19" />
+    <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Prowlarr.Common.csproj" />

@@ -113,8 +113,8 @@ module.exports = {
   //
   // Toolbar
 
-  toobarButtonHoverColor: '#ffc230',
-  toobarButtonSelectedColor: '#ffc230',
+  toobarButtonHoverColor: '#e66000',
+  toobarButtonSelectedColor: '#e66000',
 
   //
   // Scroller

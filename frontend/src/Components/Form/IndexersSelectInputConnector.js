@@ -46,7 +46,7 @@ class IndexersSelectInputConnector extends Component {
 
 IndexersSelectInputConnector.propTypes = {
   name: PropTypes.string.isRequired,
-  indexerIds: PropTypes.number.isRequired,
+  indexerIds: PropTypes.number,
   value: PropTypes.arrayOf(PropTypes.number).isRequired,
   values: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func.isRequired

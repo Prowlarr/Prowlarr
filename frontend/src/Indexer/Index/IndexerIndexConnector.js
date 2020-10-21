@@ -15,11 +15,11 @@ function createMapStateToProps() {
     createIndexerClientSideCollectionItemsSelector('indexerIndex'),
     createDimensionsSelector(),
     (
-      movies,
+      indexers,
       dimensionsState
     ) => {
       return {
-        ...movies,
+        ...indexers,
         isSmallScreen: dimensionsState.isSmallScreen
       };
     }

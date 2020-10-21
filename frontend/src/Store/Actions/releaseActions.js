@@ -26,7 +26,7 @@ export const defaultState = {
   isPopulated: false,
   error: null,
   items: [],
-  sortKey: 'releaseWeight',
+  sortKey: 'title',
   sortDirection: sortDirections.ASCENDING,
 
   columns: [

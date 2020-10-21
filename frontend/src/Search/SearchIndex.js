@@ -11,6 +11,7 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
+import NoIndexer from 'Indexer/NoIndexer';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
@@ -83,7 +84,7 @@ class SearchIndex extends Component {
     } = this.props;
 
     // Reset if not sorting by sortTitle
-    if (sortKey !== 'sortTitle') {
+    if (sortKey !== 'title') {
       this.setState({ jumpBarItems: { order: [] } });
       return;
     }
@@ -161,6 +162,7 @@ class SearchIndex extends Component {
       onScroll,
       onSortSelect,
       onFilterSelect,
+      hasIndexers,
       ...otherProps
     } = this.props;
 
@@ -173,8 +175,6 @@ class SearchIndex extends Component {
     const ViewComponent = getViewComponent();
     const isLoaded = !!(!error && isPopulated && items.length && scroller);
     const hasNoIndexer = !totalItems;
-
-    console.log(hasNoIndexer);
 
     return (
       <PageContent>
@@ -247,7 +247,12 @@ class SearchIndex extends Component {
             }
 
             {
-              !error && !isFetching && !items.length &&
+              !error && !isFetching && !hasIndexers &&
+                <NoIndexer />
+            }
+
+            {
+              !error && !isFetching && hasIndexers && !items.length &&
                 <NoSearchResults totalItems={totalItems} />
             }
           </PageContentBody>
@@ -286,7 +291,8 @@ SearchIndex.propTypes = {
   onSortSelect: PropTypes.func.isRequired,
   onFilterSelect: PropTypes.func.isRequired,
   onSearchPress: PropTypes.func.isRequired,
-  onScroll: PropTypes.func.isRequired
+  onScroll: PropTypes.func.isRequired,
+  hasIndexers: PropTypes.func.isRequired
 };
 
 export default SearchIndex;

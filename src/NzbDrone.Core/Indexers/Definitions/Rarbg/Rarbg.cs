@@ -19,6 +19,27 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
 
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
+
+        public override IndexerCapabilities Capabilities => new IndexerCapabilities
+        {
+            TvSearchParams = new List<TvSearchParam>
+                       {
+                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                       },
+            MovieSearchParams = new List<MovieSearchParam>
+                       {
+                           MovieSearchParam.Q, MovieSearchParam.ImdbId
+                       },
+            MusicSearchParams = new List<MusicSearchParam>
+                       {
+                           MusicSearchParam.Q
+                       },
+            BookSearchParams = new List<BookSearchParam>
+                       {
+                           BookSearchParam.Q
+                       }
+        };
+
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
         public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

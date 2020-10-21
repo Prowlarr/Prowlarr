@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { setMovieSort } from 'Store/Actions/indexerIndexActions';
+import { setReleasesSort } from 'Store/Actions/releaseActions';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import SearchIndexTable from './SearchIndexTable';
 
@@ -23,7 +23,7 @@ function createMapStateToProps() {
 function createMapDispatchToProps(dispatch, props) {
   return {
     onSortPress(sortKey) {
-      dispatch(setMovieSort({ sortKey }));
+      dispatch(setReleasesSort({ sortKey }));
     }
   };
 }

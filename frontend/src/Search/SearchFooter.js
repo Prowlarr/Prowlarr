@@ -4,6 +4,7 @@ import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputCon
 import TextInput from 'Components/Form/TextInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
+import SearchFooterLabel from './SearchFooterLabel';
 import styles from './SearchFooter.css';
 
 class SearchFooter extends Component {
@@ -61,9 +62,13 @@ class SearchFooter extends Component {
     return (
       <PageContentFooter>
         <div className={styles.inputContainer}>
+          <SearchFooterLabel
+            label={'Query'}
+            isSaving={false}
+          />
+
           <TextInput
             name='searchQuery'
-            placeholder='Query'
             value={searchQuery}
             isDisabled={isFetching}
             onChange={this.onInputChange}
@@ -71,6 +76,11 @@ class SearchFooter extends Component {
         </div>
 
         <div className={styles.indexerContainer}>
+          <SearchFooterLabel
+            label={'Indexers'}
+            isSaving={false}
+          />
+
           <IndexersSelectInputConnector
             name='indexerIds'
             placeholder='Indexers'

@@ -5,7 +5,7 @@
   align-items: center;
 }
 
-.status {
+.protocol {
   composes: cell;
 
   flex: 0 0 60px;

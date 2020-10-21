@@ -30,7 +30,7 @@ function SearchIndexSortMenu(props) {
         </SortMenuItem>
 
         <SortMenuItem
-          name="sortTitle"
+          name="title"
           sortKey={sortKey}
           sortDirection={sortDirection}
           onPress={onSortSelect}

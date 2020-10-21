@@ -23,6 +23,7 @@ namespace NzbDrone.Core.History
     public enum HistoryEventType
     {
         Unknown = 0,
-        ReleaseGrabbed = 1
+        ReleaseGrabbed = 1,
+        IndexerQuery = 2
     }
 }

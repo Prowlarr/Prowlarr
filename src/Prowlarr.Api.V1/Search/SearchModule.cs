@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using Nancy.ModelBinding;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser.Model;
@@ -24,17 +27,19 @@ namespace Prowlarr.Api.V1.Search
 
         private List<SearchResource> GetAll()
         {
-            if (Request.Query.query.HasValue)
+            var request = this.Bind<SearchRequest>();
+
+            if (request.Query.IsNotNullOrWhiteSpace())
             {
-                var indexerIds = Request.Query.indexerIds.HasValue ? (List<int>)Request.Query.indexerIds.split(',') : new List<int>();
+                var indexerIds = request.IndexerIds ?? new List<int>();
 
                 if (indexerIds.Count > 0)
                 {
-                    return GetSearchReleases(Request.Query.query, indexerIds);
+                    return GetSearchReleases(request.Query, indexerIds);
                 }
                 else
                 {
-                    return GetSearchReleases(Request.Query.query, null);
+                    return GetSearchReleases(request.Query, null);
                 }
             }
 

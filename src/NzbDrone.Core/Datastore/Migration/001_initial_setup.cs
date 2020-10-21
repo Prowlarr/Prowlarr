@@ -16,7 +16,6 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("IndexerId").AsInt32()
                 .WithColumn("SourceTitle").AsString()
                 .WithColumn("Date").AsDateTime()
-                .WithColumn("Quality").AsString()
                 .WithColumn("Data").AsString()
                 .WithColumn("EventType").AsInt32().Nullable()
                 .WithColumn("DownloadId").AsString().Nullable().Indexed();

@@ -45,6 +45,7 @@ namespace NzbDrone.Core.Indexers
             definition.Protocol = provider.Protocol;
             definition.Privacy = provider.Privacy;
             definition.SupportsRss = provider.SupportsRss;
+            definition.SupportsSearch = provider.SupportsSearch;
             definition.Capabilities = provider.Capabilities;
         }
 

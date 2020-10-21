@@ -8,6 +8,7 @@ using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Common.TPL;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
@@ -20,12 +21,15 @@ namespace NzbDrone.Core.IndexerSearch
 
     public class NzbSearchService : ISearchForNzb
     {
+        private readonly IEventAggregator _eventAggregator;
         private readonly IIndexerFactory _indexerFactory;
         private readonly Logger _logger;
 
-        public NzbSearchService(IIndexerFactory indexerFactory,
+        public NzbSearchService(IEventAggregator eventAggregator,
+                                IIndexerFactory indexerFactory,
                                 Logger logger)
         {
+            _eventAggregator = eventAggregator;
             _indexerFactory = indexerFactory;
             _logger = logger;
         }
@@ -86,6 +90,8 @@ namespace NzbDrone.Core.IndexerSearch
                     try
                     {
                         var indexerReports = searchAction(indexerLocal);
+
+                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase.QueryTitles.Join(", ")));
 
                         lock (reports)
                         {

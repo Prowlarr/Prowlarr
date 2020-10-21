@@ -35,27 +35,9 @@ export const defaultState = {
       isModifiable: false
     },
     {
-      name: 'movies.sortTitle',
-      label: translate('Movie'),
+      name: 'indexer',
+      label: 'Indexer',
       isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'languages',
-      label: translate('Languages'),
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'quality',
-      label: translate('Quality'),
-      isSortable: true,
-      isVisible: true
-    },
-    {
-      name: 'customFormats',
-      label: translate('Formats'),
-      isSortable: false,
       isVisible: true
     },
     {
@@ -63,21 +45,6 @@ export const defaultState = {
       label: translate('Date'),
       isSortable: true,
       isVisible: true
-    },
-    {
-      name: 'downloadClient',
-      label: translate('DownloadClient'),
-      isVisible: false
-    },
-    {
-      name: 'indexer',
-      label: translate('Indexer'),
-      isVisible: false
-    },
-    {
-      name: 'releaseGroup',
-      label: translate('ReleaseGroup'),
-      isVisible: false
     },
     {
       name: 'details',

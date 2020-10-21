@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Core.Datastore;
+using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.History
 {
@@ -19,7 +22,9 @@ namespace NzbDrone.Core.History
         List<History> Since(DateTime date, HistoryEventType? eventType);
     }
 
-    public class HistoryService : IHistoryService
+    public class HistoryService : IHistoryService,
+                                  IHandle<ProviderDeletedEvent<IIndexer>>,
+                                  IHandle<IndexerQueryEvent>
     {
         private readonly IHistoryRepository _historyRepository;
         private readonly Logger _logger;
@@ -73,6 +78,24 @@ namespace NzbDrone.Core.History
         public List<History> Since(DateTime date, HistoryEventType? eventType)
         {
             return _historyRepository.Since(date, eventType);
+        }
+
+        public void Handle(IndexerQueryEvent message)
+        {
+            var history = new History
+            {
+                Date = DateTime.UtcNow,
+                IndexerId = message.IndexerId,
+                EventType = HistoryEventType.IndexerQuery,
+                SourceTitle = message.Query
+            };
+
+            _historyRepository.Insert(history);
+        }
+
+        public void Handle(ProviderDeletedEvent<IIndexer> message)
+        {
+            _historyRepository.DeleteForIndexers(new List<int> { message.ProviderId });
         }
     }
 }

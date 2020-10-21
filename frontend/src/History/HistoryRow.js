@@ -5,8 +5,6 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
-import MovieLanguage from 'Indexer/MovieLanguage';
-import MovieQuality from 'Indexer/MovieQuality';
 import MovieTitleLink from 'Indexer/MovieTitleLink';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
@@ -52,9 +50,6 @@ class HistoryRow extends Component {
   render() {
     const {
       movie,
-      quality,
-      languages,
-      qualityCutoffNotMet,
       eventType,
       sourceTitle,
       date,
@@ -93,34 +88,13 @@ class HistoryRow extends Component {
               );
             }
 
-            if (name === 'movies.sortTitle') {
+            if (name === 'indexer') {
               return (
-                <TableRowCell key={name}>
-                  <MovieTitleLink
-                    titleSlug={movie.titleSlug}
-                    title={movie.title}
-                  />
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'languages') {
-              return (
-                <TableRowCell key={name}>
-                  <MovieLanguage
-                    languages={languages}
-                  />
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'quality') {
-              return (
-                <TableRowCell key={name}>
-                  <MovieQuality
-                    quality={quality}
-                    isCutoffMet={qualityCutoffNotMet}
-                  />
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {movie.name}
                 </TableRowCell>
               );
             }
@@ -131,39 +105,6 @@ class HistoryRow extends Component {
                   key={name}
                   date={date}
                 />
-              );
-            }
-
-            if (name === 'downloadClient') {
-              return (
-                <TableRowCell
-                  key={name}
-                  className={styles.downloadClient}
-                >
-                  {data.downloadClient}
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'indexer') {
-              return (
-                <TableRowCell
-                  key={name}
-                  className={styles.indexer}
-                >
-                  {data.indexer}
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'releaseGroup') {
-              return (
-                <TableRowCell
-                  key={name}
-                  className={styles.releaseGroup}
-                >
-                  {data.releaseGroup}
-                </TableRowCell>
               );
             }
 
@@ -205,9 +146,6 @@ class HistoryRow extends Component {
 HistoryRow.propTypes = {
   movieId: PropTypes.number,
   movie: PropTypes.object.isRequired,
-  languages: PropTypes.arrayOf(PropTypes.object).isRequired,
-  quality: PropTypes.object.isRequired,
-  qualityCutoffNotMet: PropTypes.bool.isRequired,
   eventType: PropTypes.string.isRequired,
   sourceTitle: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,

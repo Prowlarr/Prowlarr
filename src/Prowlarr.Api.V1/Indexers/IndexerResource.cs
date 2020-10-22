@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Indexers.Cardigann;
+using Prowlarr.Http.ClientSchema;
 
 namespace Prowlarr.Api.V1.Indexers
 {
@@ -28,6 +32,27 @@ namespace Prowlarr.Api.V1.Indexers
 
             var resource = base.ToResource(definition);
 
+            if (definition.Implementation == typeof(Cardigann).Name)
+            {
+                Console.WriteLine("mapping cardigann def");
+
+                var extraFields = definition.ExtraFields.Select((x, i) => MapField(x, i)).ToList();
+
+                resource.Fields.AddRange(extraFields);
+
+                var settings = (CardigannSettings)definition.Settings;
+                Console.WriteLine($"Got {settings.ExtraFieldData.Count} fields");
+                foreach (var setting in settings.ExtraFieldData)
+                {
+                    var field = extraFields.FirstOrDefault(x => x.Name == setting.Key);
+                    if (field != null)
+                    {
+                        Console.WriteLine($"setting {setting.Key} to {setting.Value}");
+                        field.Value = setting.Value;
+                    }
+                }
+            }
+
             resource.EnableRss = definition.EnableRss;
             resource.EnableAutomaticSearch = definition.EnableAutomaticSearch;
             resource.EnableInteractiveSearch = definition.EnableInteractiveSearch;
@@ -51,6 +76,22 @@ namespace Prowlarr.Api.V1.Indexers
 
             var definition = base.ToModel(resource);
 
+            if (resource.Implementation == typeof(Cardigann).Name)
+            {
+                Console.WriteLine("mapping cardigann resource");
+
+                var standardFields = base.ToResource(definition).Fields.Select(x => x.Name).ToList();
+
+                var settings = (CardigannSettings)definition.Settings;
+                foreach (var field in resource.Fields)
+                {
+                    if (!standardFields.Contains(field.Name))
+                    {
+                        settings.ExtraFieldData[field.Name] = field.Value;
+                    }
+                }
+            }
+
             definition.EnableRss = resource.EnableRss;
             definition.EnableAutomaticSearch = resource.EnableAutomaticSearch;
             definition.EnableInteractiveSearch = resource.EnableInteractiveSearch;
@@ -59,6 +100,47 @@ namespace Prowlarr.Api.V1.Indexers
             definition.Added = resource.Added;
 
             return definition;
+        }
+
+        private Field MapField(SettingsField fieldAttribute, int order)
+        {
+            Console.WriteLine($"Adding field {fieldAttribute.Name}");
+            var field = new Field
+            {
+                Name = fieldAttribute.Name,
+                Label = fieldAttribute.Label,
+                Order = order,
+                Type = fieldAttribute.Type == "text" ? "textbox" : fieldAttribute.Type
+            };
+
+            if (fieldAttribute.Type == "select")
+            {
+                var sorted = fieldAttribute.Options.OrderBy(x => x.Key).ToList();
+                field.SelectOptions = sorted.Select((x, i) => new SelectOption
+                {
+                    Value = i,
+                    Name = x.Value
+                }).ToList();
+
+                field.Value = sorted.Select(x => x.Key).ToList().IndexOf(fieldAttribute.Default);
+            }
+            else if (fieldAttribute.Type == "checkbox")
+            {
+                if (bool.TryParse(fieldAttribute.Default, out var value))
+                {
+                    field.Value = value;
+                }
+                else
+                {
+                    field.Value = false;
+                }
+            }
+            else
+            {
+                field.Value = fieldAttribute.Default;
+            }
+
+            return field;
         }
     }
 }

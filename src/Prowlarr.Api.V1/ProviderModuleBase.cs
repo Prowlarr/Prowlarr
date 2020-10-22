@@ -17,7 +17,7 @@ namespace Prowlarr.Api.V1
         where TProviderResource : ProviderResource, new()
     {
         protected readonly IProviderFactory<TProvider, TProviderDefinition> _providerFactory;
-        private readonly ProviderResourceMapper<TProviderResource, TProviderDefinition> _resourceMapper;
+        protected readonly ProviderResourceMapper<TProviderResource, TProviderDefinition> _resourceMapper;
 
         protected ProviderModuleBase(IProviderFactory<TProvider, TProviderDefinition> providerFactory, string resource, ProviderResourceMapper<TProviderResource, TProviderDefinition> resourceMapper)
             : base(resource)
@@ -113,7 +113,7 @@ namespace Prowlarr.Api.V1
             _providerFactory.Delete(id);
         }
 
-        private object GetTemplates()
+        protected virtual object GetTemplates()
         {
             var defaultDefinitions = _providerFactory.GetDefaultDefinitions().OrderBy(p => p.ImplementationName).ToList();
 

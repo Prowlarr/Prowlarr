@@ -4,6 +4,7 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Composition;
+using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 
@@ -19,10 +20,12 @@ namespace NzbDrone.Core.Indexers
 
     public class IndexerFactory : ProviderFactory<IIndexer, IndexerDefinition>, IIndexerFactory
     {
+        private readonly ICardigannDefinitionService _definitionService;
         private readonly IIndexerStatusService _indexerStatusService;
         private readonly Logger _logger;
 
-        public IndexerFactory(IIndexerStatusService indexerStatusService,
+        public IndexerFactory(ICardigannDefinitionService definitionService,
+                              IIndexerStatusService indexerStatusService,
                               IIndexerRepository providerRepository,
                               IEnumerable<IIndexer> providers,
                               IContainer container,
@@ -30,13 +33,66 @@ namespace NzbDrone.Core.Indexers
                               Logger logger)
             : base(providerRepository, providers, container, eventAggregator, logger)
         {
+            _definitionService = definitionService;
             _indexerStatusService = indexerStatusService;
             _logger = logger;
+        }
+
+        public override List<IndexerDefinition> All()
+        {
+            var definitions = base.All();
+            var metaDefs = _definitionService.All().ToDictionary(x => x.File);
+
+            foreach (var definition in definitions)
+            {
+                if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+                {
+                    var settings = (CardigannSettings)definition.Settings;
+                    definition.ExtraFields = metaDefs[settings.DefinitionFile].Settings;
+                }
+            }
+
+            return definitions;
+        }
+
+        public override IndexerDefinition Get(int id)
+        {
+            var definition = base.Get(id);
+            var metaDefs = _definitionService.All().ToDictionary(x => x.File);
+
+            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            {
+                var settings = (CardigannSettings)definition.Settings;
+                definition.ExtraFields = metaDefs[settings.DefinitionFile].Settings;
+            }
+
+            return definition;
         }
 
         protected override List<IndexerDefinition> Active()
         {
             return base.Active().Where(c => c.Enable).ToList();
+        }
+
+        public override IEnumerable<IndexerDefinition> GetDefaultDefinitions()
+        {
+            foreach (var provider in _providers)
+            {
+                var definitions = provider.DefaultDefinitions
+                    .Where(v => v.Name != null && v.Name != provider.GetType().Name)
+                    .Take(10);
+
+                foreach (IndexerDefinition definition in definitions)
+                {
+                    SetProviderCharacteristics(provider, definition);
+                    yield return definition;
+                }
+            }
+        }
+
+        public override IEnumerable<IndexerDefinition> GetPresetDefinitions(IndexerDefinition providerDefinition)
+        {
+            return new List<IndexerDefinition>();
         }
 
         public override void SetProviderCharacteristics(IIndexer provider, IndexerDefinition definition)

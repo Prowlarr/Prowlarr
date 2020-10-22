@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { createAction } from 'redux-actions';
 import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
 import createFetchSchemaHandler from 'Store/Actions/Creators/createFetchSchemaHandler';
@@ -9,7 +10,6 @@ import createSetProviderFieldValueReducer from 'Store/Actions/Creators/Reducers/
 import createSetSettingValueReducer from 'Store/Actions/Creators/Reducers/createSetSettingValueReducer';
 import { createThunk, handleThunks } from 'Store/thunks';
 import getSectionState from 'Utilities/State/getSectionState';
-import selectProviderSchema from 'Utilities/State/selectProviderSchema';
 import updateSectionState from 'Utilities/State/updateSectionState';
 import createHandleActions from './Creators/createHandleActions';
 
@@ -86,6 +86,35 @@ export const setIndexerFieldValue = createAction(SET_INDEXER_FIELD_VALUE, (paylo
 //
 // Action Handlers
 
+function applySchemaDefaults(selectedSchema, schemaDefaults) {
+  if (!schemaDefaults) {
+    return selectedSchema;
+  } else if (_.isFunction(schemaDefaults)) {
+    return schemaDefaults(selectedSchema);
+  }
+
+  return Object.assign(selectedSchema, schemaDefaults);
+}
+
+function selectSchema(state, payload, schemaDefaults) {
+  const newState = getSectionState(state, section);
+
+  console.log(payload);
+
+  const {
+    implementation,
+    name
+  } = payload;
+
+  const selectedImplementation = _.find(newState.schema, { implementation, name });
+
+  console.log(selectedImplementation);
+
+  newState.selectedSchema = applySchemaDefaults(_.cloneDeep(selectedImplementation), schemaDefaults);
+
+  return updateSectionState(state, section, newState);
+}
+
 export const actionHandlers = handleThunks({
   [FETCH_INDEXERS]: createFetchHandler(section, '/indexer'),
   [FETCH_INDEXER_SCHEMA]: createFetchSchemaHandler(section, '/indexer/schema'),
@@ -106,7 +135,7 @@ export const reducers = createHandleActions({
   [SET_INDEXER_FIELD_VALUE]: createSetProviderFieldValueReducer(section),
 
   [SELECT_INDEXER_SCHEMA]: (state, { payload }) => {
-    return selectProviderSchema(state, section, payload, (selectedSchema) => {
+    return selectSchema(state, payload, (selectedSchema) => {
       selectedSchema.enableRss = selectedSchema.supportsRss;
       selectedSchema.enableAutomaticSearch = selectedSchema.supportsSearch;
       selectedSchema.enableInteractiveSearch = selectedSchema.supportsSearch;

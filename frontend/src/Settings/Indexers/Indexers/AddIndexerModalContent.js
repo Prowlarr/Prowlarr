@@ -67,7 +67,7 @@ class AddIndexerModalContent extends Component {
                       usenetIndexers.map((indexer) => {
                         return (
                           <AddIndexerItem
-                            key={indexer.implementation}
+                            key={indexer.name}
                             implementation={indexer.implementation}
                             {...indexer}
                             onIndexerSelect={onIndexerSelect}
@@ -84,7 +84,7 @@ class AddIndexerModalContent extends Component {
                       torrentIndexers.map((indexer) => {
                         return (
                           <AddIndexerItem
-                            key={indexer.implementation}
+                            key={indexer.name}
                             implementation={indexer.implementation}
                             {...indexer}
                             onIndexerSelect={onIndexerSelect}

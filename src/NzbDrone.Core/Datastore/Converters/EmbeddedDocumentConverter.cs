@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Datastore.Converters
             serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));
             serializerSettings.Converters.Add(new TimeSpanConverter());
             serializerSettings.Converters.Add(new UtcConverter());
+            serializerSettings.Converters.Add(new DictionaryStringObjectJsonConverter());
 
             SerializerSettings = serializerSettings;
         }

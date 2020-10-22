@@ -16,10 +16,11 @@ class AddIndexerItem extends Component {
 
   onIndexerSelect = () => {
     const {
-      implementation
+      implementation,
+      name
     } = this.props;
 
-    this.props.onIndexerSelect({ implementation });
+    this.props.onIndexerSelect({ implementation, name });
   }
 
   //

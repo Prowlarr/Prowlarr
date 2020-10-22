@@ -292,7 +292,7 @@ SearchIndex.propTypes = {
   onFilterSelect: PropTypes.func.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   onScroll: PropTypes.func.isRequired,
-  hasIndexers: PropTypes.func.isRequired
+  hasIndexers: PropTypes.bool.isRequired
 };
 
 export default SearchIndex;

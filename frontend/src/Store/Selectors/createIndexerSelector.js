@@ -2,12 +2,12 @@ import { createSelector } from 'reselect';
 
 function createIndexerSelector() {
   return createSelector(
-    (state, { movieId }) => movieId,
+    (state, { indexerId }) => indexerId,
     (state) => state.indexers.itemMap,
     (state) => state.indexers.items,
-    (movieId, itemMap, allMovies) => {
-      if (allMovies && itemMap && movieId in itemMap) {
-        return allMovies[itemMap[movieId]];
+    (indexerId, itemMap, allMovies) => {
+      if (allMovies && itemMap && indexerId in itemMap) {
+        return allMovies[itemMap[indexerId]];
       }
       return undefined;
     }

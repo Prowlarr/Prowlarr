@@ -79,14 +79,14 @@ class MovieIndexActionsCell extends Component {
 
         <EditMovieModalConnector
           isOpen={isEditMovieModalOpen}
-          movieId={id}
+          indexerId={id}
           onModalClose={this.onEditMovieModalClose}
           onDeleteMoviePress={this.onDeleteMoviePress}
         />
 
         <DeleteMovieModal
           isOpen={isDeleteMovieModalOpen}
-          movieId={id}
+          indexerId={id}
           onModalClose={this.onDeleteMovieModalClose}
         />
       </VirtualTableRowCell>

@@ -165,7 +165,7 @@ class EditMovieModalContent extends Component {
 }
 
 EditMovieModalContent.propTypes = {
-  movieId: PropTypes.number.isRequired,
+  indexerId: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   item: PropTypes.object.isRequired,
   isSaving: PropTypes.bool.isRequired,

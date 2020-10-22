@@ -83,7 +83,7 @@ class EditMovieModalContentConnector extends Component {
 
   onSavePress = (moveFiles) => {
     this.props.dispatchSaveMovie({
-      id: this.props.movieId,
+      id: this.props.indexerId,
       moveFiles
     });
   }
@@ -104,7 +104,7 @@ class EditMovieModalContentConnector extends Component {
 }
 
 EditMovieModalContentConnector.propTypes = {
-  movieId: PropTypes.number,
+  indexerId: PropTypes.number,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   dispatchSetMovieValue: PropTypes.func.isRequired,

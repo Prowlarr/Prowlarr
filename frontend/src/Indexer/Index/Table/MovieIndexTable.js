@@ -64,7 +64,7 @@ class MovieIndexTable extends Component {
           key={movie.id}
           component={MovieIndexRow}
           columns={columns}
-          movieId={movie.id}
+          indexerId={movie.id}
           isSelected={selectedState[movie.id]}
           onSelectedChange={onSelectedChange}
           isMovieEditorActive={isMovieEditorActive}

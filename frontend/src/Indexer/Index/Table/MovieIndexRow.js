@@ -6,7 +6,7 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
 import { icons, kinds } from 'Helpers/Props';
-import DeleteMovieModal from 'Indexer/Delete/DeleteMovieModal';
+import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
@@ -217,11 +217,12 @@ class MovieIndexRow extends Component {
           id={id}
           isOpen={isEditIndexerModalOpen}
           onModalClose={this.onEditIndexerModalClose}
+          onDeleteIndexerPress={this.onDeleteMoviePress}
         />
 
-        <DeleteMovieModal
+        <DeleteIndexerModal
           isOpen={isDeleteMovieModalOpen}
-          movieId={id}
+          indexerId={id}
           onModalClose={this.onDeleteMovieModalClose}
         />
       </>

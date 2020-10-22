@@ -4,14 +4,14 @@ import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
-import DeleteMovieModal from './Delete/DeleteMovieModal';
-import MovieEditorFooterLabel from './MovieEditorFooterLabel';
+import DeleteIndexerModal from './Delete/DeleteIndexerModal';
+import IndexerEditorFooterLabel from './IndexerEditorFooterLabel';
 import TagsModal from './Tags/TagsModal';
-import styles from './MovieEditorFooter.css';
+import styles from './IndexerEditorFooter.css';
 
 const NO_CHANGE = 'noChange';
 
-class MovieEditorFooter extends Component {
+class IndexerEditorFooter extends Component {
 
   //
   // Lifecycle
@@ -88,7 +88,7 @@ class MovieEditorFooter extends Component {
 
   render() {
     const {
-      movieIds,
+      indexerIds,
       selectedCount,
       isSaving,
       isDeleting
@@ -104,7 +104,7 @@ class MovieEditorFooter extends Component {
       <PageContentFooter>
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
-            <MovieEditorFooterLabel
+            <IndexerEditorFooterLabel
               label={translate('IndexersSelectedInterp', [selectedCount])}
               isSaving={false}
             />
@@ -136,14 +136,14 @@ class MovieEditorFooter extends Component {
 
         <TagsModal
           isOpen={isTagsModalOpen}
-          movieIds={movieIds}
+          indexerIds={indexerIds}
           onApplyTagsPress={this.onApplyTagsPress}
           onModalClose={this.onTagsModalClose}
         />
 
-        <DeleteMovieModal
+        <DeleteIndexerModal
           isOpen={isDeleteMovieModalOpen}
-          movieIds={movieIds}
+          indexerIds={indexerIds}
           onModalClose={this.onDeleteMovieModalClose}
         />
       </PageContentFooter>
@@ -151,8 +151,8 @@ class MovieEditorFooter extends Component {
   }
 }
 
-MovieEditorFooter.propTypes = {
-  movieIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+IndexerEditorFooter.propTypes = {
+  indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   selectedCount: PropTypes.number.isRequired,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
@@ -161,4 +161,4 @@ MovieEditorFooter.propTypes = {
   onSaveSelected: PropTypes.func.isRequired
 };
 
-export default MovieEditorFooter;
+export default IndexerEditorFooter;

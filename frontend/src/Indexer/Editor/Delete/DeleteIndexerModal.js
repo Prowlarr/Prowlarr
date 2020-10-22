@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'Components/Modal/Modal';
-import DeleteMovieModalContentConnector from './DeleteMovieModalContentConnector';
+import DeleteIndexerModalContentConnector from './DeleteIndexerModalContentConnector';
 
-function DeleteMovieModal(props) {
+function DeleteIndexerModal(props) {
   const {
     isOpen,
     onModalClose,
@@ -15,7 +15,7 @@ function DeleteMovieModal(props) {
       isOpen={isOpen}
       onModalClose={onModalClose}
     >
-      <DeleteMovieModalContentConnector
+      <DeleteIndexerModalContentConnector
         {...otherProps}
         onModalClose={onModalClose}
       />
@@ -23,9 +23,9 @@ function DeleteMovieModal(props) {
   );
 }
 
-DeleteMovieModal.propTypes = {
+DeleteIndexerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired
 };
 
-export default DeleteMovieModal;
+export default DeleteIndexerModal;

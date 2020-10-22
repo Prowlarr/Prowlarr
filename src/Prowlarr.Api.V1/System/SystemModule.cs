@@ -8,7 +8,7 @@ using NzbDrone.Core.Lifecycle;
 
 namespace Prowlarr.Api.V1.System
 {
-    public class SystemModule : ProwlarrV3Module
+    public class SystemModule : ProwlarrV1Module
     {
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly IRuntimeInfo _runtimeInfo;

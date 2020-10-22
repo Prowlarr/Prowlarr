@@ -1,19 +1,19 @@
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createAllMoviesSelector from 'Store/Selectors/createAllMoviesSelector';
+import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createDeepEqualSelector from 'Store/Selectors/createDeepEqualSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
 import MovieSearchInput from './MovieSearchInput';
 
 function createCleanMovieSelector() {
   return createSelector(
-    createAllMoviesSelector(),
+    createAllIndexersSelector(),
     createTagsSelector(),
     (allMovies, allTags) => {
       return allMovies.map((movie) => {
         const {
-          title,
+          name,
           titleSlug,
           sortTitle,
           year,
@@ -23,13 +23,13 @@ function createCleanMovieSelector() {
         } = movie;
 
         return {
-          title,
+          name,
           titleSlug,
           sortTitle,
           year,
           images,
           alternateTitles,
-          firstCharacter: title.charAt(0).toLowerCase(),
+          firstCharacter: name.charAt(0).toLowerCase(),
           tags: tags.reduce((acc, id) => {
             const matchingTag = allTags.find((tag) => tag.id === id);
 

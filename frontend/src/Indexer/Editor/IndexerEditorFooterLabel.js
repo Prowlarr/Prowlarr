@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import SpinnerIcon from 'Components/SpinnerIcon';
 import { icons } from 'Helpers/Props';
-import styles from './MovieEditorFooterLabel.css';
+import styles from './IndexerEditorFooterLabel.css';
 
-function MovieEditorFooterLabel(props) {
+function IndexerEditorFooterLabel(props) {
   const {
     className,
     label,
@@ -27,14 +27,14 @@ function MovieEditorFooterLabel(props) {
   );
 }
 
-MovieEditorFooterLabel.propTypes = {
+IndexerEditorFooterLabel.propTypes = {
   className: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   isSaving: PropTypes.bool.isRequired
 };
 
-MovieEditorFooterLabel.defaultProps = {
+IndexerEditorFooterLabel.defaultProps = {
   className: styles.label
 };
 
-export default MovieEditorFooterLabel;
+export default IndexerEditorFooterLabel;

@@ -4,7 +4,7 @@ import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Hel
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import translate from 'Utilities/String/translate';
-import { set, updateItem } from './baseActions';
+import { removeItem, set, updateItem } from './baseActions';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
@@ -24,9 +24,9 @@ export const defaultState = {
   saveError: null,
   isDeleting: false,
   deleteError: null,
-  sortKey: 'sortTitle',
+  sortKey: 'name',
   sortDirection: sortDirections.ASCENDING,
-  secondarySortKey: 'sortTitle',
+  secondarySortKey: 'name',
   secondarySortDirection: sortDirections.ASCENDING,
 
   tableOptions: {
@@ -105,7 +105,7 @@ export const defaultState = {
 
   filterBuilderProps: [
     {
-      name: 'title',
+      name: 'name',
       label: 'Indexer Name',
       type: filterBuilderTypes.STRING
     },
@@ -142,7 +142,7 @@ export const SET_MOVIE_FILTER = 'indexerIndex/setMovieFilter';
 export const SET_MOVIE_VIEW = 'indexerIndex/setMovieView';
 export const SET_MOVIE_TABLE_OPTION = 'indexerIndex/setMovieTableOption';
 export const SAVE_MOVIE_EDITOR = 'indexerIndex/saveMovieEditor';
-export const BULK_DELETE_MOVIE = 'indexerIndex/bulkDeleteMovie';
+export const BULK_DELETE_INDEXERS = 'indexerIndex/bulkDeleteIndexers';
 
 //
 // Action Creators
@@ -152,7 +152,7 @@ export const setMovieFilter = createAction(SET_MOVIE_FILTER);
 export const setMovieView = createAction(SET_MOVIE_VIEW);
 export const setMovieTableOption = createAction(SET_MOVIE_TABLE_OPTION);
 export const saveMovieEditor = createThunk(SAVE_MOVIE_EDITOR);
-export const bulkDeleteMovie = createThunk(BULK_DELETE_MOVIE);
+export const bulkDeleteIndexers = createThunk(BULK_DELETE_INDEXERS);
 
 //
 // Action Handlers
@@ -198,27 +198,31 @@ export const actionHandlers = handleThunks({
     });
   },
 
-  [BULK_DELETE_MOVIE]: function(getState, payload, dispatch) {
+  [BULK_DELETE_INDEXERS]: function(getState, payload, dispatch) {
     dispatch(set({
       section,
       isDeleting: true
     }));
 
     const promise = createAjaxRequest({
-      url: '/movie/editor',
+      url: '/indexer/editor',
       method: 'DELETE',
       data: JSON.stringify(payload),
       dataType: 'json'
     }).request;
 
     promise.done(() => {
-      // SignaR will take care of removing the movie from the collection
+      dispatch(batchActions([
+        ...payload.indexerIds.map((id) => {
+          return removeItem({ section: 'indexers', id });
+        }),
 
-      dispatch(set({
-        section,
-        isDeleting: false,
-        deleteError: null
-      }));
+        set({
+          section,
+          isDeleting: false,
+          deleteError: null
+        })
+      ]));
     });
 
     promise.fail((xhr) => {

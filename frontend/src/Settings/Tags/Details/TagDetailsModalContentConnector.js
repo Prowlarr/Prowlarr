@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createAllMoviesSelector from 'Store/Selectors/createAllMoviesSelector';
+import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import TagDetailsModalContent from './TagDetailsModalContent';
 
 function findMatchingItems(ids, items) {
@@ -11,8 +11,8 @@ function findMatchingItems(ids, items) {
 
 function createUnorderedMatchingMoviesSelector() {
   return createSelector(
-    (state, { movieIds }) => movieIds,
-    createAllMoviesSelector(),
+    (state, { indexerIds }) => indexerIds,
+    createAllIndexersSelector(),
     findMatchingItems
   );
 }
@@ -37,14 +37,6 @@ function createMatchingMoviesSelector() {
   );
 }
 
-function createMatchingDelayProfilesSelector() {
-  return createSelector(
-    (state, { delayProfileIds }) => delayProfileIds,
-    (state) => state.settings.delayProfiles.items,
-    findMatchingItems
-  );
-}
-
 function createMatchingNotificationsSelector() {
   return createSelector(
     (state, { notificationIds }) => notificationIds,
@@ -53,26 +45,14 @@ function createMatchingNotificationsSelector() {
   );
 }
 
-function createMatchingRestrictionsSelector() {
-  return createSelector(
-    (state, { restrictionIds }) => restrictionIds,
-    (state) => state.settings.restrictions.items,
-    findMatchingItems
-  );
-}
-
 function createMapStateToProps() {
   return createSelector(
     createMatchingMoviesSelector(),
-    createMatchingDelayProfilesSelector(),
     createMatchingNotificationsSelector(),
-    createMatchingRestrictionsSelector(),
-    (movies, delayProfiles, notifications, restrictions) => {
+    (movies, notifications) => {
       return {
         movies,
-        delayProfiles,
-        notifications,
-        restrictions
+        notifications
       };
     }
   );

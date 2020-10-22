@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Indexers
         List<IIndexer> RssEnabled(bool filterBlockedIndexers = true);
         List<IIndexer> AutomaticSearchEnabled(bool filterBlockedIndexers = true);
         List<IIndexer> InteractiveSearchEnabled(bool filterBlockedIndexers = true);
+        void DeleteIndexers(List<int> indexerIds);
     }
 
     public class IndexerFactory : ProviderFactory<IIndexer, IndexerDefinition>, IIndexerFactory
@@ -99,6 +100,18 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 yield return indexer;
+            }
+        }
+
+        public void DeleteIndexers(List<int> indexerIds)
+        {
+            var indexersToDelete = _providerRepository.Get(indexerIds).ToList();
+
+            _providerRepository.DeleteMany(indexerIds);
+
+            foreach (var indexer in indexersToDelete)
+            {
+                _logger.Info("Deleted indexer {0}", indexer.Name);
             }
         }
 

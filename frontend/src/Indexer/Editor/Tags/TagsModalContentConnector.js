@@ -1,17 +1,17 @@
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createAllMoviesSelector from 'Store/Selectors/createAllMoviesSelector';
+import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
 import TagsModalContent from './TagsModalContent';
 
 function createMapStateToProps() {
   return createSelector(
-    (state, { movieIds }) => movieIds,
-    createAllMoviesSelector(),
+    (state, { indexerIds }) => indexerIds,
+    createAllIndexersSelector(),
     createTagsSelector(),
-    (movieIds, allMovies, tagList) => {
-      const movies = _.intersectionWith(allMovies, movieIds, (s, id) => {
+    (indexerIds, allMovies, tagList) => {
+      const movies = _.intersectionWith(allMovies, indexerIds, (s, id) => {
         return s.id === id;
       });
 

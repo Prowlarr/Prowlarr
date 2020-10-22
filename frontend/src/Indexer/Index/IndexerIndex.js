@@ -11,7 +11,7 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
-import MovieEditorFooter from 'Indexer/Editor/MovieEditorFooter.js';
+import IndexerEditorFooter from 'Indexer/Editor/IndexerEditorFooter.js';
 import NoIndexer from 'Indexer/NoIndexer';
 import AddIndexerModal from 'Settings/Indexers/Indexers/AddIndexerModal';
 import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
@@ -444,8 +444,8 @@ class IndexerIndex extends Component {
 
         {
           isLoaded && isMovieEditorActive &&
-            <MovieEditorFooter
-              movieIds={selectedMovieIds}
+            <IndexerEditorFooter
+              indexerIds={selectedMovieIds}
               selectedCount={selectedMovieIds.length}
               isSaving={isSaving}
               saveError={saveError}

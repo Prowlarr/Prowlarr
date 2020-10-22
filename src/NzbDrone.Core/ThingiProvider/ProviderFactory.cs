@@ -14,7 +14,7 @@ namespace NzbDrone.Core.ThingiProvider
         where TProviderDefinition : ProviderDefinition, new()
         where TProvider : IProvider
     {
-        private readonly IProviderRepository<TProviderDefinition> _providerRepository;
+        protected readonly IProviderRepository<TProviderDefinition> _providerRepository;
         private readonly IContainer _container;
         private readonly IEventAggregator _eventAggregator;
         private readonly Logger _logger;

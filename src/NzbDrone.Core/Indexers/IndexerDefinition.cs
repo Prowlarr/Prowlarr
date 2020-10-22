@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -19,5 +21,7 @@ namespace NzbDrone.Core.Indexers
         public override bool Enable => EnableRss || EnableAutomaticSearch || EnableInteractiveSearch;
 
         public IndexerStatus Status { get; set; }
+
+        public List<SettingsField> ExtraFields { get; set; } = new List<SettingsField>();
     }
 }

@@ -49,7 +49,7 @@ class AddIndexerModalContentConnector extends Component {
   // Listeners
 
   onIndexerSelect = ({ implementation, name }) => {
-    this.props.selectIndexerSchema({ implementation, presetName: name });
+    this.props.selectIndexerSchema({ implementation, name });
     this.props.onModalClose({ indexerSelected: true });
   }
 

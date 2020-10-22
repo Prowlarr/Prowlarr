@@ -18,6 +18,7 @@
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="MonoTorrent" Version="1.0.19" />
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
+    <PackageReference Include="AngleSharp" Version="0.14.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Prowlarr.Common.csproj" />

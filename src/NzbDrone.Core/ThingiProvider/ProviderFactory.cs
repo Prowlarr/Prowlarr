@@ -34,12 +34,12 @@ namespace NzbDrone.Core.ThingiProvider
             _logger = logger;
         }
 
-        public List<TProviderDefinition> All()
+        public virtual List<TProviderDefinition> All()
         {
             return _providerRepository.All().ToList();
         }
 
-        public IEnumerable<TProviderDefinition> GetDefaultDefinitions()
+        public virtual IEnumerable<TProviderDefinition> GetDefaultDefinitions()
         {
             foreach (var provider in _providers)
             {
@@ -64,7 +64,7 @@ namespace NzbDrone.Core.ThingiProvider
             }
         }
 
-        public IEnumerable<TProviderDefinition> GetPresetDefinitions(TProviderDefinition providerDefinition)
+        public virtual IEnumerable<TProviderDefinition> GetPresetDefinitions(TProviderDefinition providerDefinition)
         {
             var provider = _providers.First(v => v.GetType().Name == providerDefinition.Implementation);
 
@@ -91,7 +91,7 @@ namespace NzbDrone.Core.ThingiProvider
             return Active().Select(GetInstance).ToList();
         }
 
-        public TProviderDefinition Get(int id)
+        public virtual TProviderDefinition Get(int id)
         {
             return _providerRepository.Get(id);
         }

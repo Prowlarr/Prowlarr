@@ -1,0 +1,176 @@
+using System;
+using System.Collections.Generic;
+
+namespace NzbDrone.Core.Indexers.Cardigann
+{
+    // A Dictionary allowing the same key multiple times
+    public class KeyValuePairList : List<KeyValuePair<string, SelectorBlock>>, IDictionary<string, SelectorBlock>
+    {
+        public SelectorBlock this[string key]
+        {
+            get => throw new NotImplementedException();
+
+            set => Add(new KeyValuePair<string, SelectorBlock>(key, value));
+        }
+
+        public ICollection<string> Keys => throw new NotImplementedException();
+
+        public ICollection<SelectorBlock> Values => throw new NotImplementedException();
+
+        public void Add(string key, SelectorBlock value) => Add(new KeyValuePair<string, SelectorBlock>(key, value));
+
+        public bool ContainsKey(string key) => throw new NotImplementedException();
+
+        public bool Remove(string key) => throw new NotImplementedException();
+
+        public bool TryGetValue(string key, out SelectorBlock value) => throw new NotImplementedException();
+    }
+
+    // Cardigann yaml classes
+    public class CardigannDefinition
+    {
+        public string Id { get; set; }
+        public List<SettingsField> Settings { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Type { get; set; }
+        public string Language { get; set; }
+        public string Encoding { get; set; }
+        public List<string> Links { get; set; }
+        public List<string> Legacylinks { get; set; }
+        public bool Followredirect { get; set; } = false;
+        public List<string> Certificates { get; set; }
+        public CapabilitiesBlock Caps { get; set; }
+        public LoginBlock Login { get; set; }
+        public RatioBlock Ratio { get; set; }
+        public SearchBlock Search { get; set; }
+        public DownloadBlock Download { get; set; }
+    }
+
+    public class SettingsField
+    {
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Label { get; set; }
+        public string Default { get; set; }
+        public string[] Defaults { get; set; }
+        public Dictionary<string, string> Options { get; set; }
+    }
+
+    public class CategorymappingBlock
+    {
+        public string id { get; set; }
+        public string cat { get; set; }
+        public string desc { get; set; }
+        public bool Default { get; set; }
+    }
+
+    public class CapabilitiesBlock
+    {
+        public Dictionary<string, string> Categories { get; set; }
+        public List<CategorymappingBlock> Categorymappings { get; set; }
+        public Dictionary<string, List<string>> Modes { get; set; }
+    }
+
+    public class CaptchaBlock
+    {
+        public string Type { get; set; }
+        public string Selector { get; set; }
+        public string Image { get => throw new Exception("Deprecated, please use Login.Captcha.Selector instead"); set => throw new Exception("Deprecated, please use login/captcha/selector instead of image"); }
+        public string Input { get; set; }
+    }
+
+    public class LoginBlock
+    {
+        public string Path { get; set; }
+        public string Submitpath { get; set; }
+        public List<string> Cookies { get; set; }
+        public string Method { get; set; }
+        public string Form { get; set; }
+        public bool Selectors { get; set; } = false;
+        public Dictionary<string, string> Inputs { get; set; }
+        public Dictionary<string, SelectorBlock> Selectorinputs { get; set; }
+        public Dictionary<string, SelectorBlock> Getselectorinputs { get; set; }
+        public List<ErrorBlock> Error { get; set; }
+        public PageTestBlock Test { get; set; }
+        public CaptchaBlock Captcha { get; set; }
+    }
+
+    public class ErrorBlock
+    {
+        public string Path { get; set; }
+        public string Selector { get; set; }
+        public SelectorBlock Message { get; set; }
+    }
+
+    public class SelectorBlock
+    {
+        public string Selector { get; set; }
+        public bool Optional { get; set; } = false;
+        public string Text { get; set; }
+        public string Attribute { get; set; }
+        public string Remove { get; set; }
+        public List<FilterBlock> Filters { get; set; }
+        public Dictionary<string, string> Case { get; set; }
+    }
+
+    public class FilterBlock
+    {
+        public string Name { get; set; }
+        public dynamic Args { get; set; }
+    }
+
+    public class PageTestBlock
+    {
+        public string Path { get; set; }
+        public string Selector { get; set; }
+    }
+
+    public class RatioBlock : SelectorBlock
+    {
+        public string Path { get; set; }
+    }
+
+    public class SearchBlock
+    {
+        public string Path { get; set; }
+        public List<SearchPathBlock> Paths { get; set; }
+        public Dictionary<string, List<string>> Headers { get; set; }
+        public List<FilterBlock> Keywordsfilters { get; set; }
+        public Dictionary<string, string> Inputs { get; set; }
+        public List<ErrorBlock> Error { get; set; }
+        public List<FilterBlock> Preprocessingfilters { get; set; }
+        public RowsBlock Rows { get; set; }
+        public KeyValuePairList Fields { get; set; }
+    }
+
+    public class RowsBlock : SelectorBlock
+    {
+        public int After { get; set; }
+        public SelectorBlock Dateheaders { get; set; }
+    }
+
+    public class SearchPathBlock : RequestBlock
+    {
+        public List<string> Categories { get; set; }
+        public bool Inheritinputs { get; set; } = true;
+        public bool Followredirect { get; set; } = false;
+    }
+
+    public class RequestBlock
+    {
+        public string Path { get; set; }
+        public string Method { get; set; }
+        public Dictionary<string, string> Inputs { get; set; }
+        public string Queryseparator { get; set; } = "&";
+    }
+
+    public class DownloadBlock
+    {
+        public string Selector { get; set; }
+        public string Attribute { get; set; }
+        public List<FilterBlock> Filters { get; set; }
+        public string Method { get; set; }
+        public RequestBlock Before { get; set; }
+    }
+}

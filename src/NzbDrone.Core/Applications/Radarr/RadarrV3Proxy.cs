@@ -1,15 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Applications.Radarr
 {
     public interface IRadarrV3Proxy
     {
+        RadarrIndexer AddIndexer(RadarrIndexer indexer, RadarrSettings settings);
+        List<RadarrIndexer> GetIndexers(RadarrSettings settings);
+        List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings);
         ValidationFailure Test(RadarrSettings settings);
     }
 
@@ -26,7 +30,35 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public RadarrStatus GetStatus(RadarrSettings settings)
         {
-            return Execute<RadarrStatus>("/api/v3/system/status", settings);
+            var request = BuildRequest(settings, "/api/v3/system/status", HttpMethod.GET);
+            return Execute<RadarrStatus>(request);
+        }
+
+        public List<RadarrIndexer> GetIndexers(RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.GET);
+            return Execute<List<RadarrIndexer>>(request);
+        }
+
+        public void RemoveIndexer(int indexerId, RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.DELETE);
+            var response = _httpClient.Execute(request);
+        }
+
+        public List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, "/api/v3/indexer/schema", HttpMethod.GET);
+            return Execute<List<RadarrIndexer>>(request);
+        }
+
+        public RadarrIndexer AddIndexer(RadarrIndexer indexer, RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
+            return Execute<RadarrIndexer>(request);
         }
 
         public ValidationFailure Test(RadarrSettings settings)
@@ -55,20 +87,25 @@ namespace NzbDrone.Core.Applications.Radarr
             return null;
         }
 
-        private TResource Execute<TResource>(string resource, RadarrSettings settings)
-             where TResource : new()
+        private HttpRequest BuildRequest(RadarrSettings settings, string resource, HttpMethod method)
         {
-            if (settings.BaseUrl.IsNullOrWhiteSpace() || settings.ApiKey.IsNullOrWhiteSpace())
-            {
-                return new TResource();
-            }
-
             var baseUrl = settings.BaseUrl.TrimEnd('/');
 
-            var request = new HttpRequestBuilder(baseUrl).Resource(resource).Accept(HttpAccept.Json)
-                .SetHeader("X-Api-Key", settings.ApiKey).Build();
+            var request = new HttpRequestBuilder(baseUrl).Resource(resource)
+                .SetHeader("X-Api-Key", settings.ApiKey)
+                .Build();
 
-            var response = _httpClient.Get(request);
+            request.Headers.ContentType = "application/json";
+
+            request.Method = method;
+
+            return request;
+        }
+
+        private TResource Execute<TResource>(HttpRequest request)
+             where TResource : new()
+        {
+            var response = _httpClient.Execute(request);
 
             var results = JsonConvert.DeserializeObject<TResource>(response.Content);
 

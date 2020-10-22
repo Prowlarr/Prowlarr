@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
+using NLog;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Applications
 {
-    public abstract class ApplicationBase<TSettings> : IApplications
+    public abstract class ApplicationBase<TSettings> : IApplication
         where TSettings : IProviderConfig, new()
     {
+        protected readonly IAppIndexerMapService _appIndexerMapService;
+        protected readonly Logger _logger;
+
         public abstract string Name { get; }
 
         public Type ConfigContract => typeof(TSettings);
@@ -18,6 +23,12 @@ namespace NzbDrone.Core.Applications
         public abstract ValidationResult Test();
 
         protected TSettings Settings => (TSettings)Definition.Settings;
+
+        public ApplicationBase(IAppIndexerMapService appIndexerMapService, Logger logger)
+        {
+            _appIndexerMapService = appIndexerMapService;
+            _logger = logger;
+        }
 
         public override string ToString()
         {
@@ -39,6 +50,11 @@ namespace NzbDrone.Core.Applications
                 };
             }
         }
+
+        public abstract void AddIndexer(IndexerDefinition indexer);
+        public abstract void UpdateIndexer(IndexerDefinition indexer);
+        public abstract void RemoveIndexer(int indexerId);
+        public abstract void SyncIndexers();
 
         public virtual object RequestAction(string action, IDictionary<string, string> query)
         {

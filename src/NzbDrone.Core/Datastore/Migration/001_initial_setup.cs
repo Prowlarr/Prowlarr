@@ -48,6 +48,11 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("Priority").AsInt32().NotNullable().WithDefaultValue(25)
                 .WithColumn("Added").AsDateTime();
 
+            Create.TableForModel("ApplicationIndexerMapping")
+                .WithColumn("IndexerId").AsInt32()
+                .WithColumn("AppId").AsInt32()
+                .WithColumn("RemoteIndexerId").AsInt32();
+
             Create.TableForModel("Applications")
                 .WithColumn("Name").AsString().Unique()
                 .WithColumn("Implementation").AsString()

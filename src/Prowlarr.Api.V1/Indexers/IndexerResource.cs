@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
@@ -36,7 +37,7 @@ namespace Prowlarr.Api.V1.Indexers
             {
                 Console.WriteLine("mapping cardigann def");
 
-                var extraFields = definition.ExtraFields.Select((x, i) => MapField(x, i)).ToList();
+                var extraFields = definition.ExtraFields?.Select((x, i) => MapField(x, i)).ToList() ?? new List<Field>();
 
                 resource.Fields.AddRange(extraFields);
 

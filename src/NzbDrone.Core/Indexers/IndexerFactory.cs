@@ -79,8 +79,7 @@ namespace NzbDrone.Core.Indexers
             foreach (var provider in _providers)
             {
                 var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && v.Name != provider.GetType().Name)
-                    .Take(10);
+                    .Where(v => v.Name != null && v.Name != provider.GetType().Name);
 
                 foreach (IndexerDefinition definition in definitions)
                 {

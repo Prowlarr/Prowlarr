@@ -30,7 +30,6 @@ class AddIndexerItem extends Component {
     const {
       name,
       implementation,
-      implementationName,
       infoLink,
       presets,
       onIndexerSelect
@@ -105,7 +104,6 @@ class AddIndexerItem extends Component {
 AddIndexerItem.propTypes = {
   name: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
-  implementationName: PropTypes.string.isRequired,
   infoLink: PropTypes.string.isRequired,
   presets: PropTypes.arrayOf(PropTypes.object),
   onIndexerSelect: PropTypes.func.isRequired

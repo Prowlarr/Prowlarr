@@ -429,7 +429,10 @@ class IndexerIndex extends Component {
 
             {
               !error && isPopulated && !items.length &&
-                <NoIndexer totalItems={totalItems} />
+                <NoIndexer
+                  totalItems={totalItems}
+                  onAddIndexerPress={this.onAddIndexerPress}
+                />
             }
           </PageContentBody>
 

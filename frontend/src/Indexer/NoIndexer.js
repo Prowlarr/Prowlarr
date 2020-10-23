@@ -6,7 +6,10 @@ import translate from 'Utilities/String/translate';
 import styles from './NoIndexer.css';
 
 function NoIndexer(props) {
-  const { totalItems } = props;
+  const {
+    totalItems,
+    onAddIndexerPress
+  } = props;
 
   if (totalItems > 0) {
     return (
@@ -26,7 +29,7 @@ function NoIndexer(props) {
 
       <div className={styles.buttonContainer}>
         <Button
-          to="/add/new"
+          onPress={onAddIndexerPress}
           kind={kinds.PRIMARY}
         >
           {translate('AddNewIndexer')}
@@ -37,7 +40,8 @@ function NoIndexer(props) {
 }
 
 NoIndexer.propTypes = {
-  totalItems: PropTypes.number.isRequired
+  totalItems: PropTypes.number.isRequired,
+  onAddIndexerPress: PropTypes.func.isRequired
 };
 
 export default NoIndexer;

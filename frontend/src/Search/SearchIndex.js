@@ -12,6 +12,8 @@ import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
 import NoIndexer from 'Indexer/NoIndexer';
+import AddIndexerModal from 'Settings/Indexers/Indexers/AddIndexerModal';
+import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
@@ -39,6 +41,8 @@ class SearchIndex extends Component {
       scroller: null,
       jumpBarItems: { order: [] },
       jumpToCharacter: null,
+      isAddIndexerModalOpen: false,
+      isEditIndexerModalOpen: false,
       searchType: null,
       lastToggled: null
     };
@@ -123,6 +127,21 @@ class SearchIndex extends Component {
   //
   // Listeners
 
+  onAddIndexerPress = () => {
+    this.setState({ isAddIndexerModalOpen: true });
+  }
+
+  onAddIndexerModalClose = ({ indexerSelected = false } = {}) => {
+    this.setState({
+      isAddIndexerModalOpen: false,
+      isEditIndexerModalOpen: indexerSelected
+    });
+  }
+
+  onEditIndexerModalClose = () => {
+    this.setState({ isEditIndexerModalOpen: false });
+  }
+
   onJumpBarItemPress = (jumpToCharacter) => {
     this.setState({ jumpToCharacter });
   }
@@ -169,6 +188,8 @@ class SearchIndex extends Component {
     const {
       scroller,
       jumpBarItems,
+      isAddIndexerModalOpen,
+      isEditIndexerModalOpen,
       jumpToCharacter
     } = this.state;
 
@@ -248,7 +269,10 @@ class SearchIndex extends Component {
 
             {
               !error && !isFetching && !hasIndexers &&
-                <NoIndexer />
+                <NoIndexer
+                  totalItems={0}
+                  onAddIndexerPress={this.onAddIndexerPress}
+                />
             }
 
             {
@@ -268,7 +292,18 @@ class SearchIndex extends Component {
 
         <SearchFooter
           isFetching={isFetching}
+          hasIndexers={hasIndexers}
           onSearchPress={this.onSearchPress}
+        />
+
+        <AddIndexerModal
+          isOpen={isAddIndexerModalOpen}
+          onModalClose={this.onAddIndexerModalClose}
+        />
+
+        <EditIndexerModalConnector
+          isOpen={isEditIndexerModalOpen}
+          onModalClose={this.onEditIndexerModalClose}
         />
       </PageContent>
     );

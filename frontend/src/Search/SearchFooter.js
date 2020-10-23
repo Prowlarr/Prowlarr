@@ -51,7 +51,8 @@ class SearchFooter extends Component {
 
   render() {
     const {
-      isFetching
+      isFetching,
+      hasIndexers
     } = this.props;
 
     const {
@@ -97,7 +98,7 @@ class SearchFooter extends Component {
               <SpinnerButton
                 className={styles.deleteSelectedButton}
                 isSpinning={isFetching}
-                isDisabled={isFetching}
+                isDisabled={isFetching || !hasIndexers}
                 onPress={this.onSearchPress}
               >
                 Search
@@ -113,6 +114,7 @@ class SearchFooter extends Component {
 SearchFooter.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
+  hasIndexers: PropTypes.bool.isRequired,
   searchError: PropTypes.object
 };
 

@@ -14,7 +14,6 @@ namespace NzbDrone.Core.Datastore.Migration
 
             Create.TableForModel("History")
                 .WithColumn("IndexerId").AsInt32()
-                .WithColumn("SourceTitle").AsString()
                 .WithColumn("Date").AsDateTime()
                 .WithColumn("Data").AsString()
                 .WithColumn("EventType").AsInt32().Nullable()

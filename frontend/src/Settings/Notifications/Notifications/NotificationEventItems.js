@@ -15,17 +15,7 @@ function NotificationEventItems(props) {
   } = props;
 
   const {
-    onGrab,
-    onDownload,
-    onUpgrade,
-    onRename,
-    onDelete,
     onHealthIssue,
-    supportsOnGrab,
-    supportsOnDownload,
-    supportsOnUpgrade,
-    supportsOnRename,
-    supportsOnDelete,
     supportsOnHealthIssue,
     includeHealthWarnings
   } = item;
@@ -39,64 +29,6 @@ function NotificationEventItems(props) {
           link="https://github.com/Prowlarr/Prowlarr/wiki/Connections"
         />
         <div className={styles.events}>
-          <div>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="onGrab"
-              helpText={translate('OnGrabHelpText')}
-              isDisabled={!supportsOnGrab.value}
-              {...onGrab}
-              onChange={onInputChange}
-            />
-          </div>
-
-          <div>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="onDownload"
-              helpText={translate('OnDownloadHelpText')}
-              isDisabled={!supportsOnDownload.value}
-              {...onDownload}
-              onChange={onInputChange}
-            />
-          </div>
-
-          {
-            onDownload.value &&
-              <div>
-                <FormInputGroup
-                  type={inputTypes.CHECK}
-                  name="onUpgrade"
-                  helpText={translate('OnUpgradeHelpText')}
-                  isDisabled={!supportsOnUpgrade.value}
-                  {...onUpgrade}
-                  onChange={onInputChange}
-                />
-              </div>
-          }
-
-          <div>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="onRename"
-              helpText={translate('OnRenameHelpText')}
-              isDisabled={!supportsOnRename.value}
-              {...onRename}
-              onChange={onInputChange}
-            />
-          </div>
-
-          <div>
-            <FormInputGroup
-              type={inputTypes.CHECK}
-              name="onDelete"
-              helpText={translate('OnDeleteHelpText')}
-              isDisabled={!supportsOnDelete.value}
-              {...onDelete}
-              onChange={onInputChange}
-            />
-          </div>
-
           <div>
             <FormInputGroup
               type={inputTypes.CHECK}

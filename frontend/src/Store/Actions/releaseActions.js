@@ -1,7 +1,7 @@
 import React from 'react';
 import { createAction } from 'redux-actions';
 import Icon from 'Components/Icon';
-import { filterBuilderTypes, filterBuilderValueTypes, filterTypes, icons, sortDirections } from 'Helpers/Props';
+import { filterBuilderTypes, filterBuilderValueTypes, icons, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import translate from 'Utilities/String/translate';
@@ -101,17 +101,6 @@ export const defaultState = {
       }
 
       return releaseWeight;
-    },
-
-    rejections: function(item, direction) {
-      const rejections = item.rejections;
-      const releaseWeight = item.releaseWeight;
-
-      if (rejections.length !== 0) {
-        return releaseWeight + 1000000;
-      }
-
-      return releaseWeight;
     }
   },
 
@@ -122,50 +111,6 @@ export const defaultState = {
       filters: []
     }
   ],
-
-  filterPredicates: {
-    quality: function(item, value, type) {
-      const qualityId = item.quality.quality.id;
-
-      if (type === filterTypes.EQUAL) {
-        return qualityId === value;
-      }
-
-      if (type === filterTypes.NOT_EQUAL) {
-        return qualityId !== value;
-      }
-
-      // Default to false
-      return false;
-    },
-
-    rejectionCount: function(item, value, type) {
-      const rejectionCount = item.rejections.length;
-
-      switch (type) {
-        case filterTypes.EQUAL:
-          return rejectionCount === value;
-
-        case filterTypes.GREATER_THAN:
-          return rejectionCount > value;
-
-        case filterTypes.GREATER_THAN_OR_EQUAL:
-          return rejectionCount >= value;
-
-        case filterTypes.LESS_THAN:
-          return rejectionCount < value;
-
-        case filterTypes.LESS_THAN_OR_EQUAL:
-          return rejectionCount <= value;
-
-        case filterTypes.NOT_EQUAL:
-          return rejectionCount !== value;
-
-        default:
-          return false;
-      }
-    }
-  },
 
   filterBuilderProps: [
     {
@@ -204,17 +149,6 @@ export const defaultState = {
       name: 'peers',
       label: translate('Peers'),
       type: filterBuilderTypes.NUMBER
-    },
-    {
-      name: 'quality',
-      label: translate('Quality'),
-      type: filterBuilderTypes.EXACT,
-      valueType: filterBuilderValueTypes.QUALITY
-    },
-    {
-      name: 'rejectionCount',
-      label: translate('RejectionCount'),
-      type: filterBuilderTypes.NUMBER
     }
   ],
   selectedFilterKey: 'all'
@@ -235,7 +169,7 @@ export const SET_RELEASES_SORT = 'releases/setReleasesSort';
 export const CLEAR_RELEASES = 'releases/clearReleases';
 export const GRAB_RELEASE = 'releases/grabRelease';
 export const UPDATE_RELEASE = 'releases/updateRelease';
-export const SET_RELEASES_FILTER = 'releases/setMovieReleasesFilter';
+export const SET_RELEASES_FILTER = 'releases/setReleasesFilter';
 export const SET_RELEASES_TABLE_OPTION = 'releases/setReleasesTableOption';
 
 //

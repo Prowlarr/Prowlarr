@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
 using NzbDrone.Core.History;
-using NzbDrone.Core.Languages;
 using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1.History
 {
     public class HistoryResource : RestResource
     {
-        public int MovieId { get; set; }
-        public string SourceTitle { get; set; }
-        public bool QualityCutoffNotMet { get; set; }
+        public int IndexerId { get; set; }
         public DateTime Date { get; set; }
         public string DownloadId { get; set; }
 
@@ -32,8 +29,7 @@ namespace Prowlarr.Api.V1.History
             {
                 Id = model.Id,
 
-                MovieId = model.IndexerId,
-                SourceTitle = model.SourceTitle,
+                IndexerId = model.IndexerId,
 
                 //QualityCutoffNotMet
                 Date = model.Date,

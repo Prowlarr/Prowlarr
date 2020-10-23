@@ -11,9 +11,9 @@ function createMapStateToProps() {
   return createSelector(
     createIndexerSelector(),
     createUISettingsSelector(),
-    (movie, uiSettings) => {
+    (indexer, uiSettings) => {
       return {
-        movie,
+        indexer,
         shortDateFormat: uiSettings.shortDateFormat,
         timeFormat: uiSettings.timeFormat
       };

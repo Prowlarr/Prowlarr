@@ -12,7 +12,6 @@ namespace NzbDrone.Core.History
         }
 
         public int IndexerId { get; set; }
-        public string SourceTitle { get; set; }
         public DateTime Date { get; set; }
         public HistoryEventType EventType { get; set; }
         public Dictionary<string, string> Data { get; set; }

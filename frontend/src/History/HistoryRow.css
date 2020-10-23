@@ -1,4 +1,4 @@
-.downloadClient {
+.query {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 120px;

@@ -7,20 +7,8 @@ import styles from './HistoryEventTypeCell.css';
 
 function getIconName(eventType) {
   switch (eventType) {
-    case 'grabbed':
-      return icons.DOWNLOADING;
-    case 'movieFolderImported':
-      return icons.DRIVE;
-    case 'downloadFolderImported':
-      return icons.DOWNLOADED;
-    case 'downloadFailed':
-      return icons.DOWNLOADING;
-    case 'movieFileDeleted':
-      return icons.DELETE;
-    case 'movieFileRenamed':
-      return icons.ORGANIZE;
-    case 'downloadIgnored':
-      return icons.IGNORE;
+    case 'indexerQuery':
+      return icons.SEARCH;
     default:
       return icons.UNKNOWN;
   }
@@ -35,31 +23,19 @@ function getIconKind(eventType) {
   }
 }
 
-function getTooltip(eventType, data) {
+function getTooltip(eventType, data, indexer) {
   switch (eventType) {
-    case 'grabbed':
-      return `Movie grabbed from ${data.indexer} and sent to ${data.downloadClient}`;
-    case 'movieFolderImported':
-      return 'Movie imported from movie folder';
-    case 'downloadFolderImported':
-      return 'Movie downloaded successfully and picked up from download client';
-    case 'downloadFailed':
-      return 'Movie download failed';
-    case 'movieFileDeleted':
-      return 'Movie file deleted';
-    case 'movieFileRenamed':
-      return 'Movie file renamed';
-    case 'downloadIgnored':
-      return 'Movie Download Ignored';
+    case 'indexerQuery':
+      return `Query "${data.query}" sent to ${indexer.name}`;
     default:
       return 'Unknown event';
   }
 }
 
-function HistoryEventTypeCell({ eventType, data }) {
+function HistoryEventTypeCell({ eventType, data, indexer }) {
   const iconName = getIconName(eventType);
   const iconKind = getIconKind(eventType);
-  const tooltip = getTooltip(eventType, data);
+  const tooltip = getTooltip(eventType, data, indexer);
 
   return (
     <TableRowCell
@@ -76,7 +52,8 @@ function HistoryEventTypeCell({ eventType, data }) {
 
 HistoryEventTypeCell.propTypes = {
   eventType: PropTypes.string.isRequired,
-  data: PropTypes.object
+  data: PropTypes.object,
+  indexer: PropTypes.object
 };
 
 HistoryEventTypeCell.defaultProps = {

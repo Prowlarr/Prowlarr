@@ -48,9 +48,8 @@ class HistoryRow extends Component {
 
   render() {
     const {
-      movie,
+      indexer,
       eventType,
-      sourceTitle,
       date,
       data,
       isMarkingAsFailed,
@@ -60,7 +59,7 @@ class HistoryRow extends Component {
       onMarkAsFailedPress
     } = this.props;
 
-    if (!movie) {
+    if (!indexer) {
       return null;
     }
 
@@ -81,6 +80,7 @@ class HistoryRow extends Component {
               return (
                 <HistoryEventTypeCell
                   key={name}
+                  indexer={indexer}
                   eventType={eventType}
                   data={data}
                 />
@@ -93,7 +93,40 @@ class HistoryRow extends Component {
                   key={name}
                   className={styles.indexer}
                 >
-                  {movie.name}
+                  {indexer.name}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'successful') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {data.successful}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'elapsedTime') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {`${data.elapsedTime}ms`}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'query') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.query}
+                >
+                  {data.query}
                 </TableRowCell>
               );
             }
@@ -128,8 +161,8 @@ class HistoryRow extends Component {
         <HistoryDetailsModal
           isOpen={this.state.isDetailsModalOpen}
           eventType={eventType}
-          sourceTitle={sourceTitle}
           data={data}
+          indexer={indexer}
           isMarkingAsFailed={isMarkingAsFailed}
           shortDateFormat={shortDateFormat}
           timeFormat={timeFormat}
@@ -143,10 +176,9 @@ class HistoryRow extends Component {
 }
 
 HistoryRow.propTypes = {
-  movieId: PropTypes.number,
-  movie: PropTypes.object.isRequired,
+  indexerId: PropTypes.number,
+  indexer: PropTypes.object.isRequired,
   eventType: PropTypes.string.isRequired,
-  sourceTitle: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   isMarkingAsFailed: PropTypes.bool,

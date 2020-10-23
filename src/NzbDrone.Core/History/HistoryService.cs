@@ -86,9 +86,13 @@ namespace NzbDrone.Core.History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = HistoryEventType.IndexerQuery,
-                SourceTitle = message.Query
+                EventType = HistoryEventType.IndexerQuery
             };
+
+            history.Data.Add("ElapsedTime", message.Time.ToString());
+            history.Data.Add("Query", message.Query.SceneTitles.FirstOrDefault() ?? string.Empty);
+            history.Data.Add("Successful", message.Successful.ToString());
+            history.Data.Add("QueryResults", message.Results.HasValue ? message.Results.ToString() : null);
 
             _historyRepository.Insert(history);
         }

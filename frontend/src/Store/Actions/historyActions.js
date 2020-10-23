@@ -37,13 +37,31 @@ export const defaultState = {
     {
       name: 'indexer',
       label: 'Indexer',
-      isSortable: true,
+      isSortable: false,
+      isVisible: true
+    },
+    {
+      name: 'query',
+      label: 'Query',
+      isSortable: false,
       isVisible: true
     },
     {
       name: 'date',
       label: translate('Date'),
       isSortable: true,
+      isVisible: true
+    },
+    {
+      name: 'successful',
+      label: 'Successful',
+      isSortable: false,
+      isVisible: true
+    },
+    {
+      name: 'elapsedTime',
+      label: 'Elapsed Time',
+      isSortable: false,
       isVisible: true
     },
     {

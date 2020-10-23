@@ -69,6 +69,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'priority',
+      label: translate('Priority'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
       name: 'added',
       label: translate('Added'),
       isSortable: true,
@@ -114,6 +120,17 @@ export const defaultState = {
       label: translate('Added'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
+    },
+    {
+      name: 'priority',
+      label: 'Priority',
+      type: filterBuilderTypes.NUMBER
+    },
+    {
+      name: 'protocol',
+      label: 'Protocol',
+      type: filterBuilderTypes.EXACT,
+      valueType: filterBuilderValueTypes.PROTOCOL
     },
     {
       name: 'tags',

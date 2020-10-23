@@ -1,5 +1,9 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Applications
 {
@@ -10,7 +14,7 @@ namespace NzbDrone.Core.Applications
         void DeleteAllForApp(int appId);
     }
 
-    public class AppIndexerMapService : IAppIndexerMapService
+    public class AppIndexerMapService : IAppIndexerMapService, IHandle<ProviderDeletedEvent<IApplication>>
     {
         private readonly IAppIndexerMapRepository _appIndexerMapRepository;
 
@@ -32,6 +36,11 @@ namespace NzbDrone.Core.Applications
         public AppIndexerMap Insert(AppIndexerMap appIndexerMap)
         {
             return _appIndexerMapRepository.Insert(appIndexerMap);
+        }
+
+        public void Handle(ProviderDeletedEvent<IApplication> message)
+        {
+            _appIndexerMapRepository.DeleteAllForApp(message.ProviderId);
         }
     }
 }

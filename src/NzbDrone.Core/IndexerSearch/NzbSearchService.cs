@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
@@ -53,10 +54,15 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var spec = new TSpec()
             {
-                InteractiveSearch = interactiveSearch
+                InteractiveSearch = interactiveSearch,
+                SceneTitles = new List<string>()
             };
 
-            spec.SceneTitles = new List<string> { query };
+            if (query.IsNotNullOrWhiteSpace())
+            {
+                spec.SceneTitles.Add(query);
+            }
+
             spec.IndexerIds = indexerIds;
 
             return spec;
@@ -86,21 +92,25 @@ namespace NzbDrone.Core.IndexerSearch
 
                 taskList.Add(taskFactory.StartNew(() =>
                 {
+                    var sw = Stopwatch.StartNew();
                     try
                     {
                         var indexerReports = searchAction(indexerLocal);
-
-                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase.QueryTitles.Join(", ")));
 
                         lock (reports)
                         {
                             reports.AddRange(indexerReports);
                         }
+
+                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, sw.ElapsedMilliseconds, true, indexerReports.Count()));
                     }
                     catch (Exception e)
                     {
+                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, sw.ElapsedMilliseconds, false));
                         _logger.Error(e, "Error while searching for {0}", criteriaBase);
                     }
+
+                    sw.Stop();
                 }).LogExceptions());
             }
 

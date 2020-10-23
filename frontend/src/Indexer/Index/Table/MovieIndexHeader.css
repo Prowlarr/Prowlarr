@@ -10,6 +10,7 @@
   flex: 4 0 110px;
 }
 
+.priority,
 .privacy,
 .protocol {
   composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';

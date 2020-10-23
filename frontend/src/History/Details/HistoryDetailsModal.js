@@ -14,18 +14,8 @@ import styles from './HistoryDetailsModal.css';
 
 function getHeaderTitle(eventType) {
   switch (eventType) {
-    case 'grabbed':
-      return 'Grabbed';
-    case 'downloadFailed':
-      return 'Download Failed';
-    case 'downloadFolderImported':
-      return 'Movie Imported';
-    case 'movieFileDeleted':
-      return 'Movie File Deleted';
-    case 'movieFileRenamed':
-      return 'Movie File Renamed';
-    case 'downloadIgnored':
-      return 'Download Ignored';
+    case 'indexerQuery':
+      return 'Indexer Query';
     default:
       return 'Unknown';
   }
@@ -35,7 +25,7 @@ function HistoryDetailsModal(props) {
   const {
     isOpen,
     eventType,
-    sourceTitle,
+    indexer,
     data,
     isMarkingAsFailed,
     shortDateFormat,
@@ -57,7 +47,7 @@ function HistoryDetailsModal(props) {
         <ModalBody>
           <HistoryDetails
             eventType={eventType}
-            sourceTitle={sourceTitle}
+            indexer={indexer}
             data={data}
             shortDateFormat={shortDateFormat}
             timeFormat={timeFormat}
@@ -91,7 +81,7 @@ function HistoryDetailsModal(props) {
 HistoryDetailsModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   eventType: PropTypes.string.isRequired,
-  sourceTitle: PropTypes.string.isRequired,
+  indexer: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
   isMarkingAsFailed: PropTypes.bool.isRequired,
   shortDateFormat: PropTypes.string.isRequired,

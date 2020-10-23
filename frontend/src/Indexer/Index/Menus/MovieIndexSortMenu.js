@@ -48,6 +48,15 @@ function MovieIndexSortMenu(props) {
         </SortMenuItem>
 
         <SortMenuItem
+          name="priority"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          {'Priority'}
+        </SortMenuItem>
+
+        <SortMenuItem
           name="protocol"
           sortKey={sortKey}
           sortDirection={sortDirection}

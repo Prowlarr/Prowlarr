@@ -2,255 +2,43 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
-import DescriptionListItemDescription from 'Components/DescriptionList/DescriptionListItemDescription';
-import DescriptionListItemTitle from 'Components/DescriptionList/DescriptionListItemTitle';
-import Link from 'Components/Link/Link';
-import formatDateTime from 'Utilities/Date/formatDateTime';
-import formatAge from 'Utilities/Number/formatAge';
 import translate from 'Utilities/String/translate';
 import styles from './HistoryDetails.css';
 
 function HistoryDetails(props) {
   const {
+    indexer,
     eventType,
-    sourceTitle,
-    data,
-    shortDateFormat,
-    timeFormat
+    data
   } = props;
 
-  if (eventType === 'grabbed') {
+  if (eventType === 'indexerQuery') {
     const {
-      indexer,
-      releaseGroup,
-      nzbInfoUrl,
-      downloadClient,
-      downloadId,
-      age,
-      ageHours,
-      ageMinutes,
-      publishedDate
+      query,
+      queryResults
     } = data;
 
     return (
       <DescriptionList>
         <DescriptionListItem
           descriptionClassName={styles.description}
-          title={translate('Name')}
-          data={sourceTitle}
+          title={translate('Query')}
+          data={query}
         />
 
         {
           !!indexer &&
             <DescriptionListItem
               title={translate('Indexer')}
-              data={indexer}
+              data={indexer.name}
             />
         }
 
         {
-          !!releaseGroup &&
+          !!data &&
             <DescriptionListItem
-              descriptionClassName={styles.description}
-              title={translate('ReleaseGroup')}
-              data={releaseGroup}
-            />
-        }
-
-        {
-          !!nzbInfoUrl &&
-            <span>
-              <DescriptionListItemTitle>
-                Info URL
-              </DescriptionListItemTitle>
-
-              <DescriptionListItemDescription>
-                <Link to={nzbInfoUrl}>{nzbInfoUrl}</Link>
-              </DescriptionListItemDescription>
-            </span>
-        }
-
-        {
-          !!downloadClient &&
-            <DescriptionListItem
-              title={translate('DownloadClient')}
-              data={downloadClient}
-            />
-        }
-
-        {
-          !!downloadId &&
-            <DescriptionListItem
-              title={translate('GrabID')}
-              data={downloadId}
-            />
-        }
-
-        {
-          !!indexer &&
-            <DescriptionListItem
-              title={translate('AgeWhenGrabbed')}
-              data={formatAge(age, ageHours, ageMinutes)}
-            />
-        }
-
-        {
-          !!publishedDate &&
-            <DescriptionListItem
-              title={translate('PublishedDate')}
-              data={formatDateTime(publishedDate, shortDateFormat, timeFormat, { includeSeconds: true })}
-            />
-        }
-      </DescriptionList>
-    );
-  }
-
-  if (eventType === 'downloadFailed') {
-    const {
-      message
-    } = data;
-
-    return (
-      <DescriptionList>
-        <DescriptionListItem
-          descriptionClassName={styles.description}
-          title={translate('Name')}
-          data={sourceTitle}
-        />
-
-        {
-          !!message &&
-            <DescriptionListItem
-              title={translate('Message')}
-              data={message}
-            />
-        }
-      </DescriptionList>
-    );
-  }
-
-  if (eventType === 'downloadFolderImported') {
-    const {
-      droppedPath,
-      importedPath
-    } = data;
-
-    return (
-      <DescriptionList>
-        <DescriptionListItem
-          descriptionClassName={styles.description}
-          title={translate('Name')}
-          data={sourceTitle}
-        />
-
-        {
-          !!droppedPath &&
-            <DescriptionListItem
-              descriptionClassName={styles.description}
-              title={translate('Source')}
-              data={droppedPath}
-            />
-        }
-
-        {
-          !!importedPath &&
-            <DescriptionListItem
-              descriptionClassName={styles.description}
-              title={translate('ImportedTo')}
-              data={importedPath}
-            />
-        }
-      </DescriptionList>
-    );
-  }
-
-  if (eventType === 'movieFileDeleted') {
-    const {
-      reason
-    } = data;
-
-    let reasonMessage = '';
-
-    switch (reason) {
-      case 'Manual':
-        reasonMessage = 'File was deleted by via UI';
-        break;
-      case 'MissingFromDisk':
-        reasonMessage = 'Prowlarr was unable to find the file on disk so it was removed';
-        break;
-      case 'Upgrade':
-        reasonMessage = 'File was deleted to import an upgrade';
-        break;
-      default:
-        reasonMessage = '';
-    }
-
-    return (
-      <DescriptionList>
-        <DescriptionListItem
-          title={translate('Name')}
-          data={sourceTitle}
-        />
-
-        <DescriptionListItem
-          title={translate('Reason')}
-          data={reasonMessage}
-        />
-      </DescriptionList>
-    );
-  }
-
-  if (eventType === 'movieFileRenamed') {
-    const {
-      sourcePath,
-      sourceRelativePath,
-      path,
-      relativePath
-    } = data;
-
-    return (
-      <DescriptionList>
-        <DescriptionListItem
-          title={translate('SourcePath')}
-          data={sourcePath}
-        />
-
-        <DescriptionListItem
-          title={translate('SourceRelativePath')}
-          data={sourceRelativePath}
-        />
-
-        <DescriptionListItem
-          title={translate('DestinationPath')}
-          data={path}
-        />
-
-        <DescriptionListItem
-          title={translate('DestinationRelativePath')}
-          data={relativePath}
-        />
-      </DescriptionList>
-    );
-  }
-
-  if (eventType === 'downloadIgnored') {
-    const {
-      message
-    } = data;
-
-    return (
-      <DescriptionList>
-        <DescriptionListItem
-          descriptionClassName={styles.description}
-          title={translate('Name')}
-          data={sourceTitle}
-        />
-
-        {
-          !!message &&
-            <DescriptionListItem
-              title={translate('Message')}
-              data={message}
+              title={'Query Results'}
+              data={queryResults}
             />
         }
       </DescriptionList>
@@ -262,15 +50,15 @@ function HistoryDetails(props) {
       <DescriptionListItem
         descriptionClassName={styles.description}
         title={translate('Name')}
-        data={sourceTitle}
+        data={data.query}
       />
     </DescriptionList>
   );
 }
 
 HistoryDetails.propTypes = {
+  indexer: PropTypes.object.isRequired,
   eventType: PropTypes.string.isRequired,
-  sourceTitle: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired

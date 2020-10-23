@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import FilterMenu from 'Components/Menu/FilterMenu';
 import { align } from 'Helpers/Props';
-import MovieIndexFilterModalConnector from 'Indexer/Index/MovieIndexFilterModalConnector';
+import SearchIndexFilterModalConnector from 'Search/SearchIndexFilterModalConnector';
 
 function SearchIndexFilterMenu(props) {
   const {
@@ -20,7 +20,7 @@ function SearchIndexFilterMenu(props) {
       selectedFilterKey={selectedFilterKey}
       filters={filters}
       customFilters={customFilters}
-      filterModalConnectorComponent={MovieIndexFilterModalConnector}
+      filterModalConnectorComponent={SearchIndexFilterModalConnector}
       onFilterSelect={onFilterSelect}
     />
   );

@@ -5,11 +5,14 @@ import IconButton from 'Components/Link/IconButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
-import { icons, kinds } from 'Helpers/Props';
+import TagListConnector from 'Components/TagListConnector';
+import { icons } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
+import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
+import IndexerStatusCell from './IndexerStatusCell';
 import ProtocolLabel from './ProtocolLabel';
 import styles from './MovieIndexRow.css';
 
@@ -61,8 +64,10 @@ class MovieIndexRow extends Component {
       enableRss,
       enableAutomaticSearch,
       enableInteractiveSearch,
+      tags,
       protocol,
       privacy,
+      priority,
       added,
       capabilities,
       columns,
@@ -103,28 +108,13 @@ class MovieIndexRow extends Component {
 
             if (column.name === 'status') {
               return (
-                <VirtualTableRowCell
+                <IndexerStatusCell
                   key={column.name}
                   className={styles[column.name]}
-                >
-                  {
-                    enableRss || enableAutomaticSearch || enableInteractiveSearch ?
-                      <Label kind={kinds.SUCCESS}>
-                        {'Enabled'}
-                      </Label>:
-                      null
-                  }
-                  {
-                    !enableRss && !enableAutomaticSearch && !enableInteractiveSearch ?
-                      <Label
-                        kind={kinds.DISABLED}
-                        outline={true}
-                      >
-                        {translate('Disabled')}
-                      </Label> :
-                      null
-                  }
-                </VirtualTableRowCell>
+                  enabled={enableRss || enableAutomaticSearch || enableInteractiveSearch}
+                  status={status}
+                  component={VirtualTableRowCell}
+                />
               );
             }
 
@@ -146,8 +136,19 @@ class MovieIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   <Label>
-                    {privacy}
+                    {titleCase(privacy)}
                   </Label>
+                </VirtualTableRowCell>
+              );
+            }
+
+            if (column.name === 'priority') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  {priority}
                 </VirtualTableRowCell>
               );
             }
@@ -186,6 +187,19 @@ class MovieIndexRow extends Component {
                   date={added}
                   component={VirtualTableRowCell}
                 />
+              );
+            }
+
+            if (column.name === 'tags') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  <TagListConnector
+                    tags={tags}
+                  />
+                </VirtualTableRowCell>
               );
             }
 
@@ -234,6 +248,7 @@ MovieIndexRow.propTypes = {
   id: PropTypes.number.isRequired,
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
+  priority: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   enableRss: PropTypes.bool.isRequired,
   enableAutomaticSearch: PropTypes.bool.isRequired,
@@ -246,6 +261,10 @@ MovieIndexRow.propTypes = {
   isMovieEditorActive: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool,
   onSelectedChange: PropTypes.func.isRequired
+};
+
+MovieIndexRow.defaultProps = {
+  tags: []
 };
 
 export default MovieIndexRow;

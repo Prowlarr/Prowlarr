@@ -6,20 +6,20 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 
-namespace NzbDrone.Core.Applications.Radarr
+namespace NzbDrone.Core.Applications.Lidarr
 {
-    public class Radarr : ApplicationBase<RadarrSettings>
+    public class Lidarr : ApplicationBase<LidarrSettings>
     {
-        public override string Name => "Radarr";
+        public override string Name => "Lidarr";
 
-        private readonly IRadarrV3Proxy _radarrV3Proxy;
+        private readonly ILidarrV1Proxy _lidarrV1Proxy;
         private readonly IIndexerFactory _indexerFactory;
         private readonly IConfigFileProvider _configFileProvider;
 
-        public Radarr(IRadarrV3Proxy radarrV3Proxy, IIndexerFactory indexerFactory, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Lidarr(ILidarrV1Proxy lidarrV1Proxy, IIndexerFactory indexerFactory, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
             : base(appIndexerMapService, logger)
         {
-            _radarrV3Proxy = radarrV3Proxy;
+            _lidarrV1Proxy = lidarrV1Proxy;
             _indexerFactory = indexerFactory;
             _configFileProvider = configFileProvider;
         }
@@ -28,20 +28,20 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             var failures = new List<ValidationFailure>();
 
-            failures.AddIfNotNull(_radarrV3Proxy.Test(Settings));
+            failures.AddIfNotNull(_lidarrV1Proxy.Test(Settings));
 
             return new ValidationResult(failures);
         }
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var schema = _radarrV3Proxy.GetIndexerSchema(Settings);
+            var schema = _lidarrV1Proxy.GetIndexerSchema(Settings);
             var newznab = schema.Where(i => i.Implementation == "Newznab").First();
             var torznab = schema.Where(i => i.Implementation == "Torznab").First();
 
-            var radarrIndexer = BuildRadarrIndexer(indexer, indexer.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
+            var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
 
-            var remoteIndexer = _radarrV3Proxy.AddIndexer(radarrIndexer, Settings);
+            var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
             _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
         }
 
@@ -60,12 +60,12 @@ namespace NzbDrone.Core.Applications.Radarr
         public override void SyncIndexers()
         {
             // Pull Schema so we get the field mapping right
-            var schema = _radarrV3Proxy.GetIndexerSchema(Settings);
+            var schema = _lidarrV1Proxy.GetIndexerSchema(Settings);
             var newznab = schema.Where(i => i.Implementation == "Newznab").First();
             var torznab = schema.Where(i => i.Implementation == "Torznab").First();
 
-            // Pull existing indexers from Radarr
-            var indexers = _radarrV3Proxy.GetIndexers(Settings);
+            // Pull existing indexers from Lidarr
+            var indexers = _lidarrV1Proxy.GetIndexers(Settings);
 
             //Pull all local indexers (TODO only those that support movie categories.)
             var prowlarrIndexers = _indexerFactory.GetAvailableProviders();
@@ -84,18 +84,18 @@ namespace NzbDrone.Core.Applications.Radarr
 
                 var definition = (IndexerDefinition)indexer.Definition;
 
-                var radarrIndexer = BuildRadarrIndexer(definition, definition.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
+                var lidarrIndexer = BuildLidarrIndexer(definition, definition.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
 
-                var remoteIndexer = _radarrV3Proxy.AddIndexer(radarrIndexer, Settings);
+                var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = definition.Id, RemoteIndexerId = remoteIndexer.Id });
             }
 
             //Delete Indexers that need Deleting.
         }
 
-        private RadarrIndexer BuildRadarrIndexer(IndexerDefinition indexer, RadarrIndexer schema)
+        private LidarrIndexer BuildLidarrIndexer(IndexerDefinition indexer, LidarrIndexer schema)
         {
-            var radarrIndexer = new RadarrIndexer
+            var lidarrIndexer = new LidarrIndexer
             {
                 Id = 0,
                 Name = $"{indexer.Name} (Prowlarr)",
@@ -108,11 +108,11 @@ namespace NzbDrone.Core.Applications.Radarr
                 Fields = schema.Fields,
             };
 
-            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl}/api/v1/indexer/1/";
-            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/newznab";
-            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
+            lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl}/api/v1/indexer/1/";
+            lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/newznab";
+            lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
 
-            return radarrIndexer;
+            return lidarrIndexer;
         }
     }
 }

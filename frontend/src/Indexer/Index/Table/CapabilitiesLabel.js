@@ -59,4 +59,13 @@ CapabilitiesLabel.propTypes = {
   capabilities: PropTypes.object.isRequired
 };
 
+CapabilitiesLabel.defaultProps = {
+  capabilities: {
+    movieSearchAvailable: false,
+    tvSearchAvailable: false,
+    musicSearchAvailable: false,
+    bookSearchAvailable: false
+  }
+};
+
 export default CapabilitiesLabel;

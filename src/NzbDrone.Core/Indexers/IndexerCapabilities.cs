@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -88,6 +90,47 @@ namespace NzbDrone.Core.Indexers
             Categories = new List<IndexerCategory>();
         }
 
+        public void ParseCardigannSearchModes(Dictionary<string, List<string>> modes)
+        {
+            if (modes == null || !modes.Any())
+            {
+                throw new Exception("At least one search mode is required");
+            }
+
+            if (!modes.ContainsKey("search"))
+            {
+                throw new Exception("The search mode 'search' is mandatory");
+            }
+
+            foreach (var entry in modes)
+            {
+                switch (entry.Key)
+                {
+                    case "search":
+                        if (entry.Value == null || entry.Value.Count != 1 || entry.Value[0] != "q")
+                        {
+                            throw new Exception("In search mode 'search' only 'q' parameter is supported and it's mandatory");
+                        }
+
+                        break;
+                    case "tv-search":
+                        ParseTvSearchParams(entry.Value);
+                        break;
+                    case "movie-search":
+                        ParseMovieSearchParams(entry.Value);
+                        break;
+                    case "music-search":
+                        ParseMusicSearchParams(entry.Value);
+                        break;
+                    case "book-search":
+                        ParseBookSearchParams(entry.Value);
+                        break;
+                    default:
+                        throw new Exception($"Unsupported search mode: {entry.Key}");
+                }
+            }
+        }
+
         public void ParseTvSearchParams(IEnumerable<string> paramsList)
         {
             if (paramsList == null)
@@ -165,6 +208,33 @@ namespace NzbDrone.Core.Indexers
                 else
                 {
                     throw new Exception($"Not supported Music-search param: {paramStr}");
+                }
+            }
+        }
+
+        private void ParseBookSearchParams(IEnumerable<string> paramsList)
+        {
+            if (paramsList == null)
+            {
+                return;
+            }
+
+            foreach (var paramStr in paramsList)
+            {
+                if (Enum.TryParse(paramStr, true, out BookSearchParam param))
+                {
+                    if (!BookSearchParams.Contains(param))
+                    {
+                        BookSearchParams.Add(param);
+                    }
+                    else
+                    {
+                        throw new Exception($"Duplicate book-search param: {paramStr}");
+                    }
+                }
+                else
+                {
+                    throw new Exception($"Not supported book-search param: {paramStr}");
                 }
             }
         }

@@ -59,7 +59,7 @@ namespace Prowlarr.Api.V1.Indexers
             switch (requestType)
             {
                 case "caps":
-                    Response response = indexerInstance.GetCapabilities().ToXml();
+                    Response response = indexer.Capabilities.ToXml();
                     response.ContentType = "application/rss+xml";
                     return response;
                 case "tvsearch":

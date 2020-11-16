@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers
 
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
-        public override IndexerCapabilities Capabilities => new IndexerCapabilities();
+        public override IndexerCapabilities Capabilities { get; protected set; }
 
         public bool SupportsPaging => PageSize > 0;
 
@@ -84,11 +84,6 @@ namespace NzbDrone.Core.Indexers
             };
 
             return requests;
-        }
-
-        public override IndexerCapabilities GetCapabilities()
-        {
-            return Capabilities;
         }
 
         protected virtual IList<ReleaseInfo> FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)

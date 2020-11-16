@@ -20,6 +20,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
+        public override IndexerCapabilities Capabilities { get => new IndexerCapabilities(); protected set => base.Capabilities = value; }
+
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).LimitsDefault.Value;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -34,14 +36,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override IParseIndexerResponse GetParser()
         {
             return new NewznabRssParser(Settings);
-        }
-
-        public override IndexerCapabilities GetCapabilities()
-        {
-            // TODO: This uses indexer capabilities when called so we don't have to keep up with all of them
-            // however, this is not pulled on a all pull from UI, doing so will kill the UI load if an indexer is down
-            // should we just purge and manage
-            return _capabilitiesProvider.GetCapabilities(Settings);
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions

@@ -97,17 +97,9 @@ namespace NzbDrone.Core.Indexers.Torznab
             failures.AddIfNotNull(TestCapabilities());
         }
 
-        protected static List<int> CategoryIds(List<IndexerCategory> categories)
+        protected static List<int> CategoryIds(IndexerCapabilitiesCategories categories)
         {
-            var l = categories.Select(c => c.Id).ToList();
-
-            foreach (var category in categories)
-            {
-                if (category.SubCategories != null)
-                {
-                    l.AddRange(CategoryIds(category.SubCategories));
-                }
-            }
+            var l = categories.GetTorznabCategoryTree().Select(c => c.Id).ToList();
 
             return l;
         }

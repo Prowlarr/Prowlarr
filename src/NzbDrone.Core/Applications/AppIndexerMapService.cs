@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider.Events;
 

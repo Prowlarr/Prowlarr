@@ -35,5 +35,6 @@ namespace NzbDrone.Core.Indexers
         // Get Hash code should be calculated off read only properties.
         // ID is not readonly
         public override int GetHashCode() => Id;
+        public IndexerCategory CopyWithoutSubCategories() => new IndexerCategory(Id, Name);
     }
 }

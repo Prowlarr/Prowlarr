@@ -53,6 +53,7 @@ namespace NzbDrone.Core.Indexers
                     definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
                     definition.Capabilities = new IndexerCapabilities();
                     definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
+                    MapCardigannCategories(definition, defFile);
                 }
             }
 
@@ -71,6 +72,7 @@ namespace NzbDrone.Core.Indexers
                 definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
                 definition.Capabilities = new IndexerCapabilities();
                 definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
+                MapCardigannCategories(definition, defFile);
             }
 
             return definition;
@@ -79,6 +81,48 @@ namespace NzbDrone.Core.Indexers
         protected override List<IndexerDefinition> Active()
         {
             return base.Active().Where(c => c.Enable).ToList();
+        }
+
+        private void MapCardigannCategories(IndexerDefinition def, CardigannDefinition defFile)
+        {
+            if (defFile.Caps.Categories != null)
+            {
+                foreach (var category in defFile.Caps.Categories)
+                {
+                    var cat = TorznabCatType.GetCatByName(category.Value);
+
+                    if (cat == null)
+                    {
+                        continue;
+                    }
+
+                    def.Capabilities.Categories.AddCategoryMapping(category.Key, cat);
+                }
+            }
+
+            if (defFile.Caps.Categorymappings != null)
+            {
+                foreach (var categorymapping in defFile.Caps.Categorymappings)
+                {
+                    IndexerCategory torznabCat = null;
+
+                    if (categorymapping.cat != null)
+                    {
+                        torznabCat = TorznabCatType.GetCatByName(categorymapping.cat);
+                        if (torznabCat == null)
+                        {
+                            continue;
+                        }
+                    }
+
+                    def.Capabilities.Categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
+
+                    //if (categorymapping.Default)
+                    //{
+                    //    DefaultCategories.Add(categorymapping.id);
+                    //}
+                }
+            }
         }
 
         public override IEnumerable<IndexerDefinition> GetDefaultDefinitions()

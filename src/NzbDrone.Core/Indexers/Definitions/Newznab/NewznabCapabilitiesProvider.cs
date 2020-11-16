@@ -214,7 +214,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                         });
                     }
 
-                    capabilities.Categories.Add(cat);
+                    capabilities.Categories.AddCategoryMapping(cat.Name, cat);
                 }
             }
 

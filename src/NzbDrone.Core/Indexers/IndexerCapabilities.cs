@@ -41,7 +41,9 @@ namespace NzbDrone.Core.Indexers
 
     public enum BookSearchParam
     {
-        Q
+        Q,
+        Title,
+        Author
     }
 
     public class IndexerCapabilities
@@ -75,8 +77,10 @@ namespace NzbDrone.Core.Indexers
 
         public List<BookSearchParam> BookSearchParams;
         public bool BookSearchAvailable => BookSearchParams.Count > 0;
+        public bool BookSearchTitleAvailable => BookSearchParams.Contains(BookSearchParam.Title);
+        public bool BookSearchAuthorAvailable => BookSearchParams.Contains(BookSearchParam.Author);
 
-        public List<IndexerCategory> Categories { get; private set; }
+        public readonly IndexerCapabilitiesCategories Categories;
 
         public IndexerCapabilities()
         {
@@ -85,7 +89,7 @@ namespace NzbDrone.Core.Indexers
             MovieSearchParams = new List<MovieSearchParam>();
             MusicSearchParams = new List<MusicSearchParam>();
             BookSearchParams = new List<BookSearchParam>();
-            Categories = new List<IndexerCategory>();
+            Categories = new IndexerCapabilitiesCategories();
         }
 
         public void ParseCardigannSearchModes(Dictionary<string, List<string>> modes)
@@ -315,26 +319,20 @@ namespace NzbDrone.Core.Indexers
             return string.Join(",", parameters);
         }
 
-        private string SupportedBookSearchParams
+        private string SupportedBookSearchParams()
         {
-            get
+            var parameters = new List<string> { "q" }; // q is always enabled
+            if (BookSearchTitleAvailable)
             {
-                var parameters = new List<string>() { "q" };
-                if (BookSearchAvailable)
-                {
-                    parameters.Add("author,title");
-                }
-
-                return string.Join(",", parameters);
+                parameters.Add("title");
             }
-        }
 
-        public bool SupportsCategories(int[] categories)
-        {
-            var subCategories = Categories.SelectMany(c => c.SubCategories);
-            var allCategories = Categories.Concat(subCategories);
-            var supportsCategory = allCategories.Any(i => categories.Any(c => c == i.Id));
-            return supportsCategory;
+            if (BookSearchAuthorAvailable)
+            {
+                parameters.Add("author");
+            }
+
+            return string.Join(",", parameters);
         }
 
         public XDocument GetXDocument()
@@ -367,9 +365,9 @@ namespace NzbDrone.Core.Indexers
                             new XAttribute("supportedParams", SupportedMusicSearchParams())),
                         new XElement("book-search",
                             new XAttribute("available", BookSearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedBookSearchParams))),
+                            new XAttribute("supportedParams", SupportedBookSearchParams()))),
                     new XElement("categories",
-                        from c in Categories.OrderBy(x => x.Id < 100000 ? "z" + x.Id.ToString() : x.Name)
+                        from c in Categories.GetTorznabCategoryTree(true)
                         select new XElement("category",
                             new XAttribute("id", c.Id),
                             new XAttribute("name", c.Name),
@@ -390,7 +388,7 @@ namespace NzbDrone.Core.Indexers
             left.MovieSearchParams = left.MovieSearchParams.Union(right.MovieSearchParams).ToList();
             left.MusicSearchParams = left.MusicSearchParams.Union(right.MusicSearchParams).ToList();
             left.BookSearchParams = left.BookSearchParams.Union(right.BookSearchParams).ToList();
-            left.Categories.AddRange(right.Categories.Where(x => x.Id < 100000).Except(left.Categories)); // exclude indexer specific categories (>= 100000)
+            left.Categories.Concat(right.Categories);
             return left;
         }
     }

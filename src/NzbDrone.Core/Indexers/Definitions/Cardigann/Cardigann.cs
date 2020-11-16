@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
@@ -11,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 {
     public class Cardigann : HttpIndexerBase<CardigannSettings>
     {
-        private readonly ICardigannDefinitionService _definitionService;
+        private readonly IIndexerDefinitionUpdateService _definitionService;
 
         public override string Name => "Cardigann";
 
@@ -33,14 +34,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                        _logger);
         }
 
-        public override IndexerCapabilities GetCapabilities()
-        {
-            // TODO: This uses indexer capabilities when called so we don't have to keep up with all of them
-            // however, this is not pulled on a all pull from UI, doing so will kill the UI load if an indexer is down
-            // should we just purge and manage
-            return new IndexerCapabilities();
-        }
-
         public override IEnumerable<ProviderDefinition> DefaultDefinitions
         {
             get
@@ -52,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
         }
 
-        public Cardigann(ICardigannDefinitionService definitionService,
+        public Cardigann(IIndexerDefinitionUpdateService definitionService,
                          IHttpClient httpClient,
                          IIndexerStatusService indexerStatusService,
                          IConfigService configService,
@@ -76,7 +69,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Privacy = definition.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public,
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
-                Capabilities = Capabilities,
+                Capabilities = new IndexerCapabilities(),
                 ExtraFields = definition.Settings
             };
         }

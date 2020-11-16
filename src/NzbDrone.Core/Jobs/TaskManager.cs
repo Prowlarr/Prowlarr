@@ -6,6 +6,7 @@ using NzbDrone.Core.Backup;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Housekeeping;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
@@ -59,6 +60,7 @@ namespace NzbDrone.Core.Jobs
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationCheckUpdateCommand).FullName },
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
                     new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
+                    new ScheduledTask { Interval = 6 * 60, TypeName = typeof(IndexerDefinitionUpdateCommand).FullName },
 
                     new ScheduledTask
                     {

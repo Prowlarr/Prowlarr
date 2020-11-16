@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Composition;
 using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 
@@ -20,11 +21,11 @@ namespace NzbDrone.Core.Indexers
 
     public class IndexerFactory : ProviderFactory<IIndexer, IndexerDefinition>, IIndexerFactory
     {
-        private readonly ICardigannDefinitionService _definitionService;
+        private readonly IIndexerDefinitionUpdateService _definitionService;
         private readonly IIndexerStatusService _indexerStatusService;
         private readonly Logger _logger;
 
-        public IndexerFactory(ICardigannDefinitionService definitionService,
+        public IndexerFactory(IIndexerDefinitionUpdateService definitionService,
                               IIndexerStatusService indexerStatusService,
                               IIndexerRepository providerRepository,
                               IEnumerable<IIndexer> providers,
@@ -41,14 +42,17 @@ namespace NzbDrone.Core.Indexers
         public override List<IndexerDefinition> All()
         {
             var definitions = base.All();
-            var metaDefs = _definitionService.All().ToDictionary(x => x.File);
 
             foreach (var definition in definitions)
             {
                 if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
                 {
                     var settings = (CardigannSettings)definition.Settings;
-                    definition.ExtraFields = metaDefs[settings.DefinitionFile].Settings;
+                    var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
+                    definition.ExtraFields = defFile.Settings;
+                    definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
+                    definition.Capabilities = new IndexerCapabilities();
+                    definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
                 }
             }
 
@@ -58,12 +62,15 @@ namespace NzbDrone.Core.Indexers
         public override IndexerDefinition Get(int id)
         {
             var definition = base.Get(id);
-            var metaDefs = _definitionService.All().ToDictionary(x => x.File);
 
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
             {
                 var settings = (CardigannSettings)definition.Settings;
-                definition.ExtraFields = metaDefs[settings.DefinitionFile].Settings;
+                var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
+                definition.ExtraFields = defFile.Settings;
+                definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
+                definition.Capabilities = new IndexerCapabilities();
+                definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
             }
 
             return definition;
@@ -79,7 +86,7 @@ namespace NzbDrone.Core.Indexers
             foreach (var provider in _providers)
             {
                 var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && v.Name != provider.GetType().Name);
+                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name));
 
                 foreach (IndexerDefinition definition in definitions)
                 {
@@ -99,10 +106,15 @@ namespace NzbDrone.Core.Indexers
             base.SetProviderCharacteristics(provider, definition);
 
             definition.Protocol = provider.Protocol;
-            definition.Privacy = provider.Privacy;
             definition.SupportsRss = provider.SupportsRss;
             definition.SupportsSearch = provider.SupportsSearch;
-            definition.Capabilities = provider.Capabilities;
+
+            //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
+            if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
+            {
+                definition.Privacy = provider.Privacy;
+                definition.Capabilities = provider.Capabilities;
+            }
         }
 
         public List<IIndexer> RssEnabled(bool filterBlockedIndexers = true)

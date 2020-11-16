@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
-        public abstract IndexerCapabilities Capabilities { get; }
+        public abstract IndexerCapabilities Capabilities { get; protected set; }
 
         public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
         {
@@ -68,8 +68,6 @@ namespace NzbDrone.Core.Indexers
 
         public abstract IList<ReleaseInfo> FetchRecent();
         public abstract IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
-
-        public abstract IndexerCapabilities GetCapabilities();
 
         protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
         {

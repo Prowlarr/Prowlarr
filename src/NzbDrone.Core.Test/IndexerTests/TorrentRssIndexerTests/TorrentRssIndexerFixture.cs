@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using FluentAssertions;
 using Moq;
@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.TorrentRss;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -44,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/ImmortalSeed.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(50);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -70,7 +71,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/Ezrss.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(3);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -98,7 +99,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
 
             GivenRecentFeedResponse("TorrentRss/ShowRSS.info.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -126,7 +127,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
 
             GivenRecentFeedResponse("TorrentRss/Doki.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -152,7 +153,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/ExtraTorrents.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -178,7 +179,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/LimeTorrents.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -204,7 +205,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/AnimeTosho_NoSize.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(2);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -230,7 +231,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/AnimeTosho_NoSize.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(2);
             releases.Last().Should().BeOfType<TorrentInfo>();
@@ -247,7 +248,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/AlphaRatio.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(2);
             releases.Last().Should().BeOfType<TorrentInfo>();
@@ -265,7 +266,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
             Subject.Definition.Settings.As<TorrentRssIndexerSettings>().AllowZeroSize = true;
             GivenRecentFeedResponse("TorrentRss/EvolutionWorld.xml");
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(2);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -291,7 +292,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/invalid/TorrentDay_NoPubDate.xml");
 
-            Subject.FetchRecent().Should().BeEmpty();
+            Subject.Fetch(new MovieSearchCriteria()).Should().BeEmpty();
 
             Mocker.GetMock<IIndexerStatusService>()
                   .Verify(v => v.RecordFailure(It.IsAny<int>(), TimeSpan.Zero), Times.Once());

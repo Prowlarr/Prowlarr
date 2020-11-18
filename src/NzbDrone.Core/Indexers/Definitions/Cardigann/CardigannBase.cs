@@ -186,13 +186,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return variables;
         }
 
-        /*
         protected ICollection<int> MapTrackerCatToNewznab(string input)
         {
             if (input == null)
+            {
                 return new List<int>();
+            }
 
-            var cats = categoryMapping.Where(m => m.TrackerCategory != null && m.TrackerCategory.ToLowerInvariant() == input.ToLowerInvariant()).Select(c => c.NewzNabCategory).ToList();
+            var cats = _definition.Caps.Categorymappings.Where(m => m.id != null && m.id.ToLowerInvariant() == input.ToLowerInvariant()).Select(c => TorznabCatType.GetCatByName(c.cat).Id).ToList();
 
             // 1:1 category mapping
             try
@@ -206,11 +207,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             return cats;
-        }*/
+        }
 
         public List<string> MapTorznabCapsToTrackers(int[] searchCategories, bool mapChildrenCatsToParent = false)
         {
             var queryCats = new List<string>();
+
+            if (searchCategories == null)
+            {
+                return queryCats;
+            }
 
             foreach (var searchCat in searchCategories)
             {

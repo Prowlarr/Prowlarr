@@ -39,16 +39,6 @@ namespace NzbDrone.Core.Indexers
             _httpClient = httpClient;
         }
 
-        public override IList<ReleaseInfo> FetchRecent()
-        {
-            if (!SupportsRss)
-            {
-                return new List<ReleaseInfo>();
-            }
-
-            return FetchReleases(g => g.GetRecentRequests(), true);
-        }
-
         public override IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
@@ -76,7 +66,7 @@ namespace NzbDrone.Core.Indexers
                 return cookies;
             };
 
-            var requests = searchCriteria == null ? generator.GetRecentRequests() : generator.GetSearchRequests(searchCriteria as MovieSearchCriteria);
+            var requests = generator.GetSearchRequests(searchCriteria as MovieSearchCriteria);
 
             generator.CookiesUpdater = (cookies, expiration) =>
             {
@@ -322,7 +312,7 @@ namespace NzbDrone.Core.Indexers
                     _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
                 };
                 var generator = GetRequestGenerator();
-                var releases = FetchPage(generator.GetRecentRequests().GetAllTiers().First().First(), parser);
+                var releases = FetchPage(generator.GetSearchRequests(new MovieSearchCriteria()).GetAllTiers().First().First(), parser);
 
                 if (releases.Empty())
                 {

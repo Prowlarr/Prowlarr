@@ -7,6 +7,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Indexers.Torznab;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
@@ -44,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(5);
 
@@ -73,7 +74,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(5);
 
@@ -103,7 +104,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(2);
 

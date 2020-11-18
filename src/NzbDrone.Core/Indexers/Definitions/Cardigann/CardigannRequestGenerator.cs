@@ -30,6 +30,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var variables = GetBaseTemplateVariables();
 
+            variables[".Query.Type"] = null;
+            variables[".Query.Q"] = null;
+            variables[".Query.Categories"] = null;
+            variables[".Query.IMDBID"] = null;
+            variables[".Query.IMDBIDShort"] = null;
+            variables[".Query.TMDBID"] = null;
+
             pageableRequests.Add(GetRequest(variables));
 
             return pageableRequests;

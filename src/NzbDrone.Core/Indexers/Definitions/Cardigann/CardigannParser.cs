@@ -199,8 +199,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.Description;
                                         break;
                                     case "category":
-                                        // var cats = MapTrackerCatToNewznab(value);
-                                        var cats = new List<int> { 2000 };
+                                        var cats = MapTrackerCatToNewznab(value);
                                         if (cats.Any())
                                         {
                                             if (release.Category == null || fieldModifiers.Contains("noappend"))
@@ -482,7 +481,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 MagnetUrl = x.MagnetUri?.ToString(),
                 InfoHash = x.InfoHash,
                 Seeders = (int?)x.Seeders,
-                Peers = (int?)x.Peers
+                Peers = (int?)x.Peers,
+                Category = x.Category
             }));
 
             _logger.Debug($"Got {result.Count} releases");

@@ -87,7 +87,8 @@ namespace NzbDrone.Core.Datastore.Migration
                 .WithColumn("EscalationLevel").AsInt32().NotNullable()
                 .WithColumn("DisabledTill").AsDateTime().Nullable()
                 .WithColumn("LastRssSyncReleaseInfo").AsString().Nullable()
-                .WithColumn("Cookies").AsString().WithDefaultValue("{}");
+                .WithColumn("Cookies").AsString().Nullable()
+                .WithColumn("CookiesExpirationDate").AsDateTime().Nullable();
 
             Create.TableForModel("CustomFilters")
                 .WithColumn("Type").AsString().NotNullable()

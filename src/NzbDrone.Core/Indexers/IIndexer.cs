@@ -14,7 +14,6 @@ namespace NzbDrone.Core.Indexers
         DownloadProtocol Protocol { get; }
         IndexerPrivacy Privacy { get; }
 
-        IList<ReleaseInfo> FetchRecent();
         IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
     }
 }

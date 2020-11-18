@@ -30,11 +30,8 @@ namespace NzbDrone.Core.Indexers.FileList
             }
             else
             {
-                foreach (var queryTitle in searchCriteria.QueryTitles)
-                {
-                    var titleYearSearchQuery = string.Format("{0}", queryTitle);
-                    pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
-                }
+                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SearchTerm);
+                pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
             }
 
             return pageableRequests;

@@ -28,14 +28,6 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public TorznabSettingsValidator()
         {
-            RuleFor(c => c).Custom((c, context) =>
-            {
-                if (c.Categories.Empty())
-                {
-                    context.AddFailure("'Categories' must be provided");
-                }
-            });
-
             RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.ApiPath).ValidUrlBase("/api");
             RuleFor(c => c.ApiKey).NotEmpty().When(ShouldHaveApiKey);

@@ -82,14 +82,9 @@ namespace NzbDrone.Core.Indexers.Newznab
             };
         }
 
-        private NewznabSettings GetSettings(string url, string apiPath = null, int[] categories = null)
+        private NewznabSettings GetSettings(string url, string apiPath = null)
         {
             var settings = new NewznabSettings { BaseUrl = url };
-
-            if (categories != null)
-            {
-                settings.Categories = categories;
-            }
 
             if (apiPath.IsNotNullOrWhiteSpace())
             {
@@ -122,17 +117,6 @@ namespace NzbDrone.Core.Indexers.Newznab
             try
             {
                 var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                var notSupported = Settings.Categories.Except(CategoryIds(capabilities.Categories));
-
-                if (notSupported.Any())
-                {
-                    _logger.Warn($"{Definition.Name} does not support the following categories: {string.Join(", ", notSupported)}. You should probably remove them.");
-                    if (notSupported.Count() == Settings.Categories.Count())
-                    {
-                        return new ValidationFailure(string.Empty, $"This indexer does not support any of the selected categories! (You may need to turn on advanced settings to see them)");
-                    }
-                }
 
                 if (capabilities.SearchParams != null && capabilities.SearchParams.Contains(SearchParam.Q))
                 {

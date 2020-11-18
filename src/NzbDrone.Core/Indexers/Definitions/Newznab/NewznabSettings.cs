@@ -36,14 +36,6 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public NewznabSettingsValidator()
         {
-            RuleFor(c => c).Custom((c, context) =>
-            {
-                if (c.Categories.Empty())
-                {
-                    context.AddFailure("'Categories' must be provided");
-                }
-            });
-
             RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.ApiPath).ValidUrlBase("/api");
             RuleFor(c => c.ApiKey).NotEmpty().When(ShouldHaveApiKey);
@@ -59,7 +51,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         public NewznabSettings()
         {
             ApiPath = "/api";
-            Categories = new[] { 2000, 2010, 2020, 2030, 2035, 2040, 2045, 2050, 2060 };
             MultiLanguages = new List<int>();
         }
 
@@ -74,9 +65,6 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
-
-        [FieldDefinition(3, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable all categories", Advanced = true)]
-        public IEnumerable<int> Categories { get; set; }
 
         [FieldDefinition(5, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]
         public string AdditionalParameters { get; set; }

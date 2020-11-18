@@ -24,8 +24,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
                 Name = "Newznab",
                 Settings = new NewznabSettings()
                 {
-                    BaseUrl = "http://indexer.local/",
-                    Categories = new int[] { 1 }
+                    BaseUrl = "http://indexer.local/"
                 }
             };
 

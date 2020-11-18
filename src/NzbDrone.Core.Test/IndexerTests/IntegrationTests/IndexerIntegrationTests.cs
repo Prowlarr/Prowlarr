@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Test.IndexerTests.IntegrationTests
 
             _singleSearchCriteria = new MovieSearchCriteria()
             {
-                SceneTitles = new List<string> { "Person of Interest" },
+                SearchTerm = "Person of Interest",
             };
         }
 

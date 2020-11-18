@@ -21,13 +21,12 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             Subject.Settings = new NewznabSettings()
             {
                 BaseUrl = "http://127.0.0.1:1234/",
-                Categories = new[] { 1, 2 },
                 ApiKey = "abcd",
             };
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                SceneTitles = new List<string> { "Star Wars" }
+                SearchTerm = "Star Wars"
             };
 
             _capabilities = new IndexerCapabilities();
@@ -52,8 +51,6 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_not_have_duplicate_categories()
         {
-            Subject.Settings.Categories = new[] { 1, 2, 2, 3 };
-
             var results = Subject.GetRecentRequests();
 
             results.GetAllTiers().Should().HaveCount(1);

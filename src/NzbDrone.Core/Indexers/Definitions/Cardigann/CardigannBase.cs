@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {
@@ -206,6 +207,27 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             return cats;
         }*/
+
+        public List<string> MapTorznabCapsToTrackers(int[] searchCategories, bool mapChildrenCatsToParent = false)
+        {
+            var queryCats = new List<string>();
+
+            foreach (var searchCat in searchCategories)
+            {
+                var match = TorznabCatType.AllCats.FirstOrDefault(c => c.Id == searchCat);
+
+                if (match != null)
+                {
+                    queryCats.Add(match.Name);
+                }
+            }
+
+            var result = _definition.Caps.Categorymappings
+                .Where(c => queryCats.Contains(c.cat))
+                .Select(mapping => mapping.id).Distinct().ToList();
+
+            return result;
+        }
 
         protected delegate string TemplateTextModifier(string str);
 

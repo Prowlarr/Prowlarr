@@ -75,11 +75,11 @@ namespace NzbDrone.Core.Indexers.Newznab
             // Some indexers might forget to enable movie search, but normal search still works fine. Thus we force a normal search.
             if (capabilities.MovieSearchParams != null)
             {
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "movie", ""));
+                pageableRequests.Add(GetPagedRequests(MaxPages, new int[] { 2000 }, "movie", ""));
             }
             else if (capabilities.SearchParams != null)
             {
-                pageableRequests.Add(GetPagedRequests(MaxPages, Settings.Categories, "search", ""));
+                pageableRequests.Add(GetPagedRequests(MaxPages, new int[] { 2000 }, "search", ""));
             }
 
             return pageableRequests;
@@ -89,12 +89,12 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            AddMovieIdPageableRequests(pageableRequests, MaxPages, Settings.Categories, searchCriteria);
+            AddMovieIdPageableRequests(pageableRequests, MaxPages, searchCriteria.Categories, searchCriteria);
 
             return pageableRequests;
         }
 
-        private void AddMovieIdPageableRequests(IndexerPageableRequestChain chain, int maxPages, IEnumerable<int> categories, SearchCriteriaBase searchCriteria)
+        private void AddMovieIdPageableRequests(IndexerPageableRequestChain chain, int maxPages, IEnumerable<int> categories, MovieSearchCriteria searchCriteria)
         {
             var includeTmdbSearch = SupportsTmdbSearch && searchCriteria.TmdbId > 0;
             var includeImdbSearch = SupportsImdbSearch && searchCriteria.ImdbId.IsNotNullOrWhiteSpace();
@@ -136,20 +136,18 @@ namespace NzbDrone.Core.Indexers.Newznab
             if (SupportsSearch)
             {
                 chain.AddTier();
-                foreach (var queryTitle in searchCriteria.QueryTitles)
+
+                var searchQuery = searchCriteria.SearchTerm;
+
+                if (!Settings.RemoveYear)
                 {
-                    var searchQuery = queryTitle;
-
-                    if (!Settings.RemoveYear)
-                    {
-                        searchQuery = string.Format("{0}", searchQuery);
-                    }
-
-                    chain.Add(GetPagedRequests(MaxPages,
-                        Settings.Categories,
-                        "movie",
-                        string.Format("&q={0}", NewsnabifyTitle(searchQuery))));
+                    searchQuery = string.Format("{0}", searchQuery);
                 }
+
+                chain.Add(GetPagedRequests(MaxPages,
+                    categories,
+                    "movie",
+                    string.Format("&q={0}", NewsnabifyTitle(searchQuery))));
             }
         }
 

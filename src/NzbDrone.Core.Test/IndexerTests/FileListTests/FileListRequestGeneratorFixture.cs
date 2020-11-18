@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                SceneTitles = new List<string> { "Star Wars" }
+                SearchTerm = "Star Wars"
             };
         }
 

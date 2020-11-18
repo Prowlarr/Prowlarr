@@ -37,31 +37,36 @@ namespace NzbDrone.Core.IndexerSearch
 
         public List<ReleaseInfo> Search(string query, List<int> indexerIds, bool interactiveSearch)
         {
-            var searchSpec = Get<MovieSearchCriteria>(query, indexerIds, interactiveSearch);
+            var searchSpec = Get<MovieSearchCriteria>(new NewznabRequest { q = query }, indexerIds, interactiveSearch);
 
             return Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
         }
 
         public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            var searchSpec = Get<MovieSearchCriteria>(request.q, indexerIds, interactiveSearch);
+            var searchSpec = Get<MovieSearchCriteria>(request, indexerIds, interactiveSearch);
 
             return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
-        private TSpec Get<TSpec>(string query, List<int> indexerIds, bool interactiveSearch)
+        private TSpec Get<TSpec>(NewznabRequest query, List<int> indexerIds, bool interactiveSearch)
             where TSpec : SearchCriteriaBase, new()
         {
             var spec = new TSpec()
             {
-                InteractiveSearch = interactiveSearch,
-                SceneTitles = new List<string>()
+                InteractiveSearch = interactiveSearch
             };
 
-            if (query.IsNotNullOrWhiteSpace())
+            if (query.cat != null)
             {
-                spec.SceneTitles.Add(query);
+                spec.Categories = query.cat.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => int.Parse(s)).ToArray();
             }
+            else
+            {
+                spec.Categories = Array.Empty<int>();
+            }
+
+            spec.SearchTerm = query.q;
 
             spec.IndexerIds = indexerIds;
 
@@ -81,7 +86,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             var reports = new List<ReleaseInfo>();
 
-            _logger.ProgressInfo("Searching {0} indexers for {1}", indexers.Count, criteriaBase.QueryTitles.Join(", "));
+            _logger.ProgressInfo("Searching {0} indexers for {1}", indexers.Count, criteriaBase.SearchTerm);
 
             var taskList = new List<Task>();
             var taskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);

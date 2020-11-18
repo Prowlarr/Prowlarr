@@ -13,13 +13,6 @@ namespace NzbDrone.Core.Indexers.FileList
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest("latest-torrents", ""));
-            return pageableRequests;
-        }
-
         public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
@@ -28,10 +21,14 @@ namespace NzbDrone.Core.Indexers.FileList
             {
                 pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=imdb&query={0}", searchCriteria.ImdbId)));
             }
-            else
+            else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
                 var titleYearSearchQuery = string.Format("{0}", searchCriteria.SearchTerm);
                 pageableRequests.Add(GetRequest("search-torrents", string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest("latest-torrents", ""));
             }
 
             return pageableRequests;

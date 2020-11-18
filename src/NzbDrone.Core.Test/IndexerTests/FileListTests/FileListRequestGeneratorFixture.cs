@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [Test]
         public void should_use_categories_for_feed()
         {
-            var results = Subject.GetRecentRequests();
+            var results = Subject.GetSearchRequests(new MovieSearchCriteria());
 
             results.GetAllTiers().Should().HaveCount(1);
 

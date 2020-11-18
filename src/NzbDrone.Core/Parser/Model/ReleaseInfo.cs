@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using NzbDrone.Core.Indexers;
 
@@ -27,6 +28,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Container { get; set; }
         public string Codec { get; set; }
         public string Resolution { get; set; }
+        public ICollection<int> Category { get; set; }
 
         public IndexerFlags IndexerFlags { get; set; }
 

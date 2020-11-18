@@ -65,7 +65,6 @@ namespace NzbDrone.Core.Indexers
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
-        public abstract IList<ReleaseInfo> FetchRecent();
         public abstract IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
 
         protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)

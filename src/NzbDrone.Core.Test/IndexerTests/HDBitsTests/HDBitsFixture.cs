@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
@@ -8,6 +8,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.HDBits;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -37,7 +38,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), responseJson));
 
-            var torrents = Subject.FetchRecent();
+            var torrents = Subject.Fetch(new MovieSearchCriteria());
 
             torrents.Should().HaveCount(2);
             torrents.First().Should().BeOfType<HDBitsInfo>();
@@ -66,7 +67,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
                 .Setup(v => v.Execute(It.IsAny<HttpRequest>()))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), Encoding.UTF8.GetBytes(responseJson)));
 
-            var torrents = Subject.FetchRecent();
+            var torrents = Subject.Fetch(new MovieSearchCriteria());
 
             torrents.Should().BeEmpty();
 

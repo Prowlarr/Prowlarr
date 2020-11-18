@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -6,6 +6,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.PassThePopcorn;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
@@ -41,7 +42,7 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, responseJson));
 
-            var torrents = Subject.FetchRecent();
+            var torrents = Subject.Fetch(new MovieSearchCriteria());
 
             torrents.Should().HaveCount(293);
             torrents.First().Should().BeOfType<PassThePopcornInfo>();

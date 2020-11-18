@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using FluentAssertions;
 using Moq;
@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Rarbg;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -38,7 +39,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(4);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -65,7 +66,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
                    .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                    .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), "{ error_code: 20, error: \"some message\" }"));
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(0);
         }
@@ -77,7 +78,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
                    .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                    .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), "{ error_code: 25, error: \"some message\" }"));
 
-            var releases = Subject.FetchRecent();
+            var releases = Subject.Fetch(new MovieSearchCriteria());
 
             releases.Should().HaveCount(0);
 

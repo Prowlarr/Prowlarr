@@ -95,9 +95,9 @@ namespace NzbDrone.Core.Indexers.Rarbg
             {
                 requestBuilder.AddQueryParam("search_themoviedb", searchCriteria.TmdbId);
             }
-            else if (searchCriteria.QueryTitles.Count > 0)
+            else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
-                requestBuilder.AddQueryParam("search_string", $"{searchCriteria.QueryTitles.First()}");
+                requestBuilder.AddQueryParam("search_string", $"{searchCriteria.SearchTerm}");
             }
 
             if (!Settings.RankedOnly)

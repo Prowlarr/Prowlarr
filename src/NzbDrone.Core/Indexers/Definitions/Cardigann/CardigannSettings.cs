@@ -11,13 +11,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
     {
         public CardigannSettingsValidator()
         {
-            RuleFor(c => c).Custom((c, context) =>
-            {
-                if (c.Categories.Empty())
-                {
-                    context.AddFailure("'Categories' must be provided");
-                }
-            });
         }
     }
 
@@ -27,7 +20,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public CardigannSettings()
         {
-            Categories = new[] { 2000, 2010, 2020, 2030, 2035, 2040, 2045, 2050, 2060 };
             MultiLanguages = new List<int>();
             ExtraFieldData = new Dictionary<string, object>();
         }
@@ -41,9 +33,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         [FieldDefinition(1000, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
         public IEnumerable<int> MultiLanguages { get; set; }
-
-        [FieldDefinition(1001, Label = "Categories", HelpText = "Comma Separated list, leave blank to disable all categories", Advanced = true)]
-        public IEnumerable<int> Categories { get; set; }
 
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment

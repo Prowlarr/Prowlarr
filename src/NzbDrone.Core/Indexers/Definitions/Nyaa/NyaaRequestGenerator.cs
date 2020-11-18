@@ -60,10 +60,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            foreach (var queryTitle in searchCriteria.QueryTitles)
-            {
-                pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(string.Format("{0}", queryTitle))));
-            }
+            pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(string.Format("{0}", searchCriteria.SearchTerm))));
 
             return pageableRequests;
         }

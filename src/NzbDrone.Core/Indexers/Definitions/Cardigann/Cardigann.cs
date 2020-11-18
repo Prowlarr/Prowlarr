@@ -82,20 +82,5 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return;
             }
         }
-
-        protected static List<int> CategoryIds(List<IndexerCategory> categories)
-        {
-            var l = categories.Select(c => c.Id).ToList();
-
-            foreach (var category in categories)
-            {
-                if (category.SubCategories != null)
-                {
-                    l.AddRange(CategoryIds(category.SubCategories));
-                }
-            }
-
-            return l;
-        }
     }
 }

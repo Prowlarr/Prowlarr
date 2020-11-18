@@ -12,28 +12,9 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         private static readonly Regex NonWord = new Regex(@"[\W]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex BeginningThe = new Regex(@"^the\s", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        public List<string> SceneTitles { get; set; }
         public virtual bool InteractiveSearch { get; set; }
         public List<int> IndexerIds { get; set; }
-        public string ImdbId { get; set; }
-        public int TmdbId { get; set; }
-
-        public List<string> QueryTitles => SceneTitles.Select(GetQueryTitle).ToList();
-
-        public static string GetQueryTitle(string title)
-        {
-            Ensure.That(title, () => title).IsNotNullOrWhiteSpace();
-
-            var cleanTitle = BeginningThe.Replace(title, string.Empty);
-
-            cleanTitle = cleanTitle.Replace("&", "and");
-            cleanTitle = SpecialCharacter.Replace(cleanTitle, "");
-            cleanTitle = NonWord.Replace(cleanTitle, "+");
-
-            //remove any repeating +s
-            cleanTitle = Regex.Replace(cleanTitle, @"\+{2,}", "+");
-            cleanTitle = cleanTitle.RemoveAccent();
-            return cleanTitle.Trim('+', ' ');
-        }
+        public string SearchTerm { get; set; }
+        public int[] Categories { get; set; }
     }
 }

@@ -35,10 +35,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
             }
             else
             {
-                foreach (var queryTitle in searchCriteria.QueryTitles)
-                {
-                    pageableRequests.Add(GetRequest(string.Format("{0}", queryTitle)));
-                }
+                pageableRequests.Add(GetRequest(string.Format("{0}", searchCriteria.SearchTerm)));
             }
 
             return pageableRequests;

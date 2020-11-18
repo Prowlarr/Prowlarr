@@ -28,7 +28,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest(null));
+            var variables = GetBaseTemplateVariables();
+
+            pageableRequests.Add(GetRequest(variables));
 
             return pageableRequests;
         }
@@ -39,23 +41,24 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var pageableRequests = new IndexerPageableRequestChain();
 
-            foreach (var queryTitle in searchCriteria.QueryTitles)
-            {
-                pageableRequests.Add(GetRequest(string.Format("{0}", queryTitle)));
-            }
+            var variables = GetBaseTemplateVariables();
+
+            variables[".Query.Type"] = "movie";
+            variables[".Query.Q"] = searchCriteria.SearchTerm;
+            variables[".Query.Categories"] = searchCriteria.Categories;
+            variables[".Query.IMDBID"] = searchCriteria.ImdbId;
+            variables[".Query.IMDBIDShort"] = null;
+            variables[".Query.TMDBID"] = searchCriteria.TmdbId;
+
+            pageableRequests.Add(GetRequest(variables));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchCriteria)
+        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
         {
             var search = _definition.Search;
 
-            // init template context
-            var variables = GetBaseTemplateVariables();
-
-            variables[".Query.Type"] = null;
-            variables[".Query.Q"] = searchCriteria;
             variables[".Query.Series"] = null;
             variables[".Query.Ep"] = null;
             variables[".Query.Season"] = null;
@@ -64,13 +67,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Limit"] = null;
             variables[".Query.Offset"] = null;
             variables[".Query.Extended"] = null;
-            variables[".Query.Categories"] = null;
             variables[".Query.APIKey"] = null;
             variables[".Query.TVDBID"] = null;
             variables[".Query.TVRageID"] = null;
-            variables[".Query.IMDBID"] = null;
-            variables[".Query.IMDBIDShort"] = null;
-            variables[".Query.TMDBID"] = null;
             variables[".Query.TVMazeID"] = null;
             variables[".Query.TraktID"] = null;
             variables[".Query.Album"] = null;
@@ -81,15 +80,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Author"] = null;
             variables[".Query.Title"] = null;
 
-            /*
-            var mappedCategories = MapTorznabCapsToTrackers(query);
+            var mappedCategories = MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
             if (mappedCategories.Count == 0)
             {
                 mappedCategories = _defaultCategories;
             }
-            */
-
-            var mappedCategories = _defaultCategories;
 
             variables[".Categories"] = mappedCategories;
 

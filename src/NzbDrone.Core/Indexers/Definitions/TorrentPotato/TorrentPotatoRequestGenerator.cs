@@ -64,10 +64,10 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
             {
                 requestBuilder.AddQueryParam("imdbid", searchCriteria.ImdbId);
             }
-            else if (searchCriteria.QueryTitles.Count > 0)
+            else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
                 //TODO: Hack for now
-                requestBuilder.AddQueryParam("search", $"{searchCriteria.QueryTitles.First()}");
+                requestBuilder.AddQueryParam("search", $"{searchCriteria.SearchTerm}");
             }
 
             yield return new IndexerRequest(requestBuilder.Build());

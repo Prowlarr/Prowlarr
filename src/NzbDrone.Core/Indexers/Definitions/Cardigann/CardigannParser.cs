@@ -472,13 +472,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             result.AddRange(releases.Select(x => new TorrentInfo
             {
+                PublishDate = x.PublishDate,
                 Guid = x.Guid.ToString(),
                 Title = x.Title,
                 Size = x.Size.Value,
-                DownloadUrl = x.Link?.ToString(),
+                DownloadUrl = x.Link.AbsoluteUri,
                 CommentUrl = x.Comments?.ToString(),
                 InfoUrl = x.Link?.ToString(),
-                MagnetUrl = x.MagnetUri?.ToString(),
+                MagnetUrl = x.MagnetUri?.AbsoluteUri,
                 InfoHash = x.InfoHash,
                 Seeders = (int?)x.Seeders,
                 Peers = (int?)x.Peers,

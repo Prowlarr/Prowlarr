@@ -26,6 +26,7 @@ namespace Prowlarr.Api.V1.Search
         public string DownloadUrl { get; set; }
         public string InfoUrl { get; set; }
         public IEnumerable<string> IndexerFlags { get; set; }
+        public ICollection<IndexerCategory> Categories { get; set; }
 
         public string MagnetUrl { get; set; }
         public string InfoHash { get; set; }
@@ -51,7 +52,7 @@ namespace Prowlarr.Api.V1.Search
                 Age = releaseInfo.Age,
                 AgeHours = releaseInfo.AgeHours,
                 AgeMinutes = releaseInfo.AgeMinutes,
-                Size = releaseInfo.Size,
+                Size = releaseInfo.Size ?? 0,
                 IndexerId = releaseInfo.IndexerId,
                 Indexer = releaseInfo.Indexer,
                 Title = releaseInfo.Title,
@@ -60,6 +61,7 @@ namespace Prowlarr.Api.V1.Search
                 CommentUrl = releaseInfo.CommentUrl,
                 DownloadUrl = releaseInfo.DownloadUrl,
                 InfoUrl = releaseInfo.InfoUrl,
+                Categories = releaseInfo.Category,
 
                 //ReleaseWeight
                 MagnetUrl = torrentInfo.MagnetUrl,

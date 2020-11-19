@@ -35,25 +35,6 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
         }
 
         [Test]
-        public void should_use_all_categories_for_feed()
-        {
-            var results = Subject.GetRecentRequests();
-
-            results.GetAllTiers().Should().HaveCount(1);
-
-            var page = results.GetAllTiers().First().First();
-
-            var encoding = HttpHeader.GetEncodingFromContentType(page.HttpRequest.Headers.ContentType);
-
-            var body = encoding.GetString(page.HttpRequest.ContentData);
-            var query = JsonConvert.DeserializeObject<TorrentQuery>(body);
-
-            query.Category.Should().HaveCount(2);
-            query.Username.Should().Be(Subject.Settings.Username);
-            query.Passkey.Should().Be(Subject.Settings.ApiKey);
-        }
-
-        [Test]
         public void should_search_by_imdbid_if_supported()
         {
             var results = Subject.GetSearchRequests(_movieSearchCriteria);

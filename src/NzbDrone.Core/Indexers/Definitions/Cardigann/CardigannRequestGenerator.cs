@@ -10,8 +10,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
 {
     public class CardigannRequestGenerator : CardigannBase, IIndexerRequestGenerator
     {
-        private List<string> _defaultCategories = new List<string>();
-
         public CardigannRequestGenerator(CardigannDefinition definition,
                                          CardigannSettings settings,
                                          Logger logger)
@@ -22,70 +20,133 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            _logger.Trace("Getting recent");
-
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            var variables = GetBaseTemplateVariables();
-
-            variables[".Query.Type"] = null;
-            variables[".Query.Q"] = null;
-            variables[".Query.Categories"] = null;
-            variables[".Query.IMDBID"] = null;
-            variables[".Query.IMDBIDShort"] = null;
-            variables[".Query.TMDBID"] = null;
-
-            pageableRequests.Add(GetRequest(variables));
-
-            return pageableRequests;
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting search");
 
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var variables = GetBaseTemplateVariables();
+            var variables = GetQueryVariableDefaults(searchCriteria);
 
-            variables[".Query.Type"] = "movie";
-            variables[".Query.Q"] = searchCriteria.SearchTerm;
-            variables[".Query.Categories"] = searchCriteria.Categories;
+            variables[".Query.Movie"] = null;
+            variables[".Query.Year"] = searchCriteria.Year;
             variables[".Query.IMDBID"] = searchCriteria.ImdbId;
-            variables[".Query.IMDBIDShort"] = null;
+            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId.Replace("tt", "");
             variables[".Query.TMDBID"] = searchCriteria.TmdbId;
+            variables[".Query.TraktID"] = searchCriteria.TraktId;
 
             pageableRequests.Add(GetRequest(variables));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var search = _definition.Search;
+            var pageableRequests = new IndexerPageableRequestChain();
 
+            var variables = GetQueryVariableDefaults(searchCriteria);
+
+            variables[".Query.Album"] = searchCriteria.Album;
+            variables[".Query.Artist"] = searchCriteria.Artist;
+            variables[".Query.Label"] = searchCriteria.Label;
+            variables[".Query.Track"] = null;
+
+            pageableRequests.Add(GetRequest(variables));
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            var variables = GetQueryVariableDefaults(searchCriteria);
+
+            variables[".Query.Series"] = null;
+            variables[".Query.Ep"] = searchCriteria.Ep;
+            variables[".Query.Season"] = searchCriteria.Season;
+            variables[".Query.IMDBID"] = searchCriteria.ImdbId;
+            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId.Replace("tt", "");
+            variables[".Query.TVDBID"] = searchCriteria.TvdbId;
+            variables[".Query.TVRageID"] = searchCriteria.RId;
+            variables[".Query.TVMazeID"] = searchCriteria.TvMazeId;
+            variables[".Query.TraktID"] = searchCriteria.TraktId;
+
+            pageableRequests.Add(GetRequest(variables));
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            var variables = GetQueryVariableDefaults(searchCriteria);
+
+            variables[".Query.Author"] = null;
+            variables[".Query.Title"] = null;
+
+            pageableRequests.Add(GetRequest(variables));
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            var variables = GetQueryVariableDefaults(searchCriteria);
+
+            pageableRequests.Add(GetRequest(variables));
+
+            return pageableRequests;
+        }
+
+        private Dictionary<string, object> GetQueryVariableDefaults(SearchCriteriaBase searchCriteria)
+        {
+            var variables = GetBaseTemplateVariables();
+
+            variables[".Query.Type"] = searchCriteria.SearchType;
+            variables[".Query.Q"] = searchCriteria.SearchTerm;
+            variables[".Query.Categories"] = searchCriteria.Categories;
+            variables[".Query.Limit"] = searchCriteria.Limit;
+            variables[".Query.Offset"] = searchCriteria.Offset;
+            variables[".Query.Extended"] = null;
+            variables[".Query.APIKey"] = null;
+
+            //Movie
+            variables[".Query.Movie"] = null;
+            variables[".Query.Year"] = null;
+            variables[".Query.IMDBID"] = null;
+            variables[".Query.IMDBIDShort"] = null;
+            variables[".Query.TMDBID"] = null;
+
+            //Tv
             variables[".Query.Series"] = null;
             variables[".Query.Ep"] = null;
             variables[".Query.Season"] = null;
-            variables[".Query.Movie"] = null;
-            variables[".Query.Year"] = null;
-            variables[".Query.Limit"] = null;
-            variables[".Query.Offset"] = null;
-            variables[".Query.Extended"] = null;
-            variables[".Query.APIKey"] = null;
             variables[".Query.TVDBID"] = null;
             variables[".Query.TVRageID"] = null;
             variables[".Query.TVMazeID"] = null;
             variables[".Query.TraktID"] = null;
+
+            //Music
             variables[".Query.Album"] = null;
             variables[".Query.Artist"] = null;
             variables[".Query.Label"] = null;
             variables[".Query.Track"] = null;
             variables[".Query.Episode"] = null;
+
+            //Book
             variables[".Query.Author"] = null;
             variables[".Query.Title"] = null;
+
+            return variables;
+        }
+
+        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
+        {
+            var search = _definition.Search;
 
             var mappedCategories = MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
             if (mappedCategories.Count == 0)

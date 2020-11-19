@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                 Fields = schema.Fields,
             };
 
-            lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl}/api/v1/indexer/1/";
+            lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl}/api/v1/indexer/{indexer.Id}/";
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/newznab";
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
 

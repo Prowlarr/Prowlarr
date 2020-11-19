@@ -64,6 +64,7 @@ namespace Prowlarr.Api.V1.Indexers
                     return response;
                 case "tvsearch":
                 case "music":
+                case "book":
                 case "movie":
                     Response movieResponse = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false).ToXml();
                     movieResponse.ContentType = "application/rss+xml";

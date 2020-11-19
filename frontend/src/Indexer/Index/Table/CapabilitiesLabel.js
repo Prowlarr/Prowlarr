@@ -4,48 +4,25 @@ import Label from 'Components/Label';
 
 function CapabilitiesLabel(props) {
   const {
-    movieSearchAvailable,
-    tvSearchAvailable,
-    musicSearchAvailable,
-    bookSearchAvailable
+    categories
   } = props.capabilities;
+
+  const filteredList = categories.filter((item) => item.id < 100000).map((item) => item.name).sort();
 
   return (
     <span>
       {
-        bookSearchAvailable ?
-          <Label>
-            {'Books'}
-          </Label> :
-          null
+        filteredList.map((category) => {
+          return (
+            <Label key={category}>
+              {category}
+            </Label>
+          );
+        })
       }
 
       {
-        movieSearchAvailable ?
-          <Label>
-            {'Movies'}
-          </Label> :
-          null
-      }
-
-      {
-        musicSearchAvailable ?
-          <Label>
-            {'Music'}
-          </Label> :
-          null
-      }
-
-      {
-        tvSearchAvailable ?
-          <Label>
-            {'TV'}
-          </Label> :
-          null
-      }
-
-      {
-        !tvSearchAvailable && !musicSearchAvailable && !movieSearchAvailable && !bookSearchAvailable ?
+        filteredList.length === 0 ?
           <Label>
             {'None'}
           </Label> :
@@ -61,10 +38,7 @@ CapabilitiesLabel.propTypes = {
 
 CapabilitiesLabel.defaultProps = {
   capabilities: {
-    movieSearchAvailable: false,
-    tvSearchAvailable: false,
-    musicSearchAvailable: false,
-    bookSearchAvailable: false
+    categories: []
   }
 };
 

@@ -114,6 +114,7 @@ namespace NzbDrone.Core.Indexers
                             throw new Exception("In search mode 'search' only 'q' parameter is supported and it's mandatory");
                         }
 
+                        SearchParams.Add(SearchParam.Q);
                         break;
                     case "tv-search":
                         ParseTvSearchParams(entry.Value);
@@ -277,6 +278,13 @@ namespace NzbDrone.Core.Indexers
             return string.Join(",", parameters);
         }
 
+        private string SupportedSearchParams()
+        {
+            var parameters = new List<string> { "q" }; // q is always enabled
+
+            return string.Join(",", parameters);
+        }
+
         private string SupportedMovieSearchParams()
         {
             var parameters = new List<string> { "q" }; // q is always enabled
@@ -350,7 +358,7 @@ namespace NzbDrone.Core.Indexers
                     new XElement("searching",
                         new XElement("search",
                             new XAttribute("available", SearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", "q")),
+                            new XAttribute("supportedParams", SupportedSearchParams())),
                         new XElement("tv-search",
                             new XAttribute("available", TvSearchAvailable ? "yes" : "no"),
                             new XAttribute("supportedParams", SupportedTvSearchParams())),

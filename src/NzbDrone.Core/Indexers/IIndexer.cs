@@ -15,5 +15,9 @@ namespace NzbDrone.Core.Indexers
         IndexerPrivacy Privacy { get; }
 
         IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
+        IList<ReleaseInfo> Fetch(MusicSearchCriteria searchCriteria);
+        IList<ReleaseInfo> Fetch(TvSearchCriteria searchCriteria);
+        IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria);
+        IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria);
     }
 }

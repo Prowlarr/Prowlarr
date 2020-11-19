@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Applications.Radarr
                 Fields = schema.Fields,
             };
 
-            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl}/api/v1/indexer/1/";
+            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl}/api/v1/indexer/{indexer.Id}/";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/newznab";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
 

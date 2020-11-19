@@ -3,10 +3,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
     public class MovieSearchCriteria : SearchCriteriaBase
     {
         public string ImdbId { get; set; }
-        public int TmdbId { get; set; }
-        public override string ToString()
-        {
-            return string.Format("[{0}]", ImdbId);
-        }
+        public int? TmdbId { get; set; }
+        public int? Year { get; set; }
+        public int? TraktId { get; set; }
     }
 }

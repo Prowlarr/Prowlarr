@@ -10,6 +10,7 @@
   flex: 4 0 110px;
 }
 
+.category,
 .indexer {
   composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
 

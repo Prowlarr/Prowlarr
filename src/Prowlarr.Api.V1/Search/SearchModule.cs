@@ -6,6 +6,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.IndexerSearch;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http;
 
@@ -49,7 +50,7 @@ namespace Prowlarr.Api.V1.Search
         {
             try
             {
-                var decisions = _nzbSearhService.Search(query, indexerIds, true);
+                var decisions = _nzbSearhService.Search(new NewznabRequest { q = query, t = "search" }, indexerIds, true).Releases;
 
                 return MapDecisions(decisions);
             }

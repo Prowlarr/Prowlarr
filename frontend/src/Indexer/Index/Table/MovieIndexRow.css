@@ -28,7 +28,7 @@
 .capabilities {
   composes: cell;
 
-  flex: 0 0 180px;
+  flex: 0 0 350px;
 }
 
 .added {

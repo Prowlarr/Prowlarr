@@ -67,6 +67,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'category',
+      label: translate('Category'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
       name: 'indexerFlags',
       label: React.createElement(Icon, { name: icons.FLAG }),
       columnLabel: 'Indexer Flags',

@@ -66,30 +66,38 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
         }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-            // Some indexers might forget to enable movie search, but normal search still works fine. Thus we force a normal search.
-            if (capabilities.MovieSearchParams != null)
-            {
-                pageableRequests.Add(GetPagedRequests(MaxPages, new int[] { 2000 }, "movie", ""));
-            }
-            else if (capabilities.SearchParams != null)
-            {
-                pageableRequests.Add(GetPagedRequests(MaxPages, new int[] { 2000 }, "search", ""));
-            }
-
-            return pageableRequests;
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
             AddMovieIdPageableRequests(pageableRequests, MaxPages, searchCriteria.Categories, searchCriteria);
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests(MaxPages,
+                    searchCriteria.Categories,
+                    "search",
+                    string.Format("&q={0}", NewsnabifyTitle(searchCriteria.SearchTerm))));
 
             return pageableRequests;
         }
@@ -153,14 +161,13 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, IEnumerable<int> categories, string searchType, string parameters)
         {
-            if (categories.Empty())
+            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchType);
+
+            if (categories != null && categories.Any())
             {
-                yield break;
+                var categoriesQuery = string.Join(",", categories.Distinct());
+                baseUrl += string.Format("&cats={0}", categoriesQuery);
             }
-
-            var categoriesQuery = string.Join(",", categories.Distinct());
-
-            var baseUrl = string.Format("{0}{1}?t={2}&cat={3}&extended=1{4}", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchType, categoriesQuery, Settings.AdditionalParameters);
 
             if (Settings.ApiKey.IsNotNullOrWhiteSpace())
             {

@@ -72,12 +72,14 @@ namespace NzbDrone.Core.IndexerSearch
                             new XElement("guid", r.Guid),  // GUID and (Link or Magnet) are mandatory
                             new XElement("prowlarrindexer", new XAttribute("id", r.IndexerId), r.Indexer),
                             r.PublishDate == DateTime.MinValue ? new XElement("pubDate", XmlDateFormat(DateTime.Now)) : new XElement("pubDate", XmlDateFormat(r.PublishDate)),
-                            r.Category == null ? null : from c in r.Category select new XElement("category", c),
                             new XElement("size", r.Size),
+                            r.Category == null ? null : from c in r.Category select new XElement("category", c.Id),
                             new XElement(
                                 "enclosure",
-                                new XAttribute("length", r.Size),
+                                new XAttribute("url", r.DownloadUrl ?? t.MagnetUrl ?? string.Empty),
+                                r.Size == null ? null : new XAttribute("length", r.Size),
                                 new XAttribute("type", "application/x-bittorrent")),
+                            r.Category == null ? null : from c in r.Category select GetTorznabElement("category", c.Id),
                             GetTorznabElement("rageid", r.TvRageId),
                             GetTorznabElement("thetvdb", r.TvdbId),
                             GetTorznabElement("imdb", r.ImdbId.ToString("D7")),

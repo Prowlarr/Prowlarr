@@ -10,6 +10,7 @@ import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
 import translate from 'Utilities/String/translate';
+import CategoryLabel from './CategoryLabel';
 import Peers from './Peers';
 import ProtocolLabel from './ProtocolLabel';
 import styles from './SearchIndexRow.css';
@@ -22,6 +23,7 @@ class SearchIndexRow extends Component {
   render() {
     const {
       protocol,
+      categories,
       age,
       ageHours,
       ageMinutes,
@@ -132,6 +134,19 @@ class SearchIndexRow extends Component {
               );
             }
 
+            if (column.name === 'category') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  <CategoryLabel
+                    categories={categories}
+                  />
+                </VirtualTableRowCell>
+              );
+            }
+
             if (column.name === 'indexerFlags') {
               return (
                 <VirtualTableRowCell
@@ -192,6 +207,7 @@ class SearchIndexRow extends Component {
 
 SearchIndexRow.propTypes = {
   guid: PropTypes.string.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   protocol: PropTypes.string.isRequired,
   age: PropTypes.number.isRequired,
   ageHours: PropTypes.number.isRequired,

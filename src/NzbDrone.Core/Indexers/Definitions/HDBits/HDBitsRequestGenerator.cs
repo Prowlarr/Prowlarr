@@ -12,13 +12,6 @@ namespace NzbDrone.Core.Indexers.HDBits
     {
         public HDBitsSettings Settings { get; set; }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(new TorrentQuery()));
-            return pageableRequests;
-        }
-
         public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
@@ -75,6 +68,26 @@ namespace NzbDrone.Core.Indexers.HDBits
             request.SetContent(query.ToJson());
 
             yield return new IndexerRequest(request);
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
         }
     }
 }

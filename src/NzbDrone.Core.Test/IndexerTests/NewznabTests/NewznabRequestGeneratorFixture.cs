@@ -37,30 +37,6 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         }
 
         [Test]
-        public void should_use_all_categories_for_feed()
-        {
-            var results = Subject.GetRecentRequests();
-
-            results.GetAllTiers().Should().HaveCount(1);
-
-            var page = results.GetAllTiers().First().First();
-
-            page.Url.Query.Should().Contain("&cat=1,2&");
-        }
-
-        [Test]
-        public void should_not_have_duplicate_categories()
-        {
-            var results = Subject.GetRecentRequests();
-
-            results.GetAllTiers().Should().HaveCount(1);
-
-            var page = results.GetAllTiers().First().First();
-
-            page.Url.FullUri.Should().Contain("&cat=1,2,3&");
-        }
-
-        [Test]
         public void should_return_subsequent_pages()
         {
             var results = Subject.GetSearchRequests(_movieSearchCriteria);

@@ -16,5 +16,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public List<int> IndexerIds { get; set; }
         public string SearchTerm { get; set; }
         public int[] Categories { get; set; }
+        public string SearchType { get; set; }
+        public int? Limit { get; set; }
+        public int? Offset { get; set; }
     }
 }

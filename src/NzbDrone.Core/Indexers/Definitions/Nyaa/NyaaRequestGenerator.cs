@@ -18,15 +18,6 @@ namespace NzbDrone.Core.Indexers.Nyaa
             PageSize = 100;
         }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(MaxPages, null));
-
-            return pageableRequests;
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, string term)
         {
             var baseUrl = string.Format("{0}/?page=rss{1}", Settings.BaseUrl.TrimEnd('/'), Settings.AdditionalParameters);
@@ -63,6 +54,26 @@ namespace NzbDrone.Core.Indexers.Nyaa
             pageableRequests.Add(GetPagedRequests(MaxPages, PrepareQuery(string.Format("{0}", searchCriteria.SearchTerm))));
 
             return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

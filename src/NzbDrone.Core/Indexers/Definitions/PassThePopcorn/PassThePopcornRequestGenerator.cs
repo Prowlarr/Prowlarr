@@ -16,15 +16,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public IHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetRequest(null));
-
-            return pageableRequests;
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
@@ -65,6 +56,26 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
             }
 
             yield return request;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
         }
     }
 }

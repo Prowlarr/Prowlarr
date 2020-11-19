@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Uri Link { get; set; }
         public Uri Comments { get; set; }
         public DateTime PublishDate { get; set; }
-        public ICollection<int> Category { get; set; }
+        public ICollection<IndexerCategory> Category { get; set; }
         public long? Size { get; set; }
         public long? Files { get; set; }
         public long? Grabs { get; set; }

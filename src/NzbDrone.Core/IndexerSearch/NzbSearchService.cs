@@ -16,7 +16,6 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface ISearchForNzb
     {
-        List<ReleaseInfo> Search(string query, List<int> indexerIds, bool interactiveSearch);
         NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch);
     }
 
@@ -35,16 +34,69 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        public List<ReleaseInfo> Search(string query, List<int> indexerIds, bool interactiveSearch)
-        {
-            var searchSpec = Get<MovieSearchCriteria>(new NewznabRequest { q = query }, indexerIds, interactiveSearch);
-
-            return Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
-        }
-
         public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
+            var results = new NewznabResults();
+
+            switch (request.t)
+            {
+                case "movie":
+                    return MovieSearch(request, indexerIds, interactiveSearch);
+                case "music":
+                    return MusicSearch(request, indexerIds, interactiveSearch);
+                case "tvsearch":
+                    return TvSearch(request, indexerIds, interactiveSearch);
+                case "book":
+                    return BookSearch(request, indexerIds, interactiveSearch);
+                default:
+                    return BasicSearch(request, indexerIds, interactiveSearch);
+            }
+        }
+
+        private NewznabResults MovieSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        {
             var searchSpec = Get<MovieSearchCriteria>(request, indexerIds, interactiveSearch);
+
+            searchSpec.ImdbId = request.imdbid;
+            searchSpec.TmdbId = request.tmdbid;
+            searchSpec.TraktId = request.traktid;
+            searchSpec.Year = request.year;
+
+            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+        }
+
+        private NewznabResults MusicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        {
+            var searchSpec = Get<MusicSearchCriteria>(request, indexerIds, interactiveSearch);
+
+            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+        }
+
+        private NewznabResults TvSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        {
+            var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
+
+            searchSpec.Season = request.season;
+            searchSpec.Ep = request.ep;
+            searchSpec.TvdbId = request.tvdbid;
+            searchSpec.ImdbId = request.imdbid;
+            searchSpec.TraktId = request.traktid;
+            searchSpec.RId = request.rid;
+            searchSpec.TvMazeId = request.tvmazeid;
+
+            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+        }
+
+        private NewznabResults BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        {
+            var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
+
+            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+        }
+
+        private NewznabResults BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        {
+            var searchSpec = Get<BasicSearchCriteria>(request, indexerIds, interactiveSearch);
 
             return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
@@ -67,6 +119,9 @@ namespace NzbDrone.Core.IndexerSearch
             }
 
             spec.SearchTerm = query.q;
+            spec.SearchType = query.t;
+            spec.Limit = query.limit;
+            spec.Offset = query.offset;
 
             spec.IndexerIds = indexerIds;
 

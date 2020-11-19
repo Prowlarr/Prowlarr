@@ -49,6 +49,46 @@ namespace NzbDrone.Core.Indexers
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
         }
 
+        public override IList<ReleaseInfo> Fetch(MusicSearchCriteria searchCriteria)
+        {
+            if (!SupportsSearch)
+            {
+                return new List<ReleaseInfo>();
+            }
+
+            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+        }
+
+        public override IList<ReleaseInfo> Fetch(TvSearchCriteria searchCriteria)
+        {
+            if (!SupportsSearch)
+            {
+                return new List<ReleaseInfo>();
+            }
+
+            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+        }
+
+        public override IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria)
+        {
+            if (!SupportsSearch)
+            {
+                return new List<ReleaseInfo>();
+            }
+
+            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+        }
+
+        public override IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria)
+        {
+            if (!SupportsSearch)
+            {
+                return new List<ReleaseInfo>();
+            }
+
+            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+        }
+
         protected IndexerPageableRequestChain GetRequestChain(SearchCriteriaBase searchCriteria = null)
         {
             var generator = GetRequestGenerator();
@@ -254,7 +294,7 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual bool IsValidRelease(ReleaseInfo release)
         {
-            if (release.DownloadUrl.IsNullOrWhiteSpace())
+            if (release.DownloadUrl == null)
             {
                 return false;
             }

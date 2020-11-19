@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Parser.Model
     {
         public string Guid { get; set; }
         public string Title { get; set; }
-        public long Size { get; set; }
+        public long? Size { get; set; }
         public string DownloadUrl { get; set; }
         public string InfoUrl { get; set; }
         public string CommentUrl { get; set; }
@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Container { get; set; }
         public string Codec { get; set; }
         public string Resolution { get; set; }
-        public ICollection<int> Category { get; set; }
+        public ICollection<IndexerCategory> Category { get; set; }
 
         public IndexerFlags IndexerFlags { get; set; }
 

@@ -119,6 +119,10 @@ namespace NzbDrone.Core.IndexerVersions
                     }
                 }
             }
+            else
+            {
+                //Do some things here to get it from server if we don't have it local
+            }
 
             throw new ArgumentOutOfRangeException(nameof(fileKey));
         }

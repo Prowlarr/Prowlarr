@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -160,6 +160,7 @@ namespace NzbDrone.Core.Indexers
             releaseInfo.DownloadUrl = GetDownloadUrl(item);
             releaseInfo.InfoUrl = GetInfoUrl(item);
             releaseInfo.CommentUrl = GetCommentUrl(item);
+            releaseInfo.Category = GetCategory(item);
 
             try
             {
@@ -186,6 +187,11 @@ namespace NzbDrone.Core.Indexers
         protected virtual string GetTitle(XElement item)
         {
             return item.TryGetValue("title", "Unknown");
+        }
+
+        protected virtual ICollection<IndexerCategory> GetCategory(XElement item)
+        {
+            return new List<IndexerCategory> { NewznabStandardCategory.Other };
         }
 
         protected virtual DateTime GetPublishDate(XElement item)

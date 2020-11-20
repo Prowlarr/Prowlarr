@@ -168,7 +168,7 @@ namespace NzbDrone.Core.Indexers
         private void AddTorznabCategoryTree(IndexerCategory torznabCategory)
         {
             // build the category tree
-            if (TorznabCatType.ParentCats.Contains(torznabCategory))
+            if (NewznabStandardCategory.ParentCats.Contains(torznabCategory))
             {
                 // parent cat
                 if (!_torznabCategoryTree.Contains(torznabCategory))
@@ -179,7 +179,7 @@ namespace NzbDrone.Core.Indexers
             else
             {
                 // child or custom cat
-                var parentCat = TorznabCatType.ParentCats.FirstOrDefault(c => c.Contains(torznabCategory));
+                var parentCat = NewznabStandardCategory.ParentCats.FirstOrDefault(c => c.Contains(torznabCategory));
                 if (parentCat != null)
                 {
                     // child cat
@@ -203,7 +203,37 @@ namespace NzbDrone.Core.Indexers
                 else
                 {
                     // custom cat
-                    _torznabCategoryTree.Add(torznabCategory);
+                    if (torznabCategory.Id > 1000 && torznabCategory.Id < 10000)
+                    {
+                        var potentialParent = NewznabStandardCategory.ParentCats.FirstOrDefault(c => (c.Id / 1000) == (torznabCategory.Id / 1000));
+                        if (potentialParent != null)
+                        {
+                            var nodeCat = _torznabCategoryTree.FirstOrDefault(c => c.Equals(potentialParent));
+                            if (nodeCat != null)
+                            {
+                                // parent cat already exists
+                                if (!nodeCat.Contains(torznabCategory))
+                                {
+                                    nodeCat.SubCategories.Add(torznabCategory);
+                                }
+                            }
+                            else
+                            {
+                                // create parent cat and add child
+                                nodeCat = potentialParent.CopyWithoutSubCategories();
+                                nodeCat.SubCategories.Add(torznabCategory);
+                                _torznabCategoryTree.Add(nodeCat);
+                            }
+                        }
+                        else
+                        {
+                            _torznabCategoryTree.Add(torznabCategory);
+                        }
+                    }
+                    else
+                    {
+                        _torznabCategoryTree.Add(torznabCategory);
+                    }
                 }
             }
         }

@@ -76,6 +76,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             Type = FieldType.Checkbox)]
         public bool RemoveYear { get; set; }
 
+        public List<IndexerCategory> Categories { get; set; }
+
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment
         public virtual NzbDroneValidationResult Validate()

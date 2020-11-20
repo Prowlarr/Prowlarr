@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 foreach (var category in _definition.Caps.Categories)
                 {
-                    var cat = TorznabCatType.GetCatByName(category.Value);
+                    var cat = NewznabStandardCategory.GetCatByName(category.Value);
                     if (cat == null)
                     {
                         _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value));
@@ -79,7 +79,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     if (categorymapping.cat != null)
                     {
-                        torznabCat = TorznabCatType.GetCatByName(categorymapping.cat);
+                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
                         if (torznabCat == null)
                         {
                             _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, categorymapping.id, categorymapping.cat));
@@ -262,7 +262,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                        .Where(m =>
                            !string.IsNullOrWhiteSpace(m.TrackerCategory) &&
                            string.Equals(m.TrackerCategory, input, StringComparison.InvariantCultureIgnoreCase))
-                       .Select(c => TorznabCatType.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
+                       .Select(c => NewznabStandardCategory.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
                        .ToList();
             return cats;
         }

@@ -19,5 +19,7 @@ namespace NzbDrone.Core.Indexers
         IList<ReleaseInfo> Fetch(TvSearchCriteria searchCriteria);
         IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria);
         IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria);
+
+        IndexerCapabilities GetCapabilities();
     }
 }

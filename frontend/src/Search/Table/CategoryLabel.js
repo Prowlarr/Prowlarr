@@ -3,16 +3,20 @@ import React from 'react';
 import Label from 'Components/Label';
 
 function CategoryLabel({ categories }) {
-  let catName = '';
-
-  if (categories && categories.length > 0) {
-    catName = categories[0].name;
-  }
+  const sortedCategories = categories.sort((c) => c.id);
 
   return (
-    <Label>
-      {catName}
-    </Label>
+    <span>
+      {
+        sortedCategories.map((category) => {
+          return (
+            <Label key={category.name}>
+              {category.name}
+            </Label>
+          );
+        })
+      }
+    </span>
   );
 }
 

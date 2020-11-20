@@ -17,7 +17,12 @@
   flex: 4 0 110px;
 }
 
-.category,
+.category {
+  composes: cell;
+
+  flex: 0 0 110px;
+}
+
 .indexer {
   composes: cell;
 

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NzbDrone.Core.Indexers
 {
-    public static class TorznabCatType
+    public static class NewznabStandardCategory
     {
         public static readonly IndexerCategory Console = new IndexerCategory(1000, "Console");
         public static readonly IndexerCategory ConsoleNDS = new IndexerCategory(1010, "Console/NDS");
@@ -171,7 +171,7 @@ namespace NzbDrone.Core.Indexers
             OtherHashed
         };
 
-        static TorznabCatType()
+        static NewznabStandardCategory()
         {
             Console.SubCategories.AddRange(
                 new List<IndexerCategory>

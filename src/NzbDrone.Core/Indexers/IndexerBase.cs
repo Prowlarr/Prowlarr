@@ -71,6 +71,8 @@ namespace NzbDrone.Core.Indexers
         public abstract IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria);
         public abstract IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria);
 
+        public abstract IndexerCapabilities GetCapabilities();
+
         protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
         {
             var result = releases.DistinctBy(v => v.Guid).ToList();

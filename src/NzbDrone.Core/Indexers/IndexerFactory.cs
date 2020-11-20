@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Composition;
 using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
@@ -22,10 +23,12 @@ namespace NzbDrone.Core.Indexers
     public class IndexerFactory : ProviderFactory<IIndexer, IndexerDefinition>, IIndexerFactory
     {
         private readonly IIndexerDefinitionUpdateService _definitionService;
+        private readonly INewznabCapabilitiesProvider _newznabCapabilitiesProvider;
         private readonly IIndexerStatusService _indexerStatusService;
         private readonly Logger _logger;
 
         public IndexerFactory(IIndexerDefinitionUpdateService definitionService,
+                              INewznabCapabilitiesProvider newznabCapabilitiesProvider,
                               IIndexerStatusService indexerStatusService,
                               IIndexerRepository providerRepository,
                               IEnumerable<IIndexer> providers,
@@ -36,6 +39,7 @@ namespace NzbDrone.Core.Indexers
         {
             _definitionService = definitionService;
             _indexerStatusService = indexerStatusService;
+            _newznabCapabilitiesProvider = newznabCapabilitiesProvider;
             _logger = logger;
         }
 
@@ -89,7 +93,7 @@ namespace NzbDrone.Core.Indexers
             {
                 foreach (var category in defFile.Caps.Categories)
                 {
-                    var cat = TorznabCatType.GetCatByName(category.Value);
+                    var cat = NewznabStandardCategory.GetCatByName(category.Value);
 
                     if (cat == null)
                     {
@@ -108,7 +112,7 @@ namespace NzbDrone.Core.Indexers
 
                     if (categorymapping.cat != null)
                     {
-                        torznabCat = TorznabCatType.GetCatByName(categorymapping.cat);
+                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
                         if (torznabCat == null)
                         {
                             continue;
@@ -241,6 +245,14 @@ namespace NzbDrone.Core.Indexers
         public override IndexerDefinition Create(IndexerDefinition definition)
         {
             definition.Added = DateTime.UtcNow;
+
+            var provider = _providers.First(v => v.GetType().Name == definition.Implementation);
+
+            if (definition.Implementation == typeof(Newznab.Newznab).Name)
+            {
+                var settings = (NewznabSettings)definition.Settings;
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings).Categories.GetTorznabCategoryList();
+            }
 
             return base.Create(definition);
         }

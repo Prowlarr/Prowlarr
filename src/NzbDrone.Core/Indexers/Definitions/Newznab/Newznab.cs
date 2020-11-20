@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public override IndexerCapabilities Capabilities { get => new IndexerCapabilities(); protected set => base.Capabilities = value; }
+        public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
 
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).LimitsDefault.Value;
 
@@ -36,6 +36,29 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override IParseIndexerResponse GetParser()
         {
             return new NewznabRssParser(Settings);
+        }
+
+        public IndexerCapabilities GetCapabilitiesFromSettings()
+        {
+            var caps = new IndexerCapabilities();
+
+            if (Definition == null || Settings == null || Settings.Categories == null)
+            {
+                return caps;
+            }
+
+            foreach (var category in Settings.Categories)
+            {
+                caps.Categories.AddCategoryMapping(category.Name, category);
+            }
+
+            return caps;
+        }
+
+        public override IndexerCapabilities GetCapabilities()
+        {
+            // Newznab uses different Caps per site, so we need to cache them to db on first indexer add to prevent issues with loading UI and pulling caps every time.
+            return _capabilitiesProvider.GetCapabilities(Settings);
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions

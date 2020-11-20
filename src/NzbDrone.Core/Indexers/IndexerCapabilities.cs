@@ -22,7 +22,8 @@ namespace NzbDrone.Core.Indexers
         ImdbId,
         TmdbId,
         ImdbTitle,
-        ImdbYear
+        ImdbYear,
+        TraktId,
     }
 
     public enum MusicSearchParam
@@ -67,6 +68,7 @@ namespace NzbDrone.Core.Indexers
         public bool MovieSearchAvailable => MovieSearchParams.Count > 0;
         public bool MovieSearchImdbAvailable => MovieSearchParams.Contains(MovieSearchParam.ImdbId);
         public bool MovieSearchTmdbAvailable => MovieSearchParams.Contains(MovieSearchParam.TmdbId);
+        public bool MovieSearchTraktAvailable => MovieSearchParams.Contains(MovieSearchParam.TraktId);
 
         public List<MusicSearchParam> MusicSearchParams;
         public bool MusicSearchAvailable => MusicSearchParams.Count > 0;

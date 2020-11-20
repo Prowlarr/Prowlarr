@@ -11,6 +11,7 @@ using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -290,6 +291,11 @@ namespace NzbDrone.Core.Indexers
             }
 
             return CleanupReleases(releases);
+        }
+
+        public override IndexerCapabilities GetCapabilities()
+        {
+            return Capabilities ?? ((IndexerDefinition)Definition).Capabilities;
         }
 
         protected virtual bool IsValidRelease(ReleaseInfo release)

@@ -1,11 +1,16 @@
 using NLog;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Applications
 {
-    public class ApplicationService : IHandle<ProviderAddedEvent<IIndexer>>, IHandle<ProviderDeletedEvent<IIndexer>>, IHandle<ProviderAddedEvent<IApplication>>, IHandle<ProviderUpdatedEvent<IIndexer>>
+    public class ApplicationService : IHandleAsync<ProviderAddedEvent<IIndexer>>,
+                                      IHandleAsync<ProviderDeletedEvent<IIndexer>>,
+                                      IHandleAsync<ProviderAddedEvent<IApplication>>,
+                                      IHandleAsync<ProviderUpdatedEvent<IIndexer>>,
+                                      IExecute<ApplicationIndexerSyncCommand>
     {
         private readonly IApplicationFactory _applicationsFactory;
         private readonly Logger _logger;
@@ -17,7 +22,7 @@ namespace NzbDrone.Core.Applications
         }
 
         // Sync Indexers on App Add if Sync Enabled
-        public void Handle(ProviderAddedEvent<IApplication> message)
+        public void HandleAsync(ProviderAddedEvent<IApplication> message)
         {
             var appDefinition = (ApplicationDefinition)message.Definition;
 
@@ -29,7 +34,7 @@ namespace NzbDrone.Core.Applications
             }
         }
 
-        public void Handle(ProviderAddedEvent<IIndexer> message)
+        public void HandleAsync(ProviderAddedEvent<IIndexer> message)
         {
             var enabledApps = _applicationsFactory.GetAvailableProviders();
 
@@ -40,7 +45,7 @@ namespace NzbDrone.Core.Applications
             }
         }
 
-        public void Handle(ProviderDeletedEvent<IIndexer> message)
+        public void HandleAsync(ProviderDeletedEvent<IIndexer> message)
         {
             var enabledApps = _applicationsFactory.GetAvailableProviders();
 
@@ -51,7 +56,7 @@ namespace NzbDrone.Core.Applications
             }
         }
 
-        public void Handle(ProviderUpdatedEvent<IIndexer> message)
+        public void HandleAsync(ProviderUpdatedEvent<IIndexer> message)
         {
             var enabledApps = _applicationsFactory.GetAvailableProviders();
 
@@ -59,6 +64,16 @@ namespace NzbDrone.Core.Applications
             foreach (var app in enabledApps)
             {
                 app.UpdateIndexer((IndexerDefinition)message.Definition);
+            }
+        }
+
+        public void Execute(ApplicationIndexerSyncCommand message)
+        {
+            var enabledApps = _applicationsFactory.GetAvailableProviders();
+
+            foreach (var app in enabledApps)
+            {
+                app.SyncIndexers();
             }
         }
     }

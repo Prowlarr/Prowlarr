@@ -96,6 +96,27 @@ namespace NzbDrone.Core.Indexers.Newznab
             return ParseUrl(item.TryGetValue("comments"));
         }
 
+        protected override ICollection<IndexerCategory> GetCategory(XElement item)
+        {
+            var cats = TryGetMultipleNewznabAttributes(item, "category");
+            var results = new List<IndexerCategory>();
+
+            foreach (var cat in cats)
+            {
+                if (int.TryParse(cat, out var intCategory))
+                {
+                    var indexerCat = _settings.Categories.FirstOrDefault(c => c.Id == intCategory);
+
+                    if (indexerCat != null)
+                    {
+                        results.Add(indexerCat);
+                    }
+                }
+            }
+
+            return results;
+        }
+
         protected override long GetSize(XElement item)
         {
             long size;
@@ -173,6 +194,23 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             return defaultValue;
+        }
+
+        protected List<string> TryGetMultipleNewznabAttributes(XElement item, string key)
+        {
+            var attrElements = item.Elements(ns + "attr").Where(e => e.Attribute("name").Value.Equals(key, StringComparison.OrdinalIgnoreCase));
+            var results = new List<string>();
+
+            foreach (var element in attrElements)
+            {
+                var attrValue = element.Attribute("value");
+                if (attrValue != null)
+                {
+                    results.Add(attrValue.Value);
+                }
+            }
+
+            return results;
         }
     }
 }

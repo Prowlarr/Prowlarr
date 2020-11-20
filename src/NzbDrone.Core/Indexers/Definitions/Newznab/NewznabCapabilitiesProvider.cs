@@ -206,12 +206,15 @@ namespace NzbDrone.Core.Indexers.Newznab
 
                     foreach (var xmlSubcat in xmlCategory.Elements("subcat"))
                     {
-                        cat.SubCategories.Add(new IndexerCategory
+                        var subCat = new IndexerCategory
                         {
                             Id = int.Parse(xmlSubcat.Attribute("id").Value),
                             Name = xmlSubcat.Attribute("name").Value,
                             Description = xmlSubcat.Attribute("description") != null ? xmlSubcat.Attribute("description").Value : string.Empty
-                        });
+                        };
+
+                        cat.SubCategories.Add(subCat);
+                        capabilities.Categories.AddCategoryMapping(subCat.Name, subCat);
                     }
 
                     capabilities.Categories.AddCategoryMapping(cat.Name, cat);

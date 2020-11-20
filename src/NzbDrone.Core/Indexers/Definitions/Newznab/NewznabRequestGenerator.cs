@@ -22,55 +22,35 @@ namespace NzbDrone.Core.Indexers.Newznab
             PageSize = 100;
         }
 
-        private bool SupportsSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.SearchParams != null &&
-                       capabilities.SearchParams.Contains(SearchParam.Q);
-            }
-        }
-
-        private bool SupportsImdbSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.MovieSearchParams != null &&
-                       capabilities.MovieSearchParams.Contains(MovieSearchParam.ImdbId);
-            }
-        }
-
-        private bool SupportsTmdbSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                return capabilities.MovieSearchParams != null &&
-                       capabilities.MovieSearchParams.Contains(MovieSearchParam.TmdbId);
-            }
-        }
-
-        private bool SupportsAggregatedIdSearch
-        {
-            get
-            {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
-
-                // TODO: Fix this, return capabilities.SupportsAggregateIdSearch;
-                return true;
-            }
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
-            AddMovieIdPageableRequests(pageableRequests, MaxPages, searchCriteria.Categories, searchCriteria);
+            var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = string.Empty;
+
+            if (searchCriteria.TmdbId.HasValue && capabilities.MovieSearchTmdbAvailable)
+            {
+                parameters += string.Format("&tmdbid={0}", searchCriteria.TmdbId.Value);
+            }
+
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && capabilities.MovieSearchImdbAvailable)
+            {
+                parameters += string.Format("&imdbid={0}", searchCriteria.ImdbId);
+            }
+
+            if (searchCriteria.TraktId.HasValue && capabilities.MovieSearchTraktAvailable)
+            {
+                parameters += string.Format("&traktid={0}", searchCriteria.ImdbId);
+            }
+
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                parameters += string.Format("&q={0}", searchCriteria.SearchTerm);
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
 
             return pageableRequests;
         }
@@ -82,7 +62,50 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+
+            var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = string.Empty;
+
+            if (searchCriteria.TvdbId.HasValue && capabilities.TvSearchTvdbAvailable)
+            {
+                parameters += string.Format("&tvdbid={0}", searchCriteria.TvdbId.Value);
+            }
+
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && capabilities.TvSearchImdbAvailable)
+            {
+                parameters += string.Format("&imdbid={0}", searchCriteria.ImdbId);
+            }
+
+            if (searchCriteria.TvMazeId.HasValue && capabilities.TvSearchTvMazeAvailable)
+            {
+                parameters += string.Format("&tvmazeid={0}", searchCriteria.TvMazeId);
+            }
+
+            if (searchCriteria.RId.HasValue && capabilities.TvSearchTvRageAvailable)
+            {
+                parameters += string.Format("&rid={0}", searchCriteria.RId);
+            }
+
+            if (searchCriteria.Season.HasValue && capabilities.TvSearchSeasonAvailable)
+            {
+                parameters += string.Format("&season={0}", searchCriteria.Season);
+            }
+
+            if (searchCriteria.Ep.HasValue && capabilities.TvSearchEpAvailable)
+            {
+                parameters += string.Format("&ep={0}", searchCriteria.Ep);
+            }
+
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                parameters += string.Format("&q={0}", searchCriteria.SearchTerm);
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
@@ -94,74 +117,18 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(MaxPages,
-                    searchCriteria.Categories,
-                    "search",
-                    string.Format("&q={0}", NewsnabifyTitle(searchCriteria.SearchTerm))));
+            var searchQuery = searchCriteria.SearchTerm;
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                    searchQuery.IsNotNullOrWhiteSpace() ? string.Format("&q={0}", NewsnabifyTitle(searchCriteria.SearchTerm)) : string.Empty));
 
             return pageableRequests;
         }
 
-        private void AddMovieIdPageableRequests(IndexerPageableRequestChain chain, int maxPages, IEnumerable<int> categories, MovieSearchCriteria searchCriteria)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, string parameters)
         {
-            var includeTmdbSearch = SupportsTmdbSearch && searchCriteria.TmdbId > 0;
-            var includeImdbSearch = SupportsImdbSearch && searchCriteria.ImdbId.IsNotNullOrWhiteSpace();
-
-            if (SupportsAggregatedIdSearch && (includeTmdbSearch || includeImdbSearch))
-            {
-                var ids = "";
-
-                if (includeTmdbSearch)
-                {
-                    ids += "&tmdbid=" + searchCriteria.TmdbId;
-                }
-
-                if (includeImdbSearch)
-                {
-                    ids += "&imdbid=" + searchCriteria.ImdbId.Substring(2);
-                }
-
-                chain.Add(GetPagedRequests(maxPages, categories, "movie", ids));
-            }
-            else
-            {
-                if (includeTmdbSearch)
-                {
-                    chain.Add(GetPagedRequests(maxPages,
-                        categories,
-                        "movie",
-                        string.Format("&tmdbid={0}", searchCriteria.TmdbId)));
-                }
-                else if (includeImdbSearch)
-                {
-                    chain.Add(GetPagedRequests(maxPages,
-                        categories,
-                        "movie",
-                        string.Format("&imdbid={0}", searchCriteria.ImdbId.Substring(2))));
-                }
-            }
-
-            if (SupportsSearch)
-            {
-                chain.AddTier();
-
-                var searchQuery = searchCriteria.SearchTerm;
-
-                if (!Settings.RemoveYear)
-                {
-                    searchQuery = string.Format("{0}", searchQuery);
-                }
-
-                chain.Add(GetPagedRequests(MaxPages,
-                    categories,
-                    "movie",
-                    string.Format("&q={0}", NewsnabifyTitle(searchQuery))));
-            }
-        }
-
-        private IEnumerable<IndexerRequest> GetPagedRequests(int maxPages, IEnumerable<int> categories, string searchType, string parameters)
-        {
-            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchType);
+            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
+            var categories = searchCriteria.Categories;
 
             if (categories != null && categories.Any())
             {
@@ -174,16 +141,23 @@ namespace NzbDrone.Core.Indexers.Newznab
                 baseUrl += "&apikey=" + Settings.ApiKey;
             }
 
+            if (searchCriteria.Limit.HasValue)
+            {
+                parameters += string.Format("&limit={0}", searchCriteria.Limit);
+            }
+
+            if (searchCriteria.Offset.HasValue)
+            {
+                parameters += string.Format("&offset={0}", searchCriteria.Offset);
+            }
+
             if (PageSize == 0)
             {
                 yield return new IndexerRequest(string.Format("{0}{1}", baseUrl, parameters), HttpAccept.Rss);
             }
             else
             {
-                for (var page = 0; page < maxPages; page++)
-                {
-                    yield return new IndexerRequest(string.Format("{0}&offset={1}&limit={2}{3}", baseUrl, page * PageSize, PageSize, parameters), HttpAccept.Rss);
-                }
+                yield return new IndexerRequest(string.Format("{0}&offset={1}&limit={2}{3}", baseUrl, searchCriteria.Offset, searchCriteria.Limit, parameters), HttpAccept.Rss);
             }
         }
 

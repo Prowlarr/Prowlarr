@@ -29,9 +29,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var variables = GetQueryVariableDefaults(searchCriteria);
 
             variables[".Query.Movie"] = null;
-            variables[".Query.Year"] = searchCriteria.Year;
+            variables[".Query.Year"] = null;
             variables[".Query.IMDBID"] = searchCriteria.ImdbId;
-            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId.Replace("tt", "");
+            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId?.TrimStart('t') ?? null;
             variables[".Query.TMDBID"] = searchCriteria.TmdbId;
             variables[".Query.TraktID"] = searchCriteria.TraktId;
 

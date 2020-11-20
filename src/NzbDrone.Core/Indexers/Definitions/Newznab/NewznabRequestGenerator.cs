@@ -133,7 +133,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             if (categories != null && categories.Any())
             {
                 var categoriesQuery = string.Join(",", categories.Distinct());
-                baseUrl += string.Format("&cats={0}", categoriesQuery);
+                baseUrl += string.Format("&cat={0}", categoriesQuery);
             }
 
             if (Settings.ApiKey.IsNotNullOrWhiteSpace())
@@ -151,14 +151,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters += string.Format("&offset={0}", searchCriteria.Offset);
             }
 
-            if (PageSize == 0)
-            {
-                yield return new IndexerRequest(string.Format("{0}{1}", baseUrl, parameters), HttpAccept.Rss);
-            }
-            else
-            {
-                yield return new IndexerRequest(string.Format("{0}&offset={1}&limit={2}{3}", baseUrl, searchCriteria.Offset, searchCriteria.Limit, parameters), HttpAccept.Rss);
-            }
+            yield return new IndexerRequest(string.Format("{0}{1}", baseUrl, parameters), HttpAccept.Rss);
         }
 
         private static string NewsnabifyTitle(string title)

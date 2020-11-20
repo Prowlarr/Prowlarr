@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
+import NewznabCategorySelectInputConnector from 'Components/Form/NewznabCategorySelectInputConnector';
 import TextInput from 'Components/Form/TextInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
@@ -18,7 +19,8 @@ class SearchFooter extends Component {
     this.state = {
       searchingReleases: false,
       searchQuery: '',
-      indexerIds: []
+      indexerIds: [],
+      categories: []
     };
   }
 
@@ -43,7 +45,7 @@ class SearchFooter extends Component {
   }
 
   onSearchPress = () => {
-    this.props.onSearchPress(this.state.searchQuery, this.state.indexerIds);
+    this.props.onSearchPress(this.state.searchQuery, this.state.indexerIds, this.state.categories);
   }
 
   //
@@ -57,7 +59,8 @@ class SearchFooter extends Component {
 
     const {
       searchQuery,
-      indexerIds
+      indexerIds,
+      categories
     } = this.state;
 
     return (
@@ -84,8 +87,21 @@ class SearchFooter extends Component {
 
           <IndexersSelectInputConnector
             name='indexerIds'
-            placeholder='Indexers'
             value={indexerIds}
+            isDisabled={isFetching}
+            onChange={this.onInputChange}
+          />
+        </div>
+
+        <div className={styles.indexerContainer}>
+          <SearchFooterLabel
+            label={'Categories'}
+            isSaving={false}
+          />
+
+          <NewznabCategorySelectInputConnector
+            name='categories'
+            value={categories}
             isDisabled={isFetching}
             onChange={this.onInputChange}
           />

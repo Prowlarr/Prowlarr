@@ -35,22 +35,22 @@ namespace Prowlarr.Api.V1.Search
 
                 if (indexerIds.Count > 0)
                 {
-                    return GetSearchReleases(request.Query, indexerIds);
+                    return GetSearchReleases(request.Query, indexerIds, request.Categories);
                 }
                 else
                 {
-                    return GetSearchReleases(request.Query, null);
+                    return GetSearchReleases(request.Query, null, request.Categories);
                 }
             }
 
             return new List<SearchResource>();
         }
 
-        private List<SearchResource> GetSearchReleases(string query, List<int> indexerIds)
+        private List<SearchResource> GetSearchReleases(string query, List<int> indexerIds, int[] categories)
         {
             try
             {
-                var decisions = _nzbSearhService.Search(new NewznabRequest { q = query, t = "search" }, indexerIds, true).Releases;
+                var decisions = _nzbSearhService.Search(new NewznabRequest { q = query, t = "search", cat = string.Join(",", categories) }, indexerIds, true).Releases;
 
                 return MapDecisions(decisions);
             }

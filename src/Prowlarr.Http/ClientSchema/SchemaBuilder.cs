@@ -100,13 +100,19 @@ namespace Prowlarr.Http.ClientSchema
                         Order = fieldAttribute.Order,
                         Advanced = fieldAttribute.Advanced,
                         Type = fieldAttribute.Type.ToString().FirstCharToLower(),
-                        Section = fieldAttribute.Section,
-                        RequestAction = fieldAttribute.RequestAction
+                        Section = fieldAttribute.Section
                     };
 
                     if (fieldAttribute.Type == FieldType.Select || fieldAttribute.Type == FieldType.TagSelect)
                     {
-                        field.SelectOptions = GetSelectOptions(fieldAttribute.SelectOptions);
+                        if (fieldAttribute.SelectOptionsProviderAction.IsNotNullOrWhiteSpace())
+                        {
+                            field.SelectOptionsProviderAction = fieldAttribute.SelectOptionsProviderAction;
+                        }
+                        else
+                        {
+                            field.SelectOptions = GetSelectOptions(fieldAttribute.SelectOptions);
+                        }
                     }
 
                     if (fieldAttribute.Hidden != HiddenType.Visible)

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net5.0;net472</TargetFrameworks>
 
     <ApplicationIcon>..\NzbDrone.Host\Prowlarr.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>

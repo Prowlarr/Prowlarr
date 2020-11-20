@@ -6,7 +6,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;osx-x64;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
-    <ExcludedRuntimeFrameworkPairs>win-x64:net462;osx-x64:net462;linux-arm:net462;linux-arm64:net462;linux-musl-x64:net462;linux-musl-arm64:net462</ExcludedRuntimeFrameworkPairs>
+    <ExcludedRuntimeFrameworkPairs>win-x64:net472;osx-x64:net472;linux-arm:net472;linux-arm64:net472;linux-musl-x64:net472;linux-musl-arm64:net472</ExcludedRuntimeFrameworkPairs>
 
     <ProwlarrRootDir>$(MSBuildThisFileDirectory)..\</ProwlarrRootDir>
 
@@ -56,12 +56,13 @@
   <!-- Set the Product and Version info for our own projects -->
   <PropertyGroup Condition="'$(ProwlarrProject)'=='true'">
     <Product>Prowlarr</Product>
-    <Company>prowlarr.video</Company>
-    <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) prowlarr.video (GNU General Public v3)</Copyright>
+    <Company>prowlarr.com</Company>
+    <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) prowlarr.com (GNU General Public v3)</Copyright>
     
     <!-- Should be replaced by CI -->
     <AssemblyVersion>10.0.0.*</AssemblyVersion>
     <AssemblyConfiguration>$(Configuration)-dev</AssemblyConfiguration>
+    <NeutralLanguage>en</NeutralLanguage>
 
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
@@ -90,13 +91,14 @@
     </PackageReference>
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(ProwlarrProject)'=='true' and '$(EnableAnalyzers)'=='false'">
+    <!-- FXCop Built into Net5 SDK now as NETAnalyzers, Enabled by default on net5 projects -->
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+  </PropertyGroup>
+
   <!-- Set up stylecop -->
   <ItemGroup Condition="'$(ProwlarrProject)'=='true' and '$(EnableAnalyzers)'!='false'">
     <!-- StyleCop analysis -->
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

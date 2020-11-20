@@ -118,7 +118,7 @@ PackageLinux()
 
     echo "Adding Prowlarr.Mono to UpdatePackage"
     cp $folder/Prowlarr.Mono.* $folder/Prowlarr.Update
-    if [ "$framework" = "netcoreapp3.1" ]; then
+    if [ "$framework" = "net5.0" ]; then
         cp $folder/Mono.Posix.NETStandard.* $folder/Prowlarr.Update
         cp $folder/libMonoPosixHelper.* $folder/Prowlarr.Update
     fi
@@ -136,7 +136,7 @@ PackageMacOS()
 
     PackageFiles "$folder" "$framework" "osx-x64"
 
-    if [ "$framework" = "net462" ]; then
+    if [ "$framework" = "net472" ]; then
         echo "Adding Startup script"
         cp macOS/Prowlarr $folder
     fi
@@ -150,7 +150,7 @@ PackageMacOS()
 
     echo "Adding Prowlarr.Mono to UpdatePackage"
     cp $folder/Prowlarr.Mono.* $folder/Prowlarr.Update
-    if [ "$framework" = "netcoreapp3.1" ]; then
+    if [ "$framework" = "net5.0" ]; then
         cp $folder/Mono.Posix.NETStandard.* $folder/Prowlarr.Update
         cp $folder/libMonoPosixHelper.* $folder/Prowlarr.Update
     fi
@@ -189,6 +189,7 @@ PackageWindows()
     local folder=$artifactsFolder/windows/$framework/Prowlarr
     
     PackageFiles "$folder" "$framework" "win-x64"
+    cp -r $outputFolder/$framework-windows/$runtime/publish/* $folder
 
     echo "Removing Prowlarr.Mono"
     rm -f $folder/Prowlarr.Mono.*
@@ -317,11 +318,11 @@ then
     Build
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
-        PackageTests "netcoreapp3.1" "win-x64"
-        PackageTests "netcoreapp3.1" "linux-x64"
-        PackageTests "netcoreapp3.1" "linux-musl-x64"
-        PackageTests "netcoreapp3.1" "osx-x64"
-        PackageTests "net462" "linux-x64"
+        PackageTests "net5.0" "win-x64"
+        PackageTests "net5.0" "linux-x64"
+        PackageTests "net5.0" "linux-musl-x64"
+        PackageTests "net5.0" "osx-x64"
+        PackageTests "net472" "linux-x64"
     else
         PackageTests "$FRAMEWORK" "$RID"
     fi
@@ -349,14 +350,14 @@ then
 
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
-        Package "netcoreapp3.1" "win-x64"
-        Package "netcoreapp3.1" "linux-x64"
-        Package "netcoreapp3.1" "linux-musl-x64"
-        Package "netcoreapp3.1" "linux-arm64"
-        Package "netcoreapp3.1" "linux-musl-arm64"
-        Package "netcoreapp3.1" "linux-arm"
-        Package "netcoreapp3.1" "osx-x64"
-        Package "net462" "linux-x64"
+        Package "net5.0" "win-x64"
+        Package "net5.0" "linux-x64"
+        Package "net5.0" "linux-musl-x64"
+        Package "net5.0" "linux-arm64"
+        Package "net5.0" "linux-musl-arm64"
+        Package "net5.0" "linux-arm"
+        Package "net5.0" "osx-x64"
+        Package "net472" "linux-x64"
     else
         Package "$FRAMEWORK" "$RID"
     fi

@@ -32,21 +32,22 @@ namespace Prowlarr.Api.V1.Search
             if (request.Query.IsNotNullOrWhiteSpace())
             {
                 var indexerIds = request.IndexerIds ?? new List<int>();
+                var categories = request.Categories ?? new List<int>();
 
                 if (indexerIds.Count > 0)
                 {
-                    return GetSearchReleases(request.Query, indexerIds, request.Categories);
+                    return GetSearchReleases(request.Query, indexerIds, categories);
                 }
                 else
                 {
-                    return GetSearchReleases(request.Query, null, request.Categories);
+                    return GetSearchReleases(request.Query, null, categories);
                 }
             }
 
             return new List<SearchResource>();
         }
 
-        private List<SearchResource> GetSearchReleases(string query, List<int> indexerIds, int[] categories)
+        private List<SearchResource> GetSearchReleases(string query, List<int> indexerIds, List<int> categories)
         {
             try
             {

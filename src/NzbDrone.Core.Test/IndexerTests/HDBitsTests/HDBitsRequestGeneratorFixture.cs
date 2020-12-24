@@ -19,7 +19,6 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             Subject.Settings = new HDBitsSettings()
             {
                 BaseUrl = "http://127.0.0.1:1234/",
-                Categories = new[] { 1, 2 },
                 ApiKey = "abcd",
                 Username = "somename"
             };

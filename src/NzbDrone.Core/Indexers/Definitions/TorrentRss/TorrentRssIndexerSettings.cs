@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.TorrentRss
         }
     }
 
-    public class TorrentRssIndexerSettings : ITorrentIndexerSettings
+    public class TorrentRssIndexerSettings : IIndexerSettings
     {
         private static readonly TorrentRssIndexerSettingsValidator Validator = new TorrentRssIndexerSettingsValidator();
 
@@ -23,9 +23,7 @@ namespace NzbDrone.Core.Indexers.TorrentRss
         {
             BaseUrl = string.Empty;
             AllowZeroSize = false;
-            MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "Full RSS Feed URL")]
@@ -39,12 +37,6 @@ namespace NzbDrone.Core.Indexers.TorrentRss
 
         [FieldDefinition(3, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
         public IEnumerable<int> MultiLanguages { get; set; }
-
-        [FieldDefinition(4, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(6, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

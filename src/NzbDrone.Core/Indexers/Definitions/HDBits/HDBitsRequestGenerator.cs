@@ -61,7 +61,8 @@ namespace NzbDrone.Core.Indexers.HDBits
             query.Username = Settings.Username;
             query.Passkey = Settings.ApiKey;
 
-            query.Category = Settings.Categories.ToArray();
+            //TODO Add from searchCriteria
+            // query.Category = Settings.Categories.ToArray();
             query.Codec = Settings.Codecs.ToArray();
             query.Medium = Settings.Mediums.ToArray();
 

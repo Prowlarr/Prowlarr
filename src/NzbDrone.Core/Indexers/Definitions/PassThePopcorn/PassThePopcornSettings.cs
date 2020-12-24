@@ -17,16 +17,14 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         }
     }
 
-    public class PassThePopcornSettings : ITorrentIndexerSettings
+    public class PassThePopcornSettings : IIndexerSettings
     {
         private static readonly PassThePopcornSettingsValidator Validator = new PassThePopcornSettingsValidator();
 
         public PassThePopcornSettings()
         {
             BaseUrl = "https://passthepopcorn.me";
-            MinimumSeeders = 0;
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "URL", Advanced = true, HelpText = "Do not change this unless you know what you're doing. Since your cookie will be sent to that host.")]
@@ -40,12 +38,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         [FieldDefinition(3, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
         public IEnumerable<int> MultiLanguages { get; set; }
-
-        [FieldDefinition(4, Type = FieldType.Textbox, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(6, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

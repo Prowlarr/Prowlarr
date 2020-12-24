@@ -12,12 +12,10 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public RarbgSettingsValidator()
         {
             RuleFor(c => c.BaseUrl).ValidRootUrl();
-
-            RuleFor(c => c.Categories).NotEmpty();
         }
     }
 
-    public class RarbgSettings : ITorrentIndexerSettings
+    public class RarbgSettings : IIndexerSettings
     {
         private static readonly RarbgSettingsValidator Validator = new RarbgSettingsValidator();
 
@@ -25,10 +23,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
         {
             BaseUrl = "https://torrentapi.org";
             RankedOnly = false;
-            MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
-            Categories = new[] { 14, 48, 17, 44, 45, 47, 50, 51, 52, 42, 46 };
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "API URL", HelpText = "URL to Rarbg api, not the website.")]
@@ -42,15 +37,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         [FieldDefinition(3, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
         public IEnumerable<int> MultiLanguages { get; set; }
-
-        [FieldDefinition(4, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(5, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
-
-        [FieldDefinition(6, Type = FieldType.Textbox, Label = "Categories", HelpText = "Comma Separated list, you can retrieve the ID by checking the URL behind the category on the website (i.e. Movie/x264/1080 = 44)", HelpLink = "https://rarbgmirror.org/torrents.php?category=movies", Advanced = true)]
-        public IEnumerable<int> Categories { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

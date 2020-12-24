@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import withScrollPosition from 'Components/withScrollPosition';
-import { fetchReleases, setReleasesFilter, setReleasesSort, setReleasesTableOption } from 'Store/Actions/releaseActions';
+import { cancelFetchReleases, clearReleases, fetchReleases, setReleasesFilter, setReleasesSort, setReleasesTableOption } from 'Store/Actions/releaseActions';
 import scrollPositions from 'Store/scrollPositions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import createReleaseClientSideCollectionItemsSelector from 'Store/Selectors/createReleaseClientSideCollectionItemsSelector';
@@ -44,11 +44,24 @@ function createMapDispatchToProps(dispatch, props) {
 
     onSearchPress(payload) {
       dispatch(fetchReleases(payload));
+    },
+
+    dispatchCancelFetchReleases() {
+      dispatch(cancelFetchReleases());
+    },
+
+    dispatchClearReleases() {
+      dispatch(clearReleases());
     }
   };
 }
 
 class SearchIndexConnector extends Component {
+
+  componentWillUnmount() {
+    this.props.dispatchCancelFetchReleases();
+    this.props.dispatchClearReleases();
+  }
 
   onScroll = ({ scrollTop }) => {
     scrollPositions.movieIndex = scrollTop;
@@ -70,6 +83,8 @@ class SearchIndexConnector extends Component {
 SearchIndexConnector.propTypes = {
   isSmallScreen: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
+  dispatchCancelFetchReleases: PropTypes.func.isRequired,
+  dispatchClearReleases: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.object)
 };
 

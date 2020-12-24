@@ -17,24 +17,15 @@ namespace NzbDrone.Core.Indexers.FileList
         }
     }
 
-    public class FileListSettings : ITorrentIndexerSettings
+    public class FileListSettings : IIndexerSettings
     {
         private static readonly FileListSettingsValidator Validator = new FileListSettingsValidator();
 
         public FileListSettings()
         {
             BaseUrl = "https://filelist.io";
-            MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
-
-            Categories = new int[]
-            {
-                (int)FileListCategories.Movie_HD,
-                (int)FileListCategories.Movie_SD,
-                (int)FileListCategories.Movie_4K
-            };
 
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "Username", Privacy = PrivacyLevel.UserName)]
@@ -48,15 +39,6 @@ namespace NzbDrone.Core.Indexers.FileList
 
         [FieldDefinition(3, Label = "API URL", Advanced = true, HelpText = "Do not change this unless you know what you're doing. Since your API key will be sent to that host.")]
         public string BaseUrl { get; set; }
-
-        [FieldDefinition(4, Label = "Categories", Type = FieldType.Select, SelectOptions = typeof(FileListCategories), Advanced = true, HelpText = "Categories for use in search and feeds. If unspecified, all options are used.")]
-        public IEnumerable<int> Categories { get; set; }
-
-        [FieldDefinition(5, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(6, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

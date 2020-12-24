@@ -251,7 +251,7 @@ namespace NzbDrone.Core.Indexers
             if (definition.Implementation == typeof(Newznab.Newznab).Name)
             {
                 var settings = (NewznabSettings)definition.Settings;
-                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings).Categories.GetTorznabCategoryList();
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
             return base.Create(definition);

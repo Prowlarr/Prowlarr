@@ -105,7 +105,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 if (int.TryParse(cat, out var intCategory))
                 {
-                    var indexerCat = _settings.Categories.FirstOrDefault(c => c.Id == intCategory);
+                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
 
                     if (indexerCat != null)
                     {

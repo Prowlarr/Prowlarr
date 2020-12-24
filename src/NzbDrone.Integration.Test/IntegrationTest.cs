@@ -1,7 +1,7 @@
 using System.Threading;
 using NLog;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers.Newznab;
+using NzbDrone.Core.Indexers.FileList;
 using NzbDrone.Test.Common;
 using Prowlarr.Http.ClientSchema;
 
@@ -39,11 +39,11 @@ namespace NzbDrone.Integration.Test
                 EnableRss = false,
                 EnableInteractiveSearch = false,
                 EnableAutomaticSearch = false,
-                ConfigContract = nameof(NewznabSettings),
-                Implementation = nameof(Newznab),
+                ConfigContract = nameof(FileListSettings),
+                Implementation = nameof(FileList),
                 Name = "NewznabTest",
                 Protocol = Core.Indexers.DownloadProtocol.Usenet,
-                Fields = SchemaBuilder.ToSchema(new NewznabSettings())
+                Fields = SchemaBuilder.ToSchema(new FileListSettings())
             });
 
             // Change Console Log Level to Debug so we get more details.

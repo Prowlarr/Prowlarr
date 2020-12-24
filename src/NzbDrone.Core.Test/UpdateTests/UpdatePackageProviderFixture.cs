@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Test.UpdateTests
         }
 
         [Test]
+        [Ignore("TODO No Updates On Server")]
         [Platform(Exclude = "NetCore")]
         public void finds_update_when_version_lower()
         {
@@ -41,6 +42,7 @@ namespace NzbDrone.Core.Test.UpdateTests
         }
 
         [Test]
+        [Ignore("TODO No Updates On Server")]
         public void should_get_recent_updates()
         {
             const string branch = "develop";

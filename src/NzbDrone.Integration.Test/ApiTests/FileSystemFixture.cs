@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -99,26 +99,6 @@ namespace NzbDrone.Integration.Test.ApiTests
             var result = FileSystem.Execute<FileSystemModel>(request, HttpStatusCode.OK);
 
             result.Type.Should().Be(FileSystemEntityType.Folder);
-        }
-
-        [Test]
-        public void get_all_mediafiles()
-        {
-            var tempDir = GetTempDirectory("mediaDir");
-            File.WriteAllText(Path.Combine(tempDir, "somevideo.mkv"), "video");
-
-            var request = FileSystem.BuildRequest("mediafiles");
-            request.Method = Method.GET;
-            request.AddQueryParameter("path", tempDir);
-
-            var result = FileSystem.Execute<List<Dictionary<string, string>>>(request, HttpStatusCode.OK);
-
-            result.Should().HaveCount(1);
-            result.First().Should().ContainKey("path");
-            result.First().Should().ContainKey("relativePath");
-            result.First().Should().ContainKey("name");
-
-            result.First()["name"].Should().Be("somevideo.mkv");
         }
     }
 }

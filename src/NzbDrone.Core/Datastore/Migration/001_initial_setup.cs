@@ -21,14 +21,12 @@ namespace NzbDrone.Core.Datastore.Migration
 
             Create.TableForModel("Notifications")
                 .WithColumn("Name").AsString()
-                .WithColumn("OnGrab").AsBoolean()
-                .WithColumn("OnDownload").AsBoolean()
                 .WithColumn("Settings").AsString()
                 .WithColumn("Implementation").AsString()
                 .WithColumn("ConfigContract").AsString().Nullable()
-                .WithColumn("OnUpgrade").AsBoolean().Nullable()
                 .WithColumn("Tags").AsString().Nullable()
-                .WithColumn("OnRename").AsBoolean().NotNullable();
+                .WithColumn("OnHealthIssue").AsBoolean().NotNullable()
+                .WithColumn("IncludeHealthWarnings").AsBoolean().NotNullable();
 
             Create.TableForModel("ScheduledTasks")
                 .WithColumn("TypeName").AsString().Unique()

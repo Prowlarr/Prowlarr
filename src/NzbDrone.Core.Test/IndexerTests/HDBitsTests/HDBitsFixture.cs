@@ -18,6 +18,8 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
     [TestFixture]
     public class HDBitsFixture : CoreTest<HDBits>
     {
+        private MovieSearchCriteria _movieSearchCriteria;
+
         [SetUp]
         public void Setup()
         {
@@ -25,6 +27,12 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             {
                 Name = "HdBits",
                 Settings = new HDBitsSettings() { ApiKey = "fakekey" }
+            };
+
+            _movieSearchCriteria = new MovieSearchCriteria
+            {
+                Categories = new int[] { 2000, 2010 },
+                ImdbId = "tt0076759"
             };
         }
 
@@ -38,7 +46,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), responseJson));
 
-            var torrents = Subject.Fetch(new MovieSearchCriteria());
+            var torrents = Subject.Fetch(_movieSearchCriteria);
 
             torrents.Should().HaveCount(2);
             torrents.First().Should().BeOfType<HDBitsInfo>();
@@ -67,7 +75,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
                 .Setup(v => v.Execute(It.IsAny<HttpRequest>()))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), Encoding.UTF8.GetBytes(responseJson)));
 
-            var torrents = Subject.Fetch(new MovieSearchCriteria());
+            var torrents = Subject.Fetch(_movieSearchCriteria);
 
             torrents.Should().BeEmpty();
 

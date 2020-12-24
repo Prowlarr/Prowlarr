@@ -10,18 +10,16 @@ namespace NzbDrone.Core.Indexers.TorrentRss
     {
         public TorrentRssIndexerSettings Settings { get; set; }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
+        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRssRequests(null));
+            if (searchCriteria.SearchTerm.IsNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRssRequests(null));
+            }
 
             return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
-        {
-            return new IndexerPageableRequestChain();
         }
 
         private IEnumerable<IndexerRequest> GetRssRequests(string searchParameters)

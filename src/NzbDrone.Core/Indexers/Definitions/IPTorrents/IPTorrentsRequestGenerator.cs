@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
@@ -9,18 +10,16 @@ namespace NzbDrone.Core.Indexers.IPTorrents
     {
         public IPTorrentsSettings Settings { get; set; }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
+        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRssRequests());
+            if (searchCriteria.SearchTerm.IsNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRssRequests());
+            }
 
             return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
-        {
-            return new IndexerPageableRequestChain();
         }
 
         private IEnumerable<IndexerRequest> GetRssRequests()

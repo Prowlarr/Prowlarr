@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria());
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
 
             releases.Should().HaveCount(4);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
                    .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                    .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), "{ error_code: 20, error: \"some message\" }"));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria());
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
 
             releases.Should().HaveCount(0);
         }
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
                    .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                    .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), "{ error_code: 25, error: \"some message\" }"));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria());
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
 
             releases.Should().HaveCount(0);
 

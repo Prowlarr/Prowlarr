@@ -92,6 +92,8 @@ namespace NzbDrone.Core.Indexers
             MusicSearchParams = new List<MusicSearchParam>();
             BookSearchParams = new List<BookSearchParam>();
             Categories = new IndexerCapabilitiesCategories();
+            LimitsDefault = 100;
+            LimitsMax = 100;
         }
 
         public void ParseCardigannSearchModes(Dictionary<string, List<string>> modes)

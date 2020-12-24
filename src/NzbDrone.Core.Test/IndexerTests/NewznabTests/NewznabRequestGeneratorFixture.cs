@@ -26,7 +26,8 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                SearchTerm = "Star Wars"
+                SearchTerm = "Star Wars",
+                Categories = new int[] { 2000 }
             };
 
             _capabilities = new IndexerCapabilities();
@@ -39,15 +40,14 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_return_subsequent_pages()
         {
+            _movieSearchCriteria.Offset = 0;
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(2);
+            results.GetAllTiers().Should().HaveCount(1);
 
             var pages = results.GetAllTiers().First().Take(3).ToList();
 
-            pages[0].Url.FullUri.Should().Contain("&offset=0&");
-            pages[1].Url.FullUri.Should().Contain("&offset=100&");
-            pages[2].Url.FullUri.Should().Contain("&offset=200&");
+            pages[0].Url.FullUri.Should().Contain("&offset=0");
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(2);
+            results.GetAllTiers().Should().HaveCount(1);
 
             var pages = results.GetAllTiers().First().Take(500).ToList();
 
@@ -80,6 +80,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_search_by_imdbid_if_supported()
         {
+            _movieSearchCriteria.ImdbId = "0076759";
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
@@ -93,6 +94,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_search_by_tmdbid_if_supported()
         {
+            _movieSearchCriteria.TmdbId = 11;
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
@@ -106,6 +108,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_prefer_search_by_tmdbid_if_rid_supported()
         {
+            _movieSearchCriteria.TmdbId = 11;
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
@@ -120,6 +123,8 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_use_aggregrated_id_search_if_supported()
         {
+            _movieSearchCriteria.ImdbId = "0076759";
+            _movieSearchCriteria.TmdbId = 11;
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
@@ -165,9 +170,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.Tiers.Should().Be(2);
+            results.Tiers.Should().Be(1);
 
-            var pageTier2 = results.GetTier(1).First().First();
+            var pageTier2 = results.GetTier(0).First().First();
 
             pageTier2.Url.Query.Should().NotContain("tmdbid=11");
             pageTier2.Url.Query.Should().NotContain("imdbid=0076759");

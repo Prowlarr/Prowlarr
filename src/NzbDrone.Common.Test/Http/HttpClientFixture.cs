@@ -235,14 +235,14 @@ namespace NzbDrone.Common.Test.Http
             }
 
             var request = new HttpRequestBuilder($"https://{_httpBinHost}/redirect-to")
-                .AddQueryParam("url", $"https://prowlarr.video/")
+                .AddQueryParam("url", $"https://radarr.video/")
                 .Build();
             request.AllowAutoRedirect = true;
 
             var response = Subject.Get(request);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            response.Content.Should().Contain("Prowlarr");
+            response.Content.Should().Contain("Radarr");
 
             ExceptionVerification.ExpectedErrors(0);
         }
@@ -288,7 +288,7 @@ namespace NzbDrone.Common.Test.Http
         {
             var file = GetTempFilePath();
 
-            var url = "https://prowlarr.video/img/slider/moviedetails.png";
+            var url = "https://radarr.video/img/slider/moviedetails.png";
 
             Subject.DownloadFile(url, file);
 
@@ -303,7 +303,7 @@ namespace NzbDrone.Common.Test.Http
             var file = GetTempFilePath();
 
             var request = new HttpRequestBuilder($"https://{_httpBinHost}/redirect-to")
-                .AddQueryParam("url", $"https://prowlarr.video/img/slider/moviedetails.png")
+                .AddQueryParam("url", $"https://radarr.video/img/slider/moviedetails.png")
                 .Build();
 
             Subject.DownloadFile(request.Url.FullUri, file);

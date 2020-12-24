@@ -24,7 +24,8 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
 
             _movieSearchCriteria = new MovieSearchCriteria
             {
-                SearchTerm = "Star Wars"
+                SearchTerm = "Star Wars",
+                Categories = new int[] { 2000 }
             };
         }
 
@@ -36,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [Test]
         public void should_use_categories_for_feed()
         {
-            var results = Subject.GetSearchRequests(new MovieSearchCriteria());
+            var results = Subject.GetSearchRequests(new MovieSearchCriteria { Categories = new int[] { 1, 2 } });
 
             results.GetAllTiers().Should().HaveCount(1);
 
@@ -48,6 +49,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [Test]
         public void should_not_search_by_imdbid_if_not_supported()
         {
+            _movieSearchCriteria.ImdbId = "tt0076759";
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
             results.GetAllTiers().Should().HaveCount(1);
@@ -70,7 +72,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             var page = results.GetAllTiers().First().First();
 
             page.Url.Query.Should().Contain("type=name");
-            page.Url.Query.Should().Contain("query=Star+Wars+1977");
+            page.Url.Query.Should().Contain("query=Star Wars");
         }
     }
 }

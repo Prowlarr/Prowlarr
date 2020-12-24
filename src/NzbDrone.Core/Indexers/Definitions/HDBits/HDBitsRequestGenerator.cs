@@ -38,6 +38,9 @@ namespace NzbDrone.Core.Indexers.HDBits
             {
                 query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
                 query.ImdbInfo.Id = imdbId;
+
+                //TODO Map Categories
+                query.Category = searchCriteria.Categories;
                 return true;
             }
 
@@ -62,7 +65,7 @@ namespace NzbDrone.Core.Indexers.HDBits
             query.Passkey = Settings.ApiKey;
 
             //TODO Add from searchCriteria
-            // query.Category = Settings.Categories.ToArray();
+            query.Category = query.Category.ToArray();
             query.Codec = Settings.Codecs.ToArray();
             query.Medium = Settings.Mediums.ToArray();
 

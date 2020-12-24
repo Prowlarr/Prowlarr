@@ -42,11 +42,10 @@ namespace NzbDrone.Core.Indexers
 
         public override IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria)
         {
-            if (!SupportsSearch)
-            {
-                return new List<ReleaseInfo>();
-            }
-
+            //if (!SupportsSearch)
+            //{
+            //    return new List<ReleaseInfo>();
+            //}
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
         }
 

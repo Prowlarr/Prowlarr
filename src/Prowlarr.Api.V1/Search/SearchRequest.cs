@@ -6,6 +6,6 @@ namespace Prowlarr.Api.V1.Search
     {
         public List<int> IndexerIds { get; set; }
         public string Query { get; set; }
-        public int[] Categories { get; set; }
+        public List<int> Categories { get; set; }
     }
 }

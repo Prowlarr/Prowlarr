@@ -16,16 +16,14 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
         }
     }
 
-    public class AwesomeHDSettings : ITorrentIndexerSettings
+    public class AwesomeHDSettings : IIndexerSettings
     {
         private static readonly AwesomeHDSettingsValidator Validator = new AwesomeHDSettingsValidator();
 
         public AwesomeHDSettings()
         {
             BaseUrl = "https://awesome-hd.me";
-            MinimumSeeders = 0;
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "API URL", Advanced = true, HelpText = "Do not change this unless you know what you're doing. Since you Passkey will be sent to that host.")]
@@ -36,12 +34,6 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 
         [FieldDefinition(2, Label = "Passkey", Privacy = PrivacyLevel.ApiKey)]
         public string Passkey { get; set; }
-
-        [FieldDefinition(3, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(4, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

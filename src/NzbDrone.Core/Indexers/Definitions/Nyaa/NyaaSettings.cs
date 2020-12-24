@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
         }
     }
 
-    public class NyaaSettings : ITorrentIndexerSettings
+    public class NyaaSettings : IIndexerSettings
     {
         private static readonly NyaaSettingsValidator Validator = new NyaaSettingsValidator();
 
@@ -25,9 +25,7 @@ namespace NzbDrone.Core.Indexers.Nyaa
         {
             BaseUrl = "";
             AdditionalParameters = "";
-            MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "Website URL")]
@@ -38,12 +36,6 @@ namespace NzbDrone.Core.Indexers.Nyaa
 
         [FieldDefinition(2, Label = "Additional Parameters", Advanced = true, HelpText = "Please note if you change the category you will have to add required/restricted rules about the subgroups to avoid foreign language releases.")]
         public string AdditionalParameters { get; set; }
-
-        [FieldDefinition(3, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(4, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", HelpLink = "https://github.com/Prowlarr/Prowlarr/wiki/Indexer-Flags#1-required-flags", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

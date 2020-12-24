@@ -15,16 +15,14 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         }
     }
 
-    public class TorrentPotatoSettings : ITorrentIndexerSettings
+    public class TorrentPotatoSettings : IIndexerSettings
     {
         private static readonly TorrentPotatoSettingsValidator Validator = new TorrentPotatoSettingsValidator();
 
         public TorrentPotatoSettings()
         {
             BaseUrl = "http://127.0.0.1";
-            MinimumSeeders = IndexerDefaults.MINIMUM_SEEDERS;
             MultiLanguages = new List<int>();
-            RequiredFlags = new List<int>();
         }
 
         [FieldDefinition(0, Label = "API URL", HelpText = "URL to TorrentPotato api.")]
@@ -38,12 +36,6 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
 
         [FieldDefinition(3, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
         public IEnumerable<int> MultiLanguages { get; set; }
-
-        [FieldDefinition(4, Type = FieldType.Number, Label = "Minimum Seeders", HelpText = "Minimum number of seeders required.", Advanced = true)]
-        public int MinimumSeeders { get; set; }
-
-        [FieldDefinition(6, Type = FieldType.TagSelect, SelectOptions = typeof(IndexerFlags), Label = "Required Flags", HelpText = "What indexer flags are required?", Advanced = true)]
-        public IEnumerable<int> RequiredFlags { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

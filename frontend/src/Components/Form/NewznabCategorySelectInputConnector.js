@@ -30,8 +30,6 @@ function createMapStateToProps() {
         }
       });
 
-      console.log(values);
-
       return {
         value,
         values

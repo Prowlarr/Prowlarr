@@ -47,23 +47,18 @@ namespace NzbDrone.Core.IndexerVersions
 
         public List<CardigannMetaDefinition> All()
         {
-            var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
-            var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
-            var remoteDefs = response.Resource.ToDictionary(x => x.File);
-
-            var startupFolder = _appFolderInfo.StartUpFolder;
-
-            var prefix = Path.Combine(startupFolder, "Definitions");
-
-            var directoryInfos = new List<DirectoryInfo> { new DirectoryInfo(prefix) };
-            var existingDirectories = directoryInfos.Where(d => d.Exists);
-            var files = existingDirectories.SelectMany(d => d.GetFiles("*.yml"));
-
             var indexerList = new List<CardigannMetaDefinition>();
 
-            foreach (var file in files)
+            try
             {
-                indexerList.AddIfNotNull(remoteDefs[Path.GetFileNameWithoutExtension(file.Name)]);
+                var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
+                var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
+                indexerList = response.Resource;
+                indexerList.AddRange(response.Resource);
+            }
+            catch
+            {
+                _logger.Error("Failed to Connect to Indexer Definition Server for Indexer listing");
             }
 
             return indexerList;

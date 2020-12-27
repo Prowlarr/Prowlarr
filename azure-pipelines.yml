@@ -794,32 +794,32 @@ stages:
           summaryFileLocation: './CoverageResults/combined/Cobertura.xml'
           reportDirectory: './CoverageResults/combined/'
 
-#  - stage: Report_Out
-#    dependsOn:
-#    - Analyze
-#    - Unit_Test
-#    - Integration
-#    - Automation
-#    condition: eq(variables['system.pullrequest.isfork'], false)
-#    displayName: Build Status Report
-#    jobs:
-#    - job:
-#      displayName: Discord Notification
-#      pool:
-#        vmImage: 'windows-2019'
-#      steps:
-#        - task: DownloadPipelineArtifact@2
-#          continueOnError: true
-#          displayName: Download Screenshot Artifact
-#          inputs:
-#            buildType: 'current'
-#            artifactName: 'WindowsAutomationScreenshots'
-#            targetPath: $(Build.SourcesDirectory)
-#        - checkout: none
-#        - powershell: |
-#            iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Servarr/AzureDiscordNotify/master/DiscordNotify.ps1'))
-#          env:
-#            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-#            DISCORDCHANNELID: $(discordChannelId)
-#            DISCORDWEBHOOKKEY: $(discordWebhookKey)
+  - stage: Report_Out
+    dependsOn:
+    - Analyze
+    - Unit_Test
+    - Integration
+    - Automation
+    condition: eq(variables['system.pullrequest.isfork'], false)
+    displayName: Build Status Report
+    jobs:
+    - job:
+      displayName: Discord Notification
+      pool:
+        vmImage: 'windows-2019'
+      steps:
+        - task: DownloadPipelineArtifact@2
+          continueOnError: true
+          displayName: Download Screenshot Artifact
+          inputs:
+            buildType: 'current'
+            artifactName: 'WindowsAutomationScreenshots'
+            targetPath: $(Build.SourcesDirectory)
+        - checkout: none
+        - powershell: |
+            iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Servarr/AzureDiscordNotify/master/DiscordNotify.ps1'))
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+            DISCORDCHANNELID: $(discordChannelId)
+            DISCORDWEBHOOKKEY: $(discordWebhookKey)
 

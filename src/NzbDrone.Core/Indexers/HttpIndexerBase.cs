@@ -357,7 +357,7 @@ namespace NzbDrone.Core.Indexers
                     _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
                 };
                 var generator = GetRequestGenerator();
-                var firstRequest = generator.GetSearchRequests(new BasicSearchCriteria()).GetAllTiers().FirstOrDefault()?.FirstOrDefault();
+                var firstRequest = generator.GetSearchRequests(new BasicSearchCriteria { SearchType = "search" }).GetAllTiers().FirstOrDefault()?.FirstOrDefault();
 
                 if (firstRequest == null)
                 {

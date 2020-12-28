@@ -120,12 +120,8 @@ namespace NzbDrone.Core.IndexerVersions
                     }
                 }
             }
-            else
-            {
-                return GetHttpDefinition(fileKey);
-            }
 
-            throw new ArgumentOutOfRangeException(nameof(fileKey));
+            return GetHttpDefinition(fileKey);
         }
 
         public void Execute(IndexerDefinitionUpdateCommand message)

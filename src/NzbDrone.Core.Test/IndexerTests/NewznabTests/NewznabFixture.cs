@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 }, Limit = 100, Offset = 0 });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 }, Limit = 100, Offset = 0 }).Releases;
 
             releases.Should().HaveCount(100);
 

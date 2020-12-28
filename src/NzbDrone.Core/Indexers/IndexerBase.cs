@@ -65,11 +65,11 @@ namespace NzbDrone.Core.Indexers
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
-        public abstract IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
-        public abstract IList<ReleaseInfo> Fetch(MusicSearchCriteria searchCriteria);
-        public abstract IList<ReleaseInfo> Fetch(TvSearchCriteria searchCriteria);
-        public abstract IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria);
-        public abstract IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria);
+        public abstract IndexerPageableQueryResult Fetch(MovieSearchCriteria searchCriteria);
+        public abstract IndexerPageableQueryResult Fetch(MusicSearchCriteria searchCriteria);
+        public abstract IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria);
+        public abstract IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria);
+        public abstract IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria);
 
         public abstract IndexerCapabilities GetCapabilities();
 

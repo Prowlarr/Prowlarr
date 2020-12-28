@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, responseJson));
 
-            var torrents = Subject.Fetch(new MovieSearchCriteria());
+            var torrents = Subject.Fetch(new MovieSearchCriteria()).Releases;
 
             torrents.Should().HaveCount(293);
             torrents.First().Should().BeOfType<PassThePopcornInfo>();

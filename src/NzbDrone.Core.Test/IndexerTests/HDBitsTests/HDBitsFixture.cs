@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), responseJson));
 
-            var torrents = Subject.Fetch(_movieSearchCriteria);
+            var torrents = Subject.Fetch(_movieSearchCriteria).Releases;
 
             torrents.Should().HaveCount(2);
             torrents.First().Should().BeOfType<HDBitsInfo>();
@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
                 .Setup(v => v.Execute(It.IsAny<HttpRequest>()))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), Encoding.UTF8.GetBytes(responseJson)));
 
-            var torrents = Subject.Fetch(_movieSearchCriteria);
+            var torrents = Subject.Fetch(_movieSearchCriteria).Releases;
 
             torrents.Should().BeEmpty();
 

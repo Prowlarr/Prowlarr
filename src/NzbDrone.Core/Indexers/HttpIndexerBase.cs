@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using FluentValidation.Results;
@@ -40,7 +41,7 @@ namespace NzbDrone.Core.Indexers
             _httpClient = httpClient;
         }
 
-        public override IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria)
+        public override IndexerPageableQueryResult Fetch(MovieSearchCriteria searchCriteria)
         {
             //if (!SupportsSearch)
             //{
@@ -49,41 +50,41 @@ namespace NzbDrone.Core.Indexers
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
         }
 
-        public override IList<ReleaseInfo> Fetch(MusicSearchCriteria searchCriteria)
+        public override IndexerPageableQueryResult Fetch(MusicSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
             {
-                return new List<ReleaseInfo>();
+                return new IndexerPageableQueryResult();
             }
 
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
         }
 
-        public override IList<ReleaseInfo> Fetch(TvSearchCriteria searchCriteria)
+        public override IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
             {
-                return new List<ReleaseInfo>();
+                return new IndexerPageableQueryResult();
             }
 
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
         }
 
-        public override IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria)
+        public override IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
             {
-                return new List<ReleaseInfo>();
+                return new IndexerPageableQueryResult();
             }
 
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
         }
 
-        public override IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria)
+        public override IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
             {
-                return new List<ReleaseInfo>();
+                return new IndexerPageableQueryResult();
             }
 
             return FetchReleases(g => g.GetSearchRequests(searchCriteria));
@@ -116,9 +117,10 @@ namespace NzbDrone.Core.Indexers
             return requests;
         }
 
-        protected virtual IList<ReleaseInfo> FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
+        protected virtual IndexerPageableQueryResult FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
         {
             var releases = new List<ReleaseInfo>();
+            var result = new IndexerPageableQueryResult();
             var url = string.Empty;
 
             try
@@ -153,9 +155,11 @@ namespace NzbDrone.Core.Indexers
 
                             var page = FetchPage(request, parser);
 
-                            pagedReleases.AddRange(page);
+                            result.Queries.Add(page);
 
-                            if (isRecent && page.Any())
+                            pagedReleases.AddRange(page.Releases);
+
+                            if (isRecent && page.Releases.Any())
                             {
                                 if (lastReleaseInfo == null)
                                 {
@@ -163,8 +167,8 @@ namespace NzbDrone.Core.Indexers
                                     break;
                                 }
 
-                                var oldestReleaseDate = page.Select(v => v.PublishDate).Min();
-                                if (oldestReleaseDate < lastReleaseInfo.PublishDate || page.Any(v => v.DownloadUrl == lastReleaseInfo.DownloadUrl))
+                                var oldestReleaseDate = page.Releases.Select(v => v.PublishDate).Min();
+                                if (oldestReleaseDate < lastReleaseInfo.PublishDate || page.Releases.Any(v => v.DownloadUrl == lastReleaseInfo.DownloadUrl))
                                 {
                                     fullyUpdated = true;
                                     break;
@@ -182,7 +186,7 @@ namespace NzbDrone.Core.Indexers
                                 break;
                             }
 
-                            if (!IsFullPage(page))
+                            if (!IsFullPage(page.Releases))
                             {
                                 break;
                             }
@@ -289,7 +293,9 @@ namespace NzbDrone.Core.Indexers
                 _logger.Error(ex, "An error occurred while processing indexer feed. {0}", url);
             }
 
-            return CleanupReleases(releases);
+            result.Releases = CleanupReleases(releases);
+
+            return result;
         }
 
         public override IndexerCapabilities GetCapabilities()
@@ -312,13 +318,18 @@ namespace NzbDrone.Core.Indexers
             return PageSize != 0 && page.Count >= PageSize;
         }
 
-        protected virtual IList<ReleaseInfo> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
+        protected virtual IndexerQueryResult FetchPage(IndexerRequest request, IParseIndexerResponse parser)
         {
             var response = FetchIndexerResponse(request);
 
             try
             {
-                return parser.ParseResponse(response).ToList();
+                return new IndexerQueryResult
+                {
+                    Releases = parser.ParseResponse(response).ToList(),
+                    ElapsedTime = response.ElapsedTime,
+                    StatusCode = (int)response.HttpResponse.StatusCode
+                };
             }
             catch (Exception ex)
             {
@@ -339,7 +350,13 @@ namespace NzbDrone.Core.Indexers
 
             request.HttpRequest.AllowAutoRedirect = true;
 
-            return new IndexerResponse(request, _httpClient.Execute(request.HttpRequest));
+            var stopWatch = Stopwatch.StartNew();
+
+            var response = _httpClient.Execute(request.HttpRequest);
+
+            stopWatch.Stop();
+
+            return new IndexerResponse(request, response, stopWatch.ElapsedMilliseconds);
         }
 
         protected override void Test(List<ValidationFailure> failures)
@@ -366,7 +383,7 @@ namespace NzbDrone.Core.Indexers
 
                 var releases = FetchPage(firstRequest, parser);
 
-                if (releases.Empty())
+                if (releases.Releases.Empty())
                 {
                     return new ValidationFailure(string.Empty, "Query successful, but no results were returned from your indexer. This may be an issue with the indexer or your indexer category settings.");
                 }

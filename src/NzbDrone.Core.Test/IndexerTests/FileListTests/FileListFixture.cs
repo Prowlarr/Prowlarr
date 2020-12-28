@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
                 .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(4);
             releases.First().Should().BeOfType<TorrentInfo>();

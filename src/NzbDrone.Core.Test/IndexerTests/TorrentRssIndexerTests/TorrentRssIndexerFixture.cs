@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/ImmortalSeed.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(50);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/Ezrss.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(3);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -99,7 +99,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
 
             GivenRecentFeedResponse("TorrentRss/ShowRSS.info.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
 
             GivenRecentFeedResponse("TorrentRss/Doki.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -153,7 +153,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/ExtraTorrents.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -179,7 +179,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/LimeTorrents.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(5);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -205,7 +205,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/AnimeTosho_NoSize.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(2);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -231,7 +231,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/AnimeTosho_NoSize.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(2);
             releases.Last().Should().BeOfType<TorrentInfo>();
@@ -248,7 +248,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/AlphaRatio.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(2);
             releases.Last().Should().BeOfType<TorrentInfo>();
@@ -266,7 +266,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
             Subject.Definition.Settings.As<TorrentRssIndexerSettings>().AllowZeroSize = true;
             GivenRecentFeedResponse("TorrentRss/EvolutionWorld.xml");
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } });
+            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
             releases.Should().HaveCount(2);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -292,7 +292,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
         {
             GivenRecentFeedResponse("TorrentRss/invalid/TorrentDay_NoPubDate.xml");
 
-            Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Should().BeEmpty();
+            Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases.Should().BeEmpty();
 
             Mocker.GetMock<IIndexerStatusService>()
                   .Verify(v => v.RecordFailure(It.IsAny<int>(), TimeSpan.Zero), Times.Once());

@@ -127,7 +127,7 @@ namespace NzbDrone.Core.IndexerSearch
             return spec;
         }
 
-        private List<ReleaseInfo> Dispatch(Func<IIndexer, IEnumerable<ReleaseInfo>> searchAction, SearchCriteriaBase criteriaBase)
+        private List<ReleaseInfo> Dispatch(Func<IIndexer, IndexerPageableQueryResult> searchAction, SearchCriteriaBase criteriaBase)
         {
             var indexers = criteriaBase.InteractiveSearch ?
                 _indexerFactory.InteractiveSearchEnabled() :
@@ -151,25 +151,25 @@ namespace NzbDrone.Core.IndexerSearch
 
                 taskList.Add(taskFactory.StartNew(() =>
                 {
-                    var sw = Stopwatch.StartNew();
                     try
                     {
                         var indexerReports = searchAction(indexerLocal);
 
                         lock (reports)
                         {
-                            reports.AddRange(indexerReports);
+                            reports.AddRange(indexerReports.Releases);
                         }
 
-                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, sw.ElapsedMilliseconds, true, indexerReports.Count()));
+                        foreach (var query in indexerReports.Queries)
+                        {
+                            _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, true, indexerReports.Releases.Count()));
+                        }
                     }
                     catch (Exception e)
                     {
-                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, sw.ElapsedMilliseconds, false));
+                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, 0, false));
                         _logger.Error(e, "Error while searching for {0}", criteriaBase);
                     }
-
-                    sw.Stop();
                 }).LogExceptions());
             }
 

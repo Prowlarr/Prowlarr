@@ -14,11 +14,11 @@ namespace NzbDrone.Core.Indexers
         DownloadProtocol Protocol { get; }
         IndexerPrivacy Privacy { get; }
 
-        IList<ReleaseInfo> Fetch(MovieSearchCriteria searchCriteria);
-        IList<ReleaseInfo> Fetch(MusicSearchCriteria searchCriteria);
-        IList<ReleaseInfo> Fetch(TvSearchCriteria searchCriteria);
-        IList<ReleaseInfo> Fetch(BookSearchCriteria searchCriteria);
-        IList<ReleaseInfo> Fetch(BasicSearchCriteria searchCriteria);
+        IndexerPageableQueryResult Fetch(MovieSearchCriteria searchCriteria);
+        IndexerPageableQueryResult Fetch(MusicSearchCriteria searchCriteria);
+        IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria);
+        IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria);
+        IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria);
 
         IndexerCapabilities GetCapabilities();
     }

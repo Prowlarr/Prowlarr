@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
+using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -26,6 +27,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         private readonly IHttpClient _httpClient;
         private readonly IAppFolderInfo _appFolderInfo;
+        private readonly IDiskProvider _diskProvider;
         private readonly ICached<CardigannDefinition> _cache;
         private readonly Logger _logger;
 
@@ -36,10 +38,12 @@ namespace NzbDrone.Core.IndexerVersions
 
         public IndexerDefinitionUpdateService(IHttpClient httpClient,
                                           IAppFolderInfo appFolderInfo,
+                                          IDiskProvider diskProvider,
                                           ICacheManager cacheManager,
                                           Logger logger)
         {
             _appFolderInfo = appFolderInfo;
+            _diskProvider = diskProvider;
             _cache = cacheManager.GetCache<CardigannDefinition>(typeof(CardigannDefinition), "definitions");
             _httpClient = httpClient;
             _logger = logger;
@@ -90,6 +94,8 @@ namespace NzbDrone.Core.IndexerVersions
                 throw new ArgumentNullException(nameof(fileKey));
             }
 
+            EnsureDefinitionsFolder();
+
             var definitionFolder = Path.Combine(_appFolderInfo.StartUpFolder, "Definitions");
 
             var directoryInfo = new DirectoryInfo(definitionFolder);
@@ -127,6 +133,13 @@ namespace NzbDrone.Core.IndexerVersions
             UpdateLocalDefinitions();
         }
 
+        private void EnsureDefinitionsFolder()
+        {
+            var definitionFolder = Path.Combine(_appFolderInfo.StartUpFolder, "Definitions");
+
+            _diskProvider.CreateFolder(definitionFolder);
+        }
+
         private void UpdateLocalDefinitions()
         {
             var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
@@ -138,13 +151,15 @@ namespace NzbDrone.Core.IndexerVersions
                 {
                     var startupFolder = _appFolderInfo.StartUpFolder;
 
+                    EnsureDefinitionsFolder();
+
                     var saveFile = Path.Combine(startupFolder, "Definitions", $"{def.File}.yml");
 
                     _httpClient.DownloadFile($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}/{def.File}", saveFile);
 
                     _cache.Remove(def.File);
 
-                    _logger.Info("Updated definition: {0}", def.File);
+                    _logger.Debug("Updated definition: {0}", def.File);
                 }
                 catch (Exception ex)
                 {

@@ -96,7 +96,7 @@ namespace NzbDrone.Core.IndexerVersions
 
             EnsureDefinitionsFolder();
 
-            var definitionFolder = Path.Combine(_appFolderInfo.StartUpFolder, "Definitions");
+            var definitionFolder = Path.Combine(_appFolderInfo.AppDataFolder, "Definitions");
 
             var directoryInfo = new DirectoryInfo(definitionFolder);
 
@@ -135,7 +135,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         private void EnsureDefinitionsFolder()
         {
-            var definitionFolder = Path.Combine(_appFolderInfo.StartUpFolder, "Definitions");
+            var definitionFolder = Path.Combine(_appFolderInfo.AppDataFolder, "Definitions");
 
             _diskProvider.CreateFolder(definitionFolder);
         }
@@ -149,7 +149,7 @@ namespace NzbDrone.Core.IndexerVersions
             {
                 try
                 {
-                    var startupFolder = _appFolderInfo.StartUpFolder;
+                    var startupFolder = _appFolderInfo.AppDataFolder;
 
                     EnsureDefinitionsFolder();
 

@@ -75,7 +75,11 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetRequest(string.Format("{0}", searchCriteria.SearchTerm)));
+
+            return pageableRequests;
         }
     }
 }

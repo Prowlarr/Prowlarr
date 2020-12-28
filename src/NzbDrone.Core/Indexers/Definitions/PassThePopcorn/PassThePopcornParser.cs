@@ -102,7 +102,8 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                             Scene = torrent.Scene,
                             Approved = torrent.Checked,
                             ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
-                            IndexerFlags = flags
+                            IndexerFlags = flags,
+                            Category = new List<IndexerCategory> { NewznabStandardCategory.Movies }
                         });
                     }
                     catch (Exception e)

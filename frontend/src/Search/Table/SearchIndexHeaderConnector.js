@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import { setMovieTableOption } from 'Store/Actions/indexerIndexActions';
+import { setReleasesTableOption } from 'Store/Actions/releaseActions';
 import SearchIndexHeader from './SearchIndexHeader';
 
 function createMapDispatchToProps(dispatch, props) {
   return {
     onTableOptionChange(payload) {
-      dispatch(setMovieTableOption(payload));
+      dispatch(setReleasesTableOption(payload));
     }
   };
 }

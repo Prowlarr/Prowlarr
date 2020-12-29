@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
@@ -127,6 +128,10 @@ namespace NzbDrone.Core.Indexers.Newznab
                         }
                     }
                 }
+                else
+                {
+                    capabilities.SearchParams = new List<SearchParam> { SearchParam.Q };
+                }
 
                 var xmlMovieSearch = xmlSearching.Element("movie-search");
                 if (xmlMovieSearch == null || xmlMovieSearch.Attribute("available").Value != "yes")
@@ -142,6 +147,10 @@ namespace NzbDrone.Core.Indexers.Newznab
                             capabilities.MovieSearchParams.AddIfNotNull(searchParam);
                         }
                     }
+                }
+                else
+                {
+                    capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q };
                 }
 
                 var xmlTvSearch = xmlSearching.Element("tv-search");
@@ -159,6 +168,10 @@ namespace NzbDrone.Core.Indexers.Newznab
                         }
                     }
                 }
+                else
+                {
+                    capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q };
+                }
 
                 var xmlAudioSearch = xmlSearching.Element("audio-search");
                 if (xmlAudioSearch == null || xmlAudioSearch.Attribute("available").Value != "yes")
@@ -175,6 +188,10 @@ namespace NzbDrone.Core.Indexers.Newznab
                         }
                     }
                 }
+                else
+                {
+                    capabilities.MusicSearchParams = new List<MusicSearchParam> { MusicSearchParam.Q };
+                }
 
                 var xmlBookSearch = xmlSearching.Element("book-search");
                 if (xmlBookSearch == null || xmlBookSearch.Attribute("available").Value != "yes")
@@ -190,6 +207,10 @@ namespace NzbDrone.Core.Indexers.Newznab
                             capabilities.BookSearchParams.AddIfNotNull(searchParam);
                         }
                     }
+                }
+                else
+                {
+                    capabilities.BookSearchParams = new List<BookSearchParam> { BookSearchParam.Q };
                 }
             }
 

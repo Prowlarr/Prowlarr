@@ -483,6 +483,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 InfoHash = x.InfoHash,
                 Seeders = (int?)x.Seeders,
                 Peers = (int?)x.Peers,
+                Grabs = (int?)x.Grabs,
+                Files = (int?)x.Files,
                 Category = x.Category
             }));
 

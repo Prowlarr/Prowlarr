@@ -82,6 +82,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             releaseInfo = base.ProcessItem(item, releaseInfo);
             releaseInfo.ImdbId = GetImdbId(item);
+            releaseInfo.Grabs = GetGrabs(item);
+            releaseInfo.Files = GetFiles(item);
 
             return releaseInfo;
         }
@@ -163,6 +165,32 @@ namespace NzbDrone.Core.Indexers.Newznab
             if (!imdbIdString.IsNullOrWhiteSpace() && int.TryParse(imdbIdString, out imdbId))
             {
                 return imdbId;
+            }
+
+            return 0;
+        }
+
+        protected virtual int GetGrabs(XElement item)
+        {
+            var grabsString = TryGetNewznabAttribute(item, "grabs");
+            int grabs;
+
+            if (!grabsString.IsNullOrWhiteSpace() && int.TryParse(grabsString, out grabs))
+            {
+                return grabs;
+            }
+
+            return 0;
+        }
+
+        protected virtual int GetFiles(XElement item)
+        {
+            var filesString = TryGetNewznabAttribute(item, "files");
+            int files;
+
+            if (!filesString.IsNullOrWhiteSpace() && int.TryParse(filesString, out files))
+            {
+                return files;
             }
 
             return 0;

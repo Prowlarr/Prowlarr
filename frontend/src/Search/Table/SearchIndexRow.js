@@ -32,6 +32,8 @@ class SearchIndexRow extends Component {
       infoUrl,
       indexer,
       size,
+      files,
+      grabs,
       seeders,
       leechers,
       indexerFlags,
@@ -113,6 +115,28 @@ class SearchIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   {formatBytes(size)}
+                </VirtualTableRowCell>
+              );
+            }
+
+            if (column.name === 'files') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  {files}
+                </VirtualTableRowCell>
+              );
+            }
+
+            if (column.name === 'grabs') {
+              return (
+                <VirtualTableRowCell
+                  key={column.name}
+                  className={styles[column.name]}
+                >
+                  {grabs}
                 </VirtualTableRowCell>
               );
             }
@@ -218,6 +242,8 @@ SearchIndexRow.propTypes = {
   indexerId: PropTypes.number.isRequired,
   indexer: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired,
+  files: PropTypes.number,
+  grabs: PropTypes.number,
   seeders: PropTypes.number,
   leechers: PropTypes.number,
   indexerFlags: PropTypes.arrayOf(PropTypes.string).isRequired,

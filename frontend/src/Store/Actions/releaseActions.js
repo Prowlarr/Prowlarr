@@ -1,7 +1,5 @@
-import React from 'react';
 import { createAction } from 'redux-actions';
-import Icon from 'Components/Icon';
-import { filterBuilderTypes, filterBuilderValueTypes, icons, sortDirections } from 'Helpers/Props';
+import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import translate from 'Utilities/String/translate';
@@ -61,6 +59,18 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'files',
+      label: translate('Files'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'grabs',
+      label: translate('Grabs'),
+      isSortable: true,
+      isVisible: true
+    },
+    {
       name: 'peers',
       label: translate('Peers'),
       isSortable: true,
@@ -74,7 +84,6 @@ export const defaultState = {
     },
     {
       name: 'indexerFlags',
-      label: React.createElement(Icon, { name: icons.FLAG }),
       columnLabel: 'Indexer Flags',
       isSortable: true,
       isVisible: true
@@ -144,6 +153,16 @@ export const defaultState = {
     {
       name: 'size',
       label: translate('Size'),
+      type: filterBuilderTypes.NUMBER
+    },
+    {
+      name: 'files',
+      label: translate('Files'),
+      type: filterBuilderTypes.NUMBER
+    },
+    {
+      name: 'grabs',
+      label: translate('Grabs'),
       type: filterBuilderTypes.NUMBER
     },
     {

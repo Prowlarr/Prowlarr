@@ -14,6 +14,8 @@ namespace Prowlarr.Api.V1.Search
         public double AgeHours { get; set; }
         public double AgeMinutes { get; set; }
         public long Size { get; set; }
+        public int? Files { get; set; }
+        public int? Grabs { get; set; }
         public int IndexerId { get; set; }
         public string Indexer { get; set; }
         public string SubGroup { get; set; }
@@ -53,6 +55,8 @@ namespace Prowlarr.Api.V1.Search
                 AgeHours = releaseInfo.AgeHours,
                 AgeMinutes = releaseInfo.AgeMinutes,
                 Size = releaseInfo.Size ?? 0,
+                Files = releaseInfo.Files,
+                Grabs = releaseInfo.Grabs,
                 IndexerId = releaseInfo.IndexerId,
                 Indexer = releaseInfo.Indexer,
                 Title = releaseInfo.Title,

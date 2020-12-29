@@ -24,6 +24,8 @@
 
 .age,
 .size,
+.files,
+.grabs,
 .peers {
   composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
 

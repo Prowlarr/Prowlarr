@@ -15,7 +15,9 @@ function HistoryDetails(props) {
   if (eventType === 'indexerQuery') {
     const {
       query,
-      queryResults
+      queryResults,
+      categories,
+      source
     } = data;
 
     return (
@@ -39,6 +41,22 @@ function HistoryDetails(props) {
             <DescriptionListItem
               title={'Query Results'}
               data={queryResults}
+            />
+        }
+
+        {
+          !!data &&
+            <DescriptionListItem
+              title={'Categories'}
+              data={categories}
+            />
+        }
+
+        {
+          !!data &&
+            <DescriptionListItem
+              title={'Source'}
+              data={source}
             />
         }
       </DescriptionList>

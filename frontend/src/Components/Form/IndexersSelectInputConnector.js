@@ -1,7 +1,9 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import titleCase from 'Utilities/String/titleCase';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
@@ -9,11 +11,24 @@ function createMapStateToProps() {
     (state, { value }) => value,
     (state) => state.indexers,
     (value, indexers) => {
-      const values = indexers.items.map(({ id, name }) => {
-        return {
-          key: id,
-          value: name
-        };
+      const values = [];
+      const groupedIndexers = _(indexers.items).groupBy((x) => x.protocol).map((val, key) => ({ protocol: key, indexers: val })).value();
+
+      groupedIndexers.forEach((element) => {
+        values.push({
+          key: element.protocol === 'usenet' ? -1 : -2,
+          value: titleCase(element.protocol)
+        });
+
+        if (element.indexers && element.indexers.length > 0) {
+          element.indexers.forEach((subCat) => {
+            values.push({
+              key: subCat.id,
+              value: subCat.name,
+              parentKey: element.protocol === 'usenet' ? -1 : -2
+            });
+          });
+        }
       });
 
       return {
@@ -27,6 +42,7 @@ function createMapStateToProps() {
 class IndexersSelectInputConnector extends Component {
 
   onChange = ({ name, value }) => {
+    console.log(name, value);
     this.props.onChange({ name, value });
   }
 
@@ -47,7 +63,7 @@ class IndexersSelectInputConnector extends Component {
 IndexersSelectInputConnector.propTypes = {
   name: PropTypes.string.isRequired,
   indexerIds: PropTypes.number,
-  value: PropTypes.arrayOf(PropTypes.number).isRequired,
+  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
   values: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func.isRequired
 };

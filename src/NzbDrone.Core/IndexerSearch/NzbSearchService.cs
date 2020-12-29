@@ -135,7 +135,10 @@ namespace NzbDrone.Core.IndexerSearch
 
             if (criteriaBase.IndexerIds != null && criteriaBase.IndexerIds.Count > 0)
             {
-                indexers = indexers.Where(i => criteriaBase.IndexerIds.Contains(i.Definition.Id)).ToList();
+                indexers = indexers.Where(i => criteriaBase.IndexerIds.Contains(i.Definition.Id) ||
+                    (criteriaBase.IndexerIds.Contains(-1) && i.Protocol == DownloadProtocol.Usenet) ||
+                    (criteriaBase.IndexerIds.Contains(-2) && i.Protocol == DownloadProtocol.Torrent))
+                    .ToList();
             }
 
             var reports = new List<ReleaseInfo>();

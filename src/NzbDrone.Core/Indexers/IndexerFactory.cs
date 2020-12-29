@@ -256,5 +256,18 @@ namespace NzbDrone.Core.Indexers
 
             return base.Create(definition);
         }
+
+        public override void Update(IndexerDefinition definition)
+        {
+            var provider = _providers.First(v => v.GetType().Name == definition.Implementation);
+
+            if (definition.Implementation == typeof(Newznab.Newznab).Name)
+            {
+                var settings = (NewznabSettings)definition.Settings;
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
+            }
+
+            base.Update(definition);
+        }
     }
 }

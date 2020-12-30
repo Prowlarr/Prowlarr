@@ -41,6 +41,10 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         {
             var caps = new IndexerCapabilities
             {
+                SearchParams = new List<SearchParam>
+                {
+                    SearchParam.Q
+                },
                 MovieSearchParams = new List<MovieSearchParam>
                 {
                     MovieSearchParam.Q, MovieSearchParam.ImdbId

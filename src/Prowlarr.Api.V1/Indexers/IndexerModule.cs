@@ -4,6 +4,7 @@ using Nancy.ModelBinding;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
+using NzbDrone.Core.Parser;
 using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1.Indexers
@@ -41,6 +42,7 @@ namespace Prowlarr.Api.V1.Indexers
         private object GetNewznabResponse(NewznabRequest request)
         {
             var requestType = request.t;
+            request.source = UserAgentParser.ParseSource(Request.Headers.UserAgent);
 
             if (requestType.IsNullOrWhiteSpace())
             {

@@ -92,6 +92,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("ElapsedTime", message.Time.ToString());
             history.Data.Add("Query", message.Query.SearchTerm ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
+            history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("QueryResults", message.Results.HasValue ? message.Results.ToString() : null);
 

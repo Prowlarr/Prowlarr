@@ -1,3 +1,4 @@
+using System.Linq;
 using NLog;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
@@ -26,7 +27,7 @@ namespace NzbDrone.Core.Applications
         {
             var appDefinition = (ApplicationDefinition)message.Definition;
 
-            if (message.Definition.Enable)
+            if (appDefinition.Enable)
             {
                 var app = _applicationsFactory.GetInstance(appDefinition);
 
@@ -36,9 +37,9 @@ namespace NzbDrone.Core.Applications
 
         public void HandleAsync(ProviderAddedEvent<IIndexer> message)
         {
-            var enabledApps = _applicationsFactory.GetAvailableProviders();
+            var enabledApps = _applicationsFactory.GetAvailableProviders()
+                                                  .Where(n => ((ApplicationDefinition)n.Definition).Enable);
 
-            // TODO: Only apps with Sync enabled
             foreach (var app in enabledApps)
             {
                 app.AddIndexer((IndexerDefinition)message.Definition);
@@ -47,9 +48,9 @@ namespace NzbDrone.Core.Applications
 
         public void HandleAsync(ProviderDeletedEvent<IIndexer> message)
         {
-            var enabledApps = _applicationsFactory.GetAvailableProviders();
+            var enabledApps = _applicationsFactory.GetAvailableProviders()
+                                                  .Where(n => ((ApplicationDefinition)n.Definition).SyncLevel == ApplicationSyncLevel.FullSync);
 
-            // TODO: Only remove indexers when Sync is Full
             foreach (var app in enabledApps)
             {
                 app.RemoveIndexer(message.ProviderId);
@@ -58,9 +59,9 @@ namespace NzbDrone.Core.Applications
 
         public void HandleAsync(ProviderUpdatedEvent<IIndexer> message)
         {
-            var enabledApps = _applicationsFactory.GetAvailableProviders();
+            var enabledApps = _applicationsFactory.GetAvailableProviders()
+                                                  .Where(n => ((ApplicationDefinition)n.Definition).SyncLevel == ApplicationSyncLevel.FullSync);
 
-            // TODO: Only upate indexers when Sync is Full
             foreach (var app in enabledApps)
             {
                 app.UpdateIndexer((IndexerDefinition)message.Definition);

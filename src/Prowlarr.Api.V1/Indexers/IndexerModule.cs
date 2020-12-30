@@ -62,11 +62,12 @@ namespace Prowlarr.Api.V1.Indexers
                     Response response = indexerInstance.GetCapabilities().ToXml();
                     response.ContentType = "application/rss+xml";
                     return response;
+                case "seach":
                 case "tvsearch":
                 case "music":
                 case "book":
                 case "movie":
-                    Response movieResponse = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false).ToXml();
+                    Response movieResponse = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false).ToXml(indexerInstance.Protocol);
                     movieResponse.ContentType = "application/rss+xml";
                     return movieResponse;
                 default:

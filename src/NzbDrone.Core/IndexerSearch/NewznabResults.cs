@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Linq;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
@@ -13,6 +14,7 @@ namespace NzbDrone.Core.IndexerSearch
     {
         private static readonly XNamespace _AtomNs = "http://www.w3.org/2005/Atom";
         private static readonly XNamespace _TorznabNs = "http://torznab.com/schemas/2015/feed";
+        private static readonly XNamespace _NewznabNs = "http://www.newznab.com/DTD/2010/feeds/attributes/";
 
         // filters control characters but allows only properly-formed surrogate sequences
         // https://stackoverflow.com/a/961504
@@ -40,17 +42,19 @@ namespace NzbDrone.Core.IndexerSearch
             return $"{dt:ddd, dd MMM yyyy HH:mm:ss} " + $"{dt:zzz}".Replace(":", "");
         }
 
-        private static XElement GetTorznabElement(string name, object value)
+        private static XElement GetNabElement(string name, object value, DownloadProtocol protocol)
         {
             if (value == null)
             {
                 return null;
             }
 
-            return new XElement(_TorznabNs + "attr", new XAttribute("name", name), new XAttribute("value", value));
+            var feedNamespace = protocol == DownloadProtocol.Torrent ? _TorznabNs : _NewznabNs;
+
+            return new XElement(feedNamespace + "attr", new XAttribute("name", name), new XAttribute("value", value));
         }
 
-        public string ToXml()
+        public string ToXml(DownloadProtocol protocol)
         {
             // IMPORTANT: We can't use Uri.ToString(), because it generates URLs without URL encode (links with unicode
             // characters are broken). We must use Uri.AbsoluteUri instead that handles encoding correctly
@@ -59,7 +63,9 @@ namespace NzbDrone.Core.IndexerSearch
                 new XElement("rss",
                     new XAttribute("version", "1.0"),
                     new XAttribute(XNamespace.Xmlns + "atom", _AtomNs.NamespaceName),
-                    new XAttribute(XNamespace.Xmlns + "torznab", _TorznabNs.NamespaceName),
+                    protocol == DownloadProtocol.Torrent ?
+                        new XAttribute(XNamespace.Xmlns + "torznab", _TorznabNs.NamespaceName) :
+                        new XAttribute(XNamespace.Xmlns + "newznab", _NewznabNs.NamespaceName),
                     new XElement("channel",
                         new XElement(_AtomNs + "link",
                             new XAttribute("rel", "self"),
@@ -78,15 +84,17 @@ namespace NzbDrone.Core.IndexerSearch
                                 "enclosure",
                                 new XAttribute("url", r.DownloadUrl ?? t.MagnetUrl ?? string.Empty),
                                 r.Size == null ? null : new XAttribute("length", r.Size),
-                                new XAttribute("type", "application/x-bittorrent")),
-                            r.Category == null ? null : from c in r.Category select GetTorznabElement("category", c.Id),
-                            GetTorznabElement("rageid", r.TvRageId),
-                            GetTorznabElement("thetvdb", r.TvdbId),
-                            GetTorznabElement("imdb", r.ImdbId.ToString("D7")),
-                            GetTorznabElement("tmdb", r.TmdbId),
-                            GetTorznabElement("seeders", t.Seeders),
-                            GetTorznabElement("peers", t.Peers),
-                            GetTorznabElement("infohash", RemoveInvalidXMLChars(r.Guid))))));
+                                new XAttribute("type", protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb")),
+                            r.Category == null ? null : from c in r.Category select GetNabElement("category", c.Id, protocol),
+                            GetNabElement("rageid", r.TvRageId, protocol),
+                            GetNabElement("thetvdb", r.TvdbId, protocol),
+                            GetNabElement("imdb", r.ImdbId.ToString("D7"), protocol),
+                            GetNabElement("tmdb", r.TmdbId, protocol),
+                            GetNabElement("seeders", t.Seeders, protocol),
+                            GetNabElement("files", r.Files, protocol),
+                            GetNabElement("grabs", r.Grabs, protocol),
+                            GetNabElement("peers", t.Peers, protocol),
+                            GetNabElement("infohash", RemoveInvalidXMLChars(r.Guid), protocol)))));
 
             return xdoc.Declaration + Environment.NewLine + xdoc;
         }

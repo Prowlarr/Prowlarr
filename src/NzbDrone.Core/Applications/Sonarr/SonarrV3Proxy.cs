@@ -98,6 +98,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             request.Headers.ContentType = "application/json";
 
             request.Method = method;
+            request.AllowAutoRedirect = true;
 
             return request;
         }

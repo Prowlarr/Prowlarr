@@ -35,6 +35,8 @@ function getType({ type, selectOptionsProviderAction }) {
       return inputTypes.TEXT;
     case 'oAuth':
       return inputTypes.OAUTH;
+    case 'info':
+      return inputTypes.INFO;
     default:
       return inputTypes.TEXT;
   }

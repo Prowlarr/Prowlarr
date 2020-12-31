@@ -3,6 +3,7 @@ export const AVAILABILITY_SELECT = 'availabilitySelect';
 export const CAPTCHA = 'captcha';
 export const CHECK = 'check';
 export const DEVICE = 'device';
+export const INFO = 'info';
 export const MOVIE_MONITORED_SELECT = 'movieMonitoredSelect';
 export const NUMBER = 'number';
 export const OAUTH = 'oauth';
@@ -22,6 +23,7 @@ export const all = [
   CAPTCHA,
   CHECK,
   DEVICE,
+  INFO,
   MOVIE_MONITORED_SELECT,
   NUMBER,
   OAUTH,

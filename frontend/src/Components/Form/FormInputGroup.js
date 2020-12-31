@@ -12,6 +12,7 @@ import EnhancedSelectInput from './EnhancedSelectInput';
 import EnhancedSelectInputConnector from './EnhancedSelectInputConnector';
 import FormInputHelpText from './FormInputHelpText';
 import IndexerFlagsSelectInputConnector from './IndexerFlagsSelectInputConnector';
+import InfoInput from './InfoInput';
 import KeyValueListInput from './KeyValueListInput';
 import MovieMonitoredSelectInput from './MovieMonitoredSelectInput';
 import NumberInput from './NumberInput';
@@ -41,6 +42,9 @@ function getComponent(type) {
 
     case inputTypes.DEVICE:
       return DeviceInputConnector;
+
+    case inputTypes.INFO:
+      return InfoInput;
 
     case inputTypes.KEY_VALUE_LIST:
       return KeyValueListInput;

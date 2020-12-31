@@ -240,6 +240,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     variables[name] = selected.Value;
                 }
+                else if (setting.Type == "info")
+                {
+                    variables[name] = value;
+                }
                 else
                 {
                     throw new NotSupportedException();

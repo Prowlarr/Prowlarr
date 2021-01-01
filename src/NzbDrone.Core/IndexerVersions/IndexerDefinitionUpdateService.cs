@@ -58,7 +58,6 @@ namespace NzbDrone.Core.IndexerVersions
                 var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
                 var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
                 indexerList = response.Resource;
-                indexerList.AddRange(response.Resource);
             }
             catch
             {

@@ -26,7 +26,7 @@ const links = [
     children: [
       {
         title: translate('Stats'),
-        to: '/indexer/stats'
+        to: '/indexers/stats'
       }
     ]
   },

@@ -8,6 +8,7 @@ namespace Prowlarr.Api.V1.Indexers
     public class IndexerStatsResource : RestResource
     {
         public int IndexerId { get; set; }
+        public string IndexerName { get; set; }
         public int NumberOfQueries { get; set; }
         public int AverageResponseTime { get; set; }
     }
@@ -24,6 +25,7 @@ namespace Prowlarr.Api.V1.Indexers
             return new IndexerStatsResource
             {
                 IndexerId = model.IndexerId,
+                IndexerName = model.IndexerName,
                 NumberOfQueries = model.NumberOfQueries,
                 AverageResponseTime = model.AverageResponseTime
             };

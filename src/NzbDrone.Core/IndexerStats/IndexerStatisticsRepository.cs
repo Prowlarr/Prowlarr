@@ -47,6 +47,7 @@ namespace NzbDrone.Core.IndexerStats
 
         private SqlBuilder Builder() => new SqlBuilder()
             .Select(@"Indexers.Id AS IndexerId,
+                     Indexers.Name AS IndexerName,
                      COUNT(History.Id) AS NumberOfQueries,
                      AVG(json_extract(History.Data,'$.elapsedTime')) AS AverageResponseTime")
             .Join<History.History, IndexerDefinition>((t, r) => t.IndexerId == r.Id)

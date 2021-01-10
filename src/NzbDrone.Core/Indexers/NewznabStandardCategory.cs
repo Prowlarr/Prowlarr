@@ -5,6 +5,10 @@ namespace NzbDrone.Core.Indexers
 {
     public static class NewznabStandardCategory
     {
+        public static readonly IndexerCategory ZedOther = new IndexerCategory(0000, "Other");
+        public static readonly IndexerCategory ZedOtherMisc = new IndexerCategory(0010, "Other/Misc");
+        public static readonly IndexerCategory ZedOtherHashed = new IndexerCategory(0020, "Other/Hashed");
+
         public static readonly IndexerCategory Console = new IndexerCategory(1000, "Console");
         public static readonly IndexerCategory ConsoleNDS = new IndexerCategory(1010, "Console/NDS");
         public static readonly IndexerCategory ConsolePSP = new IndexerCategory(1020, "Console/PSP");
@@ -86,6 +90,7 @@ namespace NzbDrone.Core.Indexers
 
         public static readonly IndexerCategory[] ParentCats =
         {
+            ZedOther,
             Console,
             Movies,
             Audio,
@@ -98,6 +103,9 @@ namespace NzbDrone.Core.Indexers
 
         public static readonly IndexerCategory[] AllCats =
         {
+            ZedOther,
+            ZedOtherHashed,
+            ZedOtherMisc,
             Console,
             ConsoleNDS,
             ConsolePSP,
@@ -173,6 +181,7 @@ namespace NzbDrone.Core.Indexers
 
         static NewznabStandardCategory()
         {
+            ZedOther.SubCategories.AddRange(new List<IndexerCategory> { ZedOtherMisc, ZedOtherHashed });
             Console.SubCategories.AddRange(
                 new List<IndexerCategory>
                 {

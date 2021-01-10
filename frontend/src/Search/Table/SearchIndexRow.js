@@ -30,6 +30,7 @@ class SearchIndexRow extends Component {
       publishDate,
       title,
       infoUrl,
+      downloadUrl,
       indexer,
       size,
       files,
@@ -214,8 +215,9 @@ class SearchIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   <IconButton
-                    name={icons.EXTERNAL_LINK}
-                    title={'Website'}
+                    name={icons.DOWNLOAD}
+                    title={'Grab'}
+                    to={downloadUrl}
                   />
                 </VirtualTableRowCell>
               );
@@ -239,6 +241,7 @@ SearchIndexRow.propTypes = {
   publishDate: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   infoUrl: PropTypes.string.isRequired,
+  downloadUrl: PropTypes.string.isRequired,
   indexerId: PropTypes.number.isRequired,
   indexer: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired,

@@ -69,9 +69,9 @@ namespace Prowlarr.Api.V1.Indexers
                 case "music":
                 case "book":
                 case "movie":
-                    Response movieResponse = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false).ToXml(indexerInstance.Protocol);
-                    movieResponse.ContentType = "application/rss+xml";
-                    return movieResponse;
+                    Response searchResponse = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false).ToXml(indexerInstance.Protocol);
+                    searchResponse.ContentType = "application/rss+xml";
+                    return searchResponse;
                 default:
                     throw new BadRequestException("Function Not Available");
             }

@@ -51,7 +51,7 @@ namespace Prowlarr.Api.V1.Search
         {
             try
             {
-                var decisions = _nzbSearhService.Search(new NewznabRequest { q = query, t = "search", cat = string.Join(",", categories) }, indexerIds, true).Releases;
+                var decisions = _nzbSearhService.Search(new NewznabRequest { q = query, source = "Prowlarr", t = "search", cat = string.Join(",", categories) }, indexerIds, true).Releases;
 
                 return MapDecisions(decisions);
             }

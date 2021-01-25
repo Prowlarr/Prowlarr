@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Test.UpdateTests
         {
             const string branch = "develop";
             UseRealHttp();
-            var recent = Subject.GetRecentUpdates(branch, new Version(2, 0));
+            var recent = Subject.GetRecentUpdates(branch, new Version(2, 0), null);
             var recentWithChanges = recent.Where(c => c.Changes != null);
 
             recent.Should().NotBeEmpty();

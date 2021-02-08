@@ -3,7 +3,7 @@ import React from 'react';
 import Label from 'Components/Label';
 
 function CategoryLabel({ categories }) {
-  const sortedCategories = categories.sort((c) => c.id);
+  const sortedCategories = categories.filter((cat) => cat.name !== undefined).sort((c) => c.id);
 
   return (
     <span>

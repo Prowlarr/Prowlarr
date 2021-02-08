@@ -22,7 +22,6 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         public TorrentPotatoSettings()
         {
             BaseUrl = "http://127.0.0.1";
-            MultiLanguages = new List<int>();
         }
 
         [FieldDefinition(0, Label = "API URL", HelpText = "URL to TorrentPotato api.")]
@@ -33,9 +32,6 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
 
         [FieldDefinition(2, Label = "Passkey", HelpText = "The password you use at your Indexer.", Privacy = PrivacyLevel.Password)]
         public string Passkey { get; set; }
-
-        [FieldDefinition(3, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
-        public IEnumerable<int> MultiLanguages { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

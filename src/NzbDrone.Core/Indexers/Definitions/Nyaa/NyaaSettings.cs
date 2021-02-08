@@ -25,16 +25,12 @@ namespace NzbDrone.Core.Indexers.Nyaa
         {
             BaseUrl = "";
             AdditionalParameters = "";
-            MultiLanguages = new List<int>();
         }
 
         [FieldDefinition(0, Label = "Website URL")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
-        public IEnumerable<int> MultiLanguages { get; set; }
-
-        [FieldDefinition(2, Label = "Additional Parameters", Advanced = true, HelpText = "Please note if you change the category you will have to add required/restricted rules about the subgroups to avoid foreign language releases.")]
+        [FieldDefinition(1, Label = "Additional Parameters", Advanced = true, HelpText = "Please note if you change the category you will have to add required/restricted rules about the subgroups to avoid foreign language releases.")]
         public string AdditionalParameters { get; set; }
 
         public NzbDroneValidationResult Validate()

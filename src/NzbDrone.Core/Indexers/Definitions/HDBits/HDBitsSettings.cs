@@ -25,14 +25,10 @@ namespace NzbDrone.Core.Indexers.HDBits
             BaseUrl = "https://hdbits.org";
             Codecs = System.Array.Empty<int>();
             Mediums = System.Array.Empty<int>();
-            MultiLanguages = new List<int>();
         }
 
         [FieldDefinition(0, Label = "Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
-
-        [FieldDefinition(1, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
-        public IEnumerable<int> MultiLanguages { get; set; }
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }

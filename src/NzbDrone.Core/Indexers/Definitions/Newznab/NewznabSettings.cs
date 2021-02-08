@@ -51,7 +51,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         public NewznabSettings()
         {
             ApiPath = "/api";
-            MultiLanguages = new List<int>();
         }
 
         [FieldDefinition(0, Label = "URL")]
@@ -60,21 +59,11 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(1, Label = "API Path", HelpText = "Path to the api, usually /api", Advanced = true)]
         public string ApiPath { get; set; }
 
-        [FieldDefinition(1, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
-        public IEnumerable<int> MultiLanguages { get; set; }
-
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         [FieldDefinition(5, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]
         public string AdditionalParameters { get; set; }
-
-        [FieldDefinition(6,
-            Label = "Remove year from search string",
-            HelpText = "Should Prowlarr remove the year after the title when searching this indexer?",
-            Advanced = true,
-            Type = FieldType.Checkbox)]
-        public bool RemoveYear { get; set; }
 
         public List<IndexerCategory> Categories { get; set; }
 

@@ -20,7 +20,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public CardigannSettings()
         {
-            MultiLanguages = new List<int>();
             ExtraFieldData = new Dictionary<string, object>();
         }
 
@@ -30,9 +29,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Dictionary<string, object> ExtraFieldData { get; set; }
 
         public string BaseUrl { get; set; }
-
-        [FieldDefinition(1000, Type = FieldType.Select, SelectOptions = typeof(LanguageFieldConverter), Label = "Multi Languages", HelpText = "What languages are normally in a multi release on this indexer?", Advanced = true)]
-        public IEnumerable<int> MultiLanguages { get; set; }
 
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment

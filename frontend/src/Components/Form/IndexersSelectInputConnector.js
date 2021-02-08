@@ -42,7 +42,6 @@ function createMapStateToProps() {
 class IndexersSelectInputConnector extends Component {
 
   onChange = ({ name, value }) => {
-    console.log(name, value);
     this.props.onChange({ name, value });
   }
 

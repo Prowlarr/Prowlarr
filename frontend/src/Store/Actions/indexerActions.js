@@ -99,16 +99,12 @@ function applySchemaDefaults(selectedSchema, schemaDefaults) {
 function selectSchema(state, payload, schemaDefaults) {
   const newState = getSectionState(state, section);
 
-  console.log(payload);
-
   const {
     implementation,
     name
   } = payload;
 
   const selectedImplementation = _.find(newState.schema, { implementation, name });
-
-  console.log(selectedImplementation);
 
   newState.selectedSchema = applySchemaDefaults(_.cloneDeep(selectedImplementation), schemaDefaults);
 

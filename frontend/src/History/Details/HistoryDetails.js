@@ -25,7 +25,7 @@ function HistoryDetails(props) {
         <DescriptionListItem
           descriptionClassName={styles.description}
           title={translate('Query')}
-          data={query}
+          data={query ? query : '-'}
         />
 
         {
@@ -40,7 +40,7 @@ function HistoryDetails(props) {
           !!data &&
             <DescriptionListItem
               title={'Query Results'}
-              data={queryResults}
+              data={queryResults ? queryResults : '-'}
             />
         }
 
@@ -48,7 +48,7 @@ function HistoryDetails(props) {
           !!data &&
             <DescriptionListItem
               title={'Categories'}
-              data={categories}
+              data={categories ? categories : '-'}
             />
         }
 

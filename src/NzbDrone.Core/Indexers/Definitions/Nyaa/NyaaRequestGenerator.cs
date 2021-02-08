@@ -34,11 +34,6 @@ namespace NzbDrone.Core.Indexers.Nyaa
             else
             {
                 yield return new IndexerRequest(baseUrl, HttpAccept.Rss);
-
-                for (var page = 1; page < maxPages; page++)
-                {
-                    yield return new IndexerRequest($"{baseUrl}&offset={page + 1}", HttpAccept.Rss);
-                }
             }
         }
 

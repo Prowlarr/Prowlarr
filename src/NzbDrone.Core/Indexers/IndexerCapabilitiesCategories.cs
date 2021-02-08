@@ -77,26 +77,28 @@ namespace NzbDrone.Core.Indexers
             AddTorznabCategoryTree(customCat);
         }
 
-        //public List<string> MapTorznabCapsToTrackers(TorznabQuery query, bool mapChildrenCatsToParent = false)
-        //{
-        //    var expandedQueryCats = ExpandTorznabQueryCategories(query, mapChildrenCatsToParent);
-        //    var result = _categoryMapping
-        //        .Where(c => expandedQueryCats.Contains(c.NewzNabCategory))
-        //        .Select(mapping => mapping.TrackerCategory).Distinct().ToList();
-        //    return result;
-        //}
-        public ICollection<int> MapTrackerCatToNewznab(string trackerCategory)
+        public List<string> MapTorznabCapsToTrackers(int[] queryCategories, bool mapChildrenCatsToParent = false)
         {
-            if (string.IsNullOrWhiteSpace(trackerCategory))
+            var expandedQueryCats = ExpandTorznabQueryCategories(queryCategories, mapChildrenCatsToParent);
+            var result = _categoryMapping
+                .Where(c => expandedQueryCats.Contains(c.NewzNabCategory))
+                .Select(mapping => mapping.TrackerCategory).Distinct().ToList();
+            return result;
+        }
+
+        public ICollection<IndexerCategory> MapTrackerCatToNewznab(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
             {
-                return new List<int>();
+                return new List<IndexerCategory>();
             }
 
             var cats = _categoryMapping
                        .Where(m =>
                            !string.IsNullOrWhiteSpace(m.TrackerCategory) &&
-                           string.Equals(m.TrackerCategory, trackerCategory, StringComparison.InvariantCultureIgnoreCase))
-                       .Select(c => c.NewzNabCategory).ToList();
+                           string.Equals(m.TrackerCategory, input, StringComparison.InvariantCultureIgnoreCase))
+                       .Select(c => NewznabStandardCategory.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
+                       .ToList();
             return cats;
         }
 
@@ -134,37 +136,44 @@ namespace NzbDrone.Core.Indexers
             rhs.GetTorznabCategoryList().Where(x => x.Id < 100000).ToList().ForEach(AddTorznabCategoryTree);
         }
 
-        //public List<int> ExpandTorznabQueryCategories(TorznabQuery query, bool mapChildrenCatsToParent = false)
-        //{
-        //    var expandedQueryCats = new List<int>();
-        //    foreach (var queryCategory in query.Categories)
-        //    {
-        //        expandedQueryCats.Add(queryCategory);
-        //        if (queryCategory >= 100000)
-        //        {
-        //            continue;
-        //        }
+        public List<int> ExpandTorznabQueryCategories(int[] queryCategories, bool mapChildrenCatsToParent = false)
+        {
+            var expandedQueryCats = new List<int>();
 
-        //        var parentCat = _torznabCategoryTree.FirstOrDefault(c => c.Id == queryCategory);
-        //        if (parentCat != null)
-        //        {
-        //            // if it's parent cat we add all the children
-        //            expandedQueryCats.AddRange(parentCat.SubCategories.Select(c => c.Id));
-        //        }
-        //        else if (mapChildrenCatsToParent)
-        //        {
-        //            // if it's child cat and mapChildrenCatsToParent is enabled we add the parent
-        //            var queryCategoryTorznab = new IndexerCategory(queryCategory, "");
-        //            parentCat = _torznabCategoryTree.FirstOrDefault(c => c.Contains(queryCategoryTorznab));
-        //            if (parentCat != null)
-        //            {
-        //                expandedQueryCats.Add(parentCat.Id);
-        //            }
-        //        }
-        //    }
+            if (queryCategories == null)
+            {
+                return expandedQueryCats;
+            }
 
-        //    return expandedQueryCats.Distinct().ToList();
-        //}
+            foreach (var queryCategory in queryCategories)
+            {
+                expandedQueryCats.Add(queryCategory);
+                if (queryCategory >= 100000)
+                {
+                    continue;
+                }
+
+                var parentCat = _torznabCategoryTree.FirstOrDefault(c => c.Id == queryCategory);
+                if (parentCat != null)
+                {
+                    // if it's parent cat we add all the children
+                    expandedQueryCats.AddRange(parentCat.SubCategories.Select(c => c.Id));
+                }
+                else if (mapChildrenCatsToParent)
+                {
+                    // if it's child cat and mapChildrenCatsToParent is enabled we add the parent
+                    var queryCategoryTorznab = new IndexerCategory(queryCategory, "");
+                    parentCat = _torznabCategoryTree.FirstOrDefault(c => c.Contains(queryCategoryTorznab));
+                    if (parentCat != null)
+                    {
+                        expandedQueryCats.Add(parentCat.Id);
+                    }
+                }
+            }
+
+            return expandedQueryCats.Distinct().ToList();
+        }
+
         private void AddTorznabCategoryTree(IndexerCategory torznabCategory)
         {
             // build the category tree

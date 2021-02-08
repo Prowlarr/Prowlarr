@@ -1,0 +1,293 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using FluentValidation;
+using Newtonsoft.Json;
+using NLog;
+using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
+using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Validation;
+
+namespace NzbDrone.Core.Indexers.Definitions
+{
+    public class DigitalCore : HttpIndexerBase<DigitalCoreSettings>
+    {
+        public override string Name => "DigitalCore";
+        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override IndexerCapabilities Capabilities => SetCapabilities();
+
+        public DigitalCore(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, indexerStatusService, configService, logger)
+        {
+        }
+
+        public override IIndexerRequestGenerator GetRequestGenerator()
+        {
+            return new DigitalCoreRequestGenerator() { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities };
+        }
+
+        public override IParseIndexerResponse GetParser()
+        {
+            return new DigitalCoreParser(Settings, Capabilities.Categories);
+        }
+
+        private IndexerCapabilities SetCapabilities()
+        {
+            var caps = new IndexerCapabilities
+            {
+                TvSearchParams = new List<TvSearchParam>
+                                   {
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                                   },
+                MovieSearchParams = new List<MovieSearchParam>
+                                   {
+                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
+                                   },
+                MusicSearchParams = new List<MusicSearchParam>
+                                   {
+                                       MusicSearchParam.Q
+                                   },
+                BookSearchParams = new List<BookSearchParam>
+                                   {
+                                       BookSearchParam.Q
+                                   }
+            };
+
+            caps.Categories.AddCategoryMapping(1.ToString(), NewznabStandardCategory.MoviesDVD, "Movies/DVDR");
+            caps.Categories.AddCategoryMapping(2.ToString(), NewznabStandardCategory.MoviesSD, "Movies/SD");
+            caps.Categories.AddCategoryMapping(3.ToString(), NewznabStandardCategory.MoviesBluRay, "Movies/BluRay");
+            caps.Categories.AddCategoryMapping(4.ToString(), NewznabStandardCategory.MoviesUHD, "Movies/4K");
+            caps.Categories.AddCategoryMapping(5.ToString(), NewznabStandardCategory.MoviesHD, "Movies/720p");
+            caps.Categories.AddCategoryMapping(6.ToString(), NewznabStandardCategory.MoviesHD, "Movies/1080p");
+            caps.Categories.AddCategoryMapping(7.ToString(), NewznabStandardCategory.MoviesHD, "Movies/PACKS");
+
+            caps.Categories.AddCategoryMapping(8.ToString(), NewznabStandardCategory.TVHD, "TV/720p");
+            caps.Categories.AddCategoryMapping(9.ToString(), NewznabStandardCategory.TVHD, "TV/1080p");
+            caps.Categories.AddCategoryMapping(10.ToString(), NewznabStandardCategory.TVSD, "TV/SD");
+            caps.Categories.AddCategoryMapping(11.ToString(), NewznabStandardCategory.TVSD, "TV/DVDR");
+            caps.Categories.AddCategoryMapping(12.ToString(), NewznabStandardCategory.TVHD, "TV/PACKS");
+            caps.Categories.AddCategoryMapping(13.ToString(), NewznabStandardCategory.TVUHD, "TV/4K");
+            caps.Categories.AddCategoryMapping(14.ToString(), NewznabStandardCategory.TVHD, "TV/BluRay");
+
+            caps.Categories.AddCategoryMapping(17.ToString(), NewznabStandardCategory.Other, "Unknown");
+            caps.Categories.AddCategoryMapping(18.ToString(), NewznabStandardCategory.PC0day, "Apps/0day");
+            caps.Categories.AddCategoryMapping(20.ToString(), NewznabStandardCategory.PCISO, "Apps/PC");
+            caps.Categories.AddCategoryMapping(21.ToString(), NewznabStandardCategory.PCMac, "Apps/Mac");
+            caps.Categories.AddCategoryMapping(33.ToString(), NewznabStandardCategory.PC, "Apps/Tutorials");
+
+            caps.Categories.AddCategoryMapping(22.ToString(), NewznabStandardCategory.AudioMP3, "Music/MP3");
+            caps.Categories.AddCategoryMapping(23.ToString(), NewznabStandardCategory.AudioLossless, "Music/FLAC");
+            caps.Categories.AddCategoryMapping(24.ToString(), NewznabStandardCategory.Audio, "Music/MTV");
+            caps.Categories.AddCategoryMapping(29.ToString(), NewznabStandardCategory.Audio, "Music/PACKS");
+
+            caps.Categories.AddCategoryMapping(25.ToString(), NewznabStandardCategory.PCGames, "Games/PC");
+            caps.Categories.AddCategoryMapping(26.ToString(), NewznabStandardCategory.Console, "Games/NSW");
+            caps.Categories.AddCategoryMapping(27.ToString(), NewznabStandardCategory.PCMac, "Games/Mac");
+
+            caps.Categories.AddCategoryMapping(28.ToString(), NewznabStandardCategory.Books, "Ebooks");
+
+            caps.Categories.AddCategoryMapping(30.ToString(), NewznabStandardCategory.XXXSD, "XXX/SD");
+            caps.Categories.AddCategoryMapping(31.ToString(), NewznabStandardCategory.XXX, "XXX/HD");
+            caps.Categories.AddCategoryMapping(32.ToString(), NewznabStandardCategory.XXXUHD, "XXX/4K");
+            caps.Categories.AddCategoryMapping(35.ToString(), NewznabStandardCategory.XXXSD, "XXX/Movies/SD");
+            caps.Categories.AddCategoryMapping(36.ToString(), NewznabStandardCategory.XXX, "XXX/Movies/HD");
+            caps.Categories.AddCategoryMapping(37.ToString(), NewznabStandardCategory.XXXUHD, "XXX/Movies/4K");
+            caps.Categories.AddCategoryMapping(34.ToString(), NewznabStandardCategory.XXXImageSet, "XXX/Imagesets");
+
+            return caps;
+        }
+    }
+
+    public class DigitalCoreRequestGenerator : IIndexerRequestGenerator
+    {
+        public DigitalCoreSettings Settings { get; set; }
+        public IndexerCapabilities Capabilities { get; set; }
+
+        public int MaxPages { get; set; }
+        public int PageSize { get; set; }
+
+        public DigitalCoreRequestGenerator()
+        {
+            MaxPages = 30;
+            PageSize = 100;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        {
+            var baseUrl = string.Format("{0}/api/v1/torrents?extendedSearch=false", Settings.BaseUrl.TrimEnd('/'));
+
+            var parameters = string.Empty;
+
+            parameters += "&freeleech=false";
+            parameters += "&index=0";
+            parameters += "&limit=100";
+            parameters += "&order=desc";
+            parameters += "&page=search";
+            parameters += string.Format("&searchText={0}", term);
+
+            parameters += "&sort=d";
+            parameters += "&section=all";
+            parameters += "&stereoscopic=false";
+            parameters += "&watchview=false";
+
+            var searchUrl = baseUrl + parameters;
+
+            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
+            {
+                searchUrl += "&categories[]=" + cat;
+            }
+
+            var request = new IndexerRequest(searchUrl, HttpAccept.Rss);
+            request.HttpRequest.Cookies.Add("uid", Settings.UId);
+            request.HttpRequest.Cookies.Add("pass", Settings.Passphrase);
+
+            yield return request;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories));
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories));
+
+            return pageableRequests;
+        }
+
+        public Func<IDictionary<string, string>> GetCookies { get; set; }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class DigitalCoreParser : IParseIndexerResponse
+    {
+        private readonly DigitalCoreSettings _settings;
+        private readonly IndexerCapabilitiesCategories _categories;
+
+        public DigitalCoreParser(DigitalCoreSettings settings, IndexerCapabilitiesCategories categories)
+        {
+            _settings = settings;
+            _categories = categories;
+        }
+
+        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        {
+            var torrentInfos = new List<ReleaseInfo>();
+
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new IndexerException(indexerResponse,
+                    "Unexpected response status {0} code from API request",
+                    indexerResponse.HttpResponse.StatusCode);
+            }
+
+            try
+            {
+                //var json = JArray.Parse(results.Content);
+                var json = JsonConvert.DeserializeObject<dynamic>(indexerResponse.Content);
+
+                foreach (var row in json ?? Enumerable.Empty<dynamic>())
+                {
+                    var release = new TorrentInfo();
+                    var descriptions = new List<string>();
+                    var tags = new List<string>();
+
+                    release.Title = row.name;
+                    release.Category = _categories.MapTrackerCatToNewznab(row.category.ToString());
+                    release.Size = row.size;
+                    release.Seeders = row.seeders;
+                    release.Peers = row.leechers + release.Seeders;
+                    release.PublishDate = DateTime.ParseExact(row.added.ToString() + " +01:00", "yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture);
+                    release.Files = row.numfiles;
+                    release.Grabs = row.times_completed;
+
+                    release.Guid = new Uri(_settings.BaseUrl + "torrent/" + row.id.ToString() + "/").ToString();
+                    release.DownloadUrl = _settings.BaseUrl + "api/v1/torrents/download/" + row.id.ToString();
+
+                    if (row.imdbid2 != null && row.imdbid2.ToString().StartsWith("tt"))
+                    {
+                        if (int.TryParse((string)row.imdbid2, out int imdbNumber))
+                        {
+                            release.ImdbId = imdbNumber;
+                        }
+                    }
+
+                    torrentInfos.Add(release);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new IndexerException(indexerResponse,
+                    "Unable to parse response from DigitalCore: {0}",
+                    ex.Message);
+            }
+
+            return torrentInfos.ToArray();
+        }
+
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class DigitalCoreSettingsValidator : AbstractValidator<DigitalCoreSettings>
+    {
+        public DigitalCoreSettingsValidator()
+        {
+            RuleFor(c => c.UId).NotEmpty();
+            RuleFor(c => c.Passphrase).NotEmpty();
+        }
+    }
+
+    public class DigitalCoreSettings : IIndexerSettings
+    {
+        private static readonly DigitalCoreSettingsValidator Validator = new DigitalCoreSettingsValidator();
+
+        public DigitalCoreSettings()
+        {
+            BaseUrl = "https://digitalcore.club/";
+            UId = "";
+            Passphrase = "";
+        }
+
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(1, Label = "UID", Advanced = true, HelpText = "Uid from login cookie")]
+        public string UId { get; set; }
+
+        [FieldDefinition(2, Label = "Passphrase", Advanced = true, HelpText = "Pass from login cookie")]
+        public string Passphrase { get; set; }
+
+        public NzbDroneValidationResult Validate()
+        {
+            return new NzbDroneValidationResult(Validator.Validate(this));
+        }
+    }
+}

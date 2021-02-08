@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Nyaa

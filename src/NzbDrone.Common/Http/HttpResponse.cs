@@ -11,18 +11,20 @@ namespace NzbDrone.Common.Http
     {
         private static readonly Regex RegexSetCookie = new Regex("^(.*?)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, byte[] binaryData, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             Request = request;
             Headers = headers;
+            Cookies = cookies;
             ResponseData = binaryData;
             StatusCode = statusCode;
         }
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, string content, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, string content, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             Request = request;
             Headers = headers;
+            Cookies = cookies;
             ResponseData = Headers.GetEncodingFromContentType().GetBytes(content);
             _content = content;
             StatusCode = statusCode;
@@ -30,6 +32,7 @@ namespace NzbDrone.Common.Http
 
         public HttpRequest Request { get; private set; }
         public HttpHeader Headers { get; private set; }
+        public CookieCollection Cookies { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
         public byte[] ResponseData { get; private set; }
 
@@ -65,14 +68,9 @@ namespace NzbDrone.Common.Http
         {
             var result = new Dictionary<string, string>();
 
-            var setCookieHeaders = GetCookieHeaders();
-            foreach (var cookie in setCookieHeaders)
+            foreach (Cookie cookie in Cookies)
             {
-                var match = RegexSetCookie.Match(cookie);
-                if (match.Success)
-                {
-                    result[match.Groups[1].Value] = match.Groups[2].Value;
-                }
+                result[cookie.Name] = cookie.Value;
             }
 
             return result;
@@ -95,7 +93,7 @@ namespace NzbDrone.Common.Http
         where T : new()
     {
         public HttpResponse(HttpResponse response)
-            : base(response.Request, response.Headers, response.ResponseData, response.StatusCode)
+            : base(response.Request, response.Headers, response.Cookies, response.ResponseData, response.StatusCode)
         {
             Resource = Json.Deserialize<T>(response.Content);
         }

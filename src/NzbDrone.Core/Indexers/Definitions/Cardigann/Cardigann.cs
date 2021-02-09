@@ -24,7 +24,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             return new CardigannRequestGenerator(_definitionService.GetDefinition(Settings.DefinitionFile),
                                                  Settings,
-                                                 _logger);
+                                                 _logger)
+            {
+                HttpClient = _httpClient
+            };
         }
 
         public override IParseIndexerResponse GetParser()

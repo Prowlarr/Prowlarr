@@ -35,20 +35,16 @@ namespace Prowlarr.Api.V1.Indexers
 
             if (definition.Implementation == typeof(Cardigann).Name)
             {
-                Console.WriteLine("mapping cardigann def");
-
                 var extraFields = definition.ExtraFields?.Select((x, i) => MapField(x, i)).ToList() ?? new List<Field>();
 
                 resource.Fields.AddRange(extraFields);
 
                 var settings = (CardigannSettings)definition.Settings;
-                Console.WriteLine($"Got {settings.ExtraFieldData.Count} fields");
                 foreach (var setting in settings.ExtraFieldData)
                 {
                     var field = extraFields.FirstOrDefault(x => x.Name == setting.Key);
                     if (field != null)
                     {
-                        Console.WriteLine($"setting {setting.Key} to {setting.Value}");
                         field.Value = setting.Value;
                     }
                 }
@@ -79,8 +75,6 @@ namespace Prowlarr.Api.V1.Indexers
 
             if (resource.Implementation == typeof(Cardigann).Name)
             {
-                Console.WriteLine("mapping cardigann resource");
-
                 var standardFields = base.ToResource(definition).Fields.Select(x => x.Name).ToList();
 
                 var settings = (CardigannSettings)definition.Settings;
@@ -105,7 +99,6 @@ namespace Prowlarr.Api.V1.Indexers
 
         private Field MapField(SettingsField fieldAttribute, int order)
         {
-            Console.WriteLine($"Adding field {fieldAttribute.Name}");
             var field = new Field
             {
                 Name = fieldAttribute.Name,

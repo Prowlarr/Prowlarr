@@ -143,7 +143,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 }
             }
 
-            return new HttpResponse(request, new HttpHeader(httpWebResponse.Headers), data, httpWebResponse.StatusCode);
+            return new HttpResponse(request, new HttpHeader(httpWebResponse.Headers), httpWebResponse.Cookies, data, httpWebResponse.StatusCode);
         }
 
         public void DownloadFile(string url, string fileName)

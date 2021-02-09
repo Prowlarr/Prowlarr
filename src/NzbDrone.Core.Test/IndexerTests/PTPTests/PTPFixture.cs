@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -36,11 +37,11 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
 
             Mocker.GetMock<IHttpClient>()
                   .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
-                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), authStream.ToString()));
+                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), authStream.ToString()));
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, responseJson));
+                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, new CookieCollection(), responseJson));
 
             var torrents = Subject.Fetch(new MovieSearchCriteria()).Releases;
 

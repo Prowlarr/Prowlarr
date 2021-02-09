@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -37,7 +38,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorrentRssIndexerTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.IsAny<HttpRequest>()))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
+                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed));
         }
 
         [Test]

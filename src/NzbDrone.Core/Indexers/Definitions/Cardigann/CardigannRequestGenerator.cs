@@ -1,15 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
+using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {
     public class CardigannRequestGenerator : CardigannBase, IIndexerRequestGenerator
     {
+        public IHttpClient HttpClient { get; set; }
+        public IDictionary<string, string> Cookies { get; set; }
+        protected HttpResponse landingResult;
+        protected IHtmlDocument landingResultDocument;
+
         public CardigannRequestGenerator(CardigannDefinition definition,
                                          CardigannSettings settings,
                                          Logger logger)
@@ -144,8 +154,617 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return variables;
         }
 
+        private void Authenticate()
+        {
+            var login = _definition.Login;
+
+            if (login == null || TestLogin())
+            {
+                return;
+            }
+
+            if (login.Method == "post")
+            {
+                var pairs = new Dictionary<string, string>();
+
+                foreach (var input in login.Inputs)
+                {
+                    var value = ApplyGoTemplateText(input.Value);
+                    pairs.Add(input.Key, value);
+                }
+
+                var loginUrl = ResolvePath(login.Path).ToString();
+
+                CookiesUpdater(null, null);
+
+                var requestBuilder = new HttpRequestBuilder(loginUrl)
+                {
+                    LogResponseContent = true,
+                    Method = HttpMethod.POST,
+                    AllowAutoRedirect = true,
+                    SuppressHttpError = true
+                };
+
+                requestBuilder.Headers.Add("Referer", SiteLink);
+
+                var response = HttpClient.Execute(requestBuilder.Build());
+
+                Cookies = response.GetCookies();
+
+                CheckForError(response, login.Error);
+
+                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+            }
+            else if (login.Method == "form")
+            {
+                var loginUrl = ResolvePath(login.Path).ToString();
+
+                var queryCollection = new NameValueCollection();
+                var pairs = new Dictionary<string, string>();
+
+                var formSelector = login.Form;
+                if (formSelector == null)
+                {
+                    formSelector = "form";
+                }
+
+                // landingResultDocument might not be initiated if the login is caused by a relogin during a query
+                if (landingResultDocument == null)
+                {
+                    GetConfigurationForSetup(true);
+                }
+
+                var form = landingResultDocument.QuerySelector(formSelector);
+                if (form == null)
+                {
+                    throw new CardigannConfigException(_definition, string.Format("Login failed: No form found on {0} using form selector {1}", loginUrl, formSelector));
+                }
+
+                var inputs = form.QuerySelectorAll("input");
+                if (inputs == null)
+                {
+                    throw new CardigannConfigException(_definition, string.Format("Login failed: No inputs found on {0} using form selector {1}", loginUrl, formSelector));
+                }
+
+                var submitUrlstr = form.GetAttribute("action");
+                if (login.Submitpath != null)
+                {
+                    submitUrlstr = login.Submitpath;
+                }
+
+                foreach (var input in inputs)
+                {
+                    var name = input.GetAttribute("name");
+                    if (name == null)
+                    {
+                        continue;
+                    }
+
+                    var value = input.GetAttribute("value");
+                    if (value == null)
+                    {
+                        value = "";
+                    }
+
+                    pairs[name] = value;
+                }
+
+                foreach (var input in login.Inputs)
+                {
+                    var value = ApplyGoTemplateText(input.Value);
+                    var inputKey = input.Key;
+                    if (login.Selectors)
+                    {
+                        var inputElement = landingResultDocument.QuerySelector(input.Key);
+                        if (inputElement == null)
+                        {
+                            throw new CardigannConfigException(_definition, string.Format("Login failed: No input found using selector {0}", input.Key));
+                        }
+
+                        inputKey = inputElement.GetAttribute("name");
+                    }
+
+                    pairs[inputKey] = value;
+                }
+
+                // selector inputs
+                if (login.Selectorinputs != null)
+                {
+                    foreach (var selectorinput in login.Selectorinputs)
+                    {
+                        string value = null;
+                        try
+                        {
+                            value = HandleSelector(selectorinput.Value, landingResultDocument.FirstElementChild);
+                            pairs[selectorinput.Key] = value;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(string.Format("Error while parsing selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
+                        }
+                    }
+                }
+
+                // getselector inputs
+                if (login.Getselectorinputs != null)
+                {
+                    foreach (var selectorinput in login.Getselectorinputs)
+                    {
+                        string value = null;
+                        try
+                        {
+                            value = HandleSelector(selectorinput.Value, landingResultDocument.FirstElementChild);
+                            queryCollection[selectorinput.Key] = value;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(string.Format("Error while parsing get selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
+                        }
+                    }
+                }
+
+                if (queryCollection.Count > 0)
+                {
+                    submitUrlstr += "?" + queryCollection.GetQueryString();
+                }
+
+                var submitUrl = ResolvePath(submitUrlstr, new Uri(loginUrl));
+
+                // automatically solve simpleCaptchas, if used
+                var simpleCaptchaPresent = landingResultDocument.QuerySelector("script[src*=\"simpleCaptcha\"]");
+                if (simpleCaptchaPresent != null)
+                {
+                    var captchaUrl = ResolvePath("simpleCaptcha.php?numImages=1");
+
+                    var requestBuilder = new HttpRequestBuilder(captchaUrl.ToString())
+                    {
+                        LogResponseContent = true,
+                        Method = HttpMethod.GET
+                    };
+
+                    requestBuilder.Headers.Add("Referer", loginUrl);
+
+                    var simpleCaptchaResult = HttpClient.Execute(requestBuilder.Build());
+
+                    var simpleCaptchaJSON = JObject.Parse(simpleCaptchaResult.Content);
+                    var captchaSelection = simpleCaptchaJSON["images"][0]["hash"].ToString();
+                    pairs["captchaSelection"] = captchaSelection;
+                    pairs["submitme"] = "X";
+                }
+
+                if (login.Captcha != null)
+                {
+                    var captcha = login.Captcha;
+                    if (captcha.Type == "image")
+                    {
+                        _settings.ExtraFieldData.TryGetValue("CaptchaText", out var captchaText);
+                        if (captchaText != null)
+                        {
+                            var input = captcha.Input;
+                            if (login.Selectors)
+                            {
+                                var inputElement = landingResultDocument.QuerySelector(captcha.Input);
+                                if (inputElement == null)
+                                {
+                                    throw new CardigannConfigException(_definition, string.Format("Login failed: No captcha input found using {0}", captcha.Input));
+                                }
+
+                                input = inputElement.GetAttribute("name");
+                            }
+
+                            pairs[input] = (string)captchaText;
+                        }
+                    }
+
+                    if (captcha.Type == "text")
+                    {
+                        _settings.ExtraFieldData.TryGetValue("CaptchaAnswer", out var captchaAnswer);
+                        if (captchaAnswer != null)
+                        {
+                            var input = captcha.Input;
+                            if (login.Selectors)
+                            {
+                                var inputElement = landingResultDocument.QuerySelector(captcha.Input);
+                                if (inputElement == null)
+                                {
+                                    throw new CardigannConfigException(_definition, string.Format("Login failed: No captcha input found using {0}", captcha.Input));
+                                }
+
+                                input = inputElement.GetAttribute("name");
+                            }
+
+                            pairs[input] = (string)captchaAnswer;
+                        }
+                    }
+                }
+
+                // clear landingResults/Document, otherwise we might use an old version for a new relogin (if GetConfigurationForSetup() wasn't called before)
+                landingResult = null;
+                landingResultDocument = null;
+
+                HttpResponse loginResult = null;
+                var enctype = form.GetAttribute("enctype");
+                if (enctype == "multipart/form-data")
+                {
+                    var headers = new Dictionary<string, string>();
+                    var boundary = "---------------------------" + DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString().Replace(".", "");
+                    var bodyParts = new List<string>();
+
+                    foreach (var pair in pairs)
+                    {
+                        var part = "--" + boundary + "\r\n" +
+                          "Content-Disposition: form-data; name=\"" + pair.Key + "\"\r\n" +
+                          "\r\n" +
+                          pair.Value;
+                        bodyParts.Add(part);
+                    }
+
+                    bodyParts.Add("--" + boundary + "--");
+
+                    headers.Add("Content-Type", "multipart/form-data; boundary=" + boundary);
+                    var body = string.Join("\r\n", bodyParts);
+
+                    var requestBuilder = new HttpRequestBuilder(submitUrl.ToString())
+                    {
+                        LogResponseContent = true,
+                        Method = HttpMethod.POST,
+                        AllowAutoRedirect = true
+                    };
+
+                    requestBuilder.Headers.Add("Referer", SiteLink);
+
+                    requestBuilder.SetCookies(Cookies);
+
+                    foreach (var pair in pairs)
+                    {
+                        requestBuilder.AddFormParameter(pair.Key, pair.Value);
+                    }
+
+                    foreach (var header in headers)
+                    {
+                        requestBuilder.SetHeader(header.Key, header.Value);
+                    }
+
+                    var request = requestBuilder.Build();
+                    request.SetContent(body);
+
+                    loginResult = HttpClient.Execute(request);
+                }
+                else
+                {
+                    var requestBuilder = new HttpRequestBuilder(submitUrl.ToString())
+                    {
+                        LogResponseContent = true,
+                        Method = HttpMethod.POST,
+                        AllowAutoRedirect = true,
+                        SuppressHttpError = true
+                    };
+
+                    requestBuilder.SetCookies(Cookies);
+                    requestBuilder.Headers.Add("Referer", loginUrl);
+
+                    foreach (var pair in pairs)
+                    {
+                        requestBuilder.AddFormParameter(pair.Key, pair.Value);
+                    }
+
+                    loginResult = HttpClient.Execute(requestBuilder.Build());
+                }
+
+                Cookies = loginResult.GetCookies();
+                CheckForError(loginResult, login.Error);
+                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+            }
+            else if (login.Method == "cookie")
+            {
+                CookiesUpdater(null, null);
+                _settings.ExtraFieldData.TryGetValue("cookie", out var cookies);
+                CookiesUpdater(CookieUtil.CookieHeaderToDictionary((string)cookies), DateTime.Now + TimeSpan.FromDays(30));
+            }
+            else if (login.Method == "get")
+            {
+                var queryCollection = new NameValueCollection();
+                foreach (var input in login.Inputs)
+                {
+                    var value = ApplyGoTemplateText(input.Value);
+                    queryCollection.Add(input.Key, value);
+                }
+
+                var loginUrl = ResolvePath(login.Path + "?" + queryCollection.GetQueryString()).ToString();
+
+                CookiesUpdater(null, null);
+
+                var requestBuilder = new HttpRequestBuilder(loginUrl)
+                {
+                    LogResponseContent = true,
+                    Method = HttpMethod.GET,
+                    SuppressHttpError = true
+                };
+
+                requestBuilder.Headers.Add("Referer", SiteLink);
+
+                var response = HttpClient.Execute(requestBuilder.Build());
+
+                Cookies = response.GetCookies();
+
+                CheckForError(response, login.Error);
+
+                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+            }
+            else if (login.Method == "oneurl")
+            {
+                var oneUrl = ApplyGoTemplateText(login.Inputs["oneurl"]);
+                var loginUrl = ResolvePath(login.Path + oneUrl).ToString();
+
+                CookiesUpdater(null, null);
+
+                var requestBuilder = new HttpRequestBuilder(loginUrl)
+                {
+                    LogResponseContent = true,
+                    Method = HttpMethod.GET,
+                    SuppressHttpError = true
+                };
+
+                requestBuilder.Headers.Add("Referer", SiteLink);
+
+                var response = HttpClient.Execute(requestBuilder.Build());
+
+                Cookies = response.GetCookies();
+
+                CheckForError(response, login.Error);
+
+                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+            }
+            else
+            {
+                throw new NotImplementedException("Login method " + login.Method + " not implemented");
+            }
+        }
+
+        protected bool CheckForError(HttpResponse loginResult, IList<ErrorBlock> errorBlocks)
+        {
+            if (loginResult.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new HttpException(loginResult);
+            }
+
+            if (errorBlocks == null)
+            {
+                return true;
+            }
+
+            var resultParser = new HtmlParser();
+            var resultDocument = resultParser.ParseDocument(loginResult.Content);
+            foreach (var error in errorBlocks)
+            {
+                var selection = resultDocument.QuerySelector(error.Selector);
+                if (selection != null)
+                {
+                    var errorMessage = selection.TextContent;
+                    if (error.Message != null)
+                    {
+                        errorMessage = HandleSelector(error.Message, resultDocument.FirstElementChild);
+                    }
+
+                    throw new CardigannConfigException(_definition, string.Format("Error: {0}", errorMessage.Trim()));
+                }
+            }
+
+            return true;
+        }
+
+        public void GetConfigurationForSetup(bool automaticlogin)
+        {
+            var login = _definition.Login;
+
+            if (login == null || login.Method != "form")
+            {
+                return;
+            }
+
+            var loginUrl = ResolvePath(login.Path);
+
+            Cookies = null;
+
+            if (login.Cookies != null)
+            {
+                Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
+            }
+
+            var requestBuilder = new HttpRequestBuilder(loginUrl.AbsoluteUri)
+            {
+                LogResponseContent = true,
+                Method = HttpMethod.GET
+            };
+
+            requestBuilder.Headers.Add("Referer", SiteLink);
+
+            if (Cookies != null)
+            {
+                requestBuilder.SetCookies(Cookies);
+            }
+
+            landingResult = HttpClient.Execute(requestBuilder.Build());
+
+            Cookies = landingResult.GetCookies();
+
+            // Some sites have a temporary redirect before the login page, we need to process it.
+            //if (_definition.Followredirect)
+            //{
+            //    await FollowIfRedirect(landingResult, loginUrl.AbsoluteUri, overrideCookies: landingResult.Cookies, accumulateCookies: true);
+            //}
+            var hasCaptcha = false;
+            var htmlParser = new HtmlParser();
+            landingResultDocument = htmlParser.ParseDocument(landingResult.Content);
+
+            if (login.Captcha != null)
+            {
+                var captcha = login.Captcha;
+                if (captcha.Type == "image")
+                {
+                    var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
+                    if (captchaElement != null)
+                    {
+                        hasCaptcha = true;
+
+                        //TODO Bubble this to UI when we get a captcha so that user can action it
+                        //Jackett does this by inserting image or question into the extrasettings which then show up in the add modal
+                        //
+                        //var captchaUrl = ResolvePath(captchaElement.GetAttribute("src"), loginUrl);
+                        //var captchaImageData = RequestWithCookiesAsync(captchaUrl.ToString(), landingResult.GetCookies, referer: loginUrl.AbsoluteUri);
+                        // var CaptchaImage = new ImageItem { Name = "Captcha Image" };
+                        //var CaptchaText = new StringItem { Name = "Captcha Text" };
+                        //CaptchaImage.Value = captchaImageData.ContentBytes;
+                        //configData.AddDynamic("CaptchaImage", CaptchaImage);
+                        //configData.AddDynamic("CaptchaText", CaptchaText);
+                    }
+                    else
+                    {
+                        _logger.Debug(string.Format("CardigannIndexer ({0}): No captcha image found", _definition.Id));
+                    }
+                }
+                else if (captcha.Type == "text")
+                {
+                    var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
+                    if (captchaElement != null)
+                    {
+                        hasCaptcha = true;
+
+                        //var captchaChallenge = new DisplayItem(captchaElement.TextContent) { Name = "Captcha Challenge" };
+                        //var captchaAnswer = new StringItem { Name = "Captcha Answer" };
+
+                        //configData.AddDynamic("CaptchaChallenge", captchaChallenge);
+                        //configData.AddDynamic("CaptchaAnswer", captchaAnswer);
+                    }
+                    else
+                    {
+                        _logger.Debug(string.Format("CardigannIndexer ({0}): No captcha image found", _definition.Id));
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException(string.Format("Captcha type \"{0}\" is not implemented", captcha.Type));
+                }
+            }
+
+            if (hasCaptcha && automaticlogin)
+            {
+                _logger.Error(string.Format("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id));
+                return;
+            }
+
+            return;
+        }
+
+        protected bool TestLogin()
+        {
+            var login = _definition.Login;
+
+            if (login == null || login.Test == null)
+            {
+                return false;
+            }
+
+            // test if login was successful
+            var loginTestUrl = ResolvePath(login.Test.Path).ToString();
+
+            // var headers = ParseCustomHeaders(_definition.Search?.Headers, GetBaseTemplateVariables());
+            var requestBuilder = new HttpRequestBuilder(loginTestUrl)
+            {
+                LogResponseContent = true,
+                Method = HttpMethod.GET,
+                SuppressHttpError = true
+            };
+
+            if (Cookies != null)
+            {
+                requestBuilder.SetCookies(Cookies);
+            }
+
+            var testResult = HttpClient.Execute(requestBuilder.Build());
+
+            if (testResult.HasHttpRedirect)
+            {
+                var errormessage = "Login Failed, got redirected.";
+                var domainHint = GetRedirectDomainHint(testResult);
+                if (domainHint != null)
+                {
+                    errormessage += " Try changing the indexer URL to " + domainHint + ".";
+                }
+
+                _logger.Debug(errormessage);
+                return false;
+            }
+
+            if (login.Test.Selector != null)
+            {
+                var testResultParser = new HtmlParser();
+                var testResultDocument = testResultParser.ParseDocument(testResult.Content);
+                var selection = testResultDocument.QuerySelectorAll(login.Test.Selector);
+                if (selection.Length == 0)
+                {
+                    _logger.Debug(string.Format("Login failed: Selector \"{0}\" didn't match", login.Test.Selector));
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        protected string GetRedirectDomainHint(string requestUrl, string redirectUrl)
+        {
+            if (requestUrl.StartsWith(SiteLink) && !redirectUrl.StartsWith(SiteLink))
+            {
+                var uri = new Uri(redirectUrl);
+                return uri.Scheme + "://" + uri.Host + "/";
+            }
+
+            return null;
+        }
+
+        protected string GetRedirectDomainHint(HttpResponse result) => GetRedirectDomainHint(result.Request.Url.ToString(), result.Headers.GetSingleValue("Location"));
+
+        protected bool CheckIfLoginIsNeeded(HttpResponse response, IHtmlDocument document)
+        {
+            if (response.HasHttpRedirect)
+            {
+                var domainHint = GetRedirectDomainHint(response);
+                if (domainHint != null)
+                {
+                    var errormessage = "Got redirected to another domain. Try changing the indexer URL to " + domainHint + ".";
+
+                    throw new Exception(errormessage);
+                }
+
+                return true;
+            }
+
+            if (_definition.Login == null || _definition.Login.Test == null)
+            {
+                return false;
+            }
+
+            if (_definition.Login.Test.Selector != null)
+            {
+                var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
+                if (selection.Length == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
         {
+            Cookies = GetCookies();
+
+            if (Cookies == null || !Cookies.Any())
+            {
+                Authenticate();
+            }
+
             var search = _definition.Search;
 
             var mappedCategories = MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
@@ -267,6 +886,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     foreach (var header in search.Headers)
                     {
                         request.HttpRequest.Headers.Add(header.Key, header.Value[0]);
+                    }
+                }
+
+                if (Cookies != null)
+                {
+                    foreach (var cookie in Cookies)
+                    {
+                        request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
                     }
                 }
 

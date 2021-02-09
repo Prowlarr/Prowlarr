@@ -222,7 +222,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 _logger.Debug($"{name} got value {value.ToJson()}");
 
-                if (setting.Type == "text")
+                if (setting.Type == "text" || setting.Type == "password")
                 {
                     variables[name] = value;
                 }
@@ -232,13 +232,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "select")
                 {
-                    _logger.Debug($"setting options: {setting.Options.ToJson()}");
+                    _logger.Debug($"Setting options: {setting.Options.ToJson()}");
                     var sorted = setting.Options.OrderBy(x => x.Key).ToList();
                     var selected = sorted[(int)(long)value];
 
-                    _logger.Debug($"selected option: {selected.ToJson()}");
+                    _logger.Debug($"Selected option: {selected.ToJson()}");
 
-                    variables[name] = selected.Value;
+                    variables[name] = selected.Key;
                 }
                 else if (setting.Type == "info")
                 {
@@ -249,7 +249,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new NotSupportedException();
                 }
 
-                _logger.Debug($"Setting {setting.Name} to {variables[name]}");
+                _logger.Debug($"Setting {setting.Name} to {(setting.Type == "password" ? "Redacted" : variables[name])}");
             }
 
             return variables;

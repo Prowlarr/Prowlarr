@@ -102,13 +102,17 @@ namespace NzbDrone.Core.Indexers.Cardigann
         // http://www.codeproject.com/Articles/33298/C-Date-Time-Parser
         public static DateTime FromFuzzyTime(string str, string format = null)
         {
-            /*var dtFormat = format == "UK" ?
-                DateTimeRoutines.DateTimeRoutines.DateTimeFormat.UkDate :
-                DateTimeRoutines.DateTimeRoutines.DateTimeFormat.UsaDate;
+            //var dtFormat = format == "UK" ?
+            //    DateTimeRoutines.DateTimeRoutines.DateTimeFormat.UkDate :
+            //    DateTimeRoutines.DateTimeRoutines.DateTimeFormat.UsaDate;
 
-            if (DateTimeRoutines.DateTimeRoutines.TryParseDateOrTime(
-                str, dtFormat, out DateTimeRoutines.DateTimeRoutines.ParsedDateTime dt))
-                return dt.DateTime;*/
+            //if (DateTimeRoutines.DateTimeRoutines.TryParseDateOrTime(
+            //    str, dtFormat, out DateTimeRoutines.DateTimeRoutines.ParsedDateTime dt))
+            //    return dt.DateTime;
+            if (DateTime.TryParse(str, out var dateTimeParsed))
+            {
+                return dateTimeParsed;
+            }
 
             throw new Exception("FromFuzzyTime parsing failed");
         }

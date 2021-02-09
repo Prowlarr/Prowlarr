@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -37,7 +38,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), recentFeed));
+                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed));
 
             var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
@@ -64,7 +65,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         {
             Mocker.GetMock<IHttpClient>()
                    .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), "{ error_code: 20, error: \"some message\" }"));
+                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 20, error: \"some message\" }"));
 
             var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 
@@ -76,7 +77,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         {
             Mocker.GetMock<IHttpClient>()
                    .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), "{ error_code: 25, error: \"some message\" }"));
+                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 25, error: \"some message\" }"));
 
             var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
 

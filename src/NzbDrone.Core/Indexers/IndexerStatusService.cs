@@ -32,12 +32,12 @@ namespace NzbDrone.Core.Indexers
 
         public IDictionary<string, string> GetIndexerCookies(int indexerId)
         {
-            return GetProviderStatus(indexerId).Cookies;
+            return GetProviderStatus(indexerId)?.Cookies ?? null;
         }
 
         public DateTime GetIndexerCookiesExpirationDate(int indexerId)
         {
-            return GetProviderStatus(indexerId).CookiesExpirationDate ?? DateTime.Now + TimeSpan.FromDays(12);
+            return GetProviderStatus(indexerId)?.CookiesExpirationDate ?? DateTime.Now + TimeSpan.FromDays(12);
         }
 
         public void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo)
@@ -54,12 +54,15 @@ namespace NzbDrone.Core.Indexers
 
         public void UpdateCookies(int indexerId, IDictionary<string, string> cookies, DateTime? expiration)
         {
-            lock (_syncRoot)
+            if (indexerId > 0)
             {
-                var status = GetProviderStatus(indexerId);
-                status.Cookies = cookies;
-                status.CookiesExpirationDate = expiration;
-                _providerStatusRepository.Upsert(status);
+                lock (_syncRoot)
+                {
+                    var status = GetProviderStatus(indexerId);
+                    status.Cookies = cookies;
+                    status.CookiesExpirationDate = expiration;
+                    _providerStatusRepository.Upsert(status);
+                }
             }
         }
     }

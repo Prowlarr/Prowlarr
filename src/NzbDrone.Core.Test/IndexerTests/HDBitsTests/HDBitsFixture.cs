@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Text;
 using FluentAssertions;
 using Moq;
@@ -44,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), responseJson));
+                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), responseJson));
 
             var torrents = Subject.Fetch(_movieSearchCriteria).Releases;
 
@@ -73,7 +74,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(v => v.Execute(It.IsAny<HttpRequest>()))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), Encoding.UTF8.GetBytes(responseJson)));
+                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), Encoding.UTF8.GetBytes(responseJson)));
 
             var torrents = Subject.Fetch(_movieSearchCriteria).Releases;
 

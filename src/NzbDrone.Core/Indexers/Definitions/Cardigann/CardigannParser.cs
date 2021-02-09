@@ -333,8 +333,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                     continue;
                                 }
 
-                                _logger.Error("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
-                                throw;
+                                //Parser errors usually happen on every result and are costly to performance, trace only
+                                _logger.Trace("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
                             }
                         }
 

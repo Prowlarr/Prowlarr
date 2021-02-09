@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Xml;
 using FluentAssertions;
 using Moq;
@@ -30,7 +31,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Get(It.IsAny<HttpRequest>()))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), caps));
+                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), caps));
         }
 
         [Test]

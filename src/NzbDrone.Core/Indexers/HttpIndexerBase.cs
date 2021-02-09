@@ -12,7 +12,6 @@ using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -43,11 +42,12 @@ namespace NzbDrone.Core.Indexers
 
         public override IndexerPageableQueryResult Fetch(MovieSearchCriteria searchCriteria)
         {
+            //TODO: Re-Enable when All Indexer Caps are fixed and tests don't fail
             //if (!SupportsSearch)
             //{
-            //    return new List<ReleaseInfo>();
+            //    return new IndexerPageableQueryResult();
             //}
-            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
         public override IndexerPageableQueryResult Fetch(MusicSearchCriteria searchCriteria)
@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerPageableQueryResult();
             }
 
-            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
         public override IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria)
@@ -67,7 +67,7 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerPageableQueryResult();
             }
 
-            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
         public override IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria)
@@ -77,7 +77,7 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerPageableQueryResult();
             }
 
-            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
         public override IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria)
@@ -87,13 +87,11 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerPageableQueryResult();
             }
 
-            return FetchReleases(g => g.GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
-        protected IndexerPageableRequestChain GetRequestChain(SearchCriteriaBase searchCriteria = null)
+        protected IIndexerRequestGenerator SetCookieFunctions(IIndexerRequestGenerator generator)
         {
-            var generator = GetRequestGenerator();
-
             //A func ensures cookies are always updated to the latest. This way, the first page could update the cookies and then can be reused by the second page.
             generator.GetCookies = () =>
             {
@@ -107,14 +105,12 @@ namespace NzbDrone.Core.Indexers
                 return cookies;
             };
 
-            var requests = generator.GetSearchRequests(searchCriteria as MovieSearchCriteria);
-
             generator.CookiesUpdater = (cookies, expiration) =>
             {
                 _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
             };
 
-            return requests;
+            return generator;
         }
 
         protected virtual IndexerPageableQueryResult FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
@@ -373,7 +369,11 @@ namespace NzbDrone.Core.Indexers
                 {
                     _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
                 };
+
                 var generator = GetRequestGenerator();
+
+                generator = SetCookieFunctions(generator);
+
                 var firstRequest = generator.GetSearchRequests(new BasicSearchCriteria { SearchType = "search" }).GetAllTiers().FirstOrDefault()?.FirstOrDefault();
 
                 if (firstRequest == null)

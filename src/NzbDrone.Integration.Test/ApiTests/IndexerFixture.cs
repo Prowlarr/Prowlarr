@@ -16,7 +16,7 @@ namespace NzbDrone.Integration.Test.ApiTests
 
             indexers.Should().NotBeEmpty();
             indexers.Should().NotContain(c => string.IsNullOrWhiteSpace(c.Name));
-            indexers.Where(c => c.ConfigContract == typeof(NullConfig).Name).Should().OnlyContain(c => c.EnableRss);
+            indexers.Where(c => c.ConfigContract == typeof(NullConfig).Name).Should().OnlyContain(c => c.Enable);
         }
     }
 }

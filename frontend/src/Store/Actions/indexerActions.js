@@ -142,9 +142,7 @@ export const reducers = createHandleActions({
 
   [SELECT_INDEXER_SCHEMA]: (state, { payload }) => {
     return selectSchema(state, payload, (selectedSchema) => {
-      selectedSchema.enableRss = selectedSchema.supportsRss;
-      selectedSchema.enableAutomaticSearch = selectedSchema.supportsSearch;
-      selectedSchema.enableInteractiveSearch = selectedSchema.supportsSearch;
+      selectedSchema.enable = selectedSchema.supportsRss;
 
       return selectedSchema;
     });

@@ -10,9 +10,7 @@ namespace Prowlarr.Api.V1.Indexers
 {
     public class IndexerResource : ProviderResource
     {
-        public bool EnableRss { get; set; }
-        public bool EnableAutomaticSearch { get; set; }
-        public bool EnableInteractiveSearch { get; set; }
+        public bool Enable { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public DownloadProtocol Protocol { get; set; }
@@ -51,9 +49,7 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
-            resource.EnableRss = definition.EnableRss;
-            resource.EnableAutomaticSearch = definition.EnableAutomaticSearch;
-            resource.EnableInteractiveSearch = definition.EnableInteractiveSearch;
+            resource.Enable = definition.Enable;
             resource.SupportsRss = definition.SupportsRss;
             resource.SupportsSearch = definition.SupportsSearch;
             resource.Capabilities = definition.Capabilities.ToResource();
@@ -88,9 +84,7 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
-            definition.EnableRss = resource.EnableRss;
-            definition.EnableAutomaticSearch = resource.EnableAutomaticSearch;
-            definition.EnableInteractiveSearch = resource.EnableInteractiveSearch;
+            definition.Enable = resource.Enable;
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;
             definition.Added = resource.Added;

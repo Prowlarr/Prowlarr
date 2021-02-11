@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                   .Returns(new List<IIndexer>());
 
             Mocker.GetMock<IIndexerFactory>()
-                  .Setup(s => s.RssEnabled(It.IsAny<bool>()))
+                  .Setup(s => s.Enabled(It.IsAny<bool>()))
                   .Returns(new List<IIndexer>());
 
             Mocker.GetMock<ILocalizationService>()
@@ -43,14 +43,14 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         private void GivenRssEnabled()
         {
             Mocker.GetMock<IIndexerFactory>()
-                  .Setup(s => s.RssEnabled(It.IsAny<bool>()))
+                  .Setup(s => s.Enabled(It.IsAny<bool>()))
                   .Returns(new List<IIndexer> { _indexerMock.Object });
         }
 
         private void GivenRssFiltered()
         {
             Mocker.GetMock<IIndexerFactory>()
-                  .Setup(s => s.RssEnabled(false))
+                  .Setup(s => s.Enabled(false))
                   .Returns(new List<IIndexer> { _indexerMock.Object });
 
             Mocker.GetMock<ILocalizationService>()

@@ -61,9 +61,7 @@ class MovieIndexRow extends Component {
     const {
       id,
       name,
-      enableRss,
-      enableAutomaticSearch,
-      enableInteractiveSearch,
+      enable,
       tags,
       protocol,
       privacy,
@@ -114,7 +112,7 @@ class MovieIndexRow extends Component {
                 <IndexerStatusCell
                   key={column.name}
                   className={styles[column.name]}
-                  enabled={enableRss || enableAutomaticSearch || enableInteractiveSearch}
+                  enabled={enable}
                   status={status}
                   longDateFormat={longDateFormat}
                   timeFormat={timeFormat}
@@ -255,9 +253,7 @@ MovieIndexRow.propTypes = {
   privacy: PropTypes.string.isRequired,
   priority: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  enableRss: PropTypes.bool.isRequired,
-  enableAutomaticSearch: PropTypes.bool.isRequired,
-  enableInteractiveSearch: PropTypes.bool.isRequired,
+  enable: PropTypes.bool.isRequired,
   status: PropTypes.object,
   capabilities: PropTypes.object.isRequired,
   added: PropTypes.string.isRequired,

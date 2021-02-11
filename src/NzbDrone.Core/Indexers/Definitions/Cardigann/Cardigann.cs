@@ -63,9 +63,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             return new IndexerDefinition
             {
-                EnableRss = false,
-                EnableAutomaticSearch = false,
-                EnableInteractiveSearch = false,
+                Enable = true,
                 Name = definition.Name,
                 Implementation = GetType().Name,
                 Settings = new CardigannSettings { DefinitionFile = definition.File },

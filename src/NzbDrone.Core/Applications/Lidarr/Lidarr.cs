@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             var indexers = _lidarrV1Proxy.GetIndexers(Settings);
 
             //Pull all local indexers (TODO only those that support movie categories.)
-            var prowlarrIndexers = _indexerFactory.GetAvailableProviders();
+            var prowlarrIndexers = _indexerFactory.Enabled();
 
             //Pull mapping so we can check the mapping to see what already exists.
             var indexerMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
@@ -107,9 +107,9 @@ namespace NzbDrone.Core.Applications.Lidarr
             {
                 Id = 0,
                 Name = $"{indexer.Name} (Prowlarr)",
-                EnableRss = indexer.EnableRss,
-                EnableAutomaticSearch = indexer.EnableAutomaticSearch,
-                EnableInteractiveSearch = indexer.EnableInteractiveSearch,
+                EnableRss = true,
+                EnableAutomaticSearch = true,
+                EnableInteractiveSearch = true,
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,

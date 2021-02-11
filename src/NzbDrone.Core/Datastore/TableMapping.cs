@@ -40,7 +40,6 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<IndexerDefinition>("Indexers").RegisterModel()
                   .Ignore(x => x.ImplementationName)
-                  .Ignore(i => i.Enable)
                   .Ignore(i => i.Protocol)
                   .Ignore(i => i.Privacy)
                   .Ignore(i => i.SupportsRss)
@@ -68,6 +67,8 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(c => c.Message);
 
             Mapper.Entity<IndexerStatus>("IndexerStatus").RegisterModel();
+
+            Mapper.Entity<ApplicationStatus>("ApplicationStatus").RegisterModel();
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
         }

@@ -129,9 +129,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         private List<ReleaseInfo> Dispatch(Func<IIndexer, IndexerPageableQueryResult> searchAction, SearchCriteriaBase criteriaBase)
         {
-            var indexers = criteriaBase.InteractiveSearch ?
-                _indexerFactory.InteractiveSearchEnabled() :
-                _indexerFactory.AutomaticSearchEnabled();
+            var indexers = _indexerFactory.GetAvailableProviders();
 
             if (criteriaBase.IndexerIds != null && criteriaBase.IndexerIds.Count > 0)
             {

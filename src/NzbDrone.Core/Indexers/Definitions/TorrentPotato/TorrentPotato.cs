@@ -23,9 +23,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         {
             return new IndexerDefinition
             {
-                EnableRss = false,
-                EnableAutomaticSearch = false,
-                EnableInteractiveSearch = false,
+                Enable = true,
                 Name = name,
                 Implementation = GetType().Name,
                 Settings = settings,

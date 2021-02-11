@@ -21,14 +21,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            var enabled = _indexerFactory.RssEnabled(false);
+            var enabled = _indexerFactory.Enabled(false);
 
             if (enabled.Empty())
             {
                 return new HealthCheck(GetType(), HealthCheckResult.Error, _localizationService.GetLocalizedString("IndexerRssHealthCheckNoIndexers"));
             }
 
-            var active = _indexerFactory.RssEnabled(true);
+            var active = _indexerFactory.Enabled(true);
 
             if (active.Empty())
             {

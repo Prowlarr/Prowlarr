@@ -14,9 +14,7 @@ namespace NzbDrone.Core.Indexers
 {
     public interface IIndexerFactory : IProviderFactory<IIndexer, IndexerDefinition>
     {
-        List<IIndexer> RssEnabled(bool filterBlockedIndexers = true);
-        List<IIndexer> AutomaticSearchEnabled(bool filterBlockedIndexers = true);
-        List<IIndexer> InteractiveSearchEnabled(bool filterBlockedIndexers = true);
+        List<IIndexer> Enabled(bool filterBlockedIndexers = true);
         void DeleteIndexers(List<int> indexerIds);
     }
 
@@ -165,33 +163,9 @@ namespace NzbDrone.Core.Indexers
             }
         }
 
-        public List<IIndexer> RssEnabled(bool filterBlockedIndexers = true)
+        public List<IIndexer> Enabled(bool filterBlockedIndexers = true)
         {
-            var enabledIndexers = GetAvailableProviders().Where(n => ((IndexerDefinition)n.Definition).EnableRss);
-
-            if (filterBlockedIndexers)
-            {
-                return FilterBlockedIndexers(enabledIndexers).ToList();
-            }
-
-            return enabledIndexers.ToList();
-        }
-
-        public List<IIndexer> AutomaticSearchEnabled(bool filterBlockedIndexers = true)
-        {
-            var enabledIndexers = GetAvailableProviders().Where(n => ((IndexerDefinition)n.Definition).EnableAutomaticSearch);
-
-            if (filterBlockedIndexers)
-            {
-                return FilterBlockedIndexers(enabledIndexers).ToList();
-            }
-
-            return enabledIndexers.ToList();
-        }
-
-        public List<IIndexer> InteractiveSearchEnabled(bool filterBlockedIndexers = true)
-        {
-            var enabledIndexers = GetAvailableProviders().Where(n => ((IndexerDefinition)n.Definition).EnableInteractiveSearch);
+            var enabledIndexers = GetAvailableProviders().Where(n => ((IndexerDefinition)n.Definition).Enable);
 
             if (filterBlockedIndexers)
             {

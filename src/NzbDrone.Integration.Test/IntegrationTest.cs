@@ -36,9 +36,7 @@ namespace NzbDrone.Integration.Test
         {
             Indexers.Post(new Prowlarr.Api.V1.Indexers.IndexerResource
             {
-                EnableRss = false,
-                EnableInteractiveSearch = false,
-                EnableAutomaticSearch = false,
+                Enable = false,
                 ConfigContract = nameof(FileListSettings),
                 Implementation = nameof(FileList),
                 Name = "NewznabTest",

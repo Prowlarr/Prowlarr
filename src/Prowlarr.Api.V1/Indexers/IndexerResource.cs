@@ -20,6 +20,7 @@ namespace Prowlarr.Api.V1.Indexers
         public IndexerCapabilityResource Capabilities { get; set; }
         public int Priority { get; set; }
         public DateTime Added { get; set; }
+        public IndexerStatusResource Status { get; set; }
     }
 
     public class IndexerResourceMapper : ProviderResourceMapper<IndexerResource, IndexerDefinition>

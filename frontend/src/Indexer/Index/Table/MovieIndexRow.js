@@ -68,9 +68,12 @@ class MovieIndexRow extends Component {
       protocol,
       privacy,
       priority,
+      status,
       added,
       capabilities,
       columns,
+      longDateFormat,
+      timeFormat,
       isMovieEditorActive,
       isSelected,
       onSelectedChange
@@ -113,6 +116,8 @@ class MovieIndexRow extends Component {
                   className={styles[column.name]}
                   enabled={enableRss || enableAutomaticSearch || enableInteractiveSearch}
                   status={status}
+                  longDateFormat={longDateFormat}
+                  timeFormat={timeFormat}
                   component={VirtualTableRowCell}
                 />
               );
@@ -253,6 +258,7 @@ MovieIndexRow.propTypes = {
   enableRss: PropTypes.bool.isRequired,
   enableAutomaticSearch: PropTypes.bool.isRequired,
   enableInteractiveSearch: PropTypes.bool.isRequired,
+  status: PropTypes.object,
   capabilities: PropTypes.object.isRequired,
   added: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
@@ -260,7 +266,9 @@ MovieIndexRow.propTypes = {
   isSearchingMovie: PropTypes.bool.isRequired,
   isMovieEditorActive: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool,
-  onSelectedChange: PropTypes.func.isRequired
+  onSelectedChange: PropTypes.func.isRequired,
+  longDateFormat: PropTypes.string.isRequired,
+  timeFormat: PropTypes.string.isRequired
 };
 
 MovieIndexRow.defaultProps = {

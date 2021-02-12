@@ -6,6 +6,7 @@ import * as history from './historyActions';
 import * as indexers from './indexerActions';
 import * as indexerIndex from './indexerIndexActions';
 import * as indexerStats from './indexerStatsActions';
+import * as indexerStatus from './indexerStatusActions';
 import * as movies from './movieActions';
 import * as oAuth from './oAuthActions';
 import * as paths from './pathActions';
@@ -29,6 +30,7 @@ export default [
   indexers,
   indexerIndex,
   indexerStats,
+  indexerStatus,
   settings,
   system,
   tags

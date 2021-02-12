@@ -6,6 +6,8 @@ import * as commandNames from 'Commands/commandNames';
 import { executeCommand } from 'Store/Actions/commandActions';
 import createExecutingCommandsSelector from 'Store/Selectors/createExecutingCommandsSelector';
 import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
+import createIndexerStatusSelector from 'Store/Selectors/createIndexerStatusSelector';
+import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 
 function selectShowSearchAction() {
   return createSelector(
@@ -19,18 +21,24 @@ function selectShowSearchAction() {
 function createMapStateToProps() {
   return createSelector(
     createIndexerSelector(),
+    createIndexerStatusSelector(),
     selectShowSearchAction(),
     createExecutingCommandsSelector(),
+    createUISettingsSelector(),
     (
       movie,
+      status,
       showSearchAction,
-      executingCommands
+      executingCommands,
+      uiSettings
     ) => {
 
       // If a movie is deleted this selector may fire before the parent
       // selecors, which will result in an undefined movie, if that happens
       // we want to return early here and again in the render function to avoid
       // trying to show a movie that has no information available.
+
+      console.log(status);
 
       if (!movie) {
         return {};
@@ -52,9 +60,12 @@ function createMapStateToProps() {
 
       return {
         ...movie,
+        status,
         showSearchAction,
         isRefreshingMovie,
-        isSearchingMovie
+        isSearchingMovie,
+        longDateFormat: uiSettings.longDateFormat,
+        timeFormat: uiSettings.timeFormat
       };
     }
   );

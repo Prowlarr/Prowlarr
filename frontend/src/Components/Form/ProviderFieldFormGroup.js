@@ -119,7 +119,7 @@ const selectOptionsShape = {
 ProviderFieldFormGroup.propTypes = {
   advancedSettings: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   helpText: PropTypes.string,
   helpLink: PropTypes.string,
   value: PropTypes.any,

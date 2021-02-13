@@ -38,8 +38,6 @@ function createMapStateToProps() {
       // we want to return early here and again in the render function to avoid
       // trying to show a movie that has no information available.
 
-      console.log(status);
-
       if (!movie) {
         return {};
       }

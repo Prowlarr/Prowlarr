@@ -1,31 +1,31 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchIndexerSchema, selectIndexerSchema } from 'Store/Actions/indexerActions';
+import { fetchIndexerSchema, selectIndexerSchema, setIndexerSchemaSort } from 'Store/Actions/indexerActions';
+import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import AddIndexerModalContent from './AddIndexerModalContent';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.indexers,
+    createClientSideCollectionSelector('indexers.schema'),
     (indexers) => {
       const {
-        isSchemaFetching,
-        isSchemaPopulated,
-        schemaError,
-        schema
+        isFetching,
+        isPopulated,
+        error,
+        items,
+        sortDirection,
+        sortKey
       } = indexers;
 
-      const usenetIndexers = _.filter(schema, { protocol: 'usenet' });
-      const torrentIndexers = _.filter(schema, { protocol: 'torrent' });
-
       return {
-        isSchemaFetching,
-        isSchemaPopulated,
-        schemaError,
-        usenetIndexers,
-        torrentIndexers
+        isFetching,
+        isPopulated,
+        error,
+        indexers: items,
+        sortKey,
+        sortDirection
       };
     }
   );
@@ -33,7 +33,8 @@ function createMapStateToProps() {
 
 const mapDispatchToProps = {
   fetchIndexerSchema,
-  selectIndexerSchema
+  selectIndexerSchema,
+  setIndexerSchemaSort
 };
 
 class AddIndexerModalContentConnector extends Component {
@@ -53,6 +54,10 @@ class AddIndexerModalContentConnector extends Component {
     this.props.onModalClose({ indexerSelected: true });
   }
 
+  onSortPress = (sortKey, sortDirection) => {
+    this.props.setIndexerSchemaSort({ sortKey, sortDirection });
+  }
+
   //
   // Render
 
@@ -60,6 +65,7 @@ class AddIndexerModalContentConnector extends Component {
     return (
       <AddIndexerModalContent
         {...this.props}
+        onSortPress={this.onSortPress}
         onIndexerSelect={this.onIndexerSelect}
       />
     );
@@ -69,6 +75,7 @@ class AddIndexerModalContentConnector extends Component {
 AddIndexerModalContentConnector.propTypes = {
   fetchIndexerSchema: PropTypes.func.isRequired,
   selectIndexerSchema: PropTypes.func.isRequired,
+  setIndexerSchemaSort: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };
 

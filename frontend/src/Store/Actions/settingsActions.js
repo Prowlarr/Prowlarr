@@ -5,7 +5,6 @@ import applications from './Settings/applications';
 import general from './Settings/general';
 import indexerCategories from './Settings/indexerCategories';
 import indexerFlags from './Settings/indexerFlags';
-import indexerOptions from './Settings/indexerOptions';
 import languages from './Settings/languages';
 import notifications from './Settings/notifications';
 import ui from './Settings/ui';
@@ -13,7 +12,6 @@ import ui from './Settings/ui';
 export * from './Settings/general';
 export * from './Settings/indexerCategories';
 export * from './Settings/indexerFlags';
-export * from './Settings/indexerOptions';
 export * from './Settings/languages';
 export * from './Settings/notifications';
 export * from './Settings/applications';
@@ -33,7 +31,6 @@ export const defaultState = {
   general: general.defaultState,
   indexerCategories: indexerCategories.defaultState,
   indexerFlags: indexerFlags.defaultState,
-  indexerOptions: indexerOptions.defaultState,
   languages: languages.defaultState,
   notifications: notifications.defaultState,
   applications: applications.defaultState,
@@ -61,7 +58,6 @@ export const actionHandlers = handleThunks({
   ...general.actionHandlers,
   ...indexerCategories.actionHandlers,
   ...indexerFlags.actionHandlers,
-  ...indexerOptions.actionHandlers,
   ...languages.actionHandlers,
   ...notifications.actionHandlers,
   ...applications.actionHandlers,
@@ -80,7 +76,6 @@ export const reducers = createHandleActions({
   ...general.reducers,
   ...indexerCategories.reducers,
   ...indexerFlags.reducers,
-  ...indexerOptions.reducers,
   ...languages.reducers,
   ...notifications.reducers,
   ...applications.reducers,

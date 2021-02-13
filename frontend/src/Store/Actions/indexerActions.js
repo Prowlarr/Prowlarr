@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { createAction } from 'redux-actions';
+import { sortDirections } from 'Helpers/Props';
 import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
-import createFetchSchemaHandler from 'Store/Actions/Creators/createFetchSchemaHandler';
 import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHandler';
 import createSaveProviderHandler, { createCancelSaveProviderHandler } from 'Store/Actions/Creators/createSaveProviderHandler';
 import createTestAllProvidersHandler from 'Store/Actions/Creators/createTestAllProvidersHandler';
@@ -12,11 +12,13 @@ import { createThunk, handleThunks } from 'Store/thunks';
 import getSectionState from 'Utilities/State/getSectionState';
 import updateSectionState from 'Utilities/State/updateSectionState';
 import createHandleActions from './Creators/createHandleActions';
+import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 
 //
 // Variables
 
 export const section = 'indexers';
+const schemaSection = `${section}.schema`;
 
 //
 // State
@@ -25,17 +27,22 @@ export const defaultState = {
   isFetching: false,
   isPopulated: false,
   error: null,
-  isSchemaFetching: false,
-  isSchemaPopulated: false,
-  schemaError: null,
-  schema: [],
   selectedSchema: {},
   isSaving: false,
   saveError: null,
   isTesting: false,
   isTestingAll: false,
   items: [],
-  pendingChanges: {}
+  pendingChanges: {},
+
+  schema: {
+    isFetching: false,
+    isPopulated: false,
+    error: null,
+    sortKey: 'name',
+    sortDirection: sortDirections.ASCENDING,
+    items: []
+  }
 };
 
 //
@@ -44,6 +51,7 @@ export const defaultState = {
 export const FETCH_INDEXERS = 'indexers/fetchIndexers';
 export const FETCH_INDEXER_SCHEMA = 'indexers/fetchIndexerSchema';
 export const SELECT_INDEXER_SCHEMA = 'indexers/selectIndexerSchema';
+export const SET_INDEXER_SCHEMA_SORT = 'indexers/setIndexerSchemaSort';
 export const CLONE_INDEXER = 'indexers/cloneIndexer';
 export const SET_INDEXER_VALUE = 'indexers/setIndexerValue';
 export const SET_INDEXER_FIELD_VALUE = 'indexers/setIndexerFieldValue';
@@ -60,6 +68,7 @@ export const TEST_ALL_INDEXERS = 'indexers/testAllIndexers';
 export const fetchIndexers = createThunk(FETCH_INDEXERS);
 export const fetchIndexerSchema = createThunk(FETCH_INDEXER_SCHEMA);
 export const selectIndexerSchema = createAction(SELECT_INDEXER_SCHEMA);
+export const setIndexerSchemaSort = createAction(SET_INDEXER_SCHEMA_SORT);
 export const cloneIndexer = createAction(CLONE_INDEXER);
 
 export const saveIndexer = createThunk(SAVE_INDEXER);
@@ -104,7 +113,7 @@ function selectSchema(state, payload, schemaDefaults) {
     name
   } = payload;
 
-  const selectedImplementation = _.find(newState.schema, { implementation, name });
+  const selectedImplementation = _.find(newState.schema.items, { implementation, name });
 
   newState.selectedSchema = applySchemaDefaults(_.cloneDeep(selectedImplementation), schemaDefaults);
 
@@ -113,7 +122,7 @@ function selectSchema(state, payload, schemaDefaults) {
 
 export const actionHandlers = handleThunks({
   [FETCH_INDEXERS]: createFetchHandler(section, '/indexer'),
-  [FETCH_INDEXER_SCHEMA]: createFetchSchemaHandler(section, '/indexer/schema'),
+  [FETCH_INDEXER_SCHEMA]: createFetchHandler(schemaSection, '/indexer/schema'),
 
   [SAVE_INDEXER]: createSaveProviderHandler(section, '/indexer'),
   [CANCEL_SAVE_INDEXER]: createCancelSaveProviderHandler(section),
@@ -129,6 +138,7 @@ export const actionHandlers = handleThunks({
 export const reducers = createHandleActions({
   [SET_INDEXER_VALUE]: createSetSettingValueReducer(section),
   [SET_INDEXER_FIELD_VALUE]: createSetProviderFieldValueReducer(section),
+  [SET_INDEXER_SCHEMA_SORT]: createSetClientSideCollectionSortReducer(schemaSection),
 
   [SELECT_INDEXER_SCHEMA]: (state, { payload }) => {
     return selectSchema(state, payload, (selectedSchema) => {

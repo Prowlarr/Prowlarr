@@ -9,7 +9,6 @@ import StatsConnector from 'Indexer/Stats/StatsConnector';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
 import ApplicationSettings from 'Settings/Applications/ApplicationSettings';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
-import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
@@ -92,11 +91,6 @@ function AppRoutes(props) {
       <Route
         path="/settings/applications"
         component={ApplicationSettings}
-      />
-
-      <Route
-        path="/settings/indexers"
-        component={IndexerSettingsConnector}
       />
 
       <Route

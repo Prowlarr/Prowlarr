@@ -1,33 +1,83 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Alert from 'Components/Alert';
-import FieldSet from 'Components/FieldSet';
+import TextInput from 'Components/Form/TextInput';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
-import { kinds } from 'Helpers/Props';
+import Scroller from 'Components/Scroller/Scroller';
+import Table from 'Components/Table/Table';
+import TableBody from 'Components/Table/TableBody';
+import { kinds, scrollDirections } from 'Helpers/Props';
+import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
-import AddIndexerItem from './AddIndexerItem';
+import SelectIndexerRow from './SelectIndexerRow';
 import styles from './AddIndexerModalContent.css';
 
+const columns = [
+  {
+    name: 'protocol',
+    label: 'Protocol',
+    isSortable: true,
+    isVisible: true
+  },
+  {
+    name: 'name',
+    label: 'Name',
+    isSortable: true,
+    isVisible: true
+  },
+  {
+    name: 'privacy',
+    label: 'Privacy',
+    isSortable: true,
+    isVisible: true
+  }
+];
+
 class AddIndexerModalContent extends Component {
+
+  //
+  // Lifecycle
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      filter: ''
+    };
+  }
+
+  //
+  // Listeners
+
+  onFilterChange = ({ value }) => {
+    this.setState({ filter: value });
+  }
 
   //
   // Render
 
   render() {
     const {
-      isSchemaFetching,
-      isSchemaPopulated,
-      schemaError,
-      usenetIndexers,
-      torrentIndexers,
+      indexers,
       onIndexerSelect,
+      sortKey,
+      sortDirection,
+      isFetching,
+      isPopulated,
+      error,
+      onSortPress,
       onModalClose
     } = this.props;
+
+    const filter = this.state.filter;
+    const filterLower = filter.toLowerCase();
+
+    const errorMessage = getErrorMessage(error, 'Unable to load indexers');
 
     return (
       <ModalContent onModalClose={onModalClose}>
@@ -35,68 +85,68 @@ class AddIndexerModalContent extends Component {
           Add Indexer
         </ModalHeader>
 
-        <ModalBody>
-          {
-            isSchemaFetching &&
-              <LoadingIndicator />
-          }
+        <ModalBody
+          className={styles.modalBody}
+          scrollDirection={scrollDirections.NONE}
+        >
+          <TextInput
+            className={styles.filterInput}
+            placeholder={translate('FilterPlaceHolder')}
+            name="filter"
+            value={filter}
+            autoFocus={true}
+            onChange={this.onFilterChange}
+          />
 
-          {
-            !isSchemaFetching && !!schemaError &&
-              <div>
-                {translate('UnableToAddANewIndexerPleaseTryAgain')}
-              </div>
-          }
+          <Alert
+            kind={kinds.INFO}
+            className={styles.alert}
+          >
+            <div>
+              {translate('ProwlarrSupportsAnyIndexer')}
+            </div>
+          </Alert>
 
-          {
-            isSchemaPopulated && !schemaError &&
-              <div>
-
-                <Alert kind={kinds.INFO}>
-                  <div>
-                    {translate('ProwlarrSupportsAnyIndexer')}
-                  </div>
-                  <div>
-                    {translate('ForMoreInformationOnTheIndividualIndexers')}
-                  </div>
-                </Alert>
-
-                <FieldSet legend={translate('Usenet')}>
-                  <div className={styles.indexers}>
+          <Scroller
+            className={styles.scroller}
+            autoFocus={false}
+          >
+            {
+              isFetching ? <LoadingIndicator /> : null
+            }
+            {
+              error ? <div>{errorMessage}</div> : null
+            }
+            {
+              isPopulated && !!indexers.length ?
+                <Table
+                  columns={columns}
+                  sortKey={sortKey}
+                  sortDirection={sortDirection}
+                  onSortPress={onSortPress}
+                >
+                  <TableBody>
                     {
-                      usenetIndexers.map((indexer) => {
-                        return (
-                          <AddIndexerItem
-                            key={indexer.name}
-                            implementation={indexer.implementation}
-                            {...indexer}
-                            onIndexerSelect={onIndexerSelect}
-                          />
-                        );
+                      indexers.map((indexer) => {
+                        return indexer.name.toLowerCase().includes(filterLower) ?
+                          (
+                            <SelectIndexerRow
+                              key={indexer.name}
+                              implementation={indexer.implementation}
+                              {...indexer}
+                              onIndexerSelect={onIndexerSelect}
+                            />
+                          ) :
+                          null;
                       })
                     }
-                  </div>
-                </FieldSet>
-
-                <FieldSet legend={translate('Torrents')}>
-                  <div className={styles.indexers}>
-                    {
-                      torrentIndexers.map((indexer) => {
-                        return (
-                          <AddIndexerItem
-                            key={indexer.name}
-                            implementation={indexer.implementation}
-                            {...indexer}
-                            onIndexerSelect={onIndexerSelect}
-                          />
-                        );
-                      })
-                    }
-                  </div>
-                </FieldSet>
-              </div>
-          }
+                  </TableBody>
+                </Table> :
+                null
+            }
+          </Scroller>
         </ModalBody>
+
         <ModalFooter>
           <Button
             onPress={onModalClose}
@@ -110,11 +160,13 @@ class AddIndexerModalContent extends Component {
 }
 
 AddIndexerModalContent.propTypes = {
-  isSchemaFetching: PropTypes.bool.isRequired,
-  isSchemaPopulated: PropTypes.bool.isRequired,
-  schemaError: PropTypes.object,
-  usenetIndexers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  torrentIndexers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  isPopulated: PropTypes.bool.isRequired,
+  error: PropTypes.object,
+  sortKey: PropTypes.string,
+  sortDirection: PropTypes.string,
+  onSortPress: PropTypes.func.isRequired,
+  indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   onIndexerSelect: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

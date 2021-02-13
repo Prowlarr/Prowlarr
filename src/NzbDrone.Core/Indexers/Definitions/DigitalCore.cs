@@ -60,46 +60,46 @@ namespace NzbDrone.Core.Indexers.Definitions
                                    }
             };
 
-            caps.Categories.AddCategoryMapping(1.ToString(), NewznabStandardCategory.MoviesDVD, "Movies/DVDR");
-            caps.Categories.AddCategoryMapping(2.ToString(), NewznabStandardCategory.MoviesSD, "Movies/SD");
-            caps.Categories.AddCategoryMapping(3.ToString(), NewznabStandardCategory.MoviesBluRay, "Movies/BluRay");
-            caps.Categories.AddCategoryMapping(4.ToString(), NewznabStandardCategory.MoviesUHD, "Movies/4K");
-            caps.Categories.AddCategoryMapping(5.ToString(), NewznabStandardCategory.MoviesHD, "Movies/720p");
-            caps.Categories.AddCategoryMapping(6.ToString(), NewznabStandardCategory.MoviesHD, "Movies/1080p");
-            caps.Categories.AddCategoryMapping(7.ToString(), NewznabStandardCategory.MoviesHD, "Movies/PACKS");
+            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesDVD, "Movies/DVDR");
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.MoviesSD, "Movies/SD");
+            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.MoviesBluRay, "Movies/BluRay");
+            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.MoviesUHD, "Movies/4K");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.MoviesHD, "Movies/720p");
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.MoviesHD, "Movies/1080p");
+            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.MoviesHD, "Movies/PACKS");
 
-            caps.Categories.AddCategoryMapping(8.ToString(), NewznabStandardCategory.TVHD, "TV/720p");
-            caps.Categories.AddCategoryMapping(9.ToString(), NewznabStandardCategory.TVHD, "TV/1080p");
-            caps.Categories.AddCategoryMapping(10.ToString(), NewznabStandardCategory.TVSD, "TV/SD");
-            caps.Categories.AddCategoryMapping(11.ToString(), NewznabStandardCategory.TVSD, "TV/DVDR");
-            caps.Categories.AddCategoryMapping(12.ToString(), NewznabStandardCategory.TVHD, "TV/PACKS");
-            caps.Categories.AddCategoryMapping(13.ToString(), NewznabStandardCategory.TVUHD, "TV/4K");
-            caps.Categories.AddCategoryMapping(14.ToString(), NewznabStandardCategory.TVHD, "TV/BluRay");
+            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.TVHD, "TV/720p");
+            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TVHD, "TV/1080p");
+            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.TVSD, "TV/SD");
+            caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.TVSD, "TV/DVDR");
+            caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.TVHD, "TV/PACKS");
+            caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.TVUHD, "TV/4K");
+            caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.TVHD, "TV/BluRay");
 
-            caps.Categories.AddCategoryMapping(17.ToString(), NewznabStandardCategory.Other, "Unknown");
-            caps.Categories.AddCategoryMapping(18.ToString(), NewznabStandardCategory.PC0day, "Apps/0day");
-            caps.Categories.AddCategoryMapping(20.ToString(), NewznabStandardCategory.PCISO, "Apps/PC");
-            caps.Categories.AddCategoryMapping(21.ToString(), NewznabStandardCategory.PCMac, "Apps/Mac");
-            caps.Categories.AddCategoryMapping(33.ToString(), NewznabStandardCategory.PC, "Apps/Tutorials");
+            caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.Other, "Unknown");
+            caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.PC0day, "Apps/0day");
+            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.PCISO, "Apps/PC");
+            caps.Categories.AddCategoryMapping(21, NewznabStandardCategory.PCMac, "Apps/Mac");
+            caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.PC, "Apps/Tutorials");
 
-            caps.Categories.AddCategoryMapping(22.ToString(), NewznabStandardCategory.AudioMP3, "Music/MP3");
-            caps.Categories.AddCategoryMapping(23.ToString(), NewznabStandardCategory.AudioLossless, "Music/FLAC");
-            caps.Categories.AddCategoryMapping(24.ToString(), NewznabStandardCategory.Audio, "Music/MTV");
-            caps.Categories.AddCategoryMapping(29.ToString(), NewznabStandardCategory.Audio, "Music/PACKS");
+            caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.AudioMP3, "Music/MP3");
+            caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.AudioLossless, "Music/FLAC");
+            caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.Audio, "Music/MTV");
+            caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.Audio, "Music/PACKS");
 
-            caps.Categories.AddCategoryMapping(25.ToString(), NewznabStandardCategory.PCGames, "Games/PC");
-            caps.Categories.AddCategoryMapping(26.ToString(), NewznabStandardCategory.Console, "Games/NSW");
-            caps.Categories.AddCategoryMapping(27.ToString(), NewznabStandardCategory.PCMac, "Games/Mac");
+            caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.PCGames, "Games/PC");
+            caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.Console, "Games/NSW");
+            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.PCMac, "Games/Mac");
 
-            caps.Categories.AddCategoryMapping(28.ToString(), NewznabStandardCategory.Books, "Ebooks");
+            caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.Books, "Ebooks");
 
-            caps.Categories.AddCategoryMapping(30.ToString(), NewznabStandardCategory.XXXSD, "XXX/SD");
-            caps.Categories.AddCategoryMapping(31.ToString(), NewznabStandardCategory.XXX, "XXX/HD");
-            caps.Categories.AddCategoryMapping(32.ToString(), NewznabStandardCategory.XXXUHD, "XXX/4K");
-            caps.Categories.AddCategoryMapping(35.ToString(), NewznabStandardCategory.XXXSD, "XXX/Movies/SD");
-            caps.Categories.AddCategoryMapping(36.ToString(), NewznabStandardCategory.XXX, "XXX/Movies/HD");
-            caps.Categories.AddCategoryMapping(37.ToString(), NewznabStandardCategory.XXXUHD, "XXX/Movies/4K");
-            caps.Categories.AddCategoryMapping(34.ToString(), NewznabStandardCategory.XXXImageSet, "XXX/Imagesets");
+            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.XXXSD, "XXX/SD");
+            caps.Categories.AddCategoryMapping(31, NewznabStandardCategory.XXX, "XXX/HD");
+            caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.XXXUHD, "XXX/4K");
+            caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.XXXSD, "XXX/Movies/SD");
+            caps.Categories.AddCategoryMapping(36, NewznabStandardCategory.XXX, "XXX/Movies/HD");
+            caps.Categories.AddCategoryMapping(37, NewznabStandardCategory.XXXUHD, "XXX/Movies/4K");
+            caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.XXXImageSet, "XXX/Imagesets");
 
             return caps;
         }

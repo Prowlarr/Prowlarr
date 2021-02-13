@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
@@ -19,23 +20,23 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.ImdbId));
-            return pageableRequests;
-        }
+            var parameters = string.Empty;
 
-        public Func<IDictionary<string, string>> GetCookies { get; set; }
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
-        {
-            if (searchParameters != null)
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                yield return new IndexerRequest($"{Settings.BaseUrl.Trim().TrimEnd('/')}/searchapi.php?action=imdbsearch&passkey={Settings.Passkey.Trim()}&imdb={searchParameters}", HttpAccept.Rss);
+                parameters = string.Format("&action=imdbsearch&imdb={0}", searchCriteria.ImdbId);
+            }
+            else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                parameters = string.Format("&action=titlesearch&title={0}", searchCriteria.SearchTerm);
             }
             else
             {
-                yield return new IndexerRequest($"{Settings.BaseUrl.Trim().TrimEnd('/')}/searchapi.php?action=latestmovies&passkey={Settings.Passkey.Trim()}", HttpAccept.Rss);
+                parameters = "&action=latestmovies";
             }
+
+            pageableRequests.Add(GetRequest(parameters));
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
@@ -56,6 +57,17 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             return new IndexerPageableRequestChain();
+        }
+
+        public Func<IDictionary<string, string>> GetCookies { get; set; }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        {
+            if (searchParameters != null)
+            {
+                yield return new IndexerRequest($"{Settings.BaseUrl.Trim().TrimEnd('/')}/searchapi.php?passkey={Settings.Passkey.Trim()}{searchParameters}", HttpAccept.Rss);
+            }
         }
     }
 }

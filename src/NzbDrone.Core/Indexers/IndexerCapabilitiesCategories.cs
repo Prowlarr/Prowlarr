@@ -51,6 +51,9 @@ namespace NzbDrone.Core.Indexers
             return newFlatList;
         }
 
+        public void AddCategoryMapping(int trackerCategory, IndexerCategory newznabCategory, string trackerCategoryDesc = null) =>
+            AddCategoryMapping(trackerCategory.ToString(), newznabCategory, trackerCategoryDesc);
+
         public void AddCategoryMapping(string trackerCategory, IndexerCategory torznabCategory, string trackerCategoryDesc = null)
         {
             _categoryMapping.Add(new CategoryMapping(trackerCategory, trackerCategoryDesc, torznabCategory.Id));

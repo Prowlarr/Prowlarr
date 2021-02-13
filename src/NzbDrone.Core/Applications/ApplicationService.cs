@@ -70,7 +70,8 @@ namespace NzbDrone.Core.Applications
 
         public void Execute(ApplicationIndexerSyncCommand message)
         {
-            var enabledApps = _applicationsFactory.GetAvailableProviders();
+            var enabledApps = _applicationsFactory.GetAvailableProviders()
+                                                  .Where(n => ((ApplicationDefinition)n.Definition).Enable);
 
             foreach (var app in enabledApps)
             {

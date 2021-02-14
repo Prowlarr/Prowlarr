@@ -26,6 +26,8 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
                 SearchTerm = "Star Wars",
                 Categories = new int[] { 2000 }
             };
+
+            Subject.BaseUrl = "https://filelist.io";
         }
 
         private void MovieWithoutIMDB()

@@ -12,11 +12,13 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 {
     public class AwesomeHDRssParser : IParseIndexerResponse
     {
+        private readonly string _baseUrl;
         private readonly AwesomeHDSettings _settings;
 
-        public AwesomeHDRssParser(AwesomeHDSettings settings)
+        public AwesomeHDRssParser(AwesomeHDSettings settings, string baseUrl)
         {
             _settings = settings;
+            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -145,7 +147,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 
         private string GetDownloadUrl(string torrentId, string authKey, string passKey)
         {
-            var url = new HttpUri(_settings.BaseUrl)
+            var url = new HttpUri(_baseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
@@ -157,7 +159,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 
         private string GetInfoUrl(string groupId, string torrentId)
         {
-            var url = new HttpUri(_settings.BaseUrl)
+            var url = new HttpUri(_baseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("id", groupId)
                 .AddQueryParam("torrentid", torrentId);

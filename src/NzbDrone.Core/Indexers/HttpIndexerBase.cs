@@ -12,11 +12,12 @@ using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
 {
     public abstract class HttpIndexerBase<TSettings> : IndexerBase<TSettings>
-        where TSettings : IIndexerSettings, new()
+        where TSettings : IProviderConfig, new()
     {
         protected const int MaxNumResultsPerQuery = 1000;
 
@@ -25,9 +26,6 @@ namespace NzbDrone.Core.Indexers
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override IndexerCapabilities Capabilities { get; protected set; }
-
-        public bool SupportsPaging => PageSize > 0;
-
         public virtual int PageSize => 0;
         public virtual TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 

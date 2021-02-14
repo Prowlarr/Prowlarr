@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
@@ -11,11 +11,13 @@ namespace NzbDrone.Core.Indexers.HDBits
 {
     public class HDBitsParser : IParseIndexerResponse
     {
+        private readonly string _baseUrl;
         private readonly HDBitsSettings _settings;
 
-        public HDBitsParser(HDBitsSettings settings)
+        public HDBitsParser(HDBitsSettings settings, string baseUrl)
         {
             _settings = settings;
+            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -89,7 +91,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         private string GetDownloadUrl(string torrentId)
         {
-            var url = new HttpUri(_settings.BaseUrl)
+            var url = new HttpUri(_baseUrl)
                 .CombinePath("/download.php")
                 .AddQueryParam("id", torrentId)
                 .AddQueryParam("passkey", _settings.ApiKey);
@@ -99,7 +101,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         private string GetInfoUrl(string torrentId)
         {
-            var url = new HttpUri(_settings.BaseUrl)
+            var url = new HttpUri(_baseUrl)
                 .CombinePath("/details.php")
                 .AddQueryParam("id", torrentId);
 

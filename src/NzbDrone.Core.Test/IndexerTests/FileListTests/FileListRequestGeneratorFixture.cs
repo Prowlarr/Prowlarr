@@ -17,7 +17,6 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         {
             Subject.Settings = new FileListSettings()
             {
-                BaseUrl = "http://127.0.0.1:1234/",
                 Passkey = "abcd",
                 Username = "somename"
             };

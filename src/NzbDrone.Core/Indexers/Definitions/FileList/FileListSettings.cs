@@ -3,6 +3,7 @@ using FluentValidation;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Languages;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.FileList
@@ -11,22 +12,18 @@ namespace NzbDrone.Core.Indexers.FileList
     {
         public FileListSettingsValidator()
         {
-            RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Passkey).NotEmpty();
         }
     }
 
-    public class FileListSettings : IIndexerSettings
+    public class FileListSettings : IProviderConfig
     {
         private static readonly FileListSettingsValidator Validator = new FileListSettingsValidator();
 
         public FileListSettings()
         {
-            BaseUrl = "https://filelist.io";
         }
-
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(0, Label = "Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }

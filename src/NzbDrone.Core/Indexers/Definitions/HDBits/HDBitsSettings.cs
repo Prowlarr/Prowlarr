@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.HDBits
@@ -11,18 +10,16 @@ namespace NzbDrone.Core.Indexers.HDBits
     {
         public HDBitsSettingsValidator()
         {
-            RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.ApiKey).NotEmpty();
         }
     }
 
-    public class HDBitsSettings : IIndexerSettings
+    public class HDBitsSettings : IProviderConfig
     {
         private static readonly HDBitsSettingsValidator Validator = new HDBitsSettingsValidator();
 
         public HDBitsSettings()
         {
-            BaseUrl = "https://hdbits.org";
             Codecs = System.Array.Empty<int>();
             Mediums = System.Array.Empty<int>();
         }
@@ -32,9 +29,6 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
-
-        [FieldDefinition(3, Label = "API URL", Advanced = true, HelpText = "Do not change this unless you know what you're doing. Since your API key will be sent to that host.")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(5, Label = "Codecs", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsCodec), Advanced = true, HelpText = "Options: h264, Mpeg2, VC1, Xvid. If unspecified, all options are used.")]
         public IEnumerable<int> Codecs { get; set; }

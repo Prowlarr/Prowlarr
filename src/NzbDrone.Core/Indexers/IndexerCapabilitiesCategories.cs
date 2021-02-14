@@ -105,18 +105,19 @@ namespace NzbDrone.Core.Indexers
             return cats;
         }
 
-        public ICollection<int> MapTrackerCatDescToNewznab(string trackerCategoryDesc)
+        public ICollection<IndexerCategory> MapTrackerCatDescToNewznab(string trackerCategoryDesc)
         {
             if (string.IsNullOrWhiteSpace(trackerCategoryDesc))
             {
-                return new List<int>();
+                return new List<IndexerCategory>();
             }
 
             var cats = _categoryMapping
                 .Where(m =>
                     !string.IsNullOrWhiteSpace(m.TrackerCategoryDesc) &&
                     string.Equals(m.TrackerCategoryDesc, trackerCategoryDesc, StringComparison.InvariantCultureIgnoreCase))
-                .Select(c => c.NewzNabCategory).ToList();
+                .Select(c => NewznabStandardCategory.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
+                .ToList();
             return cats;
         }
 

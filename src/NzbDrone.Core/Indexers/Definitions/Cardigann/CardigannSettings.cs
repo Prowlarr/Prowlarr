@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Cardigann
@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         }
     }
 
-    public class CardigannSettings : IIndexerSettings
+    public class CardigannSettings : IProviderConfig
     {
         private static readonly CardigannSettingsValidator Validator = new CardigannSettingsValidator();
 
@@ -27,8 +27,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public string DefinitionFile { get; set; }
 
         public Dictionary<string, object> ExtraFieldData { get; set; }
-
-        public string BaseUrl { get; set; }
 
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment

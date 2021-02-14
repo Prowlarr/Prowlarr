@@ -5,6 +5,7 @@ using FluentValidation;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Languages;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Newznab
@@ -44,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         }
     }
 
-    public class NewznabSettings : IIndexerSettings
+    public class NewznabSettings : IProviderConfig
     {
         private static readonly NewznabSettingsValidator Validator = new NewznabSettingsValidator();
 

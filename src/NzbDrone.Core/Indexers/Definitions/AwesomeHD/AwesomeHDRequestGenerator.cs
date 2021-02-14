@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 {
     public class AwesomeHDRequestGenerator : IIndexerRequestGenerator
     {
+        public string BaseUrl { get; set; }
         public AwesomeHDSettings Settings { get; set; }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
@@ -66,7 +67,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
         {
             if (searchParameters != null)
             {
-                yield return new IndexerRequest($"{Settings.BaseUrl.Trim().TrimEnd('/')}/searchapi.php?passkey={Settings.Passkey.Trim()}{searchParameters}", HttpAccept.Rss);
+                yield return new IndexerRequest($"{BaseUrl.Trim().TrimEnd('/')}/searchapi.php?passkey={Settings.Passkey.Trim()}{searchParameters}", HttpAccept.Rss);
             }
         }
     }

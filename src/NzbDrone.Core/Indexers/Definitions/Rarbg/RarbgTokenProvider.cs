@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 {
     public interface IRarbgTokenProvider
     {
-        string GetToken(RarbgSettings settings);
+        string GetToken(RarbgSettings settings, string baseUrl);
     }
 
     public class RarbgTokenProvider : IRarbgTokenProvider
@@ -25,12 +25,12 @@ namespace NzbDrone.Core.Indexers.Rarbg
             _logger = logger;
         }
 
-        public string GetToken(RarbgSettings settings)
+        public string GetToken(RarbgSettings settings, string baseUrl)
         {
-            return _tokenCache.Get(settings.BaseUrl,
+            return _tokenCache.Get(baseUrl,
                 () =>
                 {
-                    var requestBuilder = new HttpRequestBuilder(settings.BaseUrl.Trim('/'))
+                    var requestBuilder = new HttpRequestBuilder(baseUrl.Trim('/'))
                         .WithRateLimit(3.0)
                         .Resource("/pubapi_v2.php?get_token=get_token&app_id=Prowlarr")
                         .Accept(HttpAccept.Json);

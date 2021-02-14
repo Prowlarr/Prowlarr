@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         private readonly IIndexerDefinitionUpdateService _definitionService;
 
         public override string Name => "Cardigann";
+        public override string BaseUrl => throw new System.NotImplementedException();
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

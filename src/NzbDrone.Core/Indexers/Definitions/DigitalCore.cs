@@ -12,6 +12,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -19,6 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class DigitalCore : HttpIndexerBase<DigitalCoreSettings>
     {
         public override string Name => "DigitalCore";
+        public override string BaseUrl => "https://digitalcore.club/";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -35,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new DigitalCoreParser(Settings, Capabilities.Categories);
+            return new DigitalCoreParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -107,6 +109,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class DigitalCoreRequestGenerator : IIndexerRequestGenerator
     {
+        public string BaseUrl { get; set; }
         public DigitalCoreSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
@@ -121,7 +124,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
-            var baseUrl = string.Format("{0}/api/v1/torrents?extendedSearch=false", Settings.BaseUrl.TrimEnd('/'));
+            var baseUrl = string.Format("{0}/api/v1/torrents?extendedSearch=false", BaseUrl.TrimEnd('/'));
 
             var parameters = string.Empty;
 
@@ -190,13 +193,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class DigitalCoreParser : IParseIndexerResponse
     {
+        private readonly string _baseUrl;
         private readonly DigitalCoreSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public DigitalCoreParser(DigitalCoreSettings settings, IndexerCapabilitiesCategories categories)
+        public DigitalCoreParser(DigitalCoreSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
         {
             _settings = settings;
             _categories = categories;
+            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -230,8 +235,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Files = row.numfiles;
                     release.Grabs = row.times_completed;
 
-                    release.Guid = new Uri(_settings.BaseUrl + "torrent/" + row.id.ToString() + "/").ToString();
-                    release.DownloadUrl = _settings.BaseUrl + "api/v1/torrents/download/" + row.id.ToString();
+                    release.Guid = new Uri(_baseUrl + "torrent/" + row.id.ToString() + "/").ToString();
+                    release.DownloadUrl = _baseUrl + "api/v1/torrents/download/" + row.id.ToString();
 
                     if (row.imdbid2 != null && row.imdbid2.ToString().StartsWith("tt"))
                     {
@@ -266,18 +271,15 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class DigitalCoreSettings : IIndexerSettings
+    public class DigitalCoreSettings : IProviderConfig
     {
         private static readonly DigitalCoreSettingsValidator Validator = new DigitalCoreSettingsValidator();
 
         public DigitalCoreSettings()
         {
-            BaseUrl = "https://digitalcore.club/";
             UId = "";
             Passphrase = "";
         }
-
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(1, Label = "UID", Advanced = true, HelpText = "Uid from login cookie")]
         public string UId { get; set; }

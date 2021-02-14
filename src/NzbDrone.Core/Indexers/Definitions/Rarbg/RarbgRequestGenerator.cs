@@ -12,6 +12,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
     {
         private readonly IRarbgTokenProvider _tokenProvider;
 
+        public string BaseUrl { get; set; }
         public RarbgSettings Settings { get; set; }
 
         public RarbgRequestGenerator(IRarbgTokenProvider tokenProvider)
@@ -28,7 +29,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         private IEnumerable<IndexerRequest> GetMovieRequest(MovieSearchCriteria searchCriteria)
         {
-            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
+            var requestBuilder = new HttpRequestBuilder(BaseUrl)
                 .Resource("/pubapi_v2.php")
                 .Accept(HttpAccept.Json);
 
@@ -62,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
             requestBuilder.AddQueryParam("category", categoryParam);
             requestBuilder.AddQueryParam("limit", "100");
-            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings));
+            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings, BaseUrl));
             requestBuilder.AddQueryParam("format", "json_extended");
             requestBuilder.AddQueryParam("app_id", BuildInfo.AppName);
 

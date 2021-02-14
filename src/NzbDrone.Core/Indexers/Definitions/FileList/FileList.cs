@@ -7,6 +7,7 @@ namespace NzbDrone.Core.Indexers.FileList
     public class FileList : HttpIndexerBase<FileListSettings>
     {
         public override string Name => "FileList.io";
+        public override string BaseUrl => "https://filelist.io";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
@@ -19,12 +20,12 @@ namespace NzbDrone.Core.Indexers.FileList
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new FileListRequestGenerator() { Settings = Settings };
+            return new FileListRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new FileListParser(Settings);
+            return new FileListParser(Settings, BaseUrl);
         }
     }
 }

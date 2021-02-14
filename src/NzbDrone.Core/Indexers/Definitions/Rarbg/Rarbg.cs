@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
         private readonly IRarbgTokenProvider _tokenProvider;
 
         public override string Name => "Rarbg";
+        public override string BaseUrl => "https://torrentapi.org";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
 
@@ -50,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RarbgRequestGenerator(_tokenProvider) { Settings = Settings };
+            return new RarbgRequestGenerator(_tokenProvider) { Settings = Settings, BaseUrl = BaseUrl };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -66,7 +67,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
                 try
                 {
-                    var request = new HttpRequestBuilder(Settings.BaseUrl.Trim('/'))
+                    var request = new HttpRequestBuilder(BaseUrl.Trim('/'))
                            .Resource("/pubapi_v2.php?get_token=get_token")
                            .Accept(HttpAccept.Json)
                            .Build();

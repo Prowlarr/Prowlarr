@@ -12,13 +12,14 @@ using NzbDrone.Core.ThingiProvider;
 namespace NzbDrone.Core.Indexers
 {
     public abstract class IndexerBase<TSettings> : IIndexer
-        where TSettings : IIndexerSettings, new()
+        where TSettings : IProviderConfig, new()
     {
         protected readonly IIndexerStatusService _indexerStatusService;
         protected readonly IConfigService _configService;
         protected readonly Logger _logger;
 
         public abstract string Name { get; }
+        public abstract string BaseUrl { get; }
         public abstract DownloadProtocol Protocol { get; }
         public abstract IndexerPrivacy Privacy { get; }
         public int Priority { get; set; }

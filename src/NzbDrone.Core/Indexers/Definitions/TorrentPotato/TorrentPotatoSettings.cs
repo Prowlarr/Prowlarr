@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.TorrentPotato
@@ -11,21 +9,16 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
     {
         public TorrentPotatoSettingsValidator()
         {
-            RuleFor(c => c.BaseUrl).ValidRootUrl();
         }
     }
 
-    public class TorrentPotatoSettings : IIndexerSettings
+    public class TorrentPotatoSettings : IProviderConfig
     {
         private static readonly TorrentPotatoSettingsValidator Validator = new TorrentPotatoSettingsValidator();
 
         public TorrentPotatoSettings()
         {
-            BaseUrl = "http://127.0.0.1";
         }
-
-        [FieldDefinition(0, Label = "API URL", HelpText = "URL to TorrentPotato api.")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(1, Label = "Username", HelpText = "The username you use at your indexer.", Privacy = PrivacyLevel.UserName)]
         public string User { get; set; }

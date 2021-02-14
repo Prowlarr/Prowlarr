@@ -9,6 +9,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
     public class PassThePopcornRequestGenerator : IIndexerRequestGenerator
     {
+        public string BaseUrl { get; set; }
         public PassThePopcornSettings Settings { get; set; }
 
         public IDictionary<string, string> Cookies { get; set; }
@@ -39,7 +40,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         {
             var request =
                 new IndexerRequest(
-                    $"{Settings.BaseUrl.Trim().TrimEnd('/')}/torrents.php?action=advanced&json=noredirect&searchstr={searchParameters}",
+                    $"{BaseUrl.Trim().TrimEnd('/')}/torrents.php?action=advanced&json=noredirect&searchstr={searchParameters}",
                     HttpAccept.Json);
 
             request.HttpRequest.Headers["ApiUser"] = Settings.APIUser;

@@ -10,11 +10,13 @@ namespace NzbDrone.Core.Indexers.FileList
 {
     public class FileListParser : IParseIndexerResponse
     {
+        private readonly string _baseUrl;
         private readonly FileListSettings _settings;
 
-        public FileListParser(FileListSettings settings)
+        public FileListParser(FileListSettings settings, string baseUrl)
         {
             _settings = settings;
+            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -69,7 +71,7 @@ namespace NzbDrone.Core.Indexers.FileList
 
         private string GetDownloadUrl(string torrentId)
         {
-            var url = new HttpUri(_settings.BaseUrl)
+            var url = new HttpUri(_baseUrl)
                 .CombinePath("/download.php")
                 .AddQueryParam("id", torrentId)
                 .AddQueryParam("passkey", _settings.Passkey);
@@ -79,7 +81,7 @@ namespace NzbDrone.Core.Indexers.FileList
 
         private string GetInfoUrl(string torrentId)
         {
-            var url = new HttpUri(_settings.BaseUrl)
+            var url = new HttpUri(_baseUrl)
                 .CombinePath("/details.php")
                 .AddQueryParam("id", torrentId);
 

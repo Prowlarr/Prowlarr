@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
             };
 
             Mocker.GetMock<IRarbgTokenProvider>()
-                .Setup(v => v.GetToken(It.IsAny<RarbgSettings>()))
+                .Setup(v => v.GetToken(It.IsAny<RarbgSettings>(), It.IsAny<string>()))
                 .Returns("validtoken");
         }
 

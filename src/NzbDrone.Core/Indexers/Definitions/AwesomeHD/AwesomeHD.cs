@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
     public class AwesomeHD : HttpIndexerBase<AwesomeHDSettings>
     {
         public override string Name => "AwesomeHD";
+        public override string BaseUrl => "https://awesome-hd.club";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
@@ -24,12 +25,12 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AwesomeHDRequestGenerator() { Settings = Settings };
+            return new AwesomeHDRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AwesomeHDRssParser(Settings);
+            return new AwesomeHDRssParser(Settings, BaseUrl);
         }
 
         private IndexerCapabilities SetCapabilities()

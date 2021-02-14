@@ -1,5 +1,6 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.AwesomeHD
@@ -8,21 +9,17 @@ namespace NzbDrone.Core.Indexers.AwesomeHD
     {
         public AwesomeHDSettingsValidator()
         {
-            RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.Passkey).NotEmpty();
         }
     }
 
-    public class AwesomeHDSettings : IIndexerSettings
+    public class AwesomeHDSettings : IProviderConfig
     {
         private static readonly AwesomeHDSettingsValidator Validator = new AwesomeHDSettingsValidator();
 
         public AwesomeHDSettings()
         {
-            BaseUrl = "https://awesome-hd.club";
         }
-
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(1, Label = "Passkey", Privacy = PrivacyLevel.ApiKey)]
         public string Passkey { get; set; }

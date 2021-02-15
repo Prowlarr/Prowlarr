@@ -43,6 +43,13 @@ namespace NzbDrone.Core.Indexers.Gazelle
     {
         public string GroupId { get; set; }
         public string GroupName { get; set; }
+        public int TorrentId { get; set; }
+        public string Size { get; set; }
+        public int FileCount { get; set; }
+        public string Snatches { get; set; }
+        public string Seeders { get; set; }
+        public string Leechers { get; set; }
+        public string Category { get; set; }
         public string Artist { get; set; }
         public string GroupYear { get; set; }
         public string Cover { get; set; }
@@ -52,8 +59,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public int TotalSeeders { get; set; }
         public int TotalSnatched { get; set; }
         public long MaxSize { get; set; }
-        public string GroupTime { get; set; }
+        public long GroupTime { get; set; }
         public List<GazelleTorrent> Torrents { get; set; }
+        public bool IsFreeLeech { get; set; }
+        public bool IsNeutralLeech { get; set; }
+        public bool IsPersonalFreeLeech { get; set; }
+        public bool CanUseToken { get; set; }
     }
 
     public class GazelleResponse

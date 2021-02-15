@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Indexers
         protected const int MaxNumResultsPerQuery = 1000;
 
         protected readonly IHttpClient _httpClient;
+        public IDictionary<string, string> Cookies { get; set; }
 
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
@@ -109,6 +110,23 @@ namespace NzbDrone.Core.Indexers
             };
 
             return generator;
+        }
+
+        protected IDictionary<string, string> GetCookies()
+        {
+            var cookies = _indexerStatusService.GetIndexerCookies(Definition.Id);
+            var expiration = _indexerStatusService.GetIndexerCookiesExpirationDate(Definition.Id);
+            if (expiration < DateTime.Now)
+            {
+                cookies = null;
+            }
+
+            return cookies;
+        }
+
+        protected void UpdateCookies(IDictionary<string, string> cookies, DateTime? expiration)
+        {
+            _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
         }
 
         protected virtual IndexerPageableQueryResult FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
@@ -333,6 +351,15 @@ namespace NzbDrone.Core.Indexers
             }
         }
 
+        protected virtual bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            return false;
+        }
+
+        protected virtual void DoLogin()
+        {
+        }
+
         protected virtual IndexerResponse FetchIndexerResponse(IndexerRequest request)
         {
             _logger.Debug("Downloading Feed " + request.HttpRequest.ToString(false));
@@ -342,13 +369,40 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.RateLimit = RateLimit;
             }
 
-            request.HttpRequest.AllowAutoRedirect = true;
+            request.HttpRequest.AllowAutoRedirect = false;
+
+            Cookies = GetCookies();
+
+            if (Cookies != null)
+            {
+                foreach (var cookie in Cookies)
+                {
+                    request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
+                }
+            }
 
             var stopWatch = Stopwatch.StartNew();
 
             var response = _httpClient.Execute(request.HttpRequest);
 
             stopWatch.Stop();
+
+            // Check reponse to see if auth is needed, if needed try again
+            if (CheckIfLoginNeeded(response))
+            {
+                DoLogin();
+                request.HttpRequest.Cookies.Clear();
+
+                if (Cookies != null)
+                {
+                    foreach (var cookie in Cookies)
+                    {
+                        request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
+                    }
+                }
+
+                response = _httpClient.Execute(request.HttpRequest);
+            }
 
             return new IndexerResponse(request, response, stopWatch.ElapsedMilliseconds);
         }

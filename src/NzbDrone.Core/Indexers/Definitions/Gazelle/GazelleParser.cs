@@ -73,6 +73,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Guid = string.Format("Gazelle-{0}", id),
                             Title = WebUtility.HtmlDecode(title),
                             Container = torrent.Encoding,
+                            Files = torrent.FileCount,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
                             DownloadUrl = GetDownloadUrl(id),
@@ -96,6 +97,36 @@ namespace NzbDrone.Core.Indexers.Gazelle
                         torrentInfos.Add(release);
                     }
                 }
+                else
+                {
+                    var id = result.TorrentId;
+                    var groupName = WebUtility.HtmlDecode(result.GroupName);
+
+                    var release = new GazelleInfo()
+                    {
+                        Guid = string.Format("Gazelle-{0}", id),
+                        Title = groupName,
+                        Size = long.Parse(result.Size),
+                        DownloadUrl = GetDownloadUrl(id),
+                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        Seeders = int.Parse(result.Seeders),
+                        Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
+                        Files = result.FileCount,
+                        PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
+                    };
+
+                    var category = result.Category;
+                    if (category == null || category.Contains("Select Category"))
+                    {
+                        release.Category = _capabilities.Categories.MapTrackerCatToNewznab("1");
+                    }
+                    else
+                    {
+                        release.Category = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
+                    }
+
+                    torrentInfos.Add(release);
+                }
             }
 
             // order by date
@@ -110,9 +141,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             var url = new HttpUri(_baseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
-                .AddQueryParam("id", torrentId)
-                .AddQueryParam("authkey", _settings.AuthKey)
-                .AddQueryParam("torrent_pass", _settings.PassKey);
+                .AddQueryParam("id", torrentId);
 
             return url.FullUri;
         }

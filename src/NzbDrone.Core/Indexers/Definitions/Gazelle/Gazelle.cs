@@ -1,3 +1,4 @@
+using System;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -8,6 +9,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override string BaseUrl => "";
+        protected virtual string LoginUrl => BaseUrl + "login.php";
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
@@ -43,6 +45,51 @@ namespace NzbDrone.Core.Indexers.Gazelle
             var caps = new IndexerCapabilities();
 
             return caps;
+        }
+
+        protected override void DoLogin()
+        {
+            var requestBuilder = new HttpRequestBuilder(LoginUrl)
+            {
+                LogResponseContent = true
+            };
+
+            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+
+            var cookies = Cookies;
+
+            Cookies = null;
+            var authLoginRequest = requestBuilder
+                .AddFormParameter("username", Settings.Username)
+                .AddFormParameter("password", Settings.Password)
+                .AddFormParameter("keeplogged", "1")
+                .SetHeader("Content-Type", "multipart/form-data")
+                .Accept(HttpAccept.Json)
+                .Build();
+
+            var response = _httpClient.Execute(authLoginRequest);
+
+            cookies = response.GetCookies();
+
+            Cookies = cookies;
+
+            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+
+            _logger.Debug("Gazelle authentication succeeded.");
+
+            //Settings.AuthKey = index.Response.Authkey;
+            //Settings.PassKey = index.Response.Passkey;
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse response)
+        {
+            if (response.HasHttpRedirect || (response.Content != null && response.Content.Contains("\"bad credentials\"")))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

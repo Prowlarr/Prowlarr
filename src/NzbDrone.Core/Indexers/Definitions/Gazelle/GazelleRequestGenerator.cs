@@ -20,7 +20,6 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 
-        protected virtual string LoginUrl => BaseUrl + "login.php";
         protected virtual string APIUrl => BaseUrl + "ajax.php";
         protected virtual string DownloadUrl => BaseUrl + "torrents.php?action=download&usetoken=" + (Settings.UseFreeleechToken ? "1" : "0") + "&id=";
         protected virtual string DetailsUrl => BaseUrl + "torrents.php?torrentid=";
@@ -40,10 +39,6 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
-            AuthCookieCache = GetCookies();
-
-            Authenticate();
-
             var filter = "";
             if (searchParameters == null)
             {
@@ -51,91 +46,17 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             var request =
                 new IndexerRequest(
-                    $"{APIUrl}?action=browse{searchParameters}{filter}",
+                    $"{APIUrl}?{searchParameters}{filter}",
                     HttpAccept.Json);
 
-            var cookies = AuthCookieCache;
-            foreach (var cookie in cookies)
-            {
-                request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
-            }
-
             yield return request;
-        }
-
-        private GazelleAuthResponse GetIndex(IDictionary<string, string> cookies)
-        {
-            var indexRequestBuilder = new HttpRequestBuilder($"{APIUrl}?action=index")
-            {
-                LogResponseContent = true
-            };
-
-            indexRequestBuilder.SetCookies(cookies);
-            indexRequestBuilder.Method = HttpMethod.POST;
-
-            var authIndexRequest = indexRequestBuilder
-                .Accept(HttpAccept.Json)
-                .Build();
-
-            var indexResponse = HttpClient.Execute(authIndexRequest);
-
-            var result = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
-
-            return result;
-        }
-
-        private void Authenticate()
-        {
-            var requestBuilder = new HttpRequestBuilder(LoginUrl)
-            {
-                LogResponseContent = true
-            };
-
-            requestBuilder.Method = HttpMethod.POST;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
-            var cookies = AuthCookieCache;
-
-            if (cookies == null)
-            {
-                AuthCookieCache = null;
-                var authLoginRequest = requestBuilder
-                    .AddFormParameter("username", Settings.Username)
-                    .AddFormParameter("password", Settings.Password)
-                    .AddFormParameter("keeplogged", "1")
-                    .SetHeader("Content-Type", "multipart/form-data")
-                    .Accept(HttpAccept.Json)
-                    .Build();
-
-                var response = HttpClient.Execute(authLoginRequest);
-
-                cookies = response.GetCookies();
-
-                AuthCookieCache = cookies;
-                CookiesUpdater(cookies, DateTime.Now + TimeSpan.FromDays(30));
-            }
-
-            var index = GetIndex(cookies);
-
-            if (index == null || index.Status.IsNullOrWhiteSpace() || index.Status != "success")
-            {
-                Logger.Debug("Gazelle authentication failed.");
-                AuthCookieCache = null;
-                CookiesUpdater(null, null);
-                throw new Exception("Failed to authenticate with Gazelle.");
-            }
-
-            Logger.Debug("Gazelle authentication succeeded.");
-
-            Settings.AuthKey = index.Response.Authkey;
-            Settings.PassKey = index.Response.Passkey;
         }
 
         private string GetBasicSearchParameters(string searchTerm, int[] categories)
         {
             var searchString = GetSearchTerm(searchTerm);
 
-            var parameters = "&action=browse&order_by=time&order_way=desc";
+            var parameters = "action=browse&order_by=time&order_way=desc";
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {

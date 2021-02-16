@@ -20,5 +20,10 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? Limit { get; set; }
         public int? Offset { get; set; }
         public string Source { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{Term: {SearchTerm}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]}}";
+        }
     }
 }

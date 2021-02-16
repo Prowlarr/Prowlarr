@@ -4,6 +4,7 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
@@ -71,6 +72,7 @@ namespace NzbDrone.Core.Indexers
         public abstract IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria);
         public abstract IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria);
         public abstract IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria);
+        public abstract byte[] Download(HttpUri searchCriteria);
 
         public abstract IndexerCapabilities GetCapabilities();
 

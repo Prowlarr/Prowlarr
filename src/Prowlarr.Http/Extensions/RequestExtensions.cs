@@ -124,5 +124,34 @@ namespace Prowlarr.Http.Extensions
 
             return remoteAddress;
         }
+
+        public static string GetServerUrl(this Request request)
+        {
+            var scheme = request.Url.Scheme;
+            var port = request.Url.Port;
+
+            // Check for protocol headers added by reverse proxys
+            // X-Forwarded-Proto: A de facto standard for identifying the originating protocol of an HTTP request
+            var xForwardedProto = request.Headers.Where(x => x.Key == "X-Forwarded-Proto").Select(x => x.Value).FirstOrDefault();
+
+            if (xForwardedProto != null)
+            {
+                scheme = xForwardedProto.First();
+            }
+
+            // Front-End-Https: Non-standard header field used by Microsoft applications and load-balancers
+            else if (request.Headers.Where(x => x.Key == "Front-End-Https" && x.Value.FirstOrDefault() == "on").Any())
+            {
+                scheme = "https";
+            }
+
+            //default to 443 if the Host header doesn't contain the port (needed for reverse proxy setups)
+            if (scheme == "https" && !request.Url.HostName.Contains(":"))
+            {
+                port = 443;
+            }
+
+            return $"{scheme}://{request.Url.HostName}:{port}";
+        }
     }
 }

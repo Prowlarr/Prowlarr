@@ -1,7 +1,7 @@
 using NzbDrone.Common.Messaging;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Indexers.Events
 {
     public class IndexerQueryEvent : IEvent
     {

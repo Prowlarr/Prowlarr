@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider.Events;
 
@@ -24,7 +25,8 @@ namespace NzbDrone.Core.History
 
     public class HistoryService : IHistoryService,
                                   IHandle<ProviderDeletedEvent<IIndexer>>,
-                                  IHandle<IndexerQueryEvent>
+                                  IHandle<IndexerQueryEvent>,
+                                  IHandle<IndexerDownloadEvent>
     {
         private readonly IHistoryRepository _historyRepository;
         private readonly Logger _logger;
@@ -95,6 +97,20 @@ namespace NzbDrone.Core.History
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("QueryResults", message.Results.HasValue ? message.Results.ToString() : null);
+
+            _historyRepository.Insert(history);
+        }
+
+        public void Handle(IndexerDownloadEvent message)
+        {
+            var history = new History
+            {
+                Date = DateTime.UtcNow,
+                IndexerId = message.IndexerId,
+                EventType = HistoryEventType.ReleaseGrabbed
+            };
+
+            history.Data.Add("Successful", message.Successful.ToString());
 
             _historyRepository.Insert(history);
         }

@@ -9,8 +9,10 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Http.CloudFlare;
+using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -87,6 +89,32 @@ namespace NzbDrone.Core.Indexers
             }
 
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+        }
+
+        public override byte[] Download(HttpUri link)
+        {
+            Cookies = GetCookies();
+
+            var requestBuilder = new HttpRequestBuilder(link.FullUri);
+
+            if (Cookies != null)
+            {
+                requestBuilder.SetCookies(Cookies);
+            }
+
+            var downloadBytes = Array.Empty<byte>();
+
+            try
+            {
+                downloadBytes = _httpClient.Execute(requestBuilder.Build()).ResponseData;
+            }
+            catch (Exception)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Error("Download failed");
+            }
+
+            return downloadBytes;
         }
 
         protected IIndexerRequestGenerator SetCookieFunctions(IIndexerRequestGenerator generator)

@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
-using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -19,6 +18,8 @@ namespace NzbDrone.Core.Indexers
         IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria);
         IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria);
         IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria);
+
+        byte[] Download(HttpUri link);
 
         IndexerCapabilities GetCapabilities();
     }

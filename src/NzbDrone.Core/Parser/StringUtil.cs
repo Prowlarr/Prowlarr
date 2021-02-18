@@ -6,8 +6,9 @@ using System.Security.Cryptography;
 using System.Text;
 using AngleSharp.Dom;
 using AngleSharp.Html;
+using NzbDrone.Common.Extensions;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Parser
 {
     public static class StringUtil
     {
@@ -171,7 +172,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                             Encoding encoding = null,
                                             string separator = "&") =>
             string.Join(separator,
-                        collection.Select(a => $"{a.Key}={WebUtilityHelpers.UrlEncode(a.Value, encoding ?? Encoding.UTF8)}"));
+                        collection.Select(a => $"{a.Key}={a.Value.UrlEncode(encoding ?? Encoding.UTF8)}"));
 
         public static void Add(this ICollection<KeyValuePair<string, string>> collection, string key, string value) => collection.Add(new KeyValuePair<string, string>(key, value));
 

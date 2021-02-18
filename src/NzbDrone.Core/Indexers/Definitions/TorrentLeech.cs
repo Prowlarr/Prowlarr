@@ -12,6 +12,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -294,7 +295,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // freeleech #6579 #6624 #7367
                 string dlMultiplier = row.download_multiplier.ToString();
-                var dlVolumeFactor = dlMultiplier.IsNullOrWhiteSpace() ? 1 : dlMultiplier.CoerceInt();
+                var dlVolumeFactor = dlMultiplier.IsNullOrWhiteSpace() ? 1 : ParseUtil.CoerceInt(dlMultiplier);
 
                 var release = new TorrentInfo
                 {
@@ -345,7 +346,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "Username", Advanced = true, HelpText = "Site username")]
+        [FieldDefinition(1, Label = "Username", HelpText = "Site username")]
         public string Username { get; set; }
 
         [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Site password", Privacy = PrivacyLevel.Password)]

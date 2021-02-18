@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {
@@ -608,10 +609,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         data = data.ToUpper();
                         break;
                     case "urldecode":
-                        data = WebUtilityHelpers.UrlDecode(data, _encoding);
+                        data = data.UrlDecode(_encoding);
                         break;
                     case "urlencode":
-                        data = WebUtilityHelpers.UrlEncode(data, _encoding);
+                        data = data.UrlEncode(_encoding);
                         break;
                     case "timeago":
                     case "reltime":

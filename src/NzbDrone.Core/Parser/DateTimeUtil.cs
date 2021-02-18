@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Parser
 {
     public static class DateTimeUtil
     {

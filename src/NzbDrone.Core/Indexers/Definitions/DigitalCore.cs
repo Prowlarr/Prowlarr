@@ -226,7 +226,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var descriptions = new List<string>();
                     var tags = new List<string>();
 
-
                     release.MinimumRatio = 1.1;
                     release.MinimumSeedTime = 432000; // 120 hours
                     release.Title = row.name;

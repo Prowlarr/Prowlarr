@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         LidarrIndexer AddIndexer(LidarrIndexer indexer, LidarrSettings settings);
         List<LidarrIndexer> GetIndexers(LidarrSettings settings);
         List<LidarrIndexer> GetIndexerSchema(LidarrSettings settings);
+        void RemoveIndexer(int indexerId, LidarrSettings settings);
         ValidationFailure Test(LidarrSettings settings);
     }
 

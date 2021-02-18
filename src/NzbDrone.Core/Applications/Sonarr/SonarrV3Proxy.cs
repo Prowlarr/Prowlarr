@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         SonarrIndexer AddIndexer(SonarrIndexer indexer, SonarrSettings settings);
         List<SonarrIndexer> GetIndexers(SonarrSettings settings);
         List<SonarrIndexer> GetIndexerSchema(SonarrSettings settings);
+        void RemoveIndexer(int indexerId, SonarrSettings settings);
         ValidationFailure Test(SonarrSettings settings);
     }
 

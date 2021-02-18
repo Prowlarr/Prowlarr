@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Applications.Readarr
         ReadarrIndexer AddIndexer(ReadarrIndexer indexer, ReadarrSettings settings);
         List<ReadarrIndexer> GetIndexers(ReadarrSettings settings);
         List<ReadarrIndexer> GetIndexerSchema(ReadarrSettings settings);
+        void RemoveIndexer(int indexerId, ReadarrSettings settings);
         ValidationFailure Test(ReadarrSettings settings);
     }
 

@@ -111,6 +111,7 @@ namespace NzbDrone.Core.History
             };
 
             history.Data.Add("Successful", message.Successful.ToString());
+            history.Data.Add("Source", message.Source ?? string.Empty);
 
             _historyRepository.Insert(history);
         }

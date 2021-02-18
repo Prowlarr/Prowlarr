@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Indexers
 {
     public interface IDownloadService
     {
-        byte[] DownloadReport(string link, int indexerId);
+        byte[] DownloadReport(string link, int indexerId, string source);
     }
 
     public class DownloadService : IDownloadService
@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers
             _logger = logger;
         }
 
-        public byte[] DownloadReport(string link, int indexerId)
+        public byte[] DownloadReport(string link, int indexerId, string source)
         {
             var url = new HttpUri(link);
 
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Indexers
             }
 
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(indexerId));
-            bool success;
+            var success = false;
             var downloadedBytes = Array.Empty<byte>();
 
             try
@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Indexers
             catch (ReleaseUnavailableException)
             {
                 _logger.Trace("Release {0} no longer available on indexer.", link);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, false));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source));
                 throw;
             }
             catch (ReleaseDownloadException ex)
@@ -75,11 +75,11 @@ namespace NzbDrone.Core.Indexers
                     _indexerStatusService.RecordFailure(indexerId);
                 }
 
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, false));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source));
                 throw;
             }
 
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success));
+            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source));
             return downloadedBytes;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using Nancy;
 using Nancy.ModelBinding;
@@ -115,8 +116,10 @@ namespace Prowlarr.Api.V1.Indexers
 
             var indexerInstance = _indexerFactory.GetInstance(indexer);
 
+            var source = UserAgentParser.ParseSource(Request.Headers.UserAgent);
+
             var downloadBytes = Array.Empty<byte>();
-            downloadBytes = _downloadService.DownloadReport(_downloadMappingService.ConvertToNormalLink(link), id);
+            downloadBytes = _downloadService.DownloadReport(_downloadMappingService.ConvertToNormalLink(link), id, source);
 
             // handle magnet URLs
             if (downloadBytes.Length >= 7

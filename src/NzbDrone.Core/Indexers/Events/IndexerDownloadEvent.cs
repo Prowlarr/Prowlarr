@@ -11,11 +11,13 @@ namespace NzbDrone.Core.Indexers.Events
     {
         public int IndexerId { get; set; }
         public bool Successful { get; set; }
+        public string Source { get; set; }
 
-        public IndexerDownloadEvent(int indexerId, bool successful)
+        public IndexerDownloadEvent(int indexerId, bool successful, string source)
         {
             IndexerId = indexerId;
             Successful = successful;
+            Source = source;
         }
     }
 }

@@ -48,7 +48,8 @@ namespace NzbDrone.Core.IndexerStats
         private SqlBuilder Builder() => new SqlBuilder()
             .Select(@"Indexers.Id AS IndexerId,
                      Indexers.Name AS IndexerName,
-                     COUNT(History.Id) AS NumberOfQueries,
+                     SUM(CASE WHEN EventType == 2 then 1 else 0 end) AS NumberOfQueries,
+                     SUM(CASE WHEN EventType == 1 then 1 else 0 end) AS NumberOfGrabs,
                      AVG(json_extract(History.Data,'$.elapsedTime')) AS AverageResponseTime")
             .Join<History.History, IndexerDefinition>((t, r) => t.IndexerId == r.Id)
             .GroupBy<IndexerDefinition>(x => x.Id);

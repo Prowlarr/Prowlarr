@@ -30,6 +30,21 @@ function getTotalRequestsData(indexerStats) {
   return data;
 }
 
+function getNumberGrabsData(indexerStats) {
+  const data = indexerStats.map((indexer) => {
+    return {
+      label: indexer.indexerName,
+      value: indexer.numberOfGrabs
+    };
+  });
+
+  data.sort((a, b) => {
+    return b.value - a.value;
+  });
+
+  return data;
+}
+
 function Stats(props) {
   const {
     items,
@@ -68,6 +83,12 @@ function Stats(props) {
               <DoughnutChart
                 data={getTotalRequestsData(items)}
                 title='Total Indexer Queries'
+              />
+            </div>
+            <div className={styles.halfWidthChart}>
+              <BarChart
+                data={getNumberGrabsData(items)}
+                title='Total Indexer Grabs'
               />
             </div>
           </div>

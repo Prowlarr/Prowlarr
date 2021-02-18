@@ -11,6 +11,7 @@ namespace Prowlarr.Api.V1.Indexers
         public string IndexerName { get; set; }
         public int NumberOfQueries { get; set; }
         public int AverageResponseTime { get; set; }
+        public int NumberOfGrabs { get; set; }
     }
 
     public static class IndexerStatsResourceMapper
@@ -27,7 +28,8 @@ namespace Prowlarr.Api.V1.Indexers
                 IndexerId = model.IndexerId,
                 IndexerName = model.IndexerName,
                 NumberOfQueries = model.NumberOfQueries,
-                AverageResponseTime = model.AverageResponseTime
+                AverageResponseTime = model.AverageResponseTime,
+                NumberOfGrabs = model.NumberOfGrabs
             };
         }
 

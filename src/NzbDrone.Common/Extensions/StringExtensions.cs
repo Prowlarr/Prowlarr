@@ -10,6 +10,8 @@ namespace NzbDrone.Common.Extensions
     public static class StringExtensions
     {
         private static readonly Regex CamelCaseRegex = new Regex("(?<!^)[A-Z]", RegexOptions.Compiled);
+        private static readonly Regex InvalidXmlChars = new Regex(@"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]", RegexOptions.Compiled);
+        private static readonly Regex ImdbId = new Regex(@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
 
         public static string NullSafe(this string target)
         {
@@ -171,5 +173,13 @@ namespace NzbDrone.Common.Extensions
         {
             return source.Contains(value, StringComparer.InvariantCultureIgnoreCase);
         }
+
+        public static int CoerceInt(this string str) => int.Parse(NormalizeNumber(str), NumberStyles.Any, CultureInfo.InvariantCulture);
+
+        public static string NormalizeSpace(this string s) => s.Trim();
+
+        public static string NormalizeMultiSpaces(this string s) => new Regex(@"\s+").Replace(NormalizeSpace(s), " ");
+
+        public static string NormalizeNumber(this string s) => NormalizeSpace(s).Replace("-", "0").Replace(",", "");
     }
 }

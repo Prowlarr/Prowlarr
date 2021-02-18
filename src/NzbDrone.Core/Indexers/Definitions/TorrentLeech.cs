@@ -292,6 +292,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     imdbId = int.Parse(imdb.Substring(2));
                 }
 
+                // freeleech #6579 #6624 #7367
+                string dlMultiplier = row.download_multiplier.ToString();
+                var dlVolumeFactor = dlMultiplier.IsNullOrWhiteSpace() ? 1 : dlMultiplier.CoerceInt();
+
                 var release = new TorrentInfo
                 {
                     Title = title,
@@ -304,7 +308,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Grabs = grabs,
                     Seeders = seeders,
                     Peers = seeders + leechers,
-                    ImdbId = imdbId
+                    ImdbId = imdbId,
+                    UploadVolumeFactor = 1,
+                    DownloadVolumeFactor = dlVolumeFactor,
+                    MinimumRatio = 1,
+                    MinimumSeedTime = 864000 // 10 days for registered users, less for upgraded users
                 };
 
                 torrentInfos.Add(release);

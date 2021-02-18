@@ -226,6 +226,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var descriptions = new List<string>();
                     var tags = new List<string>();
 
+
+                    release.MinimumRatio = 1.1;
+                    release.MinimumSeedTime = 432000; // 120 hours
                     release.Title = row.name;
                     release.Category = _categories.MapTrackerCatToNewznab(row.category.ToString());
                     release.Size = row.size;
@@ -237,6 +240,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     release.Guid = new Uri(_baseUrl + "torrent/" + row.id.ToString() + "/").ToString();
                     release.DownloadUrl = _baseUrl + "api/v1/torrents/download/" + row.id.ToString();
+
+                    if (row.frileech == 1)
+                    {
+                        release.DownloadVolumeFactor = 0;
+                    }
+                    else
+                    {
+                        release.DownloadVolumeFactor = 1;
+                    }
+
+                    release.UploadVolumeFactor = 1;
 
                     if (row.imdbid2 != null && row.imdbid2.ToString().StartsWith("tt"))
                     {

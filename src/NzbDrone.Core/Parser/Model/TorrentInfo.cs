@@ -10,6 +10,10 @@ namespace NzbDrone.Core.Parser.Model
         public int? Seeders { get; set; }
         public int? Peers { get; set; }
         public bool Freeleech { get; set; }
+        public double? MinimumRatio { get; set; }
+        public long? MinimumSeedTime { get; set; }
+        public double? DownloadVolumeFactor { get; set; }
+        public double? UploadVolumeFactor { get; set; }
 
         public static int? GetSeeders(ReleaseInfo release)
         {

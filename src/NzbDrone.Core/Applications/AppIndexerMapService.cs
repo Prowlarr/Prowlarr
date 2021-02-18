@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Applications
     {
         List<AppIndexerMap> GetMappingsForApp(int appId);
         AppIndexerMap Insert(AppIndexerMap appIndexerMap);
+        void Delete(int mappingId);
         void DeleteAllForApp(int appId);
     }
 
@@ -23,6 +24,11 @@ namespace NzbDrone.Core.Applications
         public void DeleteAllForApp(int appId)
         {
             _appIndexerMapRepository.DeleteAllForApp(appId);
+        }
+
+        public void Delete(int mappingId)
+        {
+            _appIndexerMapRepository.Delete(mappingId);
         }
 
         public List<AppIndexerMap> GetMappingsForApp(int appId)

@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Applications.Radarr
         RadarrIndexer AddIndexer(RadarrIndexer indexer, RadarrSettings settings);
         List<RadarrIndexer> GetIndexers(RadarrSettings settings);
         List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings);
+        void RemoveIndexer(int indexerId, RadarrSettings settings);
         ValidationFailure Test(RadarrSettings settings);
     }
 

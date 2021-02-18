@@ -47,8 +47,16 @@ namespace NzbDrone.Core.Applications.Readarr
 
         public override void RemoveIndexer(int indexerId)
         {
-            //Use the Id mapping here to delete the correct indexer
-            throw new System.NotImplementedException();
+            var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
+
+            var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexerId);
+
+            if (indexerMapping != null)
+            {
+                //Remove Indexer remotely and then remove the mapping
+                _readarrV1Proxy.RemoveIndexer(indexerMapping.RemoteIndexerId, Settings);
+                _appIndexerMapService.Delete(indexerMapping.Id);
+            }
         }
 
         public override void UpdateIndexer(IndexerDefinition indexer)

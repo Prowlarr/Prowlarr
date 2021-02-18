@@ -10,6 +10,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {

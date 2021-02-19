@@ -7,6 +7,7 @@ import { setAppValue, setVersion } from 'Store/Actions/appActions';
 import { removeItem, update, updateItem } from 'Store/Actions/baseActions';
 import { fetchCommands, finishCommand, updateCommand } from 'Store/Actions/commandActions';
 import { fetchIndexers } from 'Store/Actions/indexerActions';
+import { fetchIndexerStatus } from 'Store/Actions/indexerStatusActions';
 import { fetchHealth } from 'Store/Actions/systemActions';
 import { fetchTagDetails, fetchTags } from 'Store/Actions/tagActions';
 import { repopulatePage } from 'Utilities/pagePopulator';
@@ -43,6 +44,7 @@ const mapDispatchToProps = {
   dispatchRemoveItem: removeItem,
   dispatchFetchHealth: fetchHealth,
   dispatchFetchIndexers: fetchIndexers,
+  dispatchFetchIndexerStatus: fetchIndexerStatus,
   dispatchFetchTags: fetchTags,
   dispatchFetchTagDetails: fetchTagDetails
 };
@@ -162,6 +164,10 @@ class SignalRConnector extends Component {
     this.props.dispatchFetchHealth();
   }
 
+  handleIndexerstatus = () => {
+    this.props.dispatchFetchIndexerStatus();
+  }
+
   handleMovie = (body) => {
     const action = body.action;
     const section = 'movies';
@@ -274,6 +280,7 @@ SignalRConnector.propTypes = {
   dispatchRemoveItem: PropTypes.func.isRequired,
   dispatchFetchHealth: PropTypes.func.isRequired,
   dispatchFetchIndexers: PropTypes.func.isRequired,
+  dispatchFetchIndexerStatus: PropTypes.func.isRequired,
   dispatchFetchTags: PropTypes.func.isRequired,
   dispatchFetchTagDetails: PropTypes.func.isRequired
 };

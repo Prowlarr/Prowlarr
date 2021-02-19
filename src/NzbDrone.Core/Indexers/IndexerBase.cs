@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract string Name { get; }
         public abstract string BaseUrl { get; }
+        public abstract bool FollowRedirect { get; }
         public abstract DownloadProtocol Protocol { get; }
         public abstract IndexerPrivacy Privacy { get; }
         public int Priority { get; set; }

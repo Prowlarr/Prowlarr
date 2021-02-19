@@ -28,6 +28,8 @@ namespace NzbDrone.Core.Indexers
 
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+
+        public override bool FollowRedirect => false;
         public override IndexerCapabilities Capabilities { get; protected set; }
         public virtual int PageSize => 0;
         public virtual TimeSpan RateLimit => TimeSpan.FromSeconds(2);
@@ -397,7 +399,7 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.RateLimit = RateLimit;
             }
 
-            request.HttpRequest.AllowAutoRedirect = false;
+            request.HttpRequest.AllowAutoRedirect = FollowRedirect;
 
             Cookies = GetCookies();
 

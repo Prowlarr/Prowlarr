@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override string Name => "Newznab";
         public override string BaseUrl => Settings.BaseUrl;
+        public override bool FollowRedirect => true;
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

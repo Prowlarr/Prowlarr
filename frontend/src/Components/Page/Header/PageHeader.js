@@ -52,8 +52,11 @@ class PageHeader extends Component {
     return (
       <div className={styles.header}>
         <div className={styles.logoContainer}>
-          <Link to={`${window.Prowlarr.urlBase}/`}>
-            <span className={styles.appTitle}>Prowlarr</span>
+          <Link to={'/'}>
+            <img
+              className={styles.logo}
+              src={`${window.Prowlarr.urlBase}/Content/Images/logo.png`}
+            />
           </Link>
         </div>
 

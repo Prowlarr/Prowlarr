@@ -3,8 +3,8 @@ using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Security;
 
 namespace NzbDrone.Core.Indexers
 {

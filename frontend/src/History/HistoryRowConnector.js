@@ -1,8 +1,10 @@
+import { push } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { fetchHistory, markAsFailed } from 'Store/Actions/historyActions';
+import { setSearchDefault } from 'Store/Actions/releaseActions';
 import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import HistoryRow from './HistoryRow';
@@ -23,7 +25,9 @@ function createMapStateToProps() {
 
 const mapDispatchToProps = {
   fetchHistory,
-  markAsFailed
+  markAsFailed,
+  setSearchDefault,
+  push
 };
 
 class HistoryRowConnector extends Component {
@@ -44,6 +48,11 @@ class HistoryRowConnector extends Component {
   //
   // Listeners
 
+  onSearchPress = (term, indexerId, categories) => {
+    this.props.setSearchDefault({ searchQuery: term, searchIndexerIds: [indexerId], searchCategories: categories });
+    this.props.push(`${window.Prowlarr.urlBase}search`);
+  }
+
   onMarkAsFailedPress = () => {
     this.props.markAsFailed({ id: this.props.id });
   }
@@ -56,6 +65,7 @@ class HistoryRowConnector extends Component {
       <HistoryRow
         {...this.props}
         onMarkAsFailedPress={this.onMarkAsFailedPress}
+        onSearchPress={this.onSearchPress}
       />
     );
   }
@@ -67,7 +77,9 @@ HistoryRowConnector.propTypes = {
   isMarkingAsFailed: PropTypes.bool,
   markAsFailedError: PropTypes.object,
   fetchHistory: PropTypes.func.isRequired,
-  markAsFailed: PropTypes.func.isRequired
+  markAsFailed: PropTypes.func.isRequired,
+  setSearchDefault: PropTypes.func.isRequired,
+  push: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(HistoryRowConnector);

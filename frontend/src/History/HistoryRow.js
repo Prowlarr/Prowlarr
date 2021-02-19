@@ -35,6 +35,25 @@ class HistoryRow extends Component {
   //
   // Listeners
 
+  onSearchPress = () => {
+    const {
+      indexer,
+      data
+    } = this.props;
+
+    let categories = [];
+
+    if (data.categories) {
+      categories = data.categories.split(',').map((item) => {
+        return parseInt(item);
+      });
+    }
+
+    console.log(categories);
+
+    this.props.onSearchPress(data.query, indexer.id, categories);
+  }
+
   onDetailsPress = () => {
     this.setState({ isDetailsModalOpen: true });
   }
@@ -115,7 +134,11 @@ class HistoryRow extends Component {
                   key={name}
                   className={styles.indexer}
                 >
-                  {`${data.elapsedTime}ms`}
+                  {
+                    data.elapsedTime ?
+                      `${data.elapsedTime}ms` :
+                      null
+                  }
                 </TableRowCell>
               );
             }
@@ -146,9 +169,19 @@ class HistoryRow extends Component {
                   key={name}
                   className={styles.details}
                 >
+                  {
+                    eventType === 'indexerQuery' ?
+                      <IconButton
+                        name={icons.SEARCH}
+                        onPress={this.onSearchPress}
+                        title='Repeat Search'
+                      /> :
+                      null
+                  }
                   <IconButton
                     name={icons.INFO}
                     onPress={this.onDetailsPress}
+                    title='History Details'
                   />
                 </TableRowCell>
               );
@@ -186,7 +219,8 @@ HistoryRow.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   shortDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
-  onMarkAsFailedPress: PropTypes.func.isRequired
+  onMarkAsFailedPress: PropTypes.func.isRequired,
+  onSearchPress: PropTypes.func.isRequired
 };
 
 export default HistoryRow;

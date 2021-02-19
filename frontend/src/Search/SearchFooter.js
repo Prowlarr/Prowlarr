@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
@@ -16,36 +17,75 @@ class SearchFooter extends Component {
   constructor(props, context) {
     super(props, context);
 
+    const {
+      defaultIndexerIds,
+      defaultCategories,
+      defaultSearchQuery
+    } = props;
+
     this.state = {
       searchingReleases: false,
-      searchQuery: '',
-      indexerIds: [],
-      categories: []
+      searchQuery: defaultSearchQuery,
+      searchIndexerIds: defaultIndexerIds,
+      searchCategories: defaultCategories
     };
+  }
+
+  componentDidMount() {
+    const {
+      searchIndexerIds,
+      searchCategories,
+      searchQuery
+    } = this.state;
+
+    if (searchQuery !== '' || searchCategories !== [] || searchIndexerIds !== []) {
+      this.onSearchPress();
+    }
   }
 
   componentDidUpdate(prevProps) {
     const {
       isFetching,
+      defaultIndexerIds,
+      defaultCategories,
+      defaultSearchQuery,
       searchError
     } = this.props;
 
+    const {
+      searchIndexerIds,
+      searchCategories,
+      searchQuery
+    } = this.state;
+
+    const newState = {};
+
+    if (searchIndexerIds !== defaultIndexerIds) {
+      newState.searchIndexerIds = defaultIndexerIds;
+    }
+
+    if (searchCategories !== defaultCategories) {
+      newState.searchCategories = defaultCategories;
+    }
+
+    if (searchQuery !== defaultSearchQuery) {
+      newState.searchQuery = defaultSearchQuery;
+    }
+
     if (prevProps.isFetching && !isFetching && !searchError) {
-      this.setState({
-        searchingReleases: false
-      });
+      newState.searchingReleases = false;
+    }
+
+    if (!_.isEmpty(newState)) {
+      this.setState(newState);
     }
   }
 
   //
   // Listeners
 
-  onInputChange = ({ name, value }) => {
-    this.setState({ [name]: value });
-  }
-
   onSearchPress = () => {
-    this.props.onSearchPress(this.state.searchQuery, this.state.indexerIds, this.state.categories);
+    this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories);
   }
 
   //
@@ -54,13 +94,14 @@ class SearchFooter extends Component {
   render() {
     const {
       isFetching,
-      hasIndexers
+      hasIndexers,
+      onInputChange
     } = this.props;
 
     const {
       searchQuery,
-      indexerIds,
-      categories
+      searchIndexerIds,
+      searchCategories
     } = this.state;
 
     return (
@@ -75,7 +116,7 @@ class SearchFooter extends Component {
             name='searchQuery'
             value={searchQuery}
             isDisabled={isFetching}
-            onChange={this.onInputChange}
+            onChange={onInputChange}
           />
         </div>
 
@@ -86,10 +127,10 @@ class SearchFooter extends Component {
           />
 
           <IndexersSelectInputConnector
-            name='indexerIds'
-            value={indexerIds}
+            name='searchIndexerIds'
+            value={searchIndexerIds}
             isDisabled={isFetching}
-            onChange={this.onInputChange}
+            onChange={onInputChange}
           />
         </div>
 
@@ -100,19 +141,24 @@ class SearchFooter extends Component {
           />
 
           <NewznabCategorySelectInputConnector
-            name='categories'
-            value={categories}
+            name='searchCategories'
+            value={searchCategories}
             isDisabled={isFetching}
-            onChange={this.onInputChange}
+            onChange={onInputChange}
           />
         </div>
 
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
+            <SearchFooterLabel
+              label={`Search ${searchIndexerIds.length === 0 ? 'all' : searchIndexerIds.length} Indexers`}
+              isSaving={false}
+            />
+
             <div className={styles.buttons}>
 
               <SpinnerButton
-                className={styles.deleteSelectedButton}
+                className={styles.searchButton}
                 isSpinning={isFetching}
                 isDisabled={isFetching || !hasIndexers}
                 onPress={this.onSearchPress}
@@ -128,9 +174,13 @@ class SearchFooter extends Component {
 }
 
 SearchFooter.propTypes = {
+  defaultIndexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  defaultCategories: PropTypes.arrayOf(PropTypes.number).isRequired,
+  defaultSearchQuery: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired,
+  onInputChange: PropTypes.func.isRequired,
   searchError: PropTypes.object
 };
 

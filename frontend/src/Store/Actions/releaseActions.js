@@ -2,6 +2,8 @@ import { createAction } from 'redux-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
+import getSectionState from 'Utilities/State/getSectionState';
+import updateSectionState from 'Utilities/State/updateSectionState';
 import translate from 'Utilities/String/translate';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
@@ -26,6 +28,12 @@ export const defaultState = {
   items: [],
   sortKey: 'title',
   sortDirection: sortDirections.ASCENDING,
+
+  defaults: {
+    searchQuery: '',
+    searchIndexerIds: [],
+    searchCategories: []
+  },
 
   columns: [
     {
@@ -196,6 +204,7 @@ export const GRAB_RELEASE = 'releases/grabRelease';
 export const UPDATE_RELEASE = 'releases/updateRelease';
 export const SET_RELEASES_FILTER = 'releases/setReleasesFilter';
 export const SET_RELEASES_TABLE_OPTION = 'releases/setReleasesTableOption';
+export const SET_SEARCH_DEFAULT = 'releases/setSearchDefault';
 
 //
 // Action Creators
@@ -208,6 +217,7 @@ export const grabRelease = createThunk(GRAB_RELEASE);
 export const updateRelease = createAction(UPDATE_RELEASE);
 export const setReleasesFilter = createAction(SET_RELEASES_FILTER);
 export const setReleasesTableOption = createAction(SET_RELEASES_TABLE_OPTION);
+export const setSearchDefault = createAction(SET_SEARCH_DEFAULT);
 
 //
 // Helpers
@@ -289,6 +299,17 @@ export const reducers = createHandleActions({
     }
 
     return newState;
+  },
+
+  [SET_SEARCH_DEFAULT]: function(state, { payload }) {
+    const newState = getSectionState(state, section);
+
+    newState.defaults = {
+      ...newState.defaults,
+      ...payload
+    };
+
+    return updateSectionState(state, section, newState);
   },
 
   [SET_RELEASES_FILTER]: createSetClientSideCollectionFilterReducer(section),

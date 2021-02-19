@@ -9,14 +9,16 @@ function getIconName(eventType) {
   switch (eventType) {
     case 'indexerQuery':
       return icons.SEARCH;
+    case 'releaseGrabbed':
+      return icons.DOWNLOAD;
     default:
       return icons.UNKNOWN;
   }
 }
 
-function getIconKind(eventType) {
-  switch (eventType) {
-    case 'downloadFailed':
+function getIconKind(data) {
+  switch (data.successful) {
+    case 'False':
       return kinds.DANGER;
     default:
       return kinds.DEFAULT;
@@ -27,6 +29,8 @@ function getTooltip(eventType, data, indexer) {
   switch (eventType) {
     case 'indexerQuery':
       return `Query "${data.query}" sent to ${indexer.name}`;
+    case 'releaseGrabbed':
+      return `Release grabbed from ${indexer.name}`;
     default:
       return 'Unknown event';
   }
@@ -34,7 +38,7 @@ function getTooltip(eventType, data, indexer) {
 
 function HistoryEventTypeCell({ eventType, data, indexer }) {
   const iconName = getIconName(eventType);
-  const iconKind = getIconKind(eventType);
+  const iconKind = getIconKind(data);
   const tooltip = getTooltip(eventType, data, indexer);
 
   return (

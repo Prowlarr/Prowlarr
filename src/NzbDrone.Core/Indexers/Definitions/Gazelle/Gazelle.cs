@@ -77,9 +77,6 @@ namespace NzbDrone.Core.Indexers.Gazelle
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             _logger.Debug("Gazelle authentication succeeded.");
-
-            //Settings.AuthKey = index.Response.Authkey;
-            //Settings.PassKey = index.Response.Passkey;
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse response)

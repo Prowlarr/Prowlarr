@@ -63,6 +63,32 @@ function HistoryDetails(props) {
     );
   }
 
+  if (eventType === 'releaseGrabbed') {
+    const {
+      source
+    } = data;
+
+    return (
+      <DescriptionList>
+        {
+          !!indexer &&
+            <DescriptionListItem
+              title={translate('Indexer')}
+              data={indexer.name}
+            />
+        }
+
+        {
+          !!data &&
+            <DescriptionListItem
+              title={'Source'}
+              data={source}
+            />
+        }
+      </DescriptionList>
+    );
+  }
+
   return (
     <DescriptionList>
       <DescriptionListItem

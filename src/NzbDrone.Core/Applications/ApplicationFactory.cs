@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Composition;
 using NzbDrone.Core.Messaging.Events;
@@ -56,6 +57,18 @@ namespace NzbDrone.Core.Applications
 
                 yield return application;
             }
+        }
+
+        public override ValidationResult Test(ApplicationDefinition definition)
+        {
+            var result = base.Test(definition);
+
+            if ((result == null || result.IsValid) && definition.Id != 0)
+            {
+                _applicationStatusService.RecordSuccess(definition.Id);
+            }
+
+            return result;
         }
     }
 }

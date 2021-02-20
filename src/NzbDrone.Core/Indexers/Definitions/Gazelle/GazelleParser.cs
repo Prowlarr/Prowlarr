@@ -74,6 +74,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Title = WebUtility.HtmlDecode(title),
                             Container = torrent.Encoding,
                             Files = torrent.FileCount,
+                            Grabs = torrent.Snatches,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
                             DownloadUrl = GetDownloadUrl(id),
@@ -112,6 +113,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         Files = result.FileCount,
+                        Grabs = result.Snatches,
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
                     };
 

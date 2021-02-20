@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public int FileCount { get; set; }
         public DateTime Time { get; set; }
         public string Size { get; set; }
-        public string Snatches { get; set; }
+        public int? Snatches { get; set; }
         public string Seeders { get; set; }
         public string Leechers { get; set; }
         public string Category { get; set; }
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public int TorrentId { get; set; }
         public string Size { get; set; }
         public int FileCount { get; set; }
-        public string Snatches { get; set; }
+        public int? Snatches { get; set; }
         public string Seeders { get; set; }
         public string Leechers { get; set; }
         public string Category { get; set; }

@@ -7,6 +7,7 @@ namespace NzbDrone.Core.Indexers
 {
     public class IndexerDefinition : ProviderDefinition
     {
+        public string BaseUrl { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
         public bool SupportsRss { get; set; }

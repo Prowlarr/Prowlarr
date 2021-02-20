@@ -14,9 +14,9 @@ import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
 import IndexerStatusCell from './IndexerStatusCell';
 import ProtocolLabel from './ProtocolLabel';
-import styles from './MovieIndexRow.css';
+import styles from './IndexerIndexRow.css';
 
-class MovieIndexRow extends Component {
+class IndexerIndexRow extends Component {
 
   //
   // Lifecycle
@@ -61,6 +61,7 @@ class MovieIndexRow extends Component {
     const {
       id,
       name,
+      baseUrl,
       enable,
       tags,
       protocol,
@@ -213,8 +214,10 @@ class MovieIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   <IconButton
+                    className={styles.externalLink}
                     name={icons.EXTERNAL_LINK}
                     title={'Website'}
+                    to={baseUrl}
                   />
 
                   <IconButton
@@ -247,8 +250,9 @@ class MovieIndexRow extends Component {
   }
 }
 
-MovieIndexRow.propTypes = {
+IndexerIndexRow.propTypes = {
   id: PropTypes.number.isRequired,
+  baseUrl: PropTypes.string.isRequired,
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
   priority: PropTypes.number.isRequired,
@@ -267,8 +271,8 @@ MovieIndexRow.propTypes = {
   timeFormat: PropTypes.string.isRequired
 };
 
-MovieIndexRow.defaultProps = {
+IndexerIndexRow.defaultProps = {
   tags: []
 };
 
-export default MovieIndexRow;
+export default IndexerIndexRow;

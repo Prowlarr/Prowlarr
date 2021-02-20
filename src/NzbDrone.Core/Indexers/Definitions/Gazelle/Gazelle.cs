@@ -72,8 +72,6 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             cookies = response.GetCookies();
 
-            Cookies = cookies;
-
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             _logger.Debug("Gazelle authentication succeeded.");

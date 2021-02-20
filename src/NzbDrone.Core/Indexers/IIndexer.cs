@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Indexers
         bool SupportsSearch { get; }
         IndexerCapabilities Capabilities { get; }
 
+        string BaseUrl { get; }
         DownloadProtocol Protocol { get; }
         IndexerPrivacy Privacy { get; }
 

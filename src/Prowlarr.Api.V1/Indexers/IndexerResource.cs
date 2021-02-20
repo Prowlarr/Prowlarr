@@ -10,6 +10,7 @@ namespace Prowlarr.Api.V1.Indexers
 {
     public class IndexerResource : ProviderResource
     {
+        public string BaseUrl { get; set; }
         public bool Enable { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
@@ -49,6 +50,7 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
+            resource.BaseUrl = definition.BaseUrl;
             resource.Enable = definition.Enable;
             resource.SupportsRss = definition.SupportsRss;
             resource.SupportsSearch = definition.SupportsSearch;
@@ -85,6 +87,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
 
             definition.Enable = resource.Enable;
+            definition.BaseUrl = resource.BaseUrl;
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;
             definition.Added = resource.Added;

@@ -155,14 +155,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return variables;
         }
 
-        private void Authenticate()
+        public void DoLogin()
         {
             var login = _definition.Login;
-
-            if (login == null || TestLogin())
-            {
-                return;
-            }
 
             if (login.Method == "post")
             {
@@ -725,7 +720,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         protected string GetRedirectDomainHint(HttpResponse result) => GetRedirectDomainHint(result.Request.Url.ToString(), result.Headers.GetSingleValue("Location"));
 
-        protected bool CheckIfLoginIsNeeded(HttpResponse response, IHtmlDocument document)
+        public bool CheckIfLoginIsNeeded(HttpResponse response)
         {
             if (response.HasHttpRedirect)
             {
@@ -745,6 +740,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return false;
             }
 
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(response.Content);
+
             if (_definition.Login.Test.Selector != null)
             {
                 var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
@@ -759,13 +757,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
         {
-            Cookies = GetCookies();
-
-            if (Cookies == null || !Cookies.Any())
-            {
-                Authenticate();
-            }
-
             var search = _definition.Search;
 
             var mappedCategories = MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
@@ -887,14 +878,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     foreach (var header in search.Headers)
                     {
                         request.HttpRequest.Headers.Add(header.Key, header.Value[0]);
-                    }
-                }
-
-                if (Cookies != null)
-                {
-                    foreach (var cookie in Cookies)
-                    {
-                        request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
                     }
                 }
 

@@ -81,7 +81,7 @@ export const defaultState = {
       filters: []
     },
     {
-      key: 'grabbed',
+      key: 'releaseGrabbed',
       label: translate('Grabbed'),
       filters: [
         {
@@ -92,56 +92,12 @@ export const defaultState = {
       ]
     },
     {
-      key: 'imported',
-      label: translate('Imported'),
+      key: 'indexerQuery',
+      label: translate('IndexerQuery'),
       filters: [
         {
           key: 'eventType',
-          value: '3',
-          type: filterTypes.EQUAL
-        }
-      ]
-    },
-    {
-      key: 'failed',
-      label: translate('Failed'),
-      filters: [
-        {
-          key: 'eventType',
-          value: '4',
-          type: filterTypes.EQUAL
-        }
-      ]
-    },
-    {
-      key: 'deleted',
-      label: translate('Deleted'),
-      filters: [
-        {
-          key: 'eventType',
-          value: '6',
-          type: filterTypes.EQUAL
-        }
-      ]
-    },
-    {
-      key: 'renamed',
-      label: translate('Renamed'),
-      filters: [
-        {
-          key: 'eventType',
-          value: '8',
-          type: filterTypes.EQUAL
-        }
-      ]
-    },
-    {
-      key: 'ignored',
-      label: translate('Ignored'),
-      filters: [
-        {
-          key: 'eventType',
-          value: '9',
+          value: '2',
           type: filterTypes.EQUAL
         }
       ]

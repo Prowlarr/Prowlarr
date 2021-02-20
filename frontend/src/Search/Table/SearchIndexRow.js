@@ -215,6 +215,7 @@ class SearchIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   <IconButton
+                    className={styles.downloadLink}
                     name={icons.DOWNLOAD}
                     title={'Grab'}
                     to={downloadUrl}

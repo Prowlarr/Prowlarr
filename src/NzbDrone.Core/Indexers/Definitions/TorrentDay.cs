@@ -242,6 +242,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Title = title,
                     Guid = details.AbsoluteUri,
                     DownloadUrl = link.AbsoluteUri,
+                    InfoUrl = details.AbsoluteUri,
                     PublishDate = publishDate,
                     Category = _categories.MapTrackerCatToNewznab(row.c.ToString()),
                     Size = (long)row.size,

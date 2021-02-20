@@ -5,8 +5,8 @@ import VirtualTableRow from 'Components/Table/VirtualTableRow';
 import { sortDirections } from 'Helpers/Props';
 import MovieIndexItemConnector from 'Indexer/Index/MovieIndexItemConnector';
 import getIndexOfFirstCharacter from 'Utilities/Array/getIndexOfFirstCharacter';
+import IndexerIndexRow from './IndexerIndexRow';
 import MovieIndexHeaderConnector from './MovieIndexHeaderConnector';
-import MovieIndexRow from './MovieIndexRow';
 import styles from './MovieIndexTable.css';
 
 class MovieIndexTable extends Component {
@@ -62,7 +62,7 @@ class MovieIndexTable extends Component {
       >
         <MovieIndexItemConnector
           key={movie.id}
-          component={MovieIndexRow}
+          component={IndexerIndexRow}
           columns={columns}
           indexerId={movie.id}
           isSelected={selectedState[movie.id]}

@@ -56,8 +56,8 @@
   margin-top: 0;
 }
 
-.externalLinks {
-  margin: 0 2px;
-  width: 22px;
-  text-align: center;
+.externalLink {
+  composes: link from '~Components/Link/Link.css';
+
+  color: $textColor;
 }

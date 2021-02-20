@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         private readonly IIndexerDefinitionUpdateService _definitionService;
 
         public override string Name => "Cardigann";
-        public override string BaseUrl => throw new System.NotImplementedException();
+        public override string BaseUrl => "";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -74,6 +74,24 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Capabilities = new IndexerCapabilities(),
                 ExtraFields = definition.Settings
             };
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            var generator = (CardigannRequestGenerator)GetRequestGenerator();
+
+            SetCookieFunctions(generator);
+
+            return generator.CheckIfLoginIsNeeded(httpResponse);
+        }
+
+        protected override void DoLogin()
+        {
+            var generator = (CardigannRequestGenerator)GetRequestGenerator();
+
+            SetCookieFunctions(generator);
+
+            generator.DoLogin();
         }
 
         protected override void Test(List<ValidationFailure> failures)

@@ -136,7 +136,7 @@ namespace NzbDrone.Core.Indexers
 
             generator.CookiesUpdater = (cookies, expiration) =>
             {
-                _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
+                UpdateCookies(cookies, expiration);
             };
 
             return generator;
@@ -156,6 +156,7 @@ namespace NzbDrone.Core.Indexers
 
         protected void UpdateCookies(IDictionary<string, string> cookies, DateTime? expiration)
         {
+            Cookies = cookies;
             _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
         }
 
@@ -433,6 +434,8 @@ namespace NzbDrone.Core.Indexers
 
                 response = _httpClient.Execute(request.HttpRequest);
             }
+
+            UpdateCookies(Cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             return new IndexerResponse(request, response, stopWatch.ElapsedMilliseconds);
         }

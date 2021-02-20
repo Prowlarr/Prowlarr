@@ -52,6 +52,7 @@ namespace NzbDrone.Core.Indexers
                     var settings = (CardigannSettings)definition.Settings;
                     var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
                     definition.ExtraFields = defFile.Settings;
+                    definition.BaseUrl = defFile.Links.First();
                     definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
                     definition.Capabilities = new IndexerCapabilities();
                     definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
@@ -71,6 +72,7 @@ namespace NzbDrone.Core.Indexers
                 var settings = (CardigannSettings)definition.Settings;
                 var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
                 definition.ExtraFields = defFile.Settings;
+                definition.BaseUrl = defFile.Links.First();
                 definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
                 definition.Capabilities = new IndexerCapabilities();
                 definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
@@ -158,6 +160,7 @@ namespace NzbDrone.Core.Indexers
             //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
             if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
             {
+                definition.BaseUrl = provider.BaseUrl;
                 definition.Privacy = provider.Privacy;
                 definition.Capabilities = provider.Capabilities;
             }

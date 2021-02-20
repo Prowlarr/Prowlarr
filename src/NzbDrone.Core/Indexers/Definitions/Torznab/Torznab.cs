@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
         public override string Name => "Torznab";
-        public override string BaseUrl => Settings.BaseUrl;
+        public override string BaseUrl => "";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

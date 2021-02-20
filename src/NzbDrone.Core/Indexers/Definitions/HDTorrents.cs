@@ -65,7 +65,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             var response = _httpClient.Execute(authLoginRequest);
 
             cookies = response.GetCookies();
-            Cookies = cookies;
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             _logger.Debug("HDTorrents authentication succeeded.");

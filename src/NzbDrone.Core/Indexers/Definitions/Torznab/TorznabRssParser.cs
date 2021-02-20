@@ -32,12 +32,12 @@ namespace NzbDrone.Core.Indexers.Torznab
 
             if (code >= 100 && code <= 199)
             {
-                throw new ApiKeyException("Invalid API key");
+                throw new IndexerAuthException("Invalid API key");
             }
 
             if (!indexerResponse.Request.Url.FullUri.Contains("apikey=") && errorMessage == "Missing parameter")
             {
-                throw new ApiKeyException("Indexer requires an API key");
+                throw new IndexerAuthException("Indexer requires an API key");
             }
 
             if (errorMessage == "Request limit reached")

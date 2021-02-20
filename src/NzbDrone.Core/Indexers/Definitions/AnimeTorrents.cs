@@ -10,6 +10,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -45,17 +46,19 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override void DoLogin()
         {
+            UpdateCookies(null, null);
+
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                AllowAutoRedirect = true
             };
 
+            var loginPage = _httpClient.Execute(new HttpRequest(LoginUrl));
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+            requestBuilder.SetCookies(loginPage.GetCookies());
 
-            var cookies = Cookies;
-
-            Cookies = null;
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
@@ -66,10 +69,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var response = _httpClient.Execute(authLoginRequest);
 
-            cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            if (response.Content != null && response.Content.Contains("logout.php"))
+            {
+                UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
 
-            _logger.Debug("AnimeTorrents authentication succeeded.");
+                _logger.Debug("AnimeTorrents authentication succeeded");
+            }
+            else
+            {
+                throw new IndexerAuthException("AnimeTorrents authentication failed");
+            }
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)

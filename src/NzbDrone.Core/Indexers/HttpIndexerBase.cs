@@ -304,10 +304,10 @@ namespace NzbDrone.Core.Indexers
                 _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
-            catch (ApiKeyException)
+            catch (IndexerAuthException)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn("Invalid API Key for {0} {1}", this, url);
+                _logger.Warn("Invalid Credentials for {0} {1}", this, url);
             }
             catch (CloudFlareCaptchaException ex)
             {
@@ -480,9 +480,9 @@ namespace NzbDrone.Core.Indexers
                     return new ValidationFailure(string.Empty, "Query successful, but no results were returned from your indexer. This may be an issue with the indexer or your indexer category settings.");
                 }
             }
-            catch (ApiKeyException ex)
+            catch (IndexerAuthException ex)
             {
-                _logger.Warn("Indexer returned result for RSS URL, API Key appears to be invalid: " + ex.Message);
+                _logger.Warn("Indexer returned result for RSS URL, Credentials appears to be invalid: " + ex.Message);
 
                 return new ValidationFailure("ApiKey", "Invalid API Key");
             }

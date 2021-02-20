@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             switch (indexerResponse.HttpResponse.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
-                    throw new ApiKeyException("API Key invalid or not authorized");
+                    throw new IndexerAuthException("API Key invalid or not authorized");
                 case HttpStatusCode.NotFound:
                     throw new IndexerException(indexerResponse, "Indexer API call returned NotFound, the Indexer API may have changed.");
                 case HttpStatusCode.ServiceUnavailable:

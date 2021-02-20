@@ -35,12 +35,12 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (code >= 100 && code <= 199)
             {
-                throw new ApiKeyException(errorMessage);
+                throw new IndexerAuthException(errorMessage);
             }
 
             if (!indexerResponse.Request.Url.FullUri.Contains("apikey=") && (errorMessage == "Missing parameter" || errorMessage.Contains("apikey")))
             {
-                throw new ApiKeyException("Indexer requires an API key");
+                throw new IndexerAuthException("Indexer requires an API key");
             }
 
             if (errorMessage == "Request limit reached")

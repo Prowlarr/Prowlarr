@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.Content.Equals("Access Denied!"))
+            if (httpResponse.Content.Contains("Access Denied!") || httpResponse.Content.Contains("login.php"))
             {
                 return true;
             }

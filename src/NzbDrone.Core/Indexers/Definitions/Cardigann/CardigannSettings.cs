@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using FluentValidation;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;

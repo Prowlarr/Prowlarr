@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Languages;
-using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 

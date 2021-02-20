@@ -12,6 +12,13 @@ namespace NzbDrone.Core.Indexers.Rarbg
     {
         private static readonly Regex RegexGuid = new Regex(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
 
+        private readonly IndexerCapabilities _capabilities;
+
+        public RarbgParser(IndexerCapabilities capabilities)
+        {
+            _capabilities = capabilities;
+        }
+
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var results = new List<ReleaseInfo>();
@@ -51,6 +58,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 var torrentInfo = new TorrentInfo();
 
                 torrentInfo.Guid = GetGuid(torrent);
+                torrentInfo.Category = _capabilities.Categories.MapTrackerCatDescToNewznab(torrent.category);
                 torrentInfo.Title = torrent.title;
                 torrentInfo.Size = torrent.size;
                 torrentInfo.DownloadUrl = torrent.download;

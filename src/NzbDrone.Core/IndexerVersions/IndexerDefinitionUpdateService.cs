@@ -6,7 +6,6 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Messaging.Commands;

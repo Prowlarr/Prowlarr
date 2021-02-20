@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
 namespace NzbDrone.Core.Indexers.Gazelle

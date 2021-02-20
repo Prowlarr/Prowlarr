@@ -1,6 +1,7 @@
 import Chart from 'chart.js';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import colors from 'Styles/Variables/colors';
 
 class DoughnutChart extends Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class DoughnutChart extends Component {
         labels: this.props.data.map((d) => d.label),
         datasets: [{
           label: this.props.title,
-          data: this.props.data.map((d) => d.value)
+          data: this.props.data.map((d) => d.value),
+          backgroundColor: colors.chartColors
         }]
       }
     });

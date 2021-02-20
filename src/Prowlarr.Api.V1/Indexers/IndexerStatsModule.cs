@@ -16,12 +16,21 @@ namespace Prowlarr.Api.V1.Indexers
         {
             _indexerStatisticsService = indexerStatisticsService;
 
-            GetResourceAll = GetAll;
+            Get("/", x =>
+            {
+                return GetAll();
+            });
         }
 
-        private List<IndexerStatsResource> GetAll()
+        private IndexerStatsResource GetAll()
         {
-            return _indexerStatisticsService.IndexerStatistics().ToResource();
+            var indexerResource = new IndexerStatsResource
+            {
+                Indexers = _indexerStatisticsService.IndexerStatistics(),
+                UserAgents = _indexerStatisticsService.UserAgentStatistics(),
+            };
+
+            return indexerResource;
         }
     }
 }

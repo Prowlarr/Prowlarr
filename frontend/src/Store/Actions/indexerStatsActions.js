@@ -14,13 +14,13 @@ export const defaultState = {
   isFetching: false,
   isPopulated: false,
   error: null,
-  items: [],
+  item: {},
 
   details: {
     isFetching: false,
     isPopulated: false,
     error: null,
-    items: []
+    item: []
   }
 };
 

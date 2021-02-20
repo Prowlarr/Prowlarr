@@ -10,6 +10,7 @@ namespace NzbDrone.Core.IndexerStats
     public interface IIndexerStatisticsRepository
     {
         List<IndexerStatistics> IndexerStatistics();
+        List<UserAgentStatistics> UserAgentStatistics();
     }
 
     public class IndexerStatisticsRepository : IIndexerStatisticsRepository
@@ -26,13 +27,13 @@ namespace NzbDrone.Core.IndexerStats
         public List<IndexerStatistics> IndexerStatistics()
         {
             var time = DateTime.UtcNow;
-            return Query(Builder());
+            return Query(IndexerBuilder());
         }
 
-        public List<IndexerStatistics> IndexerStatistics(int indexerId)
+        public List<UserAgentStatistics> UserAgentStatistics()
         {
             var time = DateTime.UtcNow;
-            return Query(Builder().Where<IndexerDefinition>(x => x.Id == indexerId));
+            return UserAgentQuery(UserAgentBuilder());
         }
 
         private List<IndexerStatistics> Query(SqlBuilder builder)
@@ -45,7 +46,17 @@ namespace NzbDrone.Core.IndexerStats
             }
         }
 
-        private SqlBuilder Builder() => new SqlBuilder()
+        private List<UserAgentStatistics> UserAgentQuery(SqlBuilder builder)
+        {
+            var sql = builder.AddTemplate(_selectTemplate).LogQuery();
+
+            using (var conn = _database.OpenConnection())
+            {
+                return conn.Query<UserAgentStatistics>(sql.RawSql, sql.Parameters).ToList();
+            }
+        }
+
+        private SqlBuilder IndexerBuilder() => new SqlBuilder()
             .Select(@"Indexers.Id AS IndexerId,
                      Indexers.Name AS IndexerName,
                      SUM(CASE WHEN EventType == 2 then 1 else 0 end) AS NumberOfQueries,
@@ -53,5 +64,11 @@ namespace NzbDrone.Core.IndexerStats
                      AVG(json_extract(History.Data,'$.elapsedTime')) AS AverageResponseTime")
             .Join<History.History, IndexerDefinition>((t, r) => t.IndexerId == r.Id)
             .GroupBy<IndexerDefinition>(x => x.Id);
+
+        private SqlBuilder UserAgentBuilder() => new SqlBuilder()
+            .Select(@"json_extract(History.Data,'$.source') AS UserAgent,
+                     SUM(CASE WHEN EventType == 2 then 1 else 0 end) AS NumberOfQueries,
+                     SUM(CASE WHEN EventType == 1 then 1 else 0 end) AS NumberOfGrabs")
+            .GroupBy("UserAgent");
     }
 }

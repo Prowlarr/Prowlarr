@@ -181,5 +181,10 @@ module.exports = {
   //
   // Table
 
-  tableRowHoverBackgroundColor: '#fafbfc'
+  tableRowHoverBackgroundColor: '#fafbfc',
+
+  //
+  // Charts
+
+  chartColors: ['#f4d166', '#f6c760', '#f8bc58', '#f8b252', '#f7a84a', '#f69e41', '#f49538', '#f38b2f', '#f28026', '#f0751e', '#eb6c1c', '#e4641e', '#de5d1f', '#d75521', '#cf4f22', '#c64a22', '#bc4623', '#b24223', '#a83e24', '#9e3a26']
 };

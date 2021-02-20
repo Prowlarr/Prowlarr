@@ -10,4 +10,18 @@ namespace NzbDrone.Core.IndexerStats
         public int NumberOfQueries { get; set; }
         public int NumberOfGrabs { get; set; }
     }
+
+    public class UserAgentStatistics : ResultSet
+    {
+        public string UserAgent { get; set; }
+        public int NumberOfQueries { get; set; }
+        public int NumberOfGrabs { get; set; }
+    }
+
+    public class HostStatistics : ResultSet
+    {
+        public string Host { get; set; }
+        public int NumberOfQueries { get; set; }
+        public int NumberOfGrabs { get; set; }
+    }
 }

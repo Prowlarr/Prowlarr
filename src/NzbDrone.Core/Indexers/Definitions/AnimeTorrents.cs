@@ -141,6 +141,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var replaceRegex = new Regex("[^a-zA-Z0-9]+");
             searchString = replaceRegex.Replace(searchString, "%");
             var searchUrl = BaseUrl + "ajax/torrents_data.php";
+            var searchUrlReferer = BaseUrl + "torrents.php?cat=0&searchin=filename&search=";
 
             var queryCollection = new NameValueCollection
             {
@@ -155,7 +156,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var extraHeaders = new NameValueCollection
             {
-                { "X-Requested-With", "XMLHttpRequest" }
+                { "X-Requested-With", "XMLHttpRequest" },
+                { "Referer", searchUrlReferer }
             };
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);

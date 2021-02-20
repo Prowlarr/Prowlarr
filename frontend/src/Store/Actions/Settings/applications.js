@@ -3,6 +3,7 @@ import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
 import createFetchSchemaHandler from 'Store/Actions/Creators/createFetchSchemaHandler';
 import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHandler';
 import createSaveProviderHandler, { createCancelSaveProviderHandler } from 'Store/Actions/Creators/createSaveProviderHandler';
+import createTestAllProvidersHandler from 'Store/Actions/Creators/createTestAllProvidersHandler';
 import createTestProviderHandler, { createCancelTestProviderHandler } from 'Store/Actions/Creators/createTestProviderHandler';
 import createSetProviderFieldValueReducer from 'Store/Actions/Creators/Reducers/createSetProviderFieldValueReducer';
 import createSetSettingValueReducer from 'Store/Actions/Creators/Reducers/createSetSettingValueReducer';
@@ -27,6 +28,7 @@ export const CANCEL_SAVE_APPLICATION = 'settings/applications/cancelSaveApplicat
 export const DELETE_APPLICATION = 'settings/applications/deleteApplication';
 export const TEST_APPLICATION = 'settings/applications/testApplication';
 export const CANCEL_TEST_APPLICATION = 'settings/applications/cancelTestApplication';
+export const TEST_ALL_APPLICATIONS = 'indexers/testAllApplications';
 
 //
 // Action Creators
@@ -40,6 +42,7 @@ export const cancelSaveApplication = createThunk(CANCEL_SAVE_APPLICATION);
 export const deleteApplication = createThunk(DELETE_APPLICATION);
 export const testApplication = createThunk(TEST_APPLICATION);
 export const cancelTestApplication = createThunk(CANCEL_TEST_APPLICATION);
+export const testAllApplications = createThunk(TEST_ALL_APPLICATIONS);
 
 export const setApplicationValue = createAction(SET_APPLICATION_VALUE, (payload) => {
   return {
@@ -75,6 +78,7 @@ export default {
     isSaving: false,
     saveError: null,
     isTesting: false,
+    isTestingAll: false,
     items: [],
     pendingChanges: {}
   },
@@ -90,7 +94,8 @@ export default {
     [CANCEL_SAVE_APPLICATION]: createCancelSaveProviderHandler(section),
     [DELETE_APPLICATION]: createRemoveItemHandler(section, '/applications'),
     [TEST_APPLICATION]: createTestProviderHandler(section, '/applications'),
-    [CANCEL_TEST_APPLICATION]: createCancelTestProviderHandler(section)
+    [CANCEL_TEST_APPLICATION]: createCancelTestProviderHandler(section),
+    [TEST_ALL_APPLICATIONS]: createTestAllProvidersHandler(section, '/applications')
   },
 
   //

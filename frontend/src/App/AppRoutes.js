@@ -7,7 +7,7 @@ import HistoryConnector from 'History/HistoryConnector';
 import IndexerIndexConnector from 'Indexer/Index/IndexerIndexConnector';
 import StatsConnector from 'Indexer/Stats/StatsConnector';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
-import ApplicationSettings from 'Settings/Applications/ApplicationSettings';
+import ApplicationSettingsConnector from 'Settings/Applications/ApplicationSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
@@ -90,7 +90,7 @@ function AppRoutes(props) {
 
       <Route
         path="/settings/applications"
-        component={ApplicationSettings}
+        component={ApplicationSettingsConnector}
       />
 
       <Route

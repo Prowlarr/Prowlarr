@@ -6,7 +6,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;osx-x64;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
-    <ExcludedRuntimeFrameworkPairs>win-x64:net472;osx-x64:net472;linux-arm:net472;linux-arm64:net472;linux-musl-x64:net472;linux-musl-arm64:net472</ExcludedRuntimeFrameworkPairs>
 
     <ProwlarrRootDir>$(MSBuildThisFileDirectory)..\</ProwlarrRootDir>
 
@@ -82,14 +81,6 @@
     <!-- For now keep the NzbDrone namespace -->
     <RootNamespace Condition="'$(ProwlarrProject)'=='true'">$(MSBuildProjectName.Replace('Prowlarr','NzbDrone'))</RootNamespace>
   </PropertyGroup>
-
-  <!-- Allow building net framework using mono -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <PropertyGroup Condition="'$(ProwlarrProject)'=='true' and '$(EnableAnalyzers)'=='false'">
     <!-- FXCop Built into Net5 SDK now as NETAnalyzers, Enabled by default on net5 projects -->

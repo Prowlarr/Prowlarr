@@ -157,7 +157,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "Referer", searchUrlReferer }
             };
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
+            var request = new IndexerRequest(searchUrl, null);
             request.HttpRequest.Headers.Add(extraHeaders);
 
             yield return request;

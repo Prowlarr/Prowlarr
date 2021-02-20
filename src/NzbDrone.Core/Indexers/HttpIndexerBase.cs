@@ -365,9 +365,16 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
+                var releases = parser.ParseResponse(response).ToList();
+
+                if (releases.Count == 0)
+                {
+                    _logger.Trace(response.Content);
+                }
+
                 return new IndexerQueryResult
                 {
-                    Releases = parser.ParseResponse(response).ToList(),
+                    Releases = releases,
                     ElapsedTime = response.ElapsedTime,
                     StatusCode = (int)response.HttpResponse.StatusCode
                 };
@@ -419,6 +426,8 @@ namespace NzbDrone.Core.Indexers
             // Check reponse to see if auth is needed, if needed try again
             if (CheckIfLoginNeeded(response))
             {
+                _logger.Trace("Attempting to re-auth based on indexer search response");
+
                 DoLogin();
                 request.HttpRequest.Cookies.Clear();
 

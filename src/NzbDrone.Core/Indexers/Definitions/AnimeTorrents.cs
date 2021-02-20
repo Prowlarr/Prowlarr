@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "X-Requested-With", "XMLHttpRequest" }
             };
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Rss);
+            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
             request.HttpRequest.Headers.Add(extraHeaders);
 
             yield return request;
@@ -343,9 +343,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Site password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
-
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
-        public bool FreeLeechOnly { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

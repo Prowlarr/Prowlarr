@@ -283,8 +283,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             Cookie = "";
         }
 
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(1, Label = "Cookie", HelpText = "Site Cookie")]
         public string Cookie { get; set; }
 

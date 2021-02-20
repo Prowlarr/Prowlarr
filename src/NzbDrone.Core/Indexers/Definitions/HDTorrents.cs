@@ -373,8 +373,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(1, Label = "Username", HelpText = "Site username")]
         public string Username { get; set; }
 

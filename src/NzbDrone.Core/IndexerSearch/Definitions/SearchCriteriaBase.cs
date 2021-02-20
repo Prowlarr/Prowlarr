@@ -25,5 +25,33 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         {
             return $"{{Term: {SearchTerm}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]}}";
         }
+
+        public string SanitizedSearchTerm
+        {
+            get
+            {
+                var term = SearchTerm;
+                if (SearchTerm == null)
+                {
+                    term = "";
+                }
+
+                var safeTitle = term.Where(c => (char.IsLetterOrDigit(c)
+                                                 || char.IsWhiteSpace(c)
+                                                 || c == '-'
+                                                 || c == '.'
+                                                 || c == '_'
+                                                 || c == '('
+                                                 || c == ')'
+                                                 || c == '@'
+                                                 || c == '/'
+                                                 || c == '\''
+                                                 || c == '['
+                                                 || c == ']'
+                                                 || c == '+'
+                                                 || c == '%'));
+                return string.Concat(safeTitle);
+            }
+        }
     }
 }

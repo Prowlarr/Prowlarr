@@ -131,7 +131,7 @@ stages:
       - task: NodeTool@0
         displayName: Set Node.js version
         inputs:
-          versionSpec: '10.x'
+          versionSpec: '12.x'
       - checkout: self
         submodules: true
         fetchDepth: 1
@@ -684,7 +684,7 @@ stages:
       - task: NodeTool@0
         displayName: Set Node.js version
         inputs:
-          versionSpec: '10.x'
+          versionSpec: '12.x'
       - checkout: self
         submodules: true
         fetchDepth: 1

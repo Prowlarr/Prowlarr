@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Indexers
 
         public IndexerCapabilities()
         {
-            SearchParams = new List<SearchParam>();
+            SearchParams = new List<SearchParam> { SearchParam.Q };
             TvSearchParams = new List<TvSearchParam>();
             MovieSearchParams = new List<MovieSearchParam>();
             MusicSearchParams = new List<MusicSearchParam>();

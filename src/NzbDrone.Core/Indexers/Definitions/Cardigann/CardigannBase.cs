@@ -221,7 +221,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var name = ".Config." + setting.Name;
                 var value = _settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);
 
-                _logger.Debug($"{name} got value {value.ToJson()}");
+                if (setting.Type != "password")
+                {
+                    _logger.Debug($"{name} got value {value.ToJson()}");
+                }
 
                 if (setting.Type == "text" || setting.Type == "password")
                 {
@@ -250,7 +253,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new NotSupportedException();
                 }
 
-                _logger.Debug($"Setting {setting.Name} to {(setting.Type == "password" ? "Redacted" : variables[name])}");
+                if (setting.Type != "password")
+                {
+                    _logger.Debug($"Setting {setting.Name} to {variables[name]}");
+                }
             }
 
             return variables;

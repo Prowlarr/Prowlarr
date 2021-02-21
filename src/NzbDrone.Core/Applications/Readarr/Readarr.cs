@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
@@ -13,14 +14,12 @@ namespace NzbDrone.Core.Applications.Readarr
         public override string Name => "Readarr";
 
         private readonly IReadarrV1Proxy _readarrV1Proxy;
-        private readonly IIndexerFactory _indexerFactory;
         private readonly IConfigFileProvider _configFileProvider;
 
-        public Readarr(IReadarrV1Proxy readarrV1Proxy, IIndexerFactory indexerFactory, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Readarr(IReadarrV1Proxy readarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
             : base(appIndexerMapService, logger)
         {
             _readarrV1Proxy = readarrV1Proxy;
-            _indexerFactory = indexerFactory;
             _configFileProvider = configFileProvider;
         }
 
@@ -63,42 +62,6 @@ namespace NzbDrone.Core.Applications.Readarr
         {
             //Use the Id mapping here to delete the correct indexer
             throw new System.NotImplementedException();
-        }
-
-        public override void SyncIndexers()
-        {
-            // Pull Schema so we get the field mapping right
-            var schema = _readarrV1Proxy.GetIndexerSchema(Settings);
-            var newznab = schema.Where(i => i.Implementation == "Newznab").First();
-            var torznab = schema.Where(i => i.Implementation == "Torznab").First();
-
-            // Pull existing indexers from Readarr
-            var indexers = _readarrV1Proxy.GetIndexers(Settings);
-
-            //Pull all local indexers (TODO only those that support movie categories.)
-            var prowlarrIndexers = _indexerFactory.Enabled();
-
-            //Pull mapping so we can check the mapping to see what already exists.
-            var indexerMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
-
-            //Add new Indexers
-            foreach (var indexer in prowlarrIndexers)
-            {
-                //Don't add if it already exists in our mappings for this app (TODO should we check that it exists remote?)
-                if (indexerMappings.Any(x => x.IndexerId == indexer.Definition.Id))
-                {
-                    continue;
-                }
-
-                var definition = (IndexerDefinition)indexer.Definition;
-
-                var readarrIndexer = BuildReadarrIndexer(definition, definition.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
-
-                var remoteIndexer = _readarrV1Proxy.AddIndexer(readarrIndexer, Settings);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = definition.Id, RemoteIndexerId = remoteIndexer.Id });
-            }
-
-            //Delete Indexers that need Deleting.
         }
 
         private ReadarrIndexer BuildReadarrIndexer(IndexerDefinition indexer, ReadarrIndexer schema)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
@@ -17,13 +18,17 @@ namespace NzbDrone.Core.Applications
                                       IExecute<ApplicationIndexerSyncCommand>
     {
         private readonly IApplicationFactory _applicationsFactory;
+        private readonly IAppIndexerMapService _appIndexerMapService;
+        private readonly IIndexerFactory _indexerFactory;
         private readonly IApplicationStatusService _applicationStatusService;
         private readonly Logger _logger;
 
-        public ApplicationService(IApplicationFactory applicationsFactory, IApplicationStatusService applicationStatusService, Logger logger)
+        public ApplicationService(IApplicationFactory applicationsFactory, IApplicationStatusService applicationStatusService, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
         {
             _applicationsFactory = applicationsFactory;
             _applicationStatusService = applicationStatusService;
+            _appIndexerMapService = appIndexerMapService;
+            _indexerFactory = indexerFactory;
             _logger = logger;
         }
 
@@ -36,7 +41,7 @@ namespace NzbDrone.Core.Applications
             {
                 var app = _applicationsFactory.GetInstance(appDefinition);
 
-                ExecuteAction(a => a.SyncIndexers(), app);
+                SyncIndexers(new List<IApplication> { app });
             }
         }
 
@@ -76,9 +81,28 @@ namespace NzbDrone.Core.Applications
         {
             var enabledApps = _applicationsFactory.SyncEnabled();
 
-            foreach (var app in enabledApps)
+            SyncIndexers(enabledApps);
+        }
+
+        private void SyncIndexers(List<IApplication> applications)
+        {
+            var indexers = _indexerFactory.Enabled();
+
+            foreach (var app in applications)
             {
-                ExecuteAction(a => a.SyncIndexers(), app);
+                var indexerMappings = _appIndexerMapService.GetMappingsForApp(app.Definition.Id);
+
+                foreach (var indexer in indexers)
+                {
+                    if (indexerMappings.Any(x => x.IndexerId == indexer.Definition.Id))
+                    {
+                        continue;
+                    }
+
+                    var definition = (IndexerDefinition)indexer.Definition;
+
+                    ExecuteAction(a => a.AddIndexer(definition), app);
+                }
             }
         }
 

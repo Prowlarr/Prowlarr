@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new DigitalCoreRequestGenerator() { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities };
+            return new DigitalCoreRequestGenerator() { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities, BaseUrl = BaseUrl };
         }
 
         public override IParseIndexerResponse GetParser()

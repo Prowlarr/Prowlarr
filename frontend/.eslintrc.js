@@ -28,7 +28,7 @@ module.exports = {
     ecmaVersion: 6,
     sourceType: 'module',
     babelOptions: {
-      configFile: `${frontendFolder}/babel.config.js`,
+      configFile: `${frontendFolder}/babel.config.js`
     },
     ecmaFeatures: {
       modules: true,

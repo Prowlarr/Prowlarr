@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RarbgRequestGenerator(_tokenProvider) { Settings = Settings, BaseUrl = BaseUrl };
+            return new RarbgRequestGenerator(_tokenProvider) { Settings = Settings, Categories = Capabilities.Categories, BaseUrl = BaseUrl };
         }
 
         public override IParseIndexerResponse GetParser()

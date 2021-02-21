@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public string BaseUrl { get; set; }
         public RarbgSettings Settings { get; set; }
+        public IndexerCapabilitiesCategories Categories { get; set; }
 
         public RarbgRequestGenerator(IRarbgTokenProvider tokenProvider)
         {
@@ -52,9 +53,11 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 requestBuilder.AddQueryParam("ranked", "0");
             }
 
-            if (categories != null && categories.Length > 0)
+            var cats = Categories.MapTorznabCapsToTrackers(categories);
+
+            if (cats != null && cats.Count > 0)
             {
-                var categoryParam = string.Join(";", categories.Distinct());
+                var categoryParam = string.Join(";", cats.Distinct());
                 requestBuilder.AddQueryParam("category", categoryParam);
             }
 

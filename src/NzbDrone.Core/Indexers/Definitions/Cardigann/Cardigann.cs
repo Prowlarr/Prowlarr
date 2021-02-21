@@ -60,6 +60,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         private IndexerDefinition GetDefinition(CardigannMetaDefinition definition)
         {
+            var defaultSettings = new List<SettingsField>
+            {
+                new SettingsField { Name = "username", Label = "Username", Type = "text" },
+                new SettingsField { Name = "password", Label = "Password", Type = "password" }
+            };
+
+            var settings = definition.Settings ?? defaultSettings;
+
             return new IndexerDefinition
             {
                 Enable = true,
@@ -71,7 +79,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 Capabilities = new IndexerCapabilities(),
-                ExtraFields = definition.Settings
+                ExtraFields = settings
             };
         }
 

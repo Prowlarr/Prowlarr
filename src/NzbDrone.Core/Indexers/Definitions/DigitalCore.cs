@@ -294,10 +294,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Passphrase = "";
         }
 
-        [FieldDefinition(1, Label = "UID", Advanced = true, HelpText = "Uid from login cookie")]
+        [FieldDefinition(1, Label = "UID", HelpText = "Uid from login cookie")]
         public string UId { get; set; }
 
-        [FieldDefinition(2, Label = "Passphrase", Advanced = true, HelpText = "Pass from login cookie")]
+        [FieldDefinition(2, Label = "Passphrase", HelpText = "Pass from login cookie")]
         public string Passphrase { get; set; }
 
         public NzbDroneValidationResult Validate()

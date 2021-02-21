@@ -216,7 +216,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             _logger.Debug("Populating config vars");
 
-            foreach (var setting in _definition.Settings)
+            var defaultSettings = new List<SettingsField>
+            {
+                new SettingsField { Name = "username", Label = "Username", Type = "text" },
+                new SettingsField { Name = "password", Label = "Password", Type = "password" }
+            };
+
+            var settings = _definition.Settings ?? defaultSettings;
+
+            foreach (var setting in settings)
             {
                 var name = ".Config." + setting.Name;
                 var value = _settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);

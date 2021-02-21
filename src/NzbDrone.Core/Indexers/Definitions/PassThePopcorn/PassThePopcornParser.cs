@@ -85,6 +85,8 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                         flags |= IndexerFlags.G_Scene;
                     }
 
+                    var free = !(torrent.FreeleechType is null);
+
                     // Only add approved torrents
                     try
                     {
@@ -103,6 +105,10 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                             Approved = torrent.Checked,
                             ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
                             IndexerFlags = flags,
+                            MinimumRatio = 1,
+                            MinimumSeedTime = 345600,
+                            DownloadVolumeFactor = free ? 0 : 1,
+                            UploadVolumeFactor = 1,
                             Category = new List<IndexerCategory> { NewznabStandardCategory.Movies }
                         });
                     }

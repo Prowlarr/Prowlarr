@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 
@@ -13,12 +15,14 @@ namespace NzbDrone.Core.Applications.Sonarr
     {
         public override string Name => "Sonarr";
 
+        private readonly ICached<List<SonarrIndexer>> _schemaCache;
         private readonly ISonarrV3Proxy _sonarrV3Proxy;
         private readonly IConfigFileProvider _configFileProvider;
 
-        public Sonarr(ISonarrV3Proxy sonarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Sonarr(ICacheManager cacheManager, ISonarrV3Proxy sonarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
             : base(appIndexerMapService, logger)
         {
+            _schemaCache = cacheManager.GetCache<List<SonarrIndexer>>(GetType());
             _sonarrV3Proxy = sonarrV3Proxy;
             _configFileProvider = configFileProvider;
         }
@@ -34,7 +38,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var schema = _sonarrV3Proxy.GetIndexerSchema(Settings);
+            var schema = _schemaCache.Get(Definition.Settings.ToJson(), () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
             var newznab = schema.Where(i => i.Implementation == "Newznab").First();
             var torznab = schema.Where(i => i.Implementation == "Torznab").First();
 

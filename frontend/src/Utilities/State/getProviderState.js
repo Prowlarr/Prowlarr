@@ -12,7 +12,7 @@ function getProviderState(payload, getState, section, keyValueOnly=true) {
   const pendingFields = state.pendingChanges.fields || {};
   delete pendingChanges.fields;
 
-  const item = id ? _.find(state.items, { id }) : state.selectedSchema || state.schema || state.schema.items || {};
+  const item = id ? _.find(state.items, { id }) : state.selectedSchema || state.schema || state.schema && state.schema.items || {};
 
   if (item.fields) {
     pendingChanges.fields = _.reduce(item.fields, (result, field) => {

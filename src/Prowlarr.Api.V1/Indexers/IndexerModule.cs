@@ -78,7 +78,7 @@ namespace Prowlarr.Api.V1.Indexers
                     Response response = indexerInstance.GetCapabilities().ToXml();
                     response.ContentType = "application/rss+xml";
                     return response;
-                case "seach":
+                case "search":
                 case "tvsearch":
                 case "music":
                 case "book":

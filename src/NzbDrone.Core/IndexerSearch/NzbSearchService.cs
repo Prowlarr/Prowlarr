@@ -67,6 +67,10 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<MusicSearchCriteria>(request, indexerIds, interactiveSearch);
 
+            searchSpec.Artist = request.artist;
+            searchSpec.Album = request.album;
+            searchSpec.Label = request.label;
+
             return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
@@ -87,7 +91,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         private NewznabResults BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
+            var searchSpec = Get<BookSearchCriteria>(request, indexerIds, interactiveSearch);
 
             return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }

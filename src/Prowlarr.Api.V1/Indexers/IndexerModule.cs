@@ -16,15 +16,13 @@ namespace Prowlarr.Api.V1.Indexers
 {
     public class IndexerModule : ProviderModuleBase<IndexerResource, IIndexer, IndexerDefinition>
     {
-        public static readonly IndexerResourceMapper ResourceMapper = new IndexerResourceMapper();
-
         private IIndexerFactory _indexerFactory { get; set; }
         private ISearchForNzb _nzbSearchService { get; set; }
         private IDownloadMappingService _downloadMappingService { get; set; }
         private IDownloadService _downloadService { get; set; }
 
-        public IndexerModule(IndexerFactory indexerFactory, ISearchForNzb nzbSearchService, IDownloadMappingService downloadMappingService, IDownloadService downloadService)
-            : base(indexerFactory, "indexer", ResourceMapper)
+        public IndexerModule(IndexerFactory indexerFactory, ISearchForNzb nzbSearchService, IDownloadMappingService downloadMappingService, IDownloadService downloadService, IndexerResourceMapper resourceMapper)
+            : base(indexerFactory, "indexer", resourceMapper)
         {
             _indexerFactory = indexerFactory;
             _nzbSearchService = nzbSearchService;

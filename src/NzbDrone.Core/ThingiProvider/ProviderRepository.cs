@@ -32,7 +32,7 @@ namespace NzbDrone.Core.ThingiProvider
             serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));
             serializerSettings.Converters.Add(new STJTimeSpanConverter());
             serializerSettings.Converters.Add(new STJUtcConverter());
-            serializerSettings.Converters.Add(new DictionaryStringObjectJsonConverter());
+            serializerSettings.Converters.Add(new DictionaryStringObjectConverter());
 
             _serializerSettings = serializerSettings;
         }

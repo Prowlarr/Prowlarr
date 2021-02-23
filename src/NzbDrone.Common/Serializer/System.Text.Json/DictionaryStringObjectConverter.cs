@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NzbDrone.Core.Datastore.Converters
+namespace NzbDrone.Common.Serializer
 {
-    public class DictionaryStringObjectJsonConverter : JsonConverter<Dictionary<string, object>>
+    public class DictionaryStringObjectConverter : JsonConverter<Dictionary<string, object>>
     {
         public override Dictionary<string, object> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {

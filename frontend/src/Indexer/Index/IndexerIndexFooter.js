@@ -4,9 +4,9 @@ import React, { PureComponent } from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
 import translate from 'Utilities/String/translate';
-import styles from './MovieIndexFooter.css';
+import styles from './IndexerIndexFooter.css';
 
-class MovieIndexFooter extends PureComponent {
+class IndexerIndexFooter extends PureComponent {
 
   render() {
     const {
@@ -15,13 +15,13 @@ class MovieIndexFooter extends PureComponent {
     } = this.props;
 
     const count = movies.length;
-    let movieFiles = 0;
+    let enabled = 0;
     let torrent = 0;
 
     movies.forEach((s) => {
 
-      if (s.hasFile) {
-        movieFiles += 1;
+      if (s.enable) {
+        enabled += 1;
       }
 
       if (s.protocol === 'torrent') {
@@ -67,7 +67,7 @@ class MovieIndexFooter extends PureComponent {
 
             <DescriptionListItem
               title={translate('Enabled')}
-              data={movieFiles}
+              data={enabled}
             />
           </DescriptionList>
 
@@ -88,9 +88,9 @@ class MovieIndexFooter extends PureComponent {
   }
 }
 
-MovieIndexFooter.propTypes = {
+IndexerIndexFooter.propTypes = {
   movies: PropTypes.arrayOf(PropTypes.object).isRequired,
   colorImpairedMode: PropTypes.bool.isRequired
 };
 
-export default MovieIndexFooter;
+export default IndexerIndexFooter;

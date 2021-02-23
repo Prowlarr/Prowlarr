@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import createDeepEqualSelector from 'Store/Selectors/createDeepEqualSelector';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
-import MovieIndexFooter from './MovieIndexFooter';
+import IndexerIndexFooter from './IndexerIndexFooter';
 
 function createUnoptimizedSelector() {
   return createSelector(
@@ -12,12 +12,14 @@ function createUnoptimizedSelector() {
       return indexers.items.map((s) => {
         const {
           protocol,
-          privacy
+          privacy,
+          enable
         } = s;
 
         return {
           protocol,
-          privacy
+          privacy,
+          enable
         };
       });
     }
@@ -44,4 +46,4 @@ function createMapStateToProps() {
   );
 }
 
-export default connect(createMapStateToProps)(MovieIndexFooter);
+export default connect(createMapStateToProps)(IndexerIndexFooter);

@@ -22,9 +22,9 @@ import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
+import IndexerIndexFooterConnector from './IndexerIndexFooterConnector';
 import MovieIndexFilterMenu from './Menus/MovieIndexFilterMenu';
 import MovieIndexSortMenu from './Menus/MovieIndexSortMenu';
-import MovieIndexFooterConnector from './MovieIndexFooterConnector';
 import MovieIndexTableConnector from './Table/MovieIndexTableConnector';
 import MovieIndexTableOptionsConnector from './Table/MovieIndexTableOptionsConnector';
 import styles from './IndexerIndex.css';
@@ -422,7 +422,7 @@ class IndexerIndex extends Component {
 
                   {
                     !isMovieEditorActive &&
-                      <MovieIndexFooterConnector />
+                      <IndexerIndexFooterConnector />
                   }
                 </div>
             }

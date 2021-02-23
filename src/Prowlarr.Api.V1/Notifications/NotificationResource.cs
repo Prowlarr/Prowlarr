@@ -2,7 +2,7 @@ using NzbDrone.Core.Notifications;
 
 namespace Prowlarr.Api.V1.Notifications
 {
-    public class NotificationResource : ProviderResource
+    public class NotificationResource : ProviderResource<NotificationResource>
     {
         public string Link { get; set; }
         public bool OnHealthIssue { get; set; }

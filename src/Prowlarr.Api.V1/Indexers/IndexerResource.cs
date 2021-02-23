@@ -8,7 +8,7 @@ using Prowlarr.Http.ClientSchema;
 
 namespace Prowlarr.Api.V1.Indexers
 {
-    public class IndexerResource : ProviderResource
+    public class IndexerResource : ProviderResource<IndexerResource>
     {
         public string BaseUrl { get; set; }
         public bool Enable { get; set; }

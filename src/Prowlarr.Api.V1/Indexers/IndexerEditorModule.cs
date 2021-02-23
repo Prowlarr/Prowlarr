@@ -11,13 +11,15 @@ namespace Prowlarr.Api.V1.Indexers
     {
         private readonly IIndexerFactory _indexerService;
         private readonly IManageCommandQueue _commandQueueManager;
-        public static readonly IndexerResourceMapper ResourceMapper = new IndexerResourceMapper();
+        private readonly IndexerResourceMapper _resourceMapper;
 
-        public IndexerEditorModule(IIndexerFactory indexerService, IManageCommandQueue commandQueueManager)
+        public IndexerEditorModule(IIndexerFactory indexerService, IManageCommandQueue commandQueueManager, IndexerResourceMapper resourceMapper)
             : base("/indexer/editor")
         {
             _indexerService = indexerService;
             _commandQueueManager = commandQueueManager;
+            _resourceMapper = resourceMapper;
+
             Put("/", movie => SaveAll());
             Delete("/", movie => DeleteIndexers());
         }
@@ -63,7 +65,7 @@ namespace Prowlarr.Api.V1.Indexers
                 _indexerService.SetProviderCharacteristics(definition);
             }
 
-            return ResponseWithCode(ResourceMapper.ToResource(indexers), HttpStatusCode.Accepted);
+            return ResponseWithCode(_resourceMapper.ToResource(indexers), HttpStatusCode.Accepted);
         }
 
         private object DeleteIndexers()

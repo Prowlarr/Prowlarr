@@ -238,7 +238,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     _logger.Debug($"Setting options: {setting.Options.ToJson()}");
                     var sorted = setting.Options.OrderBy(x => x.Key).ToList();
-                    var selected = sorted[(int)(long)value];
+                    var selected = sorted[(int)value];
 
                     _logger.Debug($"Selected option: {selected.ToJson()}");
 

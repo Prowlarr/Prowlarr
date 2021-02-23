@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.IndexerVersions;
 using Prowlarr.Http.ClientSchema;
 
 namespace Prowlarr.Api.V1.Indexers
@@ -24,6 +26,13 @@ namespace Prowlarr.Api.V1.Indexers
 
     public class IndexerResourceMapper : ProviderResourceMapper<IndexerResource, IndexerDefinition>
     {
+        private readonly IIndexerDefinitionUpdateService _definitionService;
+
+        public IndexerResourceMapper(IIndexerDefinitionUpdateService definitionService)
+        {
+            _definitionService = definitionService;
+        }
+
         public override IndexerResource ToResource(IndexerDefinition definition)
         {
             if (definition == null)
@@ -77,11 +86,15 @@ namespace Prowlarr.Api.V1.Indexers
                 var standardFields = base.ToResource(definition).Fields.Select(x => x.Name).ToList();
 
                 var settings = (CardigannSettings)definition.Settings;
+
+                var cardigannDefinition = _definitionService.GetDefinition(settings.DefinitionFile);
+
                 foreach (var field in resource.Fields)
                 {
                     if (!standardFields.Contains(field.Name))
                     {
-                        settings.ExtraFieldData[field.Name] = field.Value;
+                        var cardigannSetting = cardigannDefinition.Settings.FirstOrDefault(x => x.Name == field.Name);
+                        settings.ExtraFieldData[field.Name] = MapValue(cardigannSetting, field.Value);
                     }
                 }
             }
@@ -95,30 +108,53 @@ namespace Prowlarr.Api.V1.Indexers
             return definition;
         }
 
-        private Field MapField(SettingsField fieldAttribute, int order)
+        private object MapValue(SettingsField setting, object value)
+        {
+            if (setting.Type == "select")
+            {
+                return value.ToString().ParseInt32() ?? 0;
+            }
+            else if (setting.Type == "checkbox")
+            {
+                if (bool.TryParse(value.ToString(), out var result))
+                {
+                    return result;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return value.ToString();
+            }
+        }
+
+        private Field MapField(SettingsField setting, int order)
         {
             var field = new Field
             {
-                Name = fieldAttribute.Name,
-                Label = fieldAttribute.Label,
+                Name = setting.Name,
+                Label = setting.Label,
                 Order = order,
-                Type = fieldAttribute.Type == "text" ? "textbox" : fieldAttribute.Type
+                Type = setting.Type == "text" ? "textbox" : setting.Type
             };
 
-            if (fieldAttribute.Type == "select")
+            if (setting.Type == "select")
             {
-                var sorted = fieldAttribute.Options.OrderBy(x => x.Key).ToList();
+                var sorted = setting.Options.OrderBy(x => x.Key).ToList();
                 field.SelectOptions = sorted.Select((x, i) => new SelectOption
                 {
                     Value = i,
                     Name = x.Value
                 }).ToList();
 
-                field.Value = sorted.Select(x => x.Key).ToList().IndexOf(fieldAttribute.Default);
+                field.Value = sorted.Select(x => x.Key).ToList().IndexOf(setting.Default);
             }
-            else if (fieldAttribute.Type == "checkbox")
+            else if (setting.Type == "checkbox")
             {
-                if (bool.TryParse(fieldAttribute.Default, out var value))
+                if (bool.TryParse(setting.Default, out var value))
                 {
                     field.Value = value;
                 }
@@ -129,7 +165,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
             else
             {
-                field.Value = fieldAttribute.Default;
+                field.Value = setting.Default;
             }
 
             return field;

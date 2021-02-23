@@ -77,6 +77,7 @@ namespace NzbDrone.Core.IndexerSearch
                             new XElement("title", RemoveInvalidXMLChars(r.Title)),
                             new XElement("guid", r.Guid),  // GUID and (Link or Magnet) are mandatory
                             new XElement("prowlarrindexer", new XAttribute("id", r.IndexerId), r.Indexer),
+                            r.InfoUrl == null ? null : new XElement("comments", r.InfoUrl),
                             r.PublishDate == DateTime.MinValue ? new XElement("pubDate", XmlDateFormat(DateTime.Now)) : new XElement("pubDate", XmlDateFormat(r.PublishDate)),
                             new XElement("size", r.Size),
                             r.Category == null ? null : from c in r.Category select new XElement("category", c.Id),

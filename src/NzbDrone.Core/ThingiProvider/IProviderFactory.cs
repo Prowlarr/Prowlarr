@@ -12,6 +12,7 @@ namespace NzbDrone.Core.ThingiProvider
         TProviderDefinition Get(int id);
         TProviderDefinition Create(TProviderDefinition definition);
         void Update(TProviderDefinition definition);
+        void Update(IEnumerable<TProviderDefinition> definitions);
         void Delete(int id);
         IEnumerable<TProviderDefinition> GetDefaultDefinitions();
         IEnumerable<TProviderDefinition> GetPresetDefinitions(TProviderDefinition providerDefinition);

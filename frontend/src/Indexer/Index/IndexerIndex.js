@@ -246,7 +246,7 @@ class IndexerIndex extends Component {
 
   onSaveSelected = (changes) => {
     this.props.onSaveSelected({
-      movieIds: this.getSelectedIds(),
+      indexerIds: this.getSelectedIds(),
       ...changes
     });
   }
@@ -290,7 +290,7 @@ class IndexerIndex extends Component {
       allUnselected
     } = this.state;
 
-    const selectedMovieIds = this.getSelectedIds();
+    const selectedIndexerIds = this.getSelectedIds();
 
     const ViewComponent = getViewComponent();
     const isLoaded = !!(!error && isPopulated && items.length && scroller);
@@ -448,8 +448,8 @@ class IndexerIndex extends Component {
         {
           isLoaded && isMovieEditorActive &&
             <IndexerEditorFooter
-              indexerIds={selectedMovieIds}
-              selectedCount={selectedMovieIds.length}
+              indexerIds={selectedIndexerIds}
+              selectedCount={selectedIndexerIds.length}
               isSaving={isSaving}
               saveError={saveError}
               isDeleting={isDeleting}

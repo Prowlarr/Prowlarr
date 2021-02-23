@@ -134,5 +134,10 @@ namespace Prowlarr.Api.V1.Indexers
 
             return field;
         }
+
+        public List<IndexerResource> ToResource(IEnumerable<IndexerDefinition> models)
+        {
+            return models.Select(ToResource).ToList();
+        }
     }
 }

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import { kinds } from 'Helpers/Props';
@@ -20,6 +21,7 @@ class IndexerEditorFooter extends Component {
     super(props, context);
 
     this.state = {
+      enable: NO_CHANGE,
       savingTags: false,
       isDeleteMovieModalOpen: false,
       isTagsModalOpen: false
@@ -34,6 +36,7 @@ class IndexerEditorFooter extends Component {
 
     if (prevProps.isSaving && !isSaving && !saveError) {
       this.setState({
+        enable: NO_CHANGE,
         savingTags: false
       });
     }
@@ -95,13 +98,35 @@ class IndexerEditorFooter extends Component {
     } = this.props;
 
     const {
+      enable,
       savingTags,
       isTagsModalOpen,
       isDeleteMovieModalOpen
     } = this.state;
 
+    const enableOptions = [
+      { key: NO_CHANGE, value: translate('NoChange'), disabled: true },
+      { key: 'true', value: translate('Enabled') },
+      { key: 'false', value: translate('Disabled') }
+    ];
+
     return (
       <PageContentFooter>
+        <div className={styles.inputContainer}>
+          <IndexerEditorFooterLabel
+            label={translate('EnableIndexer')}
+            isSaving={isSaving && enable !== NO_CHANGE}
+          />
+
+          <SelectInput
+            name="enable"
+            value={enable}
+            values={enableOptions}
+            isDisabled={!selectedCount}
+            onChange={this.onInputChange}
+          />
+        </div>
+
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
             <IndexerEditorFooterLabel

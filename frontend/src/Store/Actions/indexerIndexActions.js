@@ -182,7 +182,7 @@ export const actionHandlers = handleThunks({
     }));
 
     const promise = createAjaxRequest({
-      url: '/movie/editor',
+      url: '/indexer/editor',
       method: 'PUT',
       data: JSON.stringify(payload),
       dataType: 'json'
@@ -190,11 +190,11 @@ export const actionHandlers = handleThunks({
 
     promise.done((data) => {
       dispatch(batchActions([
-        ...data.map((movie) => {
+        ...data.map((indexer) => {
           return updateItem({
-            id: movie.id,
-            section: 'movies',
-            ...movie
+            id: indexer.id,
+            section: 'indexers',
+            ...indexer
           });
         }),
 

@@ -882,6 +882,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 request.HttpRequest.Method = method;
+                request.HttpRequest.SuppressHttpError = true;
 
                 yield return request;
             }

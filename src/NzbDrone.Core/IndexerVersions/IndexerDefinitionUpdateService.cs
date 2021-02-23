@@ -110,6 +110,22 @@ namespace NzbDrone.Core.IndexerVersions
                     {
                         var definitionString = File.ReadAllText(file.FullName);
                         var definition = _deserializer.Deserialize<CardigannDefinition>(definitionString);
+
+                        //defaults
+                        if (definition.Settings == null)
+                        {
+                            definition.Settings = new List<SettingsField>
+                            {
+                                new SettingsField { Name = "username", Label = "Username", Type = "text" },
+                                new SettingsField { Name = "password", Label = "Password", Type = "password" }
+                            };
+                        }
+
+                        if (definition.Login != null && definition.Login.Method == null)
+                        {
+                            definition.Login.Method = "form";
+                        }
+
                         return definition;
                     }
                     catch (Exception e)

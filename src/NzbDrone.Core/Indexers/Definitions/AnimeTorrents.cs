@@ -149,10 +149,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             var searchUrl = BaseUrl + "ajax/torrents_data.php";
             var searchUrlReferer = BaseUrl + "torrents.php?cat=0&searchin=filename&search=";
 
+            var trackerCats = Capabilities.Categories.MapTorznabCapsToTrackers(categories) ?? new List<string>();
+
             var queryCollection = new NameValueCollection
             {
                 { "total", "146" }, // Not sure what this is about but its required!
-                { "cat", Capabilities.Categories.MapTorznabCapsToTrackers(categories).SingleOrDefault() ?? "0" },
+                { "cat", trackerCats.Count == 1 ? trackerCats.First() : "0" },
                 { "page", "1" },
                 { "searchin", "filename" },
                 { "search", searchString }

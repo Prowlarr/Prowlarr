@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using NzbDrone.Core.Datastore.Events;
 
 namespace NzbDrone.SignalR

@@ -2,7 +2,7 @@ using NzbDrone.Core.Applications;
 
 namespace Prowlarr.Api.V1.Application
 {
-    public class ApplicationResource : ProviderResource
+    public class ApplicationResource : ProviderResource<ApplicationResource>
     {
         public ApplicationSyncLevel SyncLevel { get; set; }
         public string TestCommand { get; set; }

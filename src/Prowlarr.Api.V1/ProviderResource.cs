@@ -6,7 +6,7 @@ using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1
 {
-    public class ProviderResource : RestResource
+    public class ProviderResource<T> : RestResource
     {
         public string Name { get; set; }
         public List<Field> Fields { get; set; }
@@ -17,11 +17,11 @@ namespace Prowlarr.Api.V1
         public ProviderMessage Message { get; set; }
         public HashSet<int> Tags { get; set; }
 
-        public List<ProviderResource> Presets { get; set; }
+        public List<T> Presets { get; set; }
     }
 
     public class ProviderResourceMapper<TProviderResource, TProviderDefinition>
-        where TProviderResource : ProviderResource, new()
+        where TProviderResource : ProviderResource<TProviderResource>, new()
         where TProviderDefinition : ProviderDefinition, new()
     {
         public virtual TProviderResource ToResource(TProviderDefinition definition)

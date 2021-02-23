@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Reflection;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 
 namespace Prowlarr.Http.ClientSchema
@@ -221,9 +222,9 @@ namespace Prowlarr.Http.ClientSchema
             {
                 return fieldValue =>
                 {
-                    if (fieldValue.GetType() == typeof(JArray))
+                    if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
                     {
-                        return ((JArray)fieldValue).Select(s => s.Value<int>());
+                        return e.EnumerateArray().Select(s => s.GetInt32());
                     }
                     else
                     {
@@ -235,9 +236,9 @@ namespace Prowlarr.Http.ClientSchema
             {
                 return fieldValue =>
                 {
-                    if (fieldValue.GetType() == typeof(JArray))
+                    if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
                     {
-                        return ((JArray)fieldValue).Select(s => s.Value<string>());
+                        return e.EnumerateArray().Select(s => s.GetString());
                     }
                     else
                     {
@@ -247,7 +248,18 @@ namespace Prowlarr.Http.ClientSchema
             }
             else
             {
-                return fieldValue => fieldValue;
+                return fieldValue =>
+                {
+                    var element = fieldValue as JsonElement?;
+
+                    if (element == null || !element.HasValue)
+                    {
+                        return null;
+                    }
+
+                    var json = element.Value.GetRawText();
+                    return STJson.Deserialize(json, propertyType);
+                };
             }
         }
 

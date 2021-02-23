@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NzbDrone.Core.Indexers;
 using Prowlarr.Http.REST;
 
@@ -12,8 +10,7 @@ namespace Prowlarr.Api.V1.Indexers
     {
         public int? LimitsMax { get; set; }
         public int? LimitsDefault { get; set; }
-
-        public List<IndexerCategory> Categories;
+        public List<IndexerCategory> Categories { get; set; }
     }
 
     public static class IndexerCapabilitiesResourceMapper

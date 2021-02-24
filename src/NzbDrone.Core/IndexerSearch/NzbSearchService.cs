@@ -79,7 +79,7 @@ namespace NzbDrone.Core.IndexerSearch
             var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
 
             searchSpec.Season = request.season;
-            searchSpec.Ep = request.ep;
+            searchSpec.Episode = request.ep;
             searchSpec.TvdbId = request.tvdbid;
             searchSpec.ImdbId = request.imdbid;
             searchSpec.TraktId = request.traktid;

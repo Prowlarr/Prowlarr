@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.IndexerSearch.Definitions
@@ -7,7 +8,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
     public class TvSearchCriteria : SearchCriteriaBase
     {
         public int? Season { get; set; }
-        public int? Ep { get; set; }
+        public string Episode { get; set; }
 
         public string ImdbId { get; set; }
         public int? TvdbId { get; set; }
@@ -25,11 +26,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
             }
 
             string episodeString;
-            if (DateTime.TryParseExact(string.Format("{0} {1}", Season, Ep), "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
+            if (DateTime.TryParseExact(string.Format("{0} {1}", Season, Episode), "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
                 episodeString = showDate.ToString("yyyy.MM.dd");
             }
-            else if (!Ep.HasValue || Ep == 0)
+            else if (Episode.IsNullOrWhiteSpace())
             {
                 episodeString = string.Format("S{0:00}", Season);
             }
@@ -37,11 +38,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
             {
                 try
                 {
-                    episodeString = string.Format("S{0:00}E{1:00}", Season, Ep);
+                    episodeString = string.Format("S{0:00}E{1:00}", Season, ParseUtil.CoerceInt(Episode));
                 }
                 catch (FormatException)
                 {
-                    episodeString = string.Format("S{0:00}E{1}", Season, Ep);
+                    episodeString = string.Format("S{0:00}E{1}", Season, Episode);
                 }
             }
 

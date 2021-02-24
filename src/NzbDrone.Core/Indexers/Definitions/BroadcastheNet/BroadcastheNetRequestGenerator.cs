@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
@@ -68,14 +69,14 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             }
 
             // If only the season/episode is searched for then change format to match expected format
-            if (searchCriteria.Season > 0 && searchCriteria.Ep == null)
+            if (searchCriteria.Season > 0 && searchCriteria.Episode == null)
             {
                 parameters.Name = string.Format("Season {0}%", searchCriteria.Season.Value);
                 parameters.Category = "Season";
             }
-            else if (searchCriteria.Season > 0 && searchCriteria.Ep.Value > 0)
+            else if (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
             {
-                parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, searchCriteria.Ep.Value);
+                parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
                 parameters.Category = "Episode";
             }
 

@@ -16,7 +16,7 @@ namespace NzbDrone.Core.IndexerSearch
         public int? traktid { get; set; }
         public int? tvdbid { get; set; }
         public int? season { get; set; }
-        public int? ep { get; set; }
+        public string ep { get; set; }
         public string album { get; set; }
         public string artist { get; set; }
         public string label { get; set; }

@@ -92,9 +92,9 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters += string.Format("&season={0}", searchCriteria.Season);
             }
 
-            if (searchCriteria.Ep.HasValue && capabilities.TvSearchEpAvailable)
+            if (searchCriteria.Episode.IsNotNullOrWhiteSpace() && capabilities.TvSearchEpAvailable)
             {
-                parameters += string.Format("&ep={0}", searchCriteria.Ep);
+                parameters += string.Format("&ep={0}", searchCriteria.Episode);
             }
 
             if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())

@@ -112,7 +112,7 @@ namespace Prowlarr.Api.V1.Indexers
         {
             if (setting.Type == "select")
             {
-                return value.ToString().ParseInt32() ?? 0;
+                return value.ToString().ParseInt64() ?? 0;
             }
             else if (setting.Type == "checkbox")
             {

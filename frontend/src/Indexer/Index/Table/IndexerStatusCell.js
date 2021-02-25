@@ -10,12 +10,16 @@ function IndexerStatusCell(props) {
   const {
     className,
     enabled,
+    redirect,
     status,
     longDateFormat,
     timeFormat,
     component: Component,
     ...otherProps
   } = props;
+
+  const enableKind = redirect ? kinds.WARNING : kinds.SUCCESS;
+  const enableTitle = redirect ? 'Indexer is Enabled, Redirect is Enabled' : 'Indexer is Enabled';
 
   return (
     <Component
@@ -25,9 +29,9 @@ function IndexerStatusCell(props) {
       {
         <Icon
           className={styles.statusIcon}
-          kind={enabled ? kinds.SUCCESS : kinds.DEFAULT}
+          kind={enabled ? enableKind : kinds.DEFAULT}
           name={enabled ? icons.CHECK : icons.BLACKLIST}
-          title={enabled ? 'Indexer is Enabled' : 'Indexer is Disabled'}
+          title={enabled ? enableTitle : 'Indexer is Disabled'}
         />
       }
       {
@@ -46,6 +50,7 @@ function IndexerStatusCell(props) {
 IndexerStatusCell.propTypes = {
   className: PropTypes.string.isRequired,
   enabled: PropTypes.bool.isRequired,
+  redirect: PropTypes.bool.isRequired,
   status: PropTypes.object,
   longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,

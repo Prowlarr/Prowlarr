@@ -12,8 +12,10 @@ namespace NzbDrone.Core.Indexers
         public IndexerPrivacy Privacy { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
+        public bool SupportsRedirect { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public int Priority { get; set; } = 25;
+        public bool Redirect { get; set; }
         public DateTime Added { get; set; }
 
         public IndexerStatus Status { get; set; }

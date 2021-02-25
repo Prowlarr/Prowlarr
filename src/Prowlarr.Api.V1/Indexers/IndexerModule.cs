@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.Responses;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
@@ -107,17 +108,26 @@ namespace Prowlarr.Api.V1.Indexers
                 throw new BadRequestException("Invalid Prowlarr link");
             }
 
+            file = WebUtility.UrlDecode(file);
+
             if (indexer == null)
             {
                 throw new NotFoundException("Indexer Not Found");
             }
 
-            var indexerInstance = _indexerFactory.GetInstance(indexer);
-
             var source = UserAgentParser.ParseSource(Request.Headers.UserAgent);
 
+            var unprotectedlLink = _downloadMappingService.ConvertToNormalLink((string)link.Value);
+
+            // If Indexer is set to download via Redirect then just redirect to the link
+            if (indexer.SupportsRedirect && indexer.Redirect)
+            {
+                _downloadService.RecordRedirect(unprotectedlLink, id, source, file);
+                return Response.AsRedirect(unprotectedlLink, RedirectResponse.RedirectType.Temporary);
+            }
+
             var downloadBytes = Array.Empty<byte>();
-            downloadBytes = _downloadService.DownloadReport(_downloadMappingService.ConvertToNormalLink(link), id, source);
+            downloadBytes = _downloadService.DownloadReport(unprotectedlLink, id, source, file);
 
             // handle magnet URLs
             if (downloadBytes.Length >= 7
@@ -130,7 +140,7 @@ namespace Prowlarr.Api.V1.Indexers
                 && downloadBytes[6] == 0x3a)
             {
                 var magnetUrl = Encoding.UTF8.GetString(downloadBytes);
-                return Response.AsRedirect(magnetUrl);
+                return Response.AsRedirect(magnetUrl, RedirectResponse.RedirectType.Temporary);
             }
 
             var contentType = indexer.Protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb";

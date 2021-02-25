@@ -223,7 +223,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 if (setting.Type != "password")
                 {
-                    _logger.Debug($"{name} got value {value.ToJson()}");
+                    _logger.Trace($"{name} got value {value.ToJson()}");
                 }
 
                 if (setting.Type == "text" || setting.Type == "password")
@@ -236,7 +236,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "select")
                 {
-                    _logger.Debug($"Setting options: {setting.Options.ToJson()}");
+                    _logger.Trace($"Setting options: {setting.Options.ToJson()}");
                     var sorted = setting.Options.OrderBy(x => x.Key).ToList();
                     var selected = sorted[(int)(long)value];
 

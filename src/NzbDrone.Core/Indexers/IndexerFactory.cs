@@ -156,6 +156,7 @@ namespace NzbDrone.Core.Indexers
             definition.Protocol = provider.Protocol;
             definition.SupportsRss = provider.SupportsRss;
             definition.SupportsSearch = provider.SupportsSearch;
+            definition.SupportsRedirect = provider.SupportsRedirect;
 
             //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
             if (definition.Implementation != typeof(Cardigann.Cardigann).Name)

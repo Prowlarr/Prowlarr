@@ -25,9 +25,11 @@ namespace NzbDrone.Core.Indexers
         public abstract DownloadProtocol Protocol { get; }
         public abstract IndexerPrivacy Privacy { get; }
         public int Priority { get; set; }
+        public bool Redirect { get; set; }
 
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
+        public abstract bool SupportsRedirect { get; }
         public abstract IndexerCapabilities Capabilities { get; protected set; }
 
         public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

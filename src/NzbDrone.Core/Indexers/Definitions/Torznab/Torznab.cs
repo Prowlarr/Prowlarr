@@ -64,6 +64,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 Protocol = DownloadProtocol.Usenet,
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
+                SupportsRedirect = SupportsRedirect,
                 Capabilities = new IndexerCapabilities()
             };
         }

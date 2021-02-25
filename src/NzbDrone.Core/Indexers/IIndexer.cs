@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Indexers
     {
         bool SupportsRss { get; }
         bool SupportsSearch { get; }
+        bool SupportsRedirect { get; }
         IndexerCapabilities Capabilities { get; }
 
         string BaseUrl { get; }

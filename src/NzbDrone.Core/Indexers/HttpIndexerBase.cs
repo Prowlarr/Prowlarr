@@ -26,6 +26,7 @@ namespace NzbDrone.Core.Indexers
 
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+        public override bool SupportsRedirect => false;
 
         public override bool FollowRedirect => false;
         public override IndexerCapabilities Capabilities { get; protected set; }

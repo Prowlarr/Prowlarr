@@ -39,7 +39,9 @@ function EditIndexerModalContent(props) {
     implementationName,
     name,
     enable,
+    redirect,
     supportsRss,
+    supportsRedirect,
     fields,
     priority
   } = item;
@@ -86,6 +88,19 @@ function EditIndexerModalContent(props) {
                   helpTextWarning={supportsRss.value ? undefined : translate('RSSIsNotSupportedWithThisIndexer')}
                   isDisabled={!supportsRss.value}
                   {...enable}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <FormLabel>{translate('Redirect')}</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="redirect"
+                  helpText={'Redirect incoming download requests for indexer instead of Proxying using Prowlarr'}
+                  isDisabled={!supportsRedirect.value}
+                  {...redirect}
                   onChange={onInputChange}
                 />
               </FormGroup>

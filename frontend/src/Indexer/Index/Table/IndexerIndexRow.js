@@ -63,6 +63,7 @@ class IndexerIndexRow extends Component {
       name,
       baseUrl,
       enable,
+      redirect,
       tags,
       protocol,
       privacy,
@@ -114,6 +115,7 @@ class IndexerIndexRow extends Component {
                   key={column.name}
                   className={styles[column.name]}
                   enabled={enable}
+                  redirect={redirect}
                   status={status}
                   longDateFormat={longDateFormat}
                   timeFormat={timeFormat}
@@ -258,6 +260,7 @@ IndexerIndexRow.propTypes = {
   priority: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   enable: PropTypes.bool.isRequired,
+  redirect: PropTypes.bool.isRequired,
   status: PropTypes.object,
   capabilities: PropTypes.object.isRequired,
   added: PropTypes.string.isRequired,

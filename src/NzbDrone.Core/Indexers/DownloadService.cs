@@ -12,7 +12,8 @@ namespace NzbDrone.Core.Indexers
 {
     public interface IDownloadService
     {
-        byte[] DownloadReport(string link, int indexerId, string source);
+        byte[] DownloadReport(string link, int indexerId, string source, string title);
+        void RecordRedirect(string link, int indexerId, string source, string title);
     }
 
     public class DownloadService : IDownloadService
@@ -36,7 +37,7 @@ namespace NzbDrone.Core.Indexers
             _logger = logger;
         }
 
-        public byte[] DownloadReport(string link, int indexerId, string source)
+        public byte[] DownloadReport(string link, int indexerId, string source, string title)
         {
             var url = new HttpUri(link);
 
@@ -59,7 +60,7 @@ namespace NzbDrone.Core.Indexers
             catch (ReleaseUnavailableException)
             {
                 _logger.Trace("Release {0} no longer available on indexer.", link);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, title));
                 throw;
             }
             catch (ReleaseDownloadException ex)
@@ -74,12 +75,17 @@ namespace NzbDrone.Core.Indexers
                     _indexerStatusService.RecordFailure(indexerId);
                 }
 
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, title));
                 throw;
             }
 
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source));
+            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, title));
             return downloadedBytes;
+        }
+
+        public void RecordRedirect(string link, int indexerId, string source, string title)
+        {
+            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, true, source, title, true));
         }
     }
 }

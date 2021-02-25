@@ -112,6 +112,8 @@ namespace NzbDrone.Core.History
 
             history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("Source", message.Source ?? string.Empty);
+            history.Data.Add("GrabMethod", message.Redirect ? "Proxy" : "Redirect");
+            history.Data.Add("Title", message.Title);
 
             _historyRepository.Insert(history);
         }

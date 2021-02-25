@@ -78,6 +78,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Privacy = definition.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public,
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
+                SupportsRedirect = SupportsRedirect,
                 Capabilities = new IndexerCapabilities(),
                 ExtraFields = settings
             };

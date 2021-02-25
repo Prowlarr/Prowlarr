@@ -14,8 +14,10 @@ namespace Prowlarr.Api.V1.Indexers
     {
         public string BaseUrl { get; set; }
         public bool Enable { get; set; }
+        public bool Redirect { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
+        public bool SupportsRedirect { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
         public IndexerCapabilityResource Capabilities { get; set; }
@@ -61,8 +63,10 @@ namespace Prowlarr.Api.V1.Indexers
 
             resource.BaseUrl = definition.BaseUrl;
             resource.Enable = definition.Enable;
+            resource.Redirect = definition.Redirect;
             resource.SupportsRss = definition.SupportsRss;
             resource.SupportsSearch = definition.SupportsSearch;
+            resource.SupportsRedirect = definition.SupportsRedirect;
             resource.Capabilities = definition.Capabilities.ToResource();
             resource.Protocol = definition.Protocol;
             resource.Privacy = definition.Privacy;
@@ -100,6 +104,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
 
             definition.Enable = resource.Enable;
+            definition.Redirect = resource.Redirect;
             definition.BaseUrl = resource.BaseUrl;
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;

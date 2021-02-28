@@ -2,9 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import * as commandNames from 'Commands/commandNames';
 import { executeCommand } from 'Store/Actions/commandActions';
-import createExecutingCommandsSelector from 'Store/Selectors/createExecutingCommandsSelector';
 import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import createIndexerStatusSelector from 'Store/Selectors/createIndexerStatusSelector';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
@@ -23,13 +21,11 @@ function createMapStateToProps() {
     createIndexerSelector(),
     createIndexerStatusSelector(),
     selectShowSearchAction(),
-    createExecutingCommandsSelector(),
     createUISettingsSelector(),
     (
       movie,
       status,
       showSearchAction,
-      executingCommands,
       uiSettings
     ) => {
 
@@ -42,26 +38,10 @@ function createMapStateToProps() {
         return {};
       }
 
-      const isRefreshingMovie = executingCommands.some((command) => {
-        return (
-          command.name === commandNames.REFRESH_MOVIE &&
-          command.body.movieIds.includes(movie.id)
-        );
-      });
-
-      const isSearchingMovie = executingCommands.some((command) => {
-        return (
-          command.name === commandNames.MOVIE_SEARCH &&
-          command.body.movieIds.includes(movie.id)
-        );
-      });
-
       return {
         ...movie,
         status,
         showSearchAction,
-        isRefreshingMovie,
-        isSearchingMovie,
         longDateFormat: uiSettings.longDateFormat,
         timeFormat: uiSettings.timeFormat
       };
@@ -74,23 +54,6 @@ const mapDispatchToProps = {
 };
 
 class MovieIndexItemConnector extends Component {
-
-  //
-  // Listeners
-
-  onRefreshMoviePress = () => {
-    this.props.dispatchExecuteCommand({
-      name: commandNames.REFRESH_MOVIE,
-      movieIds: [this.props.id]
-    });
-  }
-
-  onSearchPress = () => {
-    this.props.dispatchExecuteCommand({
-      name: commandNames.MOVIE_SEARCH,
-      movieIds: [this.props.id]
-    });
-  }
 
   //
   // Render
@@ -110,8 +73,6 @@ class MovieIndexItemConnector extends Component {
       <ItemComponent
         {...otherProps}
         id={id}
-        onRefreshMoviePress={this.onRefreshMoviePress}
-        onSearchPress={this.onSearchPress}
       />
     );
   }

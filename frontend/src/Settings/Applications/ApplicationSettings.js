@@ -13,7 +13,9 @@ class ApplicationSettings extends Component {
   render() {
     const {
       isTestingAll,
-      dispatchTestAllApplications
+      isSyncingIndexers,
+      onTestAllPress,
+      onAppIndexerSyncPress
     } = this.props;
 
     return (
@@ -27,13 +29,15 @@ class ApplicationSettings extends Component {
               <PageToolbarButton
                 label={translate('SyncAppIndexers')}
                 iconName={icons.REFRESH}
+                isSpinning={isSyncingIndexers}
+                onPress={onAppIndexerSyncPress}
               />
 
               <PageToolbarButton
                 label={translate('TestAllApps')}
                 iconName={icons.TEST}
                 isSpinning={isTestingAll}
-                onPress={dispatchTestAllApplications}
+                onPress={onTestAllPress}
               />
             </Fragment>
           }
@@ -49,7 +53,9 @@ class ApplicationSettings extends Component {
 
 ApplicationSettings.propTypes = {
   isTestingAll: PropTypes.bool.isRequired,
-  dispatchTestAllApplications: PropTypes.func.isRequired
+  isSyncingIndexers: PropTypes.bool.isRequired,
+  onTestAllPress: PropTypes.func.isRequired,
+  onAppIndexerSyncPress: PropTypes.func.isRequired
 };
 
 export default ApplicationSettings;

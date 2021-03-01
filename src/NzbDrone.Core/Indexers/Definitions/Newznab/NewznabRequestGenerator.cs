@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
@@ -27,26 +29,39 @@ namespace NzbDrone.Core.Indexers.Newznab
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
             var pageableRequests = new IndexerPageableRequestChain();
-            var parameters = string.Empty;
+            var parameters = new NameValueCollection();
 
             if (searchCriteria.TmdbId.HasValue && capabilities.MovieSearchTmdbAvailable)
             {
-                parameters += string.Format("&tmdbid={0}", searchCriteria.TmdbId.Value);
+                parameters.Add("tmdbid", searchCriteria.TmdbId.Value.ToString());
             }
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && capabilities.MovieSearchImdbAvailable)
             {
-                parameters += string.Format("&imdbid={0}", searchCriteria.ImdbId);
+                parameters.Add("imdbid}", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TraktId.HasValue && capabilities.MovieSearchTraktAvailable)
             {
-                parameters += string.Format("&traktid={0}", searchCriteria.ImdbId);
+                parameters.Add("traktid", searchCriteria.ImdbId);
             }
 
-            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            //Workaround issue with Sphinx search returning garbage results on some indexers. If we don't use id parameters, fallback to t=search
+            if (parameters.Count == 0)
             {
-                parameters += string.Format("&q={0}", searchCriteria.SearchTerm);
+                searchCriteria.SearchType = "search";
+
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
+            }
+            else
+            {
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MovieSearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
             }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
@@ -57,7 +72,43 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+
+            var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
+
+            if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && capabilities.MusicSearchArtistAvailable)
+            {
+                parameters.Add("artist", searchCriteria.Artist);
+            }
+
+            if (searchCriteria.Album.IsNotNullOrWhiteSpace() && capabilities.MusicSearchAlbumAvailable)
+            {
+                parameters.Add("album", searchCriteria.Album);
+            }
+
+            //Workaround issue with Sphinx search returning garbage results on some indexers. If we don't use id parameters, fallback to t=search
+            if (parameters.Count == 0)
+            {
+                searchCriteria.SearchType = "search";
+
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
+            }
+            else
+            {
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MusicSearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
@@ -65,41 +116,54 @@ namespace NzbDrone.Core.Indexers.Newznab
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
             var pageableRequests = new IndexerPageableRequestChain();
-            var parameters = string.Empty;
+            var parameters = new NameValueCollection();
 
             if (searchCriteria.TvdbId.HasValue && capabilities.TvSearchTvdbAvailable)
             {
-                parameters += string.Format("&tvdbid={0}", searchCriteria.TvdbId.Value);
+                parameters.Add("tvdbid", searchCriteria.TvdbId.Value.ToString());
             }
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && capabilities.TvSearchImdbAvailable)
             {
-                parameters += string.Format("&imdbid={0}", searchCriteria.ImdbId);
+                parameters.Add("imdbid", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TvMazeId.HasValue && capabilities.TvSearchTvMazeAvailable)
             {
-                parameters += string.Format("&tvmazeid={0}", searchCriteria.TvMazeId);
+                parameters.Add("tvmazeid", searchCriteria.TvMazeId.ToString());
             }
 
             if (searchCriteria.RId.HasValue && capabilities.TvSearchTvRageAvailable)
             {
-                parameters += string.Format("&rid={0}", searchCriteria.RId);
+                parameters.Add("rid", searchCriteria.RId.ToString());
             }
 
             if (searchCriteria.Season.HasValue && capabilities.TvSearchSeasonAvailable)
             {
-                parameters += string.Format("&season={0}", searchCriteria.Season);
+                parameters.Add("season", searchCriteria.Season.ToString());
             }
 
             if (searchCriteria.Episode.IsNotNullOrWhiteSpace() && capabilities.TvSearchEpAvailable)
             {
-                parameters += string.Format("&ep={0}", searchCriteria.Episode);
+                parameters.Add("ep", searchCriteria.Episode);
             }
 
-            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            //Workaround issue with Sphinx search returning garbage results on some indexers. If we don't use id parameters, fallback to t=search
+            if (parameters.Count == 0)
             {
-                parameters += string.Format("&q={0}", searchCriteria.SearchTerm);
+                searchCriteria.SearchType = "search";
+
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
+            }
+            else
+            {
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.TvSearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
             }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
@@ -110,22 +174,63 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
-        }
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
-        {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            var searchQuery = searchCriteria.SearchTerm;
+            if (searchCriteria.Author.IsNotNullOrWhiteSpace() && capabilities.BookSearchAuthorAvailable)
+            {
+                parameters.Add("author", searchCriteria.Author);
+            }
+
+            if (searchCriteria.Title.IsNotNullOrWhiteSpace() && capabilities.BookSearchTitleAvailable)
+            {
+                parameters.Add("title", searchCriteria.Title);
+            }
+
+            //Workaround issue with Sphinx search returning garbage results on some indexers. If we don't use id parameters, fallback to t=search
+            if (parameters.Count == 0)
+            {
+                searchCriteria.SearchType = "search";
+
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
+            }
+            else
+            {
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.BookSearchAvailable)
+                {
+                    parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+                }
+            }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
-                    searchQuery.IsNotNullOrWhiteSpace() ? string.Format("&q={0}", NewsnabifyTitle(searchCriteria.SearchTerm)) : string.Empty));
+                parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, string parameters)
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            var parameters = new NameValueCollection();
+
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+            {
+                parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
+
+            return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
             var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
             var categories = searchCriteria.Categories;
@@ -143,15 +248,15 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.Limit.HasValue)
             {
-                parameters += string.Format("&limit={0}", searchCriteria.Limit);
+                parameters.Add("limit", searchCriteria.Limit.ToString());
             }
 
             if (searchCriteria.Offset.HasValue)
             {
-                parameters += string.Format("&offset={0}", searchCriteria.Offset);
+                parameters.Add("offset", searchCriteria.Offset.ToString());
             }
 
-            yield return new IndexerRequest(string.Format("{0}{1}", baseUrl, parameters), HttpAccept.Rss);
+            yield return new IndexerRequest(string.Format("{0}&{1}", baseUrl, parameters.GetQueryString()), HttpAccept.Rss);
         }
 
         private static string NewsnabifyTitle(string title)

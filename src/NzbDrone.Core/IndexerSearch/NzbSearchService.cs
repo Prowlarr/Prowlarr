@@ -93,6 +93,9 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<BookSearchCriteria>(request, indexerIds, interactiveSearch);
 
+            searchSpec.Author = request.author;
+            searchSpec.Title = request.title;
+
             return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 

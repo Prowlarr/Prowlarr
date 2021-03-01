@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && capabilities.MovieSearchImdbAvailable)
             {
-                parameters.Add("imdbid}", searchCriteria.ImdbId);
+                parameters.Add("imdbid", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TraktId.HasValue && capabilities.MovieSearchTraktAvailable)

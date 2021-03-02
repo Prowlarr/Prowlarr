@@ -16,6 +16,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? TvMazeId { get; set; }
         public int? TraktId { get; set; }
 
+        public string SanitizedTvSearchString => (SanitizedSearchTerm + " " + EpisodeSearchString).Trim();
         public string EpisodeSearchString => GetEpisodeSearchString();
 
         private string GetEpisodeSearchString()

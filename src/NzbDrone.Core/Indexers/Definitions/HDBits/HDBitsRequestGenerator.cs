@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
             if (searchCriteria.TvdbId == 0 && searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
-                query.Search = (searchCriteria.SanitizedSearchTerm + " " + searchCriteria.EpisodeSearchString).Trim();
+                query.Search = searchCriteria.SanitizedTvSearchString;
             }
 
             var tvdbId = searchCriteria.TvdbId;

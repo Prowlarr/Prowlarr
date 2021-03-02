@@ -18,7 +18,7 @@
   "ApplicationStatusCheckSingleClientMessage": "Applications unavailable due to failures: {0}",
   "Apply": "Apply",
   "ApplyTags": "Apply Tags",
-  "ApplyTagsHelpTexts1": "How to apply tags to the selected movies",
+  "ApplyTagsHelpTexts1": "How to apply tags to the selected indexers",
   "ApplyTagsHelpTexts2": "Add: Add the tags the existing list of tags",
   "ApplyTagsHelpTexts3": "Remove: Remove the entered tags",
   "ApplyTagsHelpTexts4": "Replace: Replace the tags with the entered tags (enter no tags to clear all tags)",

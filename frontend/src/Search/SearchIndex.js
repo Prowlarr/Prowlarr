@@ -248,7 +248,7 @@ class SearchIndex extends Component {
             {
               !isFetching && !!error &&
                 <div className={styles.errorMessage}>
-                  {getErrorMessage(error, 'Failed to load movie from API')}
+                  {getErrorMessage(error, 'Failed to load search results from API')}
                 </div>
             }
 

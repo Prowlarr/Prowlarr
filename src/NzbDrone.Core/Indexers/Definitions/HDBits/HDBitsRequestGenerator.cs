@@ -29,12 +29,15 @@ namespace NzbDrone.Core.Indexers.HDBits
                 query.Search = searchCriteria.SanitizedSearchTerm;
             }
 
-            var imdbId = int.Parse(searchCriteria.ImdbId.Substring(2));
-
-            if (imdbId != 0)
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
-                query.ImdbInfo.Id = imdbId;
+                var imdbId = int.Parse(searchCriteria.ImdbId.Substring(2));
+
+                if (imdbId != 0)
+                {
+                    query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
+                    query.ImdbInfo.Id = imdbId;
+                }
             }
 
             pageableRequests.Add(GetRequest(query));

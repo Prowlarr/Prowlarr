@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new HDBitsRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl };
+            return new HDBitsRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()

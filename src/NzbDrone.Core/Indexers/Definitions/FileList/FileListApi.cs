@@ -18,6 +18,8 @@ namespace NzbDrone.Core.Indexers.FileList
         public string ImdbId { get; set; }
         [JsonProperty(PropertyName = "freeleech")]
         public bool FreeLeech { get; set; }
+        [JsonProperty(PropertyName = "doubleup")]
+        public bool DoubleUp { get; set; }
         [JsonProperty(PropertyName = "upload_date")]
         public DateTime UploadDate { get; set; }
     }

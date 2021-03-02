@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 {
     public class HDBitsRequestGenerator : IIndexerRequestGenerator
     {
+        public IndexerCapabilities Capabilities { get; set; }
         public HDBitsSettings Settings { get; set; }
         public string BaseUrl { get; set; }
 
@@ -18,19 +19,14 @@ namespace NzbDrone.Core.Indexers.HDBits
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
 
-            if (TryAddSearchParameters(query, searchCriteria))
+            if (searchCriteria.Categories.Length > 0)
             {
-                pageableRequests.Add(GetRequest(query));
+                query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
             }
 
-            return pageableRequests;
-        }
-
-        private bool TryAddSearchParameters(TorrentQuery query, MovieSearchCriteria searchCriteria)
-        {
-            if (searchCriteria.ImdbId.IsNullOrWhiteSpace())
+            if (searchCriteria.ImdbId.IsNullOrWhiteSpace() && searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
-                return false;
+                query.Search = searchCriteria.SanitizedSearchTerm;
             }
 
             var imdbId = int.Parse(searchCriteria.ImdbId.Substring(2));
@@ -39,13 +35,11 @@ namespace NzbDrone.Core.Indexers.HDBits
             {
                 query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
                 query.ImdbInfo.Id = imdbId;
-
-                //TODO Map Categories
-                query.Category = searchCriteria.Categories;
-                return true;
             }
 
-            return false;
+            pageableRequests.Add(GetRequest(query));
+
+            return pageableRequests;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -82,7 +76,32 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+            var query = new TorrentQuery();
+
+            if (searchCriteria.Categories.Length > 0)
+            {
+                query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
+            }
+
+            if (searchCriteria.TvdbId == 0 && searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                query.Search = (searchCriteria.SanitizedSearchTerm + " " + searchCriteria.EpisodeSearchString).Trim();
+            }
+
+            var tvdbId = searchCriteria.TvdbId;
+
+            if (tvdbId != 0)
+            {
+                query.TvdbInfo = query.TvdbInfo ?? new TvdbInfo();
+                query.TvdbInfo.Id = tvdbId;
+                query.TvdbInfo.Season = searchCriteria.Season;
+                query.TvdbInfo.Episode = searchCriteria.Episode;
+            }
+
+            pageableRequests.Add(GetRequest(query));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
@@ -92,7 +111,22 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+            var query = new TorrentQuery();
+
+            if (searchCriteria.Categories.Length > 0)
+            {
+                query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
+            }
+
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                query.Search = searchCriteria.SanitizedSearchTerm;
+            }
+
+            pageableRequests.Add(GetRequest(query));
+
+            return pageableRequests;
         }
     }
 }

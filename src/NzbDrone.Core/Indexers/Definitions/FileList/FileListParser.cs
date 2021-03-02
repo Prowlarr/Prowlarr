@@ -49,6 +49,9 @@ namespace NzbDrone.Core.Indexers.FileList
                     imdbId = int.Parse(result.ImdbId.Substring(2));
                 }
 
+                var downloadVolumeFactor = result.FreeLeech == true ? 0 : 1;
+                var uploadVolumeFactor = result.DoubleUp == true ? 2 : 1;
+
                 torrentInfos.Add(new TorrentInfo()
                 {
                     Guid = string.Format("FileList-{0}", id),
@@ -60,7 +63,13 @@ namespace NzbDrone.Core.Indexers.FileList
                     Peers = result.Leechers + result.Seeders,
                     PublishDate = result.UploadDate,
                     ImdbId = imdbId,
-                    IndexerFlags = flags
+                    IndexerFlags = flags,
+                    Files = (int)result.Files,
+                    Grabs = (int)result.TimesCompleted,
+                    DownloadVolumeFactor = downloadVolumeFactor,
+                    UploadVolumeFactor = uploadVolumeFactor,
+                    MinimumRatio = 1,
+                    MinimumSeedTime = 172800, //48 hours
                 });
             }
 

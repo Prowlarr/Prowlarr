@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.FileList
             }
             else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
-                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SearchTerm);
+                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SanitizedSearchTerm);
                 pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
             }
             else
@@ -37,22 +37,71 @@ namespace NzbDrone.Core.Indexers.FileList
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SanitizedSearchTerm);
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest("latest-torrents", searchCriteria.Categories, ""));
+            }
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=imdb&query={0}&season={1}&episode={2}", searchCriteria.ImdbId, searchCriteria.Season, searchCriteria.Episode)));
+            }
+            else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SanitizedSearchTerm);
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=name&query={0}&season={1}&episode={2}", titleYearSearchQuery.Trim(), searchCriteria.Season, searchCriteria.Episode)));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest("latest-torrents", searchCriteria.Categories, ""));
+            }
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SanitizedSearchTerm);
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest("latest-torrents", searchCriteria.Categories, ""));
+            }
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            {
+                var titleYearSearchQuery = string.Format("{0}", searchCriteria.SanitizedSearchTerm);
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=name&query={0}", titleYearSearchQuery.Trim())));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest("latest-torrents", searchCriteria.Categories, ""));
+            }
+
+            return pageableRequests;
         }
 
         private IEnumerable<IndexerRequest> GetRequest(string searchType, int[] categories, string parameters)

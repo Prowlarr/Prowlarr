@@ -4,7 +4,6 @@ using System.Net;
 using System.Text;
 using Nancy;
 using Nancy.ModelBinding;
-using Nancy.Responses;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 
 namespace NzbDrone.Core.Indexers.HDBits
@@ -113,7 +113,7 @@ namespace NzbDrone.Core.Indexers.HDBits
     {
         public int? Id { get; set; }
         public int? Season { get; set; }
-        public int? Episode { get; set; }
+        public string Episode { get; set; }
     }
 
     public enum StatusCode

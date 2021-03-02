@@ -76,10 +76,13 @@ namespace NzbDrone.Core.Indexers.HDBits
                     DownloadUrl = GetDownloadUrl(id),
                     InfoUrl = GetInfoUrl(id),
                     Seeders = result.Seeders,
+                    Grabs = (int)result.TimesCompleted,
+                    Files = (int)result.NumFiles,
                     Peers = result.Leechers + result.Seeders,
                     PublishDate = result.Added.ToUniversalTime(),
                     Internal = internalRelease,
                     ImdbId = result.ImdbInfo?.Id ?? 0,
+                    TvdbId = result.TvdbInfo?.Id ?? 0,
                     IndexerFlags = flags
                 });
             }

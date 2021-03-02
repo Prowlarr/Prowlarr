@@ -40,11 +40,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
             {
-                var schema = _schemaCache.Get(Definition.Settings.ToJson(), () => _lidarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-                var newznab = schema.Where(i => i.Implementation == "Newznab").First();
-                var torznab = schema.Where(i => i.Implementation == "Torznab").First();
-
-                var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
+                var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol);
 
                 var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
@@ -67,19 +63,50 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public override void UpdateIndexer(IndexerDefinition indexer)
         {
-            //Use the Id mapping here to delete the correct indexer
-            throw new System.NotImplementedException();
+            _logger.Debug("Updating indexer {0}[{1}]", indexer.Name, indexer.Id);
+
+            var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
+            var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
+
+            var readarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
+
+            var remoteIndexer = _lidarrV1Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
+
+            if (remoteIndexer != null)
+            {
+                _logger.Debug("Remote indexer found, syncing with current settings");
+
+                if (!readarrIndexer.Equals(remoteIndexer))
+                {
+                    _lidarrV1Proxy.UpdateIndexer(readarrIndexer, Settings);
+                }
+            }
+            else
+            {
+                _logger.Debug("Remote indexer not found, re-adding indexer to Lidarr");
+                readarrIndexer.Id = 0;
+
+                var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(readarrIndexer, Settings);
+                _appIndexerMapService.Delete(indexerMapping.Id);
+                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+            }
         }
 
-        private LidarrIndexer BuildLidarrIndexer(IndexerDefinition indexer, LidarrIndexer schema)
+        private LidarrIndexer BuildLidarrIndexer(IndexerDefinition indexer, DownloadProtocol protocol, int id = 0)
         {
+            var schemas = _schemaCache.Get(Definition.Settings.ToJson(), () => _lidarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
+            var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
+
+            var schema = protocol == DownloadProtocol.Usenet ? newznab : torznab;
+
             var lidarrIndexer = new LidarrIndexer
             {
                 Id = 0,
                 Name = $"{indexer.Name} (Prowlarr)",
-                EnableRss = true,
-                EnableAutomaticSearch = true,
-                EnableInteractiveSearch = true,
+                EnableRss = indexer.Enable,
+                EnableAutomaticSearch = indexer.Enable,
+                EnableInteractiveSearch = indexer.Enable,
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,

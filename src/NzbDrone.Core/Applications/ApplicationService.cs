@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
@@ -15,6 +16,7 @@ namespace NzbDrone.Core.Applications
                                       IHandleAsync<ProviderDeletedEvent<IIndexer>>,
                                       IHandleAsync<ProviderAddedEvent<IApplication>>,
                                       IHandleAsync<ProviderUpdatedEvent<IIndexer>>,
+                                      IHandleAsync<ApiKeyChangedEvent>,
                                       IExecute<ApplicationIndexerSyncCommand>
     {
         private readonly IApplicationFactory _applicationsFactory;
@@ -40,8 +42,9 @@ namespace NzbDrone.Core.Applications
             if (appDefinition.Enable)
             {
                 var app = _applicationsFactory.GetInstance(appDefinition);
+                var indexers = _indexerFactory.Enabled().Select(i => (IndexerDefinition)i.Definition).ToList();
 
-                SyncIndexers(new List<IApplication> { app });
+                SyncIndexers(new List<IApplication> { app }, indexers);
             }
         }
 
@@ -57,8 +60,7 @@ namespace NzbDrone.Core.Applications
 
         public void HandleAsync(ProviderDeletedEvent<IIndexer> message)
         {
-            var enabledApps = _applicationsFactory.SyncEnabled()
-                                                  .Where(n => ((ApplicationDefinition)n.Definition).SyncLevel == ApplicationSyncLevel.FullSync);
+            var enabledApps = _applicationsFactory.SyncEnabled();
 
             foreach (var app in enabledApps)
             {
@@ -69,39 +71,54 @@ namespace NzbDrone.Core.Applications
         public void HandleAsync(ProviderUpdatedEvent<IIndexer> message)
         {
             var enabledApps = _applicationsFactory.SyncEnabled()
-                                                  .Where(n => ((ApplicationDefinition)n.Definition).SyncLevel == ApplicationSyncLevel.FullSync);
+                                                  .Where(n => ((ApplicationDefinition)n.Definition).SyncLevel == ApplicationSyncLevel.FullSync)
+                                                  .ToList();
 
-            foreach (var app in enabledApps)
-            {
-                ExecuteAction(a => a.UpdateIndexer((IndexerDefinition)message.Definition), app);
-            }
+            SyncIndexers(enabledApps, new List<IndexerDefinition> { (IndexerDefinition)message.Definition });
+        }
+
+        public void HandleAsync(ApiKeyChangedEvent message)
+        {
+            var enabledApps = _applicationsFactory.SyncEnabled();
+
+            var indexers = _indexerFactory.AllProviders().Select(i => (IndexerDefinition)i.Definition).ToList();
+
+            SyncIndexers(enabledApps, indexers);
         }
 
         public void Execute(ApplicationIndexerSyncCommand message)
         {
             var enabledApps = _applicationsFactory.SyncEnabled();
 
-            SyncIndexers(enabledApps);
+            var indexers = _indexerFactory.AllProviders().Select(i => (IndexerDefinition)i.Definition).ToList();
+
+            SyncIndexers(enabledApps, indexers);
         }
 
-        private void SyncIndexers(List<IApplication> applications)
+        private void SyncIndexers(List<IApplication> applications, List<IndexerDefinition> indexers)
         {
-            var indexers = _indexerFactory.Enabled();
-
             foreach (var app in applications)
             {
                 var indexerMappings = _appIndexerMapService.GetMappingsForApp(app.Definition.Id);
 
                 foreach (var indexer in indexers)
                 {
-                    if (indexerMappings.Any(x => x.IndexerId == indexer.Definition.Id))
+                    var definition = indexer;
+
+                    if (indexerMappings.Any(x => x.IndexerId == definition.Id))
                     {
-                        continue;
+                        if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync)
+                        {
+                            ExecuteAction(a => a.UpdateIndexer(definition), app);
+                        }
                     }
-
-                    var definition = (IndexerDefinition)indexer.Definition;
-
-                    ExecuteAction(a => a.AddIndexer(definition), app);
+                    else
+                    {
+                        if (indexer.Enable)
+                        {
+                            ExecuteAction(a => a.AddIndexer(definition), app);
+                        }
+                    }
                 }
             }
         }
@@ -156,7 +173,7 @@ namespace NzbDrone.Core.Applications
             catch (Exception ex)
             {
                 _applicationStatusService.RecordFailure(application.Definition.Id);
-                _logger.Error(ex, "An error occurred while talking to application.");
+                _logger.Error(ex, "An error occurred while talking to remote application.");
             }
         }
     }

@@ -19,7 +19,7 @@ import styles from './EditApplicationModalContent.css';
 
 const syncLevelOptions = [
   { key: 'disabled', value: 'Disabled' },
-  { key: 'addOnly', value: 'Add Only' },
+  { key: 'addOnly', value: 'Add and Remove Only' },
   { key: 'fullSync', value: 'Full Sync' }
 ];
 

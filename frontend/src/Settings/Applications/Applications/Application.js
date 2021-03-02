@@ -71,7 +71,7 @@ class Application extends Component {
         {
           syncLevel === 'addOnly' &&
             <Label kind={kinds.WARNING}>
-              Add Only
+              Add and Remove Only
             </Label>
         }
 

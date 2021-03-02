@@ -13,8 +13,10 @@ namespace NzbDrone.Core.Applications.Radarr
     {
         RadarrIndexer AddIndexer(RadarrIndexer indexer, RadarrSettings settings);
         List<RadarrIndexer> GetIndexers(RadarrSettings settings);
+        RadarrIndexer GetIndexer(int indexerId, RadarrSettings settings);
         List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings);
         void RemoveIndexer(int indexerId, RadarrSettings settings);
+        RadarrIndexer UpdateIndexer(RadarrIndexer indexer, RadarrSettings settings);
         ValidationFailure Test(RadarrSettings settings);
     }
 
@@ -41,6 +43,24 @@ namespace NzbDrone.Core.Applications.Radarr
             return Execute<List<RadarrIndexer>>(request);
         }
 
+        public RadarrIndexer GetIndexer(int indexerId, RadarrSettings settings)
+        {
+            try
+            {
+                var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.GET);
+                return Execute<RadarrIndexer>(request);
+            }
+            catch (HttpException ex)
+            {
+                if (ex.Response.StatusCode != HttpStatusCode.NotFound)
+                {
+                    throw;
+                }
+            }
+
+            return null;
+        }
+
         public void RemoveIndexer(int indexerId, RadarrSettings settings)
         {
             var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.DELETE);
@@ -56,6 +76,15 @@ namespace NzbDrone.Core.Applications.Radarr
         public RadarrIndexer AddIndexer(RadarrIndexer indexer, RadarrSettings settings)
         {
             var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
+            return Execute<RadarrIndexer>(request);
+        }
+
+        public RadarrIndexer UpdateIndexer(RadarrIndexer indexer, RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v3/indexer/{indexer.Id}", HttpMethod.PUT);
 
             request.SetContent(indexer.ToJson());
 

@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Indexers
     public interface IIndexerFactory : IProviderFactory<IIndexer, IndexerDefinition>
     {
         List<IIndexer> Enabled(bool filterBlockedIndexers = true);
+        List<IIndexer> AllProviders(bool filterBlockedIndexers = true);
         void DeleteIndexers(List<int> indexerIds);
     }
 
@@ -179,6 +180,18 @@ namespace NzbDrone.Core.Indexers
         public List<IIndexer> Enabled(bool filterBlockedIndexers = true)
         {
             var enabledIndexers = GetAvailableProviders().Where(n => ((IndexerDefinition)n.Definition).Enable);
+
+            if (filterBlockedIndexers)
+            {
+                return FilterBlockedIndexers(enabledIndexers).ToList();
+            }
+
+            return enabledIndexers.ToList();
+        }
+
+        public List<IIndexer> AllProviders(bool filterBlockedIndexers = true)
+        {
+            var enabledIndexers = All().Select(GetInstance);
 
             if (filterBlockedIndexers)
             {

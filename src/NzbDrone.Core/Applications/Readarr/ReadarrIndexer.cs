@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NzbDrone.Core.Applications.Readarr
 {
@@ -16,5 +17,26 @@ namespace NzbDrone.Core.Applications.Readarr
         public string InfoLink { get; set; }
         public HashSet<int> Tags { get; set; }
         public List<ReadarrField> Fields { get; set; }
+
+        public bool Equals(ReadarrIndexer other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            var baseUrl = (string)Fields.FirstOrDefault(x => x.Name == "baseUrl").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value;
+            var apiPath = (string)Fields.FirstOrDefault(x => x.Name == "apiPath").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
+            var apiKey = (string)Fields.FirstOrDefault(x => x.Name == "apiKey").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiKey").Value;
+
+            return other.EnableRss == EnableRss &&
+                other.EnableAutomaticSearch == EnableAutomaticSearch &&
+                other.EnableInteractiveSearch == EnableAutomaticSearch &&
+                other.Name == Name &&
+                other.Implementation == Implementation &&
+                other.Priority == Priority &&
+                other.Id == Id &&
+                apiKey && apiPath && baseUrl;
+        }
     }
 }

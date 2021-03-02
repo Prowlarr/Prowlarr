@@ -13,8 +13,10 @@ namespace NzbDrone.Core.Applications.Readarr
     {
         ReadarrIndexer AddIndexer(ReadarrIndexer indexer, ReadarrSettings settings);
         List<ReadarrIndexer> GetIndexers(ReadarrSettings settings);
+        ReadarrIndexer GetIndexer(int indexerId, ReadarrSettings settings);
         List<ReadarrIndexer> GetIndexerSchema(ReadarrSettings settings);
         void RemoveIndexer(int indexerId, ReadarrSettings settings);
+        ReadarrIndexer UpdateIndexer(ReadarrIndexer indexer, ReadarrSettings settings);
         ValidationFailure Test(ReadarrSettings settings);
     }
 
@@ -41,6 +43,24 @@ namespace NzbDrone.Core.Applications.Readarr
             return Execute<List<ReadarrIndexer>>(request);
         }
 
+        public ReadarrIndexer GetIndexer(int indexerId, ReadarrSettings settings)
+        {
+            try
+            {
+                var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.GET);
+                return Execute<ReadarrIndexer>(request);
+            }
+            catch (HttpException ex)
+            {
+                if (ex.Response.StatusCode != HttpStatusCode.NotFound)
+                {
+                    throw;
+                }
+            }
+
+            return null;
+        }
+
         public void RemoveIndexer(int indexerId, ReadarrSettings settings)
         {
             var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.DELETE);
@@ -56,6 +76,15 @@ namespace NzbDrone.Core.Applications.Readarr
         public ReadarrIndexer AddIndexer(ReadarrIndexer indexer, ReadarrSettings settings)
         {
             var request = BuildRequest(settings, "/api/v1/indexer", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
+            return Execute<ReadarrIndexer>(request);
+        }
+
+        public ReadarrIndexer UpdateIndexer(ReadarrIndexer indexer, ReadarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v1/indexer/{indexer.Id}", HttpMethod.PUT);
 
             request.SetContent(indexer.ToJson());
 

@@ -40,11 +40,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
             {
-                var schema = _schemaCache.Get(Definition.Settings.ToJson(), () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-                var newznab = schema.Where(i => i.Implementation == "Newznab").First();
-                var torznab = schema.Where(i => i.Implementation == "Torznab").First();
-
-                var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
+                var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol);
 
                 var remoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
@@ -67,19 +63,50 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public override void UpdateIndexer(IndexerDefinition indexer)
         {
-            //Use the Id mapping here to delete the correct indexer
-            throw new System.NotImplementedException();
+            _logger.Debug("Updating indexer {0}[{1}]", indexer.Name, indexer.Id);
+
+            var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
+            var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
+
+            var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
+
+            var remoteIndexer = _sonarrV3Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
+
+            if (remoteIndexer != null)
+            {
+                _logger.Debug("Remote indexer found, syncing with current settings");
+
+                if (!sonarrIndexer.Equals(remoteIndexer))
+                {
+                    _sonarrV3Proxy.UpdateIndexer(sonarrIndexer, Settings);
+                }
+            }
+            else
+            {
+                _logger.Debug("Remote indexer not found, re-adding indexer to Sonarr");
+                sonarrIndexer.Id = 0;
+
+                var newRemoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
+                _appIndexerMapService.Delete(indexerMapping.Id);
+                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+            }
         }
 
-        private SonarrIndexer BuildSonarrIndexer(IndexerDefinition indexer, SonarrIndexer schema)
+        private SonarrIndexer BuildSonarrIndexer(IndexerDefinition indexer, DownloadProtocol protocol, int id = 0)
         {
+            var schemas = _schemaCache.Get(Definition.Settings.ToJson(), () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
+            var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
+
+            var schema = protocol == DownloadProtocol.Usenet ? newznab : torznab;
+
             var sonarrIndexer = new SonarrIndexer
             {
                 Id = 0,
                 Name = $"{indexer.Name} (Prowlarr)",
-                EnableRss = true,
-                EnableAutomaticSearch = true,
-                EnableInteractiveSearch = true,
+                EnableRss = indexer.Enable,
+                EnableAutomaticSearch = indexer.Enable,
+                EnableInteractiveSearch = indexer.Enable,
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,

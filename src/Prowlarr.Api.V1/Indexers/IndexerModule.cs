@@ -99,7 +99,8 @@ namespace Prowlarr.Api.V1.Indexers
 
         private object GetDownload(int id)
         {
-            var indexer = _indexerFactory.Get(id);
+            var indexerDef = _indexerFactory.Get(id);
+            var indexer = _indexerFactory.GetInstance(indexerDef);
             var link = Request.Query.Link;
             var file = Request.Query.File;
 
@@ -120,10 +121,10 @@ namespace Prowlarr.Api.V1.Indexers
             var unprotectedlLink = _downloadMappingService.ConvertToNormalLink((string)link.Value);
 
             // If Indexer is set to download via Redirect then just redirect to the link
-            if (indexer.SupportsRedirect && indexer.Redirect)
+            if (indexer.SupportsRedirect && indexerDef.Redirect)
             {
                 _downloadService.RecordRedirect(unprotectedlLink, id, source, file);
-                return Response.AsRedirect(unprotectedlLink, RedirectResponse.RedirectType.Temporary);
+                return Response.AsRedirect(unprotectedlLink);
             }
 
             var downloadBytes = Array.Empty<byte>();
@@ -140,7 +141,7 @@ namespace Prowlarr.Api.V1.Indexers
                 && downloadBytes[6] == 0x3a)
             {
                 var magnetUrl = Encoding.UTF8.GetString(downloadBytes);
-                return Response.AsRedirect(magnetUrl, RedirectResponse.RedirectType.Temporary);
+                return Response.AsRedirect(magnetUrl);
             }
 
             var contentType = indexer.Protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb";

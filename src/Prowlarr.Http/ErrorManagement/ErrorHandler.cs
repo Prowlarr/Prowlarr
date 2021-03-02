@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Nancy;
 using Nancy.ErrorHandling;
 using Prowlarr.Http.Extensions;
 
@@ -13,7 +13,7 @@ namespace Prowlarr.Http.ErrorManagement
 
         public void Handle(HttpStatusCode statusCode, NancyContext context)
         {
-            if (statusCode == HttpStatusCode.SeeOther || statusCode == HttpStatusCode.OK)
+            if (statusCode == HttpStatusCode.SeeOther || statusCode == HttpStatusCode.MovedPermanently || statusCode == HttpStatusCode.OK)
             {
                 return;
             }

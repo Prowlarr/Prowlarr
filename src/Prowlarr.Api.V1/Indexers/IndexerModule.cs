@@ -123,7 +123,7 @@ namespace Prowlarr.Api.V1.Indexers
             if (indexer.SupportsRedirect && indexerDef.Redirect)
             {
                 _downloadService.RecordRedirect(unprotectedlLink, id, source, file);
-                return Response.AsRedirect(unprotectedlLink);
+                return Response.AsRedirect(unprotectedlLink, Nancy.Responses.RedirectResponse.RedirectType.Permanent);
             }
 
             var downloadBytes = Array.Empty<byte>();
@@ -140,7 +140,7 @@ namespace Prowlarr.Api.V1.Indexers
                 && downloadBytes[6] == 0x3a)
             {
                 var magnetUrl = Encoding.UTF8.GetString(downloadBytes);
-                return Response.AsRedirect(magnetUrl);
+                return Response.AsRedirect(magnetUrl, Nancy.Responses.RedirectResponse.RedirectType.Permanent);
             }
 
             var contentType = indexer.Protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb";

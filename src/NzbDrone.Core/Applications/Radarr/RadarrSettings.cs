@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.ThingiProvider;
@@ -15,7 +16,7 @@ namespace NzbDrone.Core.Applications.Radarr
         }
     }
 
-    public class RadarrSettings : IProviderConfig
+    public class RadarrSettings : IApplicationSettings
     {
         private static readonly RadarrSettingsValidator Validator = new RadarrSettingsValidator();
 
@@ -23,7 +24,10 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             ProwlarrUrl = "http://localhost:9696";
             BaseUrl = "http://localhost:7878";
+            SyncCategories = new[] { 2000, 2010, 2020, 2030, 2040, 2045, 2050, 2060, 2070, 2080 };
         }
+
+        public IEnumerable<int> SyncCategories { get; set; }
 
         [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Radarr sees it, including http(s):// and port if needed")]
         public string ProwlarrUrl { get; set; }

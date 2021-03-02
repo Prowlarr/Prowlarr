@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.ThingiProvider;
@@ -15,7 +16,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         }
     }
 
-    public class SonarrSettings : IProviderConfig
+    public class SonarrSettings : IApplicationSettings
     {
         private static readonly SonarrSettingsValidator Validator = new SonarrSettingsValidator();
 
@@ -23,7 +24,10 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             ProwlarrUrl = "http://localhost:9696";
             BaseUrl = "http://localhost:8989";
+            SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050, 5070 };
         }
+
+        public IEnumerable<int> SyncCategories { get; set; }
 
         [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Sonarr sees it, including http(s):// and port if needed")]
         public string ProwlarrUrl { get; set; }

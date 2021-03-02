@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Applications.Readarr
@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Applications.Readarr
         }
     }
 
-    public class ReadarrSettings : IProviderConfig
+    public class ReadarrSettings : IApplicationSettings
     {
         private static readonly ReadarrSettingsValidator Validator = new ReadarrSettingsValidator();
 
@@ -23,7 +23,10 @@ namespace NzbDrone.Core.Applications.Readarr
         {
             ProwlarrUrl = "http://localhost:9696";
             BaseUrl = "http://localhost:8787";
+            SyncCategories = new[] { 7000, 7010, 7020, 7030, 7040, 7050, 7060 };
         }
+
+        public IEnumerable<int> SyncCategories { get; set; }
 
         [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Readarr sees it, including http(s):// and port if needed")]
         public string ProwlarrUrl { get; set; }

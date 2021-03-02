@@ -38,14 +38,17 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var schema = _schemaCache.Get(Definition.Settings.ToJson(), () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var newznab = schema.Where(i => i.Implementation == "Newznab").First();
-            var torznab = schema.Where(i => i.Implementation == "Torznab").First();
+            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+            {
+                var schema = _schemaCache.Get(Definition.Settings.ToJson(), () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+                var newznab = schema.Where(i => i.Implementation == "Newznab").First();
+                var torznab = schema.Where(i => i.Implementation == "Torznab").First();
 
-            var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
+                var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol == DownloadProtocol.Usenet ? newznab : torznab);
 
-            var remoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
-            _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
+                var remoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
+                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
+            }
         }
 
         public override void RemoveIndexer(int indexerId)

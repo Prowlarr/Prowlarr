@@ -200,7 +200,7 @@ namespace NzbDrone.Common.Http
 
         private void HandleResponseCookies(HttpResponse response, CookieContainer cookieContainer)
         {
-            var cookieHeaders = response.GetCookieHeaders();
+            var cookieHeaders = response.Cookies;
             if (cookieHeaders.Empty())
             {
                 return;
@@ -212,11 +212,11 @@ namespace NzbDrone.Common.Http
                 {
                     var persistentCookieContainer = _cookieContainerCache.Get("container", () => new CookieContainer());
 
-                    foreach (var cookieHeader in cookieHeaders)
+                    foreach (Cookie cookieHeader in cookieHeaders)
                     {
                         try
                         {
-                            persistentCookieContainer.SetCookies((Uri)response.Request.Url, cookieHeader);
+                            persistentCookieContainer.Add((Uri)response.Request.Url, cookieHeader);
                         }
                         catch (Exception ex)
                         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.EnvironmentInfo;
@@ -22,6 +23,16 @@ namespace NzbDrone.Common.Http
         HttpResponse Head(HttpRequest request);
         HttpResponse Post(HttpRequest request);
         HttpResponse<T> Post<T>(HttpRequest request)
+            where T : new();
+
+        Task<HttpResponse> ExecuteAsync(HttpRequest request);
+        Task DownloadFileAsync(string url, string fileName);
+        Task<HttpResponse> GetAsync(HttpRequest request);
+        Task<HttpResponse<T>> GetAsync<T>(HttpRequest request)
+            where T : new();
+        Task<HttpResponse> HeadAsync(HttpRequest request);
+        Task<HttpResponse> PostAsync(HttpRequest request);
+        Task<HttpResponse<T>> PostAsync<T>(HttpRequest request)
             where T : new();
     }
 
@@ -50,11 +61,11 @@ namespace NzbDrone.Common.Http
             _cookieContainerCache = cacheManager.GetCache<CookieContainer>(typeof(HttpClient));
         }
 
-        public HttpResponse Execute(HttpRequest request)
+        public async Task<HttpResponse> ExecuteAsync(HttpRequest request)
         {
             var cookieContainer = InitializeRequestCookies(request);
 
-            var response = ExecuteRequest(request, cookieContainer);
+            var response = await ExecuteRequestAsync(request, cookieContainer);
 
             if (request.AllowAutoRedirect && response.HasHttpRedirect)
             {
@@ -73,7 +84,7 @@ namespace NzbDrone.Common.Http
                         throw new WebException($"Too many automatic redirections were attempted for {autoRedirectChain.Join(" -> ")}", WebExceptionStatus.ProtocolError);
                     }
 
-                    response = ExecuteRequest(request, cookieContainer);
+                    response = await ExecuteRequestAsync(request, cookieContainer);
                 }
                 while (response.HasHttpRedirect);
             }
@@ -100,7 +111,12 @@ namespace NzbDrone.Common.Http
             return response;
         }
 
-        private HttpResponse ExecuteRequest(HttpRequest request, CookieContainer cookieContainer)
+        public HttpResponse Execute(HttpRequest request)
+        {
+            return ExecuteAsync(request).GetAwaiter().GetResult();
+        }
+
+        private async Task<HttpResponse> ExecuteRequestAsync(HttpRequest request, CookieContainer cookieContainer)
         {
             foreach (var interceptor in _requestInterceptors)
             {
@@ -109,7 +125,7 @@ namespace NzbDrone.Common.Http
 
             if (request.RateLimit != TimeSpan.Zero)
             {
-                _rateLimitService.WaitAndPulse(request.Url.Host, request.RateLimit);
+                await _rateLimitService.WaitAndPulseAsync(request.Url.Host, request.RateLimit);
             }
 
             _logger.Trace(request);
@@ -118,7 +134,7 @@ namespace NzbDrone.Common.Http
 
             PrepareRequestCookies(request, cookieContainer);
 
-            var response = _httpDispatcher.GetResponse(request, cookieContainer);
+            var response = await _httpDispatcher.GetResponseAsync(request, cookieContainer);
 
             HandleResponseCookies(response, cookieContainer);
 
@@ -227,43 +243,76 @@ namespace NzbDrone.Common.Http
             }
         }
 
+        public async Task DownloadFileAsync(string url, string fileName)
+        {
+            await _httpDispatcher.DownloadFileAsync(url, fileName);
+        }
+
         public void DownloadFile(string url, string fileName)
         {
-            _httpDispatcher.DownloadFile(url, fileName);
+            // https://docs.microsoft.com/en-us/archive/msdn-magazine/2015/july/async-programming-brownfield-async-development#the-thread-pool-hack
+            Task.Run(() => DownloadFileAsync(url, fileName)).GetAwaiter().GetResult();
+        }
+
+        public Task<HttpResponse> GetAsync(HttpRequest request)
+        {
+            request.Method = HttpMethod.GET;
+            return ExecuteAsync(request);
         }
 
         public HttpResponse Get(HttpRequest request)
         {
-            request.Method = HttpMethod.GET;
-            return Execute(request);
+            return Task.Run(() => GetAsync(request)).GetAwaiter().GetResult();
+        }
+
+        public async Task<HttpResponse<T>> GetAsync<T>(HttpRequest request)
+            where T : new()
+        {
+            var response = await GetAsync(request);
+            CheckResponseContentType(response);
+            return new HttpResponse<T>(response);
         }
 
         public HttpResponse<T> Get<T>(HttpRequest request)
             where T : new()
         {
-            var response = Get(request);
-            CheckResponseContentType(response);
-            return new HttpResponse<T>(response);
+            return Task.Run(() => GetAsync<T>(request)).GetAwaiter().GetResult();
+        }
+
+        public Task<HttpResponse> HeadAsync(HttpRequest request)
+        {
+            request.Method = HttpMethod.HEAD;
+            return ExecuteAsync(request);
         }
 
         public HttpResponse Head(HttpRequest request)
         {
-            request.Method = HttpMethod.HEAD;
-            return Execute(request);
+            return Task.Run(() => HeadAsync(request)).GetAwaiter().GetResult();
+        }
+
+        public Task<HttpResponse> PostAsync(HttpRequest request)
+        {
+            request.Method = HttpMethod.POST;
+            return ExecuteAsync(request);
         }
 
         public HttpResponse Post(HttpRequest request)
         {
-            request.Method = HttpMethod.POST;
-            return Execute(request);
+            return Task.Run(() => PostAsync(request)).GetAwaiter().GetResult();
+        }
+
+        public async Task<HttpResponse<T>> PostAsync<T>(HttpRequest request)
+            where T : new()
+        {
+            var response = await PostAsync(request);
+            CheckResponseContentType(response);
+            return new HttpResponse<T>(response);
         }
 
         public HttpResponse<T> Post<T>(HttpRequest request)
             where T : new()
         {
-            var response = Post(request);
-            CheckResponseContentType(response);
-            return new HttpResponse<T>(response);
+            return Task.Run(() => PostAsync<T>(request)).GetAwaiter().GetResult();
         }
 
         private void CheckResponseContentType(HttpResponse response)

@@ -97,6 +97,8 @@
   "EnableSSL": "Enable SSL",
   "EnableSslHelpText": " Requires restart running as administrator to take effect",
   "Error": "Error",
+  "NewznabVipCheckExpiringClientMessage": "Indexer VIP benefits expiring soon: {0}",
+  "NewznabVipCheckExpiredClientMessage": "Indexer VIP benefits have expired: {0}",
   "ErrorLoadingContents": "Error loading contents",
   "Events": "Events",
   "EventType": "Event Type",

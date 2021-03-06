@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace NzbDrone.Common.Extensions
 {
@@ -32,6 +32,20 @@ namespace NzbDrone.Common.Extensions
         public static bool After(this DateTime dateTime, DateTime afterDateTime)
         {
             return dateTime >= afterDateTime;
+        }
+
+        public static bool IsValidDate(this string dateTime)
+        {
+            DateTime.TryParse(dateTime, out DateTime result);
+
+            return !result.Equals(default(DateTime));
+        }
+
+        public static bool IsFutureDate(this string dateTime)
+        {
+            DateTime.TryParse(dateTime, out DateTime result);
+
+            return !result.Equals(default(DateTime)) && result.After(DateTime.Now);
         }
 
         public static bool Between(this DateTime dateTime, DateTime afterDateTime, DateTime beforeDateTime)

@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Indexers.HDBits
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
 
-            if (searchCriteria.Categories.Length > 0)
+            if (searchCriteria.Categories?.Length > 0)
             {
                 query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
             }
@@ -82,7 +82,7 @@ namespace NzbDrone.Core.Indexers.HDBits
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
 
-            if (searchCriteria.Categories.Length > 0)
+            if (searchCriteria.Categories?.Length > 0)
             {
                 query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
             }
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Indexers.HDBits
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
 
-            if (searchCriteria.Categories.Length > 0)
+            if (searchCriteria.Categories?.Length > 0)
             {
                 query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
             }

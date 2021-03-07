@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -13,8 +14,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public IndexerCapabilities Capabilities { get; set; }
 
         public int? LastRecentTorrentID { get; set; }
-        public System.Func<IDictionary<string, string>> GetCookies { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public System.Action<IDictionary<string, string>, System.DateTime?> CookiesUpdater { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+        public Func<IDictionary<string, string>> GetCookies { get; set; }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
         public string BaseUrl { get; set; }
 
         public BroadcastheNetRequestGenerator()

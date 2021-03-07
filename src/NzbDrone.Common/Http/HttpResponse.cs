@@ -59,6 +59,11 @@ namespace NzbDrone.Common.Http
                                        StatusCode == HttpStatusCode.TemporaryRedirect ||
                                        StatusCode == HttpStatusCode.Found;
 
+        public string[] GetCookieHeaders()
+        {
+            return Headers.GetValues("Set-Cookie") ?? Array.Empty<string>();
+        }
+
         public Dictionary<string, string> GetCookies()
         {
             var result = new Dictionary<string, string>();

@@ -62,9 +62,9 @@ Name: "{userstartup}\{#AppName}"; Filename: "{app}\Prowlarr.exe"; WorkingDir: "{
 Name: "{app}"; Type: filesandordirs
 
 [Run]
-Filename: "{app}\Prowlarr.Console.exe"; StatusMsg: "Removing previous Windows Service"; Parameters: "/u"; Flags: runhidden waituntilterminated;
-Filename: "{app}\Prowlarr.Console.exe"; Description: "Enable Access from Other Devices"; StatusMsg: "Enabling Remote access"; Parameters: "/registerurl"; Flags: postinstall runascurrentuser runhidden waituntilterminated; Tasks: startupShortcut none;
-Filename: "{app}\Prowlarr.Console.exe"; StatusMsg: "Installing Windows Service"; Parameters: "/i"; Flags: runhidden waituntilterminated; Tasks: windowsService
+Filename: "{app}\Prowlarr.Console.exe"; StatusMsg: "Removing previous Windows Service"; Parameters: "/u /exitimmediately"; Flags: runhidden waituntilterminated;
+Filename: "{app}\Prowlarr.Console.exe"; Description: "Enable Access from Other Devices"; StatusMsg: "Enabling Remote access"; Parameters: "/registerurl /exitimmediately"; Flags: postinstall runascurrentuser runhidden waituntilterminated; Tasks: startupShortcut none;
+Filename: "{app}\Prowlarr.Console.exe"; StatusMsg: "Installing Windows Service"; Parameters: "/i /exitimmediately"; Flags: runhidden waituntilterminated; Tasks: windowsService
 Filename: "{app}\Prowlarr.exe"; Description: "Open Prowlarr Web UI"; Flags: postinstall skipifsilent nowait; Tasks: windowsService;
 Filename: "{app}\Prowlarr.exe"; Description: "Start Prowlarr"; Flags: postinstall skipifsilent nowait; Tasks: startupShortcut none;
 

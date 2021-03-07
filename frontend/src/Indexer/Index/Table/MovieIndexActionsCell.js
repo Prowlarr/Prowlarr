@@ -73,7 +73,7 @@ class MovieIndexActionsCell extends Component {
 
         <IconButton
           name={icons.EDIT}
-          title={translate('EditMovie')}
+          title={translate('EditIndexer')}
           onPress={this.onEditMoviePress}
         />
 

@@ -16,6 +16,12 @@ function getHeaderTitle(eventType) {
   switch (eventType) {
     case 'indexerQuery':
       return 'Indexer Query';
+    case 'releaseGrabbed':
+      return 'Release Grabbed';
+    case 'indexerAuth':
+      return 'Indexer Auth Attempt';
+    case 'indexerRss':
+      return 'Indexer Rss Query';
     default:
       return 'Unknown';
   }

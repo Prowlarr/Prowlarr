@@ -5,6 +5,7 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
@@ -21,10 +22,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public Avistaz(IIndexerRepository indexerRepository,
                        IHttpClient httpClient,
+                       IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
                        IConfigService configService,
                        Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _indexerRepository = indexerRepository;
         }

@@ -16,6 +16,18 @@
   width: 110px;
 }
 
+.categories {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 110px;
+}
+
+.source {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 110px;
+}
+
 .details {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 

@@ -3,6 +3,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
@@ -20,11 +21,12 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public override int PageSize => 50;
 
         public PassThePopcorn(IHttpClient httpClient,
+            IEventAggregator eventAggregator,
             ICacheManager cacheManager,
             IIndexerStatusService indexerStatusService,
             IConfigService configService,
             Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 

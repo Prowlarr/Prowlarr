@@ -12,7 +12,7 @@ function HistoryDetails(props) {
     data
   } = props;
 
-  if (eventType === 'indexerQuery') {
+  if (eventType === 'indexerQuery' || eventType === 'indexerRss') {
     const {
       query,
       queryResults,
@@ -65,7 +65,8 @@ function HistoryDetails(props) {
 
   if (eventType === 'releaseGrabbed') {
     const {
-      source
+      source,
+      title
     } = data;
 
     return (
@@ -82,7 +83,32 @@ function HistoryDetails(props) {
           !!data &&
             <DescriptionListItem
               title={'Source'}
-              data={source}
+              data={source ? source : '-'}
+            />
+        }
+
+        {
+          !!data &&
+            <DescriptionListItem
+              title={'Title'}
+              data={title ? title : '-'}
+            />
+        }
+      </DescriptionList>
+    );
+  }
+
+  if (eventType === 'indexerAuth') {
+    return (
+      <DescriptionList
+        descriptionClassName={styles.description}
+        title={translate('Auth')}
+      >
+        {
+          !!indexer &&
+            <DescriptionListItem
+              title={translate('Indexer')}
+              data={indexer.name}
             />
         }
       </DescriptionList>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Parser;
@@ -18,6 +19,19 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public string SanitizedTvSearchString => (SanitizedSearchTerm + " " + EpisodeSearchString).Trim();
         public string EpisodeSearchString => GetEpisodeSearchString();
+
+        public override bool RssSearch
+        {
+            get
+            {
+                if (SearchTerm.IsNullOrWhiteSpace() && ImdbId.IsNullOrWhiteSpace() && !TvdbId.HasValue && !RId.HasValue && !TraktId.HasValue && !TvMazeId.HasValue)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
 
         private string GetEpisodeSearchString()
         {

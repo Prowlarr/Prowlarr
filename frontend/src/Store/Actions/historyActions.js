@@ -47,6 +47,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'categories',
+      label: 'Categories',
+      isSortable: false,
+      isVisible: true
+    },
+    {
       name: 'date',
       label: translate('Date'),
       isSortable: true,
@@ -56,7 +62,13 @@ export const defaultState = {
       name: 'successful',
       label: 'Successful',
       isSortable: false,
-      isVisible: true
+      isVisible: false
+    },
+    {
+      name: 'source',
+      label: 'Source',
+      isSortable: false,
+      isVisible: false
     },
     {
       name: 'elapsedTime',

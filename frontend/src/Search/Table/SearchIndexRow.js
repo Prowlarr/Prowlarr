@@ -220,6 +220,13 @@ class SearchIndexRow extends Component {
                     title={'Grab'}
                     to={downloadUrl}
                   />
+
+                  <IconButton
+                    className={styles.downloadLink}
+                    name={icons.SAVE}
+                    title={'Save'}
+                    to={downloadUrl}
+                  />
                 </VirtualTableRowCell>
               );
             }

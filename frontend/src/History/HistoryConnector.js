@@ -15,7 +15,7 @@ function createMapStateToProps() {
       return {
         isMoviesFetching: indexers.isFetching,
         isMoviesPopulated: indexers.isPopulated,
-        moviesError: indexers.error,
+        indexersError: indexers.error,
         ...history
       };
     }

@@ -13,6 +13,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
@@ -30,8 +31,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public TorrentLeech(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+        public TorrentLeech(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
@@ -64,7 +65,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = await _httpClient.ExecuteAsync(authLoginRequest);
+            var response = await ExecuteAuth(authLoginRequest);
 
             cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));

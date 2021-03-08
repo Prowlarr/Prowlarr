@@ -70,6 +70,7 @@ import {
   faLanguage as fasLanguage,
   faLaptop as fasLaptop,
   faLevelUpAlt as fasLevelUpAlt,
+  faLock as fasLock,
   faMedkit as fasMedkit,
   faMinus as fasMinus,
   faPause as fasPause,
@@ -167,6 +168,7 @@ export const IN_CINEMAS = fasTicketAlt;
 export const INFO = fasInfoCircle;
 export const INTERACTIVE = fasUser;
 export const KEYBOARD = farKeyboard;
+export const LOCK = fasLock;
 export const LOGOUT = fasSignOutAlt;
 export const MEDIA_INFO = farFileInvoice;
 export const MISSING = fasExclamationTriangle;

@@ -27,7 +27,7 @@ class History extends Component {
       error,
       isMoviesFetching,
       isMoviesPopulated,
-      moviesError,
+      indexersError,
       items,
       columns,
       selectedFilterKey,
@@ -40,7 +40,7 @@ class History extends Component {
 
     const isFetchingAny = isFetching || isMoviesFetching;
     const isAllPopulated = isPopulated && (isMoviesPopulated || !items.length);
-    const hasError = error || moviesError;
+    const hasError = error || indexersError;
 
     return (
       <PageContent title={translate('History')}>
@@ -140,7 +140,7 @@ History.propTypes = {
   error: PropTypes.object,
   isMoviesFetching: PropTypes.bool.isRequired,
   isMoviesPopulated: PropTypes.bool.isRequired,
-  moviesError: PropTypes.object,
+  indexersError: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedFilterKey: PropTypes.string.isRequired,

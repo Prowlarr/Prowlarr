@@ -3,6 +3,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Avistaz;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -12,8 +13,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string BaseUrl => "https://privatehd.to/";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public PrivateHD(IIndexerRepository indexerRepository, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(indexerRepository, httpClient, indexerStatusService, configService, logger)
+        public PrivateHD(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 

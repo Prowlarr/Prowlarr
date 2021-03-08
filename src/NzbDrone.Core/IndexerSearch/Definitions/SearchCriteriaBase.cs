@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.IndexerSearch.Definitions
 {
@@ -22,6 +23,19 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public override string ToString()
         {
             return $"{{Term: {SearchTerm}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]}}";
+        }
+
+        public virtual bool RssSearch
+        {
+            get
+            {
+                if (SearchTerm.IsNullOrWhiteSpace())
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public string SanitizedSearchTerm

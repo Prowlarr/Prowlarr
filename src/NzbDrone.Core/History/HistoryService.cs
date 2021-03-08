@@ -5,6 +5,8 @@ using NLog;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
+using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider.Events;
 
@@ -26,7 +28,8 @@ namespace NzbDrone.Core.History
     public class HistoryService : IHistoryService,
                                   IHandle<ProviderDeletedEvent<IIndexer>>,
                                   IHandle<IndexerQueryEvent>,
-                                  IHandle<IndexerDownloadEvent>
+                                  IHandle<IndexerDownloadEvent>,
+                                  IHandle<IndexerAuthEvent>
     {
         private readonly IHistoryRepository _historyRepository;
         private readonly Logger _logger;
@@ -88,11 +91,42 @@ namespace NzbDrone.Core.History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = HistoryEventType.IndexerQuery
+                EventType = message.Query.RssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery
             };
+
+            if (message.Query is MovieSearchCriteria)
+            {
+                history.Data.Add("ImdbId", ((MovieSearchCriteria)message.Query).ImdbId ?? string.Empty);
+                history.Data.Add("TmdbId", ((MovieSearchCriteria)message.Query).TmdbId?.ToString() ?? string.Empty);
+                history.Data.Add("TraktId", ((MovieSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
+            }
+
+            if (message.Query is TvSearchCriteria)
+            {
+                history.Data.Add("ImdbId", ((TvSearchCriteria)message.Query).ImdbId ?? string.Empty);
+                history.Data.Add("TvdbId", ((TvSearchCriteria)message.Query).TvdbId?.ToString() ?? string.Empty);
+                history.Data.Add("TraktId", ((TvSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
+                history.Data.Add("RId", ((TvSearchCriteria)message.Query).RId?.ToString() ?? string.Empty);
+                history.Data.Add("TvMazeId", ((TvSearchCriteria)message.Query).TvMazeId?.ToString() ?? string.Empty);
+                history.Data.Add("Season", ((TvSearchCriteria)message.Query).Season?.ToString() ?? string.Empty);
+                history.Data.Add("Episode", ((TvSearchCriteria)message.Query).Episode ?? string.Empty);
+            }
+
+            if (message.Query is MusicSearchCriteria)
+            {
+                history.Data.Add("Artist", ((MusicSearchCriteria)message.Query).Artist ?? string.Empty);
+                history.Data.Add("Album", ((MusicSearchCriteria)message.Query).Album ?? string.Empty);
+            }
+
+            if (message.Query is BookSearchCriteria)
+            {
+                history.Data.Add("Author", ((BookSearchCriteria)message.Query).Author ?? string.Empty);
+                history.Data.Add("Title", ((BookSearchCriteria)message.Query).Title ?? string.Empty);
+            }
 
             history.Data.Add("ElapsedTime", message.Time.ToString());
             history.Data.Add("Query", message.Query.SearchTerm ?? string.Empty);
+            history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Successful", message.Successful.ToString());
@@ -112,8 +146,23 @@ namespace NzbDrone.Core.History
 
             history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("Source", message.Source ?? string.Empty);
-            history.Data.Add("GrabMethod", message.Redirect ? "Proxy" : "Redirect");
+            history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("Title", message.Title);
+
+            _historyRepository.Insert(history);
+        }
+
+        public void Handle(IndexerAuthEvent message)
+        {
+            var history = new History
+            {
+                Date = DateTime.UtcNow,
+                IndexerId = message.IndexerId,
+                EventType = HistoryEventType.IndexerAuth
+            };
+
+            history.Data.Add("Successful", message.Successful.ToString());
+            history.Data.Add("ElapsedTime", message.Time.ToString());
 
             _historyRepository.Insert(history);
         }

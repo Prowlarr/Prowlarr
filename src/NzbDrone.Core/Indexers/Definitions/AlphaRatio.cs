@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -11,8 +12,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string BaseUrl => "https://alpharatio.cc/";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public AlphaRatio(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+        public AlphaRatio(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 

@@ -8,6 +8,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerVersions;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
@@ -60,11 +61,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public Cardigann(IIndexerDefinitionUpdateService definitionService,
                          IHttpClient httpClient,
+                         IEventAggregator eventAggregator,
                          IIndexerStatusService indexerStatusService,
                          IConfigService configService,
                          ICacheManager cacheManager,
                          Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _definitionService = definitionService;
             _generatorCache = cacheManager.GetRollingCache<CardigannRequestGenerator>(GetType(), "CardigannGeneratorCache", TimeSpan.FromMinutes(5));

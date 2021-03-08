@@ -23,6 +23,9 @@ namespace NzbDrone.Core.History
     {
         Unknown = 0,
         ReleaseGrabbed = 1,
-        IndexerQuery = 2
+        IndexerQuery = 2,
+        IndexerRss = 3,
+        IndexerAuth = 4,
+        IndexerCapabilities = 5
     }
 }

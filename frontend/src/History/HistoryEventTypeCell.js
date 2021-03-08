@@ -11,6 +11,10 @@ function getIconName(eventType) {
       return icons.SEARCH;
     case 'releaseGrabbed':
       return icons.DOWNLOAD;
+    case 'indexerAuth':
+      return icons.LOCK;
+    case 'indexerRss':
+      return icons.RSS;
     default:
       return icons.UNKNOWN;
   }
@@ -31,6 +35,10 @@ function getTooltip(eventType, data, indexer) {
       return `Query "${data.query}" sent to ${indexer.name}`;
     case 'releaseGrabbed':
       return `Release grabbed from ${indexer.name}`;
+    case 'indexerAuth':
+      return `Auth attempted for ${indexer.name}`;
+    case 'indexerRss':
+      return `RSS query for ${indexer.name}`;
     default:
       return 'Unknown event';
   }

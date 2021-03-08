@@ -6,6 +6,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
@@ -25,8 +26,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
-        public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+        public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _tokenProvider = tokenProvider;
         }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Gazelle
 {
@@ -17,10 +18,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public Gazelle(IHttpClient httpClient,
+                       IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
                        IConfigService configService,
                        Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
@@ -69,7 +71,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 .Accept(HttpAccept.Json)
                 .Build();
 
-            var response = await _httpClient.ExecuteAsync(authLoginRequest);
+            var response = await ExecuteAuth(authLoginRequest);
 
             cookies = response.GetCookies();
 

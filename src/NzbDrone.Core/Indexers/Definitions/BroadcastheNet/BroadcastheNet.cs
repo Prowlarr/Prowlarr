@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.BroadcastheNet
 {
@@ -18,8 +19,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public override string BaseUrl => "http://api.broadcasthe.net/";
 
-        public BroadcastheNet(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+        public BroadcastheNet(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 

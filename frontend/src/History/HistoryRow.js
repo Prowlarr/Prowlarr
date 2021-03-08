@@ -117,6 +117,21 @@ class HistoryRow extends Component {
               );
             }
 
+            if (name === 'categories') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {
+                    data.categories ?
+                      data.categories :
+                      null
+                  }
+                </TableRowCell>
+              );
+            }
+
             if (name === 'successful') {
               return (
                 <TableRowCell
@@ -124,6 +139,21 @@ class HistoryRow extends Component {
                   className={styles.indexer}
                 >
                   {data.successful}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'source') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {
+                    data.source ?
+                      data.source :
+                      null
+                  }
                 </TableRowCell>
               );
             }

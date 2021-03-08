@@ -10,8 +10,10 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Http.CloudFlare;
+using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -23,6 +25,7 @@ namespace NzbDrone.Core.Indexers
         protected const int MaxNumResultsPerQuery = 1000;
 
         protected readonly IHttpClient _httpClient;
+        protected readonly IEventAggregator _eventAggregator;
         public IDictionary<string, string> Cookies { get; set; }
 
         public override bool SupportsRss => true;
@@ -37,10 +40,11 @@ namespace NzbDrone.Core.Indexers
         public abstract IIndexerRequestGenerator GetRequestGenerator();
         public abstract IParseIndexerResponse GetParser();
 
-        public HttpIndexerBase(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public HttpIndexerBase(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerStatusService, configService, logger)
         {
             _httpClient = httpClient;
+            _eventAggregator = eventAggregator;
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(MovieSearchCriteria searchCriteria)
@@ -475,6 +479,17 @@ namespace NzbDrone.Core.Indexers
             UpdateCookies(Cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             return new IndexerResponse(request, response, stopWatch.ElapsedMilliseconds);
+        }
+
+        protected HttpResponse ExecuteAuth(HttpRequest request)
+        {
+            var stopWatch = Stopwatch.StartNew();
+            var response = _httpClient.Execute(request);
+            stopWatch.Stop();
+
+            _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, stopWatch.ElapsedMilliseconds));
+
+            return response;
         }
 
         protected override async Task Test(List<ValidationFailure> failures)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.HDBits
 {
@@ -16,8 +17,8 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public override int PageSize => 30;
 
-        public HDBits(IHttpClient httpClient, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, indexerStatusService, configService, logger)
+        public HDBits(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 

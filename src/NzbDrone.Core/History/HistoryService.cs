@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
@@ -29,14 +30,17 @@ namespace NzbDrone.Core.History
                                   IHandle<ProviderDeletedEvent<IIndexer>>,
                                   IHandle<IndexerQueryEvent>,
                                   IHandle<IndexerDownloadEvent>,
-                                  IHandle<IndexerAuthEvent>
+                                  IHandle<IndexerAuthEvent>,
+                                  IExecute<CleanUpHistoryCommand>
     {
         private readonly IHistoryRepository _historyRepository;
+        private readonly IConfigService _configService;
         private readonly Logger _logger;
 
-        public HistoryService(IHistoryRepository historyRepository, Logger logger)
+        public HistoryService(IHistoryRepository historyRepository, IConfigService configService, Logger logger)
         {
             _historyRepository = historyRepository;
+            _configService = configService;
             _logger = logger;
         }
 
@@ -83,6 +87,23 @@ namespace NzbDrone.Core.History
         public List<History> Since(DateTime date, HistoryEventType? eventType)
         {
             return _historyRepository.Since(date, eventType);
+        }
+
+        public void Cleanup()
+        {
+            var cleanupDays = _configService.HistoryCleanupDays;
+
+            if (cleanupDays == 0)
+            {
+                _logger.Info("Automatic cleanup of History is disabled");
+                return;
+            }
+
+            _logger.Info("Removing items older than {0} days from the history", cleanupDays);
+
+            _historyRepository.Cleanup(cleanupDays);
+
+            _logger.Debug("History has been cleaned up.");
         }
 
         public void Handle(IndexerQueryEvent message)
@@ -170,6 +191,11 @@ namespace NzbDrone.Core.History
         public void Handle(ProviderDeletedEvent<IIndexer> message)
         {
             _historyRepository.DeleteForIndexers(new List<int> { message.ProviderId });
+        }
+
+        public void Execute(CleanUpHistoryCommand message)
+        {
+            Cleanup();
         }
     }
 }

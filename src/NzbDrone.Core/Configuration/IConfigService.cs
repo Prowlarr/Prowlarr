@@ -22,24 +22,8 @@ namespace NzbDrone.Core.Configuration
         bool AutoRedownloadFailed { get; set; }
         bool RemoveFailedDownloads { get; set; }
 
-        //Media Management
-        bool AutoUnmonitorPreviouslyDownloadedMovies { get; set; }
-        string RecycleBin { get; set; }
-        int RecycleBinCleanupDays { get; set; }
-        bool CreateEmptyMovieFolders { get; set; }
-        bool DeleteEmptyFolders { get; set; }
-        bool SkipFreeSpaceCheckWhenImporting { get; set; }
-        int MinimumFreeSpaceWhenImporting { get; set; }
-        bool CopyUsingHardlinks { get; set; }
-        bool EnableMediaInfo { get; set; }
-        bool ImportExtraFiles { get; set; }
-        string ExtraFileExtensions { get; set; }
-        RescanAfterRefreshType RescanAfterRefresh { get; set; }
-        bool AutoRenameFolders { get; set; }
-
-        //Permissions (Media Management)
-        bool SetPermissionsLinux { get; set; }
-        string FileChmod { get; set; }
+        //History
+        int HistoryCleanupDays { get; set; }
 
         //Indexers
         int Retention { get; set; }

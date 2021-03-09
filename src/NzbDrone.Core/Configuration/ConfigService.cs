@@ -77,28 +77,16 @@ namespace NzbDrone.Core.Configuration
             return _repository.Get(key.ToLower()) != null;
         }
 
-        public bool AutoUnmonitorPreviouslyDownloadedMovies
-        {
-            get { return GetValueBoolean("AutoUnmonitorPreviouslyDownloadedMovies"); }
-            set { SetValue("AutoUnmonitorPreviouslyDownloadedMovies", value); }
-        }
-
         public int Retention
         {
             get { return GetValueInt("Retention", 0); }
             set { SetValue("Retention", value); }
         }
 
-        public string RecycleBin
+        public int HistoryCleanupDays
         {
-            get { return GetValue("RecycleBin", string.Empty); }
-            set { SetValue("RecycleBin", value); }
-        }
-
-        public int RecycleBinCleanupDays
-        {
-            get { return GetValueInt("RecycleBinCleanupDays", 7); }
-            set { SetValue("RecycleBinCleanupDays", value); }
+            get { return GetValueInt("HistoryCleanupDays", 365); }
+            set { SetValue("HistoryCleanupDays", value); }
         }
 
         public int RssSyncInterval
@@ -202,20 +190,6 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("RemoveFailedDownloads", value); }
         }
 
-        public bool CreateEmptyMovieFolders
-        {
-            get { return GetValueBoolean("CreateEmptyMovieFolders", false); }
-
-            set { SetValue("CreateEmptyMovieFolders", value); }
-        }
-
-        public bool DeleteEmptyFolders
-        {
-            get { return GetValueBoolean("DeleteEmptyFolders", false); }
-
-            set { SetValue("DeleteEmptyFolders", value); }
-        }
-
         public string DownloadClientWorkingFolders
         {
             get { return GetValue("DownloadClientWorkingFolders", "_UNPACK_|_FAILED_"); }
@@ -234,76 +208,6 @@ namespace NzbDrone.Core.Configuration
             get { return GetValueInt("DownloadClientHistoryLimit", 30); }
 
             set { SetValue("DownloadClientHistoryLimit", value); }
-        }
-
-        public bool SkipFreeSpaceCheckWhenImporting
-        {
-            get { return GetValueBoolean("SkipFreeSpaceCheckWhenImporting", false); }
-
-            set { SetValue("SkipFreeSpaceCheckWhenImporting", value); }
-        }
-
-        public int MinimumFreeSpaceWhenImporting
-        {
-            get { return GetValueInt("MinimumFreeSpaceWhenImporting", 100); }
-
-            set { SetValue("MinimumFreeSpaceWhenImporting", value); }
-        }
-
-        public bool CopyUsingHardlinks
-        {
-            get { return GetValueBoolean("CopyUsingHardlinks", true); }
-
-            set { SetValue("CopyUsingHardlinks", value); }
-        }
-
-        public bool EnableMediaInfo
-        {
-            get { return GetValueBoolean("EnableMediaInfo", true); }
-
-            set { SetValue("EnableMediaInfo", value); }
-        }
-
-        public bool ImportExtraFiles
-        {
-            get { return GetValueBoolean("ImportExtraFiles", false); }
-
-            set { SetValue("ImportExtraFiles", value); }
-        }
-
-        public string ExtraFileExtensions
-        {
-            get { return GetValue("ExtraFileExtensions", "srt"); }
-
-            set { SetValue("ExtraFileExtensions", value); }
-        }
-
-        public bool AutoRenameFolders
-        {
-            get { return GetValueBoolean("AutoRenameFolders", false); }
-
-            set { SetValue("AutoRenameFolders", value); }
-        }
-
-        public RescanAfterRefreshType RescanAfterRefresh
-        {
-            get { return GetValueEnum("RescanAfterRefresh", RescanAfterRefreshType.Always); }
-
-            set { SetValue("RescanAfterRefresh", value); }
-        }
-
-        public bool SetPermissionsLinux
-        {
-            get { return GetValueBoolean("SetPermissionsLinux", false); }
-
-            set { SetValue("SetPermissionsLinux", value); }
-        }
-
-        public string FileChmod
-        {
-            get { return GetValue("FileChmod", "0644"); }
-
-            set { SetValue("FileChmod", value); }
         }
 
         public int FirstDayOfWeek

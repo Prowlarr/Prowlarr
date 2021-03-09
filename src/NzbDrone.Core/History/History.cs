@@ -26,6 +26,6 @@ namespace NzbDrone.Core.History
         IndexerQuery = 2,
         IndexerRss = 3,
         IndexerAuth = 4,
-        IndexerCapabilities = 5
+        IndexerInfo = 5
     }
 }

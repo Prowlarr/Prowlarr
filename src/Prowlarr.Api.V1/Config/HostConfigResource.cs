@@ -40,6 +40,7 @@ namespace Prowlarr.Api.V1.Config
         public string BackupFolder { get; set; }
         public int BackupInterval { get; set; }
         public int BackupRetention { get; set; }
+        public int HistoryCleanupDays { get; set; }
     }
 
     public static class HostConfigResourceMapper
@@ -80,7 +81,8 @@ namespace Prowlarr.Api.V1.Config
                 CertificateValidation = configService.CertificateValidation,
                 BackupFolder = configService.BackupFolder,
                 BackupInterval = configService.BackupInterval,
-                BackupRetention = configService.BackupRetention
+                BackupRetention = configService.BackupRetention,
+                HistoryCleanupDays = configService.HistoryCleanupDays
             };
         }
     }

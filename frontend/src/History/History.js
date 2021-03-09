@@ -13,6 +13,7 @@ import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptions
 import TablePager from 'Components/Table/TablePager';
 import { align, icons } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import HistoryOptionsConnector from './HistoryOptionsConnector';
 import HistoryRowConnector from './HistoryRowConnector';
 
 class History extends Component {
@@ -58,6 +59,7 @@ class History extends Component {
             <TableOptionsModalWrapper
               {...otherProps}
               columns={columns}
+              optionsComponent={HistoryOptionsConnector}
             >
               <PageToolbarButton
                 label={translate('Options')}

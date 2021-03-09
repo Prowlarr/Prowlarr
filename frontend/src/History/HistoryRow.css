@@ -7,7 +7,7 @@
 .indexer {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  width: 80px;
+  width: 150px;
 }
 
 .releaseGroup {

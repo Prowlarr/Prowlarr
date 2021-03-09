@@ -15,6 +15,7 @@ namespace NzbDrone.Core.History
         void DeleteForIndexers(List<int> indexerIds);
         History MostRecentForIndexer(int indexerId);
         List<History> Since(DateTime date, HistoryEventType? eventType);
+        void Cleanup(int days);
     }
 
     public class HistoryRepository : BasicRepository<History>, IHistoryRepository
@@ -59,6 +60,11 @@ namespace NzbDrone.Core.History
         public void DeleteForIndexers(List<int> indexerIds)
         {
             Delete(c => indexerIds.Contains(c.IndexerId));
+        }
+
+        public void Cleanup(int days)
+        {
+            Delete(c => c.Date.AddDays(days) <= DateTime.Now);
         }
 
         public History MostRecentForIndexer(int indexerId)

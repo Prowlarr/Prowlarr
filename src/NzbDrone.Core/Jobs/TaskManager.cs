@@ -6,6 +6,7 @@ using NzbDrone.Core.Applications;
 using NzbDrone.Core.Backup;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.HealthCheck;
+using NzbDrone.Core.History;
 using NzbDrone.Core.Housekeeping;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Lifecycle;
@@ -61,6 +62,7 @@ namespace NzbDrone.Core.Jobs
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationCheckUpdateCommand).FullName },
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(CheckHealthCommand).FullName },
                     new ScheduledTask { Interval = 24 * 60, TypeName = typeof(HousekeepingCommand).FullName },
+                    new ScheduledTask { Interval = 24 * 60, TypeName = typeof(CleanUpHistoryCommand).FullName },
                     new ScheduledTask { Interval = 24 * 60, TypeName = typeof(IndexerDefinitionUpdateCommand).FullName },
                     new ScheduledTask { Interval = 6 * 60, TypeName = typeof(ApplicationIndexerSyncCommand).FullName },
 
@@ -104,40 +106,6 @@ namespace NzbDrone.Core.Jobs
             var interval = _configService.BackupInterval;
 
             return interval * 60 * 24;
-        }
-
-        private int GetRssSyncInterval()
-        {
-            var interval = _configService.RssSyncInterval;
-
-            if (interval > 0 && interval < 10)
-            {
-                return 10;
-            }
-
-            if (interval < 0)
-            {
-                return 0;
-            }
-
-            return interval;
-        }
-
-        private int GetImportListSyncInterval()
-        {
-            var interval = _configService.ImportListSyncInterval;
-
-            if (interval > 0 && interval < 10)
-            {
-                return 10;
-            }
-
-            if (interval < 0)
-            {
-                return 0;
-            }
-
-            return interval;
         }
 
         public void Handle(CommandExecutedEvent message)

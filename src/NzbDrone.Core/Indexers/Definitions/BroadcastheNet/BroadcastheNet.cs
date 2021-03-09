@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var requestGenerator = new BroadcastheNetRequestGenerator() { Settings = Settings, PageSize = PageSize, BaseUrl = BaseUrl };
+            var requestGenerator = new BroadcastheNetRequestGenerator() { Settings = Settings, PageSize = PageSize, BaseUrl = BaseUrl, Capabilities = Capabilities };
 
             var releaseInfo = _indexerStatusService.GetLastRssSyncReleaseInfo(Definition.Id);
             if (releaseInfo != null)

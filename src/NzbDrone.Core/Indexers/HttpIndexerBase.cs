@@ -407,6 +407,7 @@ namespace NzbDrone.Core.Indexers
             }
 
             request.HttpRequest.AllowAutoRedirect = FollowRedirect;
+            request.HttpRequest.LogResponseContent = true;
 
             Cookies = GetCookies();
 

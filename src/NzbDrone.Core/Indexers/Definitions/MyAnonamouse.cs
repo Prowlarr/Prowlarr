@@ -293,15 +293,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var authorInfo = item.AuthorInfo;
                 var author = string.Empty;
 
-                if (authorInfo != null)
+                if (authorInfo != null && authorInfo.Count > 0)
                 {
-                    try
-                    {
-                        author = authorInfo.First + " " + authorInfo.Last;
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    author = authorInfo.First().Value;
                 }
 
                 if (author != null)
@@ -398,7 +392,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Title { get; set; }
 
         [JsonProperty(PropertyName = "author_info")]
-        public MyAnonamouseAuthorInfo AuthorInfo { get; set; }
+        public Dictionary<string, string> AuthorInfo { get; set; }
 
         [JsonProperty(PropertyName = "lang_code")]
         public string LangCode { get; set; }
@@ -414,12 +408,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public int Leechers { get; set; }
         public int NumFiles { get; set; }
         public string Size { get; set; }
-    }
-
-    public class MyAnonamouseAuthorInfo
-    {
-        public string First { get; set; }
-        public string Last { get; set; }
     }
 
     public class MyAnonamouseResponse

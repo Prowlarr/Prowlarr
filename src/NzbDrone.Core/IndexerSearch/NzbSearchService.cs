@@ -22,21 +22,22 @@ namespace NzbDrone.Core.IndexerSearch
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IIndexerFactory _indexerFactory;
+        private readonly IDownloadMappingService _downloadMappingService;
         private readonly Logger _logger;
 
         public NzbSearchService(IEventAggregator eventAggregator,
                                 IIndexerFactory indexerFactory,
+                                IDownloadMappingService downloadMappingService,
                                 Logger logger)
         {
             _eventAggregator = eventAggregator;
             _indexerFactory = indexerFactory;
+            _downloadMappingService = downloadMappingService;
             _logger = logger;
         }
 
         public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            var results = new NewznabResults();
-
             switch (request.t)
             {
                 case "movie":
@@ -60,7 +61,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
 
-            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
         private NewznabResults MusicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -71,7 +72,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Album = request.album;
             searchSpec.Label = request.label;
 
-            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
         private NewznabResults TvSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -86,7 +87,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.RId = request.rid;
             searchSpec.TvMazeId = request.tvmazeid;
 
-            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
         private NewznabResults BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -96,14 +97,24 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Author = request.author;
             searchSpec.Title = request.title;
 
-            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
         private NewznabResults BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<BasicSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            return new NewznabResults { Releases = Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+        }
+
+        private List<ReleaseInfo> MapReleases(List<ReleaseInfo> releases, string serverUrl)
+        {
+            foreach (var result in releases)
+            {
+                result.DownloadUrl = _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), serverUrl, result.IndexerId, result.Title).ToString();
+            }
+
+            return releases;
         }
 
         private TSpec Get<TSpec>(NewznabRequest query, List<int> indexerIds, bool interactiveSearch)

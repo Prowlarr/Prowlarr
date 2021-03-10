@@ -9,6 +9,7 @@ using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http;
+using Prowlarr.Http.Extensions;
 
 namespace Prowlarr.Api.V1.Search
 {
@@ -51,7 +52,8 @@ namespace Prowlarr.Api.V1.Search
         {
             try
             {
-                var decisions = _nzbSearhService.Search(new NewznabRequest { q = query, source = "Prowlarr", t = "search", cat = string.Join(",", categories) }, indexerIds, true).Releases;
+                var request = new NewznabRequest { q = query, source = "Prowlarr", t = "search", cat = string.Join(",", categories), server = Request.GetServerUrl() };
+                var decisions = _nzbSearhService.Search(request, indexerIds, true).Releases;
 
                 return MapDecisions(decisions);
             }

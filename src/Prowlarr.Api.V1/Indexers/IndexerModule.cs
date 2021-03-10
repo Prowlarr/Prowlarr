@@ -54,6 +54,7 @@ namespace Prowlarr.Api.V1.Indexers
         {
             var requestType = request.t;
             request.source = UserAgentParser.ParseSource(Request.Headers.UserAgent);
+            request.server = Request.GetServerUrl();
 
             if (requestType.IsNullOrWhiteSpace())
             {
@@ -68,7 +69,6 @@ namespace Prowlarr.Api.V1.Indexers
             }
 
             var indexerInstance = _indexerFactory.GetInstance(indexer);
-            var serverUrl = Request.GetServerUrl();
 
             switch (requestType)
             {
@@ -82,11 +82,6 @@ namespace Prowlarr.Api.V1.Indexers
                 case "book":
                 case "movie":
                     var results = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false);
-
-                    foreach (var result in results.Releases)
-                    {
-                        result.DownloadUrl = _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), serverUrl, indexer.Id, result.Title).ToString();
-                    }
 
                     Response searchResponse = results.ToXml(indexerInstance.Protocol);
                     searchResponse.ContentType = "application/rss+xml";

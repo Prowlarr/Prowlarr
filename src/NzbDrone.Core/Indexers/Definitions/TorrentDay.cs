@@ -40,6 +40,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new TorrentDayParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
+        protected override IDictionary<string, string> GetCookies()
+        {
+            return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -147,11 +152,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Rss);
-
-            foreach (var cookie in CookieUtil.CookieHeaderToDictionary(Settings.Cookie))
-            {
-                request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
-            }
 
             yield return request;
         }

@@ -41,6 +41,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new MyAnonamouseParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
+        protected override IDictionary<string, string> GetCookies()
+        {
+            return CookieUtil.CookieHeaderToDictionary("mam_id=" + Settings.MamId);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -205,11 +210,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var request = new IndexerRequest(urlSearch, HttpAccept.Json);
 
-            foreach (var cookie in CookieUtil.CookieHeaderToDictionary("mam_id=" + Settings.MamId))
-            {
-                request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
-            }
-
             yield return request;
         }
 
@@ -290,11 +290,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.Title = item.Title;
 
                 // release.Description = item.Value<string>("description");
-                var authorInfo = item.AuthorInfo;
                 var author = string.Empty;
 
-                if (authorInfo != null && authorInfo.Count > 0)
+                if (item.AuthorInfo != null)
                 {
+                    var authorInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.AuthorInfo);
                     author = authorInfo.First().Value;
                 }
 
@@ -392,7 +392,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Title { get; set; }
 
         [JsonProperty(PropertyName = "author_info")]
-        public Dictionary<string, string> AuthorInfo { get; set; }
+        public string AuthorInfo { get; set; }
 
         [JsonProperty(PropertyName = "lang_code")]
         public string LangCode { get; set; }

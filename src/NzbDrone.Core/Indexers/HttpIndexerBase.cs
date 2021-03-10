@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Indexers
             return generator;
         }
 
-        protected IDictionary<string, string> GetCookies()
+        protected virtual IDictionary<string, string> GetCookies()
         {
             var cookies = _indexerStatusService.GetIndexerCookies(Definition.Id);
             var expiration = _indexerStatusService.GetIndexerCookiesExpirationDate(Definition.Id);

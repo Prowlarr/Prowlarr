@@ -40,6 +40,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new DigitalCoreParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
+        protected override IDictionary<string, string> GetCookies()
+        {
+            var cookies = new Dictionary<string, string>();
+
+            cookies.Add("uid", Settings.UId);
+            cookies.Add("pass", Settings.Passphrase);
+
+            return cookies;
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -147,9 +157,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 searchUrl += "&categories[]=" + cat;
             }
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Rss);
-            request.HttpRequest.Cookies.Add("uid", Settings.UId);
-            request.HttpRequest.Cookies.Add("pass", Settings.Passphrase);
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 
             yield return request;
         }

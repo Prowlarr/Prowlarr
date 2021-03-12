@@ -406,8 +406,12 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.RateLimit = RateLimit;
             }
 
+            if (_configService.LogIndexerResponse)
+            {
+                request.HttpRequest.LogResponseContent = true;
+            }
+
             request.HttpRequest.AllowAutoRedirect = FollowRedirect;
-            request.HttpRequest.LogResponseContent = true;
 
             Cookies = GetCookies();
 

@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Cardigann
@@ -20,6 +21,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected readonly CardigannSettings _settings;
         protected readonly Logger _logger;
         protected readonly Encoding _encoding;
+        protected readonly IConfigService _configService;
 
         protected string SiteLink { get; private set; }
 
@@ -46,10 +48,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected static readonly Regex _LogicFunctionRegex = new Regex(
             $@"\b({string.Join("|", _SupportedLogicFunctions.Select(Regex.Escape))})(?:\s+(\(?\.[^\)\s]+\)?|""[^""]+"")){{2,}}");
 
-        public CardigannBase(CardigannDefinition definition,
+        public CardigannBase(IConfigService configService,
+                             CardigannDefinition definition,
                              CardigannSettings settings,
                              Logger logger)
         {
+            _configService = configService;
             _definition = definition;
             _settings = settings;
             _encoding = Encoding.GetEncoding(definition.Encoding);
@@ -206,6 +210,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         protected Dictionary<string, object> GetBaseTemplateVariables()
         {
+            var indexerLogging = _configService.LogIndexerResponse;
             var variables = new Dictionary<string, object>
             {
                 [".Config.sitelink"] = SiteLink,
@@ -221,7 +226,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var name = ".Config." + setting.Name;
                 var value = _settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);
 
-                if (setting.Type != "password")
+                if (setting.Type != "password" && indexerLogging)
                 {
                     _logger.Trace($"{name} got value {value.ToJson()}");
                 }
@@ -236,11 +241,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "select")
                 {
-                    _logger.Trace($"Setting options: {setting.Options.ToJson()}");
+                    if (indexerLogging)
+                    {
+                        _logger.Trace($"Setting options: {setting.Options.ToJson()}");
+                    }
+
                     var sorted = setting.Options.OrderBy(x => x.Key).ToList();
                     var selected = sorted[(int)(long)value];
 
-                    _logger.Debug($"Selected option: {selected.ToJson()}");
+                    if (indexerLogging)
+                    {
+                        _logger.Debug($"Selected option: {selected.ToJson()}");
+                    }
 
                     variables[name] = selected.Key;
                 }
@@ -253,7 +265,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new NotSupportedException();
                 }
 
-                if (setting.Type != "password")
+                if (setting.Type != "password" && indexerLogging)
                 {
                     _logger.Debug($"Setting {setting.Name} to {variables[name]}");
                 }
@@ -514,7 +526,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var all = variablesRegExMatches.Groups[0].Value;
                 var variable = variablesRegExMatches.Groups[1].Value;
 
-                var value = (string)variables[variable];
+                var value = variables[variable].ToString();
                 if (modifier != null)
                 {
                     value = modifier(value);

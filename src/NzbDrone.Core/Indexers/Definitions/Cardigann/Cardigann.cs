@@ -22,7 +22,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new CardigannRequestGenerator(_definitionService.GetDefinition(Settings.DefinitionFile),
+            return new CardigannRequestGenerator(_configService,
+                                                 _definitionService.GetDefinition(Settings.DefinitionFile),
                                                  Settings,
                                                  _logger)
             {
@@ -32,7 +33,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public override IParseIndexerResponse GetParser()
         {
-            return new CardigannParser(_definitionService.GetDefinition(Settings.DefinitionFile),
+            return new CardigannParser(_configService,
+                                       _definitionService.GetDefinition(Settings.DefinitionFile),
                                        Settings,
                                        _logger);
         }

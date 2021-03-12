@@ -81,7 +81,7 @@ namespace Prowlarr.Api.V1.Config
 
         private HostConfigResource GetHostConfig()
         {
-            var resource = _configFileProvider.ToResource(_configService);
+            var resource = HostConfigResourceMapper.ToResource(_configFileProvider, _configService);
             resource.Id = 1;
 
             var user = _userService.FindUser();

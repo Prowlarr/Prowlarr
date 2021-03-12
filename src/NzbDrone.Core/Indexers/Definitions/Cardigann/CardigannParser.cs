@@ -7,6 +7,7 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -17,10 +18,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
     {
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public CardigannParser(CardigannDefinition definition,
+        public CardigannParser(IConfigService configService,
+                               CardigannDefinition definition,
                                CardigannSettings settings,
                                Logger logger)
-        : base(definition, settings, logger)
+        : base(configService, definition, settings, logger)
         {
         }
 
@@ -61,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     results = ApplyFilters(results, search.Preprocessingfilters, variables);
                     searchResultDocument = searchResultParser.ParseDocument(results);
-                    _logger.Debug(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
+                    _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
                 }
 
                 var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
@@ -101,6 +103,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     try
                     {
                         var release = new CardigannReleaseInfo();
+                        var indexerLogging = _configService.LogIndexerResponse;
 
                         // Parse fields
                         foreach (var field in search.Fields)
@@ -334,8 +337,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                     continue;
                                 }
 
-                                //Parser errors usually happen on every result and are costly to performance, trace only
-                                _logger.Trace("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
+                                if (indexerLogging)
+                                {
+                                    _logger.Trace("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
+                                }
                             }
                         }
 

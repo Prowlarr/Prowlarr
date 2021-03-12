@@ -8,6 +8,7 @@ import IndexerIndexConnector from 'Indexer/Index/IndexerIndexConnector';
 import StatsConnector from 'Indexer/Stats/StatsConnector';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
 import ApplicationSettingsConnector from 'Settings/Applications/ApplicationSettingsConnector';
+import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
@@ -111,6 +112,11 @@ function AppRoutes(props) {
       <Route
         path="/settings/ui"
         component={UISettingsConnector}
+      />
+
+      <Route
+        path="/settings/development"
+        component={DevelopmentSettingsConnector}
       />
 
       {/*

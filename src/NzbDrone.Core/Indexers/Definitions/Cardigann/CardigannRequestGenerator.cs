@@ -8,6 +8,7 @@ using AngleSharp.Html.Parser;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
@@ -21,10 +22,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected HttpResponse landingResult;
         protected IHtmlDocument landingResultDocument;
 
-        public CardigannRequestGenerator(CardigannDefinition definition,
+        public CardigannRequestGenerator(IConfigService configService,
+                                         CardigannDefinition definition,
                                          CardigannSettings settings,
                                          Logger logger)
-        : base(definition, settings, logger)
+        : base(configService, definition, settings, logger)
         {
         }
 

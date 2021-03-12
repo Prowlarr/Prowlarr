@@ -160,6 +160,13 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("PreferIndexerFlags", value); }
         }
 
+        public bool LogIndexerResponse
+        {
+            get { return GetValueBoolean("LogIndexerResponse", false); }
+
+            set { SetValue("LogIndexerResponse", value); }
+        }
+
         public bool AllowHardcodedSubs
         {
             get { return GetValueBoolean("AllowHardcodedSubs", false); }

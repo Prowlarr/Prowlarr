@@ -96,6 +96,9 @@ namespace NzbDrone.Core.Configuration
         int BackupInterval { get; }
         int BackupRetention { get; }
 
+        // Indexers
+        bool LogIndexerResponse { get; set; }
+
         CertificateValidationType CertificateValidation { get; }
     }
 }

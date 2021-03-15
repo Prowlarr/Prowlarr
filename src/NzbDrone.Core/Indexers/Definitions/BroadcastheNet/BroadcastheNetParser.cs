@@ -92,6 +92,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 torrentInfo.Container = torrent.Container;
                 torrentInfo.Codec = torrent.Codec;
                 torrentInfo.Resolution = torrent.Resolution;
+                torrentInfo.Category = new List<IndexerCategory> { NewznabStandardCategory.TV };
 
                 results.Add(torrentInfo);
             }

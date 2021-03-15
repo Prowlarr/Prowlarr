@@ -1,8 +1,12 @@
 using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Host.AccessControl;
 
-namespace Prowlarr.Host.AccessControl
+namespace NzbDrone.Host.AccessControl
 {
+    public interface IRemoteAccessAdapter
+    {
+        void MakeAccessible(bool passive);
+    }
+
     public class RemoteAccessAdapter : IRemoteAccessAdapter
     {
         private readonly IRuntimeInfo _runtimeInfo;

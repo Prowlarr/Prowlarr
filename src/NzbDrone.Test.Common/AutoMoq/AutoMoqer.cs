@@ -152,7 +152,7 @@ namespace NzbDrone.Test.Common.AutoMoq
 
             _registeredMocks = new Dictionary<Type, object>();
             AddTheAutoMockingContainerExtensionToTheContainer(container);
-            ContainerBuilderBase.RegisterNativeResolver(new[] { "System.Data.SQLite", "Prowlarr.Core" });
+            AssemblyLoader.RegisterSQLiteResolver();
         }
 
         private static void AddTheAutoMockingContainerExtensionToTheContainer(IUnityContainer container)

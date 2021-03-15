@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Host\Prowlarr.Host.csproj" />
+    <ProjectReference Include="..\NzbDrone.Windows\Prowlarr.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

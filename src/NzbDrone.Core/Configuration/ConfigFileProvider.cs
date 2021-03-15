@@ -50,6 +50,8 @@ namespace NzbDrone.Core.Configuration
     public class ConfigFileProvider : IConfigFileProvider
     {
         public const string CONFIG_ELEMENT_NAME = "Config";
+        public const int DEFAULT_PORT = 9696;
+        public const int DEFAULT_SSL_PORT = 9898;
 
         private readonly IEventAggregator _eventAggregator;
         private readonly IDiskProvider _diskProvider;
@@ -135,9 +137,9 @@ namespace NzbDrone.Core.Configuration
             }
         }
 
-        public int Port => GetValueInt("Port", 9696);
+        public int Port => GetValueInt("Port", DEFAULT_PORT);
 
-        public int SslPort => GetValueInt("SslPort", 9898);
+        public int SslPort => GetValueInt("SslPort", DEFAULT_SSL_PORT);
 
         public bool EnableSsl => GetValueBoolean("EnableSsl", false);
 

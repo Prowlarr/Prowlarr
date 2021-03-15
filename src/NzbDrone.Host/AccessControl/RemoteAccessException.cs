@@ -1,7 +1,7 @@
 using System;
 using NzbDrone.Common.Exceptions;
 
-namespace Prowlarr.Host.AccessControl
+namespace NzbDrone.Host.AccessControl
 {
     public class RemoteAccessException : NzbDroneException
     {

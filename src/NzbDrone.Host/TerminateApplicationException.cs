@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Prowlarr.Host
+namespace NzbDrone.Host
 {
     public class TerminateApplicationException : ApplicationException
     {

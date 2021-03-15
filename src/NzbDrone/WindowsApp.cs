@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation;
+using NzbDrone.Host;
 using NzbDrone.SysTray;
-using Prowlarr.Host;
 
 namespace NzbDrone
 {
@@ -20,11 +22,9 @@ namespace NzbDrone
 
                 NzbDroneLogger.Register(startupArgs, false, true);
 
-                Bootstrap.Start(startupArgs, new MessageBoxUserAlert(), container =>
+                Bootstrap.Start(args, e =>
                 {
-                    container.Register<ISystemTrayApp, SystemTrayApp>();
-                    var trayApp = container.Resolve<ISystemTrayApp>();
-                    trayApp.Start();
+                    e.ConfigureServices((_, s) => s.AddSingleton<IHostedService, SystemTrayApp>());
                 });
             }
             catch (Exception e)

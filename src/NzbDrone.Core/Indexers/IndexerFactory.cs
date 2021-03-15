@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers
                               IIndexerStatusService indexerStatusService,
                               IIndexerRepository providerRepository,
                               IEnumerable<IIndexer> providers,
-                              IContainer container,
+                              IServiceProvider container,
                               IEventAggregator eventAggregator,
                               Logger logger)
             : base(providerRepository, providers, container, eventAggregator, logger)

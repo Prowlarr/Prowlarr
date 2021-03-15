@@ -1,4 +1,4 @@
-﻿namespace Prowlarr.Host
+namespace NzbDrone.Host
 {
     public enum ApplicationModes
     {

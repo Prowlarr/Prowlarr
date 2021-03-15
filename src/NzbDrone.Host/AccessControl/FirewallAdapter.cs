@@ -5,7 +5,7 @@ using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Configuration;
 
-namespace Prowlarr.Host.AccessControl
+namespace NzbDrone.Host.AccessControl
 {
     public interface IFirewallAdapter
     {

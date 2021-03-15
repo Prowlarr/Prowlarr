@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Nancy;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
@@ -40,13 +39,14 @@ namespace Prowlarr.Http.Frontend.Mappers
             return stream;
         }
 
-        public override Response GetResponse(string resourceUrl)
+        /*
+        public override IActionResult GetResponse(string resourceUrl)
         {
             var response = base.GetResponse(resourceUrl);
             response.Headers["X-UA-Compatible"] = "IE=edge";
 
             return response;
-        }
+        }*/
 
         protected string GetHtmlText()
         {

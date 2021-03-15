@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using Nancy.Bootstrapper;
 using NzbDrone.Common.Composition;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.SignalR;
-using Prowlarr.Http;
 
 namespace Prowlarr.Host
 {
@@ -27,8 +25,6 @@ namespace Prowlarr.Host
             : base(args, assemblies)
         {
             AutoRegisterImplementations<MessageHub>();
-
-            Container.Register<INancyBootstrapper, ProwlarrBootstrapper>();
 
             if (OsInfo.IsWindows)
             {

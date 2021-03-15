@@ -1,4 +1,5 @@
 using NzbDrone.Common.EnvironmentInfo;
+using NzbDrone.Host.AccessControl;
 
 namespace Prowlarr.Host.AccessControl
 {

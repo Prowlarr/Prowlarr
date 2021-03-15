@@ -60,12 +60,12 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault();
 
-            if (searchCriteria.TvdbId != 0)
+            if (searchCriteria.TvdbId > 0)
             {
                 parameters.Tvdb = string.Format("{0}", searchCriteria.TvdbId);
             }
 
-            if (searchCriteria.RId != 0)
+            if (searchCriteria.RId > 0)
             {
                 parameters.Tvrage = string.Format("{0}", searchCriteria.RId);
             }

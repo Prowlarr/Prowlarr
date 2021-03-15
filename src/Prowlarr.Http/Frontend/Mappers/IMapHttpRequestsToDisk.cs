@@ -1,4 +1,4 @@
-﻿using Nancy;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Prowlarr.Http.Frontend.Mappers
 {
@@ -6,6 +6,6 @@ namespace Prowlarr.Http.Frontend.Mappers
     {
         string Map(string resourceUrl);
         bool CanHandle(string resourceUrl);
-        Response GetResponse(string resourceUrl);
+        IActionResult GetResponse(string resourceUrl);
     }
 }

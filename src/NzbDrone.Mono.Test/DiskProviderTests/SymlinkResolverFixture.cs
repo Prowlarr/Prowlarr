@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using FluentAssertions;
-using Mono.Posix;
 using Mono.Unix;
 using NUnit.Framework;
 using NzbDrone.Mono.Disk;

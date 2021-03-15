@@ -2,7 +2,6 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public class NewznabRequest
     {
-        public int id { get; set; }
         public string t { get; set; }
         public string q { get; set; }
         public string cat { get; set; }

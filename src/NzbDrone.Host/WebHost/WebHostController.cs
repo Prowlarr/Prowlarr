@@ -4,42 +4,60 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Internal;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
+using NzbDrone.Common.Composition;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Exceptions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
-using Prowlarr.Host.AccessControl;
-using Prowlarr.Host.Middleware;
+using NzbDrone.Host;
+using NzbDrone.Host.AccessControl;
+using NzbDrone.SignalR;
+using Prowlarr.Api.V1.System;
+using Prowlarr.Http;
+using Prowlarr.Http.Authentication;
+using Prowlarr.Http.ErrorManagement;
+using Prowlarr.Http.Frontend;
+using Prowlarr.Http.Middleware;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Prowlarr.Host
 {
     public class WebHostController : IHostController
     {
+        private readonly IContainer _container;
         private readonly IRuntimeInfo _runtimeInfo;
         private readonly IConfigFileProvider _configFileProvider;
         private readonly IFirewallAdapter _firewallAdapter;
-        private readonly IEnumerable<IAspNetCoreMiddleware> _middlewares;
+        private readonly ProwlarrErrorPipeline _errorHandler;
         private readonly Logger _logger;
         private IWebHost _host;
 
-        public WebHostController(IRuntimeInfo runtimeInfo,
+        public WebHostController(IContainer container,
+                                 IRuntimeInfo runtimeInfo,
                                  IConfigFileProvider configFileProvider,
                                  IFirewallAdapter firewallAdapter,
-                                 IEnumerable<IAspNetCoreMiddleware> middlewares,
+                                 ProwlarrErrorPipeline errorHandler,
                                  Logger logger)
         {
+            _container = container;
             _runtimeInfo = runtimeInfo;
             _configFileProvider = configFileProvider;
             _firewallAdapter = firewallAdapter;
-            _middlewares = middlewares;
+            _errorHandler = errorHandler;
             _logger = logger;
         }
 
@@ -105,24 +123,125 @@ namespace Prowlarr.Host
                 })
                 .ConfigureServices(services =>
                 {
+                    // So that we can resolve containers with our TinyIoC services
+                    services.AddSingleton(_container);
+                    services.AddSingleton<IControllerActivator, ControllerActivator>();
+
+                    // Bits used in our custom middleware
+                    services.AddSingleton(_container.Resolve<ProwlarrErrorPipeline>());
+                    services.AddSingleton(_container.Resolve<ICacheableSpecification>());
+
+                    // Used in authentication
+                    services.AddSingleton(_container.Resolve<IAuthenticationService>());
+
+                    services.AddRouting(options => options.LowercaseUrls = true);
+
+                    services.AddResponseCompression();
+
+                    services.AddCors(options =>
+                    {
+                        options.AddPolicy(VersionedApiControllerAttribute.API_CORS_POLICY,
+                            builder =>
+                            builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader());
+
+                        options.AddPolicy("AllowGet",
+                            builder =>
+                            builder.AllowAnyOrigin()
+                            .WithMethods("GET", "OPTIONS")
+                            .AllowAnyHeader());
+                    });
+
+                    services
+                    .AddControllers(options =>
+                    {
+                        options.ReturnHttpNotAcceptable = true;
+                    })
+                    .AddApplicationPart(typeof(SystemController).Assembly)
+                    .AddApplicationPart(typeof(StaticResourceController).Assembly)
+                    .AddJsonOptions(options =>
+                    {
+                        STJson.ApplySerializerSettings(options.JsonSerializerOptions);
+                    });
+
                     services
                     .AddSignalR()
                     .AddJsonProtocol(options =>
                     {
                         options.PayloadSerializerOptions = STJson.GetSerializerSettings();
                     });
+
+                    services.AddAuthorization(options =>
+                    {
+                        options.AddPolicy("UI", policy =>
+                        {
+                            policy.AuthenticationSchemes.Add(_configFileProvider.AuthenticationMethod.ToString());
+                            policy.RequireAuthenticatedUser();
+                        });
+
+                        options.AddPolicy("SignalR", policy =>
+                        {
+                            policy.AuthenticationSchemes.Add("SignalR");
+                            policy.RequireAuthenticatedUser();
+                        });
+
+                        // Require auth on everything except those marked [AllowAnonymous]
+                        options.FallbackPolicy = new AuthorizationPolicyBuilder("API")
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    });
+
+                    services.AddAppAuthentication(_configFileProvider);
                 })
                 .Configure(app =>
                 {
-                    app.UseRouting();
-                    app.Properties["host.AppName"] = BuildInfo.AppName;
-                    app.UsePathBase(_configFileProvider.UrlBase);
-
-                    foreach (var middleWare in _middlewares.OrderBy(c => c.Order))
+                    app.UseMiddleware<LoggingMiddleware>();
+                    app.UsePathBase(new PathString(_configFileProvider.UrlBase));
+                    app.UseExceptionHandler(new ExceptionHandlerOptions
                     {
-                        _logger.Debug("Attaching {0} to host", middleWare.GetType().Name);
-                        middleWare.Attach(app);
-                    }
+                        AllowStatusCode404Response = true,
+                        ExceptionHandler = _errorHandler.HandleException
+                    });
+
+                    app.UseRouting();
+                    app.UseCors();
+                    app.UseAuthentication();
+                    app.UseAuthorization();
+                    app.UseResponseCompression();
+                    app.Properties["host.AppName"] = BuildInfo.AppName;
+
+                    app.UseMiddleware<VersionMiddleware>();
+                    app.UseMiddleware<UrlBaseMiddleware>(_configFileProvider.UrlBase);
+                    app.UseMiddleware<CacheHeaderMiddleware>();
+                    app.UseMiddleware<IfModifiedMiddleware>();
+
+                    app.Use((context, next) =>
+                    {
+                        if (context.Request.Path.StartsWithSegments("/api/v1/command", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            context.Request.EnableBuffering();
+                        }
+
+                        return next();
+                    });
+
+                    app.UseWebSockets();
+
+                    app.UseEndpoints(x =>
+                    {
+                        x.MapHub<MessageHub>("/signalr/messages").RequireAuthorization("SignalR");
+                        x.MapControllers();
+                    });
+
+                    // This is a side effect of haing multiple IoC containers, TinyIoC and whatever
+                    // Kestrel/SignalR is using. Ideally we'd have one IoC container, but that's non-trivial with TinyIoC
+                    // TODO: Use a single IoC container if supported for TinyIoC or if we switch to another system (ie Autofac).
+                    _container.Register(app.ApplicationServices);
+                    _container.Register(app.ApplicationServices.GetService<IHubContext<MessageHub>>());
+                    _container.Register(app.ApplicationServices.GetService<IActionDescriptorCollectionProvider>());
+                    _container.Register(app.ApplicationServices.GetService<EndpointDataSource>());
+                    _container.Register(app.ApplicationServices.GetService<DfaGraphWriter>());
                 })
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .Build();

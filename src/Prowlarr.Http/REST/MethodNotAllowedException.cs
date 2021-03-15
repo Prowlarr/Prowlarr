@@ -1,4 +1,4 @@
-﻿using Nancy;
+using System.Net;
 using Prowlarr.Http.Exceptions;
 
 namespace Prowlarr.Http.REST

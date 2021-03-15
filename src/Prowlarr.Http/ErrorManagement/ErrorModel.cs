@@ -1,4 +1,8 @@
-﻿using Prowlarr.Http.Exceptions;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using NzbDrone.Common.Serializer;
+using Prowlarr.Http.Exceptions;
 
 namespace Prowlarr.Http.ErrorManagement
 {
@@ -16,6 +20,13 @@ namespace Prowlarr.Http.ErrorManagement
 
         public ErrorModel()
         {
+        }
+
+        public Task WriteToResponse(HttpResponse response, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
+        {
+            response.StatusCode = (int)statusCode;
+            response.ContentType = "application/json";
+            return STJson.SerializeAsync(this, response.Body);
         }
     }
 }

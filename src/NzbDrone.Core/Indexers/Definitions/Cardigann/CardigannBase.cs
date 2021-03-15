@@ -526,7 +526,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var all = variablesRegExMatches.Groups[0].Value;
                 var variable = variablesRegExMatches.Groups[1].Value;
 
-                var value = variables[variable].ToString();
+                var value = (string)variables[variable];
                 if (modifier != null)
                 {
                     value = modifier(value);

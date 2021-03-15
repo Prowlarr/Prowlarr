@@ -96,8 +96,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
-            variables[".Query.Author"] = null;
-            variables[".Query.Title"] = null;
+            variables[".Query.Author"] = searchCriteria.Author;
+            variables[".Query.Title"] = searchCriteria.Title;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -182,6 +182,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     AllowAutoRedirect = true,
                     SuppressHttpError = true
                 };
+
+                foreach (var pair in pairs)
+                {
+                    requestBuilder.AddFormParameter(pair.Key, pair.Value);
+                }
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 

@@ -49,14 +49,7 @@ namespace NzbDrone.Core.Indexers
             {
                 if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
                 {
-                    var settings = (CardigannSettings)definition.Settings;
-                    var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
-                    definition.ExtraFields = defFile.Settings;
-                    definition.BaseUrl = defFile.Links.First();
-                    definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
-                    definition.Capabilities = new IndexerCapabilities();
-                    definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
-                    MapCardigannCategories(definition, defFile);
+                    MapCardigannDefinition(definition);
                 }
             }
 
@@ -69,14 +62,7 @@ namespace NzbDrone.Core.Indexers
 
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
             {
-                var settings = (CardigannSettings)definition.Settings;
-                var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
-                definition.ExtraFields = defFile.Settings;
-                definition.BaseUrl = defFile.Links.First();
-                definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
-                definition.Capabilities = new IndexerCapabilities();
-                definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
-                MapCardigannCategories(definition, defFile);
+                MapCardigannDefinition(definition);
             }
 
             return definition;
@@ -85,6 +71,18 @@ namespace NzbDrone.Core.Indexers
         protected override List<IndexerDefinition> Active()
         {
             return base.Active().Where(c => c.Enable).ToList();
+        }
+
+        private void MapCardigannDefinition(IndexerDefinition definition)
+        {
+            var settings = (CardigannSettings)definition.Settings;
+            var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
+            definition.ExtraFields = defFile.Settings;
+            definition.BaseUrl = defFile.Links.First();
+            definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
+            definition.Capabilities = new IndexerCapabilities();
+            definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
+            MapCardigannCategories(definition, defFile);
         }
 
         private void MapCardigannCategories(IndexerDefinition def, CardigannDefinition defFile)
@@ -232,6 +230,11 @@ namespace NzbDrone.Core.Indexers
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
+            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            {
+                MapCardigannDefinition(definition);
+            }
+
             return base.Create(definition);
         }
 
@@ -243,6 +246,11 @@ namespace NzbDrone.Core.Indexers
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
+            }
+
+            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            {
+                MapCardigannDefinition(definition);
             }
 
             base.Update(definition);

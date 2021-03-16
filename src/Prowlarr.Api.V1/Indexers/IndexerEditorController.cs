@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using Prowlarr.Http;
-using Prowlarr.Http.Extensions;
 
 namespace Prowlarr.Api.V1.Indexers
 {
@@ -29,9 +29,9 @@ namespace Prowlarr.Api.V1.Indexers
 
             foreach (var indexer in indexersToUpdate)
             {
-                if (resource.Enable.HasValue)
+                if (resource.Enable.IsNotNullOrWhiteSpace())
                 {
-                    indexer.Enable = resource.Enable.Value;
+                    indexer.Enable = bool.Parse(resource.Enable);
                 }
 
                 if (resource.Tags != null)

@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -132,25 +135,34 @@ namespace NzbDrone.Core.Indexers.Definitions
             PageSize = 100;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var baseUrl = string.Format("{0}/api/v1/torrents?extendedSearch=false", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/api/v1/torrents", BaseUrl.TrimEnd('/'));
 
-            var parameters = string.Empty;
+            var parameters = new NameValueCollection();
 
-            parameters += "&freeleech=false";
-            parameters += "&index=0";
-            parameters += "&limit=100";
-            parameters += "&order=desc";
-            parameters += "&page=search";
-            parameters += string.Format("&searchText={0}", term);
+            parameters.Add("extendedSearch", "false");
+            parameters.Add("freeleech", "false");
+            parameters.Add("index", "0");
+            parameters.Add("limit", "100");
+            parameters.Add("order", "desc");
+            parameters.Add("page", "search");
 
-            parameters += "&sort=d";
-            parameters += "&section=all";
-            parameters += "&stereoscopic=false";
-            parameters += "&watchview=false";
+            if (imdbId.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("searchText", imdbId);
+            }
+            else
+            {
+                parameters.Add("searchText", term);
+            }
 
-            var searchUrl = baseUrl + parameters;
+            parameters.Add("sort", "d");
+            parameters.Add("section", "all");
+            parameters.Add("stereoscopic", "false");
+            parameters.Add("watchview", "false");
+
+            searchUrl += "?" + parameters.GetQueryString();
 
             foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
             {
@@ -166,24 +178,36 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId));
 
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)

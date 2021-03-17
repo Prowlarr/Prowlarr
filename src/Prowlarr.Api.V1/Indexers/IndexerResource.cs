@@ -97,8 +97,15 @@ namespace Prowlarr.Api.V1.Indexers
                 {
                     if (!standardFields.Contains(field.Name))
                     {
-                        var cardigannSetting = cardigannDefinition.Settings.FirstOrDefault(x => x.Name == field.Name);
-                        settings.ExtraFieldData[field.Name] = MapValue(cardigannSetting, field.Value);
+                        if (field.Name == "cardigannCaptcha")
+                        {
+                            settings.ExtraFieldData["CAPTCHA"] = field.Value?.ToString() ?? string.Empty;
+                        }
+                        else
+                        {
+                            var cardigannSetting = cardigannDefinition.Settings.FirstOrDefault(x => x.Name == field.Name);
+                            settings.ExtraFieldData[field.Name] = MapValue(cardigannSetting, field.Value);
+                        }
                     }
                 }
             }
@@ -132,7 +139,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
             else
             {
-                return value.ToString();
+                return value?.ToString() ?? string.Empty;
             }
         }
 

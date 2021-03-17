@@ -174,7 +174,7 @@ namespace Prowlarr.Api.V1
 
             var data = _providerFactory.RequestAction(providerDefinition, name, query);
 
-            return Content(data.ToJson(), "application/json");
+            return Json(data);
         }
 
         protected virtual void Validate(TProviderDefinition definition, bool includeWarnings)

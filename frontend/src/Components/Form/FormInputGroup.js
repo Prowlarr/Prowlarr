@@ -6,6 +6,7 @@ import translate from 'Utilities/String/translate';
 import AutoCompleteInput from './AutoCompleteInput';
 import AvailabilitySelectInput from './AvailabilitySelectInput';
 import CaptchaInputConnector from './CaptchaInputConnector';
+import CardigannCaptchaInputConnector from './CardigannCaptchaInputConnector';
 import CheckInput from './CheckInput';
 import DeviceInputConnector from './DeviceInputConnector';
 import EnhancedSelectInput from './EnhancedSelectInput';
@@ -36,6 +37,9 @@ function getComponent(type) {
 
     case inputTypes.CAPTCHA:
       return CaptchaInputConnector;
+
+    case inputTypes.CARDIGANNCAPTCHA:
+      return CardigannCaptchaInputConnector;
 
     case inputTypes.CHECK:
       return CheckInput;

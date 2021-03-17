@@ -20,7 +20,10 @@ export const defaultState = {
   secretToken: null,
   ray: null,
   stoken: null,
-  responseUrl: null
+  responseUrl: null,
+  type: null,
+  contentType: null,
+  imageData: null
 };
 
 //

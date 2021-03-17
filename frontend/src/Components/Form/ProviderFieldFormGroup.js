@@ -10,6 +10,8 @@ function getType({ type, selectOptionsProviderAction }) {
   switch (type) {
     case 'captcha':
       return inputTypes.CAPTCHA;
+    case 'cardigannCaptcha':
+      return inputTypes.CARDIGANNCAPTCHA;
     case 'checkbox':
       return inputTypes.CHECK;
     case 'device':

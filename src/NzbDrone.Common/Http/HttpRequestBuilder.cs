@@ -26,6 +26,8 @@ namespace NzbDrone.Common.Http
         public bool LogResponseContent { get; set; }
         public NetworkCredential NetworkCredential { get; set; }
         public Dictionary<string, string> Cookies { get; private set; }
+        public bool StoreRequestCookie { get; set; }
+        public bool StoreResponseCookie { get; set; }
         public List<HttpFormData> FormData { get; private set; }
 
         public Action<HttpRequest> PostProcess { get; set; }
@@ -102,6 +104,8 @@ namespace NzbDrone.Common.Http
             request.SuppressHttpError = SuppressHttpError;
             request.UseSimplifiedUserAgent = UseSimplifiedUserAgent;
             request.AllowAutoRedirect = AllowAutoRedirect;
+            request.StoreRequestCookie = StoreRequestCookie;
+            request.StoreResponseCookie = StoreResponseCookie;
             request.ConnectionKeepAlive = ConnectionKeepAlive;
             request.RateLimit = RateLimit;
             request.LogResponseContent = LogResponseContent;
@@ -353,6 +357,20 @@ namespace NzbDrone.Common.Http
         public virtual HttpRequestBuilder SetCookie(string key, string value)
         {
             Cookies[key] = value;
+
+            return this;
+        }
+
+        public virtual HttpRequestBuilder StoreRequestCookies(bool val = true)
+        {
+            StoreRequestCookie = val;
+
+            return this;
+        }
+
+        public virtual HttpRequestBuilder StoreResponseCookies(bool val = true)
+        {
+            StoreResponseCookie = val;
 
             return this;
         }

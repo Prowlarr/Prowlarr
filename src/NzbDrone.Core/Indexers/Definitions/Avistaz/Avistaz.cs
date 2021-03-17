@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
@@ -52,9 +53,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return caps;
         }
 
-        protected override void DoLogin()
+        protected override async Task DoLogin()
         {
-            Settings.Token = GetToken();
+            Settings.Token = await GetToken();
 
             if (Definition.Id > 0)
             {
@@ -74,11 +75,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return false;
         }
 
-        protected override ValidationFailure TestConnection()
+        protected override async Task<ValidationFailure> TestConnection()
         {
             try
             {
-                GetToken();
+                await GetToken();
             }
             catch (Exception ex)
             {
@@ -90,7 +91,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return null;
         }
 
-        private string GetToken()
+        private async Task<string> GetToken()
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
@@ -108,7 +109,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 .Accept(HttpAccept.Json)
                 .Build();
 
-            var response = _httpClient.Post<AvistazAuthResponse>(authLoginRequest);
+            var response = await _httpClient.PostAsync<AvistazAuthResponse>(authLoginRequest);
             var token = response.Resource.Token;
 
             return token;

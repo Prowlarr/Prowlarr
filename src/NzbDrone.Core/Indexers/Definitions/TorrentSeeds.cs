@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using FluentValidation;
 using NLog;
@@ -44,14 +45,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new TorrentSeedsParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
-        protected override void DoLogin()
+        protected override async Task DoLogin()
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true
             };
 
-            var loginPage = _httpClient.Execute(new HttpRequest(TokenUrl));
+            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(TokenUrl));
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(loginPage.Content);
             var token = dom.QuerySelector("form.form-horizontal > span");
@@ -72,7 +73,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = _httpClient.Execute(authLoginRequest);
+            var response = await _httpClient.ExecuteAsync(authLoginRequest);
 
             cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));

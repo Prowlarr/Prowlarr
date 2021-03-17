@@ -12,6 +12,7 @@ namespace NzbDrone.Common.Http
         {
             Url = new HttpUri(url);
             Headers = new HttpHeader();
+            ConnectionKeepAlive = true;
             AllowAutoRedirect = true;
             StoreRequestCookie = true;
             IgnorePersistentCookies = false;

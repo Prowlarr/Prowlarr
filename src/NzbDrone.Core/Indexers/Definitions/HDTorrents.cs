@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using FluentValidation;
 using NLog;
@@ -43,7 +44,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new HDTorrentsParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
-        protected override void DoLogin()
+        protected override async Task DoLogin()
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
@@ -62,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = _httpClient.Execute(authLoginRequest);
+            var response = await _httpClient.ExecuteAsync(authLoginRequest);
 
             cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));

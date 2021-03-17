@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Extensions;
@@ -12,7 +13,7 @@ namespace NzbDrone.Core.Indexers
 {
     public interface IDownloadService
     {
-        byte[] DownloadReport(string link, int indexerId, string source, string title);
+        Task<byte[]> DownloadReport(string link, int indexerId, string source, string title);
         void RecordRedirect(string link, int indexerId, string source, string title);
     }
 
@@ -37,14 +38,14 @@ namespace NzbDrone.Core.Indexers
             _logger = logger;
         }
 
-        public byte[] DownloadReport(string link, int indexerId, string source, string title)
+        public async Task<byte[]> DownloadReport(string link, int indexerId, string source, string title)
         {
             var url = new HttpUri(link);
 
             // Limit grabs to 2 per second.
             if (link.IsNotNullOrWhiteSpace() && !link.StartsWith("magnet:"))
             {
-                _rateLimitService.WaitAndPulse(url.Host, TimeSpan.FromSeconds(2));
+                await _rateLimitService.WaitAndPulseAsync(url.Host, TimeSpan.FromSeconds(2));
             }
 
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(indexerId));
@@ -53,7 +54,7 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
-                downloadedBytes = indexer.Download(url);
+                downloadedBytes = await indexer.Download(url);
                 _indexerStatusService.RecordSuccess(indexerId);
                 success = true;
             }

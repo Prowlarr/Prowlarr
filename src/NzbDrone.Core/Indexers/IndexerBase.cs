@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -68,12 +69,12 @@ namespace NzbDrone.Core.Indexers
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
-        public abstract IndexerPageableQueryResult Fetch(MovieSearchCriteria searchCriteria);
-        public abstract IndexerPageableQueryResult Fetch(MusicSearchCriteria searchCriteria);
-        public abstract IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria);
-        public abstract IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria);
-        public abstract IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria);
-        public abstract byte[] Download(HttpUri searchCriteria);
+        public abstract Task<IndexerPageableQueryResult> Fetch(MovieSearchCriteria searchCriteria);
+        public abstract Task<IndexerPageableQueryResult> Fetch(MusicSearchCriteria searchCriteria);
+        public abstract Task<IndexerPageableQueryResult> Fetch(TvSearchCriteria searchCriteria);
+        public abstract Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria);
+        public abstract Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
+        public abstract Task<byte[]> Download(HttpUri searchCriteria);
 
         public abstract IndexerCapabilities GetCapabilities();
 
@@ -98,7 +99,7 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
-                Test(failures);
+                Test(failures).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -109,7 +110,7 @@ namespace NzbDrone.Core.Indexers
             return new ValidationResult(failures);
         }
 
-        protected abstract void Test(List<ValidationFailure> failures);
+        protected abstract Task Test(List<ValidationFailure> failures);
 
         public override string ToString()
         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
@@ -41,7 +42,7 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpGet("{id:int}/newznab")]
-        public IActionResult GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
+        public async Task<IActionResult> GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
         {
             var requestType = request.t;
             request.source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
@@ -64,13 +65,14 @@ namespace Prowlarr.Api.V1.Indexers
             switch (requestType)
             {
                 case "caps":
-                    return Content(indexerInstance.GetCapabilities().ToXml(), "application/rss+xml");
+                    var caps = indexerInstance.GetCapabilities();
+                    return Content(caps.ToXml(), "application/rss+xml");
                 case "search":
                 case "tvsearch":
                 case "music":
                 case "book":
                 case "movie":
-                    var results = _nzbSearchService.Search(request, new List<int> { indexer.Id }, false);
+                    var results = await _nzbSearchService.Search(request, new List<int> { indexer.Id }, false);
                     return Content(results.ToXml(indexerInstance.Protocol), "application/rss+xml");
                 default:
                     throw new BadRequestException("Function Not Available");
@@ -78,7 +80,7 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpGet("{id:int}/download")]
-        public object GetDownload(int id, string link, string file)
+        public async Task<object> GetDownload(int id, string link, string file)
         {
             var indexerDef = _indexerFactory.Get(id);
             var indexer = _indexerFactory.GetInstance(indexerDef);
@@ -107,7 +109,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
 
             var downloadBytes = Array.Empty<byte>();
-            downloadBytes = _downloadService.DownloadReport(unprotectedlLink, id, source, file);
+            downloadBytes = await _downloadService.DownloadReport(unprotectedlLink, id, source, file);
 
             // handle magnet URLs
             if (downloadBytes.Length >= 7

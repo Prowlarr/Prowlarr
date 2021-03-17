@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Common.TPL;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -15,7 +14,7 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface ISearchForNzb
     {
-        NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch);
+        Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch);
     }
 
     public class NzbSearchService : ISearchForNzb
@@ -36,7 +35,7 @@ namespace NzbDrone.Core.IndexerSearch
             _logger = logger;
         }
 
-        public NewznabResults Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        public Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             switch (request.t)
             {
@@ -53,7 +52,7 @@ namespace NzbDrone.Core.IndexerSearch
             }
         }
 
-        private NewznabResults MovieSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        private async Task<NewznabResults> MovieSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<MovieSearchCriteria>(request, indexerIds, interactiveSearch);
 
@@ -61,10 +60,10 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
 
-            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
-        private NewznabResults MusicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        private async Task<NewznabResults> MusicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<MusicSearchCriteria>(request, indexerIds, interactiveSearch);
 
@@ -72,10 +71,10 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Album = request.album;
             searchSpec.Label = request.label;
 
-            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
-        private NewznabResults TvSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        private async Task<NewznabResults> TvSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
 
@@ -87,24 +86,24 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.RId = request.rid;
             searchSpec.TvMazeId = request.tvmazeid;
 
-            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
-        private NewznabResults BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        private async Task<NewznabResults> BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<BookSearchCriteria>(request, indexerIds, interactiveSearch);
 
             searchSpec.Author = request.author;
             searchSpec.Title = request.title;
 
-            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
-        private NewznabResults BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        private async Task<NewznabResults> BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<BasicSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            return new NewznabResults { Releases = MapReleases(Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
         }
 
         private List<ReleaseInfo> MapReleases(List<ReleaseInfo> releases, string serverUrl)
@@ -145,7 +144,7 @@ namespace NzbDrone.Core.IndexerSearch
             return spec;
         }
 
-        private List<ReleaseInfo> Dispatch(Func<IIndexer, IndexerPageableQueryResult> searchAction, SearchCriteriaBase criteriaBase)
+        private async Task<List<ReleaseInfo>> Dispatch(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, SearchCriteriaBase criteriaBase)
         {
             var indexers = _indexerFactory.GetAvailableProviders();
 
@@ -157,46 +156,39 @@ namespace NzbDrone.Core.IndexerSearch
                     .ToList();
             }
 
-            var reports = new List<ReleaseInfo>();
-
             _logger.ProgressInfo("Searching {0} indexers for {1}", indexers.Count, criteriaBase.SearchTerm);
 
-            var taskList = new List<Task>();
-            var taskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
+            var tasks = indexers.Select(x => DispatchIndexer(searchAction, x, criteriaBase));
 
-            foreach (var indexer in indexers)
-            {
-                var indexerLocal = indexer;
+            var batch = await Task.WhenAll(tasks);
 
-                taskList.Add(taskFactory.StartNew(() =>
-                {
-                    try
-                    {
-                        var indexerReports = searchAction(indexerLocal);
-
-                        lock (reports)
-                        {
-                            reports.AddRange(indexerReports.Releases);
-                        }
-
-                        foreach (var query in indexerReports.Queries)
-                        {
-                            _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, true, indexerReports.Releases.Count()));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, 0, false));
-                        _logger.Error(e, "Error while searching for {0}", criteriaBase);
-                    }
-                }).LogExceptions());
-            }
-
-            Task.WaitAll(taskList.ToArray());
+            var reports = batch.SelectMany(x => x).ToList();
 
             _logger.Debug("Total of {0} reports were found for {1} from {2} indexers", reports.Count, criteriaBase, indexers.Count);
 
             return reports;
+        }
+
+        private async Task<IList<ReleaseInfo>> DispatchIndexer(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, IIndexer indexer, SearchCriteriaBase criteriaBase)
+        {
+            try
+            {
+                var indexerReports = await searchAction(indexer);
+
+                foreach (var query in indexerReports.Queries)
+                {
+                    _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, true, indexerReports.Releases.Count()));
+                }
+
+                return indexerReports.Releases;
+            }
+            catch (Exception e)
+            {
+                _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, 0, false));
+                _logger.Error(e, "Error while searching for {0}", criteriaBase);
+            }
+
+            return new List<ReleaseInfo>();
         }
     }
 }

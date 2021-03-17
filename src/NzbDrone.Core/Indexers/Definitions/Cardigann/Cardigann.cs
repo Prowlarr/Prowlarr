@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerVersions;
@@ -13,6 +16,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
     public class Cardigann : HttpIndexerBase<CardigannSettings>
     {
         private readonly IIndexerDefinitionUpdateService _definitionService;
+        private readonly ICached<CardigannRequestGenerator> _generatorCache;
 
         public override string Name => "Cardigann";
         public override string BaseUrl => "";
@@ -23,21 +27,24 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new CardigannRequestGenerator(_configService,
-                                                 _definitionService.GetDefinition(Settings.DefinitionFile),
-                                                 Settings,
-                                                 _logger)
-            {
-                HttpClient = _httpClient
-            };
+            return _generatorCache.Get(Settings.DefinitionFile, () =>
+                new CardigannRequestGenerator(_configService,
+                    _definitionService.GetDefinition(Settings.DefinitionFile),
+                    _logger)
+                {
+                    HttpClient = _httpClient,
+                    Settings = Settings
+                });
         }
 
         public override IParseIndexerResponse GetParser()
         {
             return new CardigannParser(_configService,
-                                       _definitionService.GetDefinition(Settings.DefinitionFile),
-                                       Settings,
-                                       _logger);
+                _definitionService.GetDefinition(Settings.DefinitionFile),
+                _logger)
+            {
+                Settings = Settings
+            };
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions
@@ -55,10 +62,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                          IHttpClient httpClient,
                          IIndexerStatusService indexerStatusService,
                          IConfigService configService,
+                         ICacheManager cacheManager,
                          Logger logger)
             : base(httpClient, indexerStatusService, configService, logger)
         {
             _definitionService = definitionService;
+            _generatorCache = cacheManager.GetRollingCache<CardigannRequestGenerator>(GetType(), "CardigannGeneratorCache", TimeSpan.FromMinutes(5));
         }
 
         private IndexerDefinition GetDefinition(CardigannMetaDefinition definition)
@@ -70,6 +79,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
             };
 
             var settings = definition.Settings ?? defaultSettings;
+
+            if (definition.Login?.Captcha != null)
+            {
+                settings.Add(new SettingsField
+                {
+                    Name = "cardigannCaptcha",
+                    Type = "cardigannCaptcha",
+                    Label = "CAPTCHA"
+                });
+            }
 
             return new IndexerDefinition
             {
@@ -93,6 +112,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             SetCookieFunctions(generator);
 
+            generator.Settings = Settings;
+
             return generator.CheckIfLoginIsNeeded(httpResponse);
         }
 
@@ -101,6 +122,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
 
             SetCookieFunctions(generator);
+
+            generator.Settings = Settings;
 
             await generator.DoLogin();
         }
@@ -112,6 +135,22 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 return;
             }
+        }
+
+        public override object RequestAction(string action, IDictionary<string, string> query)
+        {
+            if (action == "checkCaptcha")
+            {
+                var generator = (CardigannRequestGenerator)GetRequestGenerator();
+
+                var result = generator.GetConfigurationForSetup(false).GetAwaiter().GetResult();
+                return new
+                {
+                    captchaRequest = result
+                };
+            }
+
+            return null;
         }
     }
 }

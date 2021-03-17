@@ -18,7 +18,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
     public class CardigannBase
     {
         protected readonly CardigannDefinition _definition;
-        protected readonly CardigannSettings _settings;
         protected readonly Logger _logger;
         protected readonly Encoding _encoding;
         protected readonly IConfigService _configService;
@@ -48,14 +47,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected static readonly Regex _LogicFunctionRegex = new Regex(
             $@"\b({string.Join("|", _SupportedLogicFunctions.Select(Regex.Escape))})(?:\s+(\(?\.[^\)\s]+\)?|""[^""]+"")){{2,}}");
 
+        public CardigannSettings Settings { get; set;  }
+
         public CardigannBase(IConfigService configService,
                              CardigannDefinition definition,
-                             CardigannSettings settings,
                              Logger logger)
         {
             _configService = configService;
             _definition = definition;
-            _settings = settings;
             _encoding = Encoding.GetEncoding(definition.Encoding);
             _logger = logger;
 
@@ -224,7 +223,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             foreach (var setting in _definition.Settings)
             {
                 var name = ".Config." + setting.Name;
-                var value = _settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);
+                var value = Settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);
 
                 if (setting.Type != "password" && indexerLogging)
                 {
@@ -259,6 +258,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 else if (setting.Type == "info")
                 {
                     variables[name] = value;
+                }
+                else if (setting.Type == "cardigannCaptcha")
+                {
                 }
                 else
                 {

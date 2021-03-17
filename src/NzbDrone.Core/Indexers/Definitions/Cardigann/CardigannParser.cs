@@ -20,9 +20,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public CardigannParser(IConfigService configService,
                                CardigannDefinition definition,
-                               CardigannSettings settings,
                                Logger logger)
-        : base(configService, definition, settings, logger)
+        : base(configService, definition, logger)
         {
         }
 

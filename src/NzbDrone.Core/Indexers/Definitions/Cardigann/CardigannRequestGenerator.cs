@@ -25,9 +25,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public CardigannRequestGenerator(IConfigService configService,
                                          CardigannDefinition definition,
-                                         CardigannSettings settings,
                                          Logger logger)
-        : base(configService, definition, settings, logger)
+        : base(configService, definition, logger)
         {
         }
 
@@ -181,7 +180,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     LogResponseContent = true,
                     Method = HttpMethod.POST,
                     AllowAutoRedirect = true,
-                    SuppressHttpError = true
+                    SuppressHttpError = true,
                 };
 
                 foreach (var pair in pairs)
@@ -339,46 +338,22 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 if (login.Captcha != null)
                 {
                     var captcha = login.Captcha;
-                    if (captcha.Type == "image")
+                    Settings.ExtraFieldData.TryGetValue("CAPTCHA", out var captchaText);
+                    if (captchaText != null)
                     {
-                        _settings.ExtraFieldData.TryGetValue("CaptchaText", out var captchaText);
-                        if (captchaText != null)
+                        var input = captcha.Input;
+                        if (login.Selectors)
                         {
-                            var input = captcha.Input;
-                            if (login.Selectors)
+                            var inputElement = landingResultDocument.QuerySelector(captcha.Input);
+                            if (inputElement == null)
                             {
-                                var inputElement = landingResultDocument.QuerySelector(captcha.Input);
-                                if (inputElement == null)
-                                {
-                                    throw new CardigannConfigException(_definition, string.Format("Login failed: No captcha input found using {0}", captcha.Input));
-                                }
-
-                                input = inputElement.GetAttribute("name");
+                                throw new CardigannConfigException(_definition, string.Format("Login failed: No captcha input found using {0}", captcha.Input));
                             }
 
-                            pairs[input] = (string)captchaText;
+                            input = inputElement.GetAttribute("name");
                         }
-                    }
 
-                    if (captcha.Type == "text")
-                    {
-                        _settings.ExtraFieldData.TryGetValue("CaptchaAnswer", out var captchaAnswer);
-                        if (captchaAnswer != null)
-                        {
-                            var input = captcha.Input;
-                            if (login.Selectors)
-                            {
-                                var inputElement = landingResultDocument.QuerySelector(captcha.Input);
-                                if (inputElement == null)
-                                {
-                                    throw new CardigannConfigException(_definition, string.Format("Login failed: No captcha input found using {0}", captcha.Input));
-                                }
-
-                                input = inputElement.GetAttribute("name");
-                            }
-
-                            pairs[input] = (string)captchaAnswer;
-                        }
+                        pairs[input] = (string)captchaText;
                     }
                 }
 
@@ -462,7 +437,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             else if (login.Method == "cookie")
             {
                 CookiesUpdater(null, null);
-                _settings.ExtraFieldData.TryGetValue("cookie", out var cookies);
+                Settings.ExtraFieldData.TryGetValue("cookie", out var cookies);
                 CookiesUpdater(CookieUtil.CookieHeaderToDictionary((string)cookies), DateTime.Now + TimeSpan.FromDays(30));
             }
             else if (login.Method == "get")
@@ -557,13 +532,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return true;
         }
 
-        public async Task GetConfigurationForSetup(bool automaticlogin)
+        public async Task<Captcha> GetConfigurationForSetup(bool automaticlogin)
         {
             var login = _definition.Login;
 
             if (login == null || login.Method != "form")
             {
-                return;
+                return null;
             }
 
             var loginUrl = ResolvePath(login.Path);
@@ -588,7 +563,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 requestBuilder.SetCookies(Cookies);
             }
 
-            landingResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
+            var request = requestBuilder.Build();
+
+            landingResult = await HttpClient.ExecuteAsync(request);
 
             Cookies = landingResult.GetCookies();
 
@@ -597,122 +574,60 @@ namespace NzbDrone.Core.Indexers.Cardigann
             //{
             //    await FollowIfRedirect(landingResult, loginUrl.AbsoluteUri, overrideCookies: landingResult.Cookies, accumulateCookies: true);
             //}
-            var hasCaptcha = false;
             var htmlParser = new HtmlParser();
             landingResultDocument = htmlParser.ParseDocument(landingResult.Content);
 
+            Captcha captcha = null;
+
             if (login.Captcha != null)
             {
-                var captcha = login.Captcha;
-                if (captcha.Type == "image")
+                captcha = await GetCaptcha(login);
+            }
+
+            if (captcha != null && automaticlogin)
+            {
+                _logger.Error(string.Format("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id));
+            }
+
+            return captcha;
+        }
+
+        private async Task<Captcha> GetCaptcha(LoginBlock login)
+        {
+            var captcha = login.Captcha;
+
+            if (captcha.Type == "image")
+            {
+                var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
+                if (captchaElement != null)
                 {
-                    var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
-                    if (captchaElement != null)
-                    {
-                        hasCaptcha = true;
+                    var loginUrl = ResolvePath(login.Path);
+                    var captchaUrl = ResolvePath(captchaElement.GetAttribute("src"), loginUrl);
 
-                        //TODO Bubble this to UI when we get a captcha so that user can action it
-                        //Jackett does this by inserting image or question into the extrasettings which then show up in the add modal
-                        //
-                        //var captchaUrl = ResolvePath(captchaElement.GetAttribute("src"), loginUrl);
-                        //var captchaImageData = RequestWithCookiesAsync(captchaUrl.ToString(), landingResult.GetCookies, referer: loginUrl.AbsoluteUri);
-                        // var CaptchaImage = new ImageItem { Name = "Captcha Image" };
-                        //var CaptchaText = new StringItem { Name = "Captcha Text" };
-                        //CaptchaImage.Value = captchaImageData.ContentBytes;
-                        //configData.AddDynamic("CaptchaImage", CaptchaImage);
-                        //configData.AddDynamic("CaptchaText", CaptchaText);
-                    }
-                    else
-                    {
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): No captcha image found", _definition.Id));
-                    }
-                }
-                else if (captcha.Type == "text")
-                {
-                    var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
-                    if (captchaElement != null)
-                    {
-                        hasCaptcha = true;
+                    var request = new HttpRequestBuilder(captchaUrl.ToString())
+                        .SetCookies(landingResult.GetCookies())
+                        .SetHeader("Referrer", loginUrl.AbsoluteUri)
+                        .Build();
 
-                        //var captchaChallenge = new DisplayItem(captchaElement.TextContent) { Name = "Captcha Challenge" };
-                        //var captchaAnswer = new StringItem { Name = "Captcha Answer" };
+                    var response = await HttpClient.ExecuteAsync(request);
 
-                        //configData.AddDynamic("CaptchaChallenge", captchaChallenge);
-                        //configData.AddDynamic("CaptchaAnswer", captchaAnswer);
-                    }
-                    else
+                    return new Captcha
                     {
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): No captcha image found", _definition.Id));
-                    }
+                        ContentType = response.Headers.ContentType,
+                        ImageData = response.ResponseData
+                    };
                 }
                 else
                 {
-                    throw new NotImplementedException(string.Format("Captcha type \"{0}\" is not implemented", captcha.Type));
+                    _logger.Debug(string.Format("CardigannIndexer ({0}): No captcha image found", _definition.Id));
                 }
             }
-
-            if (hasCaptcha && automaticlogin)
+            else
             {
-                _logger.Error(string.Format("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id));
-                return;
+                throw new NotImplementedException(string.Format("Captcha type \"{0}\" is not implemented", captcha.Type));
             }
 
-            return;
-        }
-
-        protected async Task<bool> TestLogin()
-        {
-            var login = _definition.Login;
-
-            if (login == null || login.Test == null)
-            {
-                return false;
-            }
-
-            // test if login was successful
-            var loginTestUrl = ResolvePath(login.Test.Path).ToString();
-
-            // var headers = ParseCustomHeaders(_definition.Search?.Headers, GetBaseTemplateVariables());
-            var requestBuilder = new HttpRequestBuilder(loginTestUrl)
-            {
-                LogResponseContent = true,
-                Method = HttpMethod.GET,
-                SuppressHttpError = true
-            };
-
-            if (Cookies != null)
-            {
-                requestBuilder.SetCookies(Cookies);
-            }
-
-            var testResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
-
-            if (testResult.HasHttpRedirect)
-            {
-                var errormessage = "Login Failed, got redirected.";
-                var domainHint = GetRedirectDomainHint(testResult);
-                if (domainHint != null)
-                {
-                    errormessage += " Try changing the indexer URL to " + domainHint + ".";
-                }
-
-                _logger.Debug(errormessage);
-                return false;
-            }
-
-            if (login.Test.Selector != null)
-            {
-                var testResultParser = new HtmlParser();
-                var testResultDocument = testResultParser.ParseDocument(testResult.Content);
-                var selection = testResultDocument.QuerySelectorAll(login.Test.Selector);
-                if (selection.Length == 0)
-                {
-                    _logger.Debug(string.Format("Login failed: Selector \"{0}\" didn't match", login.Test.Selector));
-                    return false;
-                }
-            }
-
-            return true;
+            return null;
         }
 
         protected string GetRedirectDomainHint(string requestUrl, string redirectUrl)

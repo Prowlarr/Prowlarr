@@ -78,6 +78,17 @@ namespace NzbDrone.Core.Indexers
             var settings = (CardigannSettings)definition.Settings;
             var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
             definition.ExtraFields = defFile.Settings;
+
+            if (defFile.Login?.Captcha != null && !definition.ExtraFields.Any(x => x.Type == "cardigannCaptcha"))
+            {
+                definition.ExtraFields.Add(new SettingsField
+                {
+                    Name = "cardigannCaptcha",
+                    Type = "cardigannCaptcha",
+                    Label = "CAPTCHA"
+                });
+            }
+
             definition.BaseUrl = defFile.Links.First();
             definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
             definition.Capabilities = new IndexerCapabilities();

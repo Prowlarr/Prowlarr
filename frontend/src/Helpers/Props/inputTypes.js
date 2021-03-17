@@ -1,6 +1,7 @@
 export const AUTO_COMPLETE = 'autoComplete';
 export const AVAILABILITY_SELECT = 'availabilitySelect';
 export const CAPTCHA = 'captcha';
+export const CARDIGANNCAPTCHA = 'cardigannCaptcha';
 export const CHECK = 'check';
 export const DEVICE = 'device';
 export const INFO = 'info';
@@ -21,6 +22,7 @@ export const all = [
   AUTO_COMPLETE,
   AVAILABILITY_SELECT,
   CAPTCHA,
+  CARDIGANNCAPTCHA,
   CHECK,
   DEVICE,
   INFO,

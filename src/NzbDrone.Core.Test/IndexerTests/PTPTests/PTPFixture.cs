@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
         }
 
         [TestCase("Files/Indexers/PTP/imdbsearch.json")]
-        public void should_parse_feed_from_PTP(string fileName)
+        public async Task should_parse_feed_from_PTP(string fileName)
         {
             var authResponse = new PassThePopcornAuthResponse { Result = "Ok" };
 
@@ -36,14 +37,14 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
             var responseJson = ReadAllText(fileName);
 
             Mocker.GetMock<IHttpClient>()
-                  .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
-                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), authStream.ToString()));
+                  .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
+                  .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), authStream.ToString())));
 
             Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                  .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, new CookieCollection(), responseJson));
+                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
+                  .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, new CookieCollection(), responseJson)));
 
-            var torrents = Subject.Fetch(new MovieSearchCriteria()).Releases;
+            var torrents = (await Subject.Fetch(new MovieSearchCriteria())).Releases;
 
             torrents.Should().HaveCount(293);
             torrents.First().Should().BeOfType<PassThePopcornInfo>();

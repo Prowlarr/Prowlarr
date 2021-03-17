@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.ThingiProvider;
@@ -15,13 +16,13 @@ namespace NzbDrone.Core.Indexers
         DownloadProtocol Protocol { get; }
         IndexerPrivacy Privacy { get; }
 
-        IndexerPageableQueryResult Fetch(MovieSearchCriteria searchCriteria);
-        IndexerPageableQueryResult Fetch(MusicSearchCriteria searchCriteria);
-        IndexerPageableQueryResult Fetch(TvSearchCriteria searchCriteria);
-        IndexerPageableQueryResult Fetch(BookSearchCriteria searchCriteria);
-        IndexerPageableQueryResult Fetch(BasicSearchCriteria searchCriteria);
+        Task<IndexerPageableQueryResult> Fetch(MovieSearchCriteria searchCriteria);
+        Task<IndexerPageableQueryResult> Fetch(MusicSearchCriteria searchCriteria);
+        Task<IndexerPageableQueryResult> Fetch(TvSearchCriteria searchCriteria);
+        Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria);
+        Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
 
-        byte[] Download(HttpUri link);
+        Task<byte[]> Download(HttpUri link);
 
         IndexerCapabilities GetCapabilities();
     }

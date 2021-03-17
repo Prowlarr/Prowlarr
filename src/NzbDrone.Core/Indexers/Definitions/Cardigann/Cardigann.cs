@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
@@ -95,18 +96,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return generator.CheckIfLoginIsNeeded(httpResponse);
         }
 
-        protected override void DoLogin()
+        protected override async Task DoLogin()
         {
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
 
             SetCookieFunctions(generator);
 
-            generator.DoLogin();
+            await generator.DoLogin();
         }
 
-        protected override void Test(List<ValidationFailure> failures)
+        protected override async Task Test(List<ValidationFailure> failures)
         {
-            base.Test(failures);
+            await base.Test(failures);
             if (failures.HasErrors())
             {
                 return;

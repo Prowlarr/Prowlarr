@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
@@ -47,7 +48,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return caps;
         }
 
-        protected override void DoLogin()
+        protected override async Task DoLogin()
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
@@ -68,7 +69,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 .Accept(HttpAccept.Json)
                 .Build();
 
-            var response = _httpClient.Execute(authLoginRequest);
+            var response = await _httpClient.ExecuteAsync(authLoginRequest);
 
             cookies = response.GetCookies();
 

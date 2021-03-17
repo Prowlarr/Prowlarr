@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using Newtonsoft.Json.Linq;
@@ -157,7 +158,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return variables;
         }
 
-        public void DoLogin()
+        public async Task DoLogin()
         {
             var login = _definition.Login;
 
@@ -190,7 +191,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = HttpClient.Execute(requestBuilder.Build());
+                var response = await HttpClient.ExecuteAsync(requestBuilder.Build());
 
                 Cookies = response.GetCookies();
 
@@ -214,7 +215,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 // landingResultDocument might not be initiated if the login is caused by a relogin during a query
                 if (landingResultDocument == null)
                 {
-                    GetConfigurationForSetup(true);
+                    await GetConfigurationForSetup(true);
                 }
 
                 var form = landingResultDocument.QuerySelector(formSelector);
@@ -327,7 +328,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     requestBuilder.Headers.Add("Referer", loginUrl);
 
-                    var simpleCaptchaResult = HttpClient.Execute(requestBuilder.Build());
+                    var simpleCaptchaResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
 
                     var simpleCaptchaJSON = JObject.Parse(simpleCaptchaResult.Content);
                     var captchaSelection = simpleCaptchaJSON["images"][0]["hash"].ToString();
@@ -431,7 +432,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var request = requestBuilder.Build();
                     request.SetContent(body);
 
-                    loginResult = HttpClient.Execute(request);
+                    loginResult = await HttpClient.ExecuteAsync(request);
                 }
                 else
                 {
@@ -451,7 +452,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    loginResult = HttpClient.Execute(requestBuilder.Build());
+                    loginResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
                 }
 
                 Cookies = loginResult.GetCookies();
@@ -486,7 +487,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = HttpClient.Execute(requestBuilder.Build());
+                var response = await HttpClient.ExecuteAsync(requestBuilder.Build());
 
                 Cookies = response.GetCookies();
 
@@ -510,7 +511,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = HttpClient.Execute(requestBuilder.Build());
+                var response = await HttpClient.ExecuteAsync(requestBuilder.Build());
 
                 Cookies = response.GetCookies();
 
@@ -556,7 +557,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return true;
         }
 
-        public void GetConfigurationForSetup(bool automaticlogin)
+        public async Task GetConfigurationForSetup(bool automaticlogin)
         {
             var login = _definition.Login;
 
@@ -587,7 +588,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 requestBuilder.SetCookies(Cookies);
             }
 
-            landingResult = HttpClient.Execute(requestBuilder.Build());
+            landingResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
 
             Cookies = landingResult.GetCookies();
 
@@ -659,7 +660,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return;
         }
 
-        protected bool TestLogin()
+        protected async Task<bool> TestLogin()
         {
             var login = _definition.Login;
 
@@ -684,7 +685,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 requestBuilder.SetCookies(Cookies);
             }
 
-            var testResult = HttpClient.Execute(requestBuilder.Build());
+            var testResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
 
             if (testResult.HasHttpRedirect)
             {

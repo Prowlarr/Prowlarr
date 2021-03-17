@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using FluentValidation;
@@ -45,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new BakaBTParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
-        protected override void DoLogin()
+        protected override async Task DoLogin()
         {
             UpdateCookies(null, null);
 
@@ -55,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true
             };
 
-            var loginPage = _httpClient.Execute(new HttpRequest(LoginUrl));
+            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(LoginUrl));
 
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
@@ -77,7 +78,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = _httpClient.Execute(authLoginRequest);
+            var response = await _httpClient.ExecuteAsync(authLoginRequest);
 
             if (response.Content != null && response.Content.Contains("<a href=\"logout.php\">Logout</a>"))
             {

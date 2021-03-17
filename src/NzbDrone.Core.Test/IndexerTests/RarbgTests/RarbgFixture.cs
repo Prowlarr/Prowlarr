@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -32,15 +33,15 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         }
 
         [Test]
-        public void should_parse_recent_feed_from_Rarbg()
+        public async Task should_parse_recent_feed_from_Rarbg()
         {
             var recentFeed = ReadAllText(@"Files/Indexers/Rarbg/RecentFeed_v2.json");
 
             Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed));
+                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
+                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(4);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -61,25 +62,25 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         }
 
         [Test]
-        public void should_parse_error_20_as_empty_results()
+        public async Task should_parse_error_20_as_empty_results()
         {
             Mocker.GetMock<IHttpClient>()
-                   .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 20, error: \"some message\" }"));
+                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
+                   .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 20, error: \"some message\" }")));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(0);
         }
 
         [Test]
-        public void should_warn_on_unknown_error()
+        public async Task should_warn_on_unknown_error()
         {
             Mocker.GetMock<IHttpClient>()
-                   .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                   .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 25, error: \"some message\" }"));
+                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
+                   .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 25, error: \"some message\" }")));
 
-            var releases = Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } }).Releases;
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(0);
 

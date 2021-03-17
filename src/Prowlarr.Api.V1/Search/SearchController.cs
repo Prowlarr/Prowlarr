@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -26,7 +27,7 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpGet]
-        public List<SearchResource> GetAll(string query, [FromQuery] List<int> indexerIds, [FromQuery] List<int> categories)
+        public Task<List<SearchResource>> GetAll(string query, [FromQuery] List<int> indexerIds, [FromQuery] List<int> categories)
         {
             if (query.IsNotNullOrWhiteSpace())
             {
@@ -40,15 +41,16 @@ namespace Prowlarr.Api.V1.Search
                 }
             }
 
-            return new List<SearchResource>();
+            return Task.FromResult(new List<SearchResource>());
         }
 
-        private List<SearchResource> GetSearchReleases(string query, List<int> indexerIds, List<int> categories)
+        private async Task<List<SearchResource>> GetSearchReleases(string query, List<int> indexerIds, List<int> categories)
         {
             try
             {
                 var request = new NewznabRequest { q = query, source = "Prowlarr", t = "search", cat = string.Join(",", categories), server = Request.GetServerUrl() };
-                var decisions = _nzbSearhService.Search(request, indexerIds, true).Releases;
+                var result = await _nzbSearhService.Search(request, indexerIds, true);
+                var decisions = result.Releases;
 
                 return MapDecisions(decisions);
             }

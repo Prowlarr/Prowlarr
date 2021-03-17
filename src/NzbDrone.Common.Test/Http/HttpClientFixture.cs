@@ -351,6 +351,7 @@ namespace NzbDrone.Common.Test.Http
 
             var oldRequest = new HttpRequest($"https://{_httpBinHost2}/get");
             oldRequest.Cookies["my"] = "cookie";
+            oldRequest.StoreRequestCookie = true;
 
             var oldClient = new HttpClient(Array.Empty<IHttpRequestInterceptor>(), Mocker.Resolve<ICacheManager>(), Mocker.Resolve<IRateLimitService>(), Mocker.Resolve<IHttpDispatcher>(), Mocker.Resolve<Logger>());
 
@@ -362,7 +363,7 @@ namespace NzbDrone.Common.Test.Http
         }
 
         [Test]
-        public void should_preserve_cookie_during_session()
+        public void should_preserve_cookie_during_session_when_asked()
         {
             GivenOldCookie();
 
@@ -395,7 +396,7 @@ namespace NzbDrone.Common.Test.Http
             var requestGet = new HttpRequest($"https://{_httpBinHost}/get");
             requestGet.Cookies.Add("my", "cookie");
             requestGet.AllowAutoRedirect = false;
-            requestGet.StoreRequestCookie = false;
+            requestGet.StoreRequestCookie.Should().BeFalse();
             requestGet.StoreResponseCookie = false;
             var responseGet = Subject.Get<HttpBinResource>(requestGet);
 
@@ -409,12 +410,13 @@ namespace NzbDrone.Common.Test.Http
         }
 
         [Test]
-        public void should_store_request_cookie()
+        public void should_store_request_cookie_when_asked()
         {
             var requestGet = new HttpRequest($"https://{_httpBinHost}/get");
             requestGet.Cookies.Add("my", "cookie");
             requestGet.AllowAutoRedirect = false;
-            requestGet.StoreRequestCookie.Should().BeTrue();
+            requestGet.StoreRequestCookie.Should().BeFalse();
+            requestGet.StoreRequestCookie = true;
             requestGet.StoreResponseCookie = false;
             var responseGet = Subject.Get<HttpBinResource>(requestGet);
 

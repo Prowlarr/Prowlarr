@@ -27,6 +27,17 @@ function Settings() {
 
         <Link
           className={styles.link}
+          to="/settings/downloadclients"
+        >
+          {translate('DownloadClients')}
+        </Link>
+
+        <div className={styles.summary}>
+          {translate('DownloadClientsSettingsSummary')}
+        </div>
+
+        <Link
+          className={styles.link}
           to="/settings/connect"
         >
           Notifications

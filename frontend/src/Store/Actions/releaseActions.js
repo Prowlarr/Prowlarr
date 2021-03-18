@@ -247,7 +247,7 @@ export const actionHandlers = handleThunks({
     dispatch(updateRelease({ guid, isGrabbing: true }));
 
     const promise = createAjaxRequest({
-      url: '/release',
+      url: '/search',
       method: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(payload)

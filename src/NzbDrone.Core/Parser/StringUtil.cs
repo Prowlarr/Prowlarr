@@ -12,6 +12,26 @@ namespace NzbDrone.Core.Parser
 {
     public static class StringUtil
     {
+        public static string CleanFileName(string name, bool replace = true)
+        {
+            string result = name;
+            string[] badCharacters = { "\\", "/", "<", ">", "?", "*", ":", "|", "\"" };
+            string[] goodCharacters = { "+", "+", "", "", "!", "-", "-", "", "" };
+
+            // Replace a colon followed by a space with space dash space for a better appearance
+            if (replace)
+            {
+                result = result.Replace(": ", " - ");
+            }
+
+            for (int i = 0; i < badCharacters.Length; i++)
+            {
+                result = result.Replace(badCharacters[i], replace ? goodCharacters[i] : string.Empty);
+            }
+
+            return result.TrimStart(' ', '.').TrimEnd(' ');
+        }
+
         /*
         public static string StripNonAlphaNumeric(this string str, string replacement = "") =>
             StripRegex(str, "[^a-zA-Z0-9 -]", replacement);

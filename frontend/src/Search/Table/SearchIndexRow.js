@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Icon from 'Components/Icon';
 import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
+import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
@@ -15,7 +16,58 @@ import Peers from './Peers';
 import ProtocolLabel from './ProtocolLabel';
 import styles from './SearchIndexRow.css';
 
+function getDownloadIcon(isGrabbing, isGrabbed, grabError) {
+  if (isGrabbing) {
+    return icons.SPINNER;
+  } else if (isGrabbed) {
+    return icons.DOWNLOADING;
+  } else if (grabError) {
+    return icons.DOWNLOADING;
+  }
+
+  return icons.DOWNLOAD;
+}
+
+function getDownloadTooltip(isGrabbing, isGrabbed, grabError) {
+  if (isGrabbing) {
+    return '';
+  } else if (isGrabbed) {
+    return translate('AddedToDownloadClient');
+  } else if (grabError) {
+    return grabError;
+  }
+
+  return translate('AddToDownloadClient');
+}
+
 class SearchIndexRow extends Component {
+
+  //
+  // Lifecycle
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      isConfirmGrabModalOpen: false
+    };
+  }
+
+  //
+  // Listeners
+
+  onGrabPress = () => {
+    const {
+      guid,
+      indexerId,
+      onGrabPress
+    } = this.props;
+
+    onGrabPress({
+      guid,
+      indexerId
+    });
+  }
 
   //
   // Render
@@ -39,6 +91,9 @@ class SearchIndexRow extends Component {
       leechers,
       indexerFlags,
       columns,
+      isGrabbing,
+      isGrabbed,
+      grabError,
       longDateFormat,
       timeFormat
     } = this.props;
@@ -214,11 +269,13 @@ class SearchIndexRow extends Component {
                   key={column.name}
                   className={styles[column.name]}
                 >
-                  <IconButton
-                    className={styles.downloadLink}
-                    name={icons.DOWNLOAD}
-                    title={'Grab'}
-                    to={downloadUrl}
+                  <SpinnerIconButton
+                    name={getDownloadIcon(isGrabbing, isGrabbed, grabError)}
+                    kind={grabError ? kinds.DANGER : kinds.DEFAULT}
+                    title={getDownloadTooltip(isGrabbing, isGrabbed, grabError)}
+                    isDisabled={isGrabbed}
+                    isSpinning={isGrabbing}
+                    onPress={this.onGrabPress}
                   />
 
                   <IconButton
@@ -259,8 +316,17 @@ SearchIndexRow.propTypes = {
   leechers: PropTypes.number,
   indexerFlags: PropTypes.arrayOf(PropTypes.string).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onGrabPress: PropTypes.func.isRequired,
+  isGrabbing: PropTypes.bool.isRequired,
+  isGrabbed: PropTypes.bool.isRequired,
+  grabError: PropTypes.string,
   longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired
+};
+
+SearchIndexRow.defaultProps = {
+  isGrabbing: false,
+  isGrabbed: false
 };
 
 export default SearchIndexRow;

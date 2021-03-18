@@ -266,7 +266,6 @@ IndexerIndexRow.propTypes = {
   added: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  isSearchingMovie: PropTypes.bool.isRequired,
   isMovieEditorActive: PropTypes.bool.isRequired,
   isSelected: PropTypes.bool,
   onSelectedChange: PropTypes.func.isRequired,

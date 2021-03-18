@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser;
@@ -73,6 +74,12 @@ namespace Prowlarr.Api.V1.Indexers
                 case "book":
                 case "movie":
                     var results = await _nzbSearchService.Search(request, new List<int> { indexer.Id }, false);
+
+                    foreach (var result in results.Releases)
+                    {
+                        result.DownloadUrl = _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexer.Id, result.Title).ToString();
+                    }
+
                     return Content(results.ToXml(indexerInstance.Protocol), "application/rss+xml");
                 default:
                     throw new BadRequestException("Function Not Available");

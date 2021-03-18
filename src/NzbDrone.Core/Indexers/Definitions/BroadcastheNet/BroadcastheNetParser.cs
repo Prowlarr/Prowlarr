@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using NzbDrone.Common.Http;
@@ -13,6 +14,13 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         private static readonly Regex RegexProtocol = new Regex("^https?:", RegexOptions.Compiled);
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private readonly IndexerCapabilitiesCategories _categories;
+
+        public BroadcastheNetParser(IndexerCapabilitiesCategories categories)
+        {
+            _categories = categories;
+        }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
@@ -92,7 +100,17 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 torrentInfo.Container = torrent.Container;
                 torrentInfo.Codec = torrent.Codec;
                 torrentInfo.Resolution = torrent.Resolution;
-                torrentInfo.Category = new List<IndexerCategory> { NewznabStandardCategory.TV };
+                torrentInfo.UploadVolumeFactor = 1;
+                torrentInfo.DownloadVolumeFactor = 0;
+                torrentInfo.MinimumRatio = 1;
+
+                torrentInfo.Category = _categories.MapTrackerCatToNewznab(torrent.Resolution);
+
+                // Default to TV if category could not be mapped
+                if (torrentInfo.Category == null || !torrentInfo.Category.Any())
+                {
+                    torrentInfo.Category = new List<IndexerCategory> { NewznabStandardCategory.TV };
+                }
 
                 results.Add(torrentInfo);
             }

@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public override IParseIndexerResponse GetParser()
         {
-            return new BroadcastheNetParser();
+            return new BroadcastheNetParser(Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()

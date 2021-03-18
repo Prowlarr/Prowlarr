@@ -53,6 +53,10 @@ const links = [
         to: '/settings/applications'
       },
       {
+        title: translate('DownloadClients'),
+        to: '/settings/downloadclients'
+      },
+      {
         title: translate('Connect'),
         to: '/settings/connect'
       },

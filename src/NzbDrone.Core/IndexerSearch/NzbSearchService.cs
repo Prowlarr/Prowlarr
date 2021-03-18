@@ -60,7 +60,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
 
-            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
         private async Task<NewznabResults> MusicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Album = request.album;
             searchSpec.Label = request.label;
 
-            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
         private async Task<NewznabResults> TvSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.RId = request.rid;
             searchSpec.TvMazeId = request.tvmazeid;
 
-            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
         private async Task<NewznabResults> BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -96,24 +96,14 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Author = request.author;
             searchSpec.Title = request.title;
 
-            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
+            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
         private async Task<NewznabResults> BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<BasicSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            return new NewznabResults { Releases = MapReleases(await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec), request.server) };
-        }
-
-        private List<ReleaseInfo> MapReleases(List<ReleaseInfo> releases, string serverUrl)
-        {
-            foreach (var result in releases)
-            {
-                result.DownloadUrl = _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), serverUrl, result.IndexerId, result.Title).ToString();
-            }
-
-            return releases;
+            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
 
         private TSpec Get<TSpec>(NewznabRequest query, List<int> indexerIds, bool interactiveSearch)

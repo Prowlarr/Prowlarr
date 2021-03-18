@@ -48,7 +48,8 @@ class SearchIndexTable extends Component {
       items,
       columns,
       longDateFormat,
-      timeFormat
+      timeFormat,
+      onGrabPress
     } = this.props;
 
     const release = items[rowIndex];
@@ -65,6 +66,7 @@ class SearchIndexTable extends Component {
           guid={release.guid}
           longDateFormat={longDateFormat}
           timeFormat={timeFormat}
+          onGrabPress={onGrabPress}
         />
       </VirtualTableRow>
     );
@@ -118,7 +120,8 @@ SearchIndexTable.propTypes = {
   scroller: PropTypes.instanceOf(Element).isRequired,
   longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
-  onSortPress: PropTypes.func.isRequired
+  onSortPress: PropTypes.func.isRequired,
+  onGrabPress: PropTypes.func.isRequired
 };
 
 export default SearchIndexTable;

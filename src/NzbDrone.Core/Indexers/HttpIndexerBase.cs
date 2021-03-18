@@ -481,10 +481,10 @@ namespace NzbDrone.Core.Indexers
             return new IndexerResponse(request, response, stopWatch.ElapsedMilliseconds);
         }
 
-        protected HttpResponse ExecuteAuth(HttpRequest request)
+        protected async Task<HttpResponse> ExecuteAuth(HttpRequest request)
         {
             var stopWatch = Stopwatch.StartNew();
-            var response = _httpClient.Execute(request);
+            var response = await _httpClient.ExecuteAsync(request);
             stopWatch.Stop();
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, stopWatch.ElapsedMilliseconds));

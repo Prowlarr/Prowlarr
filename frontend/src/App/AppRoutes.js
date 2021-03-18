@@ -9,6 +9,7 @@ import StatsConnector from 'Indexer/Stats/StatsConnector';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
 import ApplicationSettingsConnector from 'Settings/Applications/ApplicationSettingsConnector';
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
+import DownloadClientSettingsConnector from 'Settings/DownloadClients/DownloadClientSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
@@ -92,6 +93,11 @@ function AppRoutes(props) {
       <Route
         path="/settings/applications"
         component={ApplicationSettingsConnector}
+      />
+
+      <Route
+        path="/settings/downloadclients"
+        component={DownloadClientSettingsConnector}
       />
 
       <Route

@@ -390,6 +390,11 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
+            if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -425,6 +430,7 @@ namespace NzbDrone.Core.Indexers
 
             var stopWatch = Stopwatch.StartNew();
 
+            request.HttpRequest.SuppressHttpError = true;
             var response = _httpClient.Execute(request.HttpRequest);
 
             stopWatch.Stop();
@@ -446,6 +452,21 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 response = _httpClient.Execute(request.HttpRequest);
+            }
+
+            // Throw any other http error we get after attempting auth
+            if (response.HasHttpError)
+            {
+                _logger.Warn("HTTP Error - {0}", response);
+
+                if ((int)response.StatusCode == 429)
+                {
+                    throw new TooManyRequestsException(request.HttpRequest, response);
+                }
+                else
+                {
+                    throw new HttpException(request.HttpRequest, response);
+                }
             }
 
             UpdateCookies(Cookies, DateTime.Now + TimeSpan.FromDays(30));

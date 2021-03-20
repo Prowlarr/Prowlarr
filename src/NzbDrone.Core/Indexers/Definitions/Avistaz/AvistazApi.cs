@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public int Seed { get; set; }
 
         [JsonProperty(PropertyName = "file_size")]
-        public int FileSize { get; set; }
+        public long FileSize { get; set; }
 
         [JsonProperty(PropertyName = "file_count")]
         public int FileCount { get; set; }

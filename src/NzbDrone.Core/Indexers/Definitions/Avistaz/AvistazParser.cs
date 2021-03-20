@@ -47,11 +47,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             }
 
             var jsonResponse = new HttpResponse<AvistazResponse>(indexerResponse.HttpResponse);
-            if (jsonResponse.Resource.Status != "success" ||
-                jsonResponse.Resource.Status.IsNullOrWhiteSpace())
-            {
-                return torrentInfos;
-            }
 
             foreach (var row in jsonResponse.Resource.Data)
             {

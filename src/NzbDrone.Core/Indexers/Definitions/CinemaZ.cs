@@ -7,13 +7,13 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class PrivateHD : Avistaz.AvistazBase
+    public class CinemaZ : AvistazBase
     {
-        public override string Name => "PrivateHD";
-        public override string BaseUrl => "https://privatehd.to/";
+        public override string Name => "CinemaZ";
+        public override string BaseUrl => "https://cinemaz.to/";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public PrivateHD(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public CinemaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -35,17 +35,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies);

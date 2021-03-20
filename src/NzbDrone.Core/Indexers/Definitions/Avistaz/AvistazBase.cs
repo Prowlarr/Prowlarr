@@ -9,7 +9,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
-    public abstract class Avistaz : HttpIndexerBase<AvistazSettings>
+    public abstract class AvistazBase : HttpIndexerBase<AvistazSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override string BaseUrl => "";
@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public override IndexerCapabilities Capabilities => SetCapabilities();
         private IIndexerRepository _indexerRepository;
 
-        public Avistaz(IIndexerRepository indexerRepository,
+        public AvistazBase(IIndexerRepository indexerRepository,
                        IHttpClient httpClient,
                        IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AvistazParser(Settings, Capabilities, BaseUrl);
+            return new AvistazParser();
         }
 
         protected virtual IndexerCapabilities SetCapabilities()

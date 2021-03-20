@@ -20,15 +20,15 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         [JsonProperty(PropertyName = "info_hash")]
         public string InfoHash { get; set; }
-        public int Leech { get; set; }
-        public int Completed { get; set; }
-        public int Seed { get; set; }
+        public int? Leech { get; set; }
+        public int? Completed { get; set; }
+        public int? Seed { get; set; }
 
         [JsonProperty(PropertyName = "file_size")]
-        public long FileSize { get; set; }
+        public long? FileSize { get; set; }
 
         [JsonProperty(PropertyName = "file_count")]
-        public int FileCount { get; set; }
+        public int? FileCount { get; set; }
 
         [JsonProperty(PropertyName = "download_multiply")]
         public double? DownloadMultiply { get; set; }
@@ -43,14 +43,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
     public class AvistazResponse
     {
-        public string Status { get; set; }
         public List<AvistazRelease> Data { get; set; }
     }
 
     public class AvistazIdInfo
     {
-        public int Tmdb { get; set; }
-        public int Tvdb { get; set; }
+        public string Tmdb { get; set; }
+        public string Tvdb { get; set; }
         public string Imdb { get; set; }
         public string Title { get; set; }
 

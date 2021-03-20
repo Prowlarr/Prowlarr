@@ -77,6 +77,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return false;
         }
 
+        protected override void ModifyRequest(IndexerRequest request)
+        {
+            request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.Token}");
+            base.ModifyRequest(request);
+        }
+
         protected override async Task<ValidationFailure> TestConnection()
         {
             try

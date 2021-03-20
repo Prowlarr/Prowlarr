@@ -409,6 +409,19 @@ namespace NzbDrone.Core.Indexers
             return Task.CompletedTask;
         }
 
+        protected virtual void ModifyRequest(IndexerRequest request)
+        {
+            request.HttpRequest.Cookies.Clear();
+
+            if (Cookies != null)
+            {
+                foreach (var cookie in Cookies)
+                {
+                    request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
+                }
+            }
+        }
+
         protected virtual async Task<IndexerResponse> FetchIndexerResponse(IndexerRequest request)
         {
             _logger.Debug("Downloading Feed " + request.HttpRequest.ToString(false));
@@ -448,15 +461,8 @@ namespace NzbDrone.Core.Indexers
                 _logger.Trace("Attempting to re-auth based on indexer search response");
 
                 await DoLogin();
-                request.HttpRequest.Cookies.Clear();
 
-                if (Cookies != null)
-                {
-                    foreach (var cookie in Cookies)
-                    {
-                        request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
-                    }
-                }
+                ModifyRequest(request);
 
                 response = await _httpClient.ExecuteAsync(request.HttpRequest);
             }

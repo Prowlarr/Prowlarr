@@ -84,6 +84,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TVRageID"] = searchCriteria.RId;
             variables[".Query.TVMazeID"] = searchCriteria.TvMazeId;
             variables[".Query.TraktID"] = searchCriteria.TraktId;
+            variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -142,13 +143,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TVRageID"] = null;
             variables[".Query.TVMazeID"] = null;
             variables[".Query.TraktID"] = null;
+            variables[".Query.Episode"] = null;
 
             //Music
             variables[".Query.Album"] = null;
             variables[".Query.Artist"] = null;
             variables[".Query.Label"] = null;
             variables[".Query.Track"] = null;
-            variables[".Query.Episode"] = null;
 
             //Book
             variables[".Query.Author"] = null;

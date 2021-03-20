@@ -1,0 +1,6609 @@
+﻿{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 78506,
+      "url": "https:\/\/privatehd.to\/torrent\/78506-godzilla-2014-2160p-uhd-bluray-remux-hdr-hevc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78506-a879261d4e6e792402f92401141a21de70d51bf2.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "a879261d4e6e792402f92401141a21de70d51bf2",
+      "file_name": "Godzilla 2014 2160p UHD BluRay REMUX HDR HEVC Atmos-TRiToN",
+      "file_size": 69914591044,
+      "file_count": 1,
+      "seed": 27,
+      "leech": 5,
+      "completed": 30,
+      "downloaded": 44,
+      "upload_multiply": 2,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0831387",
+        "tmdb": "124905",
+        "tvdb": null,
+        "title": "Godzilla",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-21 00:24:49"
+    },
+    {
+      "id": 78501,
+      "url": "https:\/\/privatehd.to\/torrent\/78501-soul-2020-1080p-bluray-hybrid-remux-avc-truehd-71-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78501-42df8d5f8af4a54172ce549289748ba71bb0a5b2.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "42df8d5f8af4a54172ce549289748ba71bb0a5b2",
+      "file_name": "Soul 2020 1080p BluRay Hybrid REMUX AVC TrueHD 7.1 Atmos-TRiToN",
+      "file_size": 23405423482,
+      "file_count": 1,
+      "seed": 66,
+      "leech": 1,
+      "completed": 69,
+      "downloaded": 103,
+      "upload_multiply": 2,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt2948372",
+        "tmdb": "508442",
+        "tvdb": null,
+        "title": "Soul",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-19 21:52:21"
+    },
+    {
+      "id": 78496,
+      "url": "https:\/\/privatehd.to\/torrent\/78496-killshot-2008-1080p-bluray-remux-vc-1-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78496-d4e4269f7fa968285695ebc3bfd3cf00192388dc.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "d4e4269f7fa968285695ebc3bfd3cf00192388dc",
+      "file_name": "Killshot 2008 1080p BluRay REMUX VC-1 DTS-HD MA 5.1-TRiToN",
+      "file_size": 18149206810,
+      "file_count": 1,
+      "seed": 30,
+      "leech": 0,
+      "completed": 31,
+      "downloaded": 61,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0443559",
+        "tmdb": "16164",
+        "tvdb": null,
+        "title": "Killshot",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-19 01:57:43"
+    },
+    {
+      "id": 78494,
+      "url": "https:\/\/privatehd.to\/torrent\/78494-soul-2020-2160p-uhd-bluray-remux-hdr-hevc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78494-67d9754be6e57ddba34e99bbcdfa113529578b90.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "67d9754be6e57ddba34e99bbcdfa113529578b90",
+      "file_name": "Soul 2020 2160p UHD BluRay REMUX HDR HEVC Atmos-TRiToN",
+      "file_size": 40072364685,
+      "file_count": 1,
+      "seed": 134,
+      "leech": 2,
+      "completed": 165,
+      "downloaded": 203,
+      "upload_multiply": 2,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt2948372",
+        "tmdb": "508442",
+        "tvdb": null,
+        "title": "Soul",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 14:36:10"
+    },
+    {
+      "id": 78491,
+      "url": "https:\/\/privatehd.to\/torrent\/78491-zack-snyders-justice-league-2021-2160p-hmax-web-dl-ddp-51-atmos-dv-x265-mzabi",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78491-94d24cea05475ccc21be1e49da5d6c5d3c74bf6a.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "94d24cea05475ccc21be1e49da5d6c5d3c74bf6a",
+      "file_name": "Zack Snyder's Justice League 2021 2160p HMAX WEB-DL DDP 5.1 Atmos DV x265-MZABI",
+      "file_size": 34009563060,
+      "file_count": 1,
+      "seed": 138,
+      "leech": 3,
+      "completed": 183,
+      "downloaded": 233,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt12361974",
+        "tmdb": "791373",
+        "tvdb": null,
+        "title": "Zack Snyder's Justice League",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 09:26:08"
+    },
+    {
+      "id": 78490,
+      "url": "https:\/\/privatehd.to\/torrent\/78490-zack-snyders-justice-league-2021-1080p-hmax-web-dl-ddp-51-atmos-dv-x265-flux",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78490-e5b657ec6f3261cfef9d888e86d26bfb5caec842.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "e5b657ec6f3261cfef9d888e86d26bfb5caec842",
+      "file_name": "Zack Snyder's Justice League 2021 1080p HMAX WEB-DL DDP 5.1 Atmos DV x265-FLUX",
+      "file_size": 13247914344,
+      "file_count": 1,
+      "seed": 101,
+      "leech": 0,
+      "completed": 149,
+      "downloaded": 178,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt12361974",
+        "tmdb": "791373",
+        "tvdb": null,
+        "title": "Zack Snyder's Justice League",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 09:05:55"
+    },
+    {
+      "id": 78488,
+      "url": "https:\/\/privatehd.to\/torrent\/78488-coming-to-america-1988-1080p-bluray-dts-hd-ma-51-x265-suina",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78488-81185eb8925af0291f3ce62261df943146269a96.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "81185eb8925af0291f3ce62261df943146269a96",
+      "file_name": "Coming to America 1988 1080p BluRay DTS-HD MA 5.1 x265-SUINA",
+      "file_size": 8599029183,
+      "file_count": 1,
+      "seed": 18,
+      "leech": 0,
+      "completed": 19,
+      "downloaded": 35,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0094898",
+        "tmdb": "9602",
+        "tvdb": null,
+        "title": "Coming to America",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 07:29:18"
+    },
+    {
+      "id": 78486,
+      "url": "https:\/\/privatehd.to\/torrent\/78486-the-truth-about-emanuel-2013-1080p-bluray-avc-dts-hd-ma-51-publichd",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78486-fdf4edada9650591fb3ec735883566a2fe43cf0c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "fdf4edada9650591fb3ec735883566a2fe43cf0c",
+      "file_name": "The Truth About Emanuel 2013 1080p BluRay AVC DTS-HD MA 5.1-PublicHD",
+      "file_size": 22355890076,
+      "file_count": 101,
+      "seed": 5,
+      "leech": 0,
+      "completed": 3,
+      "downloaded": 22,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt1838520",
+        "tmdb": "157351",
+        "tvdb": null,
+        "title": "The Truth About Emanuel",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 07:09:34"
+    },
+    {
+      "id": 78485,
+      "url": "https:\/\/privatehd.to\/torrent\/78485-the-mambo-kings-1992-1080i-bluray-remux-avc-dd-20-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78485-e7de42fadba2c061188b41e6552a253468f6c432.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "e7de42fadba2c061188b41e6552a253468f6c432",
+      "file_name": "The Mambo Kings 1992 1080i BluRay REMUX AVC DD 2.0-TRiToN",
+      "file_size": 15236830089,
+      "file_count": 1,
+      "seed": 36,
+      "leech": 0,
+      "completed": 40,
+      "downloaded": 74,
+      "upload_multiply": 2,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0104802",
+        "tmdb": "40082",
+        "tvdb": null,
+        "title": "The Mambo Kings",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 06:22:28"
+    },
+    {
+      "id": 78483,
+      "url": "https:\/\/privatehd.to\/torrent\/78483-zack-snyders-justice-league-2021-2160p-hmax-web-dl-ddp-51-atmos-hdr-h265-mzabi",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78483-b1c15a032fb3fc8a90e4bc3a3ef7176a1748815b.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "b1c15a032fb3fc8a90e4bc3a3ef7176a1748815b",
+      "file_name": "Zack Snyder's Justice League 2021 2160p HMAX WEB-DL DDP 5.1 Atmos HDR H.265-MZABI",
+      "file_size": 33834905082,
+      "file_count": 1,
+      "seed": 372,
+      "leech": 5,
+      "completed": 493,
+      "downloaded": 518,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt12361974",
+        "tmdb": "791373",
+        "tvdb": null,
+        "title": "Zack Snyder's Justice League",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 04:28:51"
+    },
+    {
+      "id": 78481,
+      "url": "https:\/\/privatehd.to\/torrent\/78481-zack-snyders-justice-league-2021-1080p-hmax-web-dl-dd-51-atmos-h264-mzabi",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78481-3c832ee9388815117f816adbc72d7670f7d34d81.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "3c832ee9388815117f816adbc72d7670f7d34d81",
+      "file_name": "Zack Snyder's Justice League 2021 1080p HMAX WEB-DL DD+ 5.1 Atmos H.264-MZABI",
+      "file_size": 16328630978,
+      "file_count": 1,
+      "seed": 339,
+      "leech": 4,
+      "completed": 478,
+      "downloaded": 503,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt12361974",
+        "tmdb": "791373",
+        "tvdb": null,
+        "title": "Zack Snyder's Justice League",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 118,
+          "language": "Nepali"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 129,
+          "language": "Persian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 156,
+          "language": "Tagalog"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        },
+        {
+          "id": 172,
+          "language": "Ukrainian"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        },
+        {
+          "id": 187,
+          "language": "Brazilian Portuguese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 03:25:16"
+    },
+    {
+      "id": 78480,
+      "url": "https:\/\/privatehd.to\/torrent\/78480-news-of-the-world-2020-2160p-uhd-bluray-remux-hdr-hevc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78480-5f8f1aab80b0385a230460fd0b571ef596b1343d.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "5f8f1aab80b0385a230460fd0b571ef596b1343d",
+      "file_name": "News of the World 2020 2160p UHD BluRay REMUX HDR HEVC Atmos -TRiToN",
+      "file_size": 47585069193,
+      "file_count": 1,
+      "seed": 53,
+      "leech": 3,
+      "completed": 63,
+      "downloaded": 102,
+      "upload_multiply": 2,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt6878306",
+        "tmdb": "581032",
+        "tvdb": null,
+        "title": "News of the World",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-18 02:02:22"
+    },
+    {
+      "id": 78476,
+      "url": "https:\/\/privatehd.to\/torrent\/78476-avengers-endgame-2019-2160p-v2-uhd-bluray-hdr-truehd-atmos-71-x265-chd",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78476-96cd925ba44716958518002910b9f3f8cdf832a0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "96cd925ba44716958518002910b9f3f8cdf832a0",
+      "file_name": "Avengers Endgame 2019 2160p V2 UHD BluRay HDR TrueHD Atmos 7.1 x265-CHD",
+      "file_size": 40364843754,
+      "file_count": 1,
+      "seed": 8,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 21,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt4154796",
+        "tmdb": "299534",
+        "tvdb": null,
+        "title": "Avengers: Endgame",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-17 20:31:08"
+    },
+    {
+      "id": 78472,
+      "url": "https:\/\/privatehd.to\/torrent\/78472-star-wars-episode-ii-attack-of-the-clones-2002-2160p-eur-uhd-blu-ray-hdr-hevc-atmos-71-itwasntme",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78472-9b39d726998c544645bbc7c21f6b60a9449fe166.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "9b39d726998c544645bbc7c21f6b60a9449fe166",
+      "file_name": "Star Wars: Episode II - Attack of the Clones 2002 2160p EUR UHD Blu-ray HDR HEVC Atmos 7.1-iTWASNTME",
+      "file_size": 63024883296,
+      "file_count": 469,
+      "seed": 11,
+      "leech": 0,
+      "completed": 12,
+      "downloaded": 26,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0121765",
+        "tmdb": "1894",
+        "tvdb": null,
+        "title": "Star Wars: Episode II - Attack of the Clones",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-17 12:01:05"
+    },
+    {
+      "id": 78468,
+      "url": "https:\/\/privatehd.to\/torrent\/78468-boss-level-2021-720p-bluray-dd-51-x264-ift",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78468-bfa2b0158a35af334f0b42883396143df65597e7.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "bfa2b0158a35af334f0b42883396143df65597e7",
+      "file_name": "Boss Level 2021 720p BluRay DD 5.1 x264-iFT",
+      "file_size": 6738877631,
+      "file_count": 1,
+      "seed": 5,
+      "leech": 0,
+      "completed": 5,
+      "downloaded": 16,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt7638348",
+        "tmdb": "513310",
+        "tvdb": null,
+        "title": "Boss Level",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 22:47:11"
+    },
+    {
+      "id": 78467,
+      "url": "https:\/\/privatehd.to\/torrent\/78467-et-the-extra-terrestrial-1982-1080p-bluray-dts-x264-ctrlhd",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78467-87b6670c265ea58f0e837443516c0504e0c2537c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "87b6670c265ea58f0e837443516c0504e0c2537c",
+      "file_name": "E.T The Extra Terrestrial 1982 1080p BluRay DTS x264-CtrlHD",
+      "file_size": 19663236502,
+      "file_count": 1,
+      "seed": 22,
+      "leech": 0,
+      "completed": 20,
+      "downloaded": 29,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0083866",
+        "tmdb": "601",
+        "tvdb": null,
+        "title": "E.T. the Extra-Terrestrial",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 22:20:53"
+    },
+    {
+      "id": 78466,
+      "url": "https:\/\/privatehd.to\/torrent\/78466-news-of-the-world-2020-720p-bluray-dd51-x264-ift",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78466-b66cae9953dc51abc787d65a4db5008421e31704.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "b66cae9953dc51abc787d65a4db5008421e31704",
+      "file_name": "News of The World 2020 720p BluRay DD5.1 x264-iFT",
+      "file_size": 6835749738,
+      "file_count": 1,
+      "seed": 3,
+      "leech": 0,
+      "completed": 2,
+      "downloaded": 11,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt6878306",
+        "tmdb": "581032",
+        "tvdb": null,
+        "title": "News of the World",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 22:01:24"
+    },
+    {
+      "id": 78465,
+      "url": "https:\/\/privatehd.to\/torrent\/78465-wonder-woman-1984-2020-imax-720p-bluray-dd51-x264-ift",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78465-2b6011f01e8ccf6be89d97d2913f81e4f5fadb0e.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "2b6011f01e8ccf6be89d97d2913f81e4f5fadb0e",
+      "file_name": "Wonder Woman 1984 2020 IMAX 720p BluRay DD5.1 x264-iFT",
+      "file_size": 9796646151,
+      "file_count": 1,
+      "seed": 3,
+      "leech": 0,
+      "completed": 2,
+      "downloaded": 11,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 21:55:29"
+    },
+    {
+      "id": 78460,
+      "url": "https:\/\/privatehd.to\/torrent\/78460-the-cry-of-the-owl-2009-open-matte-1080p-bluray-remux-mpeg-2-truehd-51-framestor",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78460-df4cc0d459f898341bae3727fd4077e91f2d0655.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "df4cc0d459f898341bae3727fd4077e91f2d0655",
+      "file_name": "The Cry of the Owl 2009 Open Matte 1080p BluRay REMUX MPEG-2 TrueHD 5.1-FraMeSToR",
+      "file_size": 19216638632,
+      "file_count": 1,
+      "seed": 10,
+      "leech": 0,
+      "completed": 10,
+      "downloaded": 16,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt1034302",
+        "tmdb": "18530",
+        "tvdb": null,
+        "title": "The Cry of the Owl",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 14:51:45"
+    },
+    {
+      "id": 78459,
+      "url": "https:\/\/privatehd.to\/torrent\/78459-promising-young-woman-2020-1080p-bluray-remux-avc-dts-hd-ma-71-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78459-71bbac6a0c78062e3320133a8fa2e224a43b45cf.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "71bbac6a0c78062e3320133a8fa2e224a43b45cf",
+      "file_name": "Promising Young Woman 2020 1080p BluRay REMUX AVC DTS-HD MA 7.1-TRiToN",
+      "file_size": 31560121138,
+      "file_count": 1,
+      "seed": 107,
+      "leech": 0,
+      "completed": 136,
+      "downloaded": 171,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt9620292",
+        "tmdb": "582014",
+        "tvdb": null,
+        "title": "Promising Young Woman",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 12:44:15"
+    },
+    {
+      "id": 78458,
+      "url": "https:\/\/privatehd.to\/torrent\/78458-ondine-2009-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78458-db70d8ff314ec9525a18fdcf74791972cf10e355.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "db70d8ff314ec9525a18fdcf74791972cf10e355",
+      "file_name": "Ondine 2009 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 18564853509,
+      "file_count": 1,
+      "seed": 41,
+      "leech": 0,
+      "completed": 50,
+      "downloaded": 84,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt1235796",
+        "tmdb": "38448",
+        "tvdb": null,
+        "title": "Ondine",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-16 10:18:22"
+    },
+    {
+      "id": 78453,
+      "url": "https:\/\/privatehd.to\/torrent\/78453-news-of-the-world-2020-1080p-bluray-remux-avc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78453-8ce58744508fa846af49b2e05f89f3d8b78bb195.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "8ce58744508fa846af49b2e05f89f3d8b78bb195",
+      "file_name": "News of the World 2020 1080p BluRay REMUX AVC Atmos-TRiToN",
+      "file_size": 33270401437,
+      "file_count": 1,
+      "seed": 60,
+      "leech": 1,
+      "completed": 72,
+      "downloaded": 99,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt6878306",
+        "tmdb": "581032",
+        "tvdb": null,
+        "title": "News of the World",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-15 20:10:22"
+    },
+    {
+      "id": 78446,
+      "url": "https:\/\/privatehd.to\/torrent\/78446-news-of-the-world-2020-1080p-blu-ray-avc-truehd-71-atmos-nogroup",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78446-7dce0fbe9e6277e15d6b573498cbaeb300f7e6f8.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "7dce0fbe9e6277e15d6b573498cbaeb300f7e6f8",
+      "file_name": "News of the World 2020 1080p Blu-ray AVC TrueHD 7.1 Atmos-NOGROUP",
+      "file_size": 48619500759,
+      "file_count": 268,
+      "seed": 22,
+      "leech": 0,
+      "completed": 21,
+      "downloaded": 38,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt6878306",
+        "tmdb": "581032",
+        "tvdb": null,
+        "title": "News of the World",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-15 16:37:11"
+    },
+    {
+      "id": 78445,
+      "url": "https:\/\/privatehd.to\/torrent\/78445-pulse-1988-1080p-gbr-blu-ray-avc-lpcm-20-incubo",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78445-5f26ab6028dc044a52e99618ad567be284c121e5.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "5f26ab6028dc044a52e99618ad567be284c121e5",
+      "file_name": "Pulse 1988 1080p GBR Blu-ray AVC LPCM 2.0-INCUBO",
+      "file_size": 34906394581,
+      "file_count": 55,
+      "seed": 11,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0095924",
+        "tmdb": "32033",
+        "tvdb": null,
+        "title": "Pulse",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-15 15:18:32"
+    },
+    {
+      "id": 78412,
+      "url": "https:\/\/privatehd.to\/torrent\/78412-the-darjeeling-limited-2007-1080p-blu-ray-avc-dts-hd-ma-51-chdbits",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78412-fa07a2060a5acc77dd6a9eeee7b8ae62b44f28b0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "fa07a2060a5acc77dd6a9eeee7b8ae62b44f28b0",
+      "file_name": "The Darjeeling Limited 2007 1080p Blu-ray AVC DTS-HD MA 5.1-CHDBits",
+      "file_size": 47247739517,
+      "file_count": 228,
+      "seed": 5,
+      "leech": 0,
+      "completed": 9,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0838221",
+        "tmdb": "4538",
+        "tvdb": null,
+        "title": "The Darjeeling Limited",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-14 17:15:26"
+    },
+    {
+      "id": 78408,
+      "url": "https:\/\/privatehd.to\/torrent\/78408-driving-miss-daisy-1989-1080p-bluray-dts-51-x264-sinners",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78408-b68a19d905d5255d2a1adb3e46d43bc88d5af5fc.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "b68a19d905d5255d2a1adb3e46d43bc88d5af5fc",
+      "file_name": "Driving Miss Daisy 1989 1080p BluRay DTS 5.1 x264-SiNNERS",
+      "file_size": 10556506017,
+      "file_count": 1,
+      "seed": 8,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 21,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0097239",
+        "tmdb": "403",
+        "tvdb": null,
+        "title": "Driving Miss Daisy",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-03-14 09:19:49"
+    },
+    {
+      "id": 78406,
+      "url": "https:\/\/privatehd.to\/torrent\/78406-casper-1995-1080p-bluray-dts-51-x264-amiable",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78406-eab300173d194508b51a304ad02acb0966125bb3.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "eab300173d194508b51a304ad02acb0966125bb3",
+      "file_name": "Casper 1995 1080p BluRay DTS 5.1 x264-AMIABLE",
+      "file_size": 8215190583,
+      "file_count": 1,
+      "seed": 9,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0112642",
+        "tmdb": "8839",
+        "tvdb": null,
+        "title": "Casper",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-14 05:47:02"
+    },
+    {
+      "id": 78398,
+      "url": "https:\/\/privatehd.to\/torrent\/78398-the-elephant-queen-2019-2160p-atvp-web-dl-ddp-51-atmos-dv-h265-ika",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78398-a363f9273de7f59d3255998a46e5f5036c26860c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "a363f9273de7f59d3255998a46e5f5036c26860c",
+      "file_name": "The Elephant Queen 2019 2160p ATVP WEB-DL DDP 5.1 Atmos DV H.265-iKA",
+      "file_size": 17800071771,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 32,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt6722976",
+        "tmdb": "541572",
+        "tvdb": null,
+        "title": "The Elephant Queen",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 16:17:07"
+    },
+    {
+      "id": 78396,
+      "url": "https:\/\/privatehd.to\/torrent\/78396-wolfwalkers-2020-2160p-atvp-web-dl-dd-51-atmos-dv-h265-ika",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78396-dc02877a4834bbb8d6abb5f4212d207eb7c66782.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "dc02877a4834bbb8d6abb5f4212d207eb7c66782",
+      "file_name": "Wolfwalkers 2020 2160p ATVP WEB-DL DD+ 5.1 Atmos DV H.265-iKA",
+      "file_size": 17220843581,
+      "file_count": 1,
+      "seed": 17,
+      "leech": 0,
+      "completed": 16,
+      "downloaded": 28,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt5198068",
+        "tmdb": "441130",
+        "tvdb": null,
+        "title": "Wolfwalkers",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 15:44:33"
+    },
+    {
+      "id": 78395,
+      "url": "https:\/\/privatehd.to\/torrent\/78395-wonder-woman-1984-2020-2160p-uhd-bluray-remux-hdr-hevc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78395-ae6dd61b67ed8e3324aa9f6713ba7637fb7a3e99.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "ae6dd61b67ed8e3324aa9f6713ba7637fb7a3e99",
+      "file_name": "Wonder Woman 1984 2020 2160p UHD BluRay REMUX HDR HEVC Atmos-TRiToN",
+      "file_size": 68466796369,
+      "file_count": 1,
+      "seed": 62,
+      "leech": 0,
+      "completed": 78,
+      "downloaded": 105,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 15:22:23"
+    },
+    {
+      "id": 78393,
+      "url": "https:\/\/privatehd.to\/torrent\/78393-cherry-2021-2160p-atvp-web-dl-dd-51-atmos-dv-h265-ika",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78393-0c1cfcdab1459da56c6a1359d1d4873000fe8ce6.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "0c1cfcdab1459da56c6a1359d1d4873000fe8ce6",
+      "file_name": "Cherry 2021 2160p ATVP WEB-DL DD+ 5.1 Atmos DV H.265-iKA",
+      "file_size": 26641629892,
+      "file_count": 1,
+      "seed": 22,
+      "leech": 0,
+      "completed": 24,
+      "downloaded": 38,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt9130508",
+        "tmdb": "544401",
+        "tvdb": null,
+        "title": "Cherry",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 14:50:50"
+    },
+    {
+      "id": 78391,
+      "url": "https:\/\/privatehd.to\/torrent\/78391-agent-cody-banks-2003-1080p-blu-ray-avc-dts-hd-ma-51-itwasntme",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78391-a665390d8e114a34d19ace4ca3b7baf5f0123123.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "a665390d8e114a34d19ace4ca3b7baf5f0123123",
+      "file_name": "Agent Cody Banks 2003 1080p Blu-ray AVC DTS-HD MA 5.1-iTWASNTME",
+      "file_size": 40850985482,
+      "file_count": 254,
+      "seed": 7,
+      "leech": 0,
+      "completed": 7,
+      "downloaded": 20,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0313911",
+        "tmdb": "10923",
+        "tvdb": null,
+        "title": "Agent Cody Banks",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 12:35:34"
+    },
+    {
+      "id": 78390,
+      "url": "https:\/\/privatehd.to\/torrent\/78390-agent-cody-banks-2-destination-london-2004-repack-1080p-bluray-remux-avc-dts-hd-ma-51-t00thle",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78390-0b14327319e543dbe5e1412565bee9f0f62270cc.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "0b14327319e543dbe5e1412565bee9f0f62270cc",
+      "file_name": "Agent Cody Banks 2: Destination London 2004 REPACK 1080p BluRay REMUX AVC DTS-HD MA 5.1-T00thLe$$",
+      "file_size": 19903587551,
+      "file_count": 1,
+      "seed": 18,
+      "leech": 0,
+      "completed": 24,
+      "downloaded": 34,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0358349",
+        "tmdb": "17047",
+        "tvdb": null,
+        "title": "Agent Cody Banks 2: Destination London",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 12:11:32"
+    },
+    {
+      "id": 78389,
+      "url": "https:\/\/privatehd.to\/torrent\/78389-bend-it-like-beckham-2002-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78389-21d322c7e74f2de9338caac8407bb947b9b42d8a.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "21d322c7e74f2de9338caac8407bb947b9b42d8a",
+      "file_name": "Bend It Like Beckham 2002 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 29882956007,
+      "file_count": 1,
+      "seed": 49,
+      "leech": 0,
+      "completed": 70,
+      "downloaded": 87,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0286499",
+        "tmdb": "455",
+        "tvdb": null,
+        "title": "Bend It Like Beckham",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 11:43:17"
+    },
+    {
+      "id": 78388,
+      "url": "https:\/\/privatehd.to\/torrent\/78388-gattaca-1997-2160p-uhd-bluray-remux-hdr-hevc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78388-f307da413302ada8329ade5c2f20f41ff5670c5a.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "f307da413302ada8329ade5c2f20f41ff5670c5a",
+      "file_name": "Gattaca 1997 2160p UHD BluRay REMUX HDR HEVC Atmos-TRiToN",
+      "file_size": 49422965590,
+      "file_count": 1,
+      "seed": 87,
+      "leech": 0,
+      "completed": 110,
+      "downloaded": 129,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0119177",
+        "tmdb": "782",
+        "tvdb": null,
+        "title": "Gattaca",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 39,
+          "language": "Croatian"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 147,
+          "language": "Slovak"
+        },
+        {
+          "id": 148,
+          "language": "Slovenian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 11:37:52"
+    },
+    {
+      "id": 78387,
+      "url": "https:\/\/privatehd.to\/torrent\/78387-hardcore-henry-2015-1080p-bluray-dts-hd-ma-51-x265-kira",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78387-57da2824725fa4e0115746728aeea07109a11b48.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "57da2824725fa4e0115746728aeea07109a11b48",
+      "file_name": "Hardcore Henry 2015 1080p BluRay DTS-HD MA 5.1 x265-Kira",
+      "file_size": 14314065576,
+      "file_count": 1,
+      "seed": 11,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 21,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt3072482",
+        "tmdb": "325348",
+        "tvdb": null,
+        "title": "Hardcore Henry",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 11:24:07"
+    },
+    {
+      "id": 78386,
+      "url": "https:\/\/privatehd.to\/torrent\/78386-the-racer-2020-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78386-c171939cca3af5e288daf7988f631c65a3ac7c83.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "c171939cca3af5e288daf7988f631c65a3ac7c83",
+      "file_name": "The Racer 2020 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 17537884219,
+      "file_count": 1,
+      "seed": 49,
+      "leech": 0,
+      "completed": 61,
+      "downloaded": 72,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt8374436",
+        "tmdb": "305937",
+        "tvdb": null,
+        "title": "The Racer",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 09:18:58"
+    },
+    {
+      "id": 78385,
+      "url": "https:\/\/privatehd.to\/torrent\/78385-cherry-2021-2160p-atvp-web-dl-dd-51-atmos-hdr-h265-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78385-24544982cd013c25fc8829c12c8f9f41323c32e0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "24544982cd013c25fc8829c12c8f9f41323c32e0",
+      "file_name": "Cherry 2021 2160p ATVP WEB-DL DD+ 5.1 Atmos HDR H.265-CMRG",
+      "file_size": 26214716886,
+      "file_count": 1,
+      "seed": 24,
+      "leech": 0,
+      "completed": 28,
+      "downloaded": 39,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt9130508",
+        "tmdb": "544401",
+        "tvdb": null,
+        "title": "Cherry",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 25,
+          "language": "Bulgarian"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 47,
+          "language": "Estonian"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 96,
+          "language": "Latvian"
+        },
+        {
+          "id": 99,
+          "language": "Lithuanian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 147,
+          "language": "Slovak"
+        },
+        {
+          "id": 148,
+          "language": "Slovenian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        },
+        {
+          "id": 172,
+          "language": "Ukrainian"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 08:57:00"
+    },
+    {
+      "id": 78384,
+      "url": "https:\/\/privatehd.to\/torrent\/78384-cherry-2021-1080p-web-dl-dd-51-atmos-h264-naisu",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78384-0cdef02004b797aa39c804e1a74c68cf54e601ba.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "0cdef02004b797aa39c804e1a74c68cf54e601ba",
+      "file_name": "Cherry 2021 1080p WEB-DL DD+ 5.1 Atmos H.264-NAISU",
+      "file_size": 11469186487,
+      "file_count": 1,
+      "seed": 56,
+      "leech": 0,
+      "completed": 76,
+      "downloaded": 81,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt9130508",
+        "tmdb": "544401",
+        "tvdb": null,
+        "title": "Cherry",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 25,
+          "language": "Bulgarian"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 47,
+          "language": "Estonian"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 96,
+          "language": "Latvian"
+        },
+        {
+          "id": 99,
+          "language": "Lithuanian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 147,
+          "language": "Slovak"
+        },
+        {
+          "id": 148,
+          "language": "Slovenian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        },
+        {
+          "id": 172,
+          "language": "Ukrainian"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 07:51:16"
+    },
+    {
+      "id": 78379,
+      "url": "https:\/\/privatehd.to\/torrent\/78379-the-front-1976-1080p-blu-ray-avc-lpcm-10-nogroup",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78379-2279c5ff5359e5a4f21c2e908407404fc9d8a76a.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "2279c5ff5359e5a4f21c2e908407404fc9d8a76a",
+      "file_name": "The Front 1976 1080p Blu-ray AVC LPCM 1.0-NOGROUP",
+      "file_size": 34159118567,
+      "file_count": 676,
+      "seed": 12,
+      "leech": 1,
+      "completed": 15,
+      "downloaded": 28,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0074554",
+        "tmdb": "1723",
+        "tvdb": null,
+        "title": "The Front",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 00:49:43"
+    },
+    {
+      "id": 78378,
+      "url": "https:\/\/privatehd.to\/torrent\/78378-wonder-woman-1984-2020-2160p-uhd-bluray-remux-dv-hdr-hevc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78378-2ae154874ae35f85ef9b2faaacedb57128cd05ab.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "2ae154874ae35f85ef9b2faaacedb57128cd05ab",
+      "file_name": "Wonder Woman 1984 2020 2160p UHD BluRay REMUX DV HDR HEVC Atmos-TRiToN",
+      "file_size": 68574816838,
+      "file_count": 1,
+      "seed": 102,
+      "leech": 3,
+      "completed": 138,
+      "downloaded": 159,
+      "upload_multiply": 2,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-13 00:41:28"
+    },
+    {
+      "id": 78374,
+      "url": "https:\/\/privatehd.to\/torrent\/78374-wonder-woman-1984-2020-eur-imax-2160p-blu-ray-dolby-vision-hevc-atmos-71-extreme",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78374-9506e0d355ce56adc748503c36d17a8a082e90c0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "9506e0d355ce56adc748503c36d17a8a082e90c0",
+      "file_name": "Wonder Woman 1984 2020 EUR IMAX 2160p Blu-ray Dolby Vision HEVC Atmos 7.1-EXTREME",
+      "file_size": 87031950572,
+      "file_count": 177,
+      "seed": 35,
+      "leech": 0,
+      "completed": 54,
+      "downloaded": 63,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-12 15:14:14"
+    },
+    {
+      "id": 78373,
+      "url": "https:\/\/privatehd.to\/torrent\/78373-wonder-woman-1984-2020-cee-2160p-blu-ray-dv-hevc-atmos-71-mteam",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78373-164a17426e03101b0324b39f2583ac01905722c2.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "164a17426e03101b0324b39f2583ac01905722c2",
+      "file_name": "Wonder Woman 1984 2020 CEE 2160p Blu-ray DV HEVC Atmos 7.1-MTeam",
+      "file_size": 85624257274,
+      "file_count": 156,
+      "seed": 25,
+      "leech": 0,
+      "completed": 34,
+      "downloaded": 44,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-12 14:43:58"
+    },
+    {
+      "id": 78339,
+      "url": "https:\/\/privatehd.to\/torrent\/78339-the-world-to-come-2020-1080p-web-dl-dd-51-h264-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78339-e1058face57f5510b86dd1e2c2be30eabb390012.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "e1058face57f5510b86dd1e2c2be30eabb390012",
+      "file_name": "The World to Come 2020 1080p WEB-DL DD+ 5.1 H.264-CMRG",
+      "file_size": 6099598361,
+      "file_count": 1,
+      "seed": 47,
+      "leech": 0,
+      "completed": 62,
+      "downloaded": 73,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt9738716",
+        "tmdb": "506281",
+        "tvdb": null,
+        "title": "The World to Come",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-11 18:48:35"
+    },
+    {
+      "id": 78332,
+      "url": "https:\/\/privatehd.to\/torrent\/78332-wild-window-coral-kingdoms-2016-1080p-amzn-web-dl-aac-20-h264-welp",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78332-1d04b03d11fedb06274c05d4bc03fda50af7fc3e.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "1d04b03d11fedb06274c05d4bc03fda50af7fc3e",
+      "file_name": "Wild Window: Coral Kingdoms 2016 1080p AMZN WEB-DL AAC 2.0 H.264-WELP",
+      "file_size": 4467989794,
+      "file_count": 1,
+      "seed": 9,
+      "leech": 0,
+      "completed": 10,
+      "downloaded": 17,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt5814160",
+        "tmdb": null,
+        "tvdb": null,
+        "title": "Wild Window: Coral Kingdoms",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-03-11 13:46:59"
+    },
+    {
+      "id": 78329,
+      "url": "https:\/\/privatehd.to\/torrent\/78329-dont-tell-a-soul-2020-1080p-blu-ray-avc-dts-hd-ma-51-baked",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78329-37714cde7d7d5ba0800a56f75607d0a24903a47c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "37714cde7d7d5ba0800a56f75607d0a24903a47c",
+      "file_name": "Don't Tell a Soul 2020 1080p Blu-ray AVC DTS-HD MA 5.1-BAKED",
+      "file_size": 24260041134,
+      "file_count": 181,
+      "seed": 3,
+      "leech": 0,
+      "completed": 4,
+      "downloaded": 14,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt8046498",
+        "tmdb": "572400",
+        "tvdb": null,
+        "title": "Don't Tell a Soul",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-11 12:31:05"
+    },
+    {
+      "id": 78328,
+      "url": "https:\/\/privatehd.to\/torrent\/78328-the-babysitters-2007-1080p-bluray-remux-avc-dts-hd-hr-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78328-ef84c544dbb872de0f727549466e52dbe83058f0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "ef84c544dbb872de0f727549466e52dbe83058f0",
+      "file_name": "The Babysitters 2007 1080p BluRay REMUX AVC DTS-HD HR 5.1-TRiToN",
+      "file_size": 19635260204,
+      "file_count": 1,
+      "seed": 52,
+      "leech": 0,
+      "completed": 75,
+      "downloaded": 96,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0796302",
+        "tmdb": "13078",
+        "tvdb": null,
+        "title": "The Babysitters",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-03-11 12:28:38"
+    },
+    {
+      "id": 78320,
+      "url": "https:\/\/privatehd.to\/torrent\/78320-widows-2018-1080p-bluray-dd71-x264-hdvn",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78320-ef8f61e4d73c04b526aa4d74bdb1b53514755ffc.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "ef8f61e4d73c04b526aa4d74bdb1b53514755ffc",
+      "file_name": "Widows 2018 1080p BluRay DD+7.1 x264-HDVN",
+      "file_size": 22221888269,
+      "file_count": 1,
+      "seed": 11,
+      "leech": 0,
+      "completed": 13,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt4218572",
+        "tmdb": "401469",
+        "tvdb": null,
+        "title": "Widows",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 20:38:19"
+    },
+    {
+      "id": 78319,
+      "url": "https:\/\/privatehd.to\/torrent\/78319-millennium-1989-1080p-bluray-dts-20-x264-divulged",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78319-bdf4344a2184b0a0c24d5214e7a50c11b3bc8cee.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "bdf4344a2184b0a0c24d5214e7a50c11b3bc8cee",
+      "file_name": "Millennium 1989 1080p BluRay DTS 2.0 x264-DiVULGED",
+      "file_size": 9781909220,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 22,
+      "downloaded": 27,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0097883",
+        "tmdb": "4296",
+        "tvdb": null,
+        "title": "Millennium",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 19:26:47"
+    },
+    {
+      "id": 78318,
+      "url": "https:\/\/privatehd.to\/torrent\/78318-wonder-woman-1984-2020-1080p-bluray-remux-avc-atmos-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78318-852d6cf5c0ab4922955a98d098597d709663b558.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "852d6cf5c0ab4922955a98d098597d709663b558",
+      "file_name": "Wonder Woman 1984 2020 1080p BluRay REMUX AVC Atmos-TRiToN",
+      "file_size": 27754219410,
+      "file_count": 1,
+      "seed": 102,
+      "leech": 0,
+      "completed": 158,
+      "downloaded": 166,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 18:26:23"
+    },
+    {
+      "id": 78317,
+      "url": "https:\/\/privatehd.to\/torrent\/78317-wonder-woman-1984-1080p-blu-ray-avc-dts-hd-ma-71-tasko",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78317-6dff44fd3a4bdeac5d8a22c17e8eb84e6a662256.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "6dff44fd3a4bdeac5d8a22c17e8eb84e6a662256",
+      "file_name": "Wonder Woman 1984 1080p Blu-ray  AVC DTS-HD MA 7.1 - TASKO",
+      "file_size": 44074927620,
+      "file_count": 297,
+      "seed": 25,
+      "leech": 4,
+      "completed": 35,
+      "downloaded": 48,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 16:26:24"
+    },
+    {
+      "id": 78315,
+      "url": "https:\/\/privatehd.to\/torrent\/78315-dont-tell-a-soul-2020-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78315-08f248c6231bbf32c8b9f08c4b8e6f3df1b7a30c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "08f248c6231bbf32c8b9f08c4b8e6f3df1b7a30c",
+      "file_name": "Don't Tell a Soul 2020 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 18909229858,
+      "file_count": 1,
+      "seed": 45,
+      "leech": 0,
+      "completed": 73,
+      "downloaded": 88,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt8046498",
+        "tmdb": "572400",
+        "tvdb": null,
+        "title": "Don't Tell a Soul",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 13:15:55"
+    },
+    {
+      "id": 78313,
+      "url": "https:\/\/privatehd.to\/torrent\/78313-wonder-woman-1984-2020-imax-1080p-bluray-ddp-71-x264-ift",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78313-32ff12fd1dca60a01c8576d37d5ce9abb279f91d.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "32ff12fd1dca60a01c8576d37d5ce9abb279f91d",
+      "file_name": "Wonder Woman 1984 2020 IMAX 1080p BluRay DDP 7.1 x264-iFT",
+      "file_size": 19879635216,
+      "file_count": 1,
+      "seed": 35,
+      "leech": 1,
+      "completed": 35,
+      "downloaded": 62,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt7126948",
+        "tmdb": "464052",
+        "tvdb": null,
+        "title": "Wonder Woman 1984",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 11:37:21"
+    },
+    {
+      "id": 78309,
+      "url": "https:\/\/privatehd.to\/torrent\/78309-scooby-doo-music-of-the-vampire-2012-1080p-blu-ray-avc-dts-hd-ma-51-tooncore",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78309-e153fd04068ad551684679ac732cc6d1749135b3.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "e153fd04068ad551684679ac732cc6d1749135b3",
+      "file_name": "Scooby-Doo! Music of the Vampire 2012 1080p Blu-ray AVC DTS-HD MA 5.1-Tooncore",
+      "file_size": 18253009405,
+      "file_count": 327,
+      "seed": 8,
+      "leech": 0,
+      "completed": 9,
+      "downloaded": 22,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt2162709",
+        "tmdb": "81900",
+        "tvdb": null,
+        "title": "Scooby-Doo! Music of the Vampire",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 06:26:47"
+    },
+    {
+      "id": 78308,
+      "url": "https:\/\/privatehd.to\/torrent\/78308-big-top-scooby-doo-2012-1080p-blu-ray-avc-dts-hd-ma-51-tooncore",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78308-2b5557e9a42a61a5906b3798ab1379c475e7509c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "2b5557e9a42a61a5906b3798ab1379c475e7509c",
+      "file_name": "Big Top Scooby-Doo! 2012 1080p Blu-ray AVC DTS-HD MA 5.1-Tooncore",
+      "file_size": 19804876362,
+      "file_count": 234,
+      "seed": 8,
+      "leech": 0,
+      "completed": 12,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt2235542",
+        "tmdb": "119321",
+        "tvdb": null,
+        "title": "Big Top Scooby-Doo!",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 06:19:15"
+    },
+    {
+      "id": 78307,
+      "url": "https:\/\/privatehd.to\/torrent\/78307-scooby-doo-curse-of-the-lake-monster-2010-1080p-blu-ray-avc-dts-hd-ma-51-gerudo",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78307-92e4f9762bbd4ba71e32286de4246d4b7768049a.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "92e4f9762bbd4ba71e32286de4246d4b7768049a",
+      "file_name": "Scooby-Doo! Curse of the Lake Monster 2010 1080p Blu-ray AVC DTS-HD MA 5.1-GERUDO",
+      "file_size": 18669220097,
+      "file_count": 211,
+      "seed": 12,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 26,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt1618435",
+        "tmdb": "47533",
+        "tvdb": null,
+        "title": "Scooby-Doo! Curse of the Lake Monster",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 06:08:57"
+    },
+    {
+      "id": 78305,
+      "url": "https:\/\/privatehd.to\/torrent\/78305-the-x-files-i-want-to-believe-2008-1080p-bluray-ddp-51-h265-d3g",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78305-9bd2315f53fefacbf69e5e8a1a1d9921cdaddfc8.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "9bd2315f53fefacbf69e5e8a1a1d9921cdaddfc8",
+      "file_name": "The X-Files: I Want to Believe 2008 1080p BluRay DDP 5.1 H.265-d3g",
+      "file_size": 6064437762,
+      "file_count": 1,
+      "seed": 11,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 28,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0443701",
+        "tmdb": "8836",
+        "tvdb": null,
+        "title": "The X Files: I Want to Believe",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 04:45:48"
+    },
+    {
+      "id": 78304,
+      "url": "https:\/\/privatehd.to\/torrent\/78304-the-x-files-1998-1080p-bluray-ddp-51-h265-d3g",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78304-9a84a66a830552edbde915c33a686e9cbc725ef0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "9a84a66a830552edbde915c33a686e9cbc725ef0",
+      "file_name": "The X-Files 1998 1080p BluRay DDP 5.1 H.265-d3g",
+      "file_size": 6797814163,
+      "file_count": 1,
+      "seed": 13,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0120902",
+        "tmdb": "846",
+        "tvdb": null,
+        "title": "The X Files",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-03-10 04:45:25"
+    },
+    {
+      "id": 78292,
+      "url": "https:\/\/privatehd.to\/torrent\/78292-dark-web-cicada-3301-2021-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78292-299c3932c14d1e72dce862af635cf0c3ed98fe3d.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "299c3932c14d1e72dce862af635cf0c3ed98fe3d",
+      "file_name": "Dark Web: Cicada 3301 2021 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 31674646960,
+      "file_count": 1,
+      "seed": 95,
+      "leech": 0,
+      "completed": 141,
+      "downloaded": 148,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt8110246",
+        "tmdb": "791469",
+        "tvdb": null,
+        "title": "Dark Web: Cicada 3301",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-10 02:20:29"
+    },
+    {
+      "id": 78291,
+      "url": "https:\/\/privatehd.to\/torrent\/78291-the-rebound-2009-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78291-e93a6a4fbbe92400fc37ab7659314b48b6b8c5b0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "e93a6a4fbbe92400fc37ab7659314b48b6b8c5b0",
+      "file_name": "The Rebound 2009 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 17608438868,
+      "file_count": 1,
+      "seed": 43,
+      "leech": 0,
+      "completed": 67,
+      "downloaded": 84,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt1205535",
+        "tmdb": "24122",
+        "tvdb": null,
+        "title": "The Rebound",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-09 21:07:52"
+    },
+    {
+      "id": 78290,
+      "url": "https:\/\/privatehd.to\/torrent\/78290-rent-a-pal-2020-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78290-2c4a799552b51a029e3d23e17cef5d66365c23e0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "2c4a799552b51a029e3d23e17cef5d66365c23e0",
+      "file_name": "Rent-A-Pal 2020 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 31245019590,
+      "file_count": 1,
+      "seed": 44,
+      "leech": 0,
+      "completed": 66,
+      "downloaded": 87,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt12274228",
+        "tmdb": "707408",
+        "tvdb": null,
+        "title": "Rent-A-Pal",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-09 12:35:54"
+    },
+    {
+      "id": 78289,
+      "url": "https:\/\/privatehd.to\/torrent\/78289-songbird-2020-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78289-7ffa1348287e0cf0174a4fcf74de856f25c246ed.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "7ffa1348287e0cf0174a4fcf74de856f25c246ed",
+      "file_name": "Songbird 2020 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 23727447867,
+      "file_count": 1,
+      "seed": 48,
+      "leech": 0,
+      "completed": 69,
+      "downloaded": 88,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt12592252",
+        "tmdb": "721625",
+        "tvdb": null,
+        "title": "Songbird",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-09 11:39:51"
+    },
+    {
+      "id": 78287,
+      "url": "https:\/\/privatehd.to\/torrent\/78287-antony-and-cleopatra-1972-1080p-gbr-blu-ray-avc-lpcm-20-incubo",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78287-5e6b491fd136ec3415d992fe43aad0246f16e5e3.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "5e6b491fd136ec3415d992fe43aad0246f16e5e3",
+      "file_name": "Antony and Cleopatra 1972 1080p GBR Blu-ray AVC LPCM 2.0-INCUBO",
+      "file_size": 42533371112,
+      "file_count": 40,
+      "seed": 7,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 17,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0068920",
+        "tmdb": "98632",
+        "tvdb": null,
+        "title": "Antony and Cleopatra",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-03-09 09:12:02"
+    },
+    {
+      "id": 78279,
+      "url": "https:\/\/privatehd.to\/torrent\/78279-the-muppets-take-manhattan-1984-1080p-bluray-dts-51-x264-shortbrehd",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78279-c1bd943fb610589cc4cd2e42324ed28078ac2d5d.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "c1bd943fb610589cc4cd2e42324ed28078ac2d5d",
+      "file_name": "The Muppets Take Manhattan 1984 1080p BluRay DTS 5.1 x264-SHORTBREHD",
+      "file_size": 7037837623,
+      "file_count": 1,
+      "seed": 18,
+      "leech": 0,
+      "completed": 24,
+      "downloaded": 30,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0087755",
+        "tmdb": "11899",
+        "tvdb": null,
+        "title": "The Muppets Take Manhattan",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-08 11:47:40"
+    },
+    {
+      "id": 78278,
+      "url": "https:\/\/privatehd.to\/torrent\/78278-elizabethtown-2005-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78278-b1d077257a517b603a365273d511e63d9f0c71f4.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "b1d077257a517b603a365273d511e63d9f0c71f4",
+      "file_name": "Elizabethtown 2005 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 36123367310,
+      "file_count": 1,
+      "seed": 32,
+      "leech": 0,
+      "completed": 55,
+      "downloaded": 75,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0368709",
+        "tmdb": "9621",
+        "tvdb": null,
+        "title": "Elizabethtown",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-08 10:31:18"
+    },
+    {
+      "id": 78252,
+      "url": "https:\/\/privatehd.to\/torrent\/78252-blade-runner-2049-2017-1080p-bluray-dd-71-x264-lord",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78252-d78486bc74fc6708c8fffbcbafbc1b0884cdf633.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "d78486bc74fc6708c8fffbcbafbc1b0884cdf633",
+      "file_name": "Blade Runner 2049 2017 1080p BluRay DD+ 7.1 x264-LoRD",
+      "file_size": 16542620638,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 1,
+      "completed": 21,
+      "downloaded": 31,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt1856101",
+        "tmdb": "335984",
+        "tvdb": null,
+        "title": "Blade Runner 2049",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 22:14:12"
+    },
+    {
+      "id": 78251,
+      "url": "https:\/\/privatehd.to\/torrent\/78251-the-cry-of-the-owl-2009-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78251-944bb067438d90c5a39f2ec208dbdf33f14b4b51.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "944bb067438d90c5a39f2ec208dbdf33f14b4b51",
+      "file_name": "The Cry of the Owl 2009 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 17518753663,
+      "file_count": 1,
+      "seed": 38,
+      "leech": 0,
+      "completed": 49,
+      "downloaded": 67,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt1034302",
+        "tmdb": "18530",
+        "tvdb": null,
+        "title": "The Cry of the Owl",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 19:17:10"
+    },
+    {
+      "id": 78250,
+      "url": "https:\/\/privatehd.to\/torrent\/78250-rent-a-pal-2020-1080p-bluray-dts-hd-ma-51-x264-mteam",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78250-9d54584b2021390e8f206935928b16a99ed203d7.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "9d54584b2021390e8f206935928b16a99ed203d7",
+      "file_name": "Rent-A-Pal 2020 1080p BluRay DTS-HD MA 5.1 x264-MTeam",
+      "file_size": 18338862030,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 18,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt12274228",
+        "tmdb": "707408",
+        "tvdb": null,
+        "title": "Rent-A-Pal",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 17:45:21"
+    },
+    {
+      "id": 78247,
+      "url": "https:\/\/privatehd.to\/torrent\/78247-the-mauritanian-2021-2160p-amzn-web-dl-ddp51-h265-evo",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78247-c5587671c48ef8b1f0c5a0bf875e3dc2c150aa21.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "c5587671c48ef8b1f0c5a0bf875e3dc2c150aa21",
+      "file_name": "The Mauritanian 2021 2160p AMZN WEB-DL DDP5.1 H.265-EVO",
+      "file_size": 14810123182,
+      "file_count": 1,
+      "seed": 19,
+      "leech": 0,
+      "completed": 36,
+      "downloaded": 43,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt4761112",
+        "tmdb": "644583",
+        "tvdb": null,
+        "title": "The Mauritanian",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 16:30:21"
+    },
+    {
+      "id": 78246,
+      "url": "https:\/\/privatehd.to\/torrent\/78246-new-years-eve-2011-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78246-49d8c9b911599a2df09a235d6eef127dbbc5f817.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "49d8c9b911599a2df09a235d6eef127dbbc5f817",
+      "file_name": "New Year's Eve 2011 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 18728263808,
+      "file_count": 1,
+      "seed": 27,
+      "leech": 0,
+      "completed": 44,
+      "downloaded": 64,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt1598822",
+        "tmdb": "62838",
+        "tvdb": null,
+        "title": "New Year's Eve",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 39,
+          "language": "Croatian"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 69,
+          "language": "Icelandic"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 148,
+          "language": "Slovenian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 16:06:55"
+    },
+    {
+      "id": 78244,
+      "url": "https:\/\/privatehd.to\/torrent\/78244-knives-out-2019-1080p-bluray-truehd-71-hdr-x265-suina",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78244-44c6815e64fa0d8c98b385bfd6ee3e9f42a81cbc.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "44c6815e64fa0d8c98b385bfd6ee3e9f42a81cbc",
+      "file_name": "Knives Out 2019 1080p BluRay TrueHD 7.1 HDR x265-SUINA",
+      "file_size": 5474675327,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 0,
+      "completed": 25,
+      "downloaded": 29,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt8946378",
+        "tmdb": "546554",
+        "tvdb": null,
+        "title": "Knives Out",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 15:33:16"
+    },
+    {
+      "id": 78243,
+      "url": "https:\/\/privatehd.to\/torrent\/78243-four-kids-and-it-2020-1080p-bluray-remux-avc-dts-hd-ma-51-spbd",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78243-dcd8dc3a99ceb5ca4a6ed891edf4b286a8a75f36.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "dcd8dc3a99ceb5ca4a6ed891edf4b286a8a75f36",
+      "file_name": "Four Kids and It 2020 1080p BluRay REMUX AVC DTS HD-MA 5.1-SPBD",
+      "file_size": 32669617852,
+      "file_count": 1,
+      "seed": 6,
+      "leech": 0,
+      "completed": 9,
+      "downloaded": 17,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt5556054",
+        "tmdb": "555457",
+        "tvdb": null,
+        "title": "Four Kids and It",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 15:27:18"
+    },
+    {
+      "id": 78240,
+      "url": "https:\/\/privatehd.to\/torrent\/78240-little-house-look-back-to-yesterday-1983-1080p-amzn-web-dl-dd-20-h264-pawel2006",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78240-bb05338d7cfb5215728233fff9ea711d5c83fa5f.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "bb05338d7cfb5215728233fff9ea711d5c83fa5f",
+      "file_name": "Little House Look Back to Yesterday 1983 1080p AMZN WEB-DL DD+ 2.0 H.264-pawel2006",
+      "file_size": 7147927986,
+      "file_count": 1,
+      "seed": 13,
+      "leech": 0,
+      "completed": 20,
+      "downloaded": 27,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt0085855",
+        "tmdb": "441785",
+        "tvdb": null,
+        "title": "Little House: Look Back to Yesterday",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 14:26:53"
+    },
+    {
+      "id": 78239,
+      "url": "https:\/\/privatehd.to\/torrent\/78239-little-house-bless-all-the-dear-children-1984-1080p-amzn-web-dl-dd-20-h264-pawel2006",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78239-ba84b9c409fc512d990c211f534bb45c642da398.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "ba84b9c409fc512d990c211f534bb45c642da398",
+      "file_name": "Little House Bless All the Dear Children 1984 1080p AMZN WEB-DL DD+ 2.0 H.264-pawel2006",
+      "file_size": 6935844984,
+      "file_count": 1,
+      "seed": 14,
+      "leech": 0,
+      "completed": 21,
+      "downloaded": 25,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt0087630",
+        "tmdb": "368088",
+        "tvdb": null,
+        "title": "Little House: Bless All the Dear Children",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 14:21:46"
+    },
+    {
+      "id": 78238,
+      "url": "https:\/\/privatehd.to\/torrent\/78238-little-house-the-last-farewell-1984-1080p-amzn-web-dl-dd-20-h264-pawel2006",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78238-d8b4f98ea77d0abbb4b2da940c6656883d37a480.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "d8b4f98ea77d0abbb4b2da940c6656883d37a480",
+      "file_name": "Little House The Last Farewell 1984 1080p AMZN WEB-DL DD+ 2.0 H.264-pawel2006",
+      "file_size": 7166383749,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 21,
+      "downloaded": 28,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt0087631",
+        "tmdb": "472797",
+        "tvdb": null,
+        "title": "Little House: The Last Farewell",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 13:32:16"
+    },
+    {
+      "id": 78237,
+      "url": "https:\/\/privatehd.to\/torrent\/78237-murder-by-contract-1958-1080p-bluray-remux-avc-flac-10-framestor",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78237-5d360dcfb60f6f8e2b56e32766fa59af7484f2e6.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "5d360dcfb60f6f8e2b56e32766fa59af7484f2e6",
+      "file_name": "Murder by Contract 1958 1080p BluRay REMUX AVC FLAC 1.0-FraMeSToR",
+      "file_size": 16171943537,
+      "file_count": 1,
+      "seed": 7,
+      "leech": 0,
+      "completed": 9,
+      "downloaded": 16,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0051959",
+        "tmdb": "18930",
+        "tvdb": null,
+        "title": "Murder by Contract",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 12:49:22"
+    },
+    {
+      "id": 78236,
+      "url": "https:\/\/privatehd.to\/torrent\/78236-bend-it-like-beckham-2002-1080p-aus-blu-ray-avc-dts-hd-ma-51-nogroup",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78236-ee5bd816a577ad1fb5d5931bf962a8926b333951.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "ee5bd816a577ad1fb5d5931bf962a8926b333951",
+      "file_name": "Bend It Like Beckham 2002 1080p AUS Blu-ray AVC DTS-HD MA 5.1-NOGROUP",
+      "file_size": 43024183543,
+      "file_count": 175,
+      "seed": 15,
+      "leech": 0,
+      "completed": 23,
+      "downloaded": 31,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt0286499",
+        "tmdb": "455",
+        "tvdb": null,
+        "title": "Bend It Like Beckham",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 09:58:14"
+    },
+    {
+      "id": 78235,
+      "url": "https:\/\/privatehd.to\/torrent\/78235-boss-level-2021-2160p-hulu-web-dl-ddp-51-h265-ntb",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78235-3284b9fb760090f67013ad14603ad4d68ee95d44.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "3284b9fb760090f67013ad14603ad4d68ee95d44",
+      "file_name": "Boss Level 2021 2160p HULU WEB-DL DDP 5.1 H.265-NTb",
+      "file_size": 10811022547,
+      "file_count": 1,
+      "seed": 41,
+      "leech": 0,
+      "completed": 59,
+      "downloaded": 64,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt7638348",
+        "tmdb": "513310",
+        "tvdb": null,
+        "title": "Boss Level",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-07 06:23:54"
+    },
+    {
+      "id": 78216,
+      "url": "https:\/\/privatehd.to\/torrent\/78216-scare-me-2020-1080p-web-dl-dd20-h264-naisu",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78216-391dc541e836d410def9de66c13f4231bdd80415.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "391dc541e836d410def9de66c13f4231bdd80415",
+      "file_name": "Scare Me 2020 1080p WEB-DL DD+2.0 H.264-NAISU",
+      "file_size": 7251764681,
+      "file_count": 1,
+      "seed": 14,
+      "leech": 0,
+      "completed": 22,
+      "downloaded": 26,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt10126434",
+        "tmdb": "653643",
+        "tvdb": null,
+        "title": "Scare Me",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 15:51:20"
+    },
+    {
+      "id": 78215,
+      "url": "https:\/\/privatehd.to\/torrent\/78215-scare-me-2020-1080p-bluray-dts-hd-ma-51-x264-mteam",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78215-230d79e6c6df28ed75bf4badd0eb3bd79f51fe6c.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "230d79e6c6df28ed75bf4badd0eb3bd79f51fe6c",
+      "file_name": "Scare Me 2020 1080p BluRay DTS-HD MA 5.1 x264-MTeam",
+      "file_size": 14066808103,
+      "file_count": 1,
+      "seed": 5,
+      "leech": 0,
+      "completed": 10,
+      "downloaded": 14,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt10126434",
+        "tmdb": "653643",
+        "tvdb": null,
+        "title": "Scare Me",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 14:47:47"
+    },
+    {
+      "id": 78214,
+      "url": "https:\/\/privatehd.to\/torrent\/78214-land-2021-1080p-amzn-web-dl-dd-51-h264-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78214-9e83961705e4d38cdc571db4b08333d0d5b36c0e.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "9e83961705e4d38cdc571db4b08333d0d5b36c0e",
+      "file_name": "Land 2021 1080p AMZN WEB-DL DD+ 5.1 H.264-CMRG",
+      "file_size": 5235432180,
+      "file_count": 1,
+      "seed": 36,
+      "leech": 0,
+      "completed": 58,
+      "downloaded": 70,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt10265034",
+        "tmdb": "598896",
+        "tvdb": null,
+        "title": "Land",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 14:03:22"
+    },
+    {
+      "id": 78213,
+      "url": "https:\/\/privatehd.to\/torrent\/78213-land-2021-2160p-amzn-web-dl-dd-51-hdr-h265-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78213-a37ceb6fdfd4cacfa9470cacfc3603a6f2fb4e21.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "a37ceb6fdfd4cacfa9470cacfc3603a6f2fb4e21",
+      "file_name": "Land 2021 2160p AMZN WEB-DL DD+ 5.1 HDR H.265-CMRG",
+      "file_size": 10077084461,
+      "file_count": 1,
+      "seed": 23,
+      "leech": 0,
+      "completed": 33,
+      "downloaded": 33,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt10265034",
+        "tmdb": "598896",
+        "tvdb": null,
+        "title": "Land",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 13:39:59"
+    },
+    {
+      "id": 78212,
+      "url": "https:\/\/privatehd.to\/torrent\/78212-crisis-2021-1080p-amzn-web-dl-dd-51-h264-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78212-0ecae31fcf54e6b590c82a4b6206c3478a841c75.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "0ecae31fcf54e6b590c82a4b6206c3478a841c75",
+      "file_name": "Crisis 2021 1080p AMZN WEB-DL DD+ 5.1 H.264-CMRG",
+      "file_size": 10087406131,
+      "file_count": 1,
+      "seed": 37,
+      "leech": 0,
+      "completed": 67,
+      "downloaded": 74,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt9731682",
+        "tmdb": "580532",
+        "tvdb": null,
+        "title": "Crisis",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 12:44:05"
+    },
+    {
+      "id": 78210,
+      "url": "https:\/\/privatehd.to\/torrent\/78210-palmer-2021-2160p-web-dl-ddp51-atmos-hdr-h265-naisu",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78210-13b4806f1fef1440fba7992a230e8567ec2e440f.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "13b4806f1fef1440fba7992a230e8567ec2e440f",
+      "file_name": "Palmer 2021 2160p WEB-DL DDP5.1 Atmos HDR H.265-NAISU",
+      "file_size": 21132041051,
+      "file_count": 1,
+      "seed": 13,
+      "leech": 0,
+      "completed": 19,
+      "downloaded": 29,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt6857376",
+        "tmdb": "458220",
+        "tvdb": null,
+        "title": "Palmer",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 25,
+          "language": "Bulgarian"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 47,
+          "language": "Estonian"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 96,
+          "language": "Latvian"
+        },
+        {
+          "id": 99,
+          "language": "Lithuanian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 147,
+          "language": "Slovak"
+        },
+        {
+          "id": 148,
+          "language": "Slovenian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        },
+        {
+          "id": 172,
+          "language": "Ukrainian"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 11:15:35"
+    },
+    {
+      "id": 78208,
+      "url": "https:\/\/privatehd.to\/torrent\/78208-swing-low-2019-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78208-beff9e53b418de167d2aea07f11b9dbb7ed4f204.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "beff9e53b418de167d2aea07f11b9dbb7ed4f204",
+      "file_name": "Swing Low 2019 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 15091448960,
+      "file_count": 1,
+      "seed": 22,
+      "leech": 0,
+      "completed": 38,
+      "downloaded": 56,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt8191620",
+        "tmdb": "637969",
+        "tvdb": null,
+        "title": "Ravage",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 10:01:38"
+    },
+    {
+      "id": 78206,
+      "url": "https:\/\/privatehd.to\/torrent\/78206-raya-and-the-last-dragon-2021-2160p-dsnp-web-dl-ddp51-hdr-h265-nogrp",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78206-f83747d047343691d7e320cd1c239a12584317e4.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "f83747d047343691d7e320cd1c239a12584317e4",
+      "file_name": "Raya and the Last Dragon 2021 2160p DSNP WEB-DL DDP5.1 HDR H.265-NoGrp",
+      "file_size": 13490786408,
+      "file_count": 1,
+      "seed": 285,
+      "leech": 0,
+      "completed": 438,
+      "downloaded": 438,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt5109280",
+        "tmdb": "527774",
+        "tvdb": null,
+        "title": "Raya and the Last Dragon",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 69,
+          "language": "Icelandic"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 07:31:39"
+    },
+    {
+      "id": 78204,
+      "url": "https:\/\/privatehd.to\/torrent\/78204-a-walk-in-the-clouds-1995-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78204-3b0f8b0778b6b9042d5de643854b15a349bfb561.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "3b0f8b0778b6b9042d5de643854b15a349bfb561",
+      "file_name": "A Walk in the Clouds 1995 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 27983143334,
+      "file_count": 1,
+      "seed": 41,
+      "leech": 0,
+      "completed": 63,
+      "downloaded": 84,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt0114887",
+        "tmdb": "9560",
+        "tvdb": null,
+        "title": "A Walk in the Clouds",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 69,
+          "language": "Icelandic"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 02:05:40"
+    },
+    {
+      "id": 78203,
+      "url": "https:\/\/privatehd.to\/torrent\/78203-enhanced-2019-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78203-5e52d35470915a16e4731117823158dd169c1113.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "5e52d35470915a16e4731117823158dd169c1113",
+      "file_name": "Enhanced 2019 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 15164366417,
+      "file_count": 1,
+      "seed": 31,
+      "leech": 0,
+      "completed": 52,
+      "downloaded": 70,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt9458062",
+        "tmdb": "637415",
+        "tvdb": null,
+        "title": "Enhanced",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-06 01:01:33"
+    },
+    {
+      "id": 78201,
+      "url": "https:\/\/privatehd.to\/torrent\/78201-boss-level-2020-1080p-fra-blu-ray-avc-dts-hd-ma-51-pch",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78201-1ffdb84df5a541961a1d035fcb8ba1422d546db2.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "1ffdb84df5a541961a1d035fcb8ba1422d546db2",
+      "file_name": "Boss Level 2020 1080p FRA Blu-ray AVC DTS-HD MA 5.1-PCH",
+      "file_size": 36394616410,
+      "file_count": 106,
+      "seed": 6,
+      "leech": 0,
+      "completed": 7,
+      "downloaded": 19,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt7638348",
+        "tmdb": "513310",
+        "tvdb": null,
+        "title": "Boss Level",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 52,
+          "language": "French"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 21:38:15"
+    },
+    {
+      "id": 78197,
+      "url": "https:\/\/privatehd.to\/torrent\/78197-the-mortuary-collection-2020-2160p-ger-blu-ray-hevc-dts-hd-ma-51-beyondhd",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78197-ccf4db29f2eb4bd359404f2368952a8364bbd419.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "ccf4db29f2eb4bd359404f2368952a8364bbd419",
+      "file_name": "The Mortuary Collection 2020 2160p GER Blu-ray HEVC DTS-HD MA 5.1-BeyondHD",
+      "file_size": 94874699744,
+      "file_count": 216,
+      "seed": 9,
+      "leech": 1,
+      "completed": 15,
+      "downloaded": 26,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": "tt7781432",
+        "tmdb": "524216",
+        "tvdb": null,
+        "title": "The Mortuary Collection",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 58,
+          "language": "German"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 15:09:48"
+    },
+    {
+      "id": 78185,
+      "url": "https:\/\/privatehd.to\/torrent\/78185-love-liza-2002-1080p-amzn-webrip-dd-20-x264-monkee",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78185-0894b08689a5a68ad191e9a7c13858aed9a46bc0.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "0894b08689a5a68ad191e9a7c13858aed9a46bc0",
+      "file_name": "Love Liza 2002 1080p AMZN WEBRip DD+ 2.0 x264-monkee",
+      "file_size": 9338866777,
+      "file_count": 1,
+      "seed": 13,
+      "leech": 0,
+      "completed": 16,
+      "downloaded": 20,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 13,
+      "rip_type": "WEBRip",
+      "movie_tv": {
+        "imdb": "tt0282698",
+        "tmdb": "15395",
+        "tvdb": null,
+        "title": "Love Liza",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 09:22:10"
+    },
+    {
+      "id": 78184,
+      "url": "https:\/\/privatehd.to\/torrent\/78184-raya-and-the-last-dragon-2021-1080p-dsnp-web-dl-dd-51-h264-tommy",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78184-34fb752197597476062b685958bb8794970a4760.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "34fb752197597476062b685958bb8794970a4760",
+      "file_name": "Raya and the Last Dragon 2021 1080p DSNP WEB-DL DD+ 5.1 H.264-TOMMY",
+      "file_size": 6072593442,
+      "file_count": 1,
+      "seed": 434,
+      "leech": 0,
+      "completed": 702,
+      "downloaded": 689,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt5109280",
+        "tmdb": "527774",
+        "tvdb": null,
+        "title": "Raya and the Last Dragon",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 69,
+          "language": "Icelandic"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 120,
+          "language": "Norwegian"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 08:09:13"
+    },
+    {
+      "id": 78182,
+      "url": "https:\/\/privatehd.to\/torrent\/78182-the-royal-tenenbaums-2001-1080p-bluray-dts-hd-ma-51-x265-suina",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78182-96597f224cd2fc4994e34db6c87e791876a224cc.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "96597f224cd2fc4994e34db6c87e791876a224cc",
+      "file_name": "The Royal Tenenbaums 2001 1080p BluRay DTS-HD MA 5.1 x265-SUINA",
+      "file_size": 5960018192,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 23,
+      "downloaded": 27,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0265666",
+        "tmdb": "9428",
+        "tvdb": null,
+        "title": "The Royal Tenenbaums",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 06:56:38"
+    },
+    {
+      "id": 78181,
+      "url": "https:\/\/privatehd.to\/torrent\/78181-bottle-rocket-1996-1080p-bluray-dts-hd-ma-51-x265-suina",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78181-6cdf4a682a24f89f28d6a57703c018de9c59e9ad.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "6cdf4a682a24f89f28d6a57703c018de9c59e9ad",
+      "file_name": "Bottle Rocket 1996 1080p BluRay DTS-HD MA 5.1 x265-SUINA",
+      "file_size": 7135951238,
+      "file_count": 1,
+      "seed": 11,
+      "leech": 0,
+      "completed": 12,
+      "downloaded": 20,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0115734",
+        "tmdb": "13685",
+        "tvdb": null,
+        "title": "Bottle Rocket",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 06:55:19"
+    },
+    {
+      "id": 78177,
+      "url": "https:\/\/privatehd.to\/torrent\/78177-the-darjeeling-limited-2007-1080p-bluray-dts-hd-ma-51-x265-suina",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78177-74c33383b70f7d229d21ebbacaed0e6ddefdc744.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "74c33383b70f7d229d21ebbacaed0e6ddefdc744",
+      "file_name": "The Darjeeling Limited 2007 1080p BluRay DTS-HD MA 5.1 x265-SUINA",
+      "file_size": 4334311676,
+      "file_count": 1,
+      "seed": 10,
+      "leech": 0,
+      "completed": 10,
+      "downloaded": 17,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0838221",
+        "tmdb": "4538",
+        "tvdb": null,
+        "title": "The Darjeeling Limited",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 05:35:07"
+    },
+    {
+      "id": 78176,
+      "url": "https:\/\/privatehd.to\/torrent\/78176-fantastic-mr-fox-2009-1080p-bluray-dts-hd-ma-51-x265-suina",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78176-6917b6a4c822edd50fa2b46d684bff5ec72bdc40.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "6917b6a4c822edd50fa2b46d684bff5ec72bdc40",
+      "file_name": "Fantastic Mr. Fox 2009 1080p BluRay DTS-HD MA 5.1 x265-SUINA",
+      "file_size": 3847819065,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 18,
+      "downloaded": 21,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 2,
+      "rip_type": "BluRay",
+      "movie_tv": {
+        "imdb": "tt0432283",
+        "tmdb": "10315",
+        "tvdb": null,
+        "title": "Fantastic Mr. Fox",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-05 05:26:24"
+    },
+    {
+      "id": 78159,
+      "url": "https:\/\/privatehd.to\/torrent\/78159-schiller-live-in-berlin-the-concert-2021-1080i-mblu-ray-avc-dts-hd-ma-51-nogroup",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78159-7458305732d9d7ee83a7ceb6fd8344001cfb5701.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "7458305732d9d7ee83a7ceb6fd8344001cfb5701",
+      "file_name": "Schiller: Live in Berlin The Concert 2021 1080i MBlu-ray AVC DTS-HD MA 5.1-NOGROUP",
+      "file_size": 95376194124,
+      "file_count": 139,
+      "seed": 11,
+      "leech": 0,
+      "completed": 13,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 7,
+      "video_quality": "1080i",
+      "rip_type_id": 3,
+      "rip_type": "BluRay Raw",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "796574",
+        "tvdb": null,
+        "title": "Schiller: Live in Berlin - The Concert",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-03-04 23:08:06"
+    },
+    {
+      "id": 78158,
+      "url": "https:\/\/privatehd.to\/torrent\/78158-coming-2-america-2021-1080p-amzn-web-dl-ddp-51-h264-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78158-8245fad57e4f71261a904b6db6d5b241728f9dcf.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "8245fad57e4f71261a904b6db6d5b241728f9dcf",
+      "file_name": "Coming 2 America 2021 1080p AMZN WEB-DL DDP 5.1 H.264-CMRG",
+      "file_size": 8072023396,
+      "file_count": 1,
+      "seed": 130,
+      "leech": 1,
+      "completed": 246,
+      "downloaded": 231,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt6802400",
+        "tmdb": "484718",
+        "tvdb": null,
+        "title": "Coming 2 America",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-04 21:55:45"
+    },
+    {
+      "id": 78157,
+      "url": "https:\/\/privatehd.to\/torrent\/78157-coming-2-america-2021-2160p-amzn-web-dl-ddp-51-h265-cmrg",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78157-000820792af405ed074aea3c5204bc45603c22ef.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "000820792af405ed074aea3c5204bc45603c22ef",
+      "file_name": "Coming 2 America 2021 2160p AMZN WEB-DL DDP 5.1 H.265-CMRG",
+      "file_size": 12707593591,
+      "file_count": 1,
+      "seed": 79,
+      "leech": 2,
+      "completed": 133,
+      "downloaded": 138,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 6,
+      "video_quality": "2160p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt6802400",
+        "tmdb": "484718",
+        "tvdb": null,
+        "title": "Coming 2 America",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 66,
+          "language": "Hindi"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 159,
+          "language": "Tamil"
+        },
+        {
+          "id": 161,
+          "language": "Telugu"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-04 21:32:31"
+    },
+    {
+      "id": 78153,
+      "url": "https:\/\/privatehd.to\/torrent\/78153-boss-level-2021-1080p-bluray-remux-avc-dts-hd-ma-51-triton",
+      "download": "https:\/\/privatehd.to\/rss\/download\/123456789\/78153-eb4aaa9041e3be2df0cfd5f64ec994e55ee9c030.torrent",
+      "type_id": 1,
+      "type": "Movie",
+      "info_hash": "eb4aaa9041e3be2df0cfd5f64ec994e55ee9c030",
+      "file_name": "Boss Level 2021 1080p BluRay REMUX AVC DTS-HD MA 5.1-TRiToN",
+      "file_size": 27749552860,
+      "file_count": 1,
+      "seed": 98,
+      "leech": 1,
+      "completed": 157,
+      "downloaded": 193,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 14,
+      "rip_type": "REMUX",
+      "movie_tv": {
+        "imdb": "tt7638348",
+        "tmdb": "513310",
+        "tvdb": null,
+        "title": "Boss Level",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 52,
+          "language": "French"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-03-04 09:22:51"
+    }
+  ],
+  "first_page_url": "https:\/\/privatehd.to\/api\/v1\/jackett\/torrents?type=1&page=1",
+  "from": 1,
+  "last_page": 324,
+  "last_page_url": "https:\/\/privatehd.to\/api\/v1\/jackett\/torrents?type=1&page=324",
+  "next_page_url": "https:\/\/privatehd.to\/api\/v1\/jackett\/torrents?type=1&page=2",
+  "path": "https:\/\/privatehd.to\/api\/v1\/jackett\/torrents",
+  "per_page": 100,
+  "prev_page_url": null,
+  "to": 100,
+  "total": 32322
+}

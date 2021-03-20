@@ -7,13 +7,13 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class PrivateHD : Avistaz.AvistazBase
+    public class AvistaZ : AvistazBase
     {
-        public override string Name => "PrivateHD";
-        public override string BaseUrl => "https://privatehd.to/";
+        public override string Name => "AvistaZ";
+        public override string BaseUrl => "https://avistaz.to/";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public PrivateHD(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public AvistaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -41,10 +41,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 MovieSearchParams = new List<MovieSearchParam>
                        {
                            MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
                        }
             };
 

@@ -64,7 +64,9 @@ namespace NzbDrone.Core.History
 
         public void Cleanup(int days)
         {
-            Delete(c => c.Date.AddDays(days) <= DateTime.Now);
+            var cleanDate = DateTime.Now.AddDays(-1 * days);
+
+            Delete(c => c.Date <= cleanDate);
         }
 
         public History MostRecentForIndexer(int indexerId)

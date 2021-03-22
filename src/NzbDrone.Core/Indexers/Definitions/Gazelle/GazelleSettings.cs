@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use Freeleach Token")]
+        [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use Freeleech Token")]
         public bool UseFreeleechToken { get; set; }
 
         public NzbDroneValidationResult Validate()

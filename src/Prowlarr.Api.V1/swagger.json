@@ -1047,7 +1047,7 @@
                         "name": "Any",
                         "upgradeAllowed": true,
                         "cutoff": 20,
-                        "preferredTags": "freeleach",
+                        "preferredTags": "freeleech",
                         "items": [
                           {
                             "quality": {

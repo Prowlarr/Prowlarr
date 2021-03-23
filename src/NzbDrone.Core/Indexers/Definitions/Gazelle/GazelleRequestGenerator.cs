@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+            var parameters = GetBasicSearchParameters(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories);
 
             if (searchCriteria.ImdbId != null)
             {
@@ -138,7 +138,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            throw new NotImplementedException();
+            var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+
+            var pageableRequests = new IndexerPageableRequestChain();
+            pageableRequests.Add(GetRequest(parameters));
+            return pageableRequests;
         }
 
         // hook to adjust the search term

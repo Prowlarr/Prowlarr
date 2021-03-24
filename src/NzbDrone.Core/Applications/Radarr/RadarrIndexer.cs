@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace NzbDrone.Core.Applications.Radarr
 {
@@ -28,6 +29,7 @@ namespace NzbDrone.Core.Applications.Radarr
             var baseUrl = (string)Fields.FirstOrDefault(x => x.Name == "baseUrl").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value;
             var apiPath = (string)Fields.FirstOrDefault(x => x.Name == "apiPath").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var apiKey = (string)Fields.FirstOrDefault(x => x.Name == "apiKey").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiKey").Value;
+            var cats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "categories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "categories").Value);
 
             return other.EnableRss == EnableRss &&
                 other.EnableAutomaticSearch == EnableAutomaticSearch &&
@@ -36,7 +38,7 @@ namespace NzbDrone.Core.Applications.Radarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKey && apiPath && baseUrl;
+                apiKey && apiPath && baseUrl && cats;
         }
     }
 }

@@ -9,7 +9,7 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.HealthCheck.Checks
 {
     [TestFixture]
-    public class IndexerRssCheckFixture : CoreTest<IndexerRssCheck>
+    public class IndexerCheckFixture : CoreTest<IndexerCheck>
     {
         private Mock<IIndexer> _indexerMock;
 
@@ -47,17 +47,6 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                   .Returns(new List<IIndexer> { _indexerMock.Object });
         }
 
-        private void GivenRssFiltered()
-        {
-            Mocker.GetMock<IIndexerFactory>()
-                  .Setup(s => s.Enabled(false))
-                  .Returns(new List<IIndexer> { _indexerMock.Object });
-
-            Mocker.GetMock<ILocalizationService>()
-                  .Setup(s => s.GetLocalizedString(It.IsAny<string>()))
-                  .Returns("recent indexer errors");
-        }
-
         [Test]
         public void should_return_error_when_no_indexer_present()
         {
@@ -87,15 +76,6 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
             GivenIndexer(true, false);
 
             Subject.Check().ShouldBeError();
-        }
-
-        [Test]
-        public void should_return_filter_warning_if_rss_is_enabled_but_filtered()
-        {
-            GivenIndexer(true, false);
-            GivenRssFiltered();
-
-            Subject.Check().ShouldBeWarning("recent indexer errors");
         }
     }
 }

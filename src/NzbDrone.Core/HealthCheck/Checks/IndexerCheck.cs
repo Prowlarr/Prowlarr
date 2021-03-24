@@ -9,11 +9,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
     [CheckOn(typeof(ProviderUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderStatusChangedEvent<IIndexer>))]
-    public class IndexerRssCheck : HealthCheckBase
+    public class IndexerCheck : HealthCheckBase
     {
         private readonly IIndexerFactory _indexerFactory;
 
-        public IndexerRssCheck(IIndexerFactory indexerFactory, ILocalizationService localizationService)
+        public IndexerCheck(IIndexerFactory indexerFactory, ILocalizationService localizationService)
             : base(localizationService)
         {
             _indexerFactory = indexerFactory;
@@ -25,14 +25,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             if (enabled.Empty())
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Error, _localizationService.GetLocalizedString("IndexerRssHealthCheckNoIndexers"));
-            }
-
-            var active = _indexerFactory.Enabled(true);
-
-            if (active.Empty())
-            {
-                return new HealthCheck(GetType(), HealthCheckResult.Warning, _localizationService.GetLocalizedString("IndexerRssHealthCheckNoAvailableIndexers"));
+                return new HealthCheck(GetType(), HealthCheckResult.Error, _localizationService.GetLocalizedString("IndexerHealthCheckNoIndexers"));
             }
 
             return new HealthCheck(GetType());

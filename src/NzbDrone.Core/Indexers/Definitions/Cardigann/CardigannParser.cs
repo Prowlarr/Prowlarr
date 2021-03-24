@@ -31,6 +31,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             _logger.Debug("Parsing");
 
+            var indexerLogging = _configService.LogIndexerResponse;
+
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
                 // Remove cookie cache
@@ -102,7 +104,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     try
                     {
                         var release = new CardigannReleaseInfo();
-                        var indexerLogging = _configService.LogIndexerResponse;
 
                         // Parse fields
                         foreach (var field in search.Fields)

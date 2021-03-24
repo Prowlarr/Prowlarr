@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         public void RemoveIndexer(int indexerId, SonarrSettings settings)
         {
             var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.DELETE);
-            var response = _httpClient.Execute(request);
+            _httpClient.Execute(request);
         }
 
         public List<SonarrIndexer> GetIndexerSchema(SonarrSettings settings)

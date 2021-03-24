@@ -37,6 +37,28 @@ namespace NzbDrone.Core.Applications.Lidarr
             return new ValidationResult(failures);
         }
 
+        public override Dictionary<int, int> GetIndexerMappings()
+        {
+            var indexers = _lidarrV1Proxy.GetIndexers(Settings);
+            var mappings = new Dictionary<int, int>();
+
+            foreach (var indexer in indexers)
+            {
+                if ((string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value == _configFileProvider.ApiKey)
+                {
+                    var match = AppIndexerRegex.Match((string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value);
+
+                    if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
+                    {
+                        //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                        mappings.Add(indexer.Id, indexerId);
+                    }
+                }
+            }
+
+            return mappings;
+        }
+
         public override void AddIndexer(IndexerDefinition indexer)
         {
             if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
@@ -69,7 +91,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 
-            var readarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
+            var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
 
             var remoteIndexer = _lidarrV1Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
 
@@ -77,17 +99,17 @@ namespace NzbDrone.Core.Applications.Lidarr
             {
                 _logger.Debug("Remote indexer found, syncing with current settings");
 
-                if (!readarrIndexer.Equals(remoteIndexer))
+                if (!lidarrIndexer.Equals(remoteIndexer))
                 {
-                    _lidarrV1Proxy.UpdateIndexer(readarrIndexer, Settings);
+                    _lidarrV1Proxy.UpdateIndexer(lidarrIndexer, Settings);
                 }
             }
             else
             {
                 _logger.Debug("Remote indexer not found, re-adding indexer to Lidarr");
-                readarrIndexer.Id = 0;
+                lidarrIndexer.Id = 0;
 
-                var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(readarrIndexer, Settings);
+                var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
                 _appIndexerMapService.Delete(indexerMapping.Id);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
             }

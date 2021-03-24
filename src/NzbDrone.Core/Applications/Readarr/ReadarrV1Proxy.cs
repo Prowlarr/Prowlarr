@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Applications.Readarr
         public void RemoveIndexer(int indexerId, ReadarrSettings settings)
         {
             var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.DELETE);
-            var response = _httpClient.Execute(request);
+            _httpClient.Execute(request);
         }
 
         public List<ReadarrIndexer> GetIndexerSchema(ReadarrSettings settings)

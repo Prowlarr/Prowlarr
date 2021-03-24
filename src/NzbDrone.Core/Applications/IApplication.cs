@@ -9,5 +9,6 @@ namespace NzbDrone.Core.Applications
         void AddIndexer(IndexerDefinition indexer);
         void UpdateIndexer(IndexerDefinition indexer);
         void RemoveIndexer(int indexerId);
+        Dictionary<int, int> GetIndexerMappings();
     }
 }

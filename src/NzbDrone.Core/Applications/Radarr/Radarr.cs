@@ -37,6 +37,28 @@ namespace NzbDrone.Core.Applications.Radarr
             return new ValidationResult(failures);
         }
 
+        public override Dictionary<int, int> GetIndexerMappings()
+        {
+            var indexers = _radarrV3Proxy.GetIndexers(Settings);
+            var mappings = new Dictionary<int, int>();
+
+            foreach (var indexer in indexers)
+            {
+                if ((string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value == _configFileProvider.ApiKey)
+                {
+                    var match = AppIndexerRegex.Match((string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value);
+
+                    if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
+                    {
+                        //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                        mappings.Add(indexer.Id, indexerId);
+                    }
+                }
+            }
+
+            return mappings;
+        }
+
         public override void AddIndexer(IndexerDefinition indexer)
         {
             if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())

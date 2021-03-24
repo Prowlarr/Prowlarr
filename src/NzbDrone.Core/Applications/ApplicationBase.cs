@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Core.Indexers;
@@ -12,6 +13,9 @@ namespace NzbDrone.Core.Applications
     {
         protected readonly IAppIndexerMapService _appIndexerMapService;
         protected readonly Logger _logger;
+
+        protected static readonly Regex AppIndexerRegex = new Regex(@"api\/v\d*\/indexer\/(?<indexer>\d*)",
+                                                                RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public abstract string Name { get; }
 
@@ -54,6 +58,7 @@ namespace NzbDrone.Core.Applications
         public abstract void AddIndexer(IndexerDefinition indexer);
         public abstract void UpdateIndexer(IndexerDefinition indexer);
         public abstract void RemoveIndexer(int indexerId);
+        public abstract Dictionary<int, int> GetIndexerMappings();
 
         public virtual object RequestAction(string action, IDictionary<string, string> query)
         {

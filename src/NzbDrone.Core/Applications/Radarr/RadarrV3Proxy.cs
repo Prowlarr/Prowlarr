@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Applications.Radarr
         public void RemoveIndexer(int indexerId, RadarrSettings settings)
         {
             var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.DELETE);
-            var response = _httpClient.Execute(request);
+            _httpClient.Execute(request);
         }
 
         public List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings)

@@ -111,6 +111,23 @@ namespace NzbDrone.Core.Applications
             {
                 var indexerMappings = _appIndexerMapService.GetMappingsForApp(app.Definition.Id);
 
+                //Remote-Local mappings currently stored by Prowlarr
+                var prowlarrMappings = indexerMappings.ToDictionary(i => i.RemoteIndexerId, i => i.IndexerId);
+
+                //Get Dictionary of Remote Indexers point to Prowlarr and what they are mapped to
+                var remoteMappings = app.GetIndexerMappings();
+
+                //Add mappings if not already in db, these were setup manually in the app or orphaned by a table wipe
+                foreach (var mapping in remoteMappings)
+                {
+                    if (!prowlarrMappings.ContainsKey(mapping.Key))
+                    {
+                        var addMapping = new AppIndexerMap { AppId = app.Definition.Id, RemoteIndexerId = mapping.Key, IndexerId = mapping.Value };
+                        _appIndexerMapService.Insert(addMapping);
+                        indexerMappings.Add(addMapping);
+                    }
+                }
+
                 foreach (var indexer in indexers)
                 {
                     var definition = indexer;

@@ -296,7 +296,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 if (item.AuthorInfo != null)
                 {
                     var authorInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.AuthorInfo);
-                    author = authorInfo.First().Value;
+                    author = authorInfo?.First().Value;
                 }
 
                 if (author != null)

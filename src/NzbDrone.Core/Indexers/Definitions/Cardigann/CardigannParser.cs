@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var releases = new List<CardigannReleaseInfo>();
+            var releases = new List<ReleaseInfo>();
 
             _logger.Debug("Parsing");
 
@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     try
                     {
-                        var release = new CardigannReleaseInfo();
+                        var release = new TorrentInfo();
 
                         // Parse fields
                         foreach (var field in search.Fields)
@@ -127,53 +127,41 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         if (string.IsNullOrEmpty(value))
                                         {
                                             value = null;
-                                            release.Link = null;
+                                            release.DownloadUrl = null;
                                             break;
                                         }
 
                                         if (value.StartsWith("magnet:"))
                                         {
-                                            release.MagnetUri = new Uri(value);
-                                            value = release.MagnetUri.ToString();
+                                            release.MagnetUrl = value;
+                                            value = release.MagnetUrl;
                                         }
                                         else
                                         {
-                                            release.Link = ResolvePath(value, searchUrlUri);
-                                            value = release.Link.ToString();
+                                            release.DownloadUrl = ResolvePath(value, searchUrlUri).AbsoluteUri;
+                                            value = release.DownloadUrl;
                                         }
 
                                         break;
                                     case "magnet":
-                                        var magnetUri = new Uri(value);
-                                        release.MagnetUri = magnetUri;
+                                        var magnetUri = value;
+                                        release.MagnetUrl = magnetUri;
                                         value = magnetUri.ToString();
-                                        if (release.Guid == null)
-                                        {
-                                            release.Guid = magnetUri;
-                                        }
-
+                                        break;
+                                    case "infohash":
+                                        release.InfoHash = value;
                                         break;
                                     case "details":
-                                        var url = ResolvePath(value, searchUrlUri);
+                                        var url = ResolvePath(value, searchUrlUri)?.AbsoluteUri;
+                                        release.InfoUrl = url;
                                         release.Guid = url;
-                                        release.Comments = url;
-                                        if (release.Guid == null)
-                                        {
-                                            release.Guid = url;
-                                        }
-
                                         value = url.ToString();
                                         break;
                                     case "comments":
                                         var commentsUrl = ResolvePath(value, searchUrlUri);
-                                        if (release.Comments == null)
+                                        if (release.CommentUrl == null)
                                         {
-                                            release.Comments = commentsUrl;
-                                        }
-
-                                        if (release.Guid == null)
-                                        {
-                                            release.Guid = commentsUrl;
+                                            release.CommentUrl = commentsUrl.AbsoluteUri;
                                         }
 
                                         value = commentsUrl.ToString();
@@ -219,7 +207,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.Category.ToString();
                                         break;
                                     case "size":
-                                        release.Size = CardigannReleaseInfo.GetBytes(value);
+                                        release.Size = ReleaseInfo.GetBytes(value);
                                         value = release.Size.ToString();
                                         break;
                                     case "leechers":
@@ -227,17 +215,17 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         leechers = leechers < 5000000L ? leechers : 0; // to fix #6558
                                         if (release.Peers == null)
                                         {
-                                            release.Peers = leechers;
+                                            release.Peers = (int)leechers;
                                         }
                                         else
                                         {
-                                            release.Peers += leechers;
+                                            release.Peers += (int)leechers;
                                         }
 
                                         value = leechers.ToString();
                                         break;
                                     case "seeders":
-                                        release.Seeders = ParseUtil.CoerceLong(value);
+                                        release.Seeders = ParseUtil.CoerceInt(value);
                                         release.Seeders = release.Seeders < 5000000L ? release.Seeders : 0; // to fix #6558
                                         if (release.Peers == null)
                                         {
@@ -255,11 +243,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.PublishDate.ToString(DateTimeUtil.Rfc1123ZPattern);
                                         break;
                                     case "files":
-                                        release.Files = ParseUtil.CoerceLong(value);
+                                        release.Files = ParseUtil.CoerceInt(value);
                                         value = release.Files.ToString();
                                         break;
                                     case "grabs":
-                                        release.Grabs = ParseUtil.CoerceLong(value);
+                                        release.Grabs = ParseUtil.CoerceInt(value);
                                         value = release.Grabs.ToString();
                                         break;
                                     case "downloadvolumefactor":
@@ -279,45 +267,46 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.MinimumSeedTime.ToString();
                                         break;
                                     case "imdb":
-                                        release.Imdb = ParseUtil.GetLongFromString(value);
-                                        value = release.Imdb.ToString();
+                                        release.ImdbId = (int)ParseUtil.GetLongFromString(value);
+                                        value = release.ImdbId.ToString();
                                         break;
                                     case "tmdbid":
                                         var tmdbIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
                                         var tmdbIDMatch = tmdbIDRegEx.Match(value);
                                         var tmdbID = tmdbIDMatch.Groups[1].Value;
-                                        release.TMDb = ParseUtil.CoerceLong(tmdbID);
-                                        value = release.TMDb.ToString();
+                                        release.TmdbId = (int)ParseUtil.CoerceLong(tmdbID);
+                                        value = release.TmdbId.ToString();
                                         break;
                                     case "rageid":
                                         var rageIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
                                         var rageIDMatch = rageIDRegEx.Match(value);
                                         var rageID = rageIDMatch.Groups[1].Value;
-                                        release.RageID = ParseUtil.CoerceLong(rageID);
-                                        value = release.RageID.ToString();
+                                        release.TvRageId = (int)ParseUtil.CoerceLong(rageID);
+                                        value = release.TvRageId.ToString();
                                         break;
                                     case "tvdbid":
                                         var tvdbIdRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
                                         var tvdbIdMatch = tvdbIdRegEx.Match(value);
                                         var tvdbId = tvdbIdMatch.Groups[1].Value;
-                                        release.TVDBId = ParseUtil.CoerceLong(tvdbId);
-                                        value = release.TVDBId.ToString();
+                                        release.TvdbId = (int)ParseUtil.CoerceLong(tvdbId);
+                                        value = release.TvdbId.ToString();
                                         break;
-                                    case "author":
-                                        release.Author = value;
-                                        break;
-                                    case "booktitle":
-                                        release.BookTitle = value;
-                                        break;
-                                    case "banner":
-                                        if (!string.IsNullOrWhiteSpace(value))
-                                        {
-                                            var bannerurl = ResolvePath(value, searchUrlUri);
-                                            release.BannerUrl = bannerurl;
-                                        }
 
-                                        value = release.BannerUrl.ToString();
-                                        break;
+                                    //case "author":
+                                    //    release.Author = value;
+                                    //    break;
+                                    //case "booktitle":
+                                    //    release.BookTitle = value;
+                                    //    break;
+                                    //case "banner":
+                                    //    if (!string.IsNullOrWhiteSpace(value))
+                                    //    {
+                                    //        var bannerurl = ResolvePath(value, searchUrlUri);
+                                    //        release.BannerUrl = bannerurl;
+                                    //    }
+
+                                    //    value = release.BannerUrl.ToString();
+                                    //    break;
                                     default:
                                         break;
                                 }
@@ -474,29 +463,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 releases = releases.Take(query.Limit).ToList();
             }*/
 
-            var result = new List<ReleaseInfo>();
+            _logger.Debug($"Got {releases.Count} releases");
 
-            result.AddRange(releases.Select(x => new TorrentInfo
-            {
-                PublishDate = x.PublishDate,
-                Guid = x.Guid.ToString(),
-                Title = x.Title,
-                Size = x.Size.Value,
-                DownloadUrl = x.Link.AbsoluteUri,
-                CommentUrl = x.Comments?.ToString(),
-                InfoUrl = x.Link?.ToString(),
-                MagnetUrl = x.MagnetUri?.AbsoluteUri,
-                InfoHash = x.InfoHash,
-                Seeders = (int?)x.Seeders,
-                Peers = (int?)x.Peers,
-                Grabs = (int?)x.Grabs,
-                Files = (int?)x.Files,
-                Category = x.Category
-            }));
-
-            _logger.Debug($"Got {result.Count} releases");
-
-            return result;
+            return releases;
         }
     }
 }

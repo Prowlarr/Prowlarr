@@ -99,7 +99,7 @@ namespace NzbDrone.Core.History
                 return;
             }
 
-            _logger.Info("Removing items older than {0} days from the history", cleanupDays);
+            _logger.Info("Removing items older than {0} days from history", cleanupDays);
 
             _historyRepository.Cleanup(cleanupDays);
 

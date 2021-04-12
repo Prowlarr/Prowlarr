@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return _generatorCache.Get(Settings.DefinitionFile, () =>
+            var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
                 new CardigannRequestGenerator(_configService,
                     _definitionService.GetDefinition(Settings.DefinitionFile),
                     _logger)
@@ -36,6 +36,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     HttpClient = _httpClient,
                     Settings = Settings
                 });
+
+            _generatorCache.ClearExpired();
+
+            return generator;
         }
 
         public override IParseIndexerResponse GetParser()

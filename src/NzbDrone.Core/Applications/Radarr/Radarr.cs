@@ -117,7 +117,9 @@ namespace NzbDrone.Core.Applications.Radarr
 
         private RadarrIndexer BuildRadarrIndexer(IndexerDefinition indexer, DownloadProtocol protocol, int id = 0)
         {
-            var schemas = _schemaCache.Get(Definition.Settings.ToJson(), () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var cacheKey = $"{Settings.BaseUrl}";
+            var schemas = _schemaCache.Get(cacheKey, () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+
             var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
             var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
 

@@ -126,6 +126,8 @@ namespace Prowlarr.Api.V1.Search
                 result.Add(release);
             }
 
+            _remoteReleaseCache.ClearExpired();
+
             return result;
         }
 

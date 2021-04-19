@@ -4,15 +4,25 @@ import Label from 'Components/Label';
 
 function CapabilitiesLabel(props) {
   const {
+    categoryFilter
+  } = props;
+
+  const {
     categories
   } = props.capabilities;
 
-  const filteredList = categories.filter((item) => item.id < 100000).map((item) => item.name).sort();
+  let filteredList = categories.filter((item) => item.id < 100000);
+
+  if (categoryFilter.length > 0) {
+    filteredList = filteredList.filter((item) => categoryFilter.includes(item.id));
+  }
+
+  const nameList = filteredList.map((item) => item.name).sort();
 
   return (
     <span>
       {
-        filteredList.map((category) => {
+        nameList.map((category) => {
           return (
             <Label key={category}>
               {category}
@@ -33,13 +43,15 @@ function CapabilitiesLabel(props) {
 }
 
 CapabilitiesLabel.propTypes = {
-  capabilities: PropTypes.object.isRequired
+  capabilities: PropTypes.object.isRequired,
+  categoryFilter: PropTypes.arrayOf(PropTypes.number).isRequired
 };
 
 CapabilitiesLabel.defaultProps = {
   capabilities: {
     categories: []
-  }
+  },
+  categoryFilter: []
 };
 
 export default CapabilitiesLabel;

@@ -11,6 +11,7 @@
 
 .info {
   padding: 0 4px;
+  white-space: nowrap;
 }
 
 .value {

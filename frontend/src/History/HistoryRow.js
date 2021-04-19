@@ -5,6 +5,7 @@ import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellCo
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
+import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
 import HistoryRowParameter from './HistoryRowParameter';
@@ -254,7 +255,10 @@ class HistoryRow extends Component {
                 >
                   {
                     data.categories ?
-                      data.categories :
+                      <CapabilitiesLabel
+                        capabilities={indexer.capabilities}
+                        categoryFilter={data.categories.split(',').map(Number)}
+                      /> :
                       null
                   }
                 </TableRowCell>
@@ -291,7 +295,7 @@ class HistoryRow extends Component {
               return (
                 <TableRowCell
                   key={name}
-                  className={styles.indexer}
+                  className={styles.elapsedTime}
                 >
                   {
                     data.elapsedTime ?
@@ -307,6 +311,7 @@ class HistoryRow extends Component {
                 <RelativeDateCellConnector
                   key={name}
                   date={date}
+                  className={styles.date}
                 />
               );
             }

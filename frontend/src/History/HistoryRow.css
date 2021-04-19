@@ -4,25 +4,17 @@
   width: 120px;
 }
 
+.elapsedTime,
 .indexer {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 150px;
 }
 
+.categories,
+.source,
+.date,
 .releaseGroup {
-  composes: cell from '~Components/Table/Cells/TableRowCell.css';
-
-  width: 110px;
-}
-
-.categories {
-  composes: cell from '~Components/Table/Cells/TableRowCell.css';
-
-  width: 110px;
-}
-
-.source {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
   width: 110px;

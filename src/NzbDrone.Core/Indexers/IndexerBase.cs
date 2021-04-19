@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers
         public abstract Task<IndexerPageableQueryResult> Fetch(TvSearchCriteria searchCriteria);
         public abstract Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria);
         public abstract Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
-        public abstract Task<byte[]> Download(HttpUri searchCriteria);
+        public abstract Task<byte[]> Download(Uri searchCriteria);
 
         public abstract IndexerCapabilities GetCapabilities();
 

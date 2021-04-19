@@ -50,9 +50,9 @@ namespace NzbDrone.Core.Indexers.Headphones
             }
         }
 
-        public override async Task<byte[]> Download(HttpUri link)
+        public override async Task<byte[]> Download(Uri link)
         {
-            var requestBuilder = new HttpRequestBuilder(link.FullUri);
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 
             var downloadBytes = Array.Empty<byte>();
 

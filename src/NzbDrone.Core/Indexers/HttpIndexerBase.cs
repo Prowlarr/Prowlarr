@@ -97,11 +97,11 @@ namespace NzbDrone.Core.Indexers
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
-        public override async Task<byte[]> Download(HttpUri link)
+        public override async Task<byte[]> Download(Uri link)
         {
             Cookies = GetCookies();
 
-            var requestBuilder = new HttpRequestBuilder(link.FullUri);
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 
             if (Cookies != null)
             {

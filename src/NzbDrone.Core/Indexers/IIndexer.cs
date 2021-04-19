@@ -1,5 +1,5 @@
+using System;
 using System.Threading.Tasks;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.ThingiProvider;
 
@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers
         Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria);
         Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
 
-        Task<byte[]> Download(HttpUri link);
+        Task<byte[]> Download(Uri link);
 
         IndexerCapabilities GetCapabilities();
     }

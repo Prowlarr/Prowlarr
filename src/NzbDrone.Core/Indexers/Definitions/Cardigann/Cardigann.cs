@@ -37,6 +37,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     Settings = Settings
                 });
 
+            generator = (CardigannRequestGenerator)SetCookieFunctions(generator);
+
             _generatorCache.ClearExpired();
 
             return generator;
@@ -132,6 +134,29 @@ namespace NzbDrone.Core.Indexers.Cardigann
             generator.Settings = Settings;
 
             await generator.DoLogin();
+        }
+
+        public override async Task<byte[]> Download(Uri link)
+        {
+            var generator = (CardigannRequestGenerator)GetRequestGenerator();
+
+            var request = await generator.DownloadRequest(link);
+            request.AllowAutoRedirect = true;
+
+            var downloadBytes = Array.Empty<byte>();
+
+            try
+            {
+                var response = await _httpClient.ExecuteAsync(request);
+                downloadBytes = response.ResponseData;
+            }
+            catch (Exception)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Error("Download failed");
+            }
+
+            return downloadBytes;
         }
 
         protected override async Task Test(List<ValidationFailure> failures)

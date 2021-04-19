@@ -142,7 +142,7 @@ namespace NzbDrone.Core.History
             if (message.Query is BookSearchCriteria)
             {
                 history.Data.Add("Author", ((BookSearchCriteria)message.Query).Author ?? string.Empty);
-                history.Data.Add("Title", ((BookSearchCriteria)message.Query).Title ?? string.Empty);
+                history.Data.Add("BookTitle", ((BookSearchCriteria)message.Query).Title ?? string.Empty);
             }
 
             history.Data.Add("ElapsedTime", message.Time.ToString());

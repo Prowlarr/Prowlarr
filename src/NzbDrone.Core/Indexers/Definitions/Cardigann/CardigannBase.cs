@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -704,6 +705,44 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             return data;
+        }
+
+        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders,
+                                                      Dictionary<string, object> variables)
+        {
+            if (customHeaders == null)
+            {
+                return null;
+            }
+
+            // FIXME: fix jackett header handling (allow it to specifiy the same header multipe times)
+            var headers = new Dictionary<string, string>();
+            foreach (var header in customHeaders)
+            {
+                headers.Add(header.Key, ApplyGoTemplateText(header.Value[0], variables));
+            }
+
+            return headers;
+        }
+
+        protected IDictionary<string, object> AddTemplateVariablesFromUri(IDictionary<string, object> variables, Uri uri, string prefix = "")
+        {
+            variables[prefix + ".AbsoluteUri"] = uri.AbsoluteUri;
+            variables[prefix + ".AbsolutePath"] = uri.AbsolutePath;
+            variables[prefix + ".Scheme"] = uri.Scheme;
+            variables[prefix + ".Host"] = uri.Host;
+            variables[prefix + ".Port"] = uri.Port.ToString();
+            variables[prefix + ".PathAndQuery"] = uri.PathAndQuery;
+            variables[prefix + ".Query"] = uri.Query;
+            var queryString = QueryHelpers.ParseQuery(uri.Query);
+
+            foreach (var key in queryString.Keys)
+            {
+                //If we have supplied the same query string multiple time, just take the first.
+                variables[prefix + ".Query." + key] = queryString[key].First();
+            }
+
+            return variables;
         }
 
         protected Uri ResolvePath(string path, Uri currentUrl = null)

@@ -291,6 +291,16 @@ namespace NzbDrone.Common.Http
             return this;
         }
 
+        public virtual HttpRequestBuilder SetHeaders(Dictionary<string, string> headers)
+        {
+            foreach (var header in headers)
+            {
+                Headers.Set(header.Key, header.Value);
+            }
+
+            return this;
+        }
+
         public virtual HttpRequestBuilder AddPrefixQueryParam(string key, object value, bool replace = false)
         {
             if (replace)

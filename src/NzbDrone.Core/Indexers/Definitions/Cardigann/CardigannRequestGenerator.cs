@@ -607,7 +607,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     var request = new HttpRequestBuilder(captchaUrl.ToString())
                         .SetCookies(landingResult.GetCookies())
-                        .SetHeader("Referrer", loginUrl.AbsoluteUri)
+                        .SetHeader("Referer", loginUrl.AbsoluteUri)
                         .Build();
 
                     var response = await HttpClient.ExecuteAsync(request);
@@ -643,6 +643,139 @@ namespace NzbDrone.Core.Indexers.Cardigann
         }
 
         protected string GetRedirectDomainHint(HttpResponse result) => GetRedirectDomainHint(result.Request.Url.ToString(), result.Headers.GetSingleValue("Location"));
+
+        protected async Task<HttpResponse> HandleRequest(RequestBlock request, Dictionary<string, object> variables = null, string referer = null)
+        {
+            var requestLinkStr = ResolvePath(ApplyGoTemplateText(request.Path, variables)).ToString();
+            _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() requestLinkStr= {requestLinkStr}");
+
+            Dictionary<string, string> pairs = null;
+            var queryCollection = new NameValueCollection();
+
+            var method = HttpMethod.GET;
+            if (string.Equals(request.Method, "post", StringComparison.OrdinalIgnoreCase))
+            {
+                method = HttpMethod.POST;
+                pairs = new Dictionary<string, string>();
+            }
+
+            foreach (var input in request.Inputs)
+            {
+                var value = ApplyGoTemplateText(input.Value, variables);
+                if (method == HttpMethod.GET)
+                {
+                    queryCollection.Add(input.Key, value);
+                }
+                else if (method == HttpMethod.POST)
+                {
+                    pairs.Add(input.Key, value);
+                }
+            }
+
+            if (queryCollection.Count > 0)
+            {
+                if (!requestLinkStr.Contains("?"))
+                {
+                    // TODO Need Encoding here if we add it back
+                    requestLinkStr += "?" + queryCollection.GetQueryString(separator: request.Queryseparator).Substring(1);
+                }
+                else
+                {
+                    requestLinkStr += queryCollection.GetQueryString(separator: request.Queryseparator);
+                }
+            }
+
+            var httpRequest = new HttpRequestBuilder(requestLinkStr)
+                .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetHeaders(pairs ?? new Dictionary<string, string>())
+                .SetHeader("Referer", referer)
+                .Build();
+
+            httpRequest.Method = method;
+
+            var response = await HttpClient.ExecuteAsync(httpRequest);
+
+            _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() remote server returned {response.StatusCode.ToString()}");
+            return response;
+        }
+
+        public async Task<HttpRequest> DownloadRequest(Uri link)
+        {
+            Cookies = GetCookies();
+            var method = HttpMethod.GET;
+
+            if (_definition.Download != null)
+            {
+                var download = _definition.Download;
+                var variables = GetBaseTemplateVariables();
+
+                AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
+
+                if (download.Before != null)
+                {
+                    await HandleRequest(download.Before, variables, link.ToString());
+                }
+
+                if (download.Method == "post")
+                {
+                    method = HttpMethod.POST;
+                }
+
+                if (download.Selector != null)
+                {
+                    var selector = ApplyGoTemplateText(download.Selector, variables);
+                    var headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+
+                    var request = new HttpRequestBuilder(link.ToString())
+                        .SetCookies(Cookies ?? new Dictionary<string, string>())
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
+                        .Build();
+
+                    request.AllowAutoRedirect = true;
+
+                    var response = await HttpClient.ExecuteAsync(request);
+
+                    var results = response.Content;
+                    var searchResultParser = new HtmlParser();
+                    var searchResultDocument = searchResultParser.ParseDocument(results);
+                    var downloadElement = searchResultDocument.QuerySelector(selector);
+                    if (downloadElement != null)
+                    {
+                        _logger.Debug(string.Format("CardigannIndexer ({0}): Download selector {1} matched:{2}", _definition.Id, selector, downloadElement.ToHtmlPretty()));
+
+                        var href = "";
+                        if (download.Attribute != null)
+                        {
+                            href = downloadElement.GetAttribute(download.Attribute);
+                            if (href == null)
+                            {
+                                throw new Exception(string.Format("Attribute \"{0}\" is not set for element {1}", download.Attribute, downloadElement.ToHtmlPretty()));
+                            }
+                        }
+                        else
+                        {
+                            href = downloadElement.TextContent;
+                        }
+
+                        href = ApplyFilters(href, download.Filters, variables);
+                        link = ResolvePath(href, link);
+                    }
+                    else
+                    {
+                        _logger.Error(string.Format("CardigannIndexer ({0}): Download selector {1} didn't match:\n{2}", _definition.Id, download.Selector, results));
+                        throw new Exception(string.Format("Download selector {0} didn't match", download.Selector));
+                    }
+                }
+            }
+
+            var downloadRequest = new HttpRequestBuilder(link.AbsoluteUri)
+                .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .Build();
+
+            downloadRequest.Method = method;
+
+            return downloadRequest;
+        }
 
         public bool CheckIfLoginIsNeeded(HttpResponse response)
         {

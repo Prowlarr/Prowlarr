@@ -39,12 +39,14 @@ namespace NzbDrone.Core.Applications.Readarr
 
         public override Dictionary<int, int> GetIndexerMappings()
         {
-            var indexers = _readarrV1Proxy.GetIndexers(Settings);
+            var indexers = _readarrV1Proxy.GetIndexers(Settings)
+                                          .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
+
             var mappings = new Dictionary<int, int>();
 
             foreach (var indexer in indexers)
             {
-                if ((string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value == _configFileProvider.ApiKey)
+                if ((string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value == _configFileProvider.ApiKey)
                 {
                     var match = AppIndexerRegex.Match((string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value);
 

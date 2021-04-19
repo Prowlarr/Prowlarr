@@ -47,6 +47,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'parameters',
+      label: 'Parameters',
+      isSortable: false,
+      isVisible: false
+    },
+    {
       name: 'categories',
       label: 'Categories',
       isSortable: false,

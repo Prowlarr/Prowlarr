@@ -7,6 +7,7 @@ import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
+import HistoryRowParameter from './HistoryRowParameter';
 import styles from './HistoryRow.css';
 
 class HistoryRow extends Component {
@@ -117,6 +118,134 @@ class HistoryRow extends Component {
               );
             }
 
+            if (name === 'query') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.query}
+                >
+                  {data.query}
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'parameters') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.parameters}
+                >
+                  {
+                    data.imdbId ?
+                      <HistoryRowParameter
+                        title='IMDb Id'
+                        value={data.imdbId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.tmdbId ?
+                      <HistoryRowParameter
+                        title='TMDb Id'
+                        value={data.tmdbId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.tvdbId ?
+                      <HistoryRowParameter
+                        title='TVDb Id'
+                        value={data.tvdbId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.traktId ?
+                      <HistoryRowParameter
+                        title='Trakt Id'
+                        value={data.traktId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.rId ?
+                      <HistoryRowParameter
+                        title='Rage Id'
+                        value={data.rId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.tvMazeId ?
+                      <HistoryRowParameter
+                        title='TvMaze Id'
+                        value={data.tvMazeId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.season ?
+                      <HistoryRowParameter
+                        title='Season'
+                        value={data.tvMazeId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.episode ?
+                      <HistoryRowParameter
+                        title='Episode'
+                        value={data.tvMazeId}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.artist ?
+                      <HistoryRowParameter
+                        title='Artist'
+                        value={data.artist}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.album ?
+                      <HistoryRowParameter
+                        title='Album'
+                        value={data.album}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.author ?
+                      <HistoryRowParameter
+                        title='Author'
+                        value={data.author}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.bookTitle ?
+                      <HistoryRowParameter
+                        title='Book'
+                        value={data.bookTitle}
+                      /> :
+                      null
+                  }
+                </TableRowCell>
+              );
+            }
+
             if (name === 'categories') {
               return (
                 <TableRowCell
@@ -169,17 +298,6 @@ class HistoryRow extends Component {
                       `${data.elapsedTime}ms` :
                       null
                   }
-                </TableRowCell>
-              );
-            }
-
-            if (name === 'query') {
-              return (
-                <TableRowCell
-                  key={name}
-                  className={styles.query}
-                >
-                  {data.query}
                 </TableRowCell>
               );
             }

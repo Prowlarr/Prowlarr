@@ -33,3 +33,10 @@
 
   width: 70px;
 }
+
+.parameters {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  display: flex;
+  flex-wrap: wrap;
+}

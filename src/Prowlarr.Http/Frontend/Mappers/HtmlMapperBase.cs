@@ -39,15 +39,6 @@ namespace Prowlarr.Http.Frontend.Mappers
             return stream;
         }
 
-        /*
-        public override IActionResult GetResponse(string resourceUrl)
-        {
-            var response = base.GetResponse(resourceUrl);
-            response.Headers["X-UA-Compatible"] = "IE=edge";
-
-            return response;
-        }*/
-
         protected string GetHtmlText()
         {
             if (RuntimeInfo.IsProduction && _generatedContent != null)

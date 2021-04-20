@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
@@ -7,7 +6,6 @@ import keyboardShortcuts, { shortcuts } from 'Components/keyboardShortcuts';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import { icons } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
-import FuseWorker from './fuse.worker';
 import MovieSearchResult from './MovieSearchResult';
 import styles from './MovieSearchInput.css';
 
@@ -22,7 +20,6 @@ class MovieSearchInput extends Component {
     super(props, context);
 
     this._autosuggest = null;
-    this._worker = null;
 
     this.state = {
       value: '',
@@ -40,15 +37,6 @@ class MovieSearchInput extends Component {
       this._worker.terminate();
       this._worker = null;
     }
-  }
-
-  getWorker() {
-    if (!this._worker) {
-      this._worker = new FuseWorker();
-      this._worker.addEventListener('message', this.onSuggestionsReceived, false);
-    }
-
-    return this._worker;
   }
 
   //
@@ -105,11 +93,6 @@ class MovieSearchInput extends Component {
     );
   }
 
-  goToMovie(item) {
-    this.setState({ value: '' });
-    this.props.onGoToMovie(item.item.titleSlug);
-  }
-
   reset() {
     this.setState({
       value: '',
@@ -149,8 +132,7 @@ class MovieSearchInput extends Component {
     } = this.state;
 
     const {
-      highlightedSectionIndex,
-      highlightedSuggestionIndex
+      highlightedSectionIndex
     } = this._autosuggest.state;
 
     if (!suggestions.length || highlightedSectionIndex) {
@@ -161,86 +143,12 @@ class MovieSearchInput extends Component {
       return;
     }
 
-    // If an suggestion is not selected go to the first movie,
-    // otherwise go to the selected movie.
-
-    if (highlightedSuggestionIndex == null) {
-      this.goToMovie(suggestions[0]);
-    } else {
-      this.goToMovie(suggestions[highlightedSuggestionIndex]);
-    }
-
     this._autosuggest.input.blur();
     this.reset();
   }
 
   onBlur = () => {
     this.reset();
-  }
-
-  onSuggestionsFetchRequested = ({ value }) => {
-    if (!this.state.loading) {
-      this.setState({
-        loading: true
-      });
-    }
-
-    this.requestSuggestions(value);
-  };
-
-  requestSuggestions = _.debounce((value) => {
-    if (!this.state.loading) {
-      return;
-    }
-
-    const requestLoading = this.state.requestLoading;
-
-    this.setState({
-      requestValue: value,
-      requestLoading: true
-    });
-
-    if (!requestLoading) {
-      const payload = {
-        value,
-        movies: this.props.movies
-      };
-
-      this.getWorker().postMessage(payload);
-    }
-  }, 250);
-
-  onSuggestionsReceived = (message) => {
-    const {
-      value,
-      suggestions
-    } = message.data;
-
-    if (!this.state.loading) {
-      this.setState({
-        requestValue: null,
-        requestLoading: false
-      });
-    } else if (value === this.state.requestValue) {
-      this.setState({
-        suggestions,
-        requestValue: null,
-        requestLoading: false,
-        loading: false
-      });
-    } else {
-      this.setState({
-        suggestions,
-        requestLoading: true
-      });
-
-      const payload = {
-        value: this.state.requestValue,
-        movies: this.props.movies
-      };
-
-      this.getWorker().postMessage(payload);
-    }
   }
 
   onSuggestionsClearRequested = () => {
@@ -253,8 +161,6 @@ class MovieSearchInput extends Component {
   onSuggestionSelected = (event, { suggestion }) => {
     if (suggestion.type === ADD_NEW_TYPE) {
       this.props.onGoToAddNewMovie(this.state.value);
-    } else {
-      this.goToMovie(suggestion);
     }
   }
 
@@ -263,23 +169,13 @@ class MovieSearchInput extends Component {
 
   render() {
     const {
-      value,
-      loading,
-      suggestions
+      value
     } = this.state;
 
     const suggestionGroups = [];
 
-    if (suggestions.length || loading) {
-      suggestionGroups.push({
-        title: translate('ExistingMovies'),
-        loading,
-        suggestions
-      });
-    }
-
     suggestionGroups.push({
-      title: translate('AddNewMovie'),
+      title: translate('SearchIndexers'),
       suggestions: [
         {
           type: ADD_NEW_TYPE,
@@ -328,8 +224,6 @@ class MovieSearchInput extends Component {
           getSuggestionValue={this.getSuggestionValue}
           renderSuggestion={this.renderSuggestion}
           onSuggestionSelected={this.onSuggestionSelected}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
         />
       </div>
     );
@@ -337,8 +231,6 @@ class MovieSearchInput extends Component {
 }
 
 MovieSearchInput.propTypes = {
-  movies: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onGoToMovie: PropTypes.func.isRequired,
   onGoToAddNewMovie: PropTypes.func.isRequired,
   bindShortcut: PropTypes.func.isRequired
 };

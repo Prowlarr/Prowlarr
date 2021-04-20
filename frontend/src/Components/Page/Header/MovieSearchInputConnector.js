@@ -1,6 +1,7 @@
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { setSearchDefault } from 'Store/Actions/releaseActions';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createDeepEqualSelector from 'Store/Selectors/createDeepEqualSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
@@ -58,12 +59,9 @@ function createMapStateToProps() {
 
 function createMapDispatchToProps(dispatch, props) {
   return {
-    onGoToMovie(titleSlug) {
-      dispatch(push(`${window.Prowlarr.urlBase}/movie/${titleSlug}`));
-    },
-
     onGoToAddNewMovie(query) {
-      dispatch(push(`${window.Prowlarr.urlBase}/add/new?term=${encodeURIComponent(query)}`));
+      dispatch(setSearchDefault({ searchQuery: query, searchIndexerIds: [-1, -2] }));
+      dispatch(push(`${window.Prowlarr.urlBase}search`));
     }
   };
 }

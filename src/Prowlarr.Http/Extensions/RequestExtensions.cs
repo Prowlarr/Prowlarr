@@ -29,6 +29,18 @@ namespace Prowlarr.Http.Extensions
             return defaultValue;
         }
 
+        public static string GetNullableStringQueryParameter(this HttpRequest request, string parameter, string defaultValue = null)
+        {
+            var parameterValue = request.Query[parameter];
+
+            if (parameterValue.Any())
+            {
+                return parameterValue.ToString();
+            }
+
+            return defaultValue;
+        }
+
         public static PagingResource<TResource> ReadPagingResourceFromRequest<TResource>(this HttpRequest request)
         {
             if (!int.TryParse(request.Query["PageSize"].ToString(), out var pageSize))

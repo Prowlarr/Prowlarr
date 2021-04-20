@@ -6,6 +6,6 @@ namespace Prowlarr.Http.Frontend.Mappers
     {
         string Map(string resourceUrl);
         bool CanHandle(string resourceUrl);
-        IActionResult GetResponse(string resourceUrl);
+        FileStreamResult GetResponse(string resourceUrl);
     }
 }

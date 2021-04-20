@@ -186,6 +186,7 @@ namespace Prowlarr.Http.Extensions
 
         public static void DisableCache(this IHeaderDictionary headers)
         {
+            headers.Remove("Last-Modified");
             headers["Cache-Control"] = "no-cache, no-store";
             headers["Expires"] = "-1";
             headers["Pragma"] = "no-cache";

@@ -23,6 +23,7 @@ namespace NzbDrone.Core.IndexerVersions
     public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
     {
         private const int DEFINITION_VERSION = 1;
+        private readonly List<string> _defintionBlacklist = new List<string>() { "blutopia" };
 
         private readonly IHttpClient _httpClient;
         private readonly IAppFolderInfo _appFolderInfo;
@@ -56,7 +57,7 @@ namespace NzbDrone.Core.IndexerVersions
             {
                 var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
                 var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
-                indexerList = response.Resource;
+                indexerList = response.Resource.Where(i => !_defintionBlacklist.Contains(i.File)).ToList();
             }
             catch
             {

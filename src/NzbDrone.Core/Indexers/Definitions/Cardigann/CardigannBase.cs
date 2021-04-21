@@ -529,7 +529,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var all = variablesRegExMatches.Groups[0].Value;
                 var variable = variablesRegExMatches.Groups[1].Value;
 
-                var value = (string)variables[variable];
+                //We store tmdbid and others as int32, thus conversion with .tostring is needed
+                var value = variables[variable]?.ToString() ?? null;
                 if (modifier != null)
                 {
                     value = modifier(value);

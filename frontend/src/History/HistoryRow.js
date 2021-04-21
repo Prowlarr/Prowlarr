@@ -139,7 +139,7 @@ class HistoryRow extends Component {
                   {
                     data.imdbId ?
                       <HistoryRowParameter
-                        title='IMDb Id'
+                        title='IMDb'
                         value={data.imdbId}
                       /> :
                       null
@@ -148,7 +148,7 @@ class HistoryRow extends Component {
                   {
                     data.tmdbId ?
                       <HistoryRowParameter
-                        title='TMDb Id'
+                        title='TMDb'
                         value={data.tmdbId}
                       /> :
                       null
@@ -157,7 +157,7 @@ class HistoryRow extends Component {
                   {
                     data.tvdbId ?
                       <HistoryRowParameter
-                        title='TVDb Id'
+                        title='TVDb'
                         value={data.tvdbId}
                       /> :
                       null
@@ -166,7 +166,7 @@ class HistoryRow extends Component {
                   {
                     data.traktId ?
                       <HistoryRowParameter
-                        title='Trakt Id'
+                        title='Trakt'
                         value={data.traktId}
                       /> :
                       null
@@ -175,7 +175,7 @@ class HistoryRow extends Component {
                   {
                     data.rId ?
                       <HistoryRowParameter
-                        title='Rage Id'
+                        title='TvRage'
                         value={data.rId}
                       /> :
                       null
@@ -184,7 +184,7 @@ class HistoryRow extends Component {
                   {
                     data.tvMazeId ?
                       <HistoryRowParameter
-                        title='TvMaze Id'
+                        title='TvMaze'
                         value={data.tvMazeId}
                       /> :
                       null

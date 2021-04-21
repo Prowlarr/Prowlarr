@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -141,6 +142,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
 
             var request = await generator.DownloadRequest(link);
+
+            if (request.Url.Scheme == "magnet")
+            {
+                return Encoding.UTF8.GetBytes(request.Url.FullUri);
+            }
+
             request.AllowAutoRedirect = true;
 
             var downloadBytes = Array.Empty<byte>();

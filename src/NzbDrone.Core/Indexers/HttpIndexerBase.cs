@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -100,6 +101,11 @@ namespace NzbDrone.Core.Indexers
         public override async Task<byte[]> Download(Uri link)
         {
             Cookies = GetCookies();
+
+            if (link.Scheme == "magnet")
+            {
+                return Encoding.UTF8.GetBytes(link.OriginalString);
+            }
 
             var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 

@@ -146,7 +146,7 @@ namespace NzbDrone.Core.IndexerSearch
                     .ToList();
             }
 
-            _logger.ProgressInfo("Searching {0} indexers for {1}", indexers.Count, criteriaBase.ToString());
+            _logger.ProgressInfo("Searching indexers: [{0}] for {1}", string.Join(", ", indexers.Select(i => i.Definition.Name).ToList()), criteriaBase.ToString());
 
             var tasks = indexers.Select(x => DispatchIndexer(searchAction, x, criteriaBase));
 

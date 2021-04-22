@@ -194,7 +194,7 @@ class HistoryRow extends Component {
                     data.season ?
                       <HistoryRowParameter
                         title='Season'
-                        value={data.tvMazeId}
+                        value={data.season}
                       /> :
                       null
                   }
@@ -203,7 +203,7 @@ class HistoryRow extends Component {
                     data.episode ?
                       <HistoryRowParameter
                         title='Episode'
-                        value={data.tvMazeId}
+                        value={data.episode}
                       /> :
                       null
                   }

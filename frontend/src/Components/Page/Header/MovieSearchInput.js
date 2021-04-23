@@ -158,6 +158,13 @@ class MovieSearchInput extends Component {
     });
   }
 
+  onSuggestionsFetchRequested = () => {
+    this.setState({
+      suggestions: [],
+      loading: false
+    });
+  }
+
   onSuggestionSelected = (event, { suggestion }) => {
     if (suggestion.type === ADD_NEW_TYPE) {
       this.props.onGoToAddNewMovie(this.state.value);
@@ -224,6 +231,8 @@ class MovieSearchInput extends Component {
           getSuggestionValue={this.getSuggestionValue}
           renderSuggestion={this.renderSuggestion}
           onSuggestionSelected={this.onSuggestionSelected}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
         />
       </div>
     );

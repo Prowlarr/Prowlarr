@@ -31,7 +31,8 @@ namespace NzbDrone.Core.History
                                   IHandle<IndexerQueryEvent>,
                                   IHandle<IndexerDownloadEvent>,
                                   IHandle<IndexerAuthEvent>,
-                                  IExecute<CleanUpHistoryCommand>
+                                  IExecute<CleanUpHistoryCommand>,
+                                  IExecute<ClearHistoryCommand>
     {
         private readonly IHistoryRepository _historyRepository;
         private readonly IConfigService _configService;
@@ -196,6 +197,11 @@ namespace NzbDrone.Core.History
         public void Execute(CleanUpHistoryCommand message)
         {
             Cleanup();
+        }
+
+        public void Execute(ClearHistoryCommand message)
+        {
+            _historyRepository.Purge(vacuum: true);
         }
     }
 }

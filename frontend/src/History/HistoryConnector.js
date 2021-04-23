@@ -2,8 +2,11 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import * as commandNames from 'Commands/commandNames';
 import withCurrentPage from 'Components/withCurrentPage';
+import { executeCommand } from 'Store/Actions/commandActions';
 import * as historyActions from 'Store/Actions/historyActions';
+import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
 import History from './History';
 
@@ -11,11 +14,13 @@ function createMapStateToProps() {
   return createSelector(
     (state) => state.history,
     (state) => state.indexers,
-    (history, indexers) => {
+    createCommandExecutingSelector(commandNames.CLEAR_HISTORY),
+    (history, indexers, isHistoryClearing) => {
       return {
-        isMoviesFetching: indexers.isFetching,
-        isMoviesPopulated: indexers.isPopulated,
+        isIndexersFetching: indexers.isFetching,
+        isIndexersPopulated: indexers.isPopulated,
         indexersError: indexers.error,
+        isHistoryClearing,
         ...history
       };
     }
@@ -23,6 +28,7 @@ function createMapStateToProps() {
 }
 
 const mapDispatchToProps = {
+  executeCommand,
   ...historyActions
 };
 
@@ -44,6 +50,12 @@ class HistoryConnector extends Component {
       fetchHistory();
     } else {
       gotoHistoryFirstPage();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isHistoryClearing && !this.props.isHistoryClearing) {
+      this.props.gotoHistoryFirstPage();
     }
   }
 
@@ -90,6 +102,10 @@ class HistoryConnector extends Component {
     this.props.setHistoryFilter({ selectedFilterKey });
   }
 
+  onClearHistoryPress = () => {
+    this.props.executeCommand({ name: commandNames.CLEAR_HISTORY });
+  }
+
   onTableOptionChange = (payload) => {
     this.props.setHistoryTableOption(payload);
 
@@ -112,6 +128,7 @@ class HistoryConnector extends Component {
         onSortPress={this.onSortPress}
         onFilterSelect={this.onFilterSelect}
         onTableOptionChange={this.onTableOptionChange}
+        onClearHistoryPress={this.onClearHistoryPress}
         {...this.props}
       />
     );
@@ -122,6 +139,8 @@ HistoryConnector.propTypes = {
   useCurrentPage: PropTypes.bool.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   fetchHistory: PropTypes.func.isRequired,
+  clearHistory: PropTypes.func.isRequired,
+  isHistoryClearing: PropTypes.bool.isRequired,
   gotoHistoryFirstPage: PropTypes.func.isRequired,
   gotoHistoryPreviousPage: PropTypes.func.isRequired,
   gotoHistoryNextPage: PropTypes.func.isRequired,
@@ -130,7 +149,7 @@ HistoryConnector.propTypes = {
   setHistorySort: PropTypes.func.isRequired,
   setHistoryFilter: PropTypes.func.isRequired,
   setHistoryTableOption: PropTypes.func.isRequired,
-  clearHistory: PropTypes.func.isRequired
+  executeCommand: PropTypes.func.isRequired
 };
 
 export default withCurrentPage(

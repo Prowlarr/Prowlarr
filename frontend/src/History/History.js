@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import FilterMenu from 'Components/Menu/FilterMenu';
+import ConfirmModal from 'Components/Modal/ConfirmModal';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
@@ -11,12 +12,39 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import TablePager from 'Components/Table/TablePager';
-import { align, icons } from 'Helpers/Props';
+import { align, icons, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import HistoryOptionsConnector from './HistoryOptionsConnector';
 import HistoryRowConnector from './HistoryRowConnector';
 
 class History extends Component {
+
+  //
+  // Lifecycle
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      isClearHistoryModalOpen: false
+    };
+  }
+
+  //
+  // Listeners
+
+  onClearHistoryPress = () => {
+    this.setState({ isClearHistoryModalOpen: true });
+  }
+
+  onClearHistoryModalClose = () => {
+    this.setState({ isClearHistoryModalOpen: false });
+  }
+
+  onConfirmClearHistory = () => {
+    this.setState({ isClearHistoryModalOpen: false });
+    this.props.onClearHistoryPress();
+  }
 
   //
   // Render
@@ -25,9 +53,10 @@ class History extends Component {
     const {
       isFetching,
       isPopulated,
+      isHistoryClearing,
       error,
-      isMoviesFetching,
-      isMoviesPopulated,
+      isIndexersFetching,
+      isIndexersPopulated,
       indexersError,
       items,
       columns,
@@ -36,11 +65,12 @@ class History extends Component {
       totalRecords,
       onFilterSelect,
       onFirstPagePress,
+      onClearHistoryPress,
       ...otherProps
     } = this.props;
 
-    const isFetchingAny = isFetching || isMoviesFetching;
-    const isAllPopulated = isPopulated && (isMoviesPopulated || !items.length);
+    const isFetchingAny = isFetching || isIndexersFetching;
+    const isAllPopulated = isPopulated && (isIndexersPopulated || !items.length);
     const hasError = error || indexersError;
 
     return (
@@ -52,6 +82,12 @@ class History extends Component {
               iconName={icons.REFRESH}
               isSpinning={isFetching}
               onPress={onFirstPagePress}
+            />
+            <PageToolbarButton
+              label={translate('Clear')}
+              iconName={icons.DELETE}
+              isSpinning={isHistoryClearing}
+              onPress={this.onClearHistoryPress}
             />
           </PageToolbarSection>
 
@@ -131,6 +167,16 @@ class History extends Component {
               </div>
           }
         </PageContentBody>
+
+        <ConfirmModal
+          isOpen={this.state.isClearHistoryModalOpen}
+          kind={kinds.DANGER}
+          title={translate('ClearHistory')}
+          message={translate('ClearHistoryMessageText')}
+          confirmLabel={translate('Delete')}
+          onConfirm={this.onConfirmClearHistory}
+          onCancel={this.onClearHistoryModalClose}
+        />
       </PageContent>
     );
   }
@@ -139,9 +185,10 @@ class History extends Component {
 History.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
+  isHistoryClearing: PropTypes.bool.isRequired,
   error: PropTypes.object,
-  isMoviesFetching: PropTypes.bool.isRequired,
-  isMoviesPopulated: PropTypes.bool.isRequired,
+  isIndexersFetching: PropTypes.bool.isRequired,
+  isIndexersPopulated: PropTypes.bool.isRequired,
   indexersError: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -149,7 +196,8 @@ History.propTypes = {
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   totalRecords: PropTypes.number,
   onFilterSelect: PropTypes.func.isRequired,
-  onFirstPagePress: PropTypes.func.isRequired
+  onFirstPagePress: PropTypes.func.isRequired,
+  onClearHistoryPress: PropTypes.func.isRequired
 };
 
 export default History;

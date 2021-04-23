@@ -108,7 +108,6 @@ export const defaultState = {
 
   sortPredicates: {
     age: function(item) {
-      console.log(item);
       return item.ageMinutes;
     },
 

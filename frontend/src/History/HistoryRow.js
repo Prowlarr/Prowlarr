@@ -51,8 +51,6 @@ class HistoryRow extends Component {
       });
     }
 
-    console.log(categories);
-
     this.props.onSearchPress(data.query, indexer.id, categories);
   }
 

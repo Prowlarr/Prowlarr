@@ -47,6 +47,8 @@
   "CertificateValidationHelpText": "Change how strict HTTPS certification validation is",
   "ChangeHasNotBeenSavedYet": "Change has not been saved yet",
   "Clear": "Clear",
+  "ClearHistory": "Clear History",
+  "ClearHistoryMessageText": "Are you sure you want to clear all Prowlarr history?",
   "ClientPriority": "Client Priority",
   "CloneIndexer": "Clone Indexer",
   "Close": "Close",

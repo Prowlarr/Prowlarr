@@ -23,7 +23,7 @@ namespace NzbDrone.Core.IndexerVersions
     public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
     {
         private const int DEFINITION_VERSION = 1;
-        private readonly List<string> _defintionBlacklist = new List<string>() { "blutopia" };
+        private readonly List<string> _defintionBlacklist = new List<string>() { "blutopia", "beyond-hd", "beyond-hd-oneurl" };
 
         private readonly IHttpClient _httpClient;
         private readonly IAppFolderInfo _appFolderInfo;

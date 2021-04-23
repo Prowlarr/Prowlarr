@@ -8,7 +8,7 @@
 .protocol {
   composes: cell;
 
-  flex: 0 0 60px;
+  flex: 0 0 90px;
 }
 
 .title {

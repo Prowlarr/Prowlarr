@@ -82,6 +82,7 @@
   "DevelopmentSettings": "Development Settings",
   "Disabled": "Disabled",
   "Docker": "Docker",
+  "IndexerObsoleteCheckMessage": "Indexers are obsolete or have been updated: {0}. Please remove and (or) re-add to Prowlarr",
   "DownloadClient": "Download Client",
   "DownloadClientCheckNoneAvailableMessage": "No download client is available",
   "DownloadClientCheckUnableToCommunicateMessage": "Unable to communicate with {0}.",

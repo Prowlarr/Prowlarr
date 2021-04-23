@@ -18,6 +18,7 @@ namespace NzbDrone.Core.IndexerVersions
     {
         List<CardigannMetaDefinition> All();
         CardigannDefinition GetDefinition(string fileKey);
+        List<string> GetBlacklist();
     }
 
     public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
@@ -77,6 +78,11 @@ namespace NzbDrone.Core.IndexerVersions
             var definition = _cache.Get(file, () => LoadIndexerDef(file));
 
             return definition;
+        }
+
+        public List<string> GetBlacklist()
+        {
+            return _defintionBlacklist;
         }
 
         private CardigannDefinition GetHttpDefinition(string id)

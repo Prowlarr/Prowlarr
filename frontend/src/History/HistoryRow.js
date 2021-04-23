@@ -265,17 +265,6 @@ class HistoryRow extends Component {
               );
             }
 
-            if (name === 'successful') {
-              return (
-                <TableRowCell
-                  key={name}
-                  className={styles.indexer}
-                >
-                  {data.successful}
-                </TableRowCell>
-              );
-            }
-
             if (name === 'source') {
               return (
                 <TableRowCell

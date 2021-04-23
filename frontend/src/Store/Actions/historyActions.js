@@ -65,12 +65,6 @@ export const defaultState = {
       isVisible: true
     },
     {
-      name: 'successful',
-      label: 'Successful',
-      isSortable: false,
-      isVisible: false
-    },
-    {
       name: 'source',
       label: 'Source',
       isSortable: false,

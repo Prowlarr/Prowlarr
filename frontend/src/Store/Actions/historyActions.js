@@ -104,12 +104,34 @@ export const defaultState = {
       ]
     },
     {
+      key: 'indexerRss',
+      label: translate('IndexerRss'),
+      filters: [
+        {
+          key: 'eventType',
+          value: '3',
+          type: filterTypes.EQUAL
+        }
+      ]
+    },
+    {
       key: 'indexerQuery',
       label: translate('IndexerQuery'),
       filters: [
         {
           key: 'eventType',
           value: '2',
+          type: filterTypes.EQUAL
+        }
+      ]
+    },
+    {
+      key: 'indexerAuth',
+      label: translate('IndexerAuth'),
+      filters: [
+        {
+          key: 'eventType',
+          value: '4',
           type: filterTypes.EQUAL
         }
       ]

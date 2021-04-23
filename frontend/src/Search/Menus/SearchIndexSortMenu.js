@@ -21,12 +21,21 @@ function SearchIndexSortMenu(props) {
     >
       <MenuContent>
         <SortMenuItem
-          name="status"
+          name="protocol"
           sortKey={sortKey}
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Monitored/Status
+          Protocol
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="age"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Age
         </SortMenuItem>
 
         <SortMenuItem
@@ -36,6 +45,60 @@ function SearchIndexSortMenu(props) {
           onPress={onSortSelect}
         >
           {translate('Title')}
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="indexer"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Indexer
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="size"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Size
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="files"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Files
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="grabs"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Grabs
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="peers"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Peers
+        </SortMenuItem>
+
+        <SortMenuItem
+          name="category"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          Category
         </SortMenuItem>
       </MenuContent>
     </SortMenu>

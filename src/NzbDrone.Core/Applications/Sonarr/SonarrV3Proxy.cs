@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             try
             {
-                var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.GET);
+                var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.GET);
                 return Execute<SonarrIndexer>(request);
             }
             catch (HttpException ex)

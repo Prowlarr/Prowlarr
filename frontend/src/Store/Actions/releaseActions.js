@@ -28,6 +28,8 @@ export const defaultState = {
   items: [],
   sortKey: 'title',
   sortDirection: sortDirections.ASCENDING,
+  secondarySortKey: 'title',
+  secondarySortDirection: sortDirections.ASCENDING,
 
   defaults: {
     searchQuery: '',
@@ -38,7 +40,7 @@ export const defaultState = {
   columns: [
     {
       name: 'protocol',
-      label: translate('Source'),
+      label: translate('Protocol'),
       isSortable: true,
       isVisible: true
     },
@@ -105,17 +107,19 @@ export const defaultState = {
   ],
 
   sortPredicates: {
-    age: function(item, direction) {
+    age: function(item) {
+      console.log(item);
       return item.ageMinutes;
     },
-    peers: function(item, direction) {
+
+    peers: function(item) {
       const seeders = item.seeders || 0;
       const leechers = item.leechers || 0;
 
       return seeders * 1000000 + leechers;
     },
 
-    indexerFlags: function(item, direction) {
+    indexerFlags: function(item) {
       const indexerFlags = item.indexerFlags;
       const releaseWeight = item.releaseWeight;
 
@@ -124,6 +128,15 @@ export const defaultState = {
       }
 
       return releaseWeight;
+    },
+
+    category: function(item) {
+      if (item.categories.length > 0) {
+        const sortedCats = item.categories.filter((cat) => cat.name !== undefined).sort((c) => c.id);
+        const firstCat = sortedCats[0];
+
+        return firstCat.name;
+      }
     }
   },
 

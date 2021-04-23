@@ -7,14 +7,12 @@ import SearchIndexTable from './SearchIndexTable';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.app.dimensions,
-    (state) => state.releases,
     createUISettingsSelector(),
-    (dimensions, releases, uiSettings) => {
+    (dimensions, uiSettings) => {
       return {
         isSmallScreen: dimensions.isSmallScreen,
         longDateFormat: uiSettings.longDateFormat,
-        timeFormat: uiSettings.timeFormat,
-        ...releases
+        timeFormat: uiSettings.timeFormat
       };
     }
   );

@@ -261,6 +261,7 @@ class SearchIndex extends Component {
                     filters={filters}
                     sortKey={sortKey}
                     sortDirection={sortDirection}
+                    columns={columns}
                     jumpToCharacter={jumpToCharacter}
                     {...otherProps}
                   />

@@ -106,7 +106,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("categories", string.Join(",", cats));
             }
 
-            var searchUrl = BaseUrl + "/api/torrents/" + Settings.ApiKey;
+            var searchUrl = BaseUrl + "api/torrents/" + Settings.ApiKey;
 
             var request = new HttpRequest(searchUrl, HttpAccept.Json);
 
@@ -190,11 +190,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 
-            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
-            {
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
-            }
-
+            // TODO Have BHD fix their API response content type so we can proper check here
+            // if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            // {
+            //     throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            // }
             var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerResponse.HttpResponse);
 
             foreach (var row in jsonResponse.Resource.Results)

@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public override void UpdateIndexer(IndexerDefinition indexer)
         {
-            _logger.Debug("Updating indexer {0}[{1}]", indexer.Name, indexer.Id);
+            _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
@@ -107,7 +107,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             }
             else
             {
-                _logger.Debug("Remote indexer not found, re-adding indexer to Lidarr");
+                _logger.Debug("Remote indexer not found, re-adding {0} to Lidarr", indexer.Name);
                 lidarrIndexer.Id = 0;
 
                 var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);

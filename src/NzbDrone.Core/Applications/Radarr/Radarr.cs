@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public override void UpdateIndexer(IndexerDefinition indexer)
         {
-            _logger.Debug("Updating indexer {0}[{1}]", indexer.Name, indexer.Id);
+            _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
@@ -107,7 +107,7 @@ namespace NzbDrone.Core.Applications.Radarr
             }
             else
             {
-                _logger.Debug("Remote indexer not found, re-adding indexer to Radarr");
+                _logger.Debug("Remote indexer not found, re-adding {0} to Radarr", indexer.Name);
                 radarrIndexer.Id = 0;
 
                 var newRemoteIndexer = _radarrV3Proxy.AddIndexer(radarrIndexer, Settings);

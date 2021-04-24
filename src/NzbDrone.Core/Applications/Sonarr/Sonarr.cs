@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             var sonarrIndexer = new SonarrIndexer
             {
-                Id = 0,
+                Id = id,
                 Name = $"{indexer.Name} (Prowlarr)",
                 EnableRss = indexer.Enable,
                 EnableAutomaticSearch = indexer.Enable,

@@ -24,7 +24,7 @@ function getInternalLink(source) {
         <IconButton
           name={icons.SETTINGS}
           title={translate('Settings')}
-          to="/settings/indexers"
+          to="/"
         />
       );
     case 'UpdateCheck':

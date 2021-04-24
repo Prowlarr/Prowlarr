@@ -1,7 +1,3 @@
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;

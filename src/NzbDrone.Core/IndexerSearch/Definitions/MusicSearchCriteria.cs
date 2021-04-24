@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.IndexerSearch.Definitions

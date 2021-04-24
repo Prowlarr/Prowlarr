@@ -2,7 +2,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Configuration;
-using Prowlarr.Api.V1.Tags;
 using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.Config

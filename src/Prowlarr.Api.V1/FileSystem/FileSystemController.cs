@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Disk;
 using Prowlarr.Http;

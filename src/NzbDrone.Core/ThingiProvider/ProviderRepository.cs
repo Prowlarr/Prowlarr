@@ -6,7 +6,6 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Reflection;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.ThingiProvider

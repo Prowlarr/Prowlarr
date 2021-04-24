@@ -5,7 +5,6 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download.Clients.Transmission
 {

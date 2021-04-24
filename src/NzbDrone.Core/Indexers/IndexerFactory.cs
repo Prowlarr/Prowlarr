@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Composition;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;

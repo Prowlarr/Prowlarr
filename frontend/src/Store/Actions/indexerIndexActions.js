@@ -9,7 +9,7 @@ import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 import createSetTableOptionReducer from './Creators/Reducers/createSetTableOptionReducer';
-import { filterPredicates, filters, sortPredicates } from './movieActions';
+import { filterPredicates, filters, sortPredicates } from './indexerActions';
 
 //
 // Variables

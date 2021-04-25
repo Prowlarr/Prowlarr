@@ -1907,9 +1907,6 @@
                     "calendarWeekColumnHeader": {
                       "type": "string"
                     },
-                    "movieRuntimeFormat": {
-                      "type": "string"
-                    },
                     "shortDateFormat": {
                       "type": "string"
                     },
@@ -1938,7 +1935,6 @@
                     "value": {
                       "firstDayOfWeek": 0,
                       "calendarWeekColumnHeader": "ddd M/D",
-                      "movieRuntimeFormat": "hoursMinutes",
                       "shortDateFormat": "MMM D YYYY",
                       "longDateFormat": "dddd, MMMM D YYYY",
                       "timeFormat": "h(:mm)a",

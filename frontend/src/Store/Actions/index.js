@@ -7,7 +7,6 @@ import * as indexers from './indexerActions';
 import * as indexerIndex from './indexerIndexActions';
 import * as indexerStats from './indexerStatsActions';
 import * as indexerStatus from './indexerStatusActions';
-import * as movies from './movieActions';
 import * as oAuth from './oAuthActions';
 import * as paths from './pathActions';
 import * as providerOptions from './providerOptionActions';
@@ -26,7 +25,6 @@ export default [
   paths,
   providerOptions,
   releases,
-  movies,
   indexers,
   indexerIndex,
   indexerStats,

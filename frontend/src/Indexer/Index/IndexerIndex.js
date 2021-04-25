@@ -11,10 +11,10 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
+import AddIndexerModal from 'Indexer/Add/AddIndexerModal';
+import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import IndexerEditorFooter from 'Indexer/Editor/IndexerEditorFooter.js';
 import NoIndexer from 'Indexer/NoIndexer';
-import AddIndexerModal from 'Settings/Indexers/Indexers/AddIndexerModal';
-import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
@@ -23,14 +23,14 @@ import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import IndexerIndexFooterConnector from './IndexerIndexFooterConnector';
-import MovieIndexFilterMenu from './Menus/MovieIndexFilterMenu';
-import MovieIndexSortMenu from './Menus/MovieIndexSortMenu';
-import MovieIndexTableConnector from './Table/MovieIndexTableConnector';
-import MovieIndexTableOptionsConnector from './Table/MovieIndexTableOptionsConnector';
+import IndexerIndexFilterMenu from './Menus/IndexerIndexFilterMenu';
+import IndexerIndexSortMenu from './Menus/IndexerIndexSortMenu';
+import IndexerIndexTableConnector from './Table/IndexerIndexTableConnector';
+import IndexerIndexTableOptionsConnector from './Table/IndexerIndexTableOptionsConnector';
 import styles from './IndexerIndex.css';
 
 function getViewComponent() {
-  return MovieIndexTableConnector;
+  return IndexerIndexTableConnector;
 }
 
 class IndexerIndex extends Component {
@@ -354,7 +354,7 @@ class IndexerIndex extends Component {
             <TableOptionsModalWrapper
               {...otherProps}
               columns={columns}
-              optionsComponent={MovieIndexTableOptionsConnector}
+              optionsComponent={IndexerIndexTableOptionsConnector}
             >
               <PageToolbarButton
                 label={translate('Options')}
@@ -365,14 +365,14 @@ class IndexerIndex extends Component {
 
             <PageToolbarSeparator />
 
-            <MovieIndexSortMenu
+            <IndexerIndexSortMenu
               sortKey={sortKey}
               sortDirection={sortDirection}
               isDisabled={hasNoIndexer}
               onSortSelect={onSortSelect}
             />
 
-            <MovieIndexFilterMenu
+            <IndexerIndexFilterMenu
               selectedFilterKey={selectedFilterKey}
               filters={filters}
               customFilters={customFilters}

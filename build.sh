@@ -21,7 +21,7 @@ UpdateVersionNumber()
         echo "Updating Version Info"
         sed -i'' -e "s/<AssemblyVersion>[0-9.*]\+<\/AssemblyVersion>/<AssemblyVersion>$PROWLARRVERSION<\/AssemblyVersion>/g" src/Directory.Build.props
         sed -i'' -e "s/<AssemblyConfiguration>[\$()A-Za-z-]\+<\/AssemblyConfiguration>/<AssemblyConfiguration>${BUILD_SOURCEBRANCHNAME}<\/AssemblyConfiguration>/g" src/Directory.Build.props
-        sed -i'' -e "s/<string>10.0.0.0<\/string>/<string>$PROWLARRVERSION<\/string>/g" macOS/Prowlarr.app/Contents/Info.plist
+        sed -i'' -e "s/<string>10.0.0.0<\/string>/<string>$PROWLARRVERSION<\/string>/g" distribution/osx/Prowlarr.app/Contents/Info.plist
     fi
 }
 
@@ -163,7 +163,7 @@ PackageMacOSApp()
 
     rm -rf $folder
     mkdir -p $folder
-    cp -r macOS/Prowlarr.app $folder
+    cp -r distribution/osx/Prowlarr.app $folder
     mkdir -p $folder/Prowlarr.app/Contents/MacOS
 
     echo "Copying Binaries"

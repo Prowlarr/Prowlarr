@@ -9,8 +9,10 @@ import createTestProviderHandler, { createCancelTestProviderHandler } from 'Stor
 import createSetProviderFieldValueReducer from 'Store/Actions/Creators/Reducers/createSetProviderFieldValueReducer';
 import createSetSettingValueReducer from 'Store/Actions/Creators/Reducers/createSetSettingValueReducer';
 import { createThunk, handleThunks } from 'Store/thunks';
+import dateFilterPredicate from 'Utilities/Date/dateFilterPredicate';
 import getSectionState from 'Utilities/State/getSectionState';
 import updateSectionState from 'Utilities/State/updateSectionState';
+import translate from 'Utilities/String/translate';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 
@@ -44,6 +46,22 @@ export const defaultState = {
     items: []
   }
 };
+
+export const filters = [
+  {
+    key: 'all',
+    label: translate('All'),
+    filters: []
+  }
+];
+
+export const filterPredicates = {
+  added: function(item, filterValue, type) {
+    return dateFilterPredicate(item.added, filterValue, type);
+  }
+};
+
+export const sortPredicates = {};
 
 //
 // Actions Types

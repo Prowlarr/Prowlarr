@@ -82,16 +82,25 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             get
             {
-                yield return GetDefinition("abNZB", GetSettings("https://abnzb.com/"));
+                yield return GetDefinition("abNZB", GetSettings("https://abnzb.com"));
+                yield return GetDefinition("altHUB", GetSettings("https://althub.co.za"));
                 yield return GetDefinition("DOGnzb", GetSettings("https://api.dognzb.cr"));
                 yield return GetDefinition("DrunkenSlug", GetSettings("https://api.drunkenslug.com"));
+                yield return GetDefinition("GingaDADDY", GetSettings("https://www.gingadaddy.com"));
+                yield return GetDefinition("Miatrix", GetSettings("https://www.miatrix.com"));
+                yield return GetDefinition("NinjaCentral", GetSettings("https://ninjacentral.co.za"));
                 yield return GetDefinition("Nzb.su", GetSettings("https://api.nzb.su"));
                 yield return GetDefinition("NZBCat", GetSettings("https://nzb.cat"));
-                yield return GetDefinition("NZBFinder.ws", GetSettings("https://nzbfinder.ws"));
+                yield return GetDefinition("NZBFinder", GetSettings("https://nzbfinder.ws"));
                 yield return GetDefinition("NZBgeek", GetSettings("https://api.nzbgeek.info"));
-                yield return GetDefinition("nzbplanet.net", GetSettings("https://api.nzbplanet.net"));
-                yield return GetDefinition("OZnzb.com", GetSettings("https://api.oznzb.com"));
+                yield return GetDefinition("NzbNoob", GetSettings("https://www.nzbnoob.com"));
+                yield return GetDefinition("NzbPlanet", GetSettings("https://api.nzbplanet.net"));
+                yield return GetDefinition("NZBs2GO", GetSettings("https://nzbs2go.com", apiPath: @"/api/v1/api"));
+                yield return GetDefinition("NZBStars", GetSettings("https://nzbstars.com"));
+                yield return GetDefinition("NZBXS", GetSettings("https://www.nzbxs.com"));
+                yield return GetDefinition("OZnzb", GetSettings("https://api.oznzb.com"));
                 yield return GetDefinition("SimplyNZBs", GetSettings("https://simplynzbs.com"));
+                yield return GetDefinition("SpotNZB", GetSettings("https://spotnzb.xyz"));
                 yield return GetDefinition("Tabula Rasa", GetSettings("https://www.tabula-rasa.pw", apiPath: @"/api/v1/api"));
                 yield return GetDefinition("Usenet Crawler", GetSettings("https://www.usenet-crawler.com"));
                 yield return GetDefinition("Generic Newznab", GetSettings(""));

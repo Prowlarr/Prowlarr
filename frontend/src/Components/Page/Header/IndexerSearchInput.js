@@ -31,14 +31,6 @@ class IndexerSearchInput extends Component {
     this.props.bindShortcut(shortcuts.MOVIE_SEARCH_INPUT.key, this.focusInput);
   }
 
-  componentWillUnmount() {
-    if (this._worker) {
-      this._worker.removeEventListener('message', this.onSuggestionsReceived, false);
-      this._worker.terminate();
-      this._worker = null;
-    }
-  }
-
   //
   // Control
 

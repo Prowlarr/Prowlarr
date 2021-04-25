@@ -123,7 +123,6 @@
     "webpack": "5.35.1",
     "webpack-cli": "4.6.0",
     "webpack-livereload-plugin": "3.0.1",
-    "worker-loader": "3.0.8",
     "stylelint": "13.13.0",
     "stylelint-order": "4.1.0"
   }

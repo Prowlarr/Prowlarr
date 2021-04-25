@@ -12,7 +12,6 @@ module.exports = (env) => {
   const srcFolder = path.join(frontendFolder, 'src');
   const isProduction = !!env.production;
   const isProfiling = isProduction && !!env.profile;
-  const inlineWebWorkers = 'no-fallback';
 
   const distFolder = path.resolve(frontendFolder, '..', '_output', uiFolder);
 
@@ -141,16 +140,6 @@ module.exports = (env) => {
 
     module: {
       rules: [
-        {
-          test: /\.worker\.js$/,
-          use: {
-            loader: 'worker-loader',
-            options: {
-              filename: '[name].js',
-              inline: inlineWebWorkers
-            }
-          }
-        },
         {
           test: /\.js?$/,
           exclude: /(node_modules|JsLibraries)/,

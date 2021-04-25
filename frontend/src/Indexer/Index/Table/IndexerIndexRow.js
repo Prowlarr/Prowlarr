@@ -8,7 +8,7 @@ import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCel
 import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
-import EditIndexerModalConnector from 'Settings/Indexers/Indexers/EditIndexerModalConnector';
+import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';

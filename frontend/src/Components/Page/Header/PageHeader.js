@@ -5,8 +5,8 @@ import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import { icons } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import IndexerSearchInputConnector from './IndexerSearchInputConnector';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
-import MovieSearchInputConnector from './MovieSearchInputConnector';
 import PageHeaderActionsMenuConnector from './PageHeaderActionsMenuConnector';
 import styles from './PageHeader.css';
 
@@ -68,7 +68,7 @@ class PageHeader extends Component {
           />
         </div>
 
-        <MovieSearchInputConnector />
+        <IndexerSearchInputConnector />
 
         <div className={styles.right}>
           <IconButton

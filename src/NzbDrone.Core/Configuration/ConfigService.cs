@@ -224,13 +224,6 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("CalendarWeekColumnHeader", value); }
         }
 
-        public MovieRuntimeFormatType MovieRuntimeFormat
-        {
-            get { return GetValueEnum("MovieRuntimeFormat", MovieRuntimeFormatType.HoursMinutes); }
-
-            set { SetValue("MovieRuntimeFormat", value); }
-        }
-
         public string ShortDateFormat
         {
             get { return GetValue("ShortDateFormat", "MMM D YYYY"); }

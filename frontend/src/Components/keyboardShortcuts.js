@@ -37,16 +37,6 @@ export const shortcuts = {
   SCROLL_BOTTOM: {
     key: 'mod+end',
     name: translate('MovieIndexScrollBottom')
-  },
-
-  DETAILS_NEXT: {
-    key: '→',
-    name: translate('MovieDetailsNextMovie')
-  },
-
-  DETAILS_PREVIOUS: {
-    key: '←',
-    name: translate('MovieDetailsPreviousMovie')
   }
 };
 

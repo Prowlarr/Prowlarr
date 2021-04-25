@@ -183,8 +183,8 @@ stages:
       - bash: ./build.sh --packages
         displayName: Create Packages
       - bash: |
-          setup/inno/ISCC.exe setup/prowlarr.iss //DFramework=net5.0
-          cp setup/output/Prowlarr.*windows.net5.0.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Prowlarr.${BUILDNAME}.windows-core-x64-installer.exe
+          distribution/windows/setup/inno/ISCC.exe distribution/windows/setup/prowlarr.iss //DFramework=net5.0
+          cp distribution/windows/setup/output/Prowlarr.*windows.net5.0.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Prowlarr.${BUILDNAME}.windows-core-x64-installer.exe
         displayName: Create .NET Core Windows installer
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'WindowsInstaller'

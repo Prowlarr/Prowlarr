@@ -128,6 +128,11 @@ namespace NzbDrone.Core.IndexerVersions
                             };
                         }
 
+                        if (definition.Encoding == null)
+                        {
+                            definition.Encoding = "UTF-8";
+                        }
+
                         if (definition.Login != null && definition.Login.Method == null)
                         {
                             definition.Login.Method = "form";

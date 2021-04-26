@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Core.Indexers.Cardigann;
@@ -90,6 +91,9 @@ namespace NzbDrone.Core.Indexers
             }
 
             definition.BaseUrl = defFile.Links.First();
+            definition.Description = defFile.Description;
+            definition.Language = defFile.Language;
+            definition.Encoding = Encoding.GetEncoding(defFile.Encoding);
             definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
             definition.Capabilities = new IndexerCapabilities();
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
@@ -172,6 +176,9 @@ namespace NzbDrone.Core.Indexers
             {
                 definition.BaseUrl = provider.BaseUrl;
                 definition.Privacy = provider.Privacy;
+                definition.Description = provider.Description;
+                definition.Encoding = provider.Encoding;
+                definition.Language = provider.Language;
                 definition.Capabilities = provider.Capabilities;
             }
         }

@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "AlphaRatio";
         public override string BaseUrl => "https://alpharatio.cc/";
+        public override string Description => "AlphaRatio(AR) is a Private Torrent Tracker for 0DAY / GENERAL";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public AlphaRatio(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

@@ -5,9 +5,9 @@ function createIndexerSelector() {
     (state, { indexerId }) => indexerId,
     (state) => state.indexers.itemMap,
     (state) => state.indexers.items,
-    (indexerId, itemMap, allMovies) => {
-      if (allMovies && itemMap && indexerId in itemMap) {
-        return allMovies[itemMap[indexerId]];
+    (indexerId, itemMap, allIndexers) => {
+      if (allIndexers && itemMap && indexerId in itemMap) {
+        return allIndexers[itemMap[indexerId]];
       }
       return undefined;
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.ThingiProvider;
 
@@ -8,6 +9,9 @@ namespace NzbDrone.Core.Indexers
     public class IndexerDefinition : ProviderDefinition
     {
         public string BaseUrl { get; set; }
+        public string Description { get; set; }
+        public Encoding Encoding { get; set; }
+        public string Language { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
         public bool SupportsRss { get; set; }

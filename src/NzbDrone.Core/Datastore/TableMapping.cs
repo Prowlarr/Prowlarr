@@ -41,6 +41,9 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<IndexerDefinition>("Indexers").RegisterModel()
                   .Ignore(x => x.ImplementationName)
+                  .Ignore(i => i.Description)
+                  .Ignore(i => i.Language)
+                  .Ignore(i => i.Encoding)
                   .Ignore(i => i.BaseUrl)
                   .Ignore(i => i.Protocol)
                   .Ignore(i => i.Privacy)

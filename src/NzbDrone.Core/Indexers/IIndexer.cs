@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.ThingiProvider;
@@ -13,6 +14,9 @@ namespace NzbDrone.Core.Indexers
         IndexerCapabilities Capabilities { get; }
 
         string BaseUrl { get; }
+        string Description { get; }
+        Encoding Encoding { get; }
+        string Language { get; }
         DownloadProtocol Protocol { get; }
         IndexerPrivacy Privacy { get; }
 

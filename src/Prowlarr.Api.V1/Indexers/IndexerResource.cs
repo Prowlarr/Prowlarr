@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
@@ -13,6 +14,9 @@ namespace Prowlarr.Api.V1.Indexers
     public class IndexerResource : ProviderResource<IndexerResource>
     {
         public string BaseUrl { get; set; }
+        public string Description { get; set; }
+        public string Language { get; set; }
+        public string Encoding { get; set; }
         public bool Enable { get; set; }
         public bool Redirect { get; set; }
         public bool SupportsRss { get; set; }
@@ -62,6 +66,9 @@ namespace Prowlarr.Api.V1.Indexers
             }
 
             resource.BaseUrl = definition.BaseUrl;
+            resource.Description = definition.Description;
+            resource.Language = definition.Language;
+            resource.Encoding = definition.Encoding.EncodingName;
             resource.Enable = definition.Enable;
             resource.Redirect = definition.Redirect;
             resource.SupportsRss = definition.SupportsRss;

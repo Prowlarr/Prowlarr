@@ -9,6 +9,7 @@ import TagListConnector from 'Components/TagListConnector';
 import { icons } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
+import IndexerInfoModal from 'Indexer/Info/IndexerInfoModal';
 import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
@@ -26,7 +27,8 @@ class IndexerIndexRow extends Component {
 
     this.state = {
       isEditIndexerModalOpen: false,
-      isDeleteMovieModalOpen: false
+      isDeleteMovieModalOpen: false,
+      isIndexerInfoModalOpen: false
     };
   }
 
@@ -34,8 +36,16 @@ class IndexerIndexRow extends Component {
     this.setState({ isEditIndexerModalOpen: true });
   }
 
+  onIndexerInfoPress = () => {
+    this.setState({ isIndexerInfoModalOpen: true });
+  }
+
   onEditIndexerModalClose = () => {
     this.setState({ isEditIndexerModalOpen: false });
+  }
+
+  onIndexerInfoModalClose = () => {
+    this.setState({ isIndexerInfoModalOpen: false });
   }
 
   onDeleteMoviePress = () => {
@@ -81,7 +91,8 @@ class IndexerIndexRow extends Component {
 
     const {
       isEditIndexerModalOpen,
-      isDeleteMovieModalOpen
+      isDeleteMovieModalOpen,
+      isIndexerInfoModalOpen
     } = this.state;
 
     return (
@@ -216,6 +227,12 @@ class IndexerIndexRow extends Component {
                   className={styles[column.name]}
                 >
                   <IconButton
+                    name={icons.INFO}
+                    title={'Indexer info'}
+                    onPress={this.onIndexerInfoPress}
+                  />
+
+                  <IconButton
                     className={styles.externalLink}
                     name={icons.EXTERNAL_LINK}
                     title={'Website'}
@@ -240,6 +257,12 @@ class IndexerIndexRow extends Component {
           isOpen={isEditIndexerModalOpen}
           onModalClose={this.onEditIndexerModalClose}
           onDeleteIndexerPress={this.onDeleteMoviePress}
+        />
+
+        <IndexerInfoModal
+          indexerId={id}
+          isOpen={isIndexerInfoModalOpen}
+          onModalClose={this.onIndexerInfoModalClose}
         />
 
         <DeleteIndexerModal

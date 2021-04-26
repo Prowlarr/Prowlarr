@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -21,6 +22,9 @@ namespace NzbDrone.Core.Indexers
 
         public abstract string Name { get; }
         public abstract string BaseUrl { get; }
+        public abstract string Description { get; }
+        public abstract Encoding Encoding { get; }
+        public abstract string Language { get; }
         public abstract bool FollowRedirect { get; }
         public abstract DownloadProtocol Protocol { get; }
         public abstract IndexerPrivacy Privacy { get; }

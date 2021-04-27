@@ -60,6 +60,8 @@ namespace NzbDrone.Core.IndexerStats
             .Select(@"Indexers.Id AS IndexerId,
                      Indexers.Name AS IndexerName,
                      SUM(CASE WHEN EventType == 2 then 1 else 0 end) AS NumberOfQueries,
+                     SUM(CASE WHEN EventType == 3 then 1 else 0 end) AS NumberOfRssQueries,
+                     SUM(CASE WHEN EventType == 4 then 1 else 0 end) AS NumberOfAuthQueries,
                      SUM(CASE WHEN EventType == 1 then 1 else 0 end) AS NumberOfGrabs,
                      AVG(json_extract(History.Data,'$.elapsedTime')) AS AverageResponseTime")
             .Join<History.History, IndexerDefinition>((t, r) => t.IndexerId == r.Id)
@@ -68,7 +70,8 @@ namespace NzbDrone.Core.IndexerStats
         private SqlBuilder UserAgentBuilder() => new SqlBuilder()
             .Select(@"json_extract(History.Data,'$.source') AS UserAgent,
                      SUM(CASE WHEN EventType == 2 then 1 else 0 end) AS NumberOfQueries,
-                     SUM(CASE WHEN EventType == 1 then 1 else 0 end) AS NumberOfGrabs")
+                     SUM(CASE WHEN EventType == 1 then 1 else 0 end) AS NumberOfGrabs,
+                     SUM(CASE WHEN EventType == 3 then 1 else 0 end) AS NumberOfRssQueries")
             .GroupBy("UserAgent");
     }
 }

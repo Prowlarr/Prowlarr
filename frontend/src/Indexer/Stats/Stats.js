@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import BarChart from 'Components/Chart/BarChart';
-import DoughnutChart from 'Components/Chart/DoughnutChart';
+import StackedBarChart from 'Components/Chart/StackedBarChart';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
@@ -21,12 +21,25 @@ function getAverageResponseTimeData(indexerStats) {
 }
 
 function getTotalRequestsData(indexerStats) {
-  const data = indexerStats.map((indexer) => {
-    return {
-      label: indexer.indexerName,
-      value: indexer.numberOfQueries
-    };
-  });
+  const data = {
+    labels: indexerStats.map((indexer) => indexer.indexerName),
+    datasets: [
+      {
+        label: 'Search Queries',
+        data: indexerStats.map((indexer) => indexer.numberOfQueries)
+      },
+      {
+        label: 'Rss Queries',
+        data: indexerStats.map((indexer) => indexer.numberOfRssQueries)
+      },
+      {
+        label: 'Auth Queries',
+        data: indexerStats.map((indexer) => indexer.numberOfAuthQueries)
+      }
+    ]
+  };
+
+  console.log(data);
 
   return data;
 }
@@ -112,7 +125,7 @@ function Stats(props) {
                 />
               </div>
               <div className={styles.halfWidthChart}>
-                <DoughnutChart
+                <StackedBarChart
                   data={getTotalRequestsData(item.indexers)}
                   title='Total Indexer Queries'
                 />

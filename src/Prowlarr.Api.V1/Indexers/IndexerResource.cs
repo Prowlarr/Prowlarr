@@ -68,7 +68,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.BaseUrl = definition.BaseUrl;
             resource.Description = definition.Description;
             resource.Language = definition.Language;
-            resource.Encoding = definition.Encoding.EncodingName;
+            resource.Encoding = definition.Encoding?.EncodingName ?? null;
             resource.Enable = definition.Enable;
             resource.Redirect = definition.Redirect;
             resource.SupportsRss = definition.SupportsRss;

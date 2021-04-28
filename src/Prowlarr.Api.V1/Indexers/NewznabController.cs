@@ -36,6 +36,7 @@ namespace NzbDrone.Api.V1.Indexers
             _downloadService = downloadService;
         }
 
+        [HttpGet("/api/v1/indexer/{id:int}/newznab")]
         [HttpGet("{id:int}/api")]
         public async Task<IActionResult> GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
         {
@@ -80,6 +81,7 @@ namespace NzbDrone.Api.V1.Indexers
             }
         }
 
+        [HttpGet("/api/v1/indexer/{id:int}/download")]
         [HttpGet("{id:int}/download")]
         public async Task<object> GetDownload(int id, string link, string file)
         {

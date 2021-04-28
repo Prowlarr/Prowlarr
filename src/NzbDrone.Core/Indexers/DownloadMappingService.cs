@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers
             var encryptedLink = _protectionService.Protect(link.ToString());
             var encodedLink = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(encryptedLink));
             var urlEncodedFile = WebUtility.UrlEncode(file);
-            var proxyLink = $"{serverUrl}{urlBase}/api/v1/indexer/{indexerId}/download?apikey={_configFileProvider.ApiKey}&link={encodedLink}&file={urlEncodedFile}";
+            var proxyLink = $"{serverUrl}{urlBase}/{indexerId}/download?apikey={_configFileProvider.ApiKey}&link={encodedLink}&file={urlEncodedFile}";
             return new Uri(proxyLink);
         }
 

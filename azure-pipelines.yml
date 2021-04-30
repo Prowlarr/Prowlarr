@@ -183,9 +183,13 @@ stages:
       - bash: ./build.sh --packages
         displayName: Create Packages
       - bash: |
-          distribution/windows/setup/inno/ISCC.exe distribution/windows/setup/prowlarr.iss //DFramework=net5.0
+          distribution/windows/setup/inno/ISCC.exe distribution/windows/setup/prowlarr.iss //DFramework=net5.0 //DRuntime=win-x86
+          cp distribution/windows/setup/output/Prowlarr.*windows.net5.0.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Prowlarr.${BUILDNAME}.windows-core-x86-installer.exe
+        displayName: Create x86 .NET Core Windows installer
+      - bash: |
+          distribution/windows/setup/inno/ISCC.exe distribution/windows/setup/prowlarr.iss //DFramework=net5.0 //DRuntime=win-x64
           cp distribution/windows/setup/output/Prowlarr.*windows.net5.0.exe ${BUILD_ARTIFACTSTAGINGDIRECTORY}/Prowlarr.${BUILDNAME}.windows-core-x64-installer.exe
-        displayName: Create .NET Core Windows installer
+        displayName: Create x64 .NET Core Windows installer
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'WindowsInstaller'
         displayName: Publish Installer
@@ -226,7 +230,14 @@ stages:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).windows-core-x64.zip'
           archiveType: 'zip'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/windows/net5.0
+          rootFolderOrFile: $(artifactsFolder)/win-x64/net5.0
+      - task: ArchiveFiles@2
+        displayName: Create Windows x86 Core zip
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).windows-core-x86.zip'
+          archiveType: 'zip'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/win-x86/net5.0
       - task: ArchiveFiles@2
         displayName: Create MacOS Core app
         inputs:

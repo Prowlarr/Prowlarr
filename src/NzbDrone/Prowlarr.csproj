@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>..\NzbDrone.Host\Prowlarr.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>

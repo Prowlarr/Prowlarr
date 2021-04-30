@@ -178,12 +178,13 @@ PackageMacOSApp()
 PackageWindows()
 {
     local framework="$1"
+    local runtime="$2"
     
     ProgressStart "Creating Windows Package for $framework"
 
-    local folder=$artifactsFolder/windows/$framework/Prowlarr
+    local folder=$artifactsFolder/$runtime/$framework/Prowlarr
     
-    PackageFiles "$folder" "$framework" "win-x64"
+    PackageFiles "$folder" "$framework" "$runtime"
     cp -r $outputFolder/$framework-windows/$runtime/publish/* $folder
 
     echo "Removing Prowlarr.Mono"
@@ -210,7 +211,7 @@ Package()
             PackageLinux "$framework" "$runtime"
             ;;
         win)
-            PackageWindows "$framework"
+            PackageWindows "$framework" "$runtime"
             ;;
         osx)
             PackageMacOS "$framework"
@@ -227,14 +228,6 @@ PackageTests()
     cp test.sh "$testPackageFolder/$framework/$runtime/publish"
 
     rm -f $testPackageFolder/$framework/$runtime/*.log.config
-
-    # geckodriver.exe isn't copied by dotnet publish
-    if [ "$runtime" = "win-x64" ];
-    then
-        curl -Lso gecko.zip "https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-win64.zip"
-        unzip -o gecko.zip
-        cp geckodriver.exe "$testPackageFolder/$framework/win-x64/publish"
-    fi
 
     ProgressEnd 'Creating Test Package'
 }
@@ -314,6 +307,7 @@ then
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
         PackageTests "net5.0" "win-x64"
+        PackageTests "net5.0" "win-x86"
         PackageTests "net5.0" "linux-x64"
         PackageTests "net5.0" "linux-musl-x64"
         PackageTests "net5.0" "osx-x64"
@@ -345,6 +339,7 @@ then
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
         Package "net5.0" "win-x64"
+        Package "net5.0" "win-x86"
         Package "net5.0" "linux-x64"
         Package "net5.0" "linux-musl-x64"
         Package "net5.0" "linux-arm64"

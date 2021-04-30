@@ -10,15 +10,15 @@ class IndexerIndexFooter extends PureComponent {
 
   render() {
     const {
-      movies,
+      indexers,
       colorImpairedMode
     } = this.props;
 
-    const count = movies.length;
+    const count = indexers.length;
     let enabled = 0;
     let torrent = 0;
 
-    movies.forEach((s) => {
+    indexers.forEach((s) => {
 
       if (s.enable) {
         enabled += 1;
@@ -33,14 +33,21 @@ class IndexerIndexFooter extends PureComponent {
       <div className={styles.footer}>
         <div>
           <div className={styles.legendItem}>
-            <div className={styles.ended} />
+            <div className={styles.enabled} />
             <div>
               Enabled
             </div>
           </div>
 
           <div className={styles.legendItem}>
-            <div className={styles.availNotMonitored} />
+            <div className={styles.redirected} />
+            <div>
+              Enabled, Redirected
+            </div>
+          </div>
+
+          <div className={styles.legendItem}>
+            <div className={styles.disabled} />
             <div>
               Disabled
             </div>
@@ -48,7 +55,7 @@ class IndexerIndexFooter extends PureComponent {
 
           <div className={styles.legendItem}>
             <div className={classNames(
-              styles.missingMonitored,
+              styles.error,
               colorImpairedMode && 'colorImpaired'
             )}
             />
@@ -89,7 +96,7 @@ class IndexerIndexFooter extends PureComponent {
 }
 
 IndexerIndexFooter.propTypes = {
-  movies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   colorImpairedMode: PropTypes.bool.isRequired
 };
 

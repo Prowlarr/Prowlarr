@@ -29,7 +29,7 @@ function createUnoptimizedSelector() {
 function createMoviesSelector() {
   return createDeepEqualSelector(
     createUnoptimizedSelector(),
-    (movies) => movies
+    (indexers) => indexers
   );
 }
 
@@ -37,9 +37,9 @@ function createMapStateToProps() {
   return createSelector(
     createMoviesSelector(),
     createUISettingsSelector(),
-    (movies, uiSettings) => {
+    (indexers, uiSettings) => {
       return {
-        movies,
+        indexers,
         colorImpairedMode: uiSettings.enableColorImpairedMode
       };
     }

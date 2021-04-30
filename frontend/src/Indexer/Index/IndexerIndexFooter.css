@@ -18,47 +18,31 @@
   border-radius: 4px;
 }
 
-.queue {
-  composes: legendItemColor;
-
-  background-color: $queueColor;
-}
-
-.continuing {
-  composes: legendItemColor;
-
-  background-color: $primaryColor;
-}
-
-.availNotMonitored {
+.disabled {
   composes: legendItemColor;
 
   background-color: $darkGray;
 }
 
-.ended {
+.enabled {
   composes: legendItemColor;
 
   background-color: $successColor;
 }
 
-.missingMonitored {
+.redirected {
+  composes: legendItemColor;
+
+  background-color: $infoColor;
+}
+
+.error {
   composes: legendItemColor;
 
   background-color: $dangerColor;
 
   &:global(.colorImpaired) {
     background: repeating-linear-gradient(90deg, color($dangerColor shade(5%)), color($dangerColor shade(5%)) 5px, color($dangerColor shade(15%)) 5px, color($dangerColor shade(15%)) 10px);
-  }
-}
-
-.missingUnmonitored {
-  composes: legendItemColor;
-
-  background-color: $warningColor;
-
-  &:global(.colorImpaired) {
-    background: repeating-linear-gradient(45deg, $warningColor, $warningColor 5px, color($warningColor tint(15%)) 5px, color($warningColor tint(15%)) 10px);
   }
 }
 

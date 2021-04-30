@@ -18,7 +18,7 @@ function IndexerStatusCell(props) {
     ...otherProps
   } = props;
 
-  const enableKind = redirect ? kinds.WARNING : kinds.SUCCESS;
+  const enableKind = redirect ? kinds.INFO : kinds.SUCCESS;
   const enableTitle = redirect ? 'Indexer is Enabled, Redirect is Enabled' : 'Indexer is Enabled';
 
   return (

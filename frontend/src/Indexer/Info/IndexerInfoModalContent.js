@@ -59,7 +59,7 @@ function IndexerInfoModalContent(props) {
 
           <DescriptionListItemTitle>{protocol === 'usenet' ? 'Newznab' : 'Torznab'} Url</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            {`${window.Prowlarr.apiRoot}/${id}/api`}
+            {`${window.location.origin}${window.Prowlarr.apiRoot}/${id}/api`}
           </DescriptionListItemDescription>
 
         </DescriptionList>

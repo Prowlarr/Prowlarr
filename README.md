@@ -11,7 +11,7 @@ Note: Prowlarr is currently in alpha testing, no support
 
 ## Feature Requests
 
-[Feature Requests](https://github.com/Prowlarr/Prowlarr/issues/new?assignees=&labels=Type%3A+Enhancement&template=feature_request.md&title=)
+[Feature Requests](https://github.com/Prowlarr/Prowlarr/issues/new?assignees=&template=feature_request.md&Type%3A%20Feature%20Request&title=)
 
 ## Contributors & Developers
 [API Documentation](https://prowlarr.com/docs/api/)

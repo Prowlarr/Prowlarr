@@ -51,8 +51,9 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"getTorrents(""mySecret"", [asdfasdf], 100, 0)")]
         [TestCase(@"""DownloadURL"":""https:\/\/broadcasthe.net\/torrents.php?action=download&id=123&authkey=mySecret&torrent_pass=mySecret""")]
 
-        // Plex
-        [TestCase(@" http://localhost:32400/library/metadata/12345/refresh?X-Plex-Client-Identifier=1234530f-422f-4aac-b6b3-01233210aaaa&X-Plex-Product=Sonarr&X-Plex-Platform=Windows&X-Plex-Platform-Version=7&X-Plex-Device-Name=Sonarr&X-Plex-Version=3.0.3.833&X-Plex-Token=mySecret")]
+        // Notifiarr
+        [TestCase("https://notifiarr.com/notifier.php: api=1234530f-422f-4aac-b6b3-01233210aaaa&radarr_health_issue_message=Download")]
+
         public void should_clean_message(string message)
         {
             var cleansedMessage = CleanseLogMessage.Cleanse(message);

@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using AngleSharp.Dom;
 using AngleSharp.Html;
 using NzbDrone.Common.Extensions;
@@ -32,7 +35,6 @@ namespace NzbDrone.Core.Parser
             return result.TrimStart(' ', '.').TrimEnd(' ');
         }
 
-        /*
         public static string StripNonAlphaNumeric(this string str, string replacement = "") =>
             StripRegex(str, "[^a-zA-Z0-9 -]", replacement);
 
@@ -53,7 +55,9 @@ namespace NzbDrone.Core.Parser
             {
                 var c = normalizedString[i];
                 if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
                     stringBuilder.Append(c);
+                }
             }
 
             return stringBuilder.ToString();
@@ -111,11 +115,9 @@ namespace NzbDrone.Core.Parser
                              .Select(x => string.Format(
                                  "{0} = {1}",
                                  x.Name,
-                                 x.Value != null ? x.Value.ToString() : string.Empty
-                             ));
+                                 x.Value != null ? x.Value.ToString() : string.Empty));
             return string.Join("\n", fields);
         }
-        */
 
         private static char[] MakeValidFileName_invalids;
 

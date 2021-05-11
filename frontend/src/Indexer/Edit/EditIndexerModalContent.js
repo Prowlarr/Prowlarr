@@ -106,18 +106,20 @@ function EditIndexerModalContent(props) {
               </FormGroup>
 
               {
-                fields.map((field) => {
-                  return (
-                    <ProviderFieldFormGroup
-                      key={field.name}
-                      advancedSettings={advancedSettings}
-                      provider="indexer"
-                      providerData={item}
-                      {...field}
-                      onChange={onFieldChange}
-                    />
-                  );
-                })
+                fields ?
+                  fields.map((field) => {
+                    return (
+                      <ProviderFieldFormGroup
+                        key={field.name}
+                        advancedSettings={advancedSettings}
+                        provider="indexer"
+                        providerData={item}
+                        {...field}
+                        onChange={onFieldChange}
+                      />
+                    );
+                  }) :
+                  null
               }
               <FormGroup
                 advancedSettings={advancedSettings}

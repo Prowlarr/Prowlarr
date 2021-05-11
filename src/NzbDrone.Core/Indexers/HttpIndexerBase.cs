@@ -252,7 +252,7 @@ namespace NzbDrone.Core.Indexers
                             }
                         }
 
-                        releases.AddRange(pagedReleases.Where(IsValidRelease));
+                        releases.AddRange(pagedReleases);
                     }
 
                     if (releases.Any())
@@ -361,16 +361,6 @@ namespace NzbDrone.Core.Indexers
         public override IndexerCapabilities GetCapabilities()
         {
             return Capabilities ?? ((IndexerDefinition)Definition).Capabilities;
-        }
-
-        protected virtual bool IsValidRelease(ReleaseInfo release)
-        {
-            if (release.DownloadUrl == null)
-            {
-                return false;
-            }
-
-            return true;
         }
 
         protected virtual bool IsFullPage(IList<ReleaseInfo> page)

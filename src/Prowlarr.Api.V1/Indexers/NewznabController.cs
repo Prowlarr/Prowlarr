@@ -10,6 +10,7 @@ using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
 
@@ -72,7 +73,12 @@ namespace NzbDrone.Api.V1.Indexers
 
                     foreach (var result in results.Releases)
                     {
-                        result.DownloadUrl = _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexer.Id, result.Title).ToString();
+                        result.DownloadUrl = result.DownloadUrl != null ? _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexer.Id, result.Title).ToString() : null;
+
+                        if (result.DownloadProtocol == DownloadProtocol.Torrent)
+                        {
+                            ((TorrentInfo)result).MagnetUrl = ((TorrentInfo)result).MagnetUrl != null ? _downloadMappingService.ConvertToProxyLink(new Uri(((TorrentInfo)result).MagnetUrl), request.server, indexer.Id, result.Title).ToString() : null;
+                        }
                     }
 
                     return Content(results.ToXml(indexerInstance.Protocol), "application/rss+xml");

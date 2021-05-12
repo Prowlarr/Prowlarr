@@ -16,6 +16,7 @@ using NzbDrone.SignalR;
 using NzbDrone.Test.Common.Categories;
 using Prowlarr.Api.V1.Config;
 using Prowlarr.Api.V1.History;
+using Prowlarr.Api.V1.System.Tasks;
 using Prowlarr.Api.V1.Tags;
 using RestSharp;
 using RestSharp.Serializers.SystemTextJson;
@@ -28,6 +29,7 @@ namespace NzbDrone.Integration.Test
         protected RestClient RestClient { get; private set; }
 
         public CommandClient Commands;
+        public ClientBase<TaskResource> Tasks;
         public ClientBase<HistoryResource> History;
         public ClientBase<HostConfigResource> HostConfig;
         public IndexerClient Indexers;
@@ -83,6 +85,7 @@ namespace NzbDrone.Integration.Test
             RestClient.UseSystemTextJson();
 
             Commands = new CommandClient(RestClient, ApiKey);
+            Tasks = new ClientBase<TaskResource>(RestClient, ApiKey, "system/task");
             History = new ClientBase<HistoryResource>(RestClient, ApiKey);
             HostConfig = new ClientBase<HostConfigResource>(RestClient, ApiKey, "config/host");
             Indexers = new IndexerClient(RestClient, ApiKey);

@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Authentication
         User FindUser(Guid identifier);
     }
 
-    public class UserService : IUserService, IHandle<ApplicationStartedEvent>
+    public class UserService : IUserService
     {
         private readonly IUserRepository _repo;
         private readonly IAppFolderInfo _appFolderInfo;
@@ -96,36 +96,6 @@ namespace NzbDrone.Core.Authentication
         public User FindUser(Guid identifier)
         {
             return _repo.FindUser(identifier);
-        }
-
-        public void Handle(ApplicationStartedEvent message)
-        {
-            if (_repo.All().Any())
-            {
-                return;
-            }
-
-            var configFile = _appFolderInfo.GetConfigPath();
-
-            if (!_diskProvider.FileExists(configFile))
-            {
-                return;
-            }
-
-            var xDoc = XDocument.Load(configFile);
-            var config = xDoc.Descendants("Config").Single();
-            var usernameElement = config.Descendants("Username").FirstOrDefault();
-            var passwordElement = config.Descendants("Password").FirstOrDefault();
-
-            if (usernameElement == null || passwordElement == null)
-            {
-                return;
-            }
-
-            var username = usernameElement.Value;
-            var password = passwordElement.Value;
-
-            Add(username, password);
         }
     }
 }

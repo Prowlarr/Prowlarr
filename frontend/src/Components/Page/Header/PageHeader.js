@@ -81,7 +81,7 @@ class PageHeader extends Component {
             className={styles.translate}
             title={translate('SuggestTranslationChange')}
             name={icons.TRANSLATE}
-            to="https://translate.servarr.com/projects/prowlarr/prowlarr/"
+            to="https://translate.servarr.com/projects/servarr/prowlarr/"
             size={24}
           />
           <PageHeaderActionsMenuConnector

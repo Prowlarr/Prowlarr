@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Test.UpdateTests
 
         [Test]
         [Ignore("TODO No Updates On Server")]
-        [Platform(Exclude = "NetCore")]
         public void finds_update_when_version_lower()
         {
             UseRealHttp();

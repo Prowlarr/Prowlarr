@@ -1,6 +1,7 @@
 using System.Threading;
 using NLog;
 using NUnit.Framework;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.FileList;
 using NzbDrone.Test.Common;
 using Prowlarr.Http.ClientSchema;
@@ -34,6 +35,8 @@ namespace NzbDrone.Integration.Test
 
         protected override void InitializeTestTarget()
         {
+            WaitForCompletion(() => Tasks.All().SelectList(x => x.TaskName).Contains("CheckHealth"));
+
             Indexers.Post(new Prowlarr.Api.V1.Indexers.IndexerResource
             {
                 Enable = false,

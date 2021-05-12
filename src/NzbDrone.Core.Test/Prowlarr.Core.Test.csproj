@@ -11,7 +11,7 @@
     <PackageReference Include="NBuilder" Version="6.1.0" />
     <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.113.0-0" />
     <PackageReference Include="YamlDotNet" Version="11.1.1" />
-    <PackageReference Include="coverlet.collector" Version="1.2.1" PrivateAssets="all" />
+    <PackageReference Include="coverlet.collector" Version="3.0.4-preview.27.ge7cb7c3b40" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Test.Common\Prowlarr.Test.Common.csproj" />

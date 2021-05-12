@@ -8,7 +8,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="NunitXml.TestLogger" Version="3.0.97" />
     <PackageReference Include="coverlet.collector" Version="1.2.1" PrivateAssets="all" />
-    <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
+    <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-servarr1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common.Test\Prowlarr.Common.Test.csproj" />

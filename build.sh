@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 set -e
 
 outputFolder='_output'
@@ -22,6 +22,18 @@ UpdateVersionNumber()
         sed -i'' -e "s/<AssemblyVersion>[0-9.*]\+<\/AssemblyVersion>/<AssemblyVersion>$PROWLARRVERSION<\/AssemblyVersion>/g" src/Directory.Build.props
         sed -i'' -e "s/<AssemblyConfiguration>[\$()A-Za-z-]\+<\/AssemblyConfiguration>/<AssemblyConfiguration>${BUILD_SOURCEBRANCHNAME}<\/AssemblyConfiguration>/g" src/Directory.Build.props
         sed -i'' -e "s/<string>10.0.0.0<\/string>/<string>$PROWLARRVERSION<\/string>/g" distribution/osx/Prowlarr.app/Contents/Info.plist
+    fi
+}
+
+EnableBsdSupport()
+{
+    #todo enable sdk with
+    #SDK_PATH=$(dotnet --list-sdks | grep -P '5\.\d\.\d+' | head -1 | sed 's/\(5\.[0-9]*\.[0-9]*\).*\[\(.*\)\]/\2\/\1/g')
+    # BUNDLED_VERSIONS="${SDK_PATH}/Microsoft.NETCoreSdk.BundledVersions.props"
+
+    if grep -qv freebsd-x64 src/Directory.Build.props; then
+        sed -i'' -e "s^<RuntimeIdentifiers>\(.*\)</RuntimeIdentifiers>^<RuntimeIdentifiers>\1;freebsd-x64</RuntimeIdentifiers>^g" src/Directory.Build.props
+        sed -i'' -e "s^<ExcludedRuntimeFrameworkPairs>\(.*\)</ExcludedRuntimeFrameworkPairs>^<ExcludedRuntimeFrameworkPairs>\1;freebsd-x64:net472</ExcludedRuntimeFrameworkPairs>^g" src/Directory.Build.props
     fi
 }
 
@@ -207,7 +219,7 @@ Package()
     IFS='-' read -ra SPLIT <<< "$runtime"
 
     case "${SPLIT[0]}" in
-        linux)
+        linux|freebsd*)
             PackageLinux "$framework" "$runtime"
             ;;
         win)
@@ -252,6 +264,7 @@ if [ $# -eq 0 ]; then
     FRONTEND=YES
     PACKAGES=YES
     LINT=YES
+    ENABLE_BSD=NO
 fi
 
 while [[ $# -gt 0 ]]
@@ -261,6 +274,10 @@ key="$1"
 case $key in
     --backend)
         BACKEND=YES
+        shift # past argument
+        ;;
+    --enable-bsd)
+        ENABLE_BSD=YES
         shift # past argument
         ;;
     -r|--runtime)
@@ -303,6 +320,10 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [ "$BACKEND" = "YES" ];
 then
     UpdateVersionNumber
+    if [ "$ENABLE_BSD" = "YES" ];
+    then
+        EnableBsdSupport
+    fi
     Build
     if [[ -z "$RID" || -z "$FRAMEWORK" ]];
     then
@@ -311,6 +332,10 @@ then
         PackageTests "net5.0" "linux-x64"
         PackageTests "net5.0" "linux-musl-x64"
         PackageTests "net5.0" "osx-x64"
+        if [ "$ENABLE_BSD" = "YES" ];
+        then
+            PackageTests "net5.0" "freebsd-x64"
+        fi
     else
         PackageTests "$FRAMEWORK" "$RID"
     fi
@@ -346,6 +371,10 @@ then
         Package "net5.0" "linux-musl-arm64"
         Package "net5.0" "linux-arm"
         Package "net5.0" "osx-x64"
+        if [ "$ENABLE_BSD" = "YES" ];
+        then
+            Package "net5.0" "freebsd-x64"
+        fi
     else
         Package "$FRAMEWORK" "$RID"
     fi

@@ -82,7 +82,18 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
-      - bash: ./build.sh --backend
+      - bash: |
+          BUNDLEDVERSIONS=${AGENT_TOOLSDIRECTORY}/dotnet/sdk/${DOTNETVERSION}/Microsoft.NETCoreSdk.BundledVersions.props
+          echo $BUNDLEDVERSIONS
+          grep osx-x64 $BUNDLEDVERSIONS
+          if grep -q freebsd-x64 $BUNDLEDVERSIONS; then
+            echo "BSD already enabled"
+          else
+            echo "Enabling BSD support"
+            sed -i.ORI 's/osx-x64/osx-x64;freebsd-x64/' $BUNDLEDVERSIONS
+          fi
+        displayName: Enable FreeBSD Support
+      - bash: ./build.sh --backend --enable-bsd
         displayName: Build Prowlarr Backend
       - bash: |
           find ${OUTPUTFOLDER} -type f ! -path "*/publish/*" -exec rm -rf {} \;
@@ -106,6 +117,10 @@ stages:
       - publish: '$(testsFolder)/net5.0/linux-musl-x64/publish'
         artifact: LinuxMuslCoreTests
         displayName: Publish Linux Musl Test Package
+        condition: and(succeeded(), eq(variables['osName'], 'Windows'))
+      - publish: '$(testsFolder)/net5.0/freebsd-x64/publish'
+        artifact: FreebsdCoreTests
+        displayName: Publish FreeBSD Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
       - publish: '$(testsFolder)/net5.0/osx-x64/publish'
         artifact: MacCoreTests
@@ -218,7 +233,7 @@ stages:
           artifactName: WindowsFrontend
           targetPath: _output
         displayName: Fetch Frontend
-      - bash: ./build.sh --packages
+      - bash: ./build.sh --packages --enable-bsd
         displayName: Create Packages
       - bash: |
           find . -name "Prowlarr" -exec chmod a+x {} \;
@@ -293,6 +308,14 @@ stages:
           tarCompression: 'gz'
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux-musl-arm64/net5.0
+      - task: ArchiveFiles@2
+        displayName: Create FreeBSD Core Core tar
+        inputs:
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).freebsd-core-x64.tar.gz'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          includeRootFolder: false
+          rootFolderOrFile: $(artifactsFolder)/freebsd-x64/net5.0
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'Packages'
         displayName: Publish Packages
@@ -346,24 +369,34 @@ stages:
       displayName: Unit Native
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      workspace:
+        clean: all
 
       strategy:
         matrix:
           MacCore:
             osName: 'Mac'
             testName: 'MacCore'
+            poolName: 'Azure Pipelines'
             imageName: 'macos-10.14'
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
+            poolName: 'Azure Pipelines'
             imageName: 'windows-2019'
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
+            poolName: 'Azure Pipelines'
             imageName: 'ubuntu-18.04'
-            pattern: 'Prowlarr.**.linux-core-x64.tar.gz'
+          FreebsdCore:
+            osName: 'Linux'
+            testName: 'FreebsdCore'
+            poolName: 'FreeBSD'
+            imageName:
 
       pool:
+        name: $(poolName)
         vmImage: $(imageName)
 
       steps:
@@ -372,6 +405,7 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
+        condition: ne(variables['poolName'], 'FreeBSD')
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
         inputs:
@@ -472,17 +506,17 @@ stages:
             osName: 'Mac'
             testName: 'MacCore'
             imageName: 'macos-10.14'
-            pattern: 'Prowlarr.**.osx-core-x64.tar.gz'
+            pattern: 'Prowlarr.*.osx-core-x64.tar.gz'
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
             imageName: 'windows-2019'
-            pattern: 'Prowlarr.**.windows-core-x64.zip'
+            pattern: 'Prowlarr.*.windows-core-x64.zip'
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
             imageName: 'ubuntu-18.04'
-            pattern: 'Prowlarr.**.linux-core-x64.tar.gz'
+            pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
 
       pool:
         vmImage: $(imageName)
@@ -527,6 +561,52 @@ stages:
           failTaskOnFailedTests: true
         displayName: Publish Test Results
 
+    - job: Integration_FreeBSD
+      displayName: Integration Native FreeBSD
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      workspace:
+        clean: all
+      variables:
+        pattern: 'Prowlarr.*.freebsd-core-x64.tar.gz'
+      pool:
+        name: 'FreeBSD'
+
+      steps:
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: 'FreebsdCoreTests'
+          targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Packages
+          itemPattern: '/$(pattern)'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - bash: |
+          mkdir -p ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+          tar xf ${BUILD_ARTIFACTSTAGINGDIRECTORY}/$(pattern) -C ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+        displayName: Extract Package
+      - bash: |
+          mkdir -p ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+        displayName: Move Package Contents
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh Linux Integration Test
+        displayName: Run Integration Tests
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'FreeBSD Integration Tests'
+          failTaskOnFailedTests: true
+        displayName: Publish Test Results
+
     - job: Integration_Docker
       displayName: Integration Docker
       dependsOn: Prepare
@@ -537,7 +617,8 @@ stages:
             testName: 'Musl Net Core'
             artifactName: LinuxMuslCoreTests
             containerImage: ghcr.io/servarr/testimages:alpine
-            pattern: 'Prowlarr.**.linux-musl-core-x64.tar.gz'
+            pattern: 'Prowlarr.*.linux-musl-core-x64.tar.gz'
+
       pool:
         vmImage: 'ubuntu-18.04'
 
@@ -596,17 +677,17 @@ stages:
           Linux:
             osName: 'Linux'
             imageName: 'ubuntu-18.04'
-            pattern: 'Prowlarr.**.linux-core-x64.tar.gz'
+            pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
             failBuild: false
           Mac:
             osName: 'Mac'
             imageName: 'macos-10.14'
-            pattern: 'Prowlarr.**.osx-core-x64.tar.gz'
+            pattern: 'Prowlarr.*.osx-core-x64.tar.gz'
             failBuild: false
           Windows:
             osName: 'Windows'
             imageName: 'windows-2019'
-            pattern: 'Prowlarr.**.windows-core-x64.zip'
+            pattern: 'Prowlarr.*.windows-core-x64.zip'
             failBuild: false
 
       pool:

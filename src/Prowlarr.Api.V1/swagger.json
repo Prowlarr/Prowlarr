@@ -766,13 +766,13 @@
                         "source": "ImportMechanismCheck",
                         "type": "warning",
                         "message": "Enable Completed Download Handling",
-                        "wikiUrl": "https://github.com/Prowlarr/Prowlarr/wiki/Health-checks#enable-completed-download-handling"
+                        "wikiUrl": "https://wiki.servarr.com/Prowlarr_System#Completed.2FFailed_Download_Handling"
                       },
                       {
                         "source": "DownloadClientCheck",
                         "type": "error",
                         "message": "Unable to communicate with qBittorrent. Failed to connect to qBittorrent, check your settings.",
-                        "wikiUrl": "https://github.com/Prowlarr/Prowlarr/wiki/Health-checks#unable-to-communicate-with-download-client"
+                        "wikiUrl": "https://wiki.servarr.com/Prowlarr_System#Download_Clients"
                       }
                     ]
                   }

@@ -129,7 +129,9 @@ class FileBrowserModalContent extends Component {
                 className={styles.mappedDrivesWarning}
                 kind={kinds.WARNING}
               >
-                Mapped network drives are not available when running as a Windows Service, see the <Link className={styles.faqLink} to="https://github.com/Prowlarr/Prowlarr/wiki/FAQ">FAQ</Link> for more information.
+                <Link to="https://wiki.servarr.com/Prowlarr_FAQ#Why_cant_Prowlarr_see_my_files_on_a_remote_server">
+                  {translate('MappedDrivesRunningAsService')}
+                </Link>
               </Alert>
           }
 

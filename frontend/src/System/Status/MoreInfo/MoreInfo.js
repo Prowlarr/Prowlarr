@@ -22,12 +22,12 @@ class MoreInfo extends Component {
 
           <DescriptionListItemTitle>Discord</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://discord.gg/r5wJPt9">discord.gg/r5wJPt9</Link>
+            <Link to="https://prowlarr.com/discord">prowlarr.com/discord</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Wiki</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://github.com/Prowlarr/Prowlarr/wiki">github.com/Prowlarr/Prowlarr/wiki</Link>
+            <Link to="https://wiki.servarr.com/Prowlarr">wiki.servarr.com/Prowlarr</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Donations</DescriptionListItemTitle>

@@ -25,10 +25,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 if (currentBranch == "develop")
                 {
-                    return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("ReleaseBranchCheckPreviousVersionMessage"), _configFileService.Branch), "#branch-is-for-a-previous-version");
+                    return new HealthCheck(GetType(), HealthCheckResult.Error, string.Format(_localizationService.GetLocalizedString("ReleaseBranchCheckPreviousVersionMessage"), _configFileService.Branch), "#branch_is_for_a_previous_version");
                 }
 
-                return new HealthCheck(GetType(), HealthCheckResult.Warning, string.Format(_localizationService.GetLocalizedString("ReleaseBranchCheckOfficialBranchMessage"), _configFileService.Branch), "#branch-is-not-a-valid-release-branch");
+                return new HealthCheck(GetType(), HealthCheckResult.Warning, string.Format(_localizationService.GetLocalizedString("ReleaseBranchCheckOfficialBranchMessage"), _configFileService.Branch), "#branch_is_not_a_valid_release_branch");
             }
 
             return new HealthCheck(GetType());

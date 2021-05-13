@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Notifications.Webhook
             _proxy = proxy;
         }
 
-        public override string Link => "https://github.com/Prowlarr/Prowlarr/wiki/Webhook";
+        public override string Link => "https://wiki.servarr.com/Prowlarr_Settings#Connect";
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {

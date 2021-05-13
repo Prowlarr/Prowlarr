@@ -55,7 +55,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 HealthCheckResult.Warning,
                 string.Format(_localizationService.GetLocalizedString("NewznabVipCheckExpiringClientMessage"),
                     string.Join(", ", expiringProviders.Select(v => v.Definition.Name))),
-                "#newznab-vip-expiring");
+                "#newznab_vip_expiring");
             }
 
             if (!expiredProviders.Empty())
@@ -64,7 +64,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 HealthCheckResult.Warning,
                 string.Format(_localizationService.GetLocalizedString("NewznabVipCheckExpiredClientMessage"),
                     string.Join(", ", expiredProviders.Select(v => v.Definition.Name))),
-                "#newznab-vip-expired");
+                "#newznab_vip_expired");
             }
 
             return new HealthCheck(GetType());

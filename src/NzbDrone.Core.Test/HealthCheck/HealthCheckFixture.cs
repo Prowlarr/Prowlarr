@@ -8,11 +8,11 @@ namespace NzbDrone.Core.Test.HealthCheck
     [TestFixture]
     public class HealthCheckFixture : CoreTest
     {
-        private const string WikiRoot = "https://github.com/Prowlarr/Prowlarr/wiki/";
+        private const string WikiRoot = "https://wiki.servarr.com/";
 
-        [TestCase("I blew up because of some weird user mistake", null, WikiRoot + "Health-checks#i-blew-up-because-of-some-weird-user-mistake")]
-        [TestCase("I blew up because of some weird user mistake", "#my-health-check", WikiRoot + "Health-checks#my-health-check")]
-        [TestCase("I blew up because of some weird user mistake", "Custom-Page#my-health-check", WikiRoot + "Custom-Page#my-health-check")]
+        [TestCase("I blew up because of some weird user mistake", null, WikiRoot + "Prowlarr_System#i_blew_up_because_of_some_weird_user_mistake")]
+        [TestCase("I blew up because of some weird user mistake", "#my_health_check", WikiRoot + "Prowlarr_System#my_health_check")]
+        [TestCase("I blew up because of some weird user mistake", "Custom-Page#my_health_check", WikiRoot + "Custom-Page#my_health_check")]
         public void should_format_wiki_url(string message, string wikiFragment, string expectedUrl)
         {
             var subject = new NzbDrone.Core.HealthCheck.HealthCheck(typeof(HealthCheckBase), HealthCheckResult.Warning, message, wikiFragment);

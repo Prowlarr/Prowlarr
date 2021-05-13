@@ -38,8 +38,8 @@ namespace Prowlarr.Api.V1
                 Tags = definition.Tags,
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
-                InfoLink = string.Format("https://github.com/Prowlarr/Prowlarr/wiki/Supported-{0}#{1}",
-                    typeof(TProviderResource).Name.Replace("Resource", "s"),
+                //Radarr_Supported_{0} are custom build redirect pages; if passing a new var, create a new redirect
+                InfoLink = string.Format("https://wiki.servarr.com/Prowlarr_Supported_{0}",
                     definition.Implementation.ToLower())
             };
         }

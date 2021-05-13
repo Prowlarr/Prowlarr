@@ -107,12 +107,19 @@ namespace NzbDrone.Core.Applications.Readarr
             }
             else
             {
-                _logger.Debug("Remote indexer not found, re-adding {0} to Readarr", indexer.Name);
-                readarrIndexer.Id = 0;
-
-                var newRemoteIndexer = _readarrV1Proxy.AddIndexer(readarrIndexer, Settings);
                 _appIndexerMapService.Delete(indexerMapping.Id);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+
+                if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                {
+                    _logger.Debug("Remote indexer not found, re-adding {0} to Readarr", indexer.Name);
+                    readarrIndexer.Id = 0;
+                    var newRemoteIndexer = _readarrV1Proxy.AddIndexer(readarrIndexer, Settings);
+                    _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+                }
+                else
+                {
+                    _logger.Debug("Remote indexer not found for {0}, skipping re-add to Readarr due to indexer capabilities", indexer.Name);
+                }
             }
         }
 

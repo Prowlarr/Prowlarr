@@ -107,12 +107,19 @@ namespace NzbDrone.Core.Applications.Lidarr
             }
             else
             {
-                _logger.Debug("Remote indexer not found, re-adding {0} to Lidarr", indexer.Name);
-                lidarrIndexer.Id = 0;
-
-                var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
                 _appIndexerMapService.Delete(indexerMapping.Id);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+
+                if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                {
+                    _logger.Debug("Remote indexer not found, re-adding {0} to Lidarr", indexer.Name);
+                    lidarrIndexer.Id = 0;
+                    var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
+                    _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+                }
+                else
+                {
+                    _logger.Debug("Remote indexer not found for {0}, skipping re-add to Lidarr due to indexer capabilities", indexer.Name);
+                }
             }
         }
 

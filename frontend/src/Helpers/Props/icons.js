@@ -70,6 +70,7 @@ import {
   faLanguage as fasLanguage,
   faLaptop as fasLaptop,
   faLevelUpAlt as fasLevelUpAlt,
+  faLocationArrow as fasLocationArrow,
   faLock as fasLock,
   faMedkit as fasMedkit,
   faMinus as fasMinus,
@@ -191,6 +192,7 @@ export const POSTER = fasTh;
 export const QUEUED = fasCloud;
 export const QUICK = fasRocket;
 export const RECOMMENDED = fasThumbsUp;
+export const REDIRECT = fasLocationArrow;
 export const REFRESH = fasSync;
 export const REMOVE = fasTimes;
 export const RESTART = fasRedoAlt;

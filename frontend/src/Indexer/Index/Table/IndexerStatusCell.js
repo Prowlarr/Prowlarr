@@ -19,6 +19,7 @@ function IndexerStatusCell(props) {
   } = props;
 
   const enableKind = redirect ? kinds.INFO : kinds.SUCCESS;
+  const enableIcon = redirect ? icons.REDIRECT : icons.CHECK;
   const enableTitle = redirect ? 'Indexer is Enabled, Redirect is Enabled' : 'Indexer is Enabled';
 
   return (
@@ -30,7 +31,7 @@ function IndexerStatusCell(props) {
         <Icon
           className={styles.statusIcon}
           kind={enabled ? enableKind : kinds.DEFAULT}
-          name={enabled ? icons.CHECK : icons.BLACKLIST}
+          name={enabled ? enableIcon: icons.BLACKLIST}
           title={enabled ? enableTitle : 'Indexer is Disabled'}
         />
       }

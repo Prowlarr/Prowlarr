@@ -116,6 +116,12 @@ export const defaultState = {
       type: filterBuilderTypes.STRING
     },
     {
+      name: 'enable',
+      label: 'Enabled',
+      type: filterBuilderTypes.EXACT,
+      valueType: filterBuilderValueTypes.BOOL
+    },
+    {
       name: 'added',
       label: translate('Added'),
       type: filterBuilderTypes.DATE,

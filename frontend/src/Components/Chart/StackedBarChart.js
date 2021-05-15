@@ -44,7 +44,13 @@ class StackedBarChart extends Component {
 
   componentDidUpdate() {
     this.myChart.data.labels = this.props.data.labels;
-    this.myChart.data.datasets = this.props.data.datasets;
+    this.myChart.data.datasets = this.props.data.datasets.map((d, index) => {
+      return {
+        label: d.label,
+        data: d.data,
+        backgroundColor: colors.chartColors[index]
+      };
+    });
     this.myChart.update();
   }
 

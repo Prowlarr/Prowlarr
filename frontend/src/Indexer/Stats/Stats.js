@@ -39,8 +39,6 @@ function getTotalRequestsData(indexerStats) {
     ]
   };
 
-  console.log(data);
-
   return data;
 }
 

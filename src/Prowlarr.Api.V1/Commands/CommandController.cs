@@ -62,6 +62,7 @@ namespace Prowlarr.Api.V1.Commands
             command.Trigger = CommandTrigger.Manual;
             command.SuppressMessages = !command.SendUpdatesToClient;
             command.SendUpdatesToClient = true;
+            command.ClientUserAgent = Request.Headers["User-Agent"];
 
             var trackedCommand = _commandQueueManager.Push(command, CommandPriority.Normal, CommandTrigger.Manual);
             return Created(trackedCommand.Id);

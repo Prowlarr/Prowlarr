@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 case HttpStatusCode.NotFound:
                     throw new IndexerException(indexerResponse, "Indexer API call returned NotFound, the Indexer API may have changed.");
                 case HttpStatusCode.ServiceUnavailable:
-                    throw new RequestLimitReachedException("Cannot do more than 150 API requests per hour.");
+                    throw new RequestLimitReachedException(indexerResponse, "Cannot do more than 150 API requests per hour.");
                 default:
                     if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
                     {

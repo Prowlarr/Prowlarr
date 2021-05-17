@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 
             if (errorMessage == "Request limit reached")
             {
-                throw new RequestLimitReachedException("API limit reached");
+                throw new RequestLimitReachedException(indexerResponse, "API limit reached");
             }
 
             throw new TorznabException("Torznab error detected: {0}", errorMessage);

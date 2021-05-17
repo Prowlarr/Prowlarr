@@ -302,6 +302,8 @@ namespace NzbDrone.Core.Indexers
             }
             catch (TooManyRequestsException ex)
             {
+                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.ElapsedTime, StatusCode = (int)ex.Response.StatusCode });
+
                 if (ex.RetryAfter != TimeSpan.Zero)
                 {
                     _indexerStatusService.RecordFailure(Definition.Id, ex.RetryAfter);
@@ -315,11 +317,13 @@ namespace NzbDrone.Core.Indexers
             }
             catch (HttpException ex)
             {
+                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.ElapsedTime, StatusCode = (int)ex.Response.StatusCode });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn("{0} {1}", this, ex.Message);
             }
-            catch (RequestLimitReachedException)
+            catch (RequestLimitReachedException ex)
             {
+                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.HttpResponse.ElapsedTime, StatusCode = (int)ex.Response.HttpResponse.StatusCode });
                 _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
@@ -330,6 +334,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (CloudFlareCaptchaException ex)
             {
+                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.ElapsedTime, StatusCode = (int)ex.Response.StatusCode });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 ex.WithData("FeedUrl", url);
                 if (ex.IsExpired)
@@ -343,6 +348,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (IndexerException ex)
             {
+                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.HttpResponse.ElapsedTime, StatusCode = (int)ex.Response.HttpResponse.StatusCode });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn(ex, "{0}", url);
             }
@@ -384,7 +390,7 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerQueryResult
                 {
                     Releases = releases,
-                    ElapsedTime = response.ElapsedTime,
+                    ElapsedTime = response.HttpResponse.ElapsedTime,
                     StatusCode = (int)response.HttpResponse.StatusCode
                 };
             }
@@ -450,12 +456,8 @@ namespace NzbDrone.Core.Indexers
                 }
             }
 
-            var stopWatch = Stopwatch.StartNew();
-
             request.HttpRequest.SuppressHttpError = true;
             var response = await _httpClient.ExecuteAsync(request.HttpRequest);
-
-            stopWatch.Stop();
 
             // Check reponse to see if auth is needed, if needed try again
             if (CheckIfLoginNeeded(response))
@@ -486,16 +488,14 @@ namespace NzbDrone.Core.Indexers
 
             UpdateCookies(Cookies, DateTime.Now + TimeSpan.FromDays(30));
 
-            return new IndexerResponse(request, response, stopWatch.ElapsedMilliseconds);
+            return new IndexerResponse(request, response);
         }
 
         protected async Task<HttpResponse> ExecuteAuth(HttpRequest request)
         {
-            var stopWatch = Stopwatch.StartNew();
             var response = await _httpClient.ExecuteAsync(request);
-            stopWatch.Stop();
 
-            _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, stopWatch.ElapsedMilliseconds));
+            _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));
 
             return response;
         }

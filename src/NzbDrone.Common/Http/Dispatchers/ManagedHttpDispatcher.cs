@@ -68,6 +68,10 @@ namespace NzbDrone.Common.Http.Dispatchers
 
             HttpWebResponse httpWebResponse;
 
+            var sw = new Stopwatch();
+
+            sw.Start();
+
             try
             {
                 if (request.ContentData != null)
@@ -144,7 +148,9 @@ namespace NzbDrone.Common.Http.Dispatchers
                 }
             }
 
-            return new HttpResponse(request, new HttpHeader(httpWebResponse.Headers), httpWebResponse.Cookies, data, httpWebResponse.StatusCode);
+            sw.Stop();
+
+            return new HttpResponse(request, new HttpHeader(httpWebResponse.Headers), httpWebResponse.Cookies, data, sw.ElapsedMilliseconds, httpWebResponse.StatusCode);
         }
 
         public async Task DownloadFileAsync(string url, string fileName)

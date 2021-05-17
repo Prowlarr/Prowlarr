@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             if (errorMessage == "Request limit reached")
             {
-                throw new RequestLimitReachedException("API limit reached");
+                throw new RequestLimitReachedException(indexerResponse, "API limit reached");
             }
 
             throw new NewznabException(indexerResponse, errorMessage);

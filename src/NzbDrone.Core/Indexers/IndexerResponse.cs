@@ -7,11 +7,10 @@ namespace NzbDrone.Core.Indexers
         private readonly IndexerRequest _indexerRequest;
         private readonly HttpResponse _httpResponse;
 
-        public IndexerResponse(IndexerRequest indexerRequest, HttpResponse httpResponse, long elapsedTime = 0)
+        public IndexerResponse(IndexerRequest indexerRequest, HttpResponse httpResponse)
         {
             _indexerRequest = indexerRequest;
             _httpResponse = httpResponse;
-            ElapsedTime = elapsedTime;
         }
 
         public IndexerRequest Request => _indexerRequest;
@@ -21,6 +20,5 @@ namespace NzbDrone.Core.Indexers
         public HttpResponse HttpResponse => _httpResponse;
 
         public string Content => _httpResponse.Content;
-        public long ElapsedTime { get; private set; }
     }
 }

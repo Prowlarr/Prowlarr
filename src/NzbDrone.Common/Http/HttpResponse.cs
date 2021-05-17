@@ -11,16 +11,17 @@ namespace NzbDrone.Common.Http
     {
         private static readonly Regex RegexSetCookie = new Regex("^(.*?)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             Request = request;
             Headers = headers;
             Cookies = cookies;
             ResponseData = binaryData;
             StatusCode = statusCode;
+            ElapsedTime = elapsedTime;
         }
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, string content, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, string content, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             Request = request;
             Headers = headers;
@@ -28,12 +29,14 @@ namespace NzbDrone.Common.Http
             ResponseData = Headers.GetEncodingFromContentType().GetBytes(content);
             _content = content;
             StatusCode = statusCode;
+            ElapsedTime = elapsedTime;
         }
 
         public HttpRequest Request { get; private set; }
         public HttpHeader Headers { get; private set; }
         public CookieCollection Cookies { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
+        public long ElapsedTime { get; private set; }
         public byte[] ResponseData { get; private set; }
 
         private string _content;
@@ -93,7 +96,7 @@ namespace NzbDrone.Common.Http
         where T : new()
     {
         public HttpResponse(HttpResponse response)
-            : base(response.Request, response.Headers, response.Cookies, response.ResponseData, response.StatusCode)
+            : base(response.Request, response.Headers, response.Cookies, response.ResponseData, response.ElapsedTime, response.StatusCode)
         {
             Resource = Json.Deserialize<T>(response.Content);
         }

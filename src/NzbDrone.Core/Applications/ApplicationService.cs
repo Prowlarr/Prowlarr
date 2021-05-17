@@ -147,6 +147,15 @@ namespace NzbDrone.Core.Applications
                         }
                     }
                 }
+
+                foreach (var mapping in indexerMappings)
+                {
+                    if (!indexers.Any(x => x.Id == mapping.IndexerId))
+                    {
+                        _logger.Info("Indexer with the ID {0} was found within {1} but is no longer defined within Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
+                        ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
+                    }
+                }
             }
         }
 

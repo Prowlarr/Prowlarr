@@ -229,7 +229,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             // The API returns a single item to represent a state of no results. Avoid returning this result.
             if (queryResponseItems.Count == 1 && queryResponseItems.First().Id == 0)
             {
-                return (IList<ReleaseInfo>)Enumerable.Empty<ReleaseInfo>();
+                return torrentInfos;
             }
 
             foreach (var item in queryResponseItems)

@@ -48,6 +48,15 @@ function IndexerIndexSortMenu(props) {
         </SortMenuItem>
 
         <SortMenuItem
+          name="appProfileId"
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onPress={onSortSelect}
+        >
+          {translate('AppProfile')}
+        </SortMenuItem>
+
+        <SortMenuItem
           name="priority"
           sortKey={sortKey}
           sortDirection={sortDirection}

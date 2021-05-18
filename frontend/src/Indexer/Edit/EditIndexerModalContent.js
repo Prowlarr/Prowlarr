@@ -42,6 +42,7 @@ function EditIndexerModalContent(props) {
     redirect,
     supportsRss,
     supportsRedirect,
+    appProfileId,
     fields,
     priority
   } = item;
@@ -101,6 +102,17 @@ function EditIndexerModalContent(props) {
                   helpText={'Redirect incoming download requests for indexer instead of Proxying using Prowlarr'}
                   isDisabled={!supportsRedirect.value}
                   {...redirect}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <FormLabel>{translate('AppProfile')}</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.APP_PROFILE_SELECT}
+                  name="appProfileId"
+                  {...appProfileId}
                   onChange={onInputChange}
                 />
               </FormGroup>

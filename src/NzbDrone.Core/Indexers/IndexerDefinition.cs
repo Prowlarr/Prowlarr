@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Profiles;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -21,6 +23,8 @@ namespace NzbDrone.Core.Indexers
         public int Priority { get; set; } = 25;
         public bool Redirect { get; set; }
         public DateTime Added { get; set; }
+        public int AppProfileId { get; set; }
+        public LazyLoaded<AppSyncProfile> AppProfile { get; set; }
 
         public IndexerStatus Status { get; set; }
 

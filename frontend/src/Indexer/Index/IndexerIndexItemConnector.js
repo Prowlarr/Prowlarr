@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { executeCommand } from 'Store/Actions/commandActions';
+import createIndexerAppProfileSelector from 'Store/Selectors/createIndexerAppProfileSelector';
 import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import createIndexerStatusSelector from 'Store/Selectors/createIndexerStatusSelector';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
@@ -19,11 +20,13 @@ function selectShowSearchAction() {
 function createMapStateToProps() {
   return createSelector(
     createIndexerSelector(),
+    createIndexerAppProfileSelector(),
     createIndexerStatusSelector(),
     selectShowSearchAction(),
     createUISettingsSelector(),
     (
       movie,
+      appProfile,
       status,
       showSearchAction,
       uiSettings
@@ -40,6 +43,7 @@ function createMapStateToProps() {
 
       return {
         ...movie,
+        appProfile,
         status,
         showSearchAction,
         longDateFormat: uiSettings.longDateFormat,

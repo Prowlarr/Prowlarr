@@ -22,6 +22,7 @@ namespace Prowlarr.Api.V1.Indexers
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public bool SupportsRedirect { get; set; }
+        public int AppProfileId { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
         public IndexerCapabilityResource Capabilities { get; set; }
@@ -65,6 +66,7 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
+            resource.AppProfileId = definition.AppProfileId;
             resource.BaseUrl = definition.BaseUrl;
             resource.Description = definition.Description;
             resource.Language = definition.Language;
@@ -117,6 +119,7 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
+            definition.AppProfileId = resource.AppProfileId;
             definition.Enable = resource.Enable;
             definition.Redirect = resource.Redirect;
             definition.BaseUrl = resource.BaseUrl;

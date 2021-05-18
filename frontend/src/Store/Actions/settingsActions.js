@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { handleThunks } from 'Store/thunks';
 import createHandleActions from './Creators/createHandleActions';
 import applications from './Settings/applications';
+import appProfiles from './Settings/appProfiles';
 import development from './Settings/development';
 import downloadClients from './Settings/downloadClients';
 import general from './Settings/general';
@@ -16,6 +17,7 @@ export * from './Settings/indexerCategories';
 export * from './Settings/languages';
 export * from './Settings/notifications';
 export * from './Settings/applications';
+export * from './Settings/appProfiles';
 export * from './Settings/development';
 export * from './Settings/ui';
 
@@ -36,6 +38,7 @@ export const defaultState = {
   languages: languages.defaultState,
   notifications: notifications.defaultState,
   applications: applications.defaultState,
+  appProfiles: appProfiles.defaultState,
   development: development.defaultState,
   ui: ui.defaultState
 };
@@ -64,6 +67,7 @@ export const actionHandlers = handleThunks({
   ...languages.actionHandlers,
   ...notifications.actionHandlers,
   ...applications.actionHandlers,
+  ...appProfiles.actionHandlers,
   ...development.actionHandlers,
   ...ui.actionHandlers
 });
@@ -83,6 +87,7 @@ export const reducers = createHandleActions({
   ...languages.reducers,
   ...notifications.reducers,
   ...applications.reducers,
+  ...appProfiles.reducers,
   ...development.reducers,
   ...ui.reducers
 

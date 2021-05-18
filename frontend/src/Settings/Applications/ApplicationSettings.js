@@ -5,6 +5,7 @@ import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import { icons } from 'Helpers/Props';
+import AppProfilesConnector from 'Settings/Profiles/App/AppProfilesConnector';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import translate from 'Utilities/String/translate';
 import ApplicationsConnector from './Applications/ApplicationsConnector';
@@ -45,6 +46,7 @@ class ApplicationSettings extends Component {
 
         <PageContentBody>
           <ApplicationsConnector />
+          <AppProfilesConnector />
         </PageContentBody>
       </PageContent>
     );

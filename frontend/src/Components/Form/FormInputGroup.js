@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'Components/Link/Link';
 import { inputTypes } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import AppProfileSelectInputConnector from './AppProfileSelectInputConnector';
 import AutoCompleteInput from './AutoCompleteInput';
 import AvailabilitySelectInput from './AvailabilitySelectInput';
 import CaptchaInputConnector from './CaptchaInputConnector';
@@ -29,6 +30,9 @@ import styles from './FormInputGroup.css';
 
 function getComponent(type) {
   switch (type) {
+    case inputTypes.APP_PROFILE_SELECT:
+      return AppProfileSelectInputConnector;
+
     case inputTypes.AUTO_COMPLETE:
       return AutoCompleteInput;
 

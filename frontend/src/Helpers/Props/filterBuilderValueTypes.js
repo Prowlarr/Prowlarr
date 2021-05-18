@@ -4,5 +4,6 @@ export const DATE = 'date';
 export const DEFAULT = 'default';
 export const INDEXER = 'indexer';
 export const PROTOCOL = 'protocol';
+export const APP_PROFILE = 'appProfile';
 export const MOVIE_STATUS = 'movieStatus';
 export const TAG = 'tag';

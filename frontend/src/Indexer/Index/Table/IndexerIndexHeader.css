@@ -18,6 +18,12 @@
   flex: 0 0 90px;
 }
 
+.appProfileId {
+  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
+
+  flex: 1 0 125px;
+}
+
 .capabilities {
   composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
 

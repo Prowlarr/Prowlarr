@@ -25,6 +25,12 @@
   flex: 0 0 90px;
 }
 
+.appProfileId {
+  composes: cell;
+
+  flex: 1 0 125px;
+}
+
 .capabilities {
   composes: cell;
 

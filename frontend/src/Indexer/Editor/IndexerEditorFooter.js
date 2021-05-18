@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import AppProfileSelectInputConnector from 'Components/Form/AppProfileSelectInputConnector';
 import SelectInput from 'Components/Form/SelectInput';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
@@ -22,6 +23,7 @@ class IndexerEditorFooter extends Component {
 
     this.state = {
       enable: NO_CHANGE,
+      appProfileId: NO_CHANGE,
       savingTags: false,
       isDeleteMovieModalOpen: false,
       isTagsModalOpen: false
@@ -37,6 +39,7 @@ class IndexerEditorFooter extends Component {
     if (prevProps.isSaving && !isSaving && !saveError) {
       this.setState({
         enable: NO_CHANGE,
+        appProfileId: NO_CHANGE,
         savingTags: false
       });
     }
@@ -99,6 +102,7 @@ class IndexerEditorFooter extends Component {
 
     const {
       enable,
+      appProfileId,
       savingTags,
       isTagsModalOpen,
       isDeleteMovieModalOpen
@@ -122,6 +126,21 @@ class IndexerEditorFooter extends Component {
             name="enable"
             value={enable}
             values={enableOptions}
+            isDisabled={!selectedCount}
+            onChange={this.onInputChange}
+          />
+        </div>
+
+        <div className={styles.inputContainer}>
+          <IndexerEditorFooterLabel
+            label={translate('AppProfile')}
+            isSaving={isSaving && appProfileId !== NO_CHANGE}
+          />
+
+          <AppProfileSelectInputConnector
+            name="appProfileId"
+            value={appProfileId}
+            includeNoChange={true}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}
           />

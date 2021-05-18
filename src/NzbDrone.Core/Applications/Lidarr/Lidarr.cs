@@ -137,9 +137,9 @@ namespace NzbDrone.Core.Applications.Lidarr
             {
                 Id = id,
                 Name = $"{indexer.Name} (Prowlarr)",
-                EnableRss = indexer.Enable,
-                EnableAutomaticSearch = indexer.Enable,
-                EnableInteractiveSearch = indexer.Enable,
+                EnableRss = indexer.AppProfile.Value.EnableRss,
+                EnableAutomaticSearch = indexer.AppProfile.Value.EnableAutomaticSearch,
+                EnableInteractiveSearch = indexer.AppProfile.Value.EnableInteractiveSearch,
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,

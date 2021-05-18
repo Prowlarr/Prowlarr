@@ -16,6 +16,7 @@ using NzbDrone.Core.Languages;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Notifications;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Profiles;
 using NzbDrone.Core.Tags;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Update.History;
@@ -52,7 +53,8 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(i => i.SupportsSearch)
                   .Ignore(i => i.SupportsRedirect)
                   .Ignore(i => i.Capabilities)
-                  .Ignore(d => d.Tags);
+                  .Ignore(d => d.Tags)
+                  .HasOne(a => a.AppProfile, a => a.AppProfileId);
 
             Mapper.Entity<DownloadClientDefinition>("DownloadClients").RegisterModel()
                   .Ignore(x => x.ImplementationName)
@@ -86,6 +88,8 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
+
+            Mapper.Entity<AppSyncProfile>("AppSyncProfiles").RegisterModel();
         }
 
         private static void RegisterMappers()

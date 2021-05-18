@@ -25,13 +25,18 @@ namespace Prowlarr.Api.V1.Indexers
         [HttpPut]
         public IActionResult SaveAll(IndexerEditorResource resource)
         {
-            var indexersToUpdate = _indexerService.All().Where(x => resource.IndexerIds.Contains(x.Id));
+            var indexersToUpdate = _indexerService.AllProviders(false).Select(x => (IndexerDefinition)x.Definition).Where(d => resource.IndexerIds.Contains(d.Id));
 
             foreach (var indexer in indexersToUpdate)
             {
                 if (resource.Enable.IsNotNullOrWhiteSpace())
                 {
                     indexer.Enable = bool.Parse(resource.Enable);
+                }
+
+                if (resource.AppProfileId.HasValue)
+                {
+                    indexer.AppProfileId = resource.AppProfileId.Value;
                 }
 
                 if (resource.Tags != null)

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import SelectInput from 'Components/Form/SelectInput';
 import IconButton from 'Components/Link/IconButton';
 import { filterBuilderTypes, filterBuilderValueTypes, icons } from 'Helpers/Props';
+import AppProfileFilterBuilderRowValueConnector from './AppProfileFilterBuilderRowValueConnector';
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
 import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
@@ -47,6 +48,9 @@ function getRowValueConnector(selectedFilterBuilderProp) {
   const valueType = selectedFilterBuilderProp.valueType;
 
   switch (valueType) {
+    case filterBuilderValueTypes.APP_PROFILE:
+      return AppProfileFilterBuilderRowValueConnector;
+
     case filterBuilderValueTypes.BOOL:
       return BoolFilterBuilderRowValue;
 

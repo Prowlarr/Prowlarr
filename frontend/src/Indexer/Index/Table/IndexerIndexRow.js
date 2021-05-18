@@ -79,6 +79,7 @@ class IndexerIndexRow extends Component {
       privacy,
       priority,
       status,
+      appProfile,
       added,
       capabilities,
       columns,
@@ -179,6 +180,17 @@ class IndexerIndexRow extends Component {
                   <ProtocolLabel
                     protocol={protocol}
                   />
+                </VirtualTableRowCell>
+              );
+            }
+
+            if (column.name === 'appProfileId') {
+              return (
+                <VirtualTableRowCell
+                  key={name}
+                  className={styles[column.name]}
+                >
+                  {appProfile.name}
                 </VirtualTableRowCell>
               );
             }
@@ -284,6 +296,7 @@ IndexerIndexRow.propTypes = {
   name: PropTypes.string.isRequired,
   enable: PropTypes.bool.isRequired,
   redirect: PropTypes.bool.isRequired,
+  appProfile: PropTypes.object.isRequired,
   status: PropTypes.object,
   capabilities: PropTypes.object.isRequired,
   added: PropTypes.string.isRequired,

@@ -7,7 +7,7 @@ import { saveDimensions, setIsSidebarVisible } from 'Store/Actions/appActions';
 import { fetchCustomFilters } from 'Store/Actions/customFilterActions';
 import { fetchIndexers } from 'Store/Actions/indexerActions';
 import { fetchIndexerStatus } from 'Store/Actions/indexerStatusActions';
-import { fetchGeneralSettings, fetchIndexerCategories, fetchLanguages, fetchUISettings } from 'Store/Actions/settingsActions';
+import { fetchAppProfiles, fetchGeneralSettings, fetchIndexerCategories, fetchLanguages, fetchUISettings } from 'Store/Actions/settingsActions';
 import { fetchStatus } from 'Store/Actions/systemActions';
 import { fetchTags } from 'Store/Actions/tagActions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
@@ -49,6 +49,7 @@ const selectIsPopulated = createSelector(
   (state) => state.settings.ui.isPopulated,
   (state) => state.settings.general.isPopulated,
   (state) => state.settings.languages.isPopulated,
+  (state) => state.settings.appProfiles.isPopulated,
   (state) => state.indexers.isPopulated,
   (state) => state.indexerStatus.isPopulated,
   (state) => state.settings.indexerCategories.isPopulated,
@@ -59,6 +60,7 @@ const selectIsPopulated = createSelector(
     uiSettingsIsPopulated,
     generalSettingsIsPopulated,
     languagesIsPopulated,
+    appProfilesIsPopulated,
     indexersIsPopulated,
     indexerStatusIsPopulated,
     indexerCategoriesIsPopulated,
@@ -70,6 +72,7 @@ const selectIsPopulated = createSelector(
       uiSettingsIsPopulated &&
       generalSettingsIsPopulated &&
       languagesIsPopulated &&
+      appProfilesIsPopulated &&
       indexersIsPopulated &&
       indexerStatusIsPopulated &&
       indexerCategoriesIsPopulated &&
@@ -84,6 +87,7 @@ const selectErrors = createSelector(
   (state) => state.settings.ui.error,
   (state) => state.settings.general.error,
   (state) => state.settings.languages.error,
+  (state) => state.settings.appProfiles.error,
   (state) => state.indexers.error,
   (state) => state.indexerStatus.error,
   (state) => state.settings.indexerCategories.error,
@@ -94,6 +98,7 @@ const selectErrors = createSelector(
     uiSettingsError,
     generalSettingsError,
     languagesError,
+    appProfilesError,
     indexersError,
     indexerStatusError,
     indexerCategoriesError,
@@ -105,6 +110,7 @@ const selectErrors = createSelector(
       uiSettingsError ||
       generalSettingsError ||
       languagesError ||
+      appProfilesError ||
       indexersError ||
       indexerStatusError ||
       indexerCategoriesError ||
@@ -118,6 +124,7 @@ const selectErrors = createSelector(
       uiSettingsError,
       generalSettingsError,
       languagesError,
+      appProfilesError,
       indexersError,
       indexerStatusError,
       indexerCategoriesError,
@@ -174,6 +181,9 @@ function createMapDispatchToProps(dispatch, props) {
     dispatchFetchUISettings() {
       dispatch(fetchUISettings());
     },
+    dispatchFetchAppProfiles() {
+      dispatch(fetchAppProfiles());
+    },
     dispatchFetchGeneralSettings() {
       dispatch(fetchGeneralSettings());
     },
@@ -207,6 +217,7 @@ class PageConnector extends Component {
       this.props.dispatchFetchCustomFilters();
       this.props.dispatchFetchTags();
       this.props.dispatchFetchLanguages();
+      this.props.dispatchFetchAppProfiles();
       this.props.dispatchFetchIndexers();
       this.props.dispatchFetchIndexerStatus();
       this.props.dispatchFetchIndexerCategories();
@@ -232,6 +243,7 @@ class PageConnector extends Component {
       hasError,
       dispatchFetchTags,
       dispatchFetchLanguages,
+      dispatchFetchAppProfiles,
       dispatchFetchIndexers,
       dispatchFetchIndexerStatus,
       dispatchFetchIndexerCategories,
@@ -272,6 +284,7 @@ PageConnector.propTypes = {
   dispatchFetchCustomFilters: PropTypes.func.isRequired,
   dispatchFetchTags: PropTypes.func.isRequired,
   dispatchFetchLanguages: PropTypes.func.isRequired,
+  dispatchFetchAppProfiles: PropTypes.func.isRequired,
   dispatchFetchIndexers: PropTypes.func.isRequired,
   dispatchFetchIndexerStatus: PropTypes.func.isRequired,
   dispatchFetchIndexerCategories: PropTypes.func.isRequired,

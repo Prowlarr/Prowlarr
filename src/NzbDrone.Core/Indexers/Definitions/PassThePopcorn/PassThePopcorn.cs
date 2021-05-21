@@ -52,6 +52,12 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 MovieSearchParams = new List<MovieSearchParam>
                 {
                     MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.FreeLeech,
+                    PassThePopcornFlag.Golden,
+                    PassThePopcornFlag.Approved
                 }
             };
 
@@ -74,7 +80,13 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public override IParseIndexerResponse GetParser()
         {
-            return new PassThePopcornParser(BaseUrl, _logger);
+            return new PassThePopcornParser(BaseUrl, Capabilities, _logger);
         }
+    }
+
+    public class PassThePopcornFlag : IndexerFlag
+    {
+        public static IndexerFlag Golden => new IndexerFlag("golden", "Release follows Golden Popcorn quality rules");
+        public static IndexerFlag Approved => new IndexerFlag("approved", "Release approved by PTP");
     }
 }

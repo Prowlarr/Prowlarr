@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
             first.Peers.Should().Be(28);
             first.Seeders.Should().Be(26);
 
-            torrents.Any(t => t.IndexerFlags.HasFlag(IndexerFlags.G_Freeleech)).Should().Be(true);
+            torrents.Any(t => t.IndexerFlags.Contains(IndexerFlag.Scene)).Should().Be(true);
         }
     }
 }

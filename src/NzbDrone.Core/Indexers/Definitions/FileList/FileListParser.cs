@@ -36,11 +36,11 @@ namespace NzbDrone.Core.Indexers.FileList
             {
                 var id = result.Id;
 
-                IndexerFlags flags = 0;
+                var flags = new List<IndexerFlag>();
 
                 if (result.FreeLeech)
                 {
-                    flags |= IndexerFlags.G_Freeleech;
+                    flags.Add(IndexerFlag.FreeLeech);
                 }
 
                 var imdbId = 0;

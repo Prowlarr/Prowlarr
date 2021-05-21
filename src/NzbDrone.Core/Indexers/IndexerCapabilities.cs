@@ -83,6 +83,7 @@ namespace NzbDrone.Core.Indexers
         public bool BookSearchAuthorAvailable => BookSearchParams.Contains(BookSearchParam.Author);
 
         public readonly IndexerCapabilitiesCategories Categories;
+        public List<IndexerFlag> Flags;
 
         public IndexerCapabilities()
         {
@@ -92,6 +93,7 @@ namespace NzbDrone.Core.Indexers
             MusicSearchParams = new List<MusicSearchParam>();
             BookSearchParams = new List<BookSearchParam>();
             Categories = new IndexerCapabilitiesCategories();
+            Flags = new List<IndexerFlag>();
             LimitsDefault = 100;
             LimitsMax = 100;
         }
@@ -386,7 +388,12 @@ namespace NzbDrone.Core.Indexers
                             from sc in c.SubCategories
                             select new XElement("subcat",
                                 new XAttribute("id", sc.Id),
-                                new XAttribute("name", sc.Name))))));
+                                new XAttribute("name", sc.Name)))),
+                    new XElement("tags",
+                        from c in Flags
+                        select new XElement("tag",
+                            new XAttribute("name", c.Name),
+                            new XAttribute("description", c.Description)))));
             return xdoc;
         }
 

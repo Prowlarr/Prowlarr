@@ -167,7 +167,7 @@ namespace NzbDrone.Core.IndexerSearch
 
                 foreach (var query in indexerReports.Queries)
                 {
-                    _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, query.StatusCode == 200, indexerReports.Releases.Count()));
+                    _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, query.StatusCode == 200, query.Releases.Count()));
                 }
 
                 return indexerReports.Releases;

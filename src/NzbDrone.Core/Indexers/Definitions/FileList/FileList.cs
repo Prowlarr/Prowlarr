@@ -51,7 +51,11 @@ namespace NzbDrone.Core.Indexers.FileList
                 BookSearchParams = new List<BookSearchParam>
                        {
                            BookSearchParam.Q
-                       }
+                       },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.FreeLeech
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesSD, "Filme SD");

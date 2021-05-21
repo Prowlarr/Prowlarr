@@ -55,16 +55,16 @@ namespace NzbDrone.Core.Indexers.HDBits
                 var id = result.Id;
                 var internalRelease = result.TypeOrigin == 1 ? true : false;
 
-                IndexerFlags flags = 0;
+                var flags = new List<IndexerFlag>();
 
                 if (result.FreeLeech == "yes")
                 {
-                    flags |= IndexerFlags.G_Freeleech;
+                    flags.Add(IndexerFlag.FreeLeech);
                 }
 
                 if (internalRelease)
                 {
-                    flags |= IndexerFlags.HDB_Internal;
+                    flags.Add(IndexerFlag.Internal);
                 }
 
                 torrentInfos.Add(new HDBitsInfo()

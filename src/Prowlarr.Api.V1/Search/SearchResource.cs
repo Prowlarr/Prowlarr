@@ -43,7 +43,7 @@ namespace Prowlarr.Api.V1.Search
         {
             var releaseInfo = model;
             var torrentInfo = (model as TorrentInfo) ?? new TorrentInfo();
-            var indexerFlags = torrentInfo.IndexerFlags.ToString().Split(new string[] { ", " }, StringSplitOptions.None).Where(x => x != "0");
+            var indexerFlags = torrentInfo.IndexerFlags.Select(f => f.Name);
 
             // TODO: Clean this mess up. don't mix data from multiple classes, use sub-resources instead? (Got a huge Deja Vu, didn't we talk about this already once?)
             return new SearchResource

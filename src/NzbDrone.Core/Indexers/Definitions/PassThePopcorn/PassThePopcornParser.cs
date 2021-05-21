@@ -13,10 +13,12 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
     public class PassThePopcornParser : IParseIndexerResponse
     {
         private readonly string _baseUrl;
+        private readonly IndexerCapabilities _capabilities;
         private readonly Logger _logger;
-        public PassThePopcornParser(string baseUrl, Logger logger)
+        public PassThePopcornParser(string baseUrl, IndexerCapabilities capabilities, Logger logger)
         {
             _baseUrl = baseUrl;
+            _capabilities = capabilities;
             _logger = logger;
         }
 
@@ -63,26 +65,27 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 {
                     var id = torrent.Id;
                     var title = torrent.ReleaseName;
-                    IndexerFlags flags = 0;
+
+                    var flags = new List<IndexerFlag>();
 
                     if (torrent.GoldenPopcorn)
                     {
-                        flags |= IndexerFlags.PTP_Golden; //title = $"{title} 🍿";
+                        flags.Add(PassThePopcornFlag.Golden);
                     }
 
                     if (torrent.Checked)
                     {
-                        flags |= IndexerFlags.PTP_Approved; //title = $"{title} ✔";
+                        flags.Add(PassThePopcornFlag.Approved); //title = $"{title} ✔";
                     }
 
                     if (torrent.FreeleechType == "Freeleech")
                     {
-                        flags |= IndexerFlags.G_Freeleech;
+                        flags.Add(IndexerFlag.FreeLeech);
                     }
 
                     if (torrent.Scene)
                     {
-                        flags |= IndexerFlags.G_Scene;
+                        flags.Add(IndexerFlag.Scene);
                     }
 
                     var free = !(torrent.FreeleechType is null);

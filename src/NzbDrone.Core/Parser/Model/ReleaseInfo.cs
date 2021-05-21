@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Resolution { get; set; }
         public ICollection<IndexerCategory> Category { get; set; }
 
-        public IndexerFlags IndexerFlags { get; set; }
+        public ICollection<IndexerFlag> IndexerFlags { get; set; }
 
         public int Age
         {
@@ -133,21 +133,5 @@ namespace NzbDrone.Core.Parser.Model
         public static long BytesFromMB(float mb) => BytesFromKB(mb * 1024f);
 
         public static long BytesFromKB(float kb) => (long)(kb * 1024f);
-    }
-
-    [Flags]
-    public enum IndexerFlags
-    {
-        G_Freeleech = 1, //General
-        G_Halfleech = 2, //General, only 1/2 of download counted
-        G_DoubleUpload = 4, //General
-        PTP_Golden = 8, //PTP
-        PTP_Approved = 16, //PTP
-        HDB_Internal = 32, //HDBits, internal
-        AHD_Internal = 64, // AHD, internal
-        G_Scene = 128, //General, the torrent comes from the "scene"
-        G_Freeleech75 = 256, //Currently only used for AHD, signifies a torrent counts towards 75 percent of your download quota.
-        G_Freeleech25 = 512, //Currently only used for AHD, signifies a torrent counts towards 25 percent of your download quota.
-        AHD_UserRelease = 1024 // AHD, internal
     }
 }

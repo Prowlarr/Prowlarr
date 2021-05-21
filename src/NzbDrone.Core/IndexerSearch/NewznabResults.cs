@@ -87,6 +87,7 @@ namespace NzbDrone.Core.IndexerSearch
                                 r.Size == null ? null : new XAttribute("length", r.Size),
                                 new XAttribute("type", protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb")),
                             r.Category == null ? null : from c in r.Category select GetNabElement("category", c.Id, protocol),
+                            r.IndexerFlags == null ? null : from f in r.IndexerFlags select GetNabElement("tag", f.Name, protocol),
                             GetNabElement("rageid", r.TvRageId, protocol),
                             GetNabElement("thetvdb", r.TvdbId, protocol),
                             GetNabElement("imdb", r.ImdbId.ToString("D7"), protocol),

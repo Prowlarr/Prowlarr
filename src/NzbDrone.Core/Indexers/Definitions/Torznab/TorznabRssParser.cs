@@ -173,9 +173,9 @@ namespace NzbDrone.Core.Indexers.Torznab
             return base.GetPeers(item);
         }
 
-        protected IndexerFlags GetFlags(XElement item)
+        protected List<IndexerFlag> GetFlags(XElement item)
         {
-            IndexerFlags flags = 0;
+            var flags = new List<IndexerFlag>();
 
             var downloadFactor = TryGetFloatTorznabAttribute(item, "downloadvolumefactor", 1);
 
@@ -183,17 +183,17 @@ namespace NzbDrone.Core.Indexers.Torznab
 
             if (uploadFactor == 2)
             {
-                flags |= IndexerFlags.G_DoubleUpload;
+                flags.Add(IndexerFlag.DoubleUpload);
             }
 
             if (downloadFactor == 0.5)
             {
-                flags |= IndexerFlags.G_Halfleech;
+                flags.Add(IndexerFlag.HalfLeech);
             }
 
             if (downloadFactor == 0.0)
             {
-                flags |= IndexerFlags.G_Freeleech;
+                flags.Add(IndexerFlag.FreeLeech);
             }
 
             return flags;

@@ -10,6 +10,7 @@ import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
+import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CategoryLabel from './CategoryLabel';
 import Peers from './Peers';
@@ -249,7 +250,7 @@ class SearchIndexRow extends Component {
                               indexerFlags.map((flag, index) => {
                                 return (
                                   <li key={index}>
-                                    {flag}
+                                    {titleCase(flag)}
                                   </li>
                                 );
                               })

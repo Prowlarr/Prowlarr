@@ -34,7 +34,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         private string GetEpisodeSearchString()
         {
-            if (Season == 0)
+            if (Season == null || Season == 0)
             {
                 return string.Empty;
             }

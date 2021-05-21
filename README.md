@@ -1,19 +1,49 @@
 # Prowlarr
 
 [![Build Status](https://dev.azure.com/Prowlarr/Prowlarr/_apis/build/status/Prowlarr.Prowlarr?branchName=develop)](https://dev.azure.com/Prowlarr/Prowlarr/_build/latest?definitionId=1&branchName=develop)
+[![Translated](https://translate.servarr.com/widgets/prowlarr/-/prowlarr/svg-badge.svg)](https://translate.servarr.com/engage/prowlarr/?utm_source=widget)
+[![Docker Pulls](https://img.shields.io/docker/pulls/hotio/prowlarr.svg)](https://wiki.servarr.com/Prowlarr_Installation#Docker)
+![Github Downloads](https://img.shields.io/github/downloads/Prowlarr/Prowlarr/total.svg)
 [![Backers on Open Collective](https://opencollective.com/Prowlarr/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/Prowlarr/sponsors/badge.svg)](#sponsors)
 
 Prowlarr is a indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
 
+## Major Features Include:
+Prowlarr will allow you to replace both NZBHydra2 and Jackett; incorporating the best features from both applications with a familiar UI. 
+
+Features include:
+- speedy .net5
+- Usenet support for any Newznab compatible indexer
+- Support for Headphones
+- Torrent support for many trackers & more coming soon
+- Sync/push to Sonarr/Radarr/Readarr/Lidarr, so no manual configuration of the other applications are required
+- Basic Statistics
+- Arbitrary Term Searching of Trackers & Indexers at a category level
+- Support for adding releases directly to your download client of choice; support for download clients mirrors that of Radarr/Readarr/Lidarr
+
+A huge thank you to all the development team and the closed alpha testers for all their efforts in getting Prowlarr ready for public-beta consumption.
+
+Coming Soon:
+- Full Indexer Management for Sonarr/Readarr/Radarr/Lidarr including: category customization, RSS/Interactive/Automatic search settings, and seed ratios
+- additional trackers to eventually bring parity with Jackett
+- more advanced statistics
+
 ## Support
-Note: Prowlarr is currently in alpha testing, no support
+Note: Prowlarr is currently in beta testing, as such some bugs are to be expected.
+Note: GitHub Issues are for Bugs and Feature Requests Only
+
+[![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://prowlarr.com/discord)
+[![Reddit](https://img.shields.io/badge/reddit-discussion-FF4500.svg?maxAge=60)](https://www.reddit.com/r/Prowlarr)
+[![GitHub - Bugs and Feature Requests Only](https://img.shields.io/badge/github-issues-red.svg?maxAge=60)](https://github.com/Prowlarr/Prowlarr/issues)
+[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/Prowlarr)
 
 ## Feature Requests
 
 [Feature Requests](https://github.com/Prowlarr/Prowlarr/issues/new?assignees=&template=feature_request.md&Type%3A%20Feature%20Request&title=)
 
 ## Contributors & Developers
+Note: Coming Soon
 [API Documentation](https://prowlarr.com/docs/api/)
 
 This project exists thanks to all the people who contribute. [Contribute](CONTRIBUTING.md).

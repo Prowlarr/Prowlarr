@@ -84,6 +84,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 yield return GetDefinition("abNZB", GetSettings("https://abnzb.com"));
                 yield return GetDefinition("altHUB", GetSettings("https://althub.co.za"));
+                yield return GetDefinition("AnimeTosho (Usenet)", GetSettings("https://feed.animetosho.org"));
                 yield return GetDefinition("DOGnzb", GetSettings("https://api.dognzb.cr"));
                 yield return GetDefinition("DrunkenSlug", GetSettings("https://api.drunkenslug.com"));
                 yield return GetDefinition("GingaDADDY", GetSettings("https://www.gingadaddy.com"));

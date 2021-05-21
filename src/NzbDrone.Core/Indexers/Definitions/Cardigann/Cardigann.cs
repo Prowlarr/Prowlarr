@@ -24,7 +24,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override int PageSize => 100;
+
+        // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
+        // thinking its a partial page and insteaad all search_path requests are run for each indexer
+        public override int PageSize => 1;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {

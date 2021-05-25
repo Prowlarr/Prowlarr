@@ -120,11 +120,14 @@ namespace NzbDrone.Core.Indexers
                 requestBuilder.SetCookies(Cookies);
             }
 
+            var request = requestBuilder.Build();
+            request.AllowAutoRedirect = FollowRedirect;
+
             var downloadBytes = Array.Empty<byte>();
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(requestBuilder.Build());
+                var response = await _httpClient.ExecuteAsync(request);
                 downloadBytes = response.ResponseData;
             }
             catch (Exception)

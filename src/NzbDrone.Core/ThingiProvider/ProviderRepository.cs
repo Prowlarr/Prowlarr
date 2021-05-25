@@ -64,6 +64,8 @@ namespace NzbDrone.Core.ThingiProvider
                         item.Settings = (IProviderConfig)JsonSerializer.Deserialize(body, impType, _serializerSettings);
                     }
 
+                    _database.ApplyLazyLoad(item);
+
                     results.Add(item);
                 }
             }

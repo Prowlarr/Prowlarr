@@ -180,7 +180,7 @@ namespace NzbDrone.Core.Datastore
             return db.Query(sql.RawSql, mapper, sql.Parameters);
         }
 
-        private static void ApplyLazyLoad<TModel>(IDatabase db, TModel model)
+        public static void ApplyLazyLoad<TModel>(this IDatabase db, TModel model)
         {
             if (TableMapping.Mapper.LazyLoadList.TryGetValue(typeof(TModel), out var lazyProperties))
             {

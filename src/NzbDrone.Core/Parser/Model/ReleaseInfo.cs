@@ -8,6 +8,11 @@ namespace NzbDrone.Core.Parser.Model
 {
     public class ReleaseInfo
     {
+        public ReleaseInfo()
+        {
+            IndexerFlags = new List<IndexerFlag>();
+        }
+
         public string Guid { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

@@ -158,7 +158,7 @@ namespace Prowlarr.Http.Extensions
         public static string GetServerUrl(this HttpRequest request)
         {
             var scheme = request.Scheme;
-            var port = request.HttpContext.Connection.LocalPort;
+            var port = request.HttpContext.Request.Host.Port;
 
             // Check for protocol headers added by reverse proxys
             // X-Forwarded-Proto: A de facto standard for identifying the originating protocol of an HTTP request

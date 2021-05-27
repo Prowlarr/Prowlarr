@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Configuration
     {
         public const string CONFIG_ELEMENT_NAME = "Config";
         public const int DEFAULT_PORT = 9696;
-        public const int DEFAULT_SSL_PORT = 9898;
+        public const int DEFAULT_SSL_PORT = 6969;
 
         private readonly IEventAggregator _eventAggregator;
         private readonly IDiskProvider _diskProvider;

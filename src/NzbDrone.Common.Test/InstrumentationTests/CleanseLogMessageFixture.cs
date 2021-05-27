@@ -57,6 +57,9 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // Notifiarr
         [TestCase("https://notifiarr.com/notifier.php: api=1234530f-422f-4aac-b6b3-01233210aaaa&radarr_health_issue_message=Download")]
 
+        // RSS
+        [TestCase(@"<atom:link href = ""https://api.nzb.su/api?t=search&amp;extended=1&amp;cat=3030&apikey=mySecret&amp;q=Diggers"" rel=""self"" type=""application/rss+xml"" />")]
+
         public void should_clean_message(string message)
         {
             var cleansedMessage = CleanseLogMessage.Cleanse(message);

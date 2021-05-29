@@ -33,12 +33,19 @@ namespace Prowlarr.Api.V1.History
             var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>("date", SortDirection.Descending);
 
             var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
+            var successfulFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "successful");
             var downloadIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "downloadId");
 
             if (eventTypeFilter != null)
             {
                 var filterValue = (HistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
                 pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
+            }
+
+            if (successfulFilter != null)
+            {
+                var filterValue = bool.Parse(successfulFilter.Value);
+                pagingSpec.FilterExpressions.Add(v => v.Successful == filterValue);
             }
 
             if (downloadIdFilter != null)

@@ -71,6 +71,7 @@ class HistoryRow extends Component {
       eventType,
       date,
       data,
+      successful,
       isMarkingAsFailed,
       columns,
       shortDateFormat,
@@ -102,6 +103,7 @@ class HistoryRow extends Component {
                   indexer={indexer}
                   eventType={eventType}
                   data={data}
+                  successful={successful}
                 />
               );
             }
@@ -352,6 +354,7 @@ HistoryRow.propTypes = {
   indexerId: PropTypes.number,
   indexer: PropTypes.object.isRequired,
   eventType: PropTypes.string.isRequired,
+  successful: PropTypes.bool.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   isMarkingAsFailed: PropTypes.bool,

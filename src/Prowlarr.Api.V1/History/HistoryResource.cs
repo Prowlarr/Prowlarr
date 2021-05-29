@@ -10,6 +10,7 @@ namespace Prowlarr.Api.V1.History
         public int IndexerId { get; set; }
         public DateTime Date { get; set; }
         public string DownloadId { get; set; }
+        public bool Successful { get; set; }
 
         public HistoryEventType EventType { get; set; }
 
@@ -34,6 +35,7 @@ namespace Prowlarr.Api.V1.History
                 //QualityCutoffNotMet
                 Date = model.Date,
                 DownloadId = model.DownloadId,
+                Successful = model.Successful,
 
                 EventType = model.EventType,
 

@@ -10,6 +10,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -134,6 +135,7 @@ namespace NzbDrone.Core.Indexers
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Error("Download failed");
+                throw;
             }
 
             return downloadBytes;

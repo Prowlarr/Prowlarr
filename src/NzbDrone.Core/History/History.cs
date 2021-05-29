@@ -13,6 +13,7 @@ namespace NzbDrone.Core.History
 
         public int IndexerId { get; set; }
         public DateTime Date { get; set; }
+        public bool Successful { get; set; }
         public HistoryEventType EventType { get; set; }
         public Dictionary<string, string> Data { get; set; }
 

@@ -120,6 +120,12 @@ namespace Prowlarr.Http.Extensions
             }
 
             var remoteIP = request.HttpContext.Connection.RemoteIpAddress;
+
+            if (remoteIP.IsIPv4MappedToIPv6)
+            {
+                remoteIP = remoteIP.MapToIPv4();
+            }
+
             var remoteAddress = remoteIP.ToString();
 
             // Only check if forwarded by a local network reverse proxy

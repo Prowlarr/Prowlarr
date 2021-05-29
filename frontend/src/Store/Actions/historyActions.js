@@ -135,6 +135,17 @@ export const defaultState = {
           type: filterTypes.EQUAL
         }
       ]
+    },
+    {
+      key: 'failed',
+      label: translate('Failed'),
+      filters: [
+        {
+          key: 'successful',
+          value: false,
+          type: filterTypes.EQUAL
+        }
+      ]
     }
   ]
 

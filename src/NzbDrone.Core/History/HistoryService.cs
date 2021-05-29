@@ -113,7 +113,8 @@ namespace NzbDrone.Core.History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = message.Query.RssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery
+                EventType = message.Query.RssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
+                Successful = message.Successful
             };
 
             if (message.Query is MovieSearchCriteria)
@@ -151,7 +152,6 @@ namespace NzbDrone.Core.History
             history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
-            history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("QueryResults", message.Results.HasValue ? message.Results.ToString() : null);
 
             _historyRepository.Insert(history);
@@ -163,10 +163,10 @@ namespace NzbDrone.Core.History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = HistoryEventType.ReleaseGrabbed
+                EventType = HistoryEventType.ReleaseGrabbed,
+                Successful = message.Successful
             };
 
-            history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("Source", message.Source ?? string.Empty);
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("Title", message.Title);
@@ -180,10 +180,10 @@ namespace NzbDrone.Core.History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = HistoryEventType.IndexerAuth
+                EventType = HistoryEventType.IndexerAuth,
+                Successful = message.Successful
             };
 
-            history.Data.Add("Successful", message.Successful.ToString());
             history.Data.Add("ElapsedTime", message.Time.ToString());
 
             _historyRepository.Insert(history);

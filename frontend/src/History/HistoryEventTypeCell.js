@@ -20,9 +20,9 @@ function getIconName(eventType) {
   }
 }
 
-function getIconKind(data) {
-  switch (data.successful) {
-    case 'False':
+function getIconKind(successful) {
+  switch (successful) {
+    case false:
       return kinds.DANGER;
     default:
       return kinds.DEFAULT;
@@ -44,9 +44,9 @@ function getTooltip(eventType, data, indexer) {
   }
 }
 
-function HistoryEventTypeCell({ eventType, data, indexer }) {
+function HistoryEventTypeCell({ eventType, successful, data, indexer }) {
   const iconName = getIconName(eventType);
-  const iconKind = getIconKind(data);
+  const iconKind = getIconKind(successful);
   const tooltip = getTooltip(eventType, data, indexer);
 
   return (
@@ -64,6 +64,7 @@ function HistoryEventTypeCell({ eventType, data, indexer }) {
 
 HistoryEventTypeCell.propTypes = {
   eventType: PropTypes.string.isRequired,
+  successful: PropTypes.bool.isRequired,
   data: PropTypes.object,
   indexer: PropTypes.object
 };

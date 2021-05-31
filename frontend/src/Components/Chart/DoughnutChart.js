@@ -14,12 +14,14 @@ class DoughnutChart extends Component {
       type: 'doughnut',
       options: {
         maintainAspectRatio: false,
-        legend: {
-          position: 'bottom'
-        },
-        title: {
-          display: true,
-          text: this.props.title
+        plugins: {
+          title: {
+            display: true,
+            text: this.props.title
+          },
+          legend: {
+            position: 'bottom'
+          }
         }
       },
       data: {

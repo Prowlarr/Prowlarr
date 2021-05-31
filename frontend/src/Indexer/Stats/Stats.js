@@ -7,6 +7,7 @@ import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
+import { kinds } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import styles from './Stats.css';
 
@@ -16,6 +17,22 @@ function getAverageResponseTimeData(indexerStats) {
       label: indexer.indexerName,
       value: indexer.averageResponseTime
     };
+  });
+
+  return data;
+}
+
+function getFailureRateData(indexerStats) {
+  const data = indexerStats.map((indexer) => {
+    return {
+      label: indexer.indexerName,
+      value: (indexer.numberOfFailedQueries + indexer.numberOfFailedRssQueries + indexer.numberOfFailedAuthQueries + indexer.numberOfFailedGrabs) /
+        (indexer.numberOfQueries + indexer.numberOfRssQueries + indexer.numberOfAuthQueries + indexer.numberOfGrabs)
+    };
+  });
+
+  data.sort((a, b) => {
+    return b.value - a.value;
   });
 
   return data;
@@ -47,7 +64,7 @@ function getNumberGrabsData(indexerStats) {
   const data = indexerStats.map((indexer) => {
     return {
       label: indexer.indexerName,
-      value: indexer.numberOfGrabs
+      value: indexer.numberOfGrabs - indexer.numberOfFailedGrabs
     };
   });
 
@@ -153,6 +170,13 @@ function Stats(props) {
                   title='Average Response Times (ms)'
                 />
               </div>
+              <div className={styles.fullWidthChart}>
+                <BarChart
+                  data={getFailureRateData(item.indexers)}
+                  title='Indexer Failure Rate'
+                  kind={kinds.WARNING}
+                />
+              </div>
               <div className={styles.halfWidthChart}>
                 <StackedBarChart
                   data={getTotalRequestsData(item.indexers)}
@@ -162,7 +186,7 @@ function Stats(props) {
               <div className={styles.halfWidthChart}>
                 <BarChart
                   data={getNumberGrabsData(item.indexers)}
-                  title='Total Indexer Grabs'
+                  title='Total Indexer Successful Grabs'
                 />
               </div>
               <div className={styles.halfWidthChart}>

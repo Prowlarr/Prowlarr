@@ -110,7 +110,7 @@ namespace NzbDrone.Api.V1.Indexers
             var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
             var host = Request.GetHostName();
 
-            var unprotectedlLink = "https://superbits.org/api/v1/torrents/download/797354";
+            var unprotectedlLink = _downloadMappingService.ConvertToNormalLink(link);
 
             // If Indexer is set to download via Redirect then just redirect to the link
             if (indexer.SupportsRedirect && indexerDef.Redirect)

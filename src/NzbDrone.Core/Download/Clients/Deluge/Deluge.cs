@@ -139,7 +139,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
 
         private ValidationFailure TestCategory()
         {
-            if (Settings.Category.IsNullOrWhiteSpace() && Settings.Category.IsNullOrWhiteSpace())
+            if (Settings.Category.IsNullOrWhiteSpace())
             {
                 return null;
             }

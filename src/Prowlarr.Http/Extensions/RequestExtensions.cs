@@ -165,9 +165,16 @@ namespace Prowlarr.Http.Extensions
         {
             string ip = request.GetRemoteIP();
             IPAddress myIP = IPAddress.Parse(ip);
-            IPHostEntry getIPHost = Dns.GetHostEntry(myIP);
-            List<string> compName = getIPHost.HostName.ToString().Split('.').ToList();
-            return compName.First();
+            try
+            {
+                IPHostEntry getIPHost = Dns.GetHostEntry(myIP);
+                List<string> compName = getIPHost.HostName.ToString().Split('.').ToList();
+                return compName.First();
+            }
+            catch
+            {
+                return ip;
+            }
         }
 
         public static string GetServerUrl(this HttpRequest request)

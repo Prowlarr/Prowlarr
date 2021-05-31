@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
@@ -58,10 +59,12 @@ namespace Prowlarr.Api.V1.Search
             var releaseInfo = _remoteReleaseCache.Find(GetCacheKey(release));
 
             var indexerDef = _indexerFactory.Get(release.IndexerId);
+            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var host = Request.GetHostName();
 
             try
             {
-                _downloadService.SendReportToClient(releaseInfo, indexerDef.Redirect);
+                _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect);
             }
             catch (ReleaseDownloadException ex)
             {

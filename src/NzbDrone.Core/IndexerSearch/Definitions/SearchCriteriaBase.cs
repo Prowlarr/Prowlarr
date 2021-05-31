@@ -19,6 +19,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? Limit { get; set; }
         public int? Offset { get; set; }
         public string Source { get; set; }
+        public string Host { get; set; }
 
         public override string ToString()
         {

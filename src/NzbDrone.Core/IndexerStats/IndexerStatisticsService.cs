@@ -7,6 +7,7 @@ namespace NzbDrone.Core.IndexerStats
     {
         List<IndexerStatistics> IndexerStatistics();
         List<UserAgentStatistics> UserAgentStatistics();
+        List<HostStatistics> HostStatistics();
     }
 
     public class IndexerStatisticsService : IIndexerStatisticsService
@@ -20,16 +21,23 @@ namespace NzbDrone.Core.IndexerStats
 
         public List<IndexerStatistics> IndexerStatistics()
         {
-            var seasonStatistics = _indexerStatisticsRepository.IndexerStatistics();
+            var indexerStatistics = _indexerStatisticsRepository.IndexerStatistics();
 
-            return seasonStatistics.ToList();
+            return indexerStatistics.ToList();
         }
 
         public List<UserAgentStatistics> UserAgentStatistics()
         {
-            var seasonStatistics = _indexerStatisticsRepository.UserAgentStatistics();
+            var userAgentStatistics = _indexerStatisticsRepository.UserAgentStatistics();
 
-            return seasonStatistics.ToList();
+            return userAgentStatistics.ToList();
+        }
+
+        public List<HostStatistics> HostStatistics()
+        {
+            var hostStatistics = _indexerStatisticsRepository.HostStatistics();
+
+            return hostStatistics.ToList();
         }
     }
 }

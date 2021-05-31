@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
@@ -44,6 +44,7 @@ namespace NzbDrone.Api.V1.Indexers
             var requestType = request.t;
             request.source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
             request.server = Request.GetServerUrl();
+            request.host = Request.GetHostName();
 
             if (requestType.IsNullOrWhiteSpace())
             {
@@ -107,18 +108,19 @@ namespace NzbDrone.Api.V1.Indexers
             }
 
             var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var host = Request.GetHostName();
 
             var unprotectedlLink = "https://superbits.org/api/v1/torrents/download/797354";
 
             // If Indexer is set to download via Redirect then just redirect to the link
             if (indexer.SupportsRedirect && indexerDef.Redirect)
             {
-                _downloadService.RecordRedirect(unprotectedlLink, id, source, file);
+                _downloadService.RecordRedirect(unprotectedlLink, id, source, host, file);
                 return RedirectPermanent(unprotectedlLink);
             }
 
             var downloadBytes = Array.Empty<byte>();
-            downloadBytes = await _downloadService.DownloadReport(unprotectedlLink, id, source, file);
+            downloadBytes = await _downloadService.DownloadReport(unprotectedlLink, id, source, host, file);
 
             // handle magnet URLs
             if (downloadBytes.Length >= 7

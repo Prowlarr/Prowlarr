@@ -26,6 +26,7 @@ namespace NzbDrone.Core.IndexerSearch
         public string title { get; set; }
         public string configured { get; set; }
         public string source { get; set; }
+        public string host { get; set; }
         public string server { get; set; }
     }
 }

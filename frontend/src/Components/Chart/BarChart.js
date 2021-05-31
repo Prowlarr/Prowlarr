@@ -1,7 +1,17 @@
 import Chart from 'chart.js/auto';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { kinds } from 'Helpers/Props';
 import colors from 'Styles/Variables/colors';
+
+function getColors(kind) {
+
+  if (kind === kinds.WARNING) {
+    return colors.failedColors.reverse();
+  }
+
+  return colors.chartColors;
+}
 
 class BarChart extends Component {
   constructor(props) {
@@ -30,7 +40,7 @@ class BarChart extends Component {
         datasets: [{
           label: this.props.title,
           data: this.props.data.map((d) => d.value),
-          backgroundColor: colors.chartColors
+          backgroundColor: getColors(this.props.kind)
         }]
       }
     });
@@ -53,14 +63,16 @@ BarChart.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   horizontal: PropTypes.bool,
   legend: PropTypes.bool,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  kind: PropTypes.oneOf(kinds.all).isRequired
 };
 
 BarChart.defaultProps = {
   data: [],
   horizontal: false,
   legend: false,
-  title: ''
+  title: '',
+  kind: kinds.INFO
 };
 
 export default BarChart;

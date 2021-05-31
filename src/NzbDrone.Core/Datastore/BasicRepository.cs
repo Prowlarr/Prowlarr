@@ -177,6 +177,7 @@ namespace NzbDrone.Core.Datastore
             var id = (int)multi.Read().First().id;
             _keyProperty.SetValue(model, id);
 
+            _database.ApplyLazyLoad(model);
             return model;
         }
 
@@ -213,6 +214,7 @@ namespace NzbDrone.Core.Datastore
                 UpdateFields(conn, null, model, _properties);
             }
 
+            _database.ApplyLazyLoad(model);
             ModelUpdated(model);
 
             return model;

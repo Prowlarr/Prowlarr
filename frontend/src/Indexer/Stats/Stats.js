@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import BarChart from 'Components/Chart/BarChart';
+import DoughnutChart from 'Components/Chart/DoughnutChart';
 import StackedBarChart from 'Components/Chart/StackedBarChart';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
@@ -87,6 +88,36 @@ function getUserAgentQueryData(indexerStats) {
   return data;
 }
 
+function getHostGrabsData(indexerStats) {
+  const data = indexerStats.map((indexer) => {
+    return {
+      label: indexer.host ? indexer.host : 'Other',
+      value: indexer.numberOfGrabs
+    };
+  });
+
+  data.sort((a, b) => {
+    return b.value - a.value;
+  });
+
+  return data;
+}
+
+function getHostQueryData(indexerStats) {
+  const data = indexerStats.map((indexer) => {
+    return {
+      label: indexer.host ? indexer.host : 'Other',
+      value: indexer.numberOfQueries
+    };
+  });
+
+  data.sort((a, b) => {
+    return b.value - a.value;
+  });
+
+  return data;
+}
+
 function Stats(props) {
   const {
     item,
@@ -145,6 +176,20 @@ function Stats(props) {
                 <BarChart
                   data={getUserAgentGrabsData(item.userAgents)}
                   title='Total User Agent Grabs'
+                  horizontal={true}
+                />
+              </div>
+              <div className={styles.halfWidthChart}>
+                <DoughnutChart
+                  data={getHostQueryData(item.hosts)}
+                  title='Total Host Queries'
+                  horizontal={true}
+                />
+              </div>
+              <div className={styles.halfWidthChart}>
+                <DoughnutChart
+                  data={getHostGrabsData(item.hosts)}
+                  title='Total Host Grabs'
                   horizontal={true}
                 />
               </div>

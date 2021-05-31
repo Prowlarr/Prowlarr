@@ -11,6 +11,10 @@ namespace NzbDrone.Core.IndexerStats
         public int NumberOfGrabs { get; set; }
         public int NumberOfRssQueries { get; set; }
         public int NumberOfAuthQueries { get; set; }
+        public int NumberOfFailedQueries { get; set; }
+        public int NumberOfFailedGrabs { get; set; }
+        public int NumberOfFailedRssQueries { get; set; }
+        public int NumberOfFailedAuthQueries { get; set; }
     }
 
     public class UserAgentStatistics : ResultSet
@@ -18,7 +22,6 @@ namespace NzbDrone.Core.IndexerStats
         public string UserAgent { get; set; }
         public int NumberOfQueries { get; set; }
         public int NumberOfGrabs { get; set; }
-        public int NumberOfRssQueries { get; set; }
     }
 
     public class HostStatistics : ResultSet
@@ -26,6 +29,5 @@ namespace NzbDrone.Core.IndexerStats
         public string Host { get; set; }
         public int NumberOfQueries { get; set; }
         public int NumberOfGrabs { get; set; }
-        public int NumberOfRssQueries { get; set; }
     }
 }

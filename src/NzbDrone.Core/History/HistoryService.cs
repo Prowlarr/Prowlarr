@@ -152,6 +152,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
+            history.Data.Add("Host", message.Query.Host ?? string.Empty);
             history.Data.Add("QueryResults", message.Results.HasValue ? message.Results.ToString() : null);
 
             _historyRepository.Insert(history);
@@ -168,6 +169,7 @@ namespace NzbDrone.Core.History
             };
 
             history.Data.Add("Source", message.Source ?? string.Empty);
+            history.Data.Add("Host", message.Host ?? string.Empty);
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("Title", message.Title);
 

@@ -8,5 +8,6 @@ namespace Prowlarr.Api.V1.Indexers
     {
         public List<IndexerStatistics> Indexers { get; set; }
         public List<UserAgentStatistics> UserAgents { get; set; }
+        public List<HostStatistics> Hosts { get; set; }
     }
 }

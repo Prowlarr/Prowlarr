@@ -21,6 +21,7 @@ namespace Prowlarr.Api.V1.Indexers
             {
                 Indexers = _indexerStatisticsService.IndexerStatistics(),
                 UserAgents = _indexerStatisticsService.UserAgentStatistics(),
+                Hosts = _indexerStatisticsService.HostStatistics()
             };
 
             return indexerResource;

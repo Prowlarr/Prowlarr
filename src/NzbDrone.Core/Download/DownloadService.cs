@@ -17,9 +17,9 @@ namespace NzbDrone.Core.Download
 {
     public interface IDownloadService
     {
-        void SendReportToClient(ReleaseInfo release, bool redirect);
-        Task<byte[]> DownloadReport(string link, int indexerId, string source, string title);
-        void RecordRedirect(string link, int indexerId, string source, string title);
+        void SendReportToClient(ReleaseInfo release, string source, string host, bool redirect);
+        Task<byte[]> DownloadReport(string link, int indexerId, string source, string host, string title);
+        void RecordRedirect(string link, int indexerId, string source, string host, string title);
     }
 
     public class DownloadService : IDownloadService
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Download
             _logger = logger;
         }
 
-        public void SendReportToClient(ReleaseInfo release, bool redirect)
+        public void SendReportToClient(ReleaseInfo release, string source, string host, bool redirect)
         {
             var downloadTitle = release.Title;
             var downloadClient = _downloadClientProvider.GetDownloadClient(release.DownloadProtocol);
@@ -79,13 +79,13 @@ namespace NzbDrone.Core.Download
             catch (ReleaseUnavailableException)
             {
                 _logger.Trace("Release {0} no longer available on indexer.", release);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, release.Source, release.Title, redirect));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, source, host, release.Title, redirect));
                 throw;
             }
             catch (DownloadClientRejectedReleaseException)
             {
                 _logger.Trace("Release {0} rejected by download client, possible duplicate.", release);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, release.Source, release.Title, redirect));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, source, host, release.Title, redirect));
                 throw;
             }
             catch (ReleaseDownloadException ex)
@@ -100,17 +100,17 @@ namespace NzbDrone.Core.Download
                     _indexerStatusService.RecordFailure(release.IndexerId);
                 }
 
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, release.Source, release.Title, redirect));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, source, host, release.Title, redirect));
 
                 throw;
             }
 
             _logger.ProgressInfo("Report sent to {0}. {1}", downloadClient.Definition.Name, downloadTitle);
 
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, true, release.Source, release.Title, redirect));
+            _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, true, source, host, release.Title, redirect));
         }
 
-        public async Task<byte[]> DownloadReport(string link, int indexerId, string source, string title)
+        public async Task<byte[]> DownloadReport(string link, int indexerId, string source, string host, string title)
         {
             var url = new Uri(link);
 
@@ -133,7 +133,7 @@ namespace NzbDrone.Core.Download
             catch (ReleaseUnavailableException)
             {
                 _logger.Trace("Release {0} no longer available on indexer.", link);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, title));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title));
                 throw;
             }
             catch (ReleaseDownloadException ex)
@@ -148,17 +148,17 @@ namespace NzbDrone.Core.Download
                     _indexerStatusService.RecordFailure(indexerId);
                 }
 
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, title));
+                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title));
                 throw;
             }
 
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, title));
+            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title));
             return downloadedBytes;
         }
 
-        public void RecordRedirect(string link, int indexerId, string source, string title)
+        public void RecordRedirect(string link, int indexerId, string source, string host, string title)
         {
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, true, source, title, true));
+            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, true, source, host, title, true));
         }
     }
 }

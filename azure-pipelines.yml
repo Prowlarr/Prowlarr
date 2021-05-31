@@ -23,7 +23,12 @@ trigger:
     - master
 
 pr:
-- develop
+  branches:
+    include:
+    - develop
+  paths:
+    exclude:
+    - src/NzbDrone.Core/Localization/Core
 
 stages:
   - stage: Setup
@@ -818,10 +823,27 @@ stages:
         submodules: true
       - powershell: Set-Service SCardSvr -StartupType Manual
         displayName: Enable Windows Test Service
+      - task: SonarCloudPrepare@1
+        condition: eq(variables['System.PullRequest.IsFork'], 'False')
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'prowlarr'
+          scannerMode: 'MSBuild'
+          projectKey: 'Prowlarr_Prowlarr'
+          projectName: 'Prowlarr'
+          projectVersion: '$(prowlarrVersion)'
+          extraProperties: |
+            sonar.exclusions=**/obj/**,**/*.dll,**/NzbDrone.Core.Test/Files/**/*,./frontend/**,**/ExternalModules/**,./src/Libraries/**
+            sonar.coverage.exclusions=**/Prowlarr.Api.V1/**/*
+            sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.opencover.xml
+            sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResult.xml
       - bash: |
           ./build.sh --backend -f net5.0 -r win-x64
           TEST_DIR=_tests/net5.0/win-x64/publish/ ./test.sh Windows Unit Coverage
         displayName: Coverage Unit Tests
+      - task: SonarCloudAnalyze@1
+        condition: eq(variables['System.PullRequest.IsFork'], 'False')
+        displayName: Publish SonarCloud Results
       - task: reportgenerator@4
         displayName: Generate Coverage Report
         inputs:

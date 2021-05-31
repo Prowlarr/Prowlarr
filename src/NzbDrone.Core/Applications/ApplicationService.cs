@@ -35,7 +35,6 @@ namespace NzbDrone.Core.Applications
             _logger = logger;
         }
 
-        // Sync Indexers on App Add if Sync Enabled
         public void HandleAsync(ProviderAddedEvent<IApplication> message)
         {
             var appDefinition = (ApplicationDefinition)message.Definition;
@@ -84,7 +83,7 @@ namespace NzbDrone.Core.Applications
 
             var indexers = _indexerFactory.AllProviders().Select(i => (IndexerDefinition)i.Definition).ToList();
 
-            SyncIndexers(enabledApps, indexers);
+            SyncIndexers(enabledApps, indexers, true);
         }
 
         public void HandleAsync(ProviderBulkUpdatedEvent<IIndexer> message)
@@ -102,10 +101,10 @@ namespace NzbDrone.Core.Applications
 
             var indexers = _indexerFactory.AllProviders().Select(i => (IndexerDefinition)i.Definition).ToList();
 
-            SyncIndexers(enabledApps, indexers);
+            SyncIndexers(enabledApps, indexers, true);
         }
 
-        private void SyncIndexers(List<IApplication> applications, List<IndexerDefinition> indexers)
+        private void SyncIndexers(List<IApplication> applications, List<IndexerDefinition> indexers, bool removeRemote = false)
         {
             foreach (var app in applications)
             {
@@ -148,12 +147,15 @@ namespace NzbDrone.Core.Applications
                     }
                 }
 
-                foreach (var mapping in indexerMappings)
+                if (removeRemote)
                 {
-                    if (!indexers.Any(x => x.Id == mapping.IndexerId))
+                    foreach (var mapping in indexerMappings)
                     {
-                        _logger.Info("Indexer with the ID {0} was found within {1} but is no longer defined within Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
-                        ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
+                        if (!indexers.Any(x => x.Id == mapping.IndexerId))
+                        {
+                            _logger.Info("Indexer with the ID {0} was found within {1} but is no longer defined within Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
+                            ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
+                        }
                     }
                 }
             }

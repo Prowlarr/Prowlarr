@@ -878,5 +878,11 @@
     "AllIndexersHiddenDueToFilter": "Az összes indexelő rejtve van az alkalmazott szűrő miatt.",
     "AddToDownloadClient": "Kiadás hozzáadása a kliens letöltéséhez",
     "AddNewIndexer": "Új indexelő hozzáadása",
-    "AddedToDownloadClient": "Kiadás hozzáadva a klienshez"
+    "AddedToDownloadClient": "Kiadás hozzáadva a klienshez",
+    "EnableRssHelpText": "RSS Engedélyezése az Indexerekhez",
+    "EnableRss": "RSS Engedélyezése",
+    "EditAppProfile": "App profil szerkesztése",
+    "AppProfiles": "App profilok",
+    "AddAppProfile": "Szinkronizálási profil hozzáadása",
+    "AppProfile": "App Profil"
 }

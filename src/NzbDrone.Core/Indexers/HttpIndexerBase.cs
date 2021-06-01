@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,7 +9,6 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -103,42 +101,6 @@ namespace NzbDrone.Core.Indexers
             }
 
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
-        }
-
-        public override async Task<byte[]> Download(Uri link)
-        {
-            Cookies = GetCookies();
-
-            if (link.Scheme == "magnet")
-            {
-                return Encoding.UTF8.GetBytes(link.OriginalString);
-            }
-
-            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
-
-            if (Cookies != null)
-            {
-                requestBuilder.SetCookies(Cookies);
-            }
-
-            var request = requestBuilder.Build();
-            request.AllowAutoRedirect = FollowRedirect;
-
-            var downloadBytes = Array.Empty<byte>();
-
-            try
-            {
-                var response = await _httpClient.ExecuteAsync(request);
-                downloadBytes = response.ResponseData;
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
-                throw;
-            }
-
-            return downloadBytes;
         }
 
         protected IIndexerRequestGenerator SetCookieFunctions(IIndexerRequestGenerator generator)

@@ -7,7 +7,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
-    public class PassThePopcorn : HttpIndexerBase<PassThePopcornSettings>
+    public class PassThePopcorn : TorrentIndexerBase<PassThePopcornSettings>
     {
         public override string Name => "PassThePopcorn";
         public override string BaseUrl => "https://passthepopcorn.me";

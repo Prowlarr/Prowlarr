@@ -5,7 +5,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
 {
-    public abstract class Unit3dBase : HttpIndexerBase<Unit3dSettings>
+    public abstract class Unit3dBase : TorrentIndexerBase<Unit3dSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override string BaseUrl => "";

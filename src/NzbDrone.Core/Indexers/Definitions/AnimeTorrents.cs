@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class AnimeTorrents : HttpIndexerBase<AnimeTorrentsSettings>
+    public class AnimeTorrents : TorrentIndexerBase<AnimeTorrentsSettings>
     {
         public override string Name => "AnimeTorrents";
 

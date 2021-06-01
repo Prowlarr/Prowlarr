@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
@@ -7,6 +8,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
@@ -14,7 +16,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {
-    public class Cardigann : HttpIndexerBase<CardigannSettings>
+    public class Cardigann : TorrentIndexerBase<CardigannSettings>
     {
         private readonly IIndexerDefinitionUpdateService _definitionService;
         private readonly ICached<CardigannRequestGenerator> _generatorCache;
@@ -147,6 +149,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (request.Url.Scheme == "magnet")
             {
+                ValidateMagnet(request.Url.FullUri);
                 return Encoding.UTF8.GetBytes(request.Url.FullUri);
             }
 
@@ -159,10 +162,36 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var response = await _httpClient.ExecuteAsync(request);
                 downloadBytes = response.ResponseData;
             }
+            catch (HttpException ex)
+            {
+                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", request.Url.FullUri);
+                    throw new ReleaseUnavailableException("Downloading torrent failed", ex);
+                }
+
+                if ((int)ex.Response.StatusCode == 429)
+                {
+                    _logger.Error("API Grab Limit reached for {0}", request.Url.FullUri);
+                }
+                else
+                {
+                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
+                }
+
+                throw new ReleaseDownloadException("Downloading torrent failed", ex);
+            }
+            catch (WebException ex)
+            {
+                _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
+
+                throw new ReleaseDownloadException("Downloading torrent failed", ex);
+            }
             catch (Exception)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
+                _logger.Error("Downloading torrent failed");
+                throw;
             }
 
             return downloadBytes;

@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class DigitalCore : HttpIndexerBase<DigitalCoreSettings>
+    public class DigitalCore : TorrentIndexerBase<DigitalCoreSettings>
     {
         public override string Name => "DigitalCore";
         public override string BaseUrl => "https://digitalcore.club/";

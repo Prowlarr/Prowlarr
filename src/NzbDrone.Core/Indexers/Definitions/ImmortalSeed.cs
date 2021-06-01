@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class ImmortalSeed : HttpIndexerBase<ImmortalSeedSettings>
+    public class ImmortalSeed : TorrentIndexerBase<ImmortalSeedSettings>
     {
         public override string Name => "ImmortalSeed";
 

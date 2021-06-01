@@ -6,7 +6,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.BroadcastheNet
 {
-    public class BroadcastheNet : HttpIndexerBase<BroadcastheNetSettings>
+    public class BroadcastheNet : TorrentIndexerBase<BroadcastheNetSettings>
     {
         public override string Name => "BroadcasTheNet";
 

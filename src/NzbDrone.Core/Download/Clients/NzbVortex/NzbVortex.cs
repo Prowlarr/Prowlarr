@@ -20,9 +20,8 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
                        IHttpClient httpClient,
                        IConfigService configService,
                        IDiskProvider diskProvider,
-                       IValidateNzbs nzbValidationService,
                        Logger logger)
-            : base(httpClient, configService, diskProvider, nzbValidationService, logger)
+            : base(httpClient, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }

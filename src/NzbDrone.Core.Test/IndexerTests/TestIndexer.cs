@@ -1,12 +1,13 @@
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Test.IndexerTests
 {
-    public class TestIndexer : HttpIndexerBase<TestIndexerSettings>
+    public class TestIndexer : UsenetIndexerBase<TestIndexerSettings>
     {
         public override string Name => "Test Indexer";
         public override string BaseUrl => "http://testindexer.com";
@@ -18,8 +19,8 @@ namespace NzbDrone.Core.Test.IndexerTests
         public int _supportedPageSize;
         public override int PageSize => _supportedPageSize;
 
-        public TestIndexer(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public TestIndexer(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
         }
 

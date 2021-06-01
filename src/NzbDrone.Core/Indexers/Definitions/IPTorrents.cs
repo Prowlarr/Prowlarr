@@ -18,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class IPTorrents : HttpIndexerBase<IPTorrentsSettings>
+    public class IPTorrents : TorrentIndexerBase<IPTorrentsSettings>
     {
         public override string Name => "IPTorrents";
 

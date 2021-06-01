@@ -6,7 +6,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.HDBits
 {
-    public class HDBits : HttpIndexerBase<HDBitsSettings>
+    public class HDBits : TorrentIndexerBase<HDBitsSettings>
     {
         public override string Name => "HDBits";
         public override string BaseUrl => "https://hdbits.org";

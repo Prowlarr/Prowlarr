@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -54,7 +55,7 @@ namespace NzbDrone.Core.Download
             get;
         }
 
-        public abstract string Download(ReleaseInfo release, bool redirect);
+        public abstract Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer);
 
         public ValidationResult Test()
         {

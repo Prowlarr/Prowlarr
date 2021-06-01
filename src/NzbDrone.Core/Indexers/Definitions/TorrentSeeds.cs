@@ -20,7 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class TorrentSeeds : HttpIndexerBase<TorrentSeedsSettings>
+    public class TorrentSeeds : TorrentIndexerBase<TorrentSeedsSettings>
     {
         public override string Name => "TorrentSeeds";
 

@@ -17,7 +17,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class TorrentDay : HttpIndexerBase<TorrentDaySettings>
+    public class TorrentDay : TorrentIndexerBase<TorrentDaySettings>
     {
         public override string Name => "TorrentDay";
 

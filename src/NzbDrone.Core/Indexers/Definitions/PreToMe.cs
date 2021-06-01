@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class PreToMe : HttpIndexerBase<PreToMeSettings>
+    public class PreToMe : TorrentIndexerBase<PreToMeSettings>
     {
         public override string Name => "PreToMe";
         public override string BaseUrl => "https://pretome.info/";

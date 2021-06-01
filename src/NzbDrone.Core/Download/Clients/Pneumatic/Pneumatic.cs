@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -14,24 +16,20 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
 {
     public class Pneumatic : DownloadClientBase<PneumaticSettings>
     {
-        private readonly IHttpClient _httpClient;
-
-        public Pneumatic(IHttpClient httpClient,
-                         IConfigService configService,
+        public Pneumatic(IConfigService configService,
                          IDiskProvider diskProvider,
                          Logger logger)
             : base(configService, diskProvider, logger)
         {
-            _httpClient = httpClient;
         }
 
         public override string Name => "Pneumatic";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
 
-        public override string Download(ReleaseInfo release, bool redirect)
+        public override async Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer)
         {
-            var url = release.DownloadUrl;
+            var url = new Uri(release.DownloadUrl);
             var title = release.Title;
 
             title = StringUtil.CleanFileName(title);
@@ -40,7 +38,10 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
             var nzbFile = Path.Combine(Settings.NzbFolder, title + ".nzb");
 
             _logger.Debug("Downloading NZB from: {0} to: {1}", url, nzbFile);
-            _httpClient.DownloadFile(url, nzbFile);
+
+            var nzbData = await indexer.Download(url);
+
+            File.WriteAllBytes(nzbFile, nzbData);
 
             _logger.Debug("NZB Download succeeded, saved to: {0}", nzbFile);
 

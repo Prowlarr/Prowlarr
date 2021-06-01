@@ -18,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class ThePirateBay : HttpIndexerBase<ThePirateBaySettings>
+    public class ThePirateBay : TorrentIndexerBase<ThePirateBaySettings>
     {
         public override string Name => "ThePirateBay";
         public override string BaseUrl => "https://thepiratebay.org/";

@@ -31,9 +31,8 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                                      IHttpClient httpClient,
                                      IConfigService configService,
                                      IDiskProvider diskProvider,
-                                     IValidateNzbs nzbValidationService,
                                      Logger logger)
-        : base(httpClient, configService, diskProvider, nzbValidationService, logger)
+        : base(httpClient, configService, diskProvider, logger)
         {
             _dsInfoProxy = dsInfoProxy;
             _dsTaskProxy = dsTaskProxy;

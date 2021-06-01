@@ -6,11 +6,12 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Headphones
 {
-    public class Headphones : HttpIndexerBase<HeadphonesSettings>
+    public class Headphones : UsenetIndexerBase<HeadphonesSettings>
     {
         public override string Name => "Headphones VIP";
 
@@ -35,8 +36,8 @@ namespace NzbDrone.Core.Indexers.Headphones
             return new HeadphonesRssParser(Capabilities.Categories);
         }
 
-        public Headphones(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Headphones(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
         }
 

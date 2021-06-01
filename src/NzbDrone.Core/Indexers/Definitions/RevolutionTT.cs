@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class RevolutionTT : HttpIndexerBase<RevolutionTTSettings>
+    public class RevolutionTT : TorrentIndexerBase<RevolutionTTSettings>
     {
         public override string Name => "RevolutionTT";
 

@@ -7,7 +7,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Gazelle
 {
-    public abstract class Gazelle : HttpIndexerBase<GazelleSettings>
+    public abstract class Gazelle : TorrentIndexerBase<GazelleSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override string BaseUrl => "";

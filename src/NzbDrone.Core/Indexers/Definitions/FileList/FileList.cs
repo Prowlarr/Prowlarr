@@ -6,7 +6,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.FileList
 {
-    public class FileList : HttpIndexerBase<FileListSettings>
+    public class FileList : TorrentIndexerBase<FileListSettings>
     {
         public override string Name => "FileList.io";
         public override string BaseUrl => "https://filelist.io";

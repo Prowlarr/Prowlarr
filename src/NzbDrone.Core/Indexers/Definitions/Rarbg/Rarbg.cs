@@ -11,7 +11,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
 {
-    public class Rarbg : HttpIndexerBase<RarbgSettings>
+    public class Rarbg : TorrentIndexerBase<RarbgSettings>
     {
         private readonly IRarbgTokenProvider _tokenProvider;
 

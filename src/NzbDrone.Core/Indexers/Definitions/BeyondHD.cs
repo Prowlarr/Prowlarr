@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class BeyondHD : HttpIndexerBase<BeyondHDSettings>
+    public class BeyondHD : TorrentIndexerBase<BeyondHDSettings>
     {
         public override string Name => "BeyondHD";
 

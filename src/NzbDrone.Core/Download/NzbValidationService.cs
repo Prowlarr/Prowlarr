@@ -8,12 +8,12 @@ namespace NzbDrone.Core.Download
 {
     public interface IValidateNzbs
     {
-        void Validate(string filename, byte[] fileContent);
+        void Validate(byte[] fileContent);
     }
 
     public class NzbValidationService : IValidateNzbs
     {
-        public void Validate(string filename, byte[] fileContent)
+        public void Validate(byte[] fileContent)
         {
             var reader = new StreamReader(new MemoryStream(fileContent));
 
@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Download
 
                 if (nzb == null)
                 {
-                    throw new InvalidNzbException("Invalid NZB: No Root element [{0}]", filename);
+                    throw new InvalidNzbException("Invalid NZB: No Root element");
                 }
 
                 // nZEDb has an bug in their error reporting code spitting out invalid http status codes
@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Download
 
                 if (!nzb.Name.LocalName.Equals("nzb"))
                 {
-                    throw new InvalidNzbException("Invalid NZB: Unexpected root element. Expected 'nzb' found '{0}' [{1}]", nzb.Name.LocalName, filename);
+                    throw new InvalidNzbException("Invalid NZB: Unexpected root element. Expected 'nzb' found '{0}'", nzb.Name.LocalName);
                 }
 
                 var ns = nzb.Name.Namespace;
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Download
 
                 if (files.Empty())
                 {
-                    throw new InvalidNzbException("Invalid NZB: No files [{0}]", filename);
+                    throw new InvalidNzbException("Invalid NZB: No files");
                 }
             }
         }

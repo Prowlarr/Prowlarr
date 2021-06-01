@@ -21,7 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class BakaBT : HttpIndexerBase<BakaBTSettings>
+    public class BakaBT : TorrentIndexerBase<BakaBTSettings>
     {
         public override string Name => "BakaBT";
 

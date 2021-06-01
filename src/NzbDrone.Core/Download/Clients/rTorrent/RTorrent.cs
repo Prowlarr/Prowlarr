@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             {
                 _logger.Debug("rTorrent didn't add the torrent within {0} seconds: {1}.", tries * retryDelay / 1000, filename);
 
-                throw new ReleaseDownloadException(release, "Downloading torrent failed");
+                throw new ReleaseDownloadException("Downloading torrent failed");
             }
 
             return hash;

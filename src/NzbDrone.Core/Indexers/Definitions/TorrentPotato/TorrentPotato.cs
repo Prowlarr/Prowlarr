@@ -6,7 +6,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.TorrentPotato
 {
-    public class TorrentPotato : HttpIndexerBase<TorrentPotatoSettings>
+    public class TorrentPotato : TorrentIndexerBase<TorrentPotatoSettings>
     {
         public override string Name => "TorrentPotato";
         public override string BaseUrl => "http://127.0.0.1";

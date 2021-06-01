@@ -23,7 +23,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class AnimeBytes : HttpIndexerBase<AnimeBytesSettings>
+    public class AnimeBytes : TorrentIndexerBase<AnimeBytesSettings>
     {
         public override string Name => "AnimeBytes";
         public override string BaseUrl => "https://animebytes.tv/";

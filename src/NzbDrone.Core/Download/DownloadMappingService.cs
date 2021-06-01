@@ -6,7 +6,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Security;
 
-namespace NzbDrone.Core.Indexers
+namespace NzbDrone.Core.Download
 {
     public interface IDownloadMappingService
     {

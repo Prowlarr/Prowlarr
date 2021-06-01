@@ -9,7 +9,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
-    public abstract class AvistazBase : HttpIndexerBase<AvistazSettings>
+    public abstract class AvistazBase : TorrentIndexerBase<AvistazSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override string BaseUrl => "";

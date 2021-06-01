@@ -18,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class SubsPlease : HttpIndexerBase<SubsPleaseSettings>
+    public class SubsPlease : TorrentIndexerBase<SubsPleaseSettings>
     {
         public override string Name => "SubsPlease";
         public override string BaseUrl => "https://subsplease.org/";

@@ -18,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class MyAnonamouse : HttpIndexerBase<MyAnonamouseSettings>
+    public class MyAnonamouse : TorrentIndexerBase<MyAnonamouseSettings>
     {
         public override string Name => "MyAnonamouse";
 

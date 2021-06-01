@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Download
 {
     public interface IDownloadService
     {
-        void SendReportToClient(ReleaseInfo release, string source, string host, bool redirect);
+        Task SendReportToClient(ReleaseInfo release, string source, string host, bool redirect);
         Task<byte[]> DownloadReport(string link, int indexerId, string source, string host, string title);
         void RecordRedirect(string link, int indexerId, string source, string host, string title);
     }
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Download
             _logger = logger;
         }
 
-        public void SendReportToClient(ReleaseInfo release, string source, string host, bool redirect)
+        public async Task SendReportToClient(ReleaseInfo release, string source, string host, bool redirect)
         {
             var downloadTitle = release.Title;
             var downloadClient = _downloadClientProvider.GetDownloadClient(release.DownloadProtocol);
@@ -69,10 +69,12 @@ namespace NzbDrone.Core.Download
                 _rateLimitService.WaitAndPulse(url.Host, TimeSpan.FromSeconds(2));
             }
 
+            var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(release.IndexerId));
+
             string downloadClientId;
             try
             {
-                downloadClientId = downloadClient.Download(release, redirect);
+                downloadClientId = await downloadClient.Download(release, redirect, indexer);
                 _downloadClientStatusService.RecordSuccess(downloadClient.Definition.Id);
                 _indexerStatusService.RecordSuccess(release.IndexerId);
             }

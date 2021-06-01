@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using MonoTorrent;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -39,7 +40,7 @@ namespace NzbDrone.Core.Download
         protected abstract string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent);
         protected abstract string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink);
 
-        public override string Download(ReleaseInfo release, bool redirect)
+        public override async Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer)
         {
             var torrentInfo = release as TorrentInfo;
 
@@ -66,7 +67,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return DownloadFromWebUrl(release, torrentUrl);
+                        return await DownloadFromWebUrl(release, indexer, torrentUrl);
                     }
                     catch (Exception ex)
                     {
@@ -87,7 +88,7 @@ namespace NzbDrone.Core.Download
                     }
                     catch (NotSupportedException ex)
                     {
-                        throw new ReleaseDownloadException(release, "Magnet not supported by download client. ({0})", ex.Message);
+                        throw new ReleaseDownloadException("Magnet not supported by download client. ({0})", ex.Message);
                     }
                 }
             }
@@ -103,7 +104,7 @@ namespace NzbDrone.Core.Download
                     {
                         if (torrentUrl.IsNullOrWhiteSpace())
                         {
-                            throw new ReleaseDownloadException(release, "Magnet not supported by download client. ({0})", ex.Message);
+                            throw new ReleaseDownloadException("Magnet not supported by download client. ({0})", ex.Message);
                         }
 
                         _logger.Debug("Magnet not supported by download client, trying torrent. ({0})", ex.Message);
@@ -112,75 +113,18 @@ namespace NzbDrone.Core.Download
 
                 if (torrentUrl.IsNotNullOrWhiteSpace())
                 {
-                    return DownloadFromWebUrl(release, torrentUrl);
+                    return await DownloadFromWebUrl(release, indexer, torrentUrl);
                 }
             }
 
             return null;
         }
 
-        private string DownloadFromWebUrl(ReleaseInfo release, string torrentUrl)
+        private async Task<string> DownloadFromWebUrl(ReleaseInfo release, IIndexer indexer, string torrentUrl)
         {
             byte[] torrentFile = null;
 
-            try
-            {
-                var request = new HttpRequest(torrentUrl);
-                request.Headers.Accept = "application/x-bittorrent";
-                request.AllowAutoRedirect = false;
-
-                var response = _httpClient.Get(request);
-
-                if (response.StatusCode == HttpStatusCode.MovedPermanently ||
-                    response.StatusCode == HttpStatusCode.Found ||
-                    response.StatusCode == HttpStatusCode.SeeOther)
-                {
-                    var locationHeader = response.Headers.GetSingleValue("Location");
-
-                    _logger.Trace("Torrent request is being redirected to: {0}", locationHeader);
-
-                    if (locationHeader != null)
-                    {
-                        if (locationHeader.StartsWith("magnet:"))
-                        {
-                            return DownloadFromMagnetUrl(release, locationHeader);
-                        }
-
-                        return DownloadFromWebUrl(release, locationHeader);
-                    }
-
-                    throw new WebException("Remote website tried to redirect without providing a location.");
-                }
-
-                torrentFile = response.ResponseData;
-
-                _logger.Debug("Downloading torrent for release '{0}' finished ({1} bytes from {2})", release.Title, torrentFile.Length, torrentUrl);
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Downloading torrent file for release '{0}' failed since it no longer exists ({1})", release.Title, torrentUrl);
-                    throw new ReleaseUnavailableException(release, "Downloading torrent failed", ex);
-                }
-
-                if ((int)ex.Response.StatusCode == 429)
-                {
-                    _logger.Error("API Grab Limit reached for {0}", torrentUrl);
-                }
-                else
-                {
-                    _logger.Error(ex, "Downloading torrent file for release '{0}' failed ({1})", release.Title, torrentUrl);
-                }
-
-                throw new ReleaseDownloadException(release, "Downloading torrent failed", ex);
-            }
-            catch (WebException ex)
-            {
-                _logger.Error(ex, "Downloading torrent file for release '{0}' failed ({1})", release.Title, torrentUrl);
-
-                throw new ReleaseDownloadException(release, "Downloading torrent failed", ex);
-            }
+            torrentFile = await indexer.Download(new Uri(torrentUrl));
 
             var filename = string.Format("{0}.torrent", StringUtil.CleanFileName(release.Title));
             var hash = _torrentFileInfoReader.GetHashFromTorrentFile(torrentFile);

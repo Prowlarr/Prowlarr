@@ -366,5 +366,11 @@
     "View": "Exibir",
     "Warn": "Avisar",
     "YesCancel": "Sim, cancelar",
-    "Yesterday": "Ontem"
+    "Yesterday": "Ontem",
+    "EnableRssHelpText": "Habilitar feed RSS para o indexador",
+    "EnableRss": "Habilitar RSS",
+    "EditAppProfile": "Editar perfil do aplicativo",
+    "AppProfiles": "Perfis de aplicativo",
+    "AddAppProfile": "Adicionar perfil de sincronização do aplicativo",
+    "AppProfile": "Perfil do aplicativo"
 }

@@ -138,6 +138,21 @@ namespace NzbDrone.Core.IndexerVersions
                             definition.Login.Method = "form";
                         }
 
+                        if (definition.Search.Paths == null)
+                        {
+                            definition.Search.Paths = new List<SearchPathBlock>();
+                        }
+
+                        // convert definitions with a single search Path to a Paths entry
+                        if (definition.Search.Path != null)
+                        {
+                            definition.Search.Paths.Add(new SearchPathBlock
+                            {
+                                Path = definition.Search.Path,
+                                Inheritinputs = true
+                            });
+                        }
+
                         return definition;
                     }
                     catch (Exception e)

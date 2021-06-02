@@ -137,9 +137,9 @@ namespace NzbDrone.Core.Applications.Readarr
             {
                 Id = id,
                 Name = $"{indexer.Name} (Prowlarr)",
-                EnableRss = indexer.AppProfile.Value.EnableRss,
-                EnableAutomaticSearch = indexer.AppProfile.Value.EnableAutomaticSearch,
-                EnableInteractiveSearch = indexer.AppProfile.Value.EnableInteractiveSearch,
+                EnableRss = indexer.Enable && indexer.AppProfile.Value.EnableRss,
+                EnableAutomaticSearch = indexer.Enable && indexer.AppProfile.Value.EnableAutomaticSearch,
+                EnableInteractiveSearch = indexer.Enable && indexer.AppProfile.Value.EnableInteractiveSearch,
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,

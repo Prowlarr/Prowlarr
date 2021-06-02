@@ -254,6 +254,8 @@ namespace NzbDrone.Core.Indexers
 
             var provider = _providers.First(v => v.GetType().Name == definition.Implementation);
 
+            SetProviderCharacteristics(provider, definition);
+
             if (definition.Implementation == typeof(Newznab.Newznab).Name)
             {
                 var settings = (NewznabSettings)definition.Settings;
@@ -271,6 +273,8 @@ namespace NzbDrone.Core.Indexers
         public override void Update(IndexerDefinition definition)
         {
             var provider = _providers.First(v => v.GetType().Name == definition.Implementation);
+
+            SetProviderCharacteristics(provider, definition);
 
             if (definition.Implementation == typeof(Newznab.Newznab).Name)
             {

@@ -7,6 +7,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.IndexerVersions;
+using NzbDrone.Core.Parser;
 using Prowlarr.Http.ClientSchema;
 
 namespace Prowlarr.Api.V1.Indexers
@@ -29,6 +30,7 @@ namespace Prowlarr.Api.V1.Indexers
         public int Priority { get; set; }
         public DateTime Added { get; set; }
         public IndexerStatusResource Status { get; set; }
+        public string SortName { get; set; }
     }
 
     public class IndexerResourceMapper : ProviderResourceMapper<IndexerResource, IndexerDefinition>
@@ -81,6 +83,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.Privacy = definition.Privacy;
             resource.Priority = definition.Priority;
             resource.Added = definition.Added;
+            resource.SortName = definition.Name.NormalizeTitle();
 
             return resource;
         }

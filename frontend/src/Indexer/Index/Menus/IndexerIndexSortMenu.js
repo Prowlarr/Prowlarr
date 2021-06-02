@@ -30,7 +30,7 @@ function IndexerIndexSortMenu(props) {
         </SortMenuItem>
 
         <SortMenuItem
-          name="name"
+          name="sortName"
           sortKey={sortKey}
           sortDirection={sortDirection}
           onPress={onSortSelect}

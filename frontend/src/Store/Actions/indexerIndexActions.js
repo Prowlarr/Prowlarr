@@ -24,9 +24,9 @@ export const defaultState = {
   saveError: null,
   isDeleting: false,
   deleteError: null,
-  sortKey: 'name',
+  sortKey: 'sortName',
   sortDirection: sortDirections.ASCENDING,
-  secondarySortKey: 'name',
+  secondarySortKey: 'sortName',
   secondarySortDirection: sortDirections.ASCENDING,
 
   tableOptions: {
@@ -50,7 +50,7 @@ export const defaultState = {
       isModifiable: false
     },
     {
-      name: 'name',
+      name: 'sortName',
       label: 'Indexer Name',
       isSortable: true,
       isVisible: true,

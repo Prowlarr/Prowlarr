@@ -136,7 +136,7 @@ class IndexerIndexRow extends Component {
               );
             }
 
-            if (column.name === 'name') {
+            if (column.name === 'sortName') {
               return (
                 <VirtualTableRowCell
                   key={column.name}

@@ -97,7 +97,15 @@ namespace Prowlarr.Api.V1.Search
         {
             try
             {
-                var request = new NewznabRequest { q = query, source = "Prowlarr", t = "search", cat = string.Join(",", categories), server = Request.GetServerUrl() };
+                var request = new NewznabRequest
+                {
+                    q = query, source = "Prowlarr",
+                    t = "search",
+                    cat = string.Join(",", categories),
+                    server = Request.GetServerUrl(),
+                    host = Request.GetHostName()
+                };
+
                 var result = await _nzbSearhService.Search(request, indexerIds, true);
                 var decisions = result.Releases;
 

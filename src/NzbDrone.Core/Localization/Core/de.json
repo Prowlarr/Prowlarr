@@ -889,5 +889,6 @@
     "AllIndexersHiddenDueToFilter": "Alle Indexer sind durch den ausgewählten Filter ausgeblendet.",
     "AddToDownloadClient": "Release zum Downloader hinzufügen",
     "AddNewIndexer": "Neuen Indexer hinzufügen",
-    "AddedToDownloadClient": "Release zum Client hinzugefügt"
+    "AddedToDownloadClient": "Release zum Client hinzugefügt",
+    "AddAppProfile": "App synchronisier Profil hinzufügen"
 }

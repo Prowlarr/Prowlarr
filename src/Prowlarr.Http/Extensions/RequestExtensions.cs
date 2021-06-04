@@ -164,9 +164,10 @@ namespace Prowlarr.Http.Extensions
         public static string GetHostName(this HttpRequest request)
         {
             string ip = request.GetRemoteIP();
-            IPAddress myIP = IPAddress.Parse(ip);
+
             try
             {
+                IPAddress myIP = IPAddress.Parse(ip);
                 IPHostEntry getIPHost = Dns.GetHostEntry(myIP);
                 List<string> compName = getIPHost.HostName.ToString().Split('.').ToList();
                 return compName.First();

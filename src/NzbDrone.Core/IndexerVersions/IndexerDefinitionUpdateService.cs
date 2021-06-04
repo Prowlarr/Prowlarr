@@ -89,7 +89,8 @@ namespace NzbDrone.Core.IndexerVersions
         {
             var req = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}/{id}");
             var response = _httpClient.Get(req);
-            return _deserializer.Deserialize<CardigannDefinition>(response.Content);
+            var definition = _deserializer.Deserialize<CardigannDefinition>(response.Content);
+            return CleanIndexerDefinition(definition);
         }
 
         private CardigannDefinition LoadIndexerDef(string fileKey)
@@ -118,42 +119,7 @@ namespace NzbDrone.Core.IndexerVersions
                         var definitionString = File.ReadAllText(file.FullName);
                         var definition = _deserializer.Deserialize<CardigannDefinition>(definitionString);
 
-                        //defaults
-                        if (definition.Settings == null)
-                        {
-                            definition.Settings = new List<SettingsField>
-                            {
-                                new SettingsField { Name = "username", Label = "Username", Type = "text" },
-                                new SettingsField { Name = "password", Label = "Password", Type = "password" }
-                            };
-                        }
-
-                        if (definition.Encoding == null)
-                        {
-                            definition.Encoding = "UTF-8";
-                        }
-
-                        if (definition.Login != null && definition.Login.Method == null)
-                        {
-                            definition.Login.Method = "form";
-                        }
-
-                        if (definition.Search.Paths == null)
-                        {
-                            definition.Search.Paths = new List<SearchPathBlock>();
-                        }
-
-                        // convert definitions with a single search Path to a Paths entry
-                        if (definition.Search.Path != null)
-                        {
-                            definition.Search.Paths.Add(new SearchPathBlock
-                            {
-                                Path = definition.Search.Path,
-                                Inheritinputs = true
-                            });
-                        }
-
-                        return definition;
+                        return CleanIndexerDefinition(definition);
                     }
                     catch (Exception e)
                     {
@@ -163,6 +129,45 @@ namespace NzbDrone.Core.IndexerVersions
             }
 
             return GetHttpDefinition(fileKey);
+        }
+
+        private CardigannDefinition CleanIndexerDefinition(CardigannDefinition definition)
+        {
+            if (definition.Settings == null)
+            {
+                definition.Settings = new List<SettingsField>
+                            {
+                                new SettingsField { Name = "username", Label = "Username", Type = "text" },
+                                new SettingsField { Name = "password", Label = "Password", Type = "password" }
+                            };
+            }
+
+            if (definition.Encoding == null)
+            {
+                definition.Encoding = "UTF-8";
+            }
+
+            if (definition.Login != null && definition.Login.Method == null)
+            {
+                definition.Login.Method = "form";
+            }
+
+            if (definition.Search.Paths == null)
+            {
+                definition.Search.Paths = new List<SearchPathBlock>();
+            }
+
+            // convert definitions with a single search Path to a Paths entry
+            if (definition.Search.Path != null)
+            {
+                definition.Search.Paths.Add(new SearchPathBlock
+                {
+                    Path = definition.Search.Path,
+                    Inheritinputs = true
+                });
+            }
+
+            return definition;
         }
 
         public void Execute(IndexerDefinitionUpdateCommand message)

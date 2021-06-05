@@ -99,7 +99,7 @@ function EditIndexerModalContent(props) {
                 <FormInputGroup
                   type={inputTypes.CHECK}
                   name="redirect"
-                  helpText={'Redirect incoming download requests for indexer instead of Proxying using Prowlarr'}
+                  helpText={translate('RedirectHelpText')}
                   isDisabled={!supportsRedirect.value}
                   {...redirect}
                   onChange={onInputChange}
@@ -113,6 +113,7 @@ function EditIndexerModalContent(props) {
                   type={inputTypes.APP_PROFILE_SELECT}
                   name="appProfileId"
                   {...appProfileId}
+                  helpText={translate('AppProfileSelectHelpText')}
                   onChange={onInputChange}
                 />
               </FormGroup>

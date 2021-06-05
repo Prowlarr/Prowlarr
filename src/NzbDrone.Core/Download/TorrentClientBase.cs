@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using MonoTorrent;
 using NLog;
@@ -125,6 +126,20 @@ namespace NzbDrone.Core.Download
             byte[] torrentFile = null;
 
             torrentFile = await indexer.Download(new Uri(torrentUrl));
+
+            // handle magnet URLs
+            if (torrentFile.Length >= 7
+                && torrentFile[0] == 0x6d
+                && torrentFile[1] == 0x61
+                && torrentFile[2] == 0x67
+                && torrentFile[3] == 0x6e
+                && torrentFile[4] == 0x65
+                && torrentFile[5] == 0x74
+                && torrentFile[6] == 0x3a)
+            {
+                var magnetUrl = Encoding.UTF8.GetString(torrentFile);
+                return DownloadFromMagnetUrl(release, magnetUrl);
+            }
 
             var filename = string.Format("{0}.torrent", StringUtil.CleanFileName(release.Title));
             var hash = _torrentFileInfoReader.GetHashFromTorrentFile(torrentFile);

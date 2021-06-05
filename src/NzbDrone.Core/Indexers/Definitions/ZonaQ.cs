@@ -25,7 +25,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class ZonaQ : HttpIndexerBase<ZonaQSettings>
+    public class ZonaQ : TorrentIndexerBase<ZonaQSettings>
     {
         public override string Name => "ZonaQ";
         public override string BaseUrl => "https://www.zonaq.pw/";

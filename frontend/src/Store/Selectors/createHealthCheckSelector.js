@@ -13,7 +13,7 @@ function createHealthCheckSelector() {
           source: 'UI',
           type: 'warning',
           message: translate('CouldNotConnectSignalR'),
-          wikiUrl: 'https://wiki.servarr.com/Prowlarr_System#Could_not_connect_to_signalR'
+          wikiUrl: 'https://wikijs.servarr.com/prowlarr/system#could-not-connect-to-signalr'
         });
       }
 

@@ -27,7 +27,7 @@ class MoreInfo extends Component {
 
           <DescriptionListItemTitle>Wiki</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to="https://wiki.servarr.com/Prowlarr">wiki.servarr.com/Prowlarr</Link>
+            <Link to="https://wikijs.servarr.com/prowlarr">wikijs.servarr.com/prowlarr</Link>
           </DescriptionListItemDescription>
 
           <DescriptionListItemTitle>Donations</DescriptionListItemTitle>

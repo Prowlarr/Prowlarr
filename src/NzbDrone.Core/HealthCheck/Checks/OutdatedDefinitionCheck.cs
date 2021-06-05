@@ -38,7 +38,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 HealthCheckResult.Warning,
                 string.Format(_localizationService.GetLocalizedString("IndexerObsoleteCheckMessage"),
                 string.Join(", ", oldIndexers.Select(v => v.Name))),
-                "#indexers_are_obsolete");
+                "#indexers-are-obsolete");
         }
 
         public override bool CheckOnSchedule => false;

@@ -44,14 +44,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
                     _localizationService.GetLocalizedString("ApplicationStatusCheckAllClientMessage"),
-                    "#applications_are_unavailable_due_to_failures");
+                    "#applications-are-unavailable-due-to-failures");
             }
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
                 string.Format(_localizationService.GetLocalizedString("ApplicationStatusCheckSingleClientMessage"),
                     string.Join(", ", backOffProviders.Select(v => v.Provider.Definition.Name))),
-                "#applications_are_unavailable_due_to_failures");
+                "#applications-are-unavailable-due-to-failures");
         }
     }
 }

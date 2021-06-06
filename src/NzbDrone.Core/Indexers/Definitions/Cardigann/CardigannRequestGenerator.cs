@@ -635,14 +635,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             if (requestUrl.StartsWith(SiteLink) && !redirectUrl.StartsWith(SiteLink))
             {
-                var uri = new Uri(redirectUrl);
+                var uri = new HttpUri(redirectUrl);
                 return uri.Scheme + "://" + uri.Host + "/";
             }
 
             return null;
         }
 
-        protected string GetRedirectDomainHint(HttpResponse result) => GetRedirectDomainHint(result.Request.Url.ToString(), result.Headers.GetSingleValue("Location"));
+        protected string GetRedirectDomainHint(HttpResponse result) => GetRedirectDomainHint(result.Request.Url.ToString(), result.RedirectUrl);
 
         protected async Task<HttpResponse> HandleRequest(RequestBlock request, Dictionary<string, object> variables = null, string referer = null)
         {

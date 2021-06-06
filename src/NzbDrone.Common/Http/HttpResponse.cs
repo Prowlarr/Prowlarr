@@ -62,6 +62,20 @@ namespace NzbDrone.Common.Http
                                        StatusCode == HttpStatusCode.TemporaryRedirect ||
                                        StatusCode == HttpStatusCode.Found;
 
+        public string RedirectUrl
+        {
+            get
+            {
+                var newUrl = Headers["Location"];
+                if (newUrl == null || newUrl.IsNullOrWhiteSpace())
+                {
+                    return string.Empty;
+                }
+
+                return (Request.Url += new HttpUri(newUrl)).FullUri;
+            }
+        }
+
         public string[] GetCookieHeaders()
         {
             return Headers.GetValues("Set-Cookie") ?? Array.Empty<string>();

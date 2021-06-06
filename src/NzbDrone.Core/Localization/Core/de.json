@@ -890,5 +890,6 @@
     "AddToDownloadClient": "Release zum Downloader hinzufügen",
     "AddNewIndexer": "Neuen Indexer hinzufügen",
     "AddedToDownloadClient": "Release zum Client hinzugefügt",
-    "AddAppProfile": "App synchronisier Profil hinzufügen"
+    "AddAppProfile": "App synchronisier Profil hinzufügen",
+    "AppProfile": "App-Profil"
 }

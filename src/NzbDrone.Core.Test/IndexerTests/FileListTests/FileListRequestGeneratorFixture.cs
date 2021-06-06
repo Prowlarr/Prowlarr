@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.FileList;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Test.Framework;
@@ -21,6 +22,33 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
                 Username = "somename"
             };
 
+            Subject.Capabilities = new IndexerCapabilities
+            {
+                TvSearchParams = new List<TvSearchParam>
+                       {
+                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                       },
+                MovieSearchParams = new List<MovieSearchParam>
+                       {
+                           MovieSearchParam.Q, MovieSearchParam.ImdbId
+                       },
+                MusicSearchParams = new List<MusicSearchParam>
+                       {
+                           MusicSearchParam.Q
+                       },
+                BookSearchParams = new List<BookSearchParam>
+                       {
+                           BookSearchParam.Q
+                       },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.FreeLeech
+                }
+            };
+
+            Subject.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesSD, "Filme SD");
+            Subject.Capabilities.Categories.AddCategoryMapping(2, NewznabStandardCategory.MoviesDVD, "Filme DVD");
+
             _movieSearchCriteria = new MovieSearchCriteria
             {
                 SearchTerm = "Star Wars",
@@ -38,7 +66,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [Test]
         public void should_use_categories_for_feed()
         {
-            var results = Subject.GetSearchRequests(new MovieSearchCriteria { Categories = new int[] { 1, 2 } });
+            var results = Subject.GetSearchRequests(new MovieSearchCriteria { Categories = new int[] { NewznabStandardCategory.MoviesSD.Id, NewznabStandardCategory.MoviesDVD.Id } });
 
             results.GetAllTiers().Should().HaveCount(1);
 

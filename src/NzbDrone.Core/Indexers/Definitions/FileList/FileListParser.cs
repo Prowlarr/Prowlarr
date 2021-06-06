@@ -12,11 +12,13 @@ namespace NzbDrone.Core.Indexers.FileList
     {
         private readonly string _baseUrl;
         private readonly FileListSettings _settings;
+        private readonly IndexerCapabilitiesCategories _categories;
 
-        public FileListParser(FileListSettings settings, string baseUrl)
+        public FileListParser(FileListSettings settings, string baseUrl, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _baseUrl = baseUrl;
+            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -57,6 +59,7 @@ namespace NzbDrone.Core.Indexers.FileList
                     Guid = string.Format("FileList-{0}", id),
                     Title = result.Name,
                     Size = result.Size,
+                    Category = _categories.MapTrackerCatDescToNewznab(result.Category),
                     DownloadUrl = GetDownloadUrl(id),
                     InfoUrl = GetInfoUrl(id),
                     Seeders = result.Seeders,

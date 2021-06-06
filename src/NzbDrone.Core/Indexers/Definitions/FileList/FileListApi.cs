@@ -22,5 +22,6 @@ namespace NzbDrone.Core.Indexers.FileList
         public bool DoubleUp { get; set; }
         [JsonProperty(PropertyName = "upload_date")]
         public DateTime UploadDate { get; set; }
+        public string Category { get; set; }
     }
 }

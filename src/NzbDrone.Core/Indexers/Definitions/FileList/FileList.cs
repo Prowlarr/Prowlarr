@@ -24,12 +24,12 @@ namespace NzbDrone.Core.Indexers.FileList
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new FileListRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl };
+            return new FileListRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new FileListParser(Settings, BaseUrl);
+            return new FileListParser(Settings, BaseUrl, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()

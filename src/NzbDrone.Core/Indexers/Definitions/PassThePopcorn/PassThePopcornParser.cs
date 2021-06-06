@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
                 // Remove cookie cache
-                if (indexerResponse.HttpResponse.HasHttpRedirect && indexerResponse.HttpResponse.Headers["Location"]
+                if (indexerResponse.HttpResponse.HasHttpRedirect && indexerResponse.HttpResponse.RedirectUrl
                         .ContainsIgnoreCase("login.php"))
                 {
                     CookiesUpdater(null, null);

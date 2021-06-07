@@ -26,7 +26,8 @@ class SelectIndexerRow extends Component {
     const {
       protocol,
       privacy,
-      name
+      name,
+      language
     } = this.props;
 
     return (
@@ -39,6 +40,10 @@ class SelectIndexerRow extends Component {
 
         <TableRowCell>
           {name}
+        </TableRowCell>
+
+        <TableRowCell>
+          {language}
         </TableRowCell>
 
         <TableRowCell>

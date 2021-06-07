@@ -31,6 +31,12 @@ const columns = [
     isVisible: true
   },
   {
+    name: 'language',
+    label: 'Language',
+    isSortable: true,
+    isVisible: true
+  },
+  {
     name: 'privacy',
     label: 'Privacy',
     isSortable: true,

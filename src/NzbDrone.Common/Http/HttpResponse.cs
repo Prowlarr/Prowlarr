@@ -67,7 +67,7 @@ namespace NzbDrone.Common.Http
             get
             {
                 var newUrl = Headers["Location"];
-                if (newUrl == null || newUrl.IsNullOrWhiteSpace())
+                if (newUrl == null)
                 {
                     return string.Empty;
                 }

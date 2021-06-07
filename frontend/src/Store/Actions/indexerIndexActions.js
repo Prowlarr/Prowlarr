@@ -176,7 +176,7 @@ export const SET_MOVIE_SORT = 'indexerIndex/setMovieSort';
 export const SET_MOVIE_FILTER = 'indexerIndex/setMovieFilter';
 export const SET_MOVIE_VIEW = 'indexerIndex/setMovieView';
 export const SET_MOVIE_TABLE_OPTION = 'indexerIndex/setMovieTableOption';
-export const SAVE_MOVIE_EDITOR = 'indexerIndex/saveMovieEditor';
+export const SAVE_INDEXER_EDITOR = 'indexerIndex/saveIndexerEditor';
 export const BULK_DELETE_INDEXERS = 'indexerIndex/bulkDeleteIndexers';
 
 //
@@ -186,14 +186,14 @@ export const setMovieSort = createAction(SET_MOVIE_SORT);
 export const setMovieFilter = createAction(SET_MOVIE_FILTER);
 export const setMovieView = createAction(SET_MOVIE_VIEW);
 export const setMovieTableOption = createAction(SET_MOVIE_TABLE_OPTION);
-export const saveMovieEditor = createThunk(SAVE_MOVIE_EDITOR);
+export const saveIndexerEditor = createThunk(SAVE_INDEXER_EDITOR);
 export const bulkDeleteIndexers = createThunk(BULK_DELETE_INDEXERS);
 
 //
 // Action Handlers
 
 export const actionHandlers = handleThunks({
-  [SAVE_MOVIE_EDITOR]: function(getState, payload, dispatch) {
+  [SAVE_INDEXER_EDITOR]: function(getState, payload, dispatch) {
     dispatch(set({
       section,
       isSaving: true

@@ -10,15 +10,15 @@ function createMapStateToProps() {
     (state, { indexerIds }) => indexerIds,
     createAllIndexersSelector(),
     createTagsSelector(),
-    (indexerIds, allMovies, tagList) => {
-      const movies = _.intersectionWith(allMovies, indexerIds, (s, id) => {
+    (indexerIds, allIndexers, tagList) => {
+      const indexers = _.intersectionWith(allIndexers, indexerIds, (s, id) => {
         return s.id === id;
       });
 
-      const movieTags = _.uniq(_.concat(..._.map(movies, 'tags')));
+      const indexerTags = _.uniq(_.concat(..._.map(indexers, 'tags')));
 
       return {
-        movieTags,
+        indexerTags,
         tagList
       };
     }

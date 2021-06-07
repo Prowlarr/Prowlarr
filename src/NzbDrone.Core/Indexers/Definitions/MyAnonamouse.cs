@@ -375,7 +375,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             MamId = "";
         }
 
-        [FieldDefinition(1, Label = "Mam Id", HelpText = "Mam Session Id")]
+        [FieldDefinition(1, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Profile -> Security)")]
         public string MamId { get; set; }
 
         [FieldDefinition(2, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]

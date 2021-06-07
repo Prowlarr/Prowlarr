@@ -120,6 +120,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(86, NewznabStandardCategory.PC0day, "Appz/Non-English");
             caps.Categories.AddCategoryMapping(64, NewznabStandardCategory.AudioAudiobook, "AudioBook");
             caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.Books, "Books");
+            caps.Categories.AddCategoryMapping(102, NewznabStandardCategory.Books, "Books/Non-English");
             caps.Categories.AddCategoryMapping(94, NewznabStandardCategory.BooksComics, "Books/Comics");
             caps.Categories.AddCategoryMapping(95, NewznabStandardCategory.BooksOther, "Books/Educational");
             caps.Categories.AddCategoryMapping(98, NewznabStandardCategory.Other, "Other/Fonts");

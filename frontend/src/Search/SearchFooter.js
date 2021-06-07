@@ -39,7 +39,7 @@ class SearchFooter extends Component {
       searchQuery
     } = this.state;
 
-    if (searchQuery !== '' || searchCategories !== [] || searchIndexerIds !== []) {
+    if (searchQuery !== '' || searchCategories.length > 0 || searchIndexerIds.length > 0) {
       this.onSearchPress();
     }
 

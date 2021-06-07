@@ -25,7 +25,7 @@ function NotificationEventItems(props) {
       <FormLabel>{translate('NotificationTriggers')}</FormLabel>
       <div>
         <FormInputHelpText
-          text={translate('NotifcationTriggersHelpText')}
+          text={translate('NotificationTriggersHelpText')}
           link="https://wikijs.servarr.com/prowlarr/settings#connections"
         />
         <div className={styles.events}>

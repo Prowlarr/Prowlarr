@@ -297,7 +297,7 @@
     "SettingsFilterSentryEventsHelpText": "Filtrar eventos de erro de usuário conhecidos para que não sejam enviados para análise",
     "SettingsIndexerLogging": "Registro em log avançado do indexador",
     "SettingsIndexerLoggingHelpText": "Registrar dados adicionar do indexador, incluindo resposta",
-    "SettingsLogRotate": "Registrar rotação",
+    "SettingsLogRotate": "Rotação de logs",
     "SettingsLogSql": "Registrar SQL",
     "SettingsLongDateFormat": "Formato longo da data",
     "SettingsShortDateFormat": "Formato curto da data",
@@ -372,5 +372,16 @@
     "EditAppProfile": "Editar perfil do aplicativo",
     "AppProfiles": "Perfis de aplicativo",
     "AddAppProfile": "Adicionar perfil de sincronização do aplicativo",
-    "AppProfile": "Perfil do aplicativo"
+    "AppProfile": "Perfil do aplicativo",
+    "Wiki": "Wiki",
+    "RSS": "RSS",
+    "RedirectHelpText": "Redirecionar as solicitações de download de entrada para o indexador, em vez de por proxy usando o Prowlarr",
+    "Redirect": "Redirecionar",
+    "Reddit": "Reddit",
+    "InteractiveSearch": "Pesquisa interativa",
+    "HomePage": "Página inicial",
+    "FeatureRequests": "Solicitações de recursos",
+    "Discord": "Discord",
+    "AutomaticSearch": "Pesquisa automática",
+    "AppProfileSelectHelpText": "Os perfis de aplicativos são usados para controlar as configurações de RSS, Pesquisa automática e Pesquisa interativa ao sincronizar o aplicativo"
 }

@@ -878,7 +878,7 @@
     "EnableRss": "Activer RSS",
     "EnableIndexer": "Activer l'indexeur",
     "EditAppProfile": "Modifier profil de l'App",
-    "AppProfiles": "Profils d'App",
+    "AppProfiles": "Profils d'application",
     "AddAppProfile": "Ajouter un profil de synchronisation d'App",
     "DevelopmentSettings": "Paramètres de développement",
     "DeleteApplicationMessageText": "Etes-vous sûr de vouloir supprimer l'application '{0}' ?",

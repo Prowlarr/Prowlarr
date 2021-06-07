@@ -413,6 +413,8 @@ namespace NzbDrone.Core.Indexers
 
             request.HttpRequest.AllowAutoRedirect = FollowRedirect;
 
+            var originalUrl = request.Url;
+
             Cookies = GetCookies();
 
             if (Cookies != null)
@@ -433,6 +435,7 @@ namespace NzbDrone.Core.Indexers
 
                 await DoLogin();
 
+                request.HttpRequest.Url = originalUrl;
                 ModifyRequest(request);
 
                 response = await _httpClient.ExecuteAsync(request.HttpRequest);

@@ -42,6 +42,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new IPTorrentsParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
+        protected override IDictionary<string, string> GetCookies()
+        {
+            return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -172,11 +177,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             searchUrl = searchUrl + "?" + qc.GetQueryString();
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-
-            foreach (var cookie in CookieUtil.CookieHeaderToDictionary(Settings.Cookie))
-            {
-                request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
-            }
 
             yield return request;
         }

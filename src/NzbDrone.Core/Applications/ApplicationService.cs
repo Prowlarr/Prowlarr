@@ -8,6 +8,7 @@ using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Profiles;
 using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Applications
@@ -23,21 +24,30 @@ namespace NzbDrone.Core.Applications
         private readonly IApplicationFactory _applicationsFactory;
         private readonly IAppIndexerMapService _appIndexerMapService;
         private readonly IIndexerFactory _indexerFactory;
+        private readonly IProfileService _profileService;
         private readonly IApplicationStatusService _applicationStatusService;
         private readonly Logger _logger;
 
-        public ApplicationService(IApplicationFactory applicationsFactory, IApplicationStatusService applicationStatusService, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
+        public ApplicationService(IApplicationFactory applicationsFactory, IApplicationStatusService applicationStatusService, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, IProfileService profileService, Logger logger)
         {
             _applicationsFactory = applicationsFactory;
             _applicationStatusService = applicationStatusService;
             _appIndexerMapService = appIndexerMapService;
             _indexerFactory = indexerFactory;
+            _profileService = profileService;
             _logger = logger;
         }
 
         public void HandleAsync(ProviderAddedEvent<IApplication> message)
         {
             var appDefinition = (ApplicationDefinition)message.Definition;
+
+            var profiles = _profileService.All();
+
+            foreach (var profile in profiles)
+            {
+                profile.ApplicationIds.Add(appDefinition.Id);
+            }
 
             if (appDefinition.Enable)
             {
@@ -50,11 +60,16 @@ namespace NzbDrone.Core.Applications
 
         public void HandleAsync(ProviderAddedEvent<IIndexer> message)
         {
+            var definition = (IndexerDefinition)message.Definition;
+
             var enabledApps = _applicationsFactory.SyncEnabled();
 
             foreach (var app in enabledApps)
             {
-                ExecuteAction(a => a.AddIndexer((IndexerDefinition)message.Definition), app);
+                if (definition.AppProfiles != null && definition.AppProfiles.Any(x => x.ApplicationIds.Contains(app.Definition.Id)))
+                {
+                    ExecuteAction(a => a.AddIndexer(definition), app);
+                }
             }
         }
 
@@ -131,19 +146,19 @@ namespace NzbDrone.Core.Applications
                 {
                     var definition = indexer;
 
-                    if (indexerMappings.Any(x => x.IndexerId == definition.Id))
+                    if (indexerMappings.Any(x => x.IndexerId == definition.Id) && definition.AppProfiles != null)
                     {
-                        if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync)
+                        if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync && definition.AppProfiles.Any(p => p.ApplicationIds.Contains(app.Definition.Id)))
                         {
                             ExecuteAction(a => a.UpdateIndexer(definition), app);
                         }
                     }
                     else
                     {
-                        if (indexer.Enable)
-                        {
+                         if (indexer.Enable && definition.AppProfiles != null && definition.AppProfiles.Any(p => p.ApplicationIds.Contains(app.Definition.Id)))
+                         {
                             ExecuteAction(a => a.AddIndexer(definition), app);
-                        }
+                         }
                     }
                 }
 
@@ -154,6 +169,19 @@ namespace NzbDrone.Core.Applications
                         if (!indexers.Any(x => x.Id == mapping.IndexerId))
                         {
                             _logger.Info("Indexer with the ID {0} was found within {1} but is no longer defined within Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
+                            ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
+                        }
+
+                        if (indexers.Where(x => x.Id == mapping.IndexerId).Any(x => x.AppProfiles == null))
+                        {
+                            _logger.Info("Indexer with the ID {0} was found within {1} but is no longer wanted via the AppProfiles set, this is being removed", mapping.IndexerId, app.Name);
+                            ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
+                            continue;
+                        }
+
+                        if (indexers.Where(x => x.Id == mapping.IndexerId).Any(x => !x.AppProfiles.Any(p => p.ApplicationIds.Contains(mapping.AppId))))
+                        {
+                            _logger.Info("Indexer with the ID {0} was found within {1} but is no longer wanted via the AppProfiles set, this is being removed", mapping.IndexerId, app.Name);
                             ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
                         }
                     }

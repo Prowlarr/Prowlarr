@@ -23,7 +23,7 @@ namespace Prowlarr.Api.V1.Indexers
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public bool SupportsRedirect { get; set; }
-        public int AppProfileId { get; set; }
+        public List<int> AppProfileIds { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
         public IndexerCapabilityResource Capabilities { get; set; }
@@ -73,7 +73,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
 
             resource.InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported-indexers#{0}", infoLinkName.ToLower().Replace(' ', '-'));
-            resource.AppProfileId = definition.AppProfileId;
+            resource.AppProfileIds = definition.AppProfileIds;
             resource.IndexerUrls = definition.IndexerUrls;
             resource.Description = definition.Description;
             resource.Language = definition.Language;
@@ -127,7 +127,7 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
-            definition.AppProfileId = resource.AppProfileId;
+            definition.AppProfileIds = resource.AppProfileIds;
             definition.Enable = resource.Enable;
             definition.Redirect = resource.Redirect;
             definition.IndexerUrls = resource.IndexerUrls;

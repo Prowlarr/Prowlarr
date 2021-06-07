@@ -23,7 +23,7 @@ class IndexerEditorFooter extends Component {
 
     this.state = {
       enable: NO_CHANGE,
-      appProfileId: NO_CHANGE,
+      appProfileIds: NO_CHANGE,
       savingTags: false,
       isDeleteMovieModalOpen: false,
       isTagsModalOpen: false
@@ -39,7 +39,7 @@ class IndexerEditorFooter extends Component {
     if (prevProps.isSaving && !isSaving && !saveError) {
       this.setState({
         enable: NO_CHANGE,
-        appProfileId: NO_CHANGE,
+        appProfileIds: NO_CHANGE,
         savingTags: false
       });
     }
@@ -102,7 +102,7 @@ class IndexerEditorFooter extends Component {
 
     const {
       enable,
-      appProfileId,
+      appProfileIds,
       savingTags,
       isTagsModalOpen,
       isDeleteMovieModalOpen
@@ -134,12 +134,12 @@ class IndexerEditorFooter extends Component {
         <div className={styles.inputContainer}>
           <IndexerEditorFooterLabel
             label={translate('AppProfile')}
-            isSaving={isSaving && appProfileId !== NO_CHANGE}
+            isSaving={isSaving && appProfileIds !== NO_CHANGE}
           />
 
           <AppProfileSelectInputConnector
-            name="appProfileId"
-            value={appProfileId}
+            name="appProfileIds"
+            value={appProfileIds}
             includeNoChange={true}
             isDisabled={!selectedCount}
             onChange={this.onInputChange}

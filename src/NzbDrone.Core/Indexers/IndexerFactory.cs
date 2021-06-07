@@ -8,6 +8,7 @@ using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Profiles;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -24,6 +25,7 @@ namespace NzbDrone.Core.Indexers
         private readonly IIndexerDefinitionUpdateService _definitionService;
         private readonly INewznabCapabilitiesProvider _newznabCapabilitiesProvider;
         private readonly IIndexerStatusService _indexerStatusService;
+        private readonly IAppProfileRepository _profileRepository;
         private readonly Logger _logger;
 
         public IndexerFactory(IIndexerDefinitionUpdateService definitionService,
@@ -32,6 +34,7 @@ namespace NzbDrone.Core.Indexers
                               IIndexerRepository providerRepository,
                               IEnumerable<IIndexer> providers,
                               IServiceProvider container,
+                              IAppProfileRepository profileRepository,
                               IEventAggregator eventAggregator,
                               Logger logger)
             : base(providerRepository, providers, container, eventAggregator, logger)
@@ -39,6 +42,7 @@ namespace NzbDrone.Core.Indexers
             _definitionService = definitionService;
             _indexerStatusService = indexerStatusService;
             _newznabCapabilitiesProvider = newznabCapabilitiesProvider;
+            _profileRepository = profileRepository;
             _logger = logger;
         }
 
@@ -52,6 +56,11 @@ namespace NzbDrone.Core.Indexers
                 {
                     MapCardigannDefinition(definition);
                 }
+
+                if (definition.AppProfileIds != null)
+                {
+                    definition.AppProfiles = _profileRepository.All().Where(x => definition.AppProfileIds.Contains(x.Id)).ToList();
+                }
             }
 
             return definitions;
@@ -64,6 +73,11 @@ namespace NzbDrone.Core.Indexers
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
             {
                 MapCardigannDefinition(definition);
+            }
+
+            if (definition.AppProfileIds != null)
+            {
+                definition.AppProfiles = _profileRepository.All().Where(x => definition.AppProfileIds.Contains(x.Id)).ToList();
             }
 
             return definition;
@@ -180,6 +194,11 @@ namespace NzbDrone.Core.Indexers
                 definition.Encoding = provider.Encoding;
                 definition.Language = provider.Language;
                 definition.Capabilities = provider.Capabilities;
+            }
+
+            if (definition.AppProfileIds == null)
+            {
+                definition.AppProfileIds = new List<int>();
             }
         }
 

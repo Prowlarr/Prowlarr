@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
+using NzbDrone.Core.Applications;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Profiles
 {
@@ -19,19 +21,34 @@ namespace NzbDrone.Core.Profiles
     }
 
     public class AppSyncProfileService : IProfileService,
-        IHandle<ApplicationStartedEvent>
+        IHandle<ApplicationStartedEvent>,
+        IHandleAsync<ProviderDeletedEvent<IApplication>>
     {
         private readonly IAppProfileRepository _profileRepository;
+        private readonly IApplicationFactory _applicationFactory;
         private readonly IIndexerFactory _indexerFactory;
         private readonly Logger _logger;
 
         public AppSyncProfileService(IAppProfileRepository profileRepository,
+                              IApplicationFactory applicationFactory,
                               IIndexerFactory indexerFactory,
                               Logger logger)
         {
             _profileRepository = profileRepository;
+            _applicationFactory = applicationFactory;
             _indexerFactory = indexerFactory;
             _logger = logger;
+        }
+
+        public void HandleAsync(ProviderDeletedEvent<IApplication> message)
+        {
+            var profiles = _profileRepository.All().Where(x => x.ApplicationIds.Contains(message.ProviderId));
+
+            foreach (var profile in profiles)
+            {
+                profile.ApplicationIds.Remove(message.ProviderId);
+                Update(profile);
+            }
         }
 
         public AppSyncProfile Add(AppSyncProfile profile)
@@ -46,7 +63,7 @@ namespace NzbDrone.Core.Profiles
 
         public void Delete(int id)
         {
-            if (_indexerFactory.All().Any(c => c.AppProfileId == id))
+            if (_indexerFactory.All().Any(c => c.AppProfileIds.Contains(id)))
             {
                 throw new ProfileInUseException(id);
             }
@@ -88,7 +105,8 @@ namespace NzbDrone.Core.Profiles
                 Name = name,
                 EnableAutomaticSearch = true,
                 EnableInteractiveSearch = true,
-                EnableRss = true
+                EnableRss = true,
+                ApplicationIds = _applicationFactory.All().Select(a => a.Id).ToList()
             };
 
             return qualityProfile;

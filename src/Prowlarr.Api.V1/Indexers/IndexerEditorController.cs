@@ -34,9 +34,9 @@ namespace Prowlarr.Api.V1.Indexers
                     indexer.Enable = bool.Parse(resource.Enable);
                 }
 
-                if (resource.AppProfileId.HasValue)
+                if (resource.AppProfileIds.Any())
                 {
-                    indexer.AppProfileId = resource.AppProfileId.Value;
+                    indexer.AppProfileIds = resource.AppProfileIds;
                 }
 
                 if (resource.Tags != null)

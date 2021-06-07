@@ -38,6 +38,7 @@ class EditAppProfileModalContent extends Component {
     const {
       id,
       name,
+      applicationIds,
       enableRss,
       enableInteractiveSearch,
       enableAutomaticSearch
@@ -78,6 +79,20 @@ class EditAppProfileModalContent extends Component {
                       type={inputTypes.TEXT}
                       name="name"
                       {...name}
+                      onChange={onInputChange}
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <FormLabel>
+                      {translate('Applications')}
+                    </FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.APPLICATION_SELECT}
+                      name="applicationIds"
+                      {...applicationIds}
+                      helpText={translate('ApplicationSelectHelpText')}
                       onChange={onInputChange}
                     />
                   </FormGroup>

@@ -24,7 +24,7 @@ function AppProfileNameConnector({ name, ...otherProps }) {
 }
 
 AppProfileNameConnector.propTypes = {
-  appProfileId: PropTypes.number.isRequired,
+  appProfileIds: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired
 };
 

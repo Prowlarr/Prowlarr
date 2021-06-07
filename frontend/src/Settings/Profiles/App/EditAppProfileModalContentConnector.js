@@ -10,10 +10,10 @@ import EditAppProfileModalContent from './EditAppProfileModalContent';
 function createMapStateToProps() {
   return createSelector(
     createProviderSettingsSelector('appProfiles'),
-    createProfileInUseSelector('appProfileId'),
-    (appProfile, isInUse) => {
+    createProfileInUseSelector('appProfileIds'),
+    (appProfiles, isInUse) => {
       return {
-        ...appProfile,
+        ...appProfiles,
         isInUse
       };
     }

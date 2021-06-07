@@ -75,7 +75,7 @@ export const defaultState = {
       isVisible: true
     },
     {
-      name: 'appProfileId',
+      name: 'appProfileIds',
       label: translate('AppProfile'),
       isSortable: true,
       isVisible: true
@@ -145,7 +145,7 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.PROTOCOL
     },
     {
-      name: 'appProfileId',
+      name: 'appProfileIds',
       label: translate('AppProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.APP_PROFILE

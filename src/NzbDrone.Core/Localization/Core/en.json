@@ -22,6 +22,7 @@
   "AppDataDirectory": "AppData directory",
   "AppDataLocationHealthCheckMessage": "Updating will not be possible to prevent deleting AppData on Update",
   "Applications": "Applications",
+  "ApplicationSelectHelpText": "Will be used to apply settings to indexers within the selected applications",
   "ApplicationStatusCheckAllClientMessage": "All applications are unavailable due to failures",
   "ApplicationStatusCheckSingleClientMessage": "Applications unavailable due to failures: {0}",
   "Apply": "Apply",

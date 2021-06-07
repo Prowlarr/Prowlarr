@@ -79,7 +79,7 @@ class IndexerIndexRow extends Component {
       privacy,
       priority,
       status,
-      appProfile,
+      appProfiles,
       added,
       capabilities,
       columns,
@@ -184,13 +184,14 @@ class IndexerIndexRow extends Component {
               );
             }
 
-            if (column.name === 'appProfileId') {
+            if (column.name === 'appProfileIds') {
+              const joinedAppProfiles = appProfiles.map((profile) => profile.name).join(', ');
               return (
                 <VirtualTableRowCell
                   key={name}
                   className={styles[column.name]}
                 >
-                  {appProfile.name}
+                  {joinedAppProfiles}
                 </VirtualTableRowCell>
               );
             }
@@ -296,7 +297,7 @@ IndexerIndexRow.propTypes = {
   name: PropTypes.string.isRequired,
   enable: PropTypes.bool.isRequired,
   redirect: PropTypes.bool.isRequired,
-  appProfile: PropTypes.object.isRequired,
+  appProfiles: PropTypes.arrayOf(PropTypes.object).isRequired,
   status: PropTypes.object,
   capabilities: PropTypes.object.isRequired,
   added: PropTypes.string.isRequired,

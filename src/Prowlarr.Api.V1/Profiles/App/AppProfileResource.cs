@@ -11,6 +11,7 @@ namespace Prowlarr.Api.V1.Profiles.App
         public bool EnableRss { get; set; }
         public bool EnableInteractiveSearch { get; set; }
         public bool EnableAutomaticSearch { get; set; }
+        public List<int> ApplicationIds { get; set; }
     }
 
     public static class ProfileResourceMapper
@@ -28,7 +29,8 @@ namespace Prowlarr.Api.V1.Profiles.App
                 Name = model.Name,
                 EnableRss = model.EnableRss,
                 EnableInteractiveSearch = model.EnableInteractiveSearch,
-                EnableAutomaticSearch = model.EnableAutomaticSearch
+                EnableAutomaticSearch = model.EnableAutomaticSearch,
+                ApplicationIds = model.ApplicationIds
             };
         }
 
@@ -45,7 +47,8 @@ namespace Prowlarr.Api.V1.Profiles.App
                 Name = resource.Name,
                 EnableRss = resource.EnableRss,
                 EnableInteractiveSearch = resource.EnableInteractiveSearch,
-                EnableAutomaticSearch = resource.EnableAutomaticSearch
+                EnableAutomaticSearch = resource.EnableAutomaticSearch,
+                ApplicationIds = resource.ApplicationIds
             };
         }
 

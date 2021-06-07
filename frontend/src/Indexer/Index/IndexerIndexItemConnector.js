@@ -26,7 +26,7 @@ function createMapStateToProps() {
     createUISettingsSelector(),
     (
       movie,
-      appProfile,
+      appProfiles,
       status,
       showSearchAction,
       uiSettings
@@ -43,7 +43,7 @@ function createMapStateToProps() {
 
       return {
         ...movie,
-        appProfile,
+        appProfiles,
         status,
         showSearchAction,
         longDateFormat: uiSettings.longDateFormat,

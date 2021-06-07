@@ -58,6 +58,7 @@ SelectIndexerRow.propTypes = {
   name: PropTypes.string.isRequired,
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
+  language: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
   onIndexerSelect: PropTypes.func.isRequired
 };

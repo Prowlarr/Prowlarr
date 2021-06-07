@@ -3,7 +3,7 @@
 We're always looking for people to help make Prowlarr even better, there are a number of ways to contribute.
 
 ## Documentation ##
-Setup guides, FAQ, the more information we have on the [wiki](https://wikijs.servarr.com/Prowlarr) the better.
+Setup guides, FAQ, the more information we have on the [wiki](https://wikijs.servarr.com/prowlarr) the better.
 
 ## Development ##
 

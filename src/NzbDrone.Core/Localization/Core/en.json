@@ -254,6 +254,8 @@
   "Queue": "Queue",
   "ReadTheWikiForMoreInformation": "Read the Wiki for more information",
   "Reddit": "Reddit",
+  "Redirect": "Redirect",
+  "RedirectHelpText": "Redirect incoming download requests for indexer instead of Proxying using Prowlarr",
   "Refresh": "Refresh",
   "RefreshMovie": "Refresh movie",
   "ReleaseBranchCheckOfficialBranchMessage": "Branch {0} is not a valid Prowlarr release branch, you will not receive updates",

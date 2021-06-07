@@ -11,6 +11,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "AnimeWorld";
         public override string BaseUrl => "https://animeworld.cx/";
+        public override string Description => "AnimeWorld (AW) is a GERMAN Private site for ANIME / MANGA / HENTAI";
+        public override string Language => "de-de";
 
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public AnimeWorld(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

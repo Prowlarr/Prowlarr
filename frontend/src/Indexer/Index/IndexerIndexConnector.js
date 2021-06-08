@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import withScrollPosition from 'Components/withScrollPosition';
 import { testAllIndexers } from 'Store/Actions/indexerActions';
-import { saveMovieEditor, setMovieFilter, setMovieSort, setMovieTableOption } from 'Store/Actions/indexerIndexActions';
+import { saveIndexerEditor, setMovieFilter, setMovieSort, setMovieTableOption } from 'Store/Actions/indexerIndexActions';
 import scrollPositions from 'Store/scrollPositions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import createIndexerClientSideCollectionItemsSelector from 'Store/Selectors/createIndexerClientSideCollectionItemsSelector';
@@ -40,8 +40,8 @@ function createMapDispatchToProps(dispatch, props) {
       dispatch(setMovieFilter({ selectedFilterKey }));
     },
 
-    dispatchSaveMovieEditor(payload) {
-      dispatch(saveMovieEditor(payload));
+    dispatchSaveIndexerEditor(payload) {
+      dispatch(saveIndexerEditor(payload));
     },
 
     onTestAllPress() {
@@ -56,7 +56,7 @@ class IndexerIndexConnector extends Component {
   // Listeners
 
   onSaveSelected = (payload) => {
-    this.props.dispatchSaveMovieEditor(payload);
+    this.props.dispatchSaveIndexerEditor(payload);
   }
 
   onScroll = ({ scrollTop }) => {
@@ -79,7 +79,7 @@ class IndexerIndexConnector extends Component {
 
 IndexerIndexConnector.propTypes = {
   isSmallScreen: PropTypes.bool.isRequired,
-  dispatchSaveMovieEditor: PropTypes.func.isRequired,
+  dispatchSaveIndexerEditor: PropTypes.func.isRequired,
   items: PropTypes.arrayOf(PropTypes.object)
 };
 

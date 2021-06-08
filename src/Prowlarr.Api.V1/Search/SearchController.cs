@@ -78,19 +78,14 @@ namespace Prowlarr.Api.V1.Search
         [HttpGet]
         public Task<List<SearchResource>> GetAll(string query, [FromQuery] List<int> indexerIds, [FromQuery] List<int> categories)
         {
-            if (query.IsNotNullOrWhiteSpace())
+            if (indexerIds.Any())
             {
-                if (indexerIds.Any())
-                {
-                    return GetSearchReleases(query, indexerIds, categories);
-                }
-                else
-                {
-                    return GetSearchReleases(query, null, categories);
-                }
+                return GetSearchReleases(query, indexerIds, categories);
             }
-
-            return Task.FromResult(new List<SearchResource>());
+            else
+            {
+                return GetSearchReleases(query, null, categories);
+            }
         }
 
         private async Task<List<SearchResource>> GetSearchReleases(string query, List<int> indexerIds, List<int> categories)

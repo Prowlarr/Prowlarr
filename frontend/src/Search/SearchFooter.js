@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
 import NewznabCategorySelectInputConnector from 'Components/Form/NewznabCategorySelectInputConnector';
 import TextInput from 'Components/Form/TextInput';
+import keyboardShortcuts from 'Components/keyboardShortcuts';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import SearchFooterLabel from './SearchFooterLabel';
@@ -38,9 +39,11 @@ class SearchFooter extends Component {
       searchQuery
     } = this.state;
 
-    if (searchQuery !== '' || searchCategories !== [] || searchIndexerIds !== []) {
+    if (searchQuery !== '' || searchCategories.length > 0 || searchIndexerIds.length > 0) {
       this.onSearchPress();
     }
+
+    this.props.bindShortcut('enter', this.onSearchPress, { isGlobal: true });
   }
 
   componentDidUpdate(prevProps) {
@@ -114,6 +117,7 @@ class SearchFooter extends Component {
 
           <TextInput
             name='searchQuery'
+            autoFocus={true}
             value={searchQuery}
             isDisabled={isFetching}
             onChange={onInputChange}
@@ -181,7 +185,8 @@ SearchFooter.propTypes = {
   onSearchPress: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,
-  searchError: PropTypes.object
+  searchError: PropTypes.object,
+  bindShortcut: PropTypes.func.isRequired
 };
 
-export default SearchFooter;
+export default keyboardShortcuts(SearchFooter);

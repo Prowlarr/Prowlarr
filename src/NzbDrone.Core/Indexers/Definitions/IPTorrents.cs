@@ -42,6 +42,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new IPTorrentsParser(Settings, Capabilities.Categories, BaseUrl);
         }
 
+        protected override IDictionary<string, string> GetCookies()
+        {
+            return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -120,6 +125,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(86, NewznabStandardCategory.PC0day, "Appz/Non-English");
             caps.Categories.AddCategoryMapping(64, NewznabStandardCategory.AudioAudiobook, "AudioBook");
             caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.Books, "Books");
+            caps.Categories.AddCategoryMapping(102, NewznabStandardCategory.Books, "Books/Non-English");
             caps.Categories.AddCategoryMapping(94, NewznabStandardCategory.BooksComics, "Books/Comics");
             caps.Categories.AddCategoryMapping(95, NewznabStandardCategory.BooksOther, "Books/Educational");
             caps.Categories.AddCategoryMapping(98, NewznabStandardCategory.Other, "Other/Fonts");
@@ -171,11 +177,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             searchUrl = searchUrl + "?" + qc.GetQueryString();
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-
-            foreach (var cookie in CookieUtil.CookieHeaderToDictionary(Settings.Cookie))
-            {
-                request.HttpRequest.Cookies.Add(cookie.Key, cookie.Value);
-            }
 
             yield return request;
         }

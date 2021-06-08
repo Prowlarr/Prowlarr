@@ -50,7 +50,7 @@ class TagsModalContent extends Component {
 
   render() {
     const {
-      movieTags,
+      indexerTags,
       tagList,
       onModalClose
     } = this.props;
@@ -108,7 +108,7 @@ class TagsModalContent extends Component {
 
               <div className={styles.result}>
                 {
-                  movieTags.map((t) => {
+                  indexerTags.map((t) => {
                     const tag = _.find(tagList, { id: t });
 
                     if (!tag) {
@@ -140,7 +140,7 @@ class TagsModalContent extends Component {
                           return null;
                         }
 
-                        if (movieTags.indexOf(t) > -1) {
+                        if (indexerTags.indexOf(t) > -1) {
                           return null;
                         }
 
@@ -179,7 +179,7 @@ class TagsModalContent extends Component {
 }
 
 TagsModalContent.propTypes = {
-  movieTags: PropTypes.arrayOf(PropTypes.number).isRequired,
+  indexerTags: PropTypes.arrayOf(PropTypes.number).isRequired,
   tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onModalClose: PropTypes.func.isRequired,
   onApplyTagsPress: PropTypes.func.isRequired

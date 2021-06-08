@@ -73,7 +73,7 @@ class HistoryOptions extends Component {
 }
 
 HistoryOptions.propTypes = {
-  historyCleanupDays: PropTypes.bool.isRequired,
+  historyCleanupDays: PropTypes.number.isRequired,
   dispatchSaveGeneralSettings: PropTypes.func.isRequired
 };
 

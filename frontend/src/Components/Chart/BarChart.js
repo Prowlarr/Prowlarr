@@ -23,6 +23,16 @@ class BarChart extends Component {
     this.myChart = new Chart(this.canvasRef.current, {
       type: 'bar',
       options: {
+        x: {
+          ticks: {
+            stepSize: 1
+          }
+        },
+        y: {
+          ticks: {
+            stepSize: 1
+          }
+        },
         indexAxis: this.props.horizontal ? 'y' : 'x',
         maintainAspectRatio: false,
         plugins: {

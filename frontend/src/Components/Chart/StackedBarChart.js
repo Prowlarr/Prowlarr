@@ -16,10 +16,16 @@ class StackedBarChart extends Component {
         maintainAspectRatio: false,
         scales: {
           x: {
-            stacked: true
+            stacked: true,
+            ticks: {
+              stepSize: this.props.stepSize
+            }
           },
           y: {
-            stacked: true
+            stacked: true,
+            ticks: {
+              stepSize: this.props.stepSize
+            }
           }
         },
         plugins: {
@@ -63,11 +69,13 @@ class StackedBarChart extends Component {
 
 StackedBarChart.propTypes = {
   data: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  stepSize: PropTypes.number
 };
 
 StackedBarChart.defaultProps = {
-  title: ''
+  title: '',
+  stepSize: 1
 };
 
 export default StackedBarChart;

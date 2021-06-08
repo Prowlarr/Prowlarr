@@ -23,6 +23,16 @@ class BarChart extends Component {
     this.myChart = new Chart(this.canvasRef.current, {
       type: 'bar',
       options: {
+        x: {
+          ticks: {
+            stepSize: this.props.stepSize
+          }
+        },
+        y: {
+          ticks: {
+            stepSize: this.props.stepSize
+          }
+        },
         indexAxis: this.props.horizontal ? 'y' : 'x',
         maintainAspectRatio: false,
         plugins: {
@@ -64,7 +74,8 @@ BarChart.propTypes = {
   horizontal: PropTypes.bool,
   legend: PropTypes.bool,
   title: PropTypes.string.isRequired,
-  kind: PropTypes.oneOf(kinds.all).isRequired
+  kind: PropTypes.oneOf(kinds.all).isRequired,
+  stepSize: PropTypes.number
 };
 
 BarChart.defaultProps = {
@@ -72,7 +83,8 @@ BarChart.defaultProps = {
   horizontal: false,
   legend: false,
   title: '',
-  kind: kinds.INFO
+  kind: kinds.INFO,
+  stepSize: 1
 };
 
 export default BarChart;

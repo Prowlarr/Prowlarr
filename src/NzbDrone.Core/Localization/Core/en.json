@@ -237,6 +237,7 @@
   "PreferredSize": "Preferred Size",
   "Priority": "Priority",
   "PriorityHelpText": "Prioritize multiple Download Clients. Round-Robin is used for clients with the same priority.",
+  "Privacy": "Privacy",
   "Protocol": "Protocol",
   "ProwlarrSupportsAnyDownloadClient": "Prowlarr supports any of the download clients listed below.",
   "ProwlarrSupportsAnyIndexer": "Prowlarr supports any indexer that uses the Newznab standard, as well as other indexers listed below.",

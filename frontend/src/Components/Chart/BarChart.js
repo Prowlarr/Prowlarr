@@ -25,12 +25,12 @@ class BarChart extends Component {
       options: {
         x: {
           ticks: {
-            stepSize: 1
+            stepSize: this.props.stepSize
           }
         },
         y: {
           ticks: {
-            stepSize: 1
+            stepSize: this.props.stepSize
           }
         },
         indexAxis: this.props.horizontal ? 'y' : 'x',
@@ -74,7 +74,8 @@ BarChart.propTypes = {
   horizontal: PropTypes.bool,
   legend: PropTypes.bool,
   title: PropTypes.string.isRequired,
-  kind: PropTypes.oneOf(kinds.all).isRequired
+  kind: PropTypes.oneOf(kinds.all).isRequired,
+  stepSize: PropTypes.number
 };
 
 BarChart.defaultProps = {
@@ -82,7 +83,8 @@ BarChart.defaultProps = {
   horizontal: false,
   legend: false,
   title: '',
-  kind: kinds.INFO
+  kind: kinds.INFO,
+  stepSize: 1
 };
 
 export default BarChart;

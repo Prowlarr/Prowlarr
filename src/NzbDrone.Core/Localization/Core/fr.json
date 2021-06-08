@@ -891,5 +891,14 @@
     "AddToDownloadClient": "Ajouter un release au client",
     "AddedToDownloadClient": "Release ajoutée au client",
     "AddNewIndexer": "Ajouter un nouvel indexeur",
-    "AppProfile": "Profils d'application"
+    "AppProfile": "Profils d'application",
+    "Wiki": "Wiki",
+    "RSS": "RSS",
+    "RedirectHelpText": "Rediriger les demandes de téléchargement entrantes pour l'indexeur au lieu de proxy à l'aide de Prowlarr",
+    "Redirect": "Rediriger",
+    "Reddit": "Reddit",
+    "HomePage": "Page d'accueil",
+    "FeatureRequests": "Requêtes de nouvelles fonctionnalités",
+    "Discord": "Discord",
+    "AppProfileSelectHelpText": "Les profils d'application sont utilisés pour contrôler les paramètres RSS, Recherche automatique et Recherche interactive lors de la synchronisation de l'application"
 }

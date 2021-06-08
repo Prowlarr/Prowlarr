@@ -24,7 +24,7 @@ class UpdateChanges extends Component {
         <ul>
           {
             changes.map((change, index) => {
-              const checkChange = change.replace(/#\d{4,5}\b/g, (match, contents) => {
+              const checkChange = change.replace(/#\d{3,4,5}\b/g, (match, contents) => {
                 return `[${match}](https://github.com/Prowlarr/Prowlarr/issues/${match.substring(1)})`;
               });
 

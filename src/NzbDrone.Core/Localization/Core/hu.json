@@ -884,5 +884,14 @@
     "EditAppProfile": "App profil szerkesztése",
     "AppProfiles": "App profilok",
     "AddAppProfile": "Szinkronizálási profil hozzáadása",
-    "AppProfile": "App Profil"
+    "AppProfile": "App Profil",
+    "Wiki": "Wiki",
+    "RSS": "RSS",
+    "RedirectHelpText": "Átirányítja a bejövő letöltési kéréseket az indexelőhöz a Prowlarr használatával történő proxy helyett",
+    "Redirect": "Átirányítás",
+    "Reddit": "Reddit",
+    "HomePage": "Kezdőlap",
+    "FeatureRequests": "Funkció kérése",
+    "Discord": "Discord",
+    "AppProfileSelectHelpText": "Az alkalmazásprofilok az RSS vezérlésére szolgálnak, Automatikus keresés és Interaktív keresés beállításai az alkalmazás szinkronizálásakor"
 }

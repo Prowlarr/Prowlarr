@@ -26,7 +26,8 @@ class SelectIndexerRow extends Component {
     const {
       protocol,
       privacy,
-      name
+      name,
+      language
     } = this.props;
 
     return (
@@ -42,6 +43,10 @@ class SelectIndexerRow extends Component {
         </TableRowCell>
 
         <TableRowCell>
+          {language}
+        </TableRowCell>
+
+        <TableRowCell>
           {privacy}
         </TableRowCell>
       </TableRowButton>
@@ -53,6 +58,7 @@ SelectIndexerRow.propTypes = {
   name: PropTypes.string.isRequired,
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
+  language: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
   onIndexerSelect: PropTypes.func.isRequired
 };

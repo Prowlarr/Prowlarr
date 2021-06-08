@@ -20,19 +20,25 @@ import styles from './AddIndexerModalContent.css';
 const columns = [
   {
     name: 'protocol',
-    label: 'Protocol',
+    label: translate('Protocol'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'name',
-    label: 'Name',
+    label: translate('Name'),
+    isSortable: true,
+    isVisible: true
+  },
+  {
+    name: 'language',
+    label: translate('Language'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'privacy',
-    label: 'Privacy',
+    label: translate('Privacy'),
     isSortable: true,
     isVisible: true
   }

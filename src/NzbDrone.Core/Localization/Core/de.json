@@ -891,5 +891,9 @@
     "AddNewIndexer": "Neuen Indexer hinzufügen",
     "AddedToDownloadClient": "Release zum Client hinzugefügt",
     "AddAppProfile": "App synchronisier Profil hinzufügen",
-    "AppProfile": "App-Profil"
+    "AppProfile": "App-Profil",
+    "AppProfiles": "App-Profile",
+    "EnableRssHelpText": "RSS Feed für Indexer aktivieren",
+    "EnableRss": "RSS aktivieren",
+    "EditAppProfile": "App Profil bearbeiten"
 }

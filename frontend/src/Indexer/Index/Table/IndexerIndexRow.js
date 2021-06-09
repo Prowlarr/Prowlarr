@@ -248,7 +248,7 @@ class IndexerIndexRow extends Component {
                     className={styles.externalLink}
                     name={icons.EXTERNAL_LINK}
                     title={'Website'}
-                    to={baseUrl}
+                    to={baseUrl.replace('api.', '')}
                   />
 
                   <IconButton

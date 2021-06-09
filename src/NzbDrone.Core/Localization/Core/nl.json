@@ -851,5 +851,6 @@
     "AllIndexersHiddenDueToFilter": "Alle Indexeerders zijn verborgen door actieve filter",
     "AddToDownloadClient": "Release toevoegen aan download client",
     "AddNewIndexer": "Voeg nieuwe Indexeerder Toe",
-    "AddedToDownloadClient": "Release toegevoegd aan client"
+    "AddedToDownloadClient": "Release toegevoegd aan client",
+    "PrioritySettings": "Prioriteit"
 }

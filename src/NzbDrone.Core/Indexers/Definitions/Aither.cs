@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXX, "XXX");
             caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TVSport, "Sport");
             caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.PC, "Software/Apps");
-            caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.EBook, "Ebooks/Magazines");
+            caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.BooksEBook, "Ebooks/Magazines");
             caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.AudioAudiobook, "AudioBooks");
             caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.Other, "Education");
 
@@ -55,3 +55,4 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 }
+

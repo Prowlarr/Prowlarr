@@ -45,10 +45,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio, "Music");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "Games");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXX, "XXX");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TV/Sport, "Sport");
+            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TVSport, "Sport");
             caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.PC, "Software/Apps");
             caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.EBook, "Ebooks/Magazines");
-            caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.Audio/Audiobook, "AudioBooks");
+            caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.AudioAudiobook, "AudioBooks");
             caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.Other, "Education");
 
             return caps;

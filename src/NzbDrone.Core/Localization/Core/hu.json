@@ -918,5 +918,6 @@
     "Query": "Lekérdezés",
     "Stats": "Statisztikák",
     "Torrent": "Torrent",
-    "UnableToLoadAppProfiles": "Nem sikerült betölteni az alkalmazásprofilokat"
+    "UnableToLoadAppProfiles": "Nem sikerült betölteni az alkalmazásprofilokat",
+    "PrioritySettings": "Prioritás"
 }

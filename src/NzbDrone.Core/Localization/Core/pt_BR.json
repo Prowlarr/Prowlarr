@@ -415,5 +415,6 @@
     "AppProfileDeleteConfirm": "Tem certeza que deseja excluir {0}?",
     "Applications": "Aplicativos",
     "AddDownloadClient": "Adicionar cliente de download",
-    "CouldNotConnectSignalR": "Não é possível conectar ao SignalR, a interface não atualizará"
+    "CouldNotConnectSignalR": "Não é possível conectar ao SignalR, a interface não atualizará",
+    "PrioritySettings": "Prioridade"
 }

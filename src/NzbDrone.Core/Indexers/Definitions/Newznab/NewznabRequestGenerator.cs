@@ -241,6 +241,11 @@ namespace NzbDrone.Core.Indexers.Newznab
                 baseUrl += string.Format("&cat={0}", categoriesQuery);
             }
 
+            if (Settings.AdditionalParameters.IsNotNullOrWhiteSpace())
+            {
+                baseUrl += Settings.AdditionalParameters;
+            }
+
             if (Settings.ApiKey.IsNotNullOrWhiteSpace())
             {
                 baseUrl += "&apikey=" + Settings.ApiKey;

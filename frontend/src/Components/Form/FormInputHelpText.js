@@ -25,7 +25,7 @@ function FormInputHelpText(props) {
       isCheckInput && styles.isCheckInput
     )}
     >
-      {text}
+      <div dangerouslySetInnerHTML={{ __html: text }} />
 
       {
         link ?

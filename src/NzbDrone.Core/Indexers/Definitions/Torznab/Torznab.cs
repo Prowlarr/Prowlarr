@@ -19,12 +19,15 @@ namespace NzbDrone.Core.Indexers.Torznab
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
         public override string Name => "Torznab";
-        public override string BaseUrl => "";
+        public override string BaseUrl => GetBaseUrlFromSettings();
+        public override bool FollowRedirect => true;
+        public override bool SupportsRedirect => true;
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).LimitsDefault.Value;
+        public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
@@ -37,7 +40,42 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorznabRssParser();
+            return new TorznabRssParser(Settings);
+        }
+
+        public string GetBaseUrlFromSettings()
+        {
+            var baseUrl = "";
+
+            if (Definition == null || Settings == null || Settings.Categories == null)
+            {
+                return baseUrl;
+            }
+
+            return Settings.BaseUrl;
+        }
+
+        public IndexerCapabilities GetCapabilitiesFromSettings()
+        {
+            var caps = new IndexerCapabilities();
+
+            if (Definition == null || Settings == null || Settings.Categories == null)
+            {
+                return caps;
+            }
+
+            foreach (var category in Settings.Categories)
+            {
+                caps.Categories.AddCategoryMapping(category.Name, category);
+            }
+
+            return caps;
+        }
+
+        public override IndexerCapabilities GetCapabilities()
+        {
+            // Newznab uses different Caps per site, so we need to cache them to db on first indexer add to prevent issues with loading UI and pulling caps every time.
+            return _capabilitiesProvider.GetCapabilities(Settings);
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions
@@ -68,7 +106,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
-                Capabilities = new IndexerCapabilities()
+                Capabilities = Capabilities
             };
         }
 

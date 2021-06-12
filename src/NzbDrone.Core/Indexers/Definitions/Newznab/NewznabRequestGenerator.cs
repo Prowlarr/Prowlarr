@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.TraktId.HasValue && capabilities.MovieSearchTraktAvailable)
             {
-                parameters.Add("traktid", searchCriteria.ImdbId);
+                parameters.Add("traktid", searchCriteria.TraktId.ToString());
             }
 
             //Workaround issue with Sphinx search returning garbage results on some indexers. If we don't use id parameters, fallback to t=search

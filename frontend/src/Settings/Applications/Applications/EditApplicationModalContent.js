@@ -18,9 +18,9 @@ import translate from 'Utilities/String/translate';
 import styles from './EditApplicationModalContent.css';
 
 const syncLevelOptions = [
-  { key: 'disabled', value: 'Disabled' },
-  { key: 'addOnly', value: 'Add and Remove Only' },
-  { key: 'fullSync', value: 'Full Sync' }
+  { key: 'disabled', value: translate('Disabled') },
+  { key: 'addOnly', value: translate('AddRemoveOnly') },
+  { key: 'fullSync', value: translate('FullSync') }
 ];
 
 function EditApplicationModalContent(props) {
@@ -53,7 +53,7 @@ function EditApplicationModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? 'Edit' : 'Add'} Application`}
+        {`${id ? translate('Edit') : translate('Add')} ${translate('Application')}`}
       </ModalHeader>
 
       <ModalBody>
@@ -94,13 +94,13 @@ function EditApplicationModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>{'Sync Level'}</FormLabel>
+                <FormLabel>{translate('SyncLevel')}</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
                   values={syncLevelOptions}
                   name="syncLevel"
-                  helpText={'Sync Level'}
+                  helpText={`${translate('SyncLevelAddRemove')}<br>${translate('SyncLevelFull')}`}
                   {...syncLevel}
                   onChange={onInputChange}
                 />

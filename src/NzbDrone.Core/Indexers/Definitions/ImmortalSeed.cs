@@ -186,7 +186,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -204,7 +204,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -290,7 +290,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     catLink = catLink.Substring(catSplit + 9);
                 }
 
-                release.Category = _categories.MapTrackerCatToNewznab(catLink);
+                release.Categories = _categories.MapTrackerCatToNewznab(catLink);
 
                 var grabs = row.QuerySelector("td:nth-child(6)").TextContent;
                 release.Grabs = ParseUtil.CoerceInt(grabs);

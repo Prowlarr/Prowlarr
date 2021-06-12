@@ -43,8 +43,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             variables[".Query.Movie"] = null;
             variables[".Query.Year"] = null;
-            variables[".Query.IMDBID"] = searchCriteria.ImdbId;
-            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId?.TrimStart('t') ?? null;
+            variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
+            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
             variables[".Query.TMDBID"] = searchCriteria.TmdbId;
             variables[".Query.TraktID"] = searchCriteria.TraktId;
 
@@ -78,8 +78,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Series"] = null;
             variables[".Query.Ep"] = searchCriteria.Episode;
             variables[".Query.Season"] = searchCriteria.Season;
-            variables[".Query.IMDBID"] = searchCriteria.ImdbId;
-            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId?.Replace("tt", "") ?? null;
+            variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
+            variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
             variables[".Query.TVDBID"] = searchCriteria.TvdbId;
             variables[".Query.TVRageID"] = searchCriteria.RId;
             variables[".Query.TVMazeID"] = searchCriteria.TvMazeId;

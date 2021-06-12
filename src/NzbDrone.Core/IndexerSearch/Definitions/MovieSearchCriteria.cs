@@ -1,4 +1,5 @@
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.IndexerSearch.Definitions
 {
@@ -20,5 +21,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
                 return false;
             }
         }
+
+        public string FullImdbId => ParseUtil.GetFullImdbId(ImdbId);
     }
 }

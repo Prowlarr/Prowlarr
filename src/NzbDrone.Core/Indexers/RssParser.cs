@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Indexers
             releaseInfo.DownloadUrl = GetDownloadUrl(item);
             releaseInfo.InfoUrl = GetInfoUrl(item);
             releaseInfo.CommentUrl = GetCommentUrl(item);
-            releaseInfo.Category = GetCategory(item);
+            releaseInfo.Categories = GetCategory(item);
 
             try
             {

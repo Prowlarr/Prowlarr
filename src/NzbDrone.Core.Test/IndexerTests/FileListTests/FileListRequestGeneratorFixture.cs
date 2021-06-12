@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [Test]
         public void should_not_search_by_imdbid_if_not_supported()
         {
-            _movieSearchCriteria.ImdbId = "tt0076759";
+            _movieSearchCriteria.ImdbId = "0076759";
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
             results.GetAllTiers().Should().HaveCount(1);

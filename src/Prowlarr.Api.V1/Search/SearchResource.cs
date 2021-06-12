@@ -65,7 +65,7 @@ namespace Prowlarr.Api.V1.Search
                 CommentUrl = releaseInfo.CommentUrl,
                 DownloadUrl = releaseInfo.DownloadUrl,
                 InfoUrl = releaseInfo.InfoUrl,
-                Categories = releaseInfo.Category,
+                Categories = releaseInfo.Categories,
 
                 //ReleaseWeight
                 MagnetUrl = torrentInfo.MagnetUrl,

@@ -88,11 +88,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
                         var category = torrent.Category;
                         if (category == null || category.Contains("Select Category"))
                         {
-                            release.Category = _capabilities.Categories.MapTrackerCatToNewznab("1");
+                            release.Categories = _capabilities.Categories.MapTrackerCatToNewznab("1");
                         }
                         else
                         {
-                            release.Category = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
+                            release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
                         }
 
                         torrentInfos.Add(release);
@@ -120,11 +120,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     var category = result.Category;
                     if (category == null || category.Contains("Select Category"))
                     {
-                        release.Category = _capabilities.Categories.MapTrackerCatToNewznab("1");
+                        release.Categories = _capabilities.Categories.MapTrackerCatToNewznab("1");
                     }
                     else
                     {
-                        release.Category = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
+                        release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
                     }
 
                     torrentInfos.Add(release);

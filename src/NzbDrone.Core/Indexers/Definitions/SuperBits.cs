@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -178,7 +178,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -232,7 +232,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.MinimumRatio = 1.1;
                 release.MinimumSeedTime = 172800; // 48 hours
                 release.Title = row.name;
-                release.Category = _categories.MapTrackerCatToNewznab(row.category.ToString());
+                release.Categories = _categories.MapTrackerCatToNewznab(row.category.ToString());
                 release.Size = row.size;
                 release.Seeders = row.seeders;
                 release.Peers = row.leechers + release.Seeders;

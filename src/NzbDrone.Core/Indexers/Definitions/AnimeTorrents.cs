@@ -294,7 +294,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     rCat = rCat.Substring(rCatIdx + 4);
                 }
 
-                release.Category = _categories.MapTrackerCatToNewznab(rCat);
+                release.Categories = _categories.MapTrackerCatToNewznab(rCat);
 
                 if (row.QuerySelector("img[alt=\"Gold Torrent\"]") != null)
                 {

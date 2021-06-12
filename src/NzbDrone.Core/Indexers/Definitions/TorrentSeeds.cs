@@ -299,7 +299,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.MinimumSeedTime = 72 * 60 * 60;
                 var qCatLink = row.QuerySelector("a[href^=\"/browse_elastic.php?cat=\"]");
                 var catStr = qCatLink.GetAttribute("href").Split('=')[1];
-                release.Category = _categories.MapTrackerCatToNewznab(catStr);
+                release.Categories = _categories.MapTrackerCatToNewznab(catStr);
                 var qDetailsLink = row.QuerySelector("a[href^=\"/details.php?id=\"]");
                 var qDetailsTitle = row.QuerySelector("td:has(a[href^=\"/details.php?id=\"]) b");
                 release.Title = qDetailsTitle.TextContent.Trim();

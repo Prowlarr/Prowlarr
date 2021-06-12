@@ -200,7 +200,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -218,7 +218,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -307,7 +307,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Peers = seeders + leechers,
                     Grabs = (int)grabs,
                     Files = (int)files,
-                    Category = _categories.MapTrackerCatToNewznab(category),
+                    Categories = _categories.MapTrackerCatToNewznab(category),
                     ImdbId = imdb ?? 0,
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800, // 48 hours

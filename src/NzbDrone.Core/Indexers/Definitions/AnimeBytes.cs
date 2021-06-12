@@ -449,7 +449,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                                 Guid = guid.AbsoluteUri,
                                 DownloadUrl = linkUri.AbsoluteUri,
                                 PublishDate = publishDate,
-                                Category = category,
+                                Categories = category,
                                 Description = description,
                                 Size = size,
                                 Seeders = seeders,

@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.FileList
                     Guid = string.Format("FileList-{0}", id),
                     Title = result.Name,
                     Size = result.Size,
-                    Category = _categories.MapTrackerCatDescToNewznab(result.Category),
+                    Categories = _categories.MapTrackerCatDescToNewznab(result.Category),
                     DownloadUrl = GetDownloadUrl(id),
                     InfoUrl = GetInfoUrl(id),
                     Seeders = result.Seeders,

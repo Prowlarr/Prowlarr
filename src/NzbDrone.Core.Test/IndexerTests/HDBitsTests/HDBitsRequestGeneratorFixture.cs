@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             _movieSearchCriteria = new MovieSearchCriteria
             {
                 Categories = new int[] { 2000, 2010 },
-                ImdbId = "tt0076759"
+                ImdbId = "0076759"
             };
         }
 
@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
         public void should_search_by_imdbid_if_supported()
         {
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            var imdbQuery = int.Parse(_movieSearchCriteria.ImdbId.Substring(2));
+            var imdbQuery = int.Parse(_movieSearchCriteria.ImdbId);
 
             results.GetAllTiers().Should().HaveCount(1);
 

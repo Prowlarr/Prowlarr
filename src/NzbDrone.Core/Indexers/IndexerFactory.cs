@@ -147,7 +147,7 @@ namespace NzbDrone.Core.Indexers
             foreach (var provider in _providers)
             {
                 var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name));
+                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name || v.Name != typeof(Torznab.Torznab).Name));
 
                 foreach (IndexerDefinition definition in definitions)
                 {
@@ -256,7 +256,7 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation == typeof(Newznab.Newznab).Name)
+            if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
@@ -276,7 +276,7 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation == typeof(Newznab.Newznab).Name)
+            if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;

@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Applications.Readarr
 
             return other.EnableRss == EnableRss &&
                 other.EnableAutomaticSearch == EnableAutomaticSearch &&
-                other.EnableInteractiveSearch == EnableAutomaticSearch &&
+                other.EnableInteractiveSearch == EnableInteractiveSearch &&
                 other.Name == Name &&
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&

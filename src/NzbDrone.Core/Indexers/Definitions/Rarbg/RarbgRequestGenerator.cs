@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.ImdbId, searchCriteria.TmdbId));
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId));
             return pageableRequests;
         }
 
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId));
             return pageableRequests;
         }
 

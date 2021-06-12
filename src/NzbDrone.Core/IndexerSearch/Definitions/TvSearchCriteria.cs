@@ -19,6 +19,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string SanitizedTvSearchString => (SanitizedSearchTerm + " " + EpisodeSearchString).Trim();
         public string EpisodeSearchString => GetEpisodeSearchString();
 
+        public string FullImdbId => ParseUtil.GetFullImdbId(ImdbId);
+
         public override bool RssSearch
         {
             get

@@ -441,7 +441,7 @@ namespace NzbDrone.Core.Indexers
                 response = await _httpClient.ExecuteAsync(request.HttpRequest);
             }
 
-            // Throw any other http error we get after attempting auth
+            // Throw common http errors here before we try to parse
             if (response.HasHttpError)
             {
                 _logger.Warn("HTTP Error - {0}", response);
@@ -449,10 +449,6 @@ namespace NzbDrone.Core.Indexers
                 if ((int)response.StatusCode == 429)
                 {
                     throw new TooManyRequestsException(request.HttpRequest, response);
-                }
-                else
-                {
-                    throw new HttpException(request.HttpRequest, response);
                 }
             }
 

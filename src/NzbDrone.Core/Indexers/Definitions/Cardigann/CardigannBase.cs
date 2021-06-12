@@ -237,7 +237,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "checkbox")
                 {
-                    variables[name] = ((bool)value) ? ".True" : ".False";
+                    variables[name] = ((bool)value) ? ".True" : null;
                 }
                 else if (setting.Type == "select")
                 {

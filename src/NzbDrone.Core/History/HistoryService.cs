@@ -119,14 +119,14 @@ namespace NzbDrone.Core.History
 
             if (message.Query is MovieSearchCriteria)
             {
-                history.Data.Add("ImdbId", ((MovieSearchCriteria)message.Query).ImdbId ?? string.Empty);
+                history.Data.Add("ImdbId", ((MovieSearchCriteria)message.Query).FullImdbId ?? string.Empty);
                 history.Data.Add("TmdbId", ((MovieSearchCriteria)message.Query).TmdbId?.ToString() ?? string.Empty);
                 history.Data.Add("TraktId", ((MovieSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
             }
 
             if (message.Query is TvSearchCriteria)
             {
-                history.Data.Add("ImdbId", ((TvSearchCriteria)message.Query).ImdbId ?? string.Empty);
+                history.Data.Add("ImdbId", ((TvSearchCriteria)message.Query).FullImdbId ?? string.Empty);
                 history.Data.Add("TvdbId", ((TvSearchCriteria)message.Query).TvdbId?.ToString() ?? string.Empty);
                 history.Data.Add("TraktId", ((TvSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
                 history.Data.Add("RId", ((TvSearchCriteria)message.Query).RId?.ToString() ?? string.Empty);

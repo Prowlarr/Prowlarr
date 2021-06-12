@@ -39,20 +39,6 @@ namespace NzbDrone.Core.Parser
 
         public static bool TryCoerceLong(string str, out long result) => long.TryParse(NormalizeNumber(str), NumberStyles.Any, CultureInfo.InvariantCulture, out result);
 
-        /*
-        public static string GetArgumentFromQueryString(string url, string argument)
-        {
-            if (url == null || argument == null)
-            {
-                return null;
-            }
-
-            var qsStr = url.Split(new char[] { '?' }, 2)[1];
-            qsStr = qsStr.Split(new char[] { '#' }, 2)[0];
-            var qs = QueryHelpers.ParseQuery(qsStr);
-            return qs[argument].FirstOrDefault();
-        }*/
-
         public static long? GetLongFromString(string str)
         {
             if (str == null)
@@ -87,7 +73,7 @@ namespace NzbDrone.Core.Parser
             return int.Parse(match.Groups[1].Value, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
-        public static string GetFullImdbID(string imdbstr)
+        public static string GetFullImdbId(string imdbstr)
         {
             var imdbid = GetImdbID(imdbstr);
             if (imdbid == null)

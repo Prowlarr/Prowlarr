@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             _movieSearchCriteria = new MovieSearchCriteria
             {
                 Categories = new int[] { 2000, 2010 },
-                ImdbId = "tt0076759"
+                ImdbId = "0076759"
             };
         }
 

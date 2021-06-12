@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.FileList
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=imdb&query={0}", searchCriteria.ImdbId)));
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=imdb&query={0}", searchCriteria.FullImdbId)));
             }
             else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Indexers.FileList
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=imdb&query={0}&season={1}&episode={2}", searchCriteria.ImdbId, searchCriteria.Season, searchCriteria.Episode)));
+                pageableRequests.Add(GetRequest("search-torrents", searchCriteria.Categories, string.Format("&type=imdb&query={0}&season={1}&episode={2}", searchCriteria.FullImdbId, searchCriteria.Season, searchCriteria.Episode)));
             }
             else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {

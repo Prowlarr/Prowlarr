@@ -10,6 +10,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
@@ -49,6 +50,14 @@ namespace NzbDrone.Api.V1.Indexers
             if (requestType.IsNullOrWhiteSpace())
             {
                 throw new BadRequestException("Missing Function Parameter");
+            }
+
+            if (request.imdbid.IsNotNullOrWhiteSpace())
+            {
+                if (!int.TryParse(request.imdbid, out var imdb) || imdb == 0)
+                {
+                    throw new BadRequestException("Invalid Value for ImdbId");
+                }
             }
 
             var indexer = _indexerFactory.Get(id);

@@ -74,9 +74,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var parameters = GetBasicSearchParameters(searchCriteria.Categories);
 
-            if (searchCriteria.ImdbId != null)
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                parameters.Add("imdb", searchCriteria.ImdbId);
+                parameters.Add("imdb", searchCriteria.FullImdbId);
             }
             else
             {
@@ -103,9 +103,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var parameters = GetBasicSearchParameters(searchCriteria.Categories);
 
-            if (searchCriteria.ImdbId != null)
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                parameters.Add("imdb", searchCriteria.ImdbId);
+                parameters.Add("imdb", searchCriteria.FullImdbId);
             }
             else
             {

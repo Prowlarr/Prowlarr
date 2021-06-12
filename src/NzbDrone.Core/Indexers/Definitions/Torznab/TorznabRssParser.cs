@@ -12,9 +12,11 @@ namespace NzbDrone.Core.Indexers.Torznab
     {
         public const string ns = "{http://torznab.com/schemas/2015/feed}";
 
-        public TorznabRssParser()
+        private readonly TorznabSettings _settings;
+        public TorznabRssParser(TorznabSettings settings)
         {
             UseEnclosureUrl = true;
+            _settings = settings;
         }
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
@@ -141,6 +143,27 @@ namespace NzbDrone.Core.Indexers.Torznab
             return TryGetTorznabAttribute(item, "magneturl");
         }
 
+        protected override ICollection<IndexerCategory> GetCategory(XElement item)
+        {
+            var cats = TryGetMultipleNewznabAttributes(item, "category");
+            var results = new List<IndexerCategory>();
+
+            foreach (var cat in cats)
+            {
+                if (int.TryParse(cat, out var intCategory))
+                {
+                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
+
+                    if (indexerCat != null)
+                    {
+                        results.Add(indexerCat);
+                    }
+                }
+            }
+
+            return results;
+        }
+
         protected override int? GetSeeders(XElement item)
         {
             var seeders = TryGetTorznabAttribute(item, "seeders");
@@ -223,6 +246,23 @@ namespace NzbDrone.Core.Indexers.Torznab
             }
 
             return defaultValue;
+        }
+
+        protected List<string> TryGetMultipleNewznabAttributes(XElement item, string key)
+        {
+            var attrElements = item.Elements(ns + "attr").Where(e => e.Attribute("name").Value.Equals(key, StringComparison.OrdinalIgnoreCase));
+            var results = new List<string>();
+
+            foreach (var element in attrElements)
+            {
+                var attrValue = element.Attribute("value");
+                if (attrValue != null)
+                {
+                    results.Add(attrValue.Value);
+                }
+            }
+
+            return results;
         }
     }
 }

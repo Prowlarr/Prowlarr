@@ -194,17 +194,17 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         var cats = MapTrackerCatToNewznab(value);
                                         if (cats.Any())
                                         {
-                                            if (release.Category == null || fieldModifiers.Contains("noappend"))
+                                            if (release.Categories == null || fieldModifiers.Contains("noappend"))
                                             {
-                                                release.Category = cats;
+                                                release.Categories = cats;
                                             }
                                             else
                                             {
-                                                release.Category = release.Category.Union(cats).ToList();
+                                                release.Categories = release.Categories.Union(cats).ToList();
                                             }
                                         }
 
-                                        value = release.Category.ToString();
+                                        value = release.Categories.ToString();
                                         break;
                                     case "size":
                                         release.Size = ReleaseInfo.GetBytes(value);

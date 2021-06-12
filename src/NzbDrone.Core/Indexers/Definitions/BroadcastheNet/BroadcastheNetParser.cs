@@ -104,12 +104,12 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 torrentInfo.DownloadVolumeFactor = 0;
                 torrentInfo.MinimumRatio = 1;
 
-                torrentInfo.Category = _categories.MapTrackerCatToNewznab(torrent.Resolution);
+                torrentInfo.Categories = _categories.MapTrackerCatToNewznab(torrent.Resolution);
 
                 // Default to TV if category could not be mapped
-                if (torrentInfo.Category == null || !torrentInfo.Category.Any())
+                if (torrentInfo.Categories == null || !torrentInfo.Categories.Any())
                 {
-                    torrentInfo.Category = new List<IndexerCategory> { NewznabStandardCategory.TV };
+                    torrentInfo.Categories = new List<IndexerCategory> { NewznabStandardCategory.TV };
                 }
 
                 results.Add(torrentInfo);

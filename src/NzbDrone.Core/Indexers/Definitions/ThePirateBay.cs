@@ -239,7 +239,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var torrentItem =  new TorrentInfo
                 {
                     Title = item.Name,
-                    Category = _categories.MapTrackerCatToNewznab(item.Category.ToString()),
+                    Categories = _categories.MapTrackerCatToNewznab(item.Category.ToString()),
                     Guid = details,
                     InfoUrl = details,
                     InfoHash = item.InfoHash, // magnet link is auto generated from infohash

@@ -290,7 +290,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     catLink = catLink.Substring(catSplit + 9);
                 }
 
-                release.Category = _categories.MapTrackerCatToNewznab(catLink);
+                release.Categories = _categories.MapTrackerCatToNewznab(catLink);
 
                 var grabs = row.QuerySelector("td:nth-child(6)").TextContent;
                 release.Grabs = ParseUtil.CoerceInt(grabs);

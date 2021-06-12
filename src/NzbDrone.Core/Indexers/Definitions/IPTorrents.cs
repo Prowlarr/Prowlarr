@@ -308,7 +308,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = link.AbsoluteUri,
                     InfoUrl = details.AbsoluteUri,
                     PublishDate = publishDate,
-                    Category = cat,
+                    Categories = cat,
                     Size = size,
                     Files = files,
                     Grabs = grabs,

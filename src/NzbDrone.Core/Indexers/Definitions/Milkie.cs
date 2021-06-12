@@ -198,7 +198,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     InfoUrl = details,
                     Guid = details,
                     PublishDate = publishDate,
-                    Category = _categories.MapTrackerCatToNewznab(torrent.Category.ToString()),
+                    Categories = _categories.MapTrackerCatToNewznab(torrent.Category.ToString()),
                     Size = torrent.Size,
                     Seeders = torrent.Seeders,
                     Peers = torrent.Seeders + torrent.PartialSeeders + torrent.Leechers,

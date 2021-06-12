@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     InfoHash = row.InfoHash,
                     InfoUrl = details,
                     Guid = details,
-                    Category = cats,
+                    Categories = cats,
                     PublishDate = row.CreatedAt,
                     Size = row.FileSize,
                     Files = row.FileCount,

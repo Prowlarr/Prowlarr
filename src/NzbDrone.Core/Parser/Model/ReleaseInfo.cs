@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Parser.Model
         public ReleaseInfo()
         {
             IndexerFlags = new List<IndexerFlag>();
+            Categories = new List<IndexerCategory>();
         }
 
         public string Guid { get; set; }
@@ -37,7 +38,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Container { get; set; }
         public string Codec { get; set; }
         public string Resolution { get; set; }
-        public ICollection<IndexerCategory> Category { get; set; }
+        public ICollection<IndexerCategory> Categories { get; set; }
 
         public ICollection<IndexerFlag> IndexerFlags { get; set; }
 

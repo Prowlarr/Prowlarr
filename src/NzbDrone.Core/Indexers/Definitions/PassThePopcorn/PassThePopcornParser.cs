@@ -112,7 +112,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                             MinimumSeedTime = 345600,
                             DownloadVolumeFactor = free ? 0 : 1,
                             UploadVolumeFactor = 1,
-                            Category = new List<IndexerCategory> { NewznabStandardCategory.Movies }
+                            Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies }
                         });
                     }
                     catch (Exception e)

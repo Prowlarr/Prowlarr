@@ -209,7 +209,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     InfoHash = row.InfoHash,
                     InfoUrl = details,
                     Guid = details,
-                    Category = _categories.MapTrackerCatDescToNewznab(row.Category),
+                    Categories = _categories.MapTrackerCatDescToNewznab(row.Category),
                     PublishDate = DateTime.Parse(row.CreatedAt, CultureInfo.InvariantCulture),
                     Size = row.Size,
                     Grabs = row.Grabs,

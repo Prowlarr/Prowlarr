@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 var torrentInfo = new TorrentInfo();
 
                 torrentInfo.Guid = GetGuid(torrent);
-                torrentInfo.Category = _capabilities.Categories.MapTrackerCatDescToNewznab(torrent.category);
+                torrentInfo.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(torrent.category);
                 torrentInfo.Title = torrent.title;
                 torrentInfo.Size = torrent.size;
                 torrentInfo.DownloadUrl = torrent.download;

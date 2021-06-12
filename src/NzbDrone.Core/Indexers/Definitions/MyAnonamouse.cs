@@ -329,7 +329,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 var category = item.Category;
-                release.Category = _categories.MapTrackerCatToNewznab(category);
+                release.Categories = _categories.MapTrackerCatToNewznab(category);
 
                 release.DownloadUrl = _baseUrl + "/tor/download.php?tid=" + id;
                 release.InfoUrl = _baseUrl + "/t/" + id;

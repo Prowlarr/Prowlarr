@@ -307,7 +307,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Peers = seeders + leechers,
                     Grabs = (int)grabs,
                     Files = (int)files,
-                    Category = _categories.MapTrackerCatToNewznab(category),
+                    Categories = _categories.MapTrackerCatToNewznab(category),
                     ImdbId = imdb ?? 0,
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800, // 48 hours

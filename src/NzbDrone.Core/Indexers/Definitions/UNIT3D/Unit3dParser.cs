@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
                     InfoHash = row.Id,
                     InfoUrl = details,
                     Guid = details,
-                    Category = _categories.MapTrackerCatDescToNewznab(row.Attributes.Category),
+                    Categories = _categories.MapTrackerCatDescToNewznab(row.Attributes.Category),
                     PublishDate = DateTime.Parse(row.Attributes.CreatedAt, CultureInfo.InvariantCulture),
                     Size = row.Attributes.Size,
                     Files = row.Attributes.Files,

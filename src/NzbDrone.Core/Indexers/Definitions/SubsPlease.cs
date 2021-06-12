@@ -208,7 +208,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         InfoUrl = _baseUrl + $"shows/{r.Page}/",
                         PublishDate = r.Release_Date.DateTime,
                         Files = 1,
-                        Category = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
+                        Categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
                         Seeders = 1,
                         Peers = 2,
                         MinimumRatio = 1,

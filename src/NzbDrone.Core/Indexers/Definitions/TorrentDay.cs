@@ -245,7 +245,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = link.AbsoluteUri,
                     InfoUrl = details.AbsoluteUri,
                     PublishDate = publishDate,
-                    Category = _categories.MapTrackerCatToNewznab(row.c.ToString()),
+                    Categories = _categories.MapTrackerCatToNewznab(row.c.ToString()),
                     Size = (long)row.size,
                     Files = (int)row.files,
                     Grabs = (int)row.completed,

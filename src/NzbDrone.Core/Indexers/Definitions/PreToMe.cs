@@ -360,7 +360,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = link,
                     PublishDate = publishDate,
                     Size = size,
-                    Category = _categories.MapTrackerCatToNewznab(cat),
+                    Categories = _categories.MapTrackerCatToNewznab(cat),
                     Files = files,
                     Grabs = grabs,
                     Seeders = seeders,

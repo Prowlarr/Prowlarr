@@ -297,7 +297,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         release.Title = release.Title.Substring(0, insertPoint) + " Season 1 " + release.Title.Substring(insertPoint);
                     }
 
-                    release.Category = currentCategories;
+                    release.Categories = currentCategories;
 
                     //release.Description = row.QuerySelector("span.tags")?.TextContent;
                     release.Guid = _baseUrl + qTitleLink.GetAttribute("href");

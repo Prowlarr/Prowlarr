@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Notifications.Notifiarr
             var variables = new StringDictionary();
 
             variables.Add("Prowlarr_EventType", "HealthIssue");
-            variables.Add("Prowlarr_Health_Issue_Level", nameof(healthCheck.Type));
+            variables.Add("Prowlarr_Health_Issue_Level", healthCheck.Type.ToString() ?? string.Empty);
             variables.Add("Prowlarr_Health_Issue_Message", healthCheck.Message);
             variables.Add("Prowlarr_Health_Issue_Type", healthCheck.Source.Name);
             variables.Add("Prowlarr_Health_Issue_Wiki", healthCheck.WikiUrl.ToString() ?? string.Empty);

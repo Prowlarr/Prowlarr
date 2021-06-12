@@ -91,6 +91,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("GingaDADDY", GetSettings("https://www.gingadaddy.com"));
                 yield return GetDefinition("Miatrix", GetSettings("https://www.miatrix.com"));
                 yield return GetDefinition("Newz-Complex", GetSettings("https://newz-complex.org/www"));
+                yield return GetDefinition("Newz69", GetSettings("https://newz69.keagaming.com"));
                 yield return GetDefinition("NinjaCentral", GetSettings("https://ninjacentral.co.za"));
                 yield return GetDefinition("Nzb.su", GetSettings("https://api.nzb.su"));
                 yield return GetDefinition("NZBCat", GetSettings("https://nzb.cat"));

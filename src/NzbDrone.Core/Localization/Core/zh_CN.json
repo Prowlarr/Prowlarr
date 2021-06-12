@@ -1,1 +1,24 @@
-{}
+{
+    "ApplyTagsHelpTexts1": "如何应用标签到已选择索引器",
+    "ApplyTags": "应用标签",
+    "Apply": "应用",
+    "ApplicationStatusCheckSingleClientMessage": "由于故障应用程序不可用",
+    "ApplicationStatusCheckAllClientMessage": "由于故障所用应用程序都不可用",
+    "AppDataDirectory": "AppData 路径",
+    "ApiKey": "API 密钥",
+    "AnalyticsEnabledHelpText": "发送匿名操作和错误信息到 Prowlarr 服务器。包括你浏览器中与 Prowlarr WebUI、错误报告、操作系统和运行环境的信息。我们将这些信息用于确定功能优先级和 Bug 修复。",
+    "Analytics": "分析图表",
+    "AllIndexersHiddenDueToFilter": "隐藏所有索引器直至应用筛选器",
+    "All": "全部",
+    "Age": "年龄",
+    "AddToDownloadClient": "添加发布到下载客户端",
+    "AddNewIndexer": "添加新的索引器",
+    "AddingTag": "添加便签",
+    "AddIndexer": "添加索引器",
+    "AddedToDownloadClient": "发布已添加档案到客户端",
+    "Added": "已添加",
+    "AddAppProfile": "添加应用同步档案",
+    "AppProfile": "应用档案",
+    "Actions": "动作",
+    "About": "关于"
+}

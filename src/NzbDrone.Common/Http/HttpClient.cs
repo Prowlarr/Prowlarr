@@ -84,6 +84,13 @@ namespace NzbDrone.Common.Http
                         throw new WebException($"Too many automatic redirections were attempted for {autoRedirectChain.Join(" -> ")}", WebExceptionStatus.ProtocolError);
                     }
 
+                    // 302 or 303 should default to GET on redirect even if POST on original
+                    if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.RedirectMethod)
+                    {
+                        request.Method = HttpMethod.GET;
+                        request.ContentData = null;
+                    }
+
                     response = await ExecuteRequestAsync(request, cookieContainer);
                 }
                 while (response.HasHttpRedirect);

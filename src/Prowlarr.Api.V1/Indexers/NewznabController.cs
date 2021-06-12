@@ -52,6 +52,8 @@ namespace NzbDrone.Api.V1.Indexers
                 throw new BadRequestException("Missing Function Parameter");
             }
 
+            request.imdbid = request.imdbid.TrimStart('t');
+
             if (request.imdbid.IsNotNullOrWhiteSpace())
             {
                 if (!int.TryParse(request.imdbid, out var imdb) || imdb == 0)

@@ -52,7 +52,7 @@ namespace NzbDrone.Api.V1.Indexers
                 throw new BadRequestException("Missing Function Parameter");
             }
 
-            request.imdbid = request.imdbid.TrimStart('t');
+            request.imdbid = request.imdbid?.TrimStart('t') ?? null;
 
             if (request.imdbid.IsNotNullOrWhiteSpace())
             {

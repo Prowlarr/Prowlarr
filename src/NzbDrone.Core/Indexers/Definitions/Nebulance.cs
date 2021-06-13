@@ -289,13 +289,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             TwoFactorAuth = "";
         }
 
-        [FieldDefinition(1, Label = "Username", Advanced = true, HelpText = "Site username")]
+        [FieldDefinition(1, Label = "Username", HelpText = "Site username")]
         public string Username { get; set; }
 
-        [FieldDefinition(1, Label = "Password", Advanced = true, HelpText = "Site Password")]
+        [FieldDefinition(2, Label = "Password", HelpText = "Site Password")]
         public string Password { get; set; }
 
-        [FieldDefinition(1, Label = "Two Factor Auth", Advanced = true, HelpText = "Two-Factor Auth")]
+        [FieldDefinition(3, Label = "Two Factor Auth", HelpText = "Two-Factor Auth")]
         public string TwoFactorAuth { get; set; }
 
         public NzbDroneValidationResult Validate()

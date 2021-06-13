@@ -401,13 +401,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Pin", Advanced = true, HelpText = "Site Pin")]
+        [FieldDefinition(1, Label = "Pin", HelpText = "Site Pin")]
         public string Pin { get; set; }
 
-        [FieldDefinition(2, Label = "Username", Advanced = true, HelpText = "Site username")]
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username")]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", Advanced = true, HelpText = "Site Password")]
+        [FieldDefinition(3, Label = "Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Password")]
         public string Password { get; set; }
 
         public NzbDroneValidationResult Validate()

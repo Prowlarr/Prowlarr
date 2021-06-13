@@ -345,10 +345,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site username")]
+        [FieldDefinition(1, Label = "Username", HelpText = "Site Username")]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Site password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]

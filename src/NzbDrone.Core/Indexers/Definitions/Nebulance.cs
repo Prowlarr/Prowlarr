@@ -289,10 +289,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             TwoFactorAuth = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site username")]
+        [FieldDefinition(1, Label = "Username", HelpText = "Site Username")]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", HelpText = "Site Password")]
+        [FieldDefinition(2, Label = "Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Password")]
         public string Password { get; set; }
 
         [FieldDefinition(3, Label = "Two Factor Auth", HelpText = "Two-Factor Auth")]

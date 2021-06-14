@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Applications.Readarr
 
         public IEnumerable<int> SyncCategories { get; set; }
 
-        [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Readarr sees it, including http(s):// and port if needed")]
+        [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Readarr sees it, including http(s)://, port, and urlbase if needed")]
         public string ProwlarrUrl { get; set; }
 
         [FieldDefinition(1, Label = "Readarr Server", HelpText = "Readarr server URL, including http(s):// and port if needed")]

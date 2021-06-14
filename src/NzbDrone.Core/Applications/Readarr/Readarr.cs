@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using FluentValidation.Results;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -31,7 +32,25 @@ namespace NzbDrone.Core.Applications.Readarr
         {
             var failures = new List<ValidationFailure>();
 
-            failures.AddIfNotNull(_readarrV1Proxy.Test(Settings));
+            var testIndexer = new IndexerDefinition
+            {
+                Id = 0,
+                Name = "Test",
+                Protocol = DownloadProtocol.Usenet,
+                Capabilities = new IndexerCapabilities()
+            };
+
+            testIndexer.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.Books);
+
+            try
+            {
+                failures.AddIfNotNull(_readarrV1Proxy.TestConnection(BuildReadarrIndexer(testIndexer, DownloadProtocol.Usenet), Settings));
+            }
+            catch (WebException ex)
+            {
+                _logger.Error(ex, "Unable to send test message");
+                failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Unable to complete application test, cannot connect to Readarr"));
+            }
 
             return new ValidationResult(failures);
         }

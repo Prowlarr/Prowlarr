@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public IEnumerable<int> SyncCategories { get; set; }
 
-        [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Radarr sees it, including http(s):// and port if needed")]
+        [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Radarr sees it, including http(s)://, port, and urlbase if needed")]
         public string ProwlarrUrl { get; set; }
 
         [FieldDefinition(1, Label = "Radarr Server", HelpText = "Radarr server URL, including http(s):// and port if needed")]

@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Applications.Readarr
         List<ReadarrIndexer> GetIndexerSchema(ReadarrSettings settings);
         void RemoveIndexer(int indexerId, ReadarrSettings settings);
         ReadarrIndexer UpdateIndexer(ReadarrIndexer indexer, ReadarrSettings settings);
-        ValidationFailure Test(ReadarrSettings settings);
+        ValidationFailure TestConnection(ReadarrIndexer indexer, ReadarrSettings settings);
     }
 
     public class ReadarrV1Proxy : IReadarrV1Proxy
@@ -91,11 +91,15 @@ namespace NzbDrone.Core.Applications.Readarr
             return Execute<ReadarrIndexer>(request);
         }
 
-        public ValidationFailure Test(ReadarrSettings settings)
+        public ValidationFailure TestConnection(ReadarrIndexer indexer, ReadarrSettings settings)
         {
+            var request = BuildRequest(settings, $"/api/v1/indexer/test", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
             try
             {
-                GetStatus(settings);
+                Execute<ReadarrIndexer>(request);
             }
             catch (HttpException ex)
             {
@@ -105,8 +109,14 @@ namespace NzbDrone.Core.Applications.Readarr
                     return new ValidationFailure("ApiKey", "API Key is invalid");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    _logger.Error(ex, "Prowlarr URL is invalid");
+                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Readarr cannot connect to Prowlarr");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("ApiKey", "Unable to send test message");
+                return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }
             catch (Exception ex)
             {

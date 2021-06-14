@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public IEnumerable<int> SyncCategories { get; set; }
 
-        [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Lidarr sees it, including http(s):// and port if needed")]
+        [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Lidarr sees it, including http(s)://, port, and urlbase if needed")]
         public string ProwlarrUrl { get; set; }
 
         [FieldDefinition(1, Label = "Lidarr Server", HelpText = "Lidarr server URL, including http(s):// and port if needed")]

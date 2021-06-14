@@ -62,6 +62,39 @@ namespace NzbDrone.Api.V1.Indexers
                 }
             }
 
+            if (id == 0)
+            {
+                switch (requestType)
+                {
+                    case "caps":
+                        var caps = new IndexerCapabilities();
+                        foreach (var cat in NewznabStandardCategory.AllCats)
+                        {
+                            caps.Categories.AddCategoryMapping(1, cat);
+                        }
+
+                        return Content(caps.ToXml(), "application/rss+xml");
+                    case "search":
+                    case "tvsearch":
+                    case "music":
+                    case "book":
+                    case "movie":
+                        var results = new NewznabResults();
+                        results.Releases = new List<ReleaseInfo>
+                        {
+                            new ReleaseInfo
+                            {
+                                Title = "Test Release",
+                                Guid = "https://prowlarr.com",
+                                DownloadUrl = "https://prowlarr.com",
+                                PublishDate = DateTime.Now
+                            }
+                        };
+
+                        return Content(results.ToXml(DownloadProtocol.Usenet), "application/rss+xml");
+                }
+            }
+
             var indexer = _indexerFactory.Get(id);
 
             if (indexer == null)

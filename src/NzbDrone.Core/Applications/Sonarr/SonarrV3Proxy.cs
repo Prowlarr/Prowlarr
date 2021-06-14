@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         List<SonarrIndexer> GetIndexerSchema(SonarrSettings settings);
         void RemoveIndexer(int indexerId, SonarrSettings settings);
         SonarrIndexer UpdateIndexer(SonarrIndexer indexer, SonarrSettings settings);
-        ValidationFailure Test(SonarrSettings settings);
+        ValidationFailure TestConnection(SonarrIndexer indexer, SonarrSettings settings);
     }
 
     public class SonarrV3Proxy : ISonarrV3Proxy
@@ -91,11 +91,15 @@ namespace NzbDrone.Core.Applications.Sonarr
             return Execute<SonarrIndexer>(request);
         }
 
-        public ValidationFailure Test(SonarrSettings settings)
+        public ValidationFailure TestConnection(SonarrIndexer indexer, SonarrSettings settings)
         {
+            var request = BuildRequest(settings, $"/api/v3/indexer/test", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
             try
             {
-                GetStatus(settings);
+                Execute<SonarrIndexer>(request);
             }
             catch (HttpException ex)
             {
@@ -105,8 +109,14 @@ namespace NzbDrone.Core.Applications.Sonarr
                     return new ValidationFailure("ApiKey", "API Key is invalid");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    _logger.Error(ex, "Prowlarr URL is invalid");
+                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Sonarr cannot connect to Prowlarr");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("ApiKey", "Unable to send test message");
+                return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }
             catch (Exception ex)
             {

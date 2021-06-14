@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         List<LidarrIndexer> GetIndexerSchema(LidarrSettings settings);
         void RemoveIndexer(int indexerId, LidarrSettings settings);
         LidarrIndexer UpdateIndexer(LidarrIndexer indexer, LidarrSettings settings);
-        ValidationFailure Test(LidarrSettings settings);
+        ValidationFailure TestConnection(LidarrIndexer indexer, LidarrSettings settings);
     }
 
     public class LidarrV1Proxy : ILidarrV1Proxy
@@ -91,11 +91,15 @@ namespace NzbDrone.Core.Applications.Lidarr
             return Execute<LidarrIndexer>(request);
         }
 
-        public ValidationFailure Test(LidarrSettings settings)
+        public ValidationFailure TestConnection(LidarrIndexer indexer, LidarrSettings settings)
         {
+            var request = BuildRequest(settings, $"/api/v1/indexer/test", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
             try
             {
-                GetStatus(settings);
+                Execute<LidarrIndexer>(request);
             }
             catch (HttpException ex)
             {
@@ -105,8 +109,14 @@ namespace NzbDrone.Core.Applications.Lidarr
                     return new ValidationFailure("ApiKey", "API Key is invalid");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    _logger.Error(ex, "Prowlarr URL is invalid");
+                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Lidarr cannot connect to Prowlarr");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("ApiKey", "Unable to send test message");
+                return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }
             catch (Exception ex)
             {

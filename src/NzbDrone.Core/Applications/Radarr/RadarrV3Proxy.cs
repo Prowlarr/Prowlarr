@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Applications.Radarr
         List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings);
         void RemoveIndexer(int indexerId, RadarrSettings settings);
         RadarrIndexer UpdateIndexer(RadarrIndexer indexer, RadarrSettings settings);
-        ValidationFailure Test(RadarrSettings settings);
+        ValidationFailure TestConnection(RadarrIndexer indexer, RadarrSettings settings);
     }
 
     public class RadarrV3Proxy : IRadarrV3Proxy
@@ -91,11 +91,15 @@ namespace NzbDrone.Core.Applications.Radarr
             return Execute<RadarrIndexer>(request);
         }
 
-        public ValidationFailure Test(RadarrSettings settings)
+        public ValidationFailure TestConnection(RadarrIndexer indexer, RadarrSettings settings)
         {
+            var request = BuildRequest(settings, $"/api/v3/indexer/test", HttpMethod.POST);
+
+            request.SetContent(indexer.ToJson());
+
             try
             {
-                GetStatus(settings);
+                Execute<RadarrIndexer>(request);
             }
             catch (HttpException ex)
             {
@@ -105,8 +109,14 @@ namespace NzbDrone.Core.Applications.Radarr
                     return new ValidationFailure("ApiKey", "API Key is invalid");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    _logger.Error(ex, "Prowlarr URL is invalid");
+                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Radarr cannot connect to Prowlarr");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("ApiKey", "Unable to send test message");
+                return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }
             catch (Exception ex)
             {

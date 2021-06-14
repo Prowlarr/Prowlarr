@@ -10,8 +10,8 @@ namespace NzbDrone.Core.Indexers.Gazelle
     public abstract class Gazelle : TorrentIndexerBase<GazelleSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override string BaseUrl => "";
-        protected virtual string LoginUrl => BaseUrl + "login.php";
+        public override string[] IndexerUrls => new string[] { "" };
+        protected virtual string LoginUrl => Settings.BaseUrl + "login.php";
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
@@ -33,14 +33,13 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new GazelleParser(Settings, Capabilities, BaseUrl);
+            return new GazelleParser(Settings, Capabilities);
         }
 
         protected virtual IndexerCapabilities SetCapabilities()

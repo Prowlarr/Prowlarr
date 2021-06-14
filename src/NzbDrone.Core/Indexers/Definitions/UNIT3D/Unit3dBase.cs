@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
     public abstract class Unit3dBase : TorrentIndexerBase<Unit3dSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override string BaseUrl => "";
+        public override string[] IndexerUrls => new string[] { "" };
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
@@ -30,14 +30,13 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new Unit3dParser(Capabilities.Categories, BaseUrl);
+            return new Unit3dParser(Settings, Capabilities.Categories);
         }
 
         protected virtual IndexerCapabilities SetCapabilities()

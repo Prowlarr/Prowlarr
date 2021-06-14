@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.HDBits
@@ -14,7 +13,7 @@ namespace NzbDrone.Core.Indexers.HDBits
         }
     }
 
-    public class HDBitsSettings : IProviderConfig
+    public class HDBitsSettings : IIndexerSettings
     {
         private static readonly HDBitsSettingsValidator Validator = new HDBitsSettingsValidator();
 
@@ -24,16 +23,19 @@ namespace NzbDrone.Core.Indexers.HDBits
             Mediums = System.Array.Empty<int>();
         }
 
-        [FieldDefinition(0, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(3, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(5, Label = "Codecs", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsCodec), Advanced = true, HelpText = "Options: h264, Mpeg2, VC1, Xvid. If unspecified, all options are used.")]
+        [FieldDefinition(4, Label = "Codecs", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsCodec), Advanced = true, HelpText = "Options: h264, Mpeg2, VC1, Xvid. If unspecified, all options are used.")]
         public IEnumerable<int> Codecs { get; set; }
 
-        [FieldDefinition(6, Label = "Mediums", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsMedium), Advanced = true, HelpText = "Options: BluRay, Encode, Capture, Remux, WebDL. If unspecified, all options are used.")]
+        [FieldDefinition(5, Label = "Mediums", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsMedium), Advanced = true, HelpText = "Options: BluRay, Encode, Capture, Remux, WebDL. If unspecified, all options are used.")]
         public IEnumerable<int> Mediums { get; set; }
 
         public NzbDroneValidationResult Validate()

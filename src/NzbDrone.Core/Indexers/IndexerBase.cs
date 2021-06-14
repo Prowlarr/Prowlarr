@@ -14,14 +14,14 @@ using NzbDrone.Core.ThingiProvider;
 namespace NzbDrone.Core.Indexers
 {
     public abstract class IndexerBase<TSettings> : IIndexer
-        where TSettings : IProviderConfig, new()
+        where TSettings : IIndexerSettings, new()
     {
         protected readonly IIndexerStatusService _indexerStatusService;
         protected readonly IConfigService _configService;
         protected readonly Logger _logger;
 
         public abstract string Name { get; }
-        public abstract string BaseUrl { get; }
+        public abstract string[] IndexerUrls { get; }
         public abstract string Description { get; }
         public abstract Encoding Encoding { get; }
         public abstract string Language { get; }
@@ -67,10 +67,20 @@ namespace NzbDrone.Core.Indexers
 
         public virtual object RequestAction(string action, IDictionary<string, string> query)
         {
+            if (action == "getUrls")
+            {
+                var links = IndexerUrls;
+
+                return new
+                {
+                    options = links.Select(d => new { Value = d, Name = d })
+                };
+            }
+
             return null;
         }
 
-        protected TSettings Settings => (TSettings)Definition.Settings;
+        protected TSettings Settings => GetDefaultBaseUrl((TSettings)Definition.Settings);
 
         public abstract Task<IndexerPageableQueryResult> Fetch(MovieSearchCriteria searchCriteria);
         public abstract Task<IndexerPageableQueryResult> Fetch(MusicSearchCriteria searchCriteria);
@@ -100,6 +110,16 @@ namespace NzbDrone.Core.Indexers
             });
 
             return result;
+        }
+
+        protected TSettings GetDefaultBaseUrl(TSettings settings)
+        {
+            if (settings.BaseUrl.IsNullOrWhiteSpace() && IndexerUrls.First().IsNotNullOrWhiteSpace())
+            {
+                settings.BaseUrl = IndexerUrls.First();
+            }
+
+            return settings;
         }
 
         public ValidationResult Test()

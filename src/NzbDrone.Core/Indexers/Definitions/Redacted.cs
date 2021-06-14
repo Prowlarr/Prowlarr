@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Redacted : Gazelle.Gazelle
     {
         public override string Name => "Redacted";
-        public override string BaseUrl => "https://redacted.ch/";
+        public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
+        public override string Description => "";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public Redacted(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

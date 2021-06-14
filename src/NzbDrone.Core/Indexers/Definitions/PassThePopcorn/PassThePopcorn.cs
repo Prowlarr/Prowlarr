@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
     public class PassThePopcorn : TorrentIndexerBase<PassThePopcornSettings>
     {
         public override string Name => "PassThePopcorn";
-        public override string BaseUrl => "https://passthepopcorn.me";
+        public override string[] IndexerUrls => new string[] { "https://passthepopcorn.me" };
+        public override string Description => "";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
@@ -36,8 +37,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
             {
                 Settings = Settings,
                 HttpClient = _httpClient,
-                Logger = _logger,
-                BaseUrl = BaseUrl
+                Logger = _logger
             };
         }
 
@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public override IParseIndexerResponse GetParser()
         {
-            return new PassThePopcornParser(BaseUrl, Capabilities, _logger);
+            return new PassThePopcornParser(Settings, Capabilities, _logger);
         }
     }
 

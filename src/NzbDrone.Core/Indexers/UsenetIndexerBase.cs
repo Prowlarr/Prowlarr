@@ -7,12 +7,11 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
 {
     public abstract class UsenetIndexerBase<TSettings> : HttpIndexerBase<TSettings>
-        where TSettings : IProviderConfig, new()
+        where TSettings : IIndexerSettings, new()
     {
         private readonly IValidateNzbs _nzbValidationService;
 

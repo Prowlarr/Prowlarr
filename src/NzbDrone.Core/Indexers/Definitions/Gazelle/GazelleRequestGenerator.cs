@@ -9,14 +9,13 @@ namespace NzbDrone.Core.Indexers.Gazelle
     public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         public GazelleSettings Settings { get; set; }
-        public string BaseUrl { get; set; }
 
         public IDictionary<string, string> AuthCookieCache { get; set; }
         public IHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 
-        protected virtual string APIUrl => BaseUrl + "ajax.php";
+        protected virtual string APIUrl => Settings.BaseUrl + "ajax.php";
         protected virtual bool ImdbInTags => false;
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

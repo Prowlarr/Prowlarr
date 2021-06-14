@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -9,7 +8,6 @@ namespace NzbDrone.Core.Indexers.FileList
 {
     public class FileListRequestGenerator : IIndexerRequestGenerator
     {
-        public string BaseUrl { get; set; }
         public FileListSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -109,7 +107,7 @@ namespace NzbDrone.Core.Indexers.FileList
         {
             var categoriesQuery = string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(categories));
 
-            var baseUrl = string.Format("{0}/api.php?action={1}&category={2}&username={3}&passkey={4}{5}", BaseUrl.TrimEnd('/'), searchType, categoriesQuery, Settings.Username.Trim(), Settings.Passkey.Trim(), parameters);
+            var baseUrl = string.Format("{0}/api.php?action={1}&category={2}&username={3}&passkey={4}{5}", Settings.BaseUrl.TrimEnd('/'), searchType, categoriesQuery, Settings.Username.Trim(), Settings.Passkey.Trim(), parameters);
 
             yield return new IndexerRequest(baseUrl, HttpAccept.Json);
         }

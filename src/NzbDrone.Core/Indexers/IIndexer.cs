@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Indexers
         bool SupportsRedirect { get; }
         IndexerCapabilities Capabilities { get; }
 
-        string BaseUrl { get; }
+        string[] IndexerUrls { get; }
         string Description { get; }
         Encoding Encoding { get; }
         string Language { get; }

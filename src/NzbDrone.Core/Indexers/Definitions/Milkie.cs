@@ -11,7 +11,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -20,7 +19,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "Milkie";
 
-        public override string BaseUrl => "https://milkie.cc/";
+        public override string[] IndexerUrls => new string[] { "https://milkie.cc/" };
+        public override string Description => "";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -32,12 +32,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new MilkieRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new MilkieRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new MilkieParser(Settings, Capabilities.Categories, BaseUrl);
+            return new MilkieParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -77,7 +77,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public MilkieSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public MilkieRequestGenerator()
         {
@@ -85,7 +84,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = BaseUrl + "api/v1/torrents";
+            var searchUrl = Settings.BaseUrl + "api/v1/torrents";
 
             var qc = new NameValueCollection
             {
@@ -164,13 +163,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly MilkieSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public MilkieParser(MilkieSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public MilkieParser(MilkieSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -186,9 +183,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var torrent in response.Torrents)
             {
-                var torrentUrl = _baseUrl + "api/v1/torrents";
+                var torrentUrl = _settings.BaseUrl + "api/v1/torrents";
                 var link = $"{torrentUrl}/{torrent.Id}/torrent?{dlQueryParams.GetQueryString()}";
-                var details = $"{_baseUrl}browse/{torrent.Id}";
+                var details = $"{_settings.BaseUrl}browse/{torrent.Id}";
                 var publishDate = DateTimeUtil.FromUnknown(torrent.CreatedAt);
 
                 var release = new TorrentInfo
@@ -226,7 +223,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class MilkieSettings : IProviderConfig
+    public class MilkieSettings : IIndexerSettings
     {
         private static readonly MilkieSettingsValidator Validator = new MilkieSettingsValidator();
 
@@ -235,9 +232,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             ApiKey = "";
         }
 
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "Apikey", HelpText = "Site ApiKey", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "Apikey", HelpText = "Site ApiKey", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         public NzbDroneValidationResult Validate()

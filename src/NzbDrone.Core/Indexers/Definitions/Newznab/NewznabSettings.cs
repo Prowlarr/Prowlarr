@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using FluentValidation;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Newznab
@@ -52,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         }
     }
 
-    public class NewznabSettings : IProviderConfig
+    public class NewznabSettings : IIndexerSettings
     {
         private static readonly NewznabSettingsValidator Validator = new NewznabSettingsValidator();
 

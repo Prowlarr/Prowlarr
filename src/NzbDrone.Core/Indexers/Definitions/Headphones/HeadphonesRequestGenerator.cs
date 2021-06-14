@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Headphones
         public int PageSize { get; set; }
         public HeadphonesSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
+
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
@@ -106,7 +106,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
-            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
+            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
             var categories = searchCriteria.Categories;
 
             if (categories != null && categories.Any())

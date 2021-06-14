@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using AngleSharp.Html.Parser;
 using FluentValidation;
@@ -21,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class GazelleGames : TorrentIndexerBase<GazelleGamesSettings>
     {
         public override string Name => "GazelleGames";
-        public override string BaseUrl => "https://gazellegames.net/";
+        public override string[] IndexerUrls => new string[] { "https://gazellegames.net/" };
         public override string Description => "A gaming tracker.";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
@@ -36,12 +37,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new GazelleGamesRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new GazelleGamesRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new GazelleGamesParser(Settings, Capabilities.Categories, BaseUrl);
+            return new GazelleGamesParser(Settings, Capabilities.Categories);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -188,7 +189,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public GazelleGamesSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public GazelleGamesRequestGenerator()
         {
@@ -196,7 +196,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
-            var searchUrl = string.Format("{0}/torrents.php", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/torrents.php", Settings.BaseUrl.TrimEnd('/'));
 
             var searchString = term;
 
@@ -278,13 +278,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly GazelleGamesSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public GazelleGamesParser(GazelleGamesSettings settings, IndexerCapabilitiesCategories categories, string baseurl)
+        public GazelleGamesParser(GazelleGamesSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseurl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -355,12 +353,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var qFreeLeech = row.QuerySelector("strong.freeleech_label");
                     var qNeutralLeech = row.QuerySelector("strong.neutralleech_label");
                     var time = qTime.GetAttribute("title");
-                    var link = _baseUrl + qDLLink.GetAttribute("href");
+                    var link = _settings.BaseUrl + qDLLink.GetAttribute("href");
                     var seeders = ParseUtil.CoerceInt(qSeeders.TextContent);
                     var publishDate = DateTime.SpecifyKind(
                         DateTime.ParseExact(time, "MMM dd yyyy, HH:mm", CultureInfo.InvariantCulture),
                         DateTimeKind.Unspecified).ToLocalTime();
-                    var details = _baseUrl + qDetailsLink.GetAttribute("href");
+                    var details = _settings.BaseUrl + qDetailsLink.GetAttribute("href");
                     var grabs = ParseUtil.CoerceInt(qGrabs.TextContent);
                     var leechers = ParseUtil.CoerceInt(qLeechers.TextContent);
                     var size = ReleaseInfo.GetBytes(sizeString);
@@ -402,7 +400,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class GazelleGamesSettings : IProviderConfig
+    public class GazelleGamesSettings : IIndexerSettings
     {
         private static readonly GazelleGamesSettingsValidator Validator = new GazelleGamesSettingsValidator();
 
@@ -412,10 +410,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             SearchGroupNames = false;
         }
 
-        [FieldDefinition(1, Label = "Cookie", HelpText = "Login cookie from website")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Login cookie from website")]
         public string Cookie { get; set; }
 
-        [FieldDefinition(2, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
+        [FieldDefinition(3, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
         public bool SearchGroupNames { get; set; }
 
         public NzbDroneValidationResult Validate()

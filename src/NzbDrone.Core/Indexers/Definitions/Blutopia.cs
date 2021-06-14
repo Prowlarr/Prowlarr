@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Blutopia : Unit3dBase
     {
         public override string Name => "Blutopia";
-        public override string BaseUrl => "https://blutopia.xyz/";
+        public override string[] IndexerUrls => new string[] { "https://blutopia.xyz/" };
+        public override string Description => "Blutopia (BLU) is a Private Torrent Tracker for HD MOVIES / TV";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public Blutopia(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.FileList
     public class FileList : TorrentIndexerBase<FileListSettings>
     {
         public override string Name => "FileList.io";
-        public override string BaseUrl => "https://filelist.io";
+        public override string[] IndexerUrls => new string[] { "https://filelist.io" };
+        public override string Description => "";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
@@ -24,12 +25,12 @@ namespace NzbDrone.Core.Indexers.FileList
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new FileListRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl, Capabilities = Capabilities };
+            return new FileListRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new FileListParser(Settings, BaseUrl, Capabilities.Categories);
+            return new FileListParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()

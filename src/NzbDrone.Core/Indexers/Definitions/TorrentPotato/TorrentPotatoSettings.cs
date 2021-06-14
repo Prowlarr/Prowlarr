@@ -1,6 +1,5 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.TorrentPotato
@@ -12,7 +11,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         }
     }
 
-    public class TorrentPotatoSettings : IProviderConfig
+    public class TorrentPotatoSettings : IIndexerSettings
     {
         private static readonly TorrentPotatoSettingsValidator Validator = new TorrentPotatoSettingsValidator();
 
@@ -20,10 +19,13 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         {
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", HelpText = "The username you use at your indexer.", Privacy = PrivacyLevel.UserName)]
         public string User { get; set; }
 
-        [FieldDefinition(2, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Passkey", HelpText = "The password you use at your Indexer.", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Passkey { get; set; }
 
         public NzbDroneValidationResult Validate()

@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AlphaRatio : Gazelle.Gazelle
     {
         public override string Name => "AlphaRatio";
-        public override string BaseUrl => "https://alpharatio.cc/";
+        public override string[] IndexerUrls => new string[] { "https://alpharatio.cc/" };
         public override string Description => "AlphaRatio(AR) is a Private Torrent Tracker for 0DAY / GENERAL";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
@@ -25,8 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 

@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Test.IndexerTests
     public class TestIndexer : UsenetIndexerBase<TestIndexerSettings>
     {
         public override string Name => "Test Indexer";
-        public override string BaseUrl => "http://testindexer.com";
+        public override string[] IndexerUrls => new string[] { "http://testindexer.com" };
+        public override string Description => "";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
 

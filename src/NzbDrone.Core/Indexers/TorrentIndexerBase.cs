@@ -8,12 +8,11 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
 {
     public abstract class TorrentIndexerBase<TSettings> : HttpIndexerBase<TSettings>
-        where TSettings : IProviderConfig, new()
+        where TSettings : IIndexerSettings, new()
     {
         protected TorrentIndexerBase(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)

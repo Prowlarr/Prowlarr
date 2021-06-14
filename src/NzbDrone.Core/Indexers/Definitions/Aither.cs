@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Aither : Unit3dBase
     {
         public override string Name => "Aither";
-        public override string BaseUrl => "https://aither.cc/";
+        public override string[] IndexerUrls => new string[] { "https://aither.cc/" };
         public override string Description => "Aither is a Private Torrent Tracker for HD MOVIES / TV";
         public override string Language => "en-us";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

@@ -12,8 +12,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     public abstract class AvistazBase : TorrentIndexerBase<AvistazSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override string BaseUrl => "";
-        protected virtual string LoginUrl => BaseUrl + "api/v1/jackett/auth";
+        public override string[] IndexerUrls => new string[] { "" };
+        protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
@@ -38,8 +38,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 

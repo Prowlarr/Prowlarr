@@ -6,6 +6,7 @@ using System.Xml;
 using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
@@ -18,7 +19,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ShowRSS : TorrentIndexerBase<ShowRSSSettings>
     {
         public override string Name => "ShowRSS";
-        public override string BaseUrl => "https://showrss.info/";
+        public override string[] IndexerUrls => new string[] { "https://showrss.info/" };
         public override string Language => "en-us";
         public override string Description => "showRSS is a service that allows you to keep track of your favorite TV shows";
         public override Encoding Encoding => Encoding.UTF8;
@@ -33,12 +34,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new ShowRSSRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new ShowRSSRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new ShowRSSParser(BaseUrl);
+            return new ShowRSSParser(Settings);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -63,7 +64,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public ShowRSSSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public ShowRSSRequestGenerator()
         {
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
-            var searchUrl = string.Format("{0}/other/all.rss", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/other/all.rss", Settings.BaseUrl.TrimEnd('/'));
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
@@ -123,12 +123,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ShowRSSParser : IParseIndexerResponse
     {
-        private readonly string _baseUrl;
-        private string BrowseUrl => _baseUrl + "browse/";
+        private readonly ShowRSSSettings _settings;
+        private string BrowseUrl => _settings.BaseUrl + "browse/";
 
-        public ShowRSSParser(string baseurl)
+        public ShowRSSParser(ShowRSSSettings settings)
         {
-            _baseUrl = baseurl;
+            _settings = settings;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -184,9 +184,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
     }
 
-    public class ShowRSSSettings : IProviderConfig
+    public class ShowRSSSettings : IIndexerSettings
     {
         private static readonly ShowRSSSettingsValidator Validator = new ShowRSSSettingsValidator();
+
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

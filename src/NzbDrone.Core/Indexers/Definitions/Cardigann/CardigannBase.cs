@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected readonly Encoding _encoding;
         protected readonly IConfigService _configService;
 
-        protected string SiteLink { get; private set; }
+        protected virtual string SiteLink { get; private set; }
 
         protected readonly List<CategoryMapping> _categoryMapping = new List<CategoryMapping>();
         protected readonly List<string> _defaultCategories = new List<string>();

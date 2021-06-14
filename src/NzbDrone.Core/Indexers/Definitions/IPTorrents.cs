@@ -13,7 +13,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -22,7 +21,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "IPTorrents";
 
-        public override string BaseUrl => "https://iptorrents.com/";
+        public override string[] IndexerUrls => new string[] { "https://iptorrents.com/" };
+        public override string Description => "";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -34,12 +34,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new IPTorrentsRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new IPTorrentsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new IPTorrentsParser(Settings, Capabilities.Categories, BaseUrl);
+            return new IPTorrentsParser(Settings, Capabilities.Categories);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -148,7 +148,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public IPTorrentsSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public IPTorrentsRequestGenerator()
         {
@@ -156,7 +155,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = BaseUrl + "t";
+            var searchUrl = Settings.BaseUrl + "t";
 
             var qc = new NameValueCollection();
 
@@ -234,13 +233,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly IPTorrentsSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public IPTorrentsParser(IPTorrentsSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public IPTorrentsParser(IPTorrentsSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -263,10 +260,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // drop invalid char that seems to have cropped up in some titles. #6582
                 var title = qTitleLink.TextContent.Trim().Replace("\u000f", "");
-                var details = new Uri(_baseUrl + qTitleLink.GetAttribute("href").TrimStart('/'));
+                var details = new Uri(_settings.BaseUrl + qTitleLink.GetAttribute("href").TrimStart('/'));
 
                 var qLink = row.QuerySelector("a[href^=\"/download.php/\"]");
-                var link = new Uri(_baseUrl + qLink.GetAttribute("href").TrimStart('/'));
+                var link = new Uri(_settings.BaseUrl + qLink.GetAttribute("href").TrimStart('/'));
 
                 var descrSplit = row.QuerySelector("div.sub").TextContent.Split('|');
                 var dateSplit = descrSplit.Last().Split(new[] { " by " }, StringSplitOptions.None);
@@ -337,7 +334,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class IPTorrentsSettings : IProviderConfig
+    public class IPTorrentsSettings : IIndexerSettings
     {
         private static readonly IPTorrentsSettingsValidator Validator = new IPTorrentsSettingsValidator();
 
@@ -346,9 +343,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Cookie = "";
         }
 
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "Cookie", HelpText = "Site Cookie")]
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
         public string Cookie { get; set; }
 
         public NzbDroneValidationResult Validate()

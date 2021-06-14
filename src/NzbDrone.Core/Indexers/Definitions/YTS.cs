@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
-using System.Threading.Tasks;
 using FluentValidation;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -15,7 +14,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -23,7 +21,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class YTS : TorrentIndexerBase<YTSSettings>
     {
         public override string Name => "YTS";
-        public override string BaseUrl => "https://yts.mx/";
+        public override string[] IndexerUrls => new string[] { "https://yts.mx/" };
         public override string Language => "en-us";
         public override string Description => "YTS is a Public torrent site specialising in HD movies of small size";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1252");
@@ -40,12 +38,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new YTSRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new YTSRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new YTSParser(Settings, Capabilities.Categories, BaseUrl);
+            return new YTSParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -77,7 +75,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public YTSSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public YTSRequestGenerator()
         {
@@ -85,7 +82,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = string.Format("{0}/api/v2/list_movies.json", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/api/v2/list_movies.json", Settings.BaseUrl.TrimEnd('/'));
 
             var searchString = term;
 
@@ -160,13 +157,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly YTSSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public YTSParser(YTSSettings settings, IndexerCapabilitiesCategories categories, string baseurl)
+        public YTSParser(YTSSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseurl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -294,9 +289,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
     }
 
-    public class YTSSettings : IProviderConfig
+    public class YTSSettings : IIndexerSettings
     {
         private static readonly YTSSettingsValidator Validator = new YTSSettingsValidator();
+
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

@@ -15,7 +15,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -23,8 +22,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Nebulance : TorrentIndexerBase<NebulanceSettings>
     {
         public override string Name => "Nebulance";
-        public override string BaseUrl => "https://nebulance.io/";
-        private string LoginUrl => BaseUrl + "login.php";
+        public override string[] IndexerUrls => new string[] { "https://nebulance.io/" };
+        private string LoginUrl => Settings.BaseUrl + "login.php";
         public override string Description => "At Nebulance we will change the way you think about TV";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
@@ -39,12 +38,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new NebulanceRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new NebulanceRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new NebulanceParser(Settings, Capabilities.Categories, BaseUrl);
+            return new NebulanceParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -109,7 +108,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public NebulanceSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public NebulanceRequestGenerator()
         {
@@ -117,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
-            var searchUrl = string.Format("{0}/torrents.php", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/torrents.php", Settings.BaseUrl.TrimEnd('/'));
 
             var searchTerm = term;
 
@@ -188,13 +186,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly NebulanceSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public NebulanceParser(NebulanceSettings settings, IndexerCapabilitiesCategories categories, string baseurl)
+        public NebulanceParser(NebulanceSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseurl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -224,8 +220,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var posterStr = row.QuerySelector("img")?.GetAttribute("src");
                 Uri.TryCreate(posterStr, UriKind.Absolute, out var poster);
 
-                var details = _baseUrl + row.QuerySelector("a[data-src]").GetAttribute("href");
-                var link = _baseUrl + row.QuerySelector("a[href*='action=download']").GetAttribute("href");
+                var details = _settings.BaseUrl + row.QuerySelector("a[data-src]").GetAttribute("href");
+                var link = _settings.BaseUrl + row.QuerySelector("a[href*='action=download']").GetAttribute("href");
 
                 var qColSize = row.QuerySelector("td:nth-child(3)");
                 var size = ReleaseInfo.GetBytes(qColSize.Children[0].TextContent);
@@ -278,7 +274,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class NebulanceSettings : IProviderConfig
+    public class NebulanceSettings : IIndexerSettings
     {
         private static readonly NebulanceSettingsValidator Validator = new NebulanceSettingsValidator();
 
@@ -289,13 +285,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             TwoFactorAuth = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Password")]
         public string Password { get; set; }
 
-        [FieldDefinition(3, Label = "Two Factor Auth", HelpText = "Two-Factor Auth")]
+        [FieldDefinition(4, Label = "Two Factor Auth", HelpText = "Two-Factor Auth")]
         public string TwoFactorAuth { get; set; }
 
         public NzbDroneValidationResult Validate()

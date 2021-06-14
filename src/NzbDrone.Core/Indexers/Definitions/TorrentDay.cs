@@ -12,7 +12,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -21,7 +20,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "TorrentDay";
 
-        public override string BaseUrl => "https://torrentday.cool/";
+        public override string[] IndexerUrls => new string[] { "https://torrentday.cool/" };
+        public override string Description => "TorrentDay (TD) is a Private site for TV / MOVIES / GENERAL";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -33,12 +33,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TorrentDayRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new TorrentDayRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorrentDayParser(Settings, Capabilities.Categories, BaseUrl);
+            return new TorrentDayParser(Settings, Capabilities.Categories);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -124,7 +124,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public TorrentDaySettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public TorrentDayRequestGenerator()
         {
@@ -132,7 +131,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = BaseUrl + "t.json";
+            var searchUrl = Settings.BaseUrl + "t.json";
 
             var cats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
             if (cats.Count == 0)
@@ -210,13 +209,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly TorrentDaySettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public TorrentDayParser(TorrentDaySettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public TorrentDayParser(TorrentDaySettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -230,11 +227,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var title = (string)row.name;
 
                 var torrentId = (long)row.t;
-                var details = new Uri(_baseUrl + "details.php?id=" + torrentId);
+                var details = new Uri(_settings.BaseUrl + "details.php?id=" + torrentId);
                 var seeders = (int)row.seeders;
                 var imdbId = (string)row["imdb-id"];
                 var downloadMultiplier = (double?)row["download-multiplier"] ?? 1;
-                var link = new Uri(_baseUrl + "download.php/" + torrentId + "/" + torrentId + ".torrent");
+                var link = new Uri(_settings.BaseUrl + "download.php/" + torrentId + "/" + torrentId + ".torrent");
                 var publishDate = DateTimeUtil.UnixTimestampToDateTime((long)row.ctime).ToLocalTime();
                 var imdb = ParseUtil.GetImdbID(imdbId) ?? 0;
 
@@ -275,7 +272,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class TorrentDaySettings : IProviderConfig
+    public class TorrentDaySettings : IIndexerSettings
     {
         private static readonly TorrentDaySettingsValidator Validator = new TorrentDaySettingsValidator();
 
@@ -284,7 +281,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Cookie = "";
         }
 
-        [FieldDefinition(1, Label = "Cookie", HelpText = "Site Cookie")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
         public string Cookie { get; set; }
 
         public NzbDroneValidationResult Validate()

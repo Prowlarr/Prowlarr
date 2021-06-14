@@ -18,7 +18,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -26,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AnimeBytes : TorrentIndexerBase<AnimeBytesSettings>
     {
         public override string Name => "AnimeBytes";
-        public override string BaseUrl => "https://animebytes.tv/";
+        public override string[] IndexerUrls => new string[] { "https://animebytes.tv/" };
         public override string Description => "Powered by Tentacles";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
@@ -41,12 +40,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnimeBytesRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new AnimeBytesRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AnimeBytesParser(Settings, Capabilities.Categories, BaseUrl);
+            return new AnimeBytesParser(Settings, Capabilities.Categories);
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
@@ -101,7 +100,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public AnimeBytesSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public AnimeBytesRequestGenerator()
         {
@@ -109,7 +107,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string searchType, string term, int[] categories)
         {
-            var searchUrl = string.Format("{0}/scrape.php", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/scrape.php", Settings.BaseUrl.TrimEnd('/'));
 
             var queryCollection = new NameValueCollection
             {
@@ -189,13 +187,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly AnimeBytesSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public AnimeBytesParser(AnimeBytesSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public AnimeBytesParser(AnimeBytesSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -323,7 +319,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         var uploadTimeString = (string)torrent["UploadTime"];
                         var uploadTime = DateTime.ParseExact(uploadTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                         var publishDate = DateTime.SpecifyKind(uploadTime, DateTimeKind.Utc).ToLocalTime();
-                        var details = new Uri(_baseUrl + "torrent/" + torrentId + "/group");
+                        var details = new Uri(_settings.BaseUrl + "torrent/" + torrentId + "/group");
                         var size = (long)torrent["Size"];
                         var snatched = (int)torrent["Snatched"];
                         var seeders = (int)torrent["Seeders"];
@@ -484,7 +480,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class AnimeBytesSettings : IProviderConfig
+    public class AnimeBytesSettings : IIndexerSettings
     {
         private static readonly AnimeBytesSettingsValidator Validator = new AnimeBytesSettingsValidator();
 
@@ -494,10 +490,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             Username = "";
         }
 
-        [FieldDefinition(1, Label = "Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Passkey")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Passkey")]
         public string Passkey { get; set; }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
         public NzbDroneValidationResult Validate()

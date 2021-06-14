@@ -12,7 +12,6 @@ namespace NzbDrone.Core.Indexers.HDBits
     {
         public IndexerCapabilities Capabilities { get; set; }
         public HDBitsSettings Settings { get; set; }
-        public string BaseUrl { get; set; }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
@@ -50,7 +49,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         private IEnumerable<IndexerRequest> GetRequest(TorrentQuery query)
         {
-            var request = new HttpRequestBuilder(BaseUrl)
+            var request = new HttpRequestBuilder(Settings.BaseUrl)
                 .Resource("/api/torrents")
                 .Build();
 

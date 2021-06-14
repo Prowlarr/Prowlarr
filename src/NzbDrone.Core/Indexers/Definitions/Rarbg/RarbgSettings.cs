@@ -1,6 +1,5 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
@@ -12,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
         }
     }
 
-    public class RarbgSettings : IProviderConfig
+    public class RarbgSettings : IIndexerSettings
     {
         private static readonly RarbgSettingsValidator Validator = new RarbgSettingsValidator();
 
@@ -21,10 +20,13 @@ namespace NzbDrone.Core.Indexers.Rarbg
             RankedOnly = false;
         }
 
-        [FieldDefinition(1, Type = FieldType.Checkbox, Label = "Ranked Only", HelpText = "Only include ranked results.")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Type = FieldType.Checkbox, Label = "Ranked Only", HelpText = "Only include ranked results.")]
         public bool RankedOnly { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Captcha, Label = "CAPTCHA Token", HelpText = "CAPTCHA Clearance token used to handle CloudFlare Anti-DDOS measures on shared-ip VPNs.")]
+        [FieldDefinition(3, Type = FieldType.Captcha, Label = "CAPTCHA Token", HelpText = "CAPTCHA Clearance token used to handle CloudFlare Anti-DDOS measures on shared-ip VPNs.")]
         public string CaptchaToken { get; set; }
 
         public NzbDroneValidationResult Validate()

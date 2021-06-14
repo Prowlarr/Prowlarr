@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AnimeWorld : Unit3dBase
     {
         public override string Name => "AnimeWorld";
-        public override string BaseUrl => "https://animeworld.cx/";
+        public override string[] IndexerUrls => new string[] { "https://animeworld.cx/" };
         public override string Description => "AnimeWorld (AW) is a GERMAN Private site for ANIME / MANGA / HENTAI";
         public override string Language => "de-de";
 

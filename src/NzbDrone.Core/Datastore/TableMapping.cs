@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(i => i.Description)
                   .Ignore(i => i.Language)
                   .Ignore(i => i.Encoding)
-                  .Ignore(i => i.BaseUrl)
+                  .Ignore(i => i.IndexerUrls)
                   .Ignore(i => i.Protocol)
                   .Ignore(i => i.Privacy)
                   .Ignore(i => i.SupportsRss)

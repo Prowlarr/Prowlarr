@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -28,9 +28,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "SpeedApp.io";
 
-        public override string BaseUrl => "https://speedapp.io";
+        public override string[] IndexerUrls => new string[] { "https://speedapp.io" };
 
-        private string ApiUrl => $"{BaseUrl}/api";
+        private string ApiUrl => $"{Settings.BaseUrl}/api";
 
         private string LoginUrl => $"{ApiUrl}/login";
 
@@ -56,12 +56,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SpeedAppRequestGenerator(Capabilities, Settings, ApiUrl);
+            return new SpeedAppRequestGenerator(Capabilities, Settings);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SpeedAppParser(ApiUrl);
+            return new SpeedAppParser(Settings);
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
@@ -262,13 +262,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private SpeedAppSettings Settings { get; }
 
-        private string BaseUrl { get; }
-
-        public SpeedAppRequestGenerator(IndexerCapabilities capabilities, SpeedAppSettings settings, string baseUrl)
+        public SpeedAppRequestGenerator(IndexerCapabilities capabilities, SpeedAppSettings settings)
         {
             Capabilities = capabilities;
             Settings = settings;
-            BaseUrl = baseUrl;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -338,7 +335,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            var searchUrl = BaseUrl + "/torrent?" + qc.GetQueryString();
+            var searchUrl = Settings.BaseUrl + "/api/torrent?" + qc.GetQueryString();
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 
@@ -350,13 +347,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SpeedAppParser : IParseIndexerResponse
     {
-        public string BaseUrl { get; set; }
+        public SpeedAppSettings Settings { get; set; }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public SpeedAppParser(string baseUrl)
+        public SpeedAppParser(SpeedAppSettings settings)
         {
-            BaseUrl = baseUrl;
+            Settings = settings;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -380,7 +377,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
-                DownloadUrl = $"{BaseUrl}/torrent/{torrent.Id}/download",
+                DownloadUrl = $"{Settings.BaseUrl}/api/torrent/{torrent.Id}/download",
                 InfoUrl = torrent.Url,
                 Grabs = torrent.TimesCompleted,
                 PublishDate = torrent.CreatedAt,
@@ -405,7 +402,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class SpeedAppSettings : IProviderConfig
+    public class SpeedAppSettings : IIndexerSettings
     {
         private static readonly SpeedAppSettingsValidator Validator = new ();
 
@@ -415,13 +412,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Email", HelpText = "Site email")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Email", HelpText = "Site email")]
         public string Email { get; set; }
 
-        [FieldDefinition(1, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(0, Label = "Api Key", Hidden = HiddenType.Hidden)]
+        [FieldDefinition(4, Label = "Api Key", Hidden = HiddenType.Hidden)]
         public string ApiKey { get; set; }
 
         public NzbDroneValidationResult Validate()

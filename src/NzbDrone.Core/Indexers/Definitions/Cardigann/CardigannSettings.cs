@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Cardigann
@@ -13,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         }
     }
 
-    public class CardigannSettings : IProviderConfig
+    public class CardigannSettings : IIndexerSettings
     {
         private static readonly CardigannSettingsValidator Validator = new CardigannSettingsValidator();
 
@@ -24,6 +23,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         [FieldDefinition(0, Hidden = HiddenType.Hidden)]
         public string DefinitionFile { get; set; }
+
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
 
         public Dictionary<string, object> ExtraFieldData { get; set; }
 

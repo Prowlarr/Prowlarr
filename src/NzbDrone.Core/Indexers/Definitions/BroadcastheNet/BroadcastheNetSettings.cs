@@ -1,6 +1,5 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.BroadcastheNet
@@ -13,7 +12,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         }
     }
 
-    public class BroadcastheNetSettings : IProviderConfig
+    public class BroadcastheNetSettings : IIndexerSettings
     {
         private static readonly BroadcastheNetSettingsValidator Validator = new BroadcastheNetSettingsValidator();
 
@@ -21,7 +20,10 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         {
         }
 
-        [FieldDefinition(1, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         public NzbDroneValidationResult Validate()

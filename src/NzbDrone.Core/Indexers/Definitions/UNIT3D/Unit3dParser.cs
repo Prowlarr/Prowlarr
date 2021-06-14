@@ -13,15 +13,15 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
 {
     public class Unit3dParser : IParseIndexerResponse
     {
-        private readonly string _baseUrl;
         private readonly IndexerCapabilitiesCategories _categories;
+        private readonly Unit3dSettings _settings;
 
-        protected virtual string TorrentUrl => _baseUrl + "torrents";
+        protected virtual string TorrentUrl => _settings.BaseUrl + "torrents";
 
-        public Unit3dParser(IndexerCapabilitiesCategories categories, string baseUrl)
+        public Unit3dParser(Unit3dSettings settings, IndexerCapabilitiesCategories categories)
         {
+            _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

@@ -8,7 +8,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class CGPeers : Gazelle.Gazelle
     {
         public override string Name => "CGPeers";
-        public override string BaseUrl => "https://cgpeers.to/";
+        public override string[] IndexerUrls => new string[] { "https://cgpeers.to/" };
+        public override string Description => "CGPeers is a Private Torrent Tracker for GRAPHICS SOFTWARE / TUTORIALS / ETC";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public CGPeers(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

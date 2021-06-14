@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class PrivateHD : Avistaz.AvistazBase
     {
         public override string Name => "PrivateHD";
-        public override string BaseUrl => "https://privatehd.to/";
+        public override string[] IndexerUrls => new string[] { "https://privatehd.to/" };
+        public override string Description => "";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public PrivateHD(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -25,8 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 

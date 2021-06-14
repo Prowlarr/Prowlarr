@@ -16,7 +16,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -24,9 +23,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class PreToMe : TorrentIndexerBase<PreToMeSettings>
     {
         public override string Name => "PreToMe";
-        public override string BaseUrl => "https://pretome.info/";
+        public override string[] IndexerUrls => new string[] { "https://pretome.info/" };
         public override string Description => "BitTorrent site for High Quality, High Definition (HD) movies and TV Shows";
-        private string LoginUrl => BaseUrl + "takelogin.php";
+        private string LoginUrl => Settings.BaseUrl + "takelogin.php";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -40,12 +39,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new PreToMeRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new PreToMeRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new PreToMeParser(Settings, Capabilities.Categories, BaseUrl);
+            return new PreToMeParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -58,7 +57,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true
             };
 
-            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(BaseUrl + "login.php"));
+            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(Settings.BaseUrl + "login.php"));
 
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
@@ -185,7 +184,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public PreToMeSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public PreToMeRequestGenerator()
         {
@@ -193,7 +191,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = string.Format("{0}/browse.php", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/browse.php", Settings.BaseUrl.TrimEnd('/'));
 
             var qc = new List<KeyValuePair<string, string>> // NameValueCollection don't support cat[]=19&cat[]=6
             {
@@ -311,13 +309,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly PreToMeSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public PreToMeParser(PreToMeSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public PreToMeParser(PreToMeSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -341,8 +337,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 //{
                 //    continue; // we have to skip bad titles due to tags + any word search
                 //}
-                var details = _baseUrl + qLink.GetAttribute("href");
-                var link = _baseUrl + row.Children[2].QuerySelector("a").GetAttribute("href");
+                var details = _settings.BaseUrl + qLink.GetAttribute("href");
+                var link = _settings.BaseUrl + row.Children[2].QuerySelector("a").GetAttribute("href");
                 var dateStr = Regex.Replace(row.Children[5].InnerHtml, @"\<br[\s]{0,1}[\/]{0,1}\>", " ");
                 var publishDate = DateTimeUtil.FromTimeAgo(dateStr);
                 var files = ParseUtil.CoerceInt(row.Children[3].TextContent);
@@ -390,7 +386,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class PreToMeSettings : IProviderConfig
+    public class PreToMeSettings : IIndexerSettings
     {
         private static readonly PreToMeSettingsValidator Validator = new PreToMeSettingsValidator();
 
@@ -401,13 +397,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Pin", HelpText = "Site Pin")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Pin", HelpText = "Site Pin")]
         public string Pin { get; set; }
 
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(4, Label = "Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Password")]
         public string Password { get; set; }
 
         public NzbDroneValidationResult Validate()

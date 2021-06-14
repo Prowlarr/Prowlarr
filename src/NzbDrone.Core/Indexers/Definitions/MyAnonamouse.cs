@@ -13,7 +13,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -22,7 +21,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "MyAnonamouse";
 
-        public override string BaseUrl => "https://www.myanonamouse.net/";
+        public override string[] IndexerUrls => new string[] { "https://www.myanonamouse.net/" };
+        public override string Description => "";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -34,12 +34,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new MyAnonamouseRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new MyAnonamouseRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new MyAnonamouseParser(Settings, Capabilities.Categories, BaseUrl);
+            return new MyAnonamouseParser(Settings, Capabilities.Categories);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -160,7 +160,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public MyAnonamouseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public MyAnonamouseRequestGenerator()
         {
@@ -202,7 +201,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qParams.Add("tor[cat][]", "0");
             }
 
-            var urlSearch = BaseUrl + "tor/js/loadSearchJSONbasic.php";
+            var urlSearch = Settings.BaseUrl + "tor/js/loadSearchJSONbasic.php";
 
             if (qParams.Count > 0)
             {
@@ -261,13 +260,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly MyAnonamouseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public MyAnonamouseParser(MyAnonamouseSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public MyAnonamouseParser(MyAnonamouseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -331,8 +328,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var category = item.Category;
                 release.Categories = _categories.MapTrackerCatToNewznab(category);
 
-                release.DownloadUrl = _baseUrl + "/tor/download.php?tid=" + id;
-                release.InfoUrl = _baseUrl + "/t/" + id;
+                release.DownloadUrl = _settings.BaseUrl + "/tor/download.php?tid=" + id;
+                release.InfoUrl = _settings.BaseUrl + "/t/" + id;
                 release.Guid = release.InfoUrl;
 
                 var dateStr = item.Added;
@@ -366,7 +363,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class MyAnonamouseSettings : IProviderConfig
+    public class MyAnonamouseSettings : IIndexerSettings
     {
         private static readonly MyAnonamouseSettingsValidator Validator = new MyAnonamouseSettingsValidator();
 
@@ -375,10 +372,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             MamId = "";
         }
 
-        [FieldDefinition(1, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Profile -> Security)")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Profile -> Security)")]
         public string MamId { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]
+        [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]
         public bool ExcludeVip { get; set; }
 
         public NzbDroneValidationResult Validate()

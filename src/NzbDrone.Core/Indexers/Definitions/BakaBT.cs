@@ -16,7 +16,6 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -25,8 +24,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "BakaBT";
 
-        public override string BaseUrl => "https://bakabt.me/";
-        private string LoginUrl => BaseUrl + "login.php";
+        public override string[] IndexerUrls => new string[] { "https://bakabt.me/" };
+        public override string Description => "Anime Comunity";
+        private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -38,12 +38,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new BakaBTRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new BakaBTRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new BakaBTParser(Settings, Capabilities.Categories, BaseUrl);
+            return new BakaBTParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -138,7 +138,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public BakaBTSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public BakaBTRequestGenerator()
         {
@@ -147,7 +146,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
             var searchString = term;
-            var searchUrl = BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
+            var searchUrl = Settings.BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
 
             var match = Regex.Match(term, @".*(?=\s(?:[Ee]\d+|\d+)$)");
             if (match.Success)
@@ -213,14 +212,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly BakaBTSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
         private readonly List<IndexerCategory> _defaultCategories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime };
 
-        public BakaBTParser(BakaBTSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public BakaBTParser(BakaBTSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -300,10 +297,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Categories = currentCategories;
 
                     //release.Description = row.QuerySelector("span.tags")?.TextContent;
-                    release.Guid = _baseUrl + qTitleLink.GetAttribute("href");
+                    release.Guid = _settings.BaseUrl + qTitleLink.GetAttribute("href");
                     release.InfoUrl = release.Guid;
 
-                    release.DownloadUrl = _baseUrl + row.QuerySelector(".peers a").GetAttribute("href");
+                    release.DownloadUrl = _settings.BaseUrl + row.QuerySelector(".peers a").GetAttribute("href");
 
                     var grabs = row.QuerySelectorAll(".peers")[0].FirstChild.NodeValue.TrimEnd().TrimEnd('/').TrimEnd();
                     grabs = grabs.Replace("k", "000");
@@ -392,7 +389,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class BakaBTSettings : IProviderConfig
+    public class BakaBTSettings : IIndexerSettings
     {
         private static readonly BakaBTSettingsValidator Validator = new BakaBTSettingsValidator();
 
@@ -402,16 +399,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(3, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
+        [FieldDefinition(4, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
         public bool AddRomajiTitle { get; set; }
 
-        [FieldDefinition(4, Label = "Append Season", Type = FieldType.Checkbox, HelpText = "Append Season for Sonarr Compatibility")]
+        [FieldDefinition(5, Label = "Append Season", Type = FieldType.Checkbox, HelpText = "Append Season for Sonarr Compatibility")]
         public bool AppendSeason { get; set; }
 
         public NzbDroneValidationResult Validate()

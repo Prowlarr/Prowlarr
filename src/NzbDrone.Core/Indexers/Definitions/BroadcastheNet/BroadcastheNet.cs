@@ -17,7 +17,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public override string BaseUrl => "http://api.broadcasthe.net/";
+        public override string[] IndexerUrls => new string[] { "http://api.broadcasthe.net/" };
+        public override string Description => "BroadcasTheNet (BTN) is an invite-only torrent tracker focused on TV shows";
 
         public BroadcastheNet(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -26,7 +27,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var requestGenerator = new BroadcastheNetRequestGenerator() { Settings = Settings, PageSize = PageSize, BaseUrl = BaseUrl, Capabilities = Capabilities };
+            var requestGenerator = new BroadcastheNetRequestGenerator() { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities };
 
             var releaseInfo = _indexerStatusService.GetLastRssSyncReleaseInfo(Definition.Id);
             if (releaseInfo != null)

@@ -24,8 +24,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Anthelion : TorrentIndexerBase<AnthelionSettings>
     {
         public override string Name => "Anthelion";
-        public override string BaseUrl => "https://anthelion.me/";
-        private string LoginUrl => BaseUrl + "login.php";
+        public override string[] IndexerUrls => new string[] { "https://anthelion.me/" };
+        private string LoginUrl => Settings.BaseUrl + "login.php";
         public override string Description => "A movies tracker";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
@@ -40,12 +40,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnthelionRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new AnthelionRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AnthelionParser(Settings, Capabilities.Categories, BaseUrl);
+            return new AnthelionParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -214,13 +214,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly AnthelionSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public AnthelionParser(AnthelionSettings settings, IndexerCapabilitiesCategories categories, string baseurl)
+        public AnthelionParser(AnthelionSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseurl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -237,9 +235,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var tags = row.QuerySelector("div.torrent_info").FirstChild.TextContent.Replace(" / ", " ").Trim();
                 var title = $"{qDetailsLink.TextContent} {year} {tags}";
                 var description = row.QuerySelector("div.tags").TextContent.Trim();
-                var details = _baseUrl + qDetailsLink.GetAttribute("href");
+                var details = _settings.BaseUrl + qDetailsLink.GetAttribute("href");
                 var torrentId = qDetailsLink.GetAttribute("href").Split('=').Last();
-                var link = _baseUrl + "torrents.php?action=download&id=" + torrentId;
+                var link = _settings.BaseUrl + "torrents.php?action=download&id=" + torrentId;
                 var posterStr = qDetailsLink.GetAttribute("data-cover");
                 var poster = !string.IsNullOrWhiteSpace(posterStr) ? new Uri(qDetailsLink.GetAttribute("data-cover")) : null;
 
@@ -308,7 +306,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class AnthelionSettings : IProviderConfig
+    public class AnthelionSettings : IIndexerSettings
     {
         private static readonly AnthelionSettingsValidator Validator = new AnthelionSettingsValidator();
 
@@ -318,10 +316,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(1, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         public NzbDroneValidationResult Validate()

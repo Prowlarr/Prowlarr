@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Orpheus : Gazelle.Gazelle
     {
         public override string Name => "Orpheus";
-        public override string BaseUrl => "https://orpheus.network/";
+        public override string[] IndexerUrls => new string[] { "https://orpheus.network/" };
+        public override string Description => "";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public Orpheus(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

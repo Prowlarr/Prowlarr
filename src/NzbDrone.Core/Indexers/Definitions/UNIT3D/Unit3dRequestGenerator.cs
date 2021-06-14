@@ -11,13 +11,12 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
     public class Unit3dRequestGenerator : IIndexerRequestGenerator
     {
         public Unit3dSettings Settings { get; set; }
-        public string BaseUrl { get; set; }
 
         public IHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 
-        protected virtual string SearchUrl => BaseUrl + "api/torrents/filter";
+        protected virtual string SearchUrl => Settings.BaseUrl + "api/torrents/filter";
         protected virtual bool ImdbInTags => false;
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

@@ -1,6 +1,5 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
@@ -15,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         }
     }
 
-    public class AvistazSettings : IProviderConfig
+    public class AvistazSettings : IIndexerSettings
     {
         private static readonly AvistazSettingsValidator Validator = new AvistazSettingsValidator();
 
@@ -26,13 +25,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public string Token { get; set; }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", HelpText = "Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(3, Label = "PID", HelpText = "PID from My Account or My Profile page")]
+        [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]
         public string Pid { get; set; }
 
         public NzbDroneValidationResult Validate()

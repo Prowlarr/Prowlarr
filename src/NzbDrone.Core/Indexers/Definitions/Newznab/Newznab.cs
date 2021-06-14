@@ -19,7 +19,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
         public override string Name => "Newznab";
-        public override string BaseUrl => GetBaseUrlFromSettings();
+        public override string[] IndexerUrls => GetBaseUrlFromSettings();
+        public override string Description => "";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
 
@@ -44,16 +45,16 @@ namespace NzbDrone.Core.Indexers.Newznab
             return new NewznabRssParser(Settings);
         }
 
-        public string GetBaseUrlFromSettings()
+        public string[] GetBaseUrlFromSettings()
         {
             var baseUrl = "";
 
             if (Definition == null || Settings == null || Settings.Categories == null)
             {
-                return baseUrl;
+                return new string[] { baseUrl };
             }
 
-            return Settings.BaseUrl;
+            return new string[] { Settings.BaseUrl };
         }
 
         public IndexerCapabilities GetCapabilitiesFromSettings()

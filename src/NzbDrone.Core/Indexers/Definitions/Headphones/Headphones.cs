@@ -17,7 +17,8 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override string BaseUrl => "https://indexer.codeshy.com";
+        public override string[] IndexerUrls => new string[] { "https://indexer.codeshy.com" };
+        public override string Description => "";
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -26,8 +27,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             {
                 PageSize = PageSize,
                 Settings = Settings,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 

@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Indexers
                 });
             }
 
-            definition.BaseUrl = defFile.Links.First();
+            definition.IndexerUrls = defFile.Links.ToArray();
             definition.Description = defFile.Description;
             definition.Language = defFile.Language;
             definition.Encoding = Encoding.GetEncoding(defFile.Encoding);
@@ -174,7 +174,7 @@ namespace NzbDrone.Core.Indexers
             //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
             if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
             {
-                definition.BaseUrl = provider.BaseUrl;
+                definition.IndexerUrls = provider.IndexerUrls;
                 definition.Privacy = provider.Privacy;
                 definition.Description = provider.Description;
                 definition.Encoding = provider.Encoding;

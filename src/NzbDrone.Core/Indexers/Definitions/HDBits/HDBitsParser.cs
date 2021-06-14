@@ -11,13 +11,11 @@ namespace NzbDrone.Core.Indexers.HDBits
 {
     public class HDBitsParser : IParseIndexerResponse
     {
-        private readonly string _baseUrl;
         private readonly HDBitsSettings _settings;
 
-        public HDBitsParser(HDBitsSettings settings, string baseUrl)
+        public HDBitsParser(HDBitsSettings settings)
         {
             _settings = settings;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -91,7 +89,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         private string GetDownloadUrl(string torrentId)
         {
-            var url = new HttpUri(_baseUrl)
+            var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/download.php")
                 .AddQueryParam("id", torrentId)
                 .AddQueryParam("passkey", _settings.ApiKey);
@@ -101,7 +99,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         private string GetInfoUrl(string torrentId)
         {
-            var url = new HttpUri(_baseUrl)
+            var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/details.php")
                 .AddQueryParam("id", torrentId);
 

@@ -14,7 +14,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -23,7 +22,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "SuperBits";
 
-        public override string BaseUrl => "https://superbits.org/";
+        public override string[] IndexerUrls => new string[] { "https://superbits.org/" };
+        public override string Description => "Superbits is a SWEDISH Private Torrent Tracker for MOVIES / TV / GENERAL";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -35,12 +35,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SuperBitsRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new SuperBitsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SuperBitsParser(Settings, Capabilities.Categories, BaseUrl);
+            return new SuperBitsParser(Settings, Capabilities.Categories);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -104,7 +104,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public SuperBitsSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public SuperBitsRequestGenerator()
         {
@@ -112,7 +111,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = BaseUrl + "api/v1/torrents";
+            var searchUrl = Settings.BaseUrl + "api/v1/torrents";
 
             // And this was option one from
             // https://github.com/Jackett/Jackett/pull/7166#discussion_r376817517
@@ -151,7 +150,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 
-            request.HttpRequest.Headers.Add("Referer", BaseUrl);
+            request.HttpRequest.Headers.Add("Referer", Settings.BaseUrl);
 
             yield return request;
         }
@@ -209,13 +208,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly SuperBitsSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public SuperBitsParser(SuperBitsSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public SuperBitsParser(SuperBitsSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -240,9 +237,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.Files = row.numfiles;
                 release.Grabs = row.times_completed;
 
-                release.InfoUrl = _baseUrl + "torrent/" + row.id.ToString() + "/";
+                release.InfoUrl = _settings.BaseUrl + "torrent/" + row.id.ToString() + "/";
                 release.Guid = release.InfoUrl;
-                release.DownloadUrl = _baseUrl + "api/v1/torrents/download/" + row.id.ToString();
+                release.DownloadUrl = _settings.BaseUrl + "api/v1/torrents/download/" + row.id.ToString();
 
                 if (row.frileech == 1)
                 {
@@ -329,7 +326,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class SuperBitsSettings : IProviderConfig
+    public class SuperBitsSettings : IIndexerSettings
     {
         private static readonly SuperBitsSettingsValidator Validator = new SuperBitsSettingsValidator();
 
@@ -338,9 +335,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Cookie = "";
         }
 
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "Cookie", HelpText = "Site Cookie")]
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
         public string Cookie { get; set; }
 
         public NzbDroneValidationResult Validate()

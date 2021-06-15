@@ -19,6 +19,10 @@ function getAverageResponseTimeData(indexerStats) {
     };
   });
 
+  data.sort((a, b) => {
+    return b.value - a.value;
+  });
+
   return data;
 }
 

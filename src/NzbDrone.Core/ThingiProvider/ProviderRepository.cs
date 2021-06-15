@@ -23,6 +23,7 @@ namespace NzbDrone.Core.ThingiProvider
                 AllowTrailingCommas = true,
                 IgnoreNullValues = true,
                 PropertyNameCaseInsensitive = true,
+                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };

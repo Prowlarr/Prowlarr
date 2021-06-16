@@ -53,7 +53,7 @@
     "DownloadClientUnavailable": "Letöltőkliens nem elérhető",
     "DownloadClientStatusCheckSingleClientMessage": "Letöltőkliens hiba miatt nem elérhető: {0}",
     "DownloadClientStatusCheckAllClientMessage": "Az összes letöltőkliens elérhetetlen, hiba miatt",
-    "DownloadClientsSettingsSummary": "Letöltőkliensek, letöltések kezelése, és távoli elérési útvonalak",
+    "DownloadClientsSettingsSummary": "Letöltőkliens konfigurációja a Prowlarr felhasználói felület keresésbe történő integráláshoz",
     "DownloadClientSettings": "Letöltőkliens Beállítások",
     "DownloadClients": "Letöltőkliensek",
     "DownloadClientCheckUnableToCommunicateMessage": "Nem lehet kommunikálni a következővel: {0}.",
@@ -919,5 +919,12 @@
     "Stats": "Statisztikák",
     "Torrent": "Torrent",
     "UnableToLoadAppProfiles": "Nem sikerült betölteni az alkalmazásprofilokat",
-    "PrioritySettings": "Prioritás"
+    "PrioritySettings": "Prioritás",
+    "SyncLevelFull": "Teljes szinkron: Teljesen szinkronban tartja ezt az alkalmazást. A Prowlarr-ban végrehajtott módosításokat ezután szinkronizálja ezzel az alkalmazással. A távolról végrehajtott módosításokat a Prowlarr felülírja a következő szinkronizáláskor.",
+    "SyncLevelAddRemove": "Csak hozzáadás és eltávolítás: Amikor hozzáadja vagy eltávolítja a Prowlarr-ból, frissíti ezt a távoli alkalmazást.",
+    "SyncLevel": "Szinkronizálás Szintje",
+    "FullSync": "Teljes Szinkron",
+    "AddRemoveOnly": "Csak hozzáadás és eltávolítás",
+    "AddDownloadClientToProwlarr": "Letöltőkliens hozzáadásával a Prowlarr kézi keresés közben közvetlenül a felhasználói felületről küldhet kiadásokat.",
+    "Add": "Hozzáadás"
 }

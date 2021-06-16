@@ -176,11 +176,15 @@ namespace NzbDrone.Core.Indexers
                     {
                         var pagedReleases = new List<ReleaseInfo>();
 
+                        var pageSize = PageSize;
+
                         foreach (var request in pageableRequest)
                         {
                             url = request.Url.FullUri;
 
                             var page = await FetchPage(request, parser);
+
+                            pageSize = pageSize == 1 ? page.Releases.Count : pageSize;
 
                             result.Queries.Add(page);
 
@@ -213,7 +217,7 @@ namespace NzbDrone.Core.Indexers
                                 break;
                             }
 
-                            if (!IsFullPage(page.Releases))
+                            if (!IsFullPage(page.Releases, pageSize))
                             {
                                 break;
                             }
@@ -336,9 +340,9 @@ namespace NzbDrone.Core.Indexers
             return Capabilities ?? ((IndexerDefinition)Definition).Capabilities;
         }
 
-        protected virtual bool IsFullPage(IList<ReleaseInfo> page)
+        protected virtual bool IsFullPage(IList<ReleaseInfo> page, int pageSize)
         {
-            return PageSize != 0 && page.Count >= PageSize;
+            return pageSize != 0 && page.Count >= pageSize;
         }
 
         protected virtual async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)

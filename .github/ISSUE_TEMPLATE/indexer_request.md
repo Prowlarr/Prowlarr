@@ -1,6 +1,6 @@
 ---
 name: Indexer Request
-about: Request an indexer for Prowlarr. Check the [pinned Jackett parity issue](https://github.com/Prowlarr/Prowlarr/issues/29) prior to submitting a request. Duplicated requests will be closed without warning. Please search GitHub prior to requesting.
+about: Request an indexer for Prowlarr. Check the [Jackett GHI](https://github.com/Prowlarr/Prowlarr/issues/29) & search GitHub prior to submitting a request. Duplicate requests will be closed.
 title: '(Indexer) '
 labels: 'Type: Indexer Request'
 assignees: ''

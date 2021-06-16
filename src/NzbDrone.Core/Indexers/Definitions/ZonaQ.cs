@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     .SetHeader("X-Requested-With", "XMLHttpRequest")
                     .Build();
 
-                response = await ExecuteAuth(authLoginRequest);
+                response = await ExecuteAuth(authLoginRequest2);
                 message = JObject.Parse(response.Content)["msg"]?.ToString();
             }
 
@@ -131,7 +131,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             requestBuilder4.SetCookies(response.GetCookies());
-            response = await _httpClient.ExecuteAsync(new HttpRequest(Login4Url));
+            var authLoginRequest3 = requestBuilder4.Build();
+
+            response = await _httpClient.ExecuteAsync(authLoginRequest3);
 
             UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
         }

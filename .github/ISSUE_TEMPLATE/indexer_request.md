@@ -1,6 +1,6 @@
 ---
 name: Indexer Request
-about: Request an indexer for Prowlarr. Check Prowlarr Github Issue #29 for existing Jackett Indexers & search GitHub prior to submitting a request. Duplicate requests will be closed.
+about: Request an indexer for Prowlarr. Check the pinned Jackett Github Issue (Prowlarr Number 29) for existing Jackett Indexers & search GitHub prior to submitting a request. Duplicate requests will be closed.
 title: '(Indexer) '
 labels: 'Type: Indexer Request'
 assignees: ''

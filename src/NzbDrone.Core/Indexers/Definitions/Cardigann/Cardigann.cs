@@ -59,6 +59,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
             };
         }
 
+        protected override IDictionary<string, string> GetCookies()
+        {
+            if (Settings.ExtraFieldData.TryGetValue("cookie", out var cookies))
+            {
+                return CookieUtil.CookieHeaderToDictionary((string)cookies);
+            }
+
+            return base.GetCookies();
+        }
+
         public override IEnumerable<ProviderDefinition> DefaultDefinitions
         {
             get

@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var statusCode = (int)response.StatusCode;
 
-            if (statusCode is < 200 or > 400)
+            if (statusCode is < 200 or > 299)
             {
                 throw new HttpException(response);
             }

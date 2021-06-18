@@ -215,6 +215,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
                             Scene = torrent.Scene,
+                            Freeleech = torrent.IsFreeLeech || torrent.IsPersonalFreeLeech,
                         };
 
                         var category = torrent.Category;

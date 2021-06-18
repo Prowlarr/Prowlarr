@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "Redacted";
         public override string BaseUrl => "https://redacted.ch/";
-        public override string Description => "Redacted Description Go Here";
+        public override string Description => "Redacted is a Private Torrent Tracker for Music";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

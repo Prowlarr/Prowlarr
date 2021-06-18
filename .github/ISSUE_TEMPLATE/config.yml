@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Indexer Requests
+    url: https://requests.prowlarr.com/
+    about: Request new indexers to be added. Vote on existing requests.
   - name: Support via Discord
     url: https://prowlarr.com/discord
     about: Chat with users and devs on support and setup related topics.

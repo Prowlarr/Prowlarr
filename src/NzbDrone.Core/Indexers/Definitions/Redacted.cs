@@ -75,6 +75,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.PC, "Applications");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.BooksEBook, "E-Books");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.MoviesOther, "E-Learning Videos");
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVOther, "Comedy");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.BooksComics, "Comics");
 
             return caps;
@@ -86,6 +88,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public RedactedSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public string BaseUrl { get; set; }
+        public Func<IDictionary<string, string>> GetCookies { get; set; }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         public RedactedRequestGenerator()
         {
@@ -143,9 +147,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .Accept(HttpAccept.Json)
                 .SetHeader("Authorization", Settings.Apikey);
         }
-
-        public Func<IDictionary<string, string>> GetCookies { get; set; }
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
     public class RedactedParser : IParseIndexerResponse
@@ -153,6 +154,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly RedactedSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
         private readonly string _baseUrl;
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         public RedactedParser(RedactedSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
         {
@@ -209,13 +211,15 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
                             InfoUrl = GetInfoUrl(result.GroupId, id),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
                             Scene = torrent.Scene,
                             Freeleech = torrent.IsFreeLeech || torrent.IsPersonalFreeLeech,
+                            Files = torrent.FileCount,
+                            Grabs = torrent.Snatches,
                         };
 
                         var category = torrent.Category;
@@ -239,17 +243,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                     GazelleInfo release = new GazelleInfo()
                     {
                         Guid = string.Format("Redacted-{0}", id),
-
-                        // Splice Title from info to avoid calling API again for every torrent.
                         Title = WebUtility.HtmlDecode(result.GroupName),
-
                         Size = long.Parse(result.Size),
-                        DownloadUrl = GetDownloadUrl(id),
+                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
+                        PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
                         Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
-                        Categories = _categories.MapTrackerCatDescToNewznab(result.Category),
+                        Files = result.FileCount,
+                        Grabs = result.Snatches,
                     };
 
                     var category = result.Category;
@@ -273,7 +276,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     .ToArray();
         }
 
-        private string GetDownloadUrl(int torrentId)
+        private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
             // AuthKey is required but not checked, just pass in a dummy variable
             // to avoid having to track authkey, which is randomly cycled
@@ -283,7 +286,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddQueryParam("id", torrentId)
                 .AddQueryParam("authkey", "prowlarr")
                 .AddQueryParam("torrent_pass", _settings.Passkey)
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? 1 : 0);
+                .AddQueryParam("usetoken", (_settings.UseFreeleechToken && canUseToken) ? 1 : 0);
 
             return url.FullUri;
         }
@@ -297,8 +300,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return url.FullUri;
         }
-
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
     public class RedactedSettingsValidator : AbstractValidator<RedactedSettings>

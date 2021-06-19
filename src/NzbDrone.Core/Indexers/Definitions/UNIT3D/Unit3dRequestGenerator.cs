@@ -30,11 +30,13 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
             if (searchCriteria.ImdbId != null)
             {
                 parameters.Add("imdb", searchCriteria.ImdbId);
+                parameters.Add("imdbId", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TmdbId > 0)
             {
                 parameters.Add("tmdb", searchCriteria.TmdbId.ToString());
+                parameters.Add("tmdbId", searchCriteria.TmdbId.ToString());
             }
 
             var pageableRequests = new IndexerPageableRequestChain();
@@ -58,11 +60,13 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
             if (searchCriteria.ImdbId != null)
             {
                 parameters.Add("imdb", searchCriteria.ImdbId);
+                parameters.Add("imdbId", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TvdbId > 0)
             {
-                parameters.Add("tmdb", searchCriteria.TvdbId.ToString());
+                parameters.Add("tvdb", searchCriteria.TvdbId.ToString());
+                parameters.Add("tvdbId", searchCriteria.TvdbId.ToString());
             }
 
             var pageableRequests = new IndexerPageableRequestChain();

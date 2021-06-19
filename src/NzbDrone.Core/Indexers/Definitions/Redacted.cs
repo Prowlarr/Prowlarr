@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest(string.Format("&searchstr={0}", searchCriteria.SanitizedSearchTerm)));
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }
@@ -123,7 +123,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest(string.Format("&searchstr={0}", searchCriteria.SanitizedSearchTerm)));
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }

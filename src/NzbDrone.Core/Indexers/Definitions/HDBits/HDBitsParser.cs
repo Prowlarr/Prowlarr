@@ -57,11 +57,6 @@ namespace NzbDrone.Core.Indexers.HDBits
 
                 var flags = new List<IndexerFlag>();
 
-                if (result.FreeLeech == "yes")
-                {
-                    flags.Add(IndexerFlag.FreeLeech);
-                }
-
                 if (internalRelease)
                 {
                     flags.Add(IndexerFlag.Internal);
@@ -83,6 +78,8 @@ namespace NzbDrone.Core.Indexers.HDBits
                     Internal = internalRelease,
                     ImdbId = result.ImdbInfo?.Id ?? 0,
                     TvdbId = result.TvdbInfo?.Id ?? 0,
+                    DownloadVolumeFactor = result.FreeLeech == "yes" ? 0 : 1,
+                    UploadVolumeFactor = 1,
                     IndexerFlags = flags
                 });
             }

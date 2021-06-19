@@ -91,6 +91,12 @@ namespace NzbDrone.Core.Indexers
                 c.Indexer = Definition.Name;
                 c.DownloadProtocol = Protocol;
                 c.IndexerPriority = ((IndexerDefinition)Definition).Priority;
+
+                //Add common flags
+                if (Protocol == DownloadProtocol.Torrent && ((TorrentInfo)c).DownloadVolumeFactor == 0)
+                {
+                    c.IndexerFlags.Add(IndexerFlag.FreeLeech);
+                }
             });
 
             return result;

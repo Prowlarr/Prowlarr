@@ -78,11 +78,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                         flags.Add(PassThePopcornFlag.Approved); //title = $"{title} ✔";
                     }
 
-                    if (torrent.FreeleechType == "Freeleech")
-                    {
-                        flags.Add(IndexerFlag.FreeLeech);
-                    }
-
                     if (torrent.Scene)
                     {
                         flags.Add(IndexerFlag.Scene);

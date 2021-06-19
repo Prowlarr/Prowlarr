@@ -231,6 +231,39 @@ namespace NzbDrone.Core.Indexers.Definitions
                         torrentInfos.Add(release);
                     }
                 }
+
+                // Non-Audio files are formatted a little differently (1:1 for group and torrents)
+                else
+                {
+                    var id = result.TorrentId;
+                    GazelleInfo release = new GazelleInfo()
+                    {
+                        Guid = string.Format("Redacted-{0}", id),
+
+                        // Splice Title from info to avoid calling API again for every torrent.
+                        Title = WebUtility.HtmlDecode(result.GroupName),
+
+                        Size = long.Parse(result.Size),
+                        DownloadUrl = GetDownloadUrl(id),
+                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        Seeders = int.Parse(result.Seeders),
+                        Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
+                        Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
+                        Categories = _categories.MapTrackerCatDescToNewznab(result.Category),
+                    };
+
+                    var category = result.Category;
+                    if (category == null || category.Contains("Select Category"))
+                    {
+                        release.Categories = _categories.MapTrackerCatToNewznab("1");
+                    }
+                    else
+                    {
+                        release.Categories = _categories.MapTrackerCatDescToNewznab(category);
+                    }
+
+                    torrentInfos.Add(release);
+                }
             }
 
             // order by date

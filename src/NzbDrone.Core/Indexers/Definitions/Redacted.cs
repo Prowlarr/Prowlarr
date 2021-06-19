@@ -6,6 +6,7 @@ using System.Text;
 using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -36,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RedactedRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new RedactedRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl, HttpClient = _httpClient };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -90,6 +91,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string BaseUrl { get; set; }
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+        public IHttpClient HttpClient { get; set; }
 
         public RedactedRequestGenerator()
         {
@@ -134,6 +136,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
+            // Retrieve passkey if not already done
+            if (string.IsNullOrWhiteSpace(Settings.Passkey))
+            {
+                // GET on index for the passkey
+                var request = RequestBuilder().Resource("ajax.php?action=index").Build();
+                var indexResponse = HttpClient.Execute(request);
+                var index = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
+                if (index == null ||
+                    string.IsNullOrWhiteSpace(index.Status) ||
+                    index.Status != "success" ||
+                    string.IsNullOrWhiteSpace(index.Response.Passkey))
+                {
+                    throw new Exception("Failed to authenticate with Redacted.");
+                }
+
+                // Set passkey on settings so it persists and we only hit the index once per query
+                Settings.Passkey = index.Response.Passkey;
+            }
+
             var req = RequestBuilder()
                 .Resource($"ajax.php?action=browse&searchstr={searchParameters}")
                 .Build();

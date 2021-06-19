@@ -245,16 +245,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var dlVolumeFactor = row.QuerySelector("strong.tl_free") != null ? 0 : 1;
 
                 var cat = row.QuerySelector("td.cats_col > div").GetAttribute("class").Replace("tooltip cats_", "");
-                var category = new List<IndexerCategory> {
-                        cat switch
-                        {
-                            "featurefilm" => NewznabStandardCategory.Movies,
-                            "shortfilm" => NewznabStandardCategory.Movies,
-                            "miniseries" => NewznabStandardCategory.TV,
-                            "other" => NewznabStandardCategory.Other,
-                            _ => throw new Exception($"Unknown category: {cat}")
-                        }
-                    };
+                var category = new List<IndexerCategory>
+                {
+                    cat switch
+                    {
+                        "featurefilm" => NewznabStandardCategory.Movies,
+                        "shortfilm" => NewznabStandardCategory.Movies,
+                        "miniseries" => NewznabStandardCategory.TV,
+                        "other" => NewznabStandardCategory.Other,
+                        _ => throw new Exception($"Unknown category: {cat}")
+                    }
+                };
 
                 // TODO: TMDb is also available
                 var qImdb = row.QuerySelector("a[href^=\"https://www.imdb.com\"]");

@@ -98,6 +98,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("NZBFinder", GetSettings("https://nzbfinder.ws"));
                 yield return GetDefinition("NZBgeek", GetSettings("https://api.nzbgeek.info"));
                 yield return GetDefinition("NzbNoob", GetSettings("https://www.nzbnoob.com"));
+                yield return GetDefinition("NZBNDX", GetSettings("https://www.nzbndx.com"));
                 yield return GetDefinition("NzbPlanet", GetSettings("https://api.nzbplanet.net"));
                 yield return GetDefinition("NZBStars", GetSettings("https://nzbstars.com"));
                 yield return GetDefinition("NZBXS", GetSettings("https://www.nzbxs.com"));

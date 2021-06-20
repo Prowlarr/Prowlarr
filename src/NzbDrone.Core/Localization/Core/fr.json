@@ -154,7 +154,7 @@
     "Grabbed": "Attrapé",
     "Genres": "Genres",
     "Forecast": "Prévision",
-    "DownloadClientsSettingsSummary": "Clients de Téléchargement, la gestion des téléchargements et les mappages de chemins d'accès à distance",
+    "DownloadClientsSettingsSummary": "Clients de Téléchargement configuration pour l'intégration dans la recherche de l'interface utilisateur Prowlarr",
     "DownloadClientCheckUnableToCommunicateMessage": "Impossible de communiquer avec {0}.",
     "DownloadClient": "Client de Téléchargement",
     "DotNetVersionCheckOldUnsupportedMessage": "Le .Net Framework {0} actuellement installé est ancien et n'est pas pris en charge. Veuillez mettre à niveau .Net Framework à au moins {1}.",
@@ -927,5 +927,11 @@
     "UnableToAddANewApplicationPleaseTryAgain": "Impossible d'ajouter une nouvelle application, veuillez réessayer.",
     "UnableToAddANewAppProfilePleaseTryAgain": "Impossible d'ajouter un nouveau profil d'application, veuillez réessayer.",
     "UnableToLoadAppProfiles": "Impossible de charger les profils d'application",
-    "Add": "Ajouter"
+    "Add": "Ajouter",
+    "SyncLevelFull": "Synchronisation complète : gardera cette application entièrement synchronisée. Les modifications apportées dans Prowlarr sont ensuite synchronisées avec cette application. Toute modification effectuée à distance sera annulée par Prowlarr lors de la prochaine synchronisation.",
+    "SyncLevelAddRemove": "Ajouter et supprimer uniquement : lorsqu'il est ajouté ou supprimé de Prowlarr, il mettra à jour cette application distante.",
+    "SyncLevel": "Niveau de synchronisation",
+    "FullSync": "Synchronisation complète",
+    "AddRemoveOnly": "Ajouter et supprimer uniquement",
+    "AddDownloadClientToProwlarr": "L'ajout d'un client de téléchargement permet à Prowlarr d'envoyer des fichers directement depuis l'interface utilisateur tout en effectuant une recherche manuelle."
 }

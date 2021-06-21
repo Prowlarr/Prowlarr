@@ -89,7 +89,6 @@ function EditIndexerModalContent(props) {
                   type={inputTypes.CHECK}
                   name="enable"
                   helpTextWarning={supportsRss.value ? undefined : translate('RSSIsNotSupportedWithThisIndexer')}
-                  isDisabled={!supportsRss.value}
                   {...enable}
                   onChange={onInputChange}
                 />

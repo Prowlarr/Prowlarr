@@ -28,10 +28,10 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public string ApiKey { get; set; }
 
-        [FieldDefinition(1, Label = "Username")]
+        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", Type = FieldType.Password)]
+        [FieldDefinition(2, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         public virtual NzbDroneValidationResult Validate()

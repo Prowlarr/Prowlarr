@@ -343,10 +343,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username")]
+        [FieldDefinition(1, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(2, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         public NzbDroneValidationResult Validate()

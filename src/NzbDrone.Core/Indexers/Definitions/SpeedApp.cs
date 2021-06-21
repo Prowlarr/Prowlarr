@@ -418,7 +418,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Email", HelpText = "Site email")]
         public string Email { get; set; }
 
-        [FieldDefinition(1, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        [FieldDefinition(1, Label = "Password", HelpText = "Site Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(0, Label = "Api Key", Hidden = HiddenType.Hidden)]

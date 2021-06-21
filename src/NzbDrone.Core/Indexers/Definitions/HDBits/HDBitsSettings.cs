@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.HDBits
             Mediums = System.Array.Empty<int>();
         }
 
-        [FieldDefinition(0, Label = "Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(0, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]

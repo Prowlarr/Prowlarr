@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.FileList
         {
         }
 
-        [FieldDefinition(0, Label = "Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(0, Label = "Username", HelpText = "Site Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
         [FieldDefinition(1, Label = "Passkey", Privacy = PrivacyLevel.ApiKey)]

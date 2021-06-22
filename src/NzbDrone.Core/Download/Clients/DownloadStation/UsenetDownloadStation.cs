@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
     public class UsenetDownloadStation : UsenetClientBase<DownloadStationSettings>
     {
         protected readonly IDownloadStationInfoProxy _dsInfoProxy;
-        protected readonly IDownloadStationTaskProxy _dsTaskProxy;
+        protected readonly IDownloadStationTaskProxySelector _dsTaskProxySelector;
         protected readonly ISharedFolderResolver _sharedFolderResolver;
         protected readonly ISerialNumberProvider _serialNumberProvider;
         protected readonly IFileStationProxy _fileStationProxy;
@@ -27,15 +27,15 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                                      ISerialNumberProvider serialNumberProvider,
                                      IFileStationProxy fileStationProxy,
                                      IDownloadStationInfoProxy dsInfoProxy,
-                                     IDownloadStationTaskProxy dsTaskProxy,
+                                     IDownloadStationTaskProxySelector dsTaskProxySelector,
                                      IHttpClient httpClient,
                                      IConfigService configService,
                                      IDiskProvider diskProvider,
                                      Logger logger)
-        : base(httpClient, configService, diskProvider, logger)
+            : base(httpClient, configService, diskProvider, logger)
         {
             _dsInfoProxy = dsInfoProxy;
-            _dsTaskProxy = dsTaskProxy;
+            _dsTaskProxySelector = dsTaskProxySelector;
             _fileStationProxy = fileStationProxy;
             _sharedFolderResolver = sharedFolderResolver;
             _serialNumberProvider = serialNumberProvider;
@@ -46,16 +46,18 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
         public override ProviderMessage Message => new ProviderMessage("Prowlarr is unable to connect to Download Station if 2-Factor Authentication is enabled on your DSM account", ProviderMessageType.Warning);
 
+        private IDownloadStationTaskProxy DsTaskProxy => _dsTaskProxySelector.GetProxy(Settings);
+
         protected IEnumerable<DownloadStationTask> GetTasks()
         {
-            return _dsTaskProxy.GetTasks(Settings).Where(v => v.Type.ToLower() == DownloadStationTaskType.NZB.ToString().ToLower());
+            return DsTaskProxy.GetTasks(Settings).Where(v => v.Type.ToLower() == DownloadStationTaskType.NZB.ToString().ToLower());
         }
 
         protected override string AddFromNzbFile(ReleaseInfo release, string filename, byte[] fileContent)
         {
             var hashedSerialNumber = _serialNumberProvider.GetSerialNumber(Settings);
 
-            _dsTaskProxy.AddTaskFromData(fileContent, filename, GetDownloadDirectory(), Settings);
+            DsTaskProxy.AddTaskFromData(fileContent, filename, GetDownloadDirectory(), Settings);
 
             var items = GetTasks().Where(t => t.Additional.Detail["uri"] == filename);
 
@@ -127,6 +129,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             }
             catch (DownloadClientAuthenticationException ex)
             {
+                // User could not have permission to access to downloadstation
                 _logger.Error(ex, ex.Message);
                 return new NzbDroneValidationFailure(string.Empty, ex.Message);
             }
@@ -178,7 +181,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
 
         protected ValidationFailure ValidateVersion()
         {
-            var info = _dsTaskProxy.GetApiInfo(Settings);
+            var info = DsTaskProxy.GetApiInfo(Settings);
 
             _logger.Debug("Download Station api version information: Min {0} - Max {1}", info.MinVersion, info.MaxVersion);
 

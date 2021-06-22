@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
     {
         private readonly IFileStationProxy _proxy;
         private readonly ILogger _logger;
+
         private ICached<SharedFolderMapping> _cache;
 
         public SharedFolderResolver(ICacheManager cacheManager,

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
     public class DownloadStationInfoProxy : DiskStationProxyBase, IDownloadStationInfoProxy
     {
         public DownloadStationInfoProxy(IHttpClient httpClient, ICacheManager cacheManager, Logger logger)
-        : base(DiskStationApi.DownloadStationInfo, "SYNO.DownloadStation.Info", httpClient, cacheManager, logger)
+            : base(DiskStationApi.DownloadStationInfo, "SYNO.DownloadStation.Info", httpClient, cacheManager, logger)
         {
         }
 

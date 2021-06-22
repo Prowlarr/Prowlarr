@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
 {
@@ -20,16 +20,22 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
                 { 104, "The requested version does not support the functionality" },
                 { 105, "The logged in session does not have permission" },
                 { 106, "Session timeout" },
-                { 107, "Session interrupted by duplicate login" }
+                { 107, "Session interrupted by duplicate login" },
+                { 119, "SID not found" }
             };
 
             AuthMessages = new Dictionary<int, string>
             {
                 { 400, "No such account or incorrect password" },
-                { 401, "Account disabled" },
-                { 402, "Permission denied" },
-                { 403, "2-step verification code required" },
-                { 404, "Failed to authenticate 2-step verification code" }
+                { 401, "Disabled account" },
+                { 402, "Denied permission" },
+                { 403, "2-step authentication code required" },
+                { 404, "Failed to authenticate 2-step authentication code" },
+                { 406, "Enforce to authenticate with 2-factor authentication code" },
+                { 407, "Blocked IP source" },
+                { 408, "Expired password cannot change" },
+                { 409, "Expired password" },
+                { 410, "Password must be changed" }
             };
 
             DownloadStationTaskMessages = new Dictionary<int, string>
@@ -76,7 +82,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
 
         public int Code { get; set; }
 
-        public bool SessionError => Code == 105 || Code == 106 || Code == 107;
+        public bool SessionError => Code == 105 || Code == 106 || Code == 107 || Code == 119;
 
         public string GetMessage(DiskStationApi api)
         {
@@ -85,7 +91,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation.Responses
                 return AuthMessages[Code];
             }
 
-            if (api == DiskStationApi.DownloadStationTask && DownloadStationTaskMessages.ContainsKey(Code))
+            if ((api == DiskStationApi.DownloadStationTask || api == DiskStationApi.DownloadStation2Task) && DownloadStationTaskMessages.ContainsKey(Code))
             {
                 return DownloadStationTaskMessages[Code];
             }

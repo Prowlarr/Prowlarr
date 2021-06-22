@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Crypto;
@@ -16,6 +16,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
     {
         private readonly IDSMInfoProxy _proxy;
         private readonly ILogger _logger;
+
         private ICached<string> _cache;
 
         public SerialNumberProvider(ICacheManager cacheManager,

@@ -276,7 +276,7 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
+            if (definition.Enable && (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name))
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;

@@ -1080,6 +1080,33 @@ stages:
           summaryFileLocation: './CoverageResults/combined/Cobertura.xml'
           reportDirectory: './CoverageResults/combined/'
 
+  - stage: Supported_Indexers_Wiki_Update
+    dependsOn:
+    - Analyze
+    - Unit_Test
+    - Integration
+    - Automation
+    condition: |
+      or
+      (
+        and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop')),
+        and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+      )
+    displayName: Wiki Markdown Updates
+    jobs:
+    - job:
+      displayName: Markdown creation
+      pool:
+        vmImage: 'windows-2019'
+      steps:
+        - task: PowerShell@2
+          continueOnError: true
+          displayName: "Run "
+        - powershell: | 
+            Set-PSRepository PSGallery -InstallationPolicy trusted
+            Install-Module FormatMarkdownTable -Confirm:$false -Force
+            .\Convert-ProwlarrSupportedIndexersToMarkdownTable.ps1 -Commit <Q/TA - will need help with this bit> -Build '$(prowlarrVersion)' -APIKey <Q/TA - will need help with this bit> -OutputFile "./supported-indexers.md" -BaseURL "http://prowlarr:8989"
+
   - stage: Report_Out
     dependsOn:
     - Analyze

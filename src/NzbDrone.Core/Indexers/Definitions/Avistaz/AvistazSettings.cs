@@ -11,6 +11,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Password).NotEmpty();
+            RuleFor(c => c.Pid).NotEmpty();
         }
     }
 

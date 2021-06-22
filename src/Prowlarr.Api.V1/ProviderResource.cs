@@ -39,7 +39,7 @@ namespace Prowlarr.Api.V1
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
                 //prowlarr/supported#{0} are custom build redirect pages; if passing a new var, create a new redirect
-                InfoLink = string.Format("https://wikijs.servarr.com/prowlarr/supported#{0}",
+                InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported#{0}",
                     definition.Implementation.ToLower())
             };
         }

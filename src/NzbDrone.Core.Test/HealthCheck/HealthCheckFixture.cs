@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Test.HealthCheck
     [TestFixture]
     public class HealthCheckFixture : CoreTest
     {
-        private const string WikiRoot = "https://wikijs.servarr.com/";
+        private const string WikiRoot = "https://wiki.servarr.com/";
 
         [TestCase("I blew up because of some weird user mistake", null, WikiRoot + "prowlarr/system#i-blew-up-because-of-some-weird-user-mistake")]
         [TestCase("I blew up because of some weird user mistake", "#my-health-check", WikiRoot + "prowlarr/system#my-health-check")]

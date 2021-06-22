@@ -118,6 +118,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Enable = true,
                 Name = definition.Name,
                 Language = definition.Language,
+                Description = definition.Description,
                 Implementation = GetType().Name,
                 Settings = new CardigannSettings { DefinitionFile = definition.File },
                 Protocol = DownloadProtocol.Torrent,

@@ -51,6 +51,8 @@ namespace Prowlarr.Api.V1.Indexers
 
             var resource = base.ToResource(definition);
 
+            var infoLinkName = definition.ImplementationName;
+
             if (definition.Implementation == typeof(Cardigann).Name)
             {
                 var extraFields = definition.ExtraFields?.Select((x, i) => MapField(x, i)).ToList() ?? new List<Field>();
@@ -66,8 +68,11 @@ namespace Prowlarr.Api.V1.Indexers
                         field.Value = setting.Value;
                     }
                 }
+
+                infoLinkName = settings.DefinitionFile;
             }
 
+            resource.InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported-indexers#{0}", infoLinkName.ToLower().Replace(' ', '-'));
             resource.AppProfileId = definition.AppProfileId;
             resource.BaseUrl = definition.BaseUrl;
             resource.Description = definition.Description;

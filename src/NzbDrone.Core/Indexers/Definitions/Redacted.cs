@@ -338,13 +338,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
-        public static explicit operator RedactedSettings(Gazelle.GazelleSettings gazelleSettings)
-        {
-            RedactedSettings redactedSettings = new RedactedSettings();
-            redactedSettings.UseFreeleechToken = gazelleSettings.UseFreeleechToken;
-            return redactedSettings;
-        }
-
         [FieldDefinition(1, Label = "API Key", HelpText = "Redacted API Key")]
         public string Apikey { get; set; }
 

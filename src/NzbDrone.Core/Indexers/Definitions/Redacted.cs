@@ -29,6 +29,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        public override bool SupportsRedirect => true;
 
         public Redacted(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -43,11 +44,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new RedactedParser(Settings, Capabilities.Categories, BaseUrl);
-        }
-
-        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
-        {
-            return false;
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -342,14 +338,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
+        public static explicit operator RedactedSettings(Gazelle.GazelleSettings gazelleSettings)
+        {
+            RedactedSettings redactedSettings = new RedactedSettings();
+            redactedSettings.UseFreeleechToken = gazelleSettings.UseFreeleechToken;
+            return redactedSettings;
+        }
+
         [FieldDefinition(1, Label = "API Key", HelpText = "Redacted API Key")]
         public string Apikey { get; set; }
 
-        [FieldDefinition(1, Hidden = HiddenType.Hidden)]
-        public string Passkey { get; set; }
-
         [FieldDefinition(2, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
         public bool UseFreeleechToken { get; set; }
+
+        public string Passkey { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

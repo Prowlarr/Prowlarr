@@ -66,6 +66,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 torrentInfo.PublishDate = torrent.pubdate.ToUniversalTime();
                 torrentInfo.Seeders = torrent.seeders;
                 torrentInfo.Peers = torrent.leechers + torrent.seeders;
+                torrentInfo.DownloadVolumeFactor = 0;
+                torrentInfo.UploadVolumeFactor = 1;
 
                 if (torrent.movie_info != null)
                 {

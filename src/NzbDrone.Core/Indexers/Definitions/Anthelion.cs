@@ -52,7 +52,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                AllowAutoRedirect = true
             };
 
             requestBuilder.Method = HttpMethod.POST;
@@ -68,6 +69,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddFormParameter("login", "Log+In!")
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
+
+            var headers = new NameValueCollection
+            {
+                { "Referer", LoginUrl }
+            };
+
+            authLoginRequest.Headers.Add(headers);
 
             var response = await ExecuteAuth(authLoginRequest);
 

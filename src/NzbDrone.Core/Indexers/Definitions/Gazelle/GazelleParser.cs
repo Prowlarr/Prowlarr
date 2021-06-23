@@ -11,9 +11,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
 {
     public class GazelleParser : IParseIndexerResponse
     {
-        private readonly GazelleSettings _settings;
-        private readonly IndexerCapabilities _capabilities;
-        private readonly string _baseUrl;
+        protected readonly GazelleSettings _settings;
+        protected readonly IndexerCapabilities _capabilities;
+        protected readonly string _baseUrl;
 
         public GazelleParser(GazelleSettings settings, IndexerCapabilities capabilities, string baseUrl)
         {
@@ -138,11 +138,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     .ToArray();
         }
 
-        private string GetDownloadUrl(int torrentId)
+        protected virtual string GetDownloadUrl(int torrentId)
         {
             var url = new HttpUri(_baseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
+                .AddQueryParam("useToken", _settings.UseFreeleechToken ? "1" : "0")
                 .AddQueryParam("id", torrentId);
 
             return url.FullUri;

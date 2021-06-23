@@ -17,8 +17,6 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public Logger Logger { get; set; }
 
         protected virtual string APIUrl => BaseUrl + "ajax.php";
-        protected virtual string DownloadUrl => BaseUrl + "torrents.php?action=download&usetoken=" + (Settings.UseFreeleechToken ? "1" : "0") + "&id=";
-        protected virtual string DetailsUrl => BaseUrl + "torrents.php?torrentid=";
         protected virtual bool ImdbInTags => false;
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

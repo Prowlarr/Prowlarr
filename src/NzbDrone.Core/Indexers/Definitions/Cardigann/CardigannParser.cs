@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         .ContainsIgnoreCase("login.php"))
                 {
                     CookiesUpdater(null, null);
-                    throw new IndexerException(indexerResponse, "We are being redirected to the PTP login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
+                    throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
                 }
 
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");

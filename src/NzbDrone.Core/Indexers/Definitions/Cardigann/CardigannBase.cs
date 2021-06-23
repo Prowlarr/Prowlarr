@@ -557,7 +557,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case "querystring":
                         var param = (string)filter.Args;
 
-                        // data = ParseUtil.GetArgumentFromQueryString(data, param);
+                        data = ParseUtil.GetArgumentFromQueryString(data, param);
                         break;
                     case "timeparse":
                     case "dateparse":

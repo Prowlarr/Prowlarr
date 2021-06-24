@@ -7,8 +7,10 @@ import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
-import { kinds } from 'Helpers/Props';
+import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
+import { align, kinds } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import StatsFilterMenu from './StatsFilterMenu';
 import styles from './Stats.css';
 
 function getAverageResponseTimeData(indexerStats) {
@@ -144,14 +146,29 @@ function Stats(props) {
     item,
     isFetching,
     isPopulated,
-    error
+    error,
+    filters,
+    selectedFilterKey,
+    onFilterSelect
   } = props;
 
   const isLoaded = !!(!error && isPopulated);
 
   return (
     <PageContent>
-      <PageToolbar />
+      <PageToolbar>
+        <PageToolbarSection
+          alignContent={align.RIGHT}
+          collapseButtons={false}
+        >
+          <StatsFilterMenu
+            selectedFilterKey={selectedFilterKey}
+            filters={filters}
+            onFilterSelect={onFilterSelect}
+            isDisabled={false}
+          />
+        </PageToolbarSection>
+      </PageToolbar>
       <PageContentBody>
         {
           isFetching && !isPopulated &&
@@ -232,6 +249,10 @@ Stats.propTypes = {
   item: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedFilterKey: PropTypes.string.isRequired,
+  customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onFilterSelect: PropTypes.func.isRequired,
   error: PropTypes.object,
   data: PropTypes.object
 };

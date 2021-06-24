@@ -190,11 +190,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 
-            // TODO Have BHD fix their API response content type so we can proper check here
-            // if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
-            // {
-            //     throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
-            // }
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            {
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            }
+
             var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerResponse.HttpResponse);
 
             foreach (var row in jsonResponse.Resource.Results)
@@ -217,10 +217,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     ImdbId = ParseUtil.GetImdbID(row.ImdbId).GetValueOrDefault(),
                     TmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.TmdbId.Split("/")[1]),
                     Peers = row.Leechers + row.Seeders,
-                    DownloadVolumeFactor = row.Freeleech ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
+                    DownloadVolumeFactor = row.Freeleech || row.Limited ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
-                    MinimumSeedTime = 172800, // 48 hours
+                    MinimumSeedTime = 172800, // 120 hours
                 };
 
                 torrentInfos.Add(release);
@@ -300,5 +300,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public bool Promo25 { get; set; }
         public bool Promo50 { get; set; }
         public bool Promo75 { get; set; }
+        public bool Limited { get; set; }
     }
 }

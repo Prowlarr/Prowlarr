@@ -133,6 +133,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
+            if (httpResponse.HasHttpError)
+            {
+                return true;
+            }
+
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
 
             SetCookieFunctions(generator);

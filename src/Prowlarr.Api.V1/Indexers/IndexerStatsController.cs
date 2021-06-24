@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.IndexerStats;
 using Prowlarr.Http;
@@ -15,13 +16,16 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpGet]
-        public IndexerStatsResource GetAll()
+        public IndexerStatsResource GetAll(DateTime? startDate, DateTime? endDate)
         {
+            var statsStartDate = startDate ?? DateTime.Now.AddDays(-30);
+            var statsEndDate = endDate ?? DateTime.Now;
+
             var indexerResource = new IndexerStatsResource
             {
-                Indexers = _indexerStatisticsService.IndexerStatistics(),
-                UserAgents = _indexerStatisticsService.UserAgentStatistics(),
-                Hosts = _indexerStatisticsService.HostStatistics()
+                Indexers = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate).IndexerStatistics,
+                UserAgents = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate).UserAgentStatistics,
+                Hosts = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate).HostStatistics
             };
 
             return indexerResource;

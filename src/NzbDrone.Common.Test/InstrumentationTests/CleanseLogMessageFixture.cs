@@ -90,5 +90,14 @@ namespace NzbDrone.Common.Test.InstrumentationTests
 
             cleansedMessage.Should().Be(message);
         }
+
+        [TestCase(@"&useToken=2b51db35e1910123321025a12b9933d2")]
+        [TestCase(@"&useToken=2b51db35e1910123321025a12b9933d2")]
+        public void should_not_clean_usetoken(string message)
+        {
+            var cleansedMessage = CleanseLogMessage.Cleanse(message);
+
+            cleansedMessage.Should().Be(message);
+        }
     }
 }

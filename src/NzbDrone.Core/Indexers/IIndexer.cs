@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -27,6 +28,8 @@ namespace NzbDrone.Core.Indexers
         Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
 
         Task<byte[]> Download(Uri link);
+
+        IDictionary<string, string> GrabCookies();
 
         IndexerCapabilities GetCapabilities();
     }

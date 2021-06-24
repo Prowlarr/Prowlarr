@@ -125,5 +125,10 @@ namespace NzbDrone.Core.Indexers
         {
             return Definition.Name;
         }
+
+        public virtual IDictionary<string, string> GrabCookies()
+        {
+            return null;
+        }
     }
 }

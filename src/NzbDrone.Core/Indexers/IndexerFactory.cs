@@ -267,7 +267,13 @@ namespace NzbDrone.Core.Indexers
                 MapCardigannDefinition(definition);
             }
 
-            return base.Create(definition);
+            var newDef =  base.Create(definition);
+
+            provider.Definition = newDef;
+
+            _indexerStatusService.UpdateCookies(newDef.Id, provider.GrabCookies(), DateTime.Now + TimeSpan.FromDays(30));
+
+            return newDef;
         }
 
         public override void Update(IndexerDefinition definition)

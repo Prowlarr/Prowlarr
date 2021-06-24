@@ -223,6 +223,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
         }
 
+        public override IDictionary<string, string> GrabCookies()
+        {
+            return ((CardigannRequestGenerator)GetRequestGenerator()).Cookies;
+        }
+
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
             if (action == "checkCaptcha")

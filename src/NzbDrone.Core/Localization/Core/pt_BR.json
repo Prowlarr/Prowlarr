@@ -13,7 +13,7 @@
     "ConnectSettingsSummary": "Notificações, conexões com servidores/reprodutores de mídia, e scripts personalizados",
     "DeleteIndexerMessageText": "Tem certeza de que deseja excluir o indexador \"{0}\"?",
     "IndexerObsoleteCheckMessage": "Os seguintes indexadores são obsoletos ou foram atualizados: {0}. Remova-os e/ou adicione-os novamente ao Prowlarr",
-    "DownloadClientsSettingsSummary": "Clientes de download, gerenciamento de download e mapeamentos de caminho remoto",
+    "DownloadClientsSettingsSummary": "Configuração de clientes de download para integração com a pesquisa na interface do Prowlarr",
     "EnableAutoHelpText": "Se habilitada, os filmes serão automaticamente adicionados ao Prowlarr a partir desta lista",
     "EnableAutomaticSearchHelpTextWarning": "Será usado com a pesquisa interativa",
     "EnableColorImpairedModeHelpText": "Estilo alterado para permitir que usuários com daltonismo distingam melhor as informações codificadas por cores",
@@ -416,5 +416,13 @@
     "Applications": "Aplicativos",
     "AddDownloadClient": "Adicionar cliente de download",
     "CouldNotConnectSignalR": "Não é possível conectar ao SignalR, a interface não atualizará",
-    "PrioritySettings": "Prioridade"
+    "PrioritySettings": "Prioridade",
+    "SyncLevelFull": "Sincronização completa: manterá este aplicativo completamente sincronizado. Alterações feitas no Prowlarr são, então, sincronizadas com este aplicativo. Qualquer alteração feita remotamente será substituída pelo Prowlarr na próxima sincronização.",
+    "SyncLevelAddRemove": "Adicionar e remover apenas: quando o Prowlarr adiciona ou remove, ele atualizará este aplicativo remoto.",
+    "SyncLevel": "Nível de sincronização",
+    "FullSync": "Sincronização completa",
+    "Edit": "Editar",
+    "AddRemoveOnly": "Adicionar e remover apenas",
+    "AddDownloadClientToProwlarr": "Adicionar um cliente de download possibilita que o Prowlarr envie lançamentos diretamente da interface ao executar uma pesquisa manual.",
+    "Add": "Adicionar"
 }

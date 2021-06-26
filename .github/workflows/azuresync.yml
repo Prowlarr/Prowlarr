@@ -13,8 +13,8 @@ jobs:
         env:
           ado_token: "${{ secrets.ADO_PERSONAL_ACCESS_TOKEN }}"
           github_token: "${{ github.token }}"
-          ado_organization: "Prowlarr"
-          ado_project: "Prowlarr"
+          ado_organization: "Servarr"
+          ado_project: "Servarr"
           ado_wit: "Issue"
           ado_new_state: "New"
           ado_active_state: "Active"

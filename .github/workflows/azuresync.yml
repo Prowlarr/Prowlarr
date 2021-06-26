@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: danhellem/github-actions-issue-to-work-item@master
-        if: ${{ contains(github.event.issue.labels.*.name, 'Bug') == true }}
+        if: "${{ contains(github.event.issue.labels.*.name, 'Type: Bug') == true }}"
         env:
           ado_token: "${{ secrets.ADO_PERSONAL_ACCESS_TOKEN }}"
           github_token: "${{ github.token }}"
@@ -24,7 +24,7 @@ jobs:
           ado_bypassrules: true
           log_level: 100
       - uses: danhellem/github-actions-issue-to-work-item@master
-        if: ${{ contains(github.event.issue.labels.*.name, 'Bug') == false }}
+        if: "${{ contains(github.event.issue.labels.*.name, 'Type: Bug') == false }}"
         env:
           ado_token: "${{ secrets.ADO_PERSONAL_ACCESS_TOKEN }}"
           github_token: "${{ github.token }}"

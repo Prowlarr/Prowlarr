@@ -485,7 +485,7 @@
     "DeleteCustomFormat": "Deletar Formato Personalizado",
     "DeleteBackup": "Eliminar cópia de segurança",
     "DelayProfile": "Perfil de atraso",
-    "DBMigration": "Migração de base de dados",
+    "DBMigration": "Migração da base de dados",
     "CutoffHelpText": "Quando esta qualidade for alcançada, o Prowlarr não irá mais baixar filmes",
     "CutoffFormatScoreHelpText": "Quando esta pontuação do formato personalizado for alcançada, o Prowlarr não irá mais baixar filmes",
     "CustomFormatsSettings": "Ajustes Personalizados de Formatos",

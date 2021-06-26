@@ -170,6 +170,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             try
             {
                 var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+                var supportMovieSearch = false;
+                var supportTVSearch = false;
 
                 if (capabilities.SearchParams != null && capabilities.SearchParams.Contains(SearchParam.Q))
                 {
@@ -180,10 +182,32 @@ namespace NzbDrone.Core.Indexers.Newznab
                     new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)) &&
                     new[] { MovieSearchParam.ImdbTitle, MovieSearchParam.ImdbYear }.All(v => capabilities.MovieSearchParams.Contains(v)))
                 {
-                    return null;
+                    supportMovieSearch = true;
                 }
 
-                return new ValidationFailure(string.Empty, "This indexer does not support searching for movies :(. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
+                if (capabilities.TvSearchParams != null &&
+                    new[] { TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.RId, TvSearchParam.TvMazeId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
+                    new[] { TvSearchParam.Season, TvSearchParam.Ep }.All(v => capabilities.TvSearchParams.Contains(v)))
+                {
+                    supportTVSearch = true;
+                }
+
+                if (!supportMovieSearch && !supportTVSearch)
+                {
+                    return new ValidationFailure(string.Empty, "This indexer does not support searching for movies nor tv series. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
+                }
+                else if (!supportTVSearch)
+                {
+                    return new ValidationFailure(string.Empty, "This indexer does not support searching for tv series. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
+                }
+                else if (!supportMovieSearch)
+                {
+                    return new ValidationFailure(string.Empty, "This indexer does not support searching for movies. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception ex)
             {

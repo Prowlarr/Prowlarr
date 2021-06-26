@@ -180,7 +180,7 @@ namespace NzbDrone.Core.Configuration
         public bool AnalyticsEnabled => GetValueBoolean("AnalyticsEnabled", true, persist: false);
 
         // TODO: Change back to "master" for the first stable release.
-        public string Branch => GetValue("Branch", "nightly").ToLowerInvariant();
+        public string Branch => GetValue("Branch", "develop").ToLowerInvariant();
 
         public string LogLevel => GetValue("LogLevel", "info").ToLowerInvariant();
         public string ConsoleLogLevel => GetValue("ConsoleLogLevel", string.Empty, persist: false);

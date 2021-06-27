@@ -798,6 +798,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return false;
             }
 
+            if (response.HasHttpError)
+            {
+                return true;
+            }
+
             var parser = new HtmlParser();
             var document = parser.ParseDocument(response.Content);
 

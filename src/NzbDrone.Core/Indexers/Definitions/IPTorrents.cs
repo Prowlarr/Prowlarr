@@ -21,7 +21,20 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "IPTorrents";
 
-        public override string[] IndexerUrls => new string[] { "https://iptorrents.com/" };
+        public override string[] IndexerUrls => new string[]
+        {
+            "https://iptorrents.com/",
+            "https://iptorrents.me/",
+            "https://nemo.iptorrents.com/",
+            "https://ipt.getcrazy.me/",
+            "https://ipt.findnemo.net/",
+            "https://ipt.beelyrics.net/",
+            "https://ipt.venom.global/",
+            "https://ipt.workisboring.net/",
+            "https://ipt.lol/",
+            "https://ipt.cool/",
+            "https://ipt.world/"
+        };
         public override string Description => "";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

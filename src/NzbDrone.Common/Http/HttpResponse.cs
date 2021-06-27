@@ -47,7 +47,14 @@ namespace NzbDrone.Common.Http
             {
                 if (_content == null)
                 {
-                    _content = Headers.GetEncodingFromContentType().GetString(ResponseData);
+                    if (Request.Encoding != null)
+                    {
+                        _content = Request.Encoding.GetString(ResponseData);
+                    }
+                    else
+                    {
+                        _content = Headers.GetEncodingFromContentType().GetString(ResponseData);
+                    }
                 }
 
                 return _content;

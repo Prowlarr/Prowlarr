@@ -504,7 +504,7 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn("Indexer returned result for RSS URL, Credentials appears to be invalid: " + ex.Message);
 
-                return new ValidationFailure("ApiKey", "Invalid API Key");
+                return new ValidationFailure("", ex.Message);
             }
             catch (RequestLimitReachedException ex)
             {

@@ -20,6 +20,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"https://horrorcharnel.org/takeloginhorror.php: username=mySecret&password=mySecret&use_sslvalue==&perm_ssl=1&submitme=X&use_ssl=1&returnto=%2F&captchaSelection=1230456")]
         [TestCase(@"https://torrentdb.net/login: _token=2b51db35e1912ffc138825a12b9933d2&username=mySecret&password=mySecret&remember=on")]
         [TestCase(@" var authkey = ""2b51db35e1910123321025a12b9933d2"";")]
+        [TestCase(@"https://hd-space.org/index.php?page=login: uid=mySecret&pwd=mySecret")]
 
         // NzbGet
         [TestCase(@"{ ""Name"" : ""ControlUsername"", ""Value"" : ""mySecret"" }, { ""Name"" : ""ControlPassword"", ""Value"" : ""mySecret"" }, ")]

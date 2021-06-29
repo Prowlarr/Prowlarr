@@ -326,7 +326,7 @@
   "SettingsEnableColorImpairedModeHelpText": "Altered style to allow color-impaired users to better distinguish color coded information",
   "SettingsFilterSentryEvents": "Filter Analytics Events",
   "SettingsFilterSentryEventsHelpText": "Filter known user error events from being sent as Analytics",
-  "SettingsIndexerLogging": "Enchanced Indexer Logging",
+  "SettingsIndexerLogging": "Enhanced Indexer Logging",
   "SettingsIndexerLoggingHelpText": "Log additional Indexer data including response",
   "SettingsLogRotate": "Log Rotation",
   "SettingsLogRotateHelpText": "Max number of log files to keep saved in logs folder",

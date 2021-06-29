@@ -173,6 +173,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 queryCollection.Add("search", term);
             }
 
+            searchUrl += queryCollection.GetQueryString();
+
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
             yield return request;

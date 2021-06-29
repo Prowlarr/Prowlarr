@@ -169,14 +169,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly RedactedSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public RedactedParser(RedactedSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public RedactedParser(RedactedSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -296,7 +294,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             // AuthKey is required but not checked, just pass in a dummy variable
             // to avoid having to track authkey, which is randomly cycled
-            var url = new HttpUri(_baseUrl)
+            var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
@@ -309,7 +307,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string GetInfoUrl(string groupId, int torrentId)
         {
-            var url = new HttpUri(_baseUrl)
+            var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("id", groupId)
                 .AddQueryParam("torrentid", torrentId);
@@ -326,7 +324,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RedactedSettings : IProviderConfig
+    public class RedactedSettings : IIndexerSettings
     {
         private static readonly RedactedSettingsValidator Validator = new RedactedSettingsValidator();
 
@@ -337,10 +335,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
-        [FieldDefinition(1, Label = "API Key", HelpText = "Redacted API Key")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "API Key", HelpText = "Redacted API Key")]
         public string Apikey { get; set; }
 
-        [FieldDefinition(2, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
+        [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
         public bool UseFreeleechToken { get; set; }
 
         public string Passkey { get; set; }

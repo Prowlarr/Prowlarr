@@ -79,9 +79,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var response = await ExecuteAuth(authLoginRequest);
 
-            if (!response.Content.Contains("logout.php"))
+            if (CheckIfLoginNeeded(response))
             {
-                throw new IndexerAuthException("Anthelion Auth Failed");
+                var parser = new HtmlParser();
+                var dom = parser.ParseDocument(response.Content);
+                var errorMessage = dom.QuerySelector("form#loginform").TextContent.Trim();
+
+                throw new IndexerAuthException(errorMessage);
             }
 
             cookies = response.GetCookies();
@@ -127,7 +131,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public AnthelionSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public AnthelionRequestGenerator()
         {
@@ -135,7 +138,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
-            var searchUrl = string.Format("{0}/torrents.php", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/torrents.php", Settings.BaseUrl.TrimEnd('/'));
 
             // TODO: IMDB search is available but it requires to parse the details page
             var qc = new NameValueCollection
@@ -174,8 +177,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
-
             return pageableRequests;
         }
 
@@ -191,8 +192,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
 
             return pageableRequests;
         }

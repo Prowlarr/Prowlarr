@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class CinemaZ : AvistazBase
     {
         public override string Name => "CinemaZ";
-        public override string BaseUrl => "https://cinemaz.to/";
+        public override string[] IndexerUrls => new string[] { "https://cinemaz.to/" };
+        public override string Description => "Part of the Avistaz network.";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public CinemaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -25,8 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 

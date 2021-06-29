@@ -1,6 +1,5 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Headphones
@@ -14,7 +13,7 @@ namespace NzbDrone.Core.Indexers.Headphones
         }
     }
 
-    public class HeadphonesSettings : IProviderConfig
+    public class HeadphonesSettings : IIndexerSettings
     {
         private static readonly HeadphonesSettingsValidator Validator = new HeadphonesSettingsValidator();
 
@@ -28,10 +27,13 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         public string ApiKey { get; set; }
 
-        [FieldDefinition(1, Label = "Username")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", Type = FieldType.Password)]
+        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         public virtual NzbDroneValidationResult Validate()

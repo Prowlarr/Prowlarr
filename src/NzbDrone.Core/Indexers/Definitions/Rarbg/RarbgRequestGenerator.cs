@@ -12,7 +12,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
     {
         private readonly IRarbgTokenProvider _tokenProvider;
 
-        public string BaseUrl { get; set; }
         public RarbgSettings Settings { get; set; }
         public IndexerCapabilitiesCategories Categories { get; set; }
 
@@ -23,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         private IEnumerable<IndexerRequest> GetRequest(string term, int[] categories, string imdbId = null, int? tmdbId = null)
         {
-            var requestBuilder = new HttpRequestBuilder(BaseUrl)
+            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
                 .Resource("/pubapi_v2.php")
                 .Accept(HttpAccept.Json);
 
@@ -62,7 +61,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
             }
 
             requestBuilder.AddQueryParam("limit", "100");
-            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings, BaseUrl));
+            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings, Settings.BaseUrl));
             requestBuilder.AddQueryParam("format", "json_extended");
             requestBuilder.AddQueryParam("app_id", BuildInfo.AppName);
 

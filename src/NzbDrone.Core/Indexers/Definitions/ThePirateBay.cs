@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Http;
@@ -13,7 +12,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -21,7 +19,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ThePirateBay : TorrentIndexerBase<ThePirateBaySettings>
     {
         public override string Name => "ThePirateBay";
-        public override string BaseUrl => "https://thepiratebay.org/";
+        public override string[] IndexerUrls => new string[] { "https://thepiratebay.org/" };
+        public override string Description => "Pirate Bay(TPB) is the galaxy’s most resilient Public BitTorrent site";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -35,12 +34,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new ThePirateBayRequestGenerator() { Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new ThePirateBayRequestGenerator() { Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new ThePirateBayParser(Capabilities.Categories, BaseUrl);
+            return new ThePirateBayParser(Capabilities.Categories, Settings);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -123,7 +122,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ThePirateBayRequestGenerator : IIndexerRequestGenerator
     {
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
+
         private static string ApiUrl => "https://apibay.org/";
 
         public ThePirateBayRequestGenerator()
@@ -211,13 +210,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ThePirateBayParser : IParseIndexerResponse
     {
+        private readonly ThePirateBaySettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public ThePirateBayParser(IndexerCapabilitiesCategories categories, string baseUrl)
+        public ThePirateBayParser(IndexerCapabilitiesCategories categories, ThePirateBaySettings settings)
         {
+            _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -234,7 +233,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var item in queryResponseItems)
             {
-                var details = item.Id == 0 ? null : $"{_baseUrl}description.php?id={item.Id}";
+                var details = item.Id == 0 ? null : $"{_settings.BaseUrl}description.php?id={item.Id}";
                 var imdbId = string.IsNullOrEmpty(item.Imdb) ? null : ParseUtil.GetImdbID(item.Imdb);
                 var torrentItem =  new TorrentInfo
                 {
@@ -262,8 +261,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class ThePirateBaySettings : IProviderConfig
+    public class ThePirateBaySettings : IIndexerSettings
     {
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult();

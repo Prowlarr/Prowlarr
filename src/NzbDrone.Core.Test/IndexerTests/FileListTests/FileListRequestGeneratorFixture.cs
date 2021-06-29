@@ -19,7 +19,8 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             Subject.Settings = new FileListSettings()
             {
                 Passkey = "abcd",
-                Username = "somename"
+                Username = "somename",
+                BaseUrl = "https://filelist.io"
             };
 
             Subject.Capabilities = new IndexerCapabilities
@@ -54,8 +55,6 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
                 SearchTerm = "Star Wars",
                 Categories = new int[] { 2000 }
             };
-
-            Subject.BaseUrl = "https://filelist.io";
         }
 
         private void MovieWithoutIMDB()

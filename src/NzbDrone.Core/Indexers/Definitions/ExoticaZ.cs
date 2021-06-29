@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ExoticaZ : AvistazBase
     {
         public override string Name => "ExoticaZ";
-        public override string BaseUrl => "https://exoticaz.to/";
+        public override string[] IndexerUrls => new string[] { "https://exoticaz.to/" };
+        public override string Description => "ExoticaZ (YourExotic) is a Private Torrent Tracker for 3X";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public ExoticaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -26,7 +27,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 HttpClient = _httpClient,
                 Logger = _logger,
                 Capabilities = Capabilities,
-                BaseUrl = BaseUrl
             };
         }
 

@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.HDBits
     public class HDBits : TorrentIndexerBase<HDBitsSettings>
     {
         public override string Name => "HDBits";
-        public override string BaseUrl => "https://hdbits.org";
+        public override string[] IndexerUrls => new string[] { "https://hdbits.org" };
+        public override string Description => "Best HD Tracker";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -24,12 +25,12 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new HDBitsRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl, Capabilities = Capabilities };
+            return new HDBitsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new HDBitsParser(Settings, BaseUrl);
+            return new HDBitsParser(Settings);
         }
 
         private IndexerCapabilities SetCapabilities()

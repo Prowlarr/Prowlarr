@@ -16,7 +16,6 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-        public string BaseUrl { get; set; }
 
         public BroadcastheNetRequestGenerator()
         {
@@ -26,7 +25,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset)
         {
-            var builder = new JsonRpcRequestBuilder(BaseUrl)
+            var builder = new JsonRpcRequestBuilder(Settings.BaseUrl)
                 .Call("getTorrents", Settings.ApiKey, parameters, results, offset);
             builder.SuppressHttpError = true;
 

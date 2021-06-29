@@ -14,7 +14,7 @@ namespace Prowlarr.Api.V1.Indexers
 {
     public class IndexerResource : ProviderResource<IndexerResource>
     {
-        public string BaseUrl { get; set; }
+        public string[] IndexerUrls { get; set; }
         public string Description { get; set; }
         public string Language { get; set; }
         public string Encoding { get; set; }
@@ -51,6 +51,8 @@ namespace Prowlarr.Api.V1.Indexers
 
             var resource = base.ToResource(definition);
 
+            var infoLinkName = definition.ImplementationName;
+
             if (definition.Implementation == typeof(Cardigann).Name)
             {
                 var extraFields = definition.ExtraFields?.Select((x, i) => MapField(x, i)).ToList() ?? new List<Field>();
@@ -66,10 +68,13 @@ namespace Prowlarr.Api.V1.Indexers
                         field.Value = setting.Value;
                     }
                 }
+
+                infoLinkName = settings.DefinitionFile;
             }
 
+            resource.InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported-indexers#{0}", infoLinkName.ToLower().Replace(' ', '-'));
             resource.AppProfileId = definition.AppProfileId;
-            resource.BaseUrl = definition.BaseUrl;
+            resource.IndexerUrls = definition.IndexerUrls;
             resource.Description = definition.Description;
             resource.Language = definition.Language;
             resource.Encoding = definition.Encoding?.EncodingName ?? null;
@@ -125,7 +130,7 @@ namespace Prowlarr.Api.V1.Indexers
             definition.AppProfileId = resource.AppProfileId;
             definition.Enable = resource.Enable;
             definition.Redirect = resource.Redirect;
-            definition.BaseUrl = resource.BaseUrl;
+            definition.IndexerUrls = resource.IndexerUrls;
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;
             definition.Added = resource.Added;

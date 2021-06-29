@@ -12,14 +12,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     public class AvistazRequestGenerator : IIndexerRequestGenerator
     {
         public AvistazSettings Settings { get; set; }
-        public string BaseUrl { get; set; }
 
         public IDictionary<string, string> AuthCookieCache { get; set; }
         public IHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 
-        protected virtual string SearchUrl => BaseUrl + "api/v1/jackett/torrents";
+        protected virtual string SearchUrl => Settings.BaseUrl + "api/v1/jackett/torrents";
         protected virtual bool ImdbInTags => false;
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

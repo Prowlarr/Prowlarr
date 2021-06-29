@@ -71,7 +71,7 @@ class IndexerIndexRow extends Component {
     const {
       id,
       name,
-      baseUrl,
+      indexerUrls,
       enable,
       redirect,
       tags,
@@ -248,7 +248,7 @@ class IndexerIndexRow extends Component {
                     className={styles.externalLink}
                     name={icons.EXTERNAL_LINK}
                     title={'Website'}
-                    to={baseUrl.replace('api.', '')}
+                    to={indexerUrls[0].replace('api.', '')}
                   />
 
                   <IconButton
@@ -289,7 +289,7 @@ class IndexerIndexRow extends Component {
 
 IndexerIndexRow.propTypes = {
   id: PropTypes.number.isRequired,
-  baseUrl: PropTypes.string.isRequired,
+  indexerUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
   priority: PropTypes.number.isRequired,

@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SubsPlease : TorrentIndexerBase<SubsPleaseSettings>
     {
         public override string Name => "SubsPlease";
-        public override string BaseUrl => "https://subsplease.org/";
+        public override string[] IndexerUrls => new string[] { "https://subsplease.org/" };
         public override string Language => "en-us";
         public override string Description => "SubsPlease - A better HorribleSubs/Erai replacement";
         public override Encoding Encoding => Encoding.UTF8;
@@ -36,12 +36,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SubsPleaseRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new SubsPleaseRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SubsPleaseParser(Settings, Capabilities.Categories, BaseUrl);
+            return new SubsPleaseParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -64,7 +64,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public SubsPleaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public SubsPleaseRequestGenerator()
         {
@@ -72,7 +71,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetSearchRequests(string term)
         {
-            var searchUrl = string.Format("{0}/api/?", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/api/?", Settings.BaseUrl.TrimEnd('/'));
 
             string searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
 
@@ -97,7 +96,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetRssRequest()
         {
-            var searchUrl = string.Format("{0}/api/?", BaseUrl.TrimEnd('/'));
+            var searchUrl = string.Format("{0}/api/?", Settings.BaseUrl.TrimEnd('/'));
 
             var queryParameters = new NameValueCollection
             {
@@ -171,13 +170,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly SubsPleaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public SubsPleaseParser(SubsPleaseSettings settings, IndexerCapabilitiesCategories categories, string baseurl)
+        public SubsPleaseParser(SubsPleaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseurl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -205,7 +202,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     var release = new TorrentInfo
                     {
-                        InfoUrl = _baseUrl + $"shows/{r.Page}/",
+                        InfoUrl = _settings.BaseUrl + $"shows/{r.Page}/",
                         PublishDate = r.Release_Date.DateTime,
                         Files = 1,
                         Categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
@@ -255,9 +252,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
     }
 
-    public class SubsPleaseSettings : IProviderConfig
+    public class SubsPleaseSettings : IIndexerSettings
     {
         private static readonly SubsPleaseSettingsValidator Validator = new SubsPleaseSettingsValidator();
+
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
     public class TorrentPotato : TorrentIndexerBase<TorrentPotatoSettings>
     {
         public override string Name => "TorrentPotato";
-        public override string BaseUrl => "http://127.0.0.1";
+        public override string[] IndexerUrls => new string[] { "http://127.0.0.1" };
+        public override string Description => "";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -37,7 +38,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TorrentPotatoRequestGenerator() { Settings = Settings, BaseUrl = BaseUrl };
+            return new TorrentPotatoRequestGenerator() { Settings = Settings };
         }
 
         public override IParseIndexerResponse GetParser()

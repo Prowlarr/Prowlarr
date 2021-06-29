@@ -6,6 +6,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Messaging.Commands;
@@ -59,6 +60,40 @@ namespace NzbDrone.Core.IndexerVersions
                 var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
                 var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
                 indexerList = response.Resource.Where(i => !_defintionBlacklist.Contains(i.File)).ToList();
+
+                var definitionFolder = Path.Combine(_appFolderInfo.AppDataFolder, "Definitions", "Custom");
+
+                var directoryInfo = new DirectoryInfo(definitionFolder);
+
+                if (directoryInfo.Exists)
+                {
+                    var files = directoryInfo.GetFiles($"*.yml");
+
+                    foreach (var file in files)
+                    {
+                        _logger.Debug("Loading Custom Cardigann definition " + file.FullName);
+
+                        try
+                        {
+                            var definitionString = File.ReadAllText(file.FullName);
+                            var definition = _deserializer.Deserialize<CardigannMetaDefinition>(definitionString);
+
+                            definition.File = Path.GetFileNameWithoutExtension(file.Name);
+
+                            if (indexerList.Any(i => i.File == definition.File || i.Name == definition.Name))
+                            {
+                                _logger.Warn("Custom Cardigann definition {0} does not have unique file name or Indexer name", file.FullName);
+                                continue;
+                            }
+
+                            indexerList.Add(definition);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.Error($"Error while parsing custom Cardigann definition {file.FullName}\n{e}");
+                        }
+                    }
+                }
             }
             catch
             {
@@ -108,7 +143,7 @@ namespace NzbDrone.Core.IndexerVersions
 
             if (directoryInfo.Exists)
             {
-                var files = directoryInfo.GetFiles($"{fileKey}.yml");
+                var files = directoryInfo.GetFiles($"{fileKey}.yml", SearchOption.AllDirectories);
 
                 if (files.Any())
                 {

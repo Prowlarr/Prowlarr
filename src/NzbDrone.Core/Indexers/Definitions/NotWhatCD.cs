@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class NotWhatCD : Gazelle.Gazelle
     {
         public override string Name => "notwhat.cd";
-        public override string BaseUrl => "https://notwhat.cd/";
+        public override string[] IndexerUrls => new string[] { "https://notwhat.cd/" };
+        public override string Description => "";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public NotWhatCD(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

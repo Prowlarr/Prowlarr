@@ -12,12 +12,12 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
     public class PassThePopcornParser : IParseIndexerResponse
     {
-        private readonly string _baseUrl;
         private readonly IndexerCapabilities _capabilities;
+        private readonly PassThePopcornSettings _settings;
         private readonly Logger _logger;
-        public PassThePopcornParser(string baseUrl, IndexerCapabilities capabilities, Logger logger)
+        public PassThePopcornParser(PassThePopcornSettings settings, IndexerCapabilities capabilities, Logger logger)
         {
-            _baseUrl = baseUrl;
+            _settings = settings;
             _capabilities = capabilities;
             _logger = logger;
         }
@@ -78,11 +78,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                         flags.Add(PassThePopcornFlag.Approved); //title = $"{title} ✔";
                     }
 
-                    if (torrent.FreeleechType == "Freeleech")
-                    {
-                        flags.Add(IndexerFlag.FreeLeech);
-                    }
-
                     if (torrent.Scene)
                     {
                         flags.Add(IndexerFlag.Scene);
@@ -138,7 +133,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         private string GetDownloadUrl(int torrentId, string authKey, string passKey)
         {
-            var url = new HttpUri(_baseUrl)
+            var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
@@ -150,7 +145,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         private string GetInfoUrl(string groupId, int torrentId)
         {
-            var url = new HttpUri(_baseUrl)
+            var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("id", groupId)
                 .AddQueryParam("torrentid", torrentId);

@@ -11,13 +11,12 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
     public class Unit3dRequestGenerator : IIndexerRequestGenerator
     {
         public Unit3dSettings Settings { get; set; }
-        public string BaseUrl { get; set; }
 
         public IHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 
-        protected virtual string SearchUrl => BaseUrl + "api/torrents/filter";
+        protected virtual string SearchUrl => Settings.BaseUrl + "api/torrents/filter";
         protected virtual bool ImdbInTags => false;
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -30,11 +29,13 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
             if (searchCriteria.ImdbId != null)
             {
                 parameters.Add("imdb", searchCriteria.ImdbId);
+                parameters.Add("imdbId", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TmdbId > 0)
             {
                 parameters.Add("tmdb", searchCriteria.TmdbId.ToString());
+                parameters.Add("tmdbId", searchCriteria.TmdbId.ToString());
             }
 
             var pageableRequests = new IndexerPageableRequestChain();
@@ -58,11 +59,13 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
             if (searchCriteria.ImdbId != null)
             {
                 parameters.Add("imdb", searchCriteria.ImdbId);
+                parameters.Add("imdbId", searchCriteria.ImdbId);
             }
 
             if (searchCriteria.TvdbId > 0)
             {
-                parameters.Add("tmdb", searchCriteria.TvdbId.ToString());
+                parameters.Add("tvdb", searchCriteria.TvdbId.ToString());
+                parameters.Add("tvdbId", searchCriteria.TvdbId.ToString());
             }
 
             var pageableRequests = new IndexerPageableRequestChain();

@@ -38,9 +38,10 @@ namespace Prowlarr.Api.V1
                 Tags = definition.Tags,
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
-                //Radarr_Supported_{0} are custom build redirect pages; if passing a new var, create a new redirect
-                InfoLink = string.Format("https://wikijs.servarr.com/prowlarr/supported_{0}",
-                    definition.Implementation.ToLower())
+                //prowlarr/supported#{0} are custom build redirect pages; if passing a new var, create a new redirect
+                // note: indexers get a different link
+                InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported#{0}",
+                    definition.Implementation.ToLower().Replace(' ', '-'))
             };
         }
 

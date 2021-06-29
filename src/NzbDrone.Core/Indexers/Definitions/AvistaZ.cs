@@ -10,7 +10,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AvistaZ : AvistazBase
     {
         public override string Name => "AvistaZ";
-        public override string BaseUrl => "https://avistaz.to/";
+        public override string[] IndexerUrls => new string[] { "https://avistaz.to/" };
+        public override string Description => "Aka AsiaTorrents";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public AvistaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -25,8 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Settings = Settings,
                 HttpClient = _httpClient,
                 Logger = _logger,
-                Capabilities = Capabilities,
-                BaseUrl = BaseUrl
+                Capabilities = Capabilities
             };
         }
 

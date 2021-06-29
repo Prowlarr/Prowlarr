@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public IDictionary<string, string> Cookies { get; set; }
         protected HttpResponse landingResult;
         protected IHtmlDocument landingResultDocument;
+        protected override string SiteLink => Settings?.BaseUrl ?? _definition.Links.First();
 
         public CardigannRequestGenerator(IConfigService configService,
                                          CardigannDefinition definition,
@@ -795,6 +796,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
             if (_definition.Login == null || _definition.Login.Test == null)
             {
                 return false;
+            }
+
+            if (response.HasHttpError)
+            {
+                return true;
             }
 
             var parser = new HtmlParser();

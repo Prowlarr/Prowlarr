@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers
 {
     public class IndexerDefinition : ProviderDefinition
     {
-        public string BaseUrl { get; set; }
+        public string[] IndexerUrls { get; set; }
         public string Description { get; set; }
         public Encoding Encoding { get; set; }
         public string Language { get; set; }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
         private readonly ICached<CardigannRequestGenerator> _generatorCache;
 
         public override string Name => "Cardigann";
-        public override string BaseUrl => "";
+        public override string[] IndexerUrls => new string[] { "" };
+        public override string Description => "";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -43,6 +45,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 });
 
             generator = (CardigannRequestGenerator)SetCookieFunctions(generator);
+
+            generator.Settings = Settings;
 
             _generatorCache.ClearExpired();
 
@@ -118,7 +122,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Enable = true,
                 Name = definition.Name,
                 Language = definition.Language,
+                Description = definition.Description,
                 Implementation = GetType().Name,
+                IndexerUrls = definition.Links.ToArray(),
                 Settings = new CardigannSettings { DefinitionFile = definition.File },
                 Protocol = DownloadProtocol.Torrent,
                 Privacy = definition.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public,
@@ -227,6 +233,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return new
                 {
                     captchaRequest = result
+                };
+            }
+
+            if (action == "getUrls")
+            {
+                var devices = ((IndexerDefinition)Definition).IndexerUrls;
+
+                return new
+                {
+                    options = devices.Select(d => new { Value = d, Name = d })
                 };
             }
 

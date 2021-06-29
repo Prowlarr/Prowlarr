@@ -905,5 +905,7 @@
     "FeatureRequests": "Funktionsanfragen",
     "AppProfileSelectHelpText": "App-Profile werden verwendet, um die Einstellungen für RSS, automatische Suche und interaktive Suche bei der Anwendungssynchronisierung zu steuern",
     "Discord": "Discord",
-    "PrioritySettings": "Priorität"
+    "PrioritySettings": "Priorität",
+    "NotificationTriggersHelpText": "Auslöser für diese Benachrichtigung auswählen",
+    "Add": "Hinzufügen"
 }

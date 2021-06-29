@@ -2,7 +2,7 @@
 
 [![Build Status](https://dev.azure.com/Prowlarr/Prowlarr/_apis/build/status/Prowlarr.Prowlarr?branchName=develop)](https://dev.azure.com/Prowlarr/Prowlarr/_build/latest?definitionId=1&branchName=develop)
 [![Translated](https://translate.servarr.com/widgets/servarr/-/prowlarr/svg-badge.svg)](https://translate.servarr.com/engage/prowlarr/?utm_source=widget)
-[![Docker Pulls](https://img.shields.io/docker/pulls/hotio/prowlarr.svg)](https://wikijs.servarr.com/prowlarr/installation#docker)
+[![Docker Pulls](https://img.shields.io/docker/pulls/hotio/prowlarr.svg)](https://wiki.servarr.com/prowlarr/installation#docker)
 ![Github Downloads](https://img.shields.io/github/downloads/Prowlarr/Prowlarr/total.svg)
 [![Backers on Open Collective](https://opencollective.com/Prowlarr/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/Prowlarr/sponsors/badge.svg)](#sponsors)
@@ -10,8 +10,9 @@
 Prowlarr is a indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
 
 ## Major Features Include:
-- Usenet support for any Newznab compatible indexer, including Headphones VIP
-- Torrent support 400+ trackers & more coming soon
+- Usenet support for 24 indexers natively, including Headphones VIP, and support for any Newznab compatible indexer via "Generic Newznab"
+- Torrent support for almost 500 trackers & more coming soon
+- Torrent support for any Torznab compatible tracker via "Generic Torznab"
 - Indexer Sync to Sonarr/Radarr/Readarr/Lidarr, so no manual configuration of the other applications are required
 - Indexer History and Statistics
 - Manual Searching of Trackers & Indexers at a category level
@@ -24,7 +25,14 @@ Note: Prowlarr is currently early in life, thus bugs should be expected
 [![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://prowlarr.com/discord)
 [![Reddit](https://img.shields.io/badge/reddit-discussion-FF4500.svg?maxAge=60)](https://www.reddit.com/r/Prowlarr)
 [![GitHub - Bugs and Feature Requests Only](https://img.shields.io/badge/github-issues-red.svg?maxAge=60)](https://github.com/Prowlarr/Prowlarr/issues)
-[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wikijs.servarr.com/prowlarr)
+[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/prowlarr)
+
+## Indexers/Trackers
+
+[Supported Indexers](https://wiki.servarr.com/en/prowlarr/supported-indexers)
+
+[Indexer Requests](https://requests.prowlarr.com)
+- Request or vote on an existing request for a new tracker/indexer
 
 ## Feature Requests
 

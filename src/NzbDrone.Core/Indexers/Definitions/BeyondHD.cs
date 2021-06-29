@@ -16,7 +16,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -25,7 +24,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "BeyondHD";
 
-        public override string BaseUrl => "https://beyond-hd.me/";
+        public override string[] IndexerUrls => new string[] { "https://beyond-hd.me/" };
+        public override string Description => "Without BeyondHD, your HDTV is just a TV";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -37,12 +37,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new BeyondHDRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new BeyondHDRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new BeyondHDParser(Settings, Capabilities.Categories, BaseUrl);
+            return new BeyondHDParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -70,7 +70,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public BeyondHDSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public BeyondHDRequestGenerator()
         {
@@ -106,7 +105,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("categories", string.Join(",", cats));
             }
 
-            var searchUrl = BaseUrl + "api/torrents/" + Settings.ApiKey;
+            var searchUrl = Settings.BaseUrl + "api/torrents/" + Settings.ApiKey;
 
             var request = new HttpRequest(searchUrl, HttpAccept.Json);
 
@@ -172,13 +171,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly BeyondHDSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public BeyondHDParser(BeyondHDSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public BeyondHDParser(BeyondHDSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -190,11 +187,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 
-            // TODO Have BHD fix their API response content type so we can proper check here
-            // if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
-            // {
-            //     throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
-            // }
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            {
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            }
+
             var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerResponse.HttpResponse);
 
             foreach (var row in jsonResponse.Resource.Results)
@@ -217,10 +214,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     ImdbId = ParseUtil.GetImdbID(row.ImdbId).GetValueOrDefault(),
                     TmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.TmdbId.Split("/")[1]),
                     Peers = row.Leechers + row.Seeders,
-                    DownloadVolumeFactor = row.Freeleech ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
+                    DownloadVolumeFactor = row.Freeleech || row.Limited ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
-                    MinimumSeedTime = 172800, // 48 hours
+                    MinimumSeedTime = 172800, // 120 hours
                 };
 
                 torrentInfos.Add(release);
@@ -242,7 +239,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class BeyondHDSettings : IProviderConfig
+    public class BeyondHDSettings : IIndexerSettings
     {
         private static readonly BeyondHDSettingsValidator Validator = new BeyondHDSettingsValidator();
 
@@ -250,10 +247,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        [FieldDefinition(1, Label = "API Key", HelpText = "API Key from Site", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from Site", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(2, Label = "RSS Key", HelpText = "RSS Key from Site", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from Site", Privacy = PrivacyLevel.ApiKey)]
         public string RssKey { get; set; }
 
         public NzbDroneValidationResult Validate()
@@ -300,5 +300,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public bool Promo25 { get; set; }
         public bool Promo50 { get; set; }
         public bool Promo75 { get; set; }
+        public bool Limited { get; set; }
     }
 }

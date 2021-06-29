@@ -49,10 +49,10 @@ namespace NzbDrone.Core.Notifications.Email
         [FieldDefinition(2, Label = "Require Encryption", HelpText = "Require SSL (Port 465 only) or StartTLS (any other port)", Type = FieldType.Checkbox)]
         public bool RequireEncryption { get; set; }
 
-        [FieldDefinition(3, Label = "Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(3, Label = "Username", HelpText = "Username", Type = FieldType.Textbox, Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(4, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(4, Label = "Password", HelpText = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(5, Label = "From Address")]

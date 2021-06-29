@@ -8,7 +8,6 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
 {
     public class TorrentPotatoRequestGenerator : IIndexerRequestGenerator
     {
-        public string BaseUrl { get; set; }
         public TorrentPotatoSettings Settings { get; set; }
 
         public TorrentPotatoRequestGenerator()
@@ -26,7 +25,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string mode, int? tvdbId, string query, params object[] args)
         {
-            var requestBuilder = new HttpRequestBuilder(BaseUrl)
+            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
                 .Accept(HttpAccept.Json);
 
             requestBuilder.AddQueryParam("passkey", Settings.Passkey);
@@ -46,7 +45,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
 
         private IEnumerable<IndexerRequest> GetMovieRequest(MovieSearchCriteria searchCriteria)
         {
-            var requestBuilder = new HttpRequestBuilder(BaseUrl)
+            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
                  .Accept(HttpAccept.Json);
 
             requestBuilder.AddQueryParam("passkey", Settings.Passkey);

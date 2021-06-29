@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Redacted : TorrentIndexerBase<RedactedSettings>
     {
         public override string Name => "Redacted";
-        public override string BaseUrl => "https://redacted.ch/";
+        public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
         public override string Description => "Redacted is a Private Torrent Tracker for Music";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
@@ -38,12 +38,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RedactedRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl, HttpClient = _httpClient };
+            return new RedactedRequestGenerator() { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new RedactedParser(Settings, Capabilities.Categories, BaseUrl);
+            return new RedactedParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -84,7 +84,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public RedactedSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
         public IHttpClient HttpClient { get; set; }
@@ -160,7 +159,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private HttpRequestBuilder RequestBuilder()
         {
-            return new HttpRequestBuilder($"{BaseUrl.Trim().TrimEnd('/')}")
+            return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
                 .Accept(HttpAccept.Json)
                 .SetHeader("Authorization", Settings.Apikey);
         }

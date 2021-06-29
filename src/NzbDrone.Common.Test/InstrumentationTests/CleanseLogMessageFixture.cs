@@ -19,6 +19,8 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"http://nzb.su/getnzb/2b51db35e1912ffc138825a12b9933d2.nzb&i=37292&r=2b51db35e1910123321025a12b9933d2")]
         [TestCase(@"https://horrorcharnel.org/takeloginhorror.php: username=mySecret&password=mySecret&use_sslvalue==&perm_ssl=1&submitme=X&use_ssl=1&returnto=%2F&captchaSelection=1230456")]
         [TestCase(@"https://torrentdb.net/login: _token=2b51db35e1912ffc138825a12b9933d2&username=mySecret&password=mySecret&remember=on")]
+        [TestCase(@" var authkey = ""2b51db35e1910123321025a12b9933d2"";")]
+        [TestCase(@"https://hd-space.org/index.php?page=login: uid=mySecret&pwd=mySecret")]
 
         // NzbGet
         [TestCase(@"{ ""Name"" : ""ControlUsername"", ""Value"" : ""mySecret"" }, { ""Name"" : ""ControlPassword"", ""Value"" : ""mySecret"" }, ")]
@@ -85,6 +87,15 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"Auth-Unauthorized ip 32.2.3.5")]
         [TestCase(@"Auth-Failure ip 32.2.3.5")]
         public void should_not_clean_ipaddress(string message)
+        {
+            var cleansedMessage = CleanseLogMessage.Cleanse(message);
+
+            cleansedMessage.Should().Be(message);
+        }
+
+        [TestCase(@"&useToken=2b51db35e1910123321025a12b9933d2")]
+        [TestCase(@"&useToken=2b51db35e1910123321025a12b9933d2")]
+        public void should_not_clean_usetoken(string message)
         {
             var cleansedMessage = CleanseLogMessage.Cleanse(message);
 

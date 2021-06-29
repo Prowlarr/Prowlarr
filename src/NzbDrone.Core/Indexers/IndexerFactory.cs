@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Indexers
                 });
             }
 
-            definition.BaseUrl = defFile.Links.First();
+            definition.IndexerUrls = defFile.Links.ToArray();
             definition.Description = defFile.Description;
             definition.Language = defFile.Language;
             definition.Encoding = Encoding.GetEncoding(defFile.Encoding);
@@ -174,7 +174,7 @@ namespace NzbDrone.Core.Indexers
             //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
             if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
             {
-                definition.BaseUrl = provider.BaseUrl;
+                definition.IndexerUrls = provider.IndexerUrls;
                 definition.Privacy = provider.Privacy;
                 definition.Description = provider.Description;
                 definition.Encoding = provider.Encoding;
@@ -276,7 +276,7 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
+            if (definition.Enable && (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name))
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;

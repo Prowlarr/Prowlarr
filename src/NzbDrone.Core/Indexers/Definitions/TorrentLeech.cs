@@ -16,7 +16,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -25,8 +24,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "TorrentLeech";
 
-        public override string BaseUrl => "https://www.torrentleech.org/";
-        private string LoginUrl => BaseUrl + "user/account/login/";
+        public override string[] IndexerUrls => new string[] { "https://www.torrentleech.org/" };
+        public override string Description => "This is what happens when you seed";
+        private string LoginUrl => Settings.BaseUrl + "user/account/login/";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -38,12 +38,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TorrentLeechRequestGenerator() { Settings = Settings, Capabilities = Capabilities, BaseUrl = BaseUrl };
+            return new TorrentLeechRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorrentLeechParser(Settings, Capabilities.Categories, BaseUrl);
+            return new TorrentLeechParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -166,7 +166,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public TorrentLeechSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
 
         public TorrentLeechRequestGenerator()
         {
@@ -176,7 +175,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var searchString = Regex.Replace(term, @"(^|\s)-", " ");
 
-            var searchUrl = BaseUrl + "torrents/browse/list/";
+            var searchUrl = Settings.BaseUrl + "torrents/browse/list/";
 
             if (Settings.FreeLeechOnly)
             {
@@ -260,13 +259,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly TorrentLeechSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly string _baseUrl;
 
-        public TorrentLeechParser(TorrentLeechSettings settings, IndexerCapabilitiesCategories categories, string baseUrl)
+        public TorrentLeechParser(TorrentLeechSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
-            _baseUrl = baseUrl;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -279,8 +276,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var title = row.name.ToString();
 
                 var torrentId = row.fid.ToString();
-                var details = new Uri(_baseUrl + "torrent/" + torrentId);
-                var link = new Uri(_baseUrl + "download/" + torrentId + "/" + row.filename);
+                var details = new Uri(_settings.BaseUrl + "torrent/" + torrentId);
+                var link = new Uri(_settings.BaseUrl + "download/" + torrentId + "/" + row.filename);
                 var publishDate = DateTime.ParseExact(row.addedTimestamp.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 var seeders = (int)row.seeders;
                 var leechers = (int)row.leechers;
@@ -335,7 +332,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class TorrentLeechSettings : IProviderConfig
+    public class TorrentLeechSettings : IIndexerSettings
     {
         private static readonly TorrentLeechSettingsValidator Validator = new TorrentLeechSettingsValidator();
 
@@ -345,13 +342,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Username", HelpText = "Site Username")]
+        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        public string BaseUrl { get; set; }
+
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(2, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
 
         public NzbDroneValidationResult Validate()

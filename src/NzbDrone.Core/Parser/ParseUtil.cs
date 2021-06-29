@@ -1,5 +1,7 @@
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace NzbDrone.Core.Parser
 {
@@ -82,6 +84,19 @@ namespace NzbDrone.Core.Parser
             }
 
             return "tt" + ((int)imdbid).ToString("D7");
+        }
+
+        public static string GetArgumentFromQueryString(string url, string argument)
+        {
+            if (url == null || argument == null)
+            {
+                return null;
+            }
+
+            var qsStr = url.Split(new char[] { '?' }, 2)[1];
+            qsStr = qsStr.Split(new char[] { '#' }, 2)[0];
+            var qs = QueryHelpers.ParseQuery(qsStr);
+            return qs[argument].FirstOrDefault();
         }
     }
 }

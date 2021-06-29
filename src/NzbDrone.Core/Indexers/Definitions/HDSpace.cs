@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class HDSpace : TorrentIndexerBase<HDSpaceSettings>
     {
-        public override string Name => "HDSpace";
+        public override string Name => "HD-Space";
         public override string[] IndexerUrls => new string[] { "https://hd-space.org/" };
         private string LoginUrl => Settings.BaseUrl + "index.php?page=login";
         public override string Description => "Sharing The Universe";
@@ -53,7 +53,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                AllowAutoRedirect = true
             };
 
             requestBuilder.Method = HttpMethod.POST;
@@ -68,6 +69,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddFormParameter("pwd", Settings.Password)
                 .SetCookies(loginPage.GetCookies())
                 .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Referer", LoginUrl)
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);

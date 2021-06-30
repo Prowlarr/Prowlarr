@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Label from 'Components/Label';
 
-function CategoryLabel({ categories }) {
+function CategoryLabel({ categories = [] }) {
   const sortedCategories = categories.filter((cat) => cat.name !== undefined).sort((c) => c.id);
 
   return (
@@ -21,7 +21,7 @@ function CategoryLabel({ categories }) {
 }
 
 CategoryLabel.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired
+  categories: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default CategoryLabel;

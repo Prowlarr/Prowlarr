@@ -131,24 +131,20 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
-            // Retrieve passkey if not already done
-            if (string.IsNullOrWhiteSpace(Settings.Passkey))
+            // GET on index for the passkey
+            var request = RequestBuilder().Resource("ajax.php?action=index").Build();
+            var indexResponse = HttpClient.Execute(request);
+            var index = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
+            if (index == null ||
+                string.IsNullOrWhiteSpace(index.Status) ||
+                index.Status != "success" ||
+                string.IsNullOrWhiteSpace(index.Response.Passkey))
             {
-                // GET on index for the passkey
-                var request = RequestBuilder().Resource("ajax.php?action=index").Build();
-                var indexResponse = HttpClient.Execute(request);
-                var index = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
-                if (index == null ||
-                    string.IsNullOrWhiteSpace(index.Status) ||
-                    index.Status != "success" ||
-                    string.IsNullOrWhiteSpace(index.Response.Passkey))
-                {
-                    throw new Exception("Failed to authenticate with Redacted.");
-                }
-
-                // Set passkey on settings so it persists and we only hit the index once per query
-                Settings.Passkey = index.Response.Passkey;
+                throw new Exception("Failed to authenticate with Redacted.");
             }
+
+            // Set passkey on settings so it can be used to generate the download URL
+            Settings.Passkey = index.Response.Passkey;
 
             var req = RequestBuilder()
                 .Resource($"ajax.php?action=browse&searchstr={searchParameters}")

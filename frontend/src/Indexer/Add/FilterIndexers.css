@@ -1,3 +1,8 @@
+.filterIndexers {
+  border-top: 2px solid #eee;
+  border-bottom: 2px solid #eee;
+}
+
 .protocol {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 

@@ -112,7 +112,14 @@ function createCustomFiltersSelector(type, alternateType) {
   );
 }
 
-function createClientSideCollectionSelector(section, uiSection) {
+/**
+ *
+ * @param section
+ * @param uiSection
+ * @param {String} filterTarget - Used to set what is filtered/sorted
+ * @returns *
+ */
+function createClientSideCollectionSelector(section, uiSection, filterTarget = 'items') {
   return createSelector(
     (state) => _.get(state, section),
     (state) => _.get(state, uiSection),
@@ -120,15 +127,15 @@ function createClientSideCollectionSelector(section, uiSection) {
     (sectionState, uiSectionState = {}, customFilters) => {
       const state = Object.assign({}, sectionState, uiSectionState, { customFilters });
 
-      const filtered = filter(state.items, state);
+      const filtered = filter(state[filterTarget], state);
       const sorted = sort(filtered, state);
 
       return {
         ...sectionState,
         ...uiSectionState,
         customFilters,
-        items: sorted,
-        totalItems: state.items.length
+        [filterTarget]: sorted,
+        totalItems: state[filterTarget].length
       };
     }
   );

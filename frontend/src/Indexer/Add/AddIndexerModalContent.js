@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import Alert from 'Components/Alert';
 import TextInput from 'Components/Form/TextInput';
 import Button from 'Components/Link/Button';
@@ -12,8 +14,11 @@ import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import { kinds, scrollDirections } from 'Helpers/Props';
+import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
+import { SET_FILTERED_INDEXERS } from '../../Store/Actions/indexerActions';
+import FilterIndexers from './FilterIndexers';
 import SelectIndexerRow from './SelectIndexerRow';
 import styles from './AddIndexerModalContent.css';
 
@@ -44,125 +49,144 @@ const columns = [
   }
 ];
 
-class AddIndexerModalContent extends Component {
+function AddIndexerModalContent({
+  onIndexerSelect,
+  sortKey,
+  sortDirection,
+  isFetching,
+  isPopulated,
+  error,
+  onSortPress,
+  onModalClose
+}) {
+  const [filter, setFilter] = useState('');
+  const store = useSelector(createSelector(createClientSideCollectionSelector('indexers.schema', undefined, 'filteredIndexers'),
+    (schema) => {
+      const {
+        filteredIndexers,
+        items
+      } = schema;
+      return {
+        filteredIndexers,
+        externalIndexers: items
+      };
+    }));
+  const dispatch = useDispatch();
 
-  //
-  // Lifecycle
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      filter: ''
-    };
+  function setFilteredIndexers(param) {
+    dispatch({ type: SET_FILTERED_INDEXERS, payload: param });
   }
+
+  function setIndexersWrapper(param) {
+    setFilteredIndexers(param);
+  }
+
+  useEffect(() => {
+    if (store.externalIndexers.length > 0 && store.filteredIndexers.length === 0) {
+      setFilteredIndexers(store.externalIndexers);
+    }
+  }, [store.externalIndexers]);
 
   //
   // Listeners
 
-  onFilterChange = ({ value }) => {
-    this.setState({ filter: value });
+  function onFilterChange({ value }) {
+    setFilter(value);
   }
 
-  //
-  // Render
+  const filterLower = filter.toLowerCase();
 
-  render() {
-    const {
-      indexers,
-      onIndexerSelect,
-      sortKey,
-      sortDirection,
-      isFetching,
-      isPopulated,
-      error,
-      onSortPress,
-      onModalClose
-    } = this.props;
+  const errorMessage = getErrorMessage(error, 'Unable to load indexers');
 
-    const filter = this.state.filter;
-    const filterLower = filter.toLowerCase();
+  return (
+    <ModalContent onModalClose={onModalClose}>
+      <ModalHeader>
+        Add Indexer
+      </ModalHeader>
 
-    const errorMessage = getErrorMessage(error, 'Unable to load indexers');
+      <ModalBody
+        className={styles.modalBody}
+        scrollDirection={scrollDirections.NONE}
+      >
+        <TextInput
+          className={styles.filterInput}
+          placeholder={translate('FilterPlaceHolder')}
+          name="filter"
+          value={filter}
+          autoFocus={true}
+          onChange={onFilterChange}
+        />
 
-    return (
-      <ModalContent onModalClose={onModalClose}>
-        <ModalHeader>
-          Add Indexer
-        </ModalHeader>
-
-        <ModalBody
-          className={styles.modalBody}
-          scrollDirection={scrollDirections.NONE}
+        <Alert
+          kind={kinds.INFO}
+          className={styles.alert}
         >
-          <TextInput
-            className={styles.filterInput}
-            placeholder={translate('FilterPlaceHolder')}
-            name="filter"
-            value={filter}
-            autoFocus={true}
-            onChange={this.onFilterChange}
-          />
+          <div>
+            {translate('ProwlarrSupportsAnyIndexer')}
+          </div>
+        </Alert>
 
-          <Alert
-            kind={kinds.INFO}
-            className={styles.alert}
-          >
-            <div>
-              {translate('ProwlarrSupportsAnyIndexer')}
-            </div>
-          </Alert>
+        <Scroller
+          className={styles.scroller}
+          autoFocus={false}
+        >
+          {
+            isFetching ? <LoadingIndicator /> : null
+          }
+          {
+            error ? <div>{errorMessage}</div> : null
+          }
+          {
+            isPopulated ?
+              <Table
+                columns={columns}
+                sortKey={sortKey}
+                sortDirection={sortDirection}
+                onSortPress={onSortPress}
+                secondaryHeaderRow={<FilterIndexers indexers={store.externalIndexers} setIndexers={setIndexersWrapper} />}
+              >
+                <TableBody>
+                  {
+                    store.filteredIndexers.map((indexer) => {
+                      return indexer.name.toLowerCase().includes(filterLower) ?
+                        (
+                          <SelectIndexerRow
+                            key={indexer.name}
+                            implementation={indexer.implementation}
+                            {...indexer}
+                            onIndexerSelect={onIndexerSelect}
+                          />
+                        ) :
+                        null;
+                    })
+                  }
+                </TableBody>
+              </Table> :
+              null
+          }
+          {
+            (store.filteredIndexers.length === 0 && !isFetching && !error) &&
+              <Alert
+                kind={kinds.WARNING}
+                className={styles.alert}
+              >
+                <div>
+                  {translate('NoResultsFound')}
+                </div>
+              </Alert>
+          }
+        </Scroller>
+      </ModalBody>
 
-          <Scroller
-            className={styles.scroller}
-            autoFocus={false}
-          >
-            {
-              isFetching ? <LoadingIndicator /> : null
-            }
-            {
-              error ? <div>{errorMessage}</div> : null
-            }
-            {
-              isPopulated && !!indexers.length ?
-                <Table
-                  columns={columns}
-                  sortKey={sortKey}
-                  sortDirection={sortDirection}
-                  onSortPress={onSortPress}
-                >
-                  <TableBody>
-                    {
-                      indexers.map((indexer) => {
-                        return indexer.name.toLowerCase().includes(filterLower) ?
-                          (
-                            <SelectIndexerRow
-                              key={indexer.name}
-                              implementation={indexer.implementation}
-                              {...indexer}
-                              onIndexerSelect={onIndexerSelect}
-                            />
-                          ) :
-                          null;
-                      })
-                    }
-                  </TableBody>
-                </Table> :
-                null
-            }
-          </Scroller>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button
-            onPress={onModalClose}
-          >
-            {translate('Close')}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    );
-  }
+      <ModalFooter>
+        <Button
+          onPress={onModalClose}
+        >
+          {translate('Close')}
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  );
 }
 
 AddIndexerModalContent.propTypes = {

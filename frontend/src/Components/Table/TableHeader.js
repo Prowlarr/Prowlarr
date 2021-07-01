@@ -1,28 +1,20 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 
-class TableHeader extends Component {
-
-  //
-  // Render
-
-  render() {
-    const {
-      children
-    } = this.props;
-
-    return (
-      <thead>
-        <tr>
-          {children}
-        </tr>
-      </thead>
-    );
-  }
+function TableHeader({ children, secondaryHeaderRow }) {
+  return (
+    <thead>
+      <tr>
+        {children}
+      </tr>
+      {secondaryHeaderRow}
+    </thead>
+  );
 }
 
 TableHeader.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
+  secondaryHeaderRow: PropTypes.node
 };
 
 export default TableHeader;

@@ -76,7 +76,11 @@ SelectInput.propTypes = {
   disabledClassName: PropTypes.string,
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  values: PropTypes.arrayOf(PropTypes.object).isRequired,
+  values: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    value: PropTypes.string.isRequired,
+    disabled: PropTypes.bool
+  })).isRequired,
   isDisabled: PropTypes.bool,
   hasError: PropTypes.bool,
   hasWarning: PropTypes.bool,

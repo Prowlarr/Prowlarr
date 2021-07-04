@@ -26,11 +26,11 @@ namespace NzbDrone.Core.Profiles
         private readonly Logger _logger;
 
         public AppSyncProfileService(IAppProfileRepository profileRepository,
-                              IIndexerFactory movieService,
+                              IIndexerFactory indexerFactory,
                               Logger logger)
         {
             _profileRepository = profileRepository;
-            _indexerFactory = movieService;
+            _indexerFactory = indexerFactory;
             _logger = logger;
         }
 

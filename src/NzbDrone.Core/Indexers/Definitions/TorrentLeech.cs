@@ -351,7 +351,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
 
         public NzbDroneValidationResult Validate()

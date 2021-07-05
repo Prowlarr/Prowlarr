@@ -409,6 +409,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Password")]
         public string Password { get; set; }
 
+        [FieldDefinition(5)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

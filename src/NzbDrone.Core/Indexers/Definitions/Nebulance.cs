@@ -297,6 +297,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Two Factor Auth", HelpText = "Two-Factor Auth")]
         public string TwoFactorAuth { get; set; }
 
+        [FieldDefinition(5)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

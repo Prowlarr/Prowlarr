@@ -248,6 +248,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
+        [FieldDefinition(2)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

@@ -28,6 +28,9 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         [FieldDefinition(3, Label = "Passkey", HelpText = "The password you use at your Indexer.", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Passkey { get; set; }
 
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

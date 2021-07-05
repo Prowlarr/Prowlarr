@@ -419,6 +419,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
         public bool SearchGroupNames { get; set; }
 
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

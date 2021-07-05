@@ -381,6 +381,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]
         public bool ExcludeVip { get; set; }
 
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

@@ -38,6 +38,9 @@ namespace NzbDrone.Core.Indexers.HDBits
         [FieldDefinition(5, Label = "Mediums", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsMedium), Advanced = true, HelpText = "Options: BluRay, Encode, Capture, Remux, WebDL. If unspecified, all options are used.")]
         public IEnumerable<int> Mediums { get; set; }
 
+        [FieldDefinition(6)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

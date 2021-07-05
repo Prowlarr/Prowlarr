@@ -37,6 +37,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]
         public string Pid { get; set; }
 
+        [FieldDefinition(5)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

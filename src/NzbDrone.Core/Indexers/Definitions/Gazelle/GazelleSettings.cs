@@ -36,6 +36,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
         [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use Freeleech Token")]
         public bool UseFreeleechToken { get; set; }
 
+        [FieldDefinition(5)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

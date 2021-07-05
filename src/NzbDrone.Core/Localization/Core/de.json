@@ -907,5 +907,6 @@
     "Discord": "Discord",
     "PrioritySettings": "Priorität",
     "NotificationTriggersHelpText": "Auslöser für diese Benachrichtigung auswählen",
-    "Add": "Hinzufügen"
+    "Add": "Hinzufügen",
+    "AddDownloadClient": "Zum Downloader hinzufügen"
 }

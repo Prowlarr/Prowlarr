@@ -894,7 +894,7 @@
     "AppProfile": "Profils d'application",
     "Wiki": "Wiki",
     "RSS": "RSS",
-    "RedirectHelpText": "Rediriger les demandes de téléchargement entrantes pour l'indexeur au lieu de proxy à l'aide de Prowlarr",
+    "RedirectHelpText": "Rediriger la demande de téléchargement entrante pour l'indexeur et transmettre la capture directement au lieu de transmettre la demande par proxy via Prowlarr",
     "Redirect": "Rediriger",
     "Reddit": "Reddit",
     "HomePage": "Page d'accueil",

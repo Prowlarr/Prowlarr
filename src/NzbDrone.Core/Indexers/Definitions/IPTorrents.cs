@@ -181,6 +181,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("q", term);
             }
 
+            if (Settings.FreeLeechOnly)
+            {
+                qc.Add("free", "on");
+            }
+
             foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
             {
                 qc.Add(cat, string.Empty);
@@ -361,6 +366,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
         public string Cookie { get; set; }
+
+        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
+        public bool FreeLeechOnly { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

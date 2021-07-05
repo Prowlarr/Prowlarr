@@ -7,7 +7,7 @@ import Tooltip from '../../Components/Tooltip/Tooltip';
 function CategoryLabel({ categories }) {
   const sortedCategories = categories.filter((cat) => cat.name !== undefined).sort((c) => c.id);
 
-  if (categories.length === 0) {
+  if (categories?.length === 0) {
     return (
       <Tooltip
         anchor={<Label kind={kinds.DANGER}>Unknown</Label>}
@@ -31,6 +31,10 @@ function CategoryLabel({ categories }) {
     </span>
   );
 }
+
+CategoryLabel.defaultProps = {
+  categories: []
+};
 
 CategoryLabel.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.object).isRequired

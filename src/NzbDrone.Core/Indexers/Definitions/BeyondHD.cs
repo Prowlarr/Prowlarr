@@ -256,6 +256,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from Site", Privacy = PrivacyLevel.ApiKey)]
         public string RssKey { get; set; }
 
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

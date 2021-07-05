@@ -354,6 +354,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
 
+        [FieldDefinition(5)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

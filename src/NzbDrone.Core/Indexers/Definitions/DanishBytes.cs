@@ -247,6 +247,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from Site", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
+        [FieldDefinition(3)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

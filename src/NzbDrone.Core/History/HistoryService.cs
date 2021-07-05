@@ -24,6 +24,7 @@ namespace NzbDrone.Core.History
         List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType);
         void UpdateMany(List<History> toUpdate);
         List<History> Since(DateTime date, HistoryEventType? eventType);
+        int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
     }
 
     public class HistoryService : IHistoryService,
@@ -204,6 +205,11 @@ namespace NzbDrone.Core.History
         public void Execute(ClearHistoryCommand message)
         {
             _historyRepository.Purge(vacuum: true);
+        }
+
+        public int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes)
+        {
+            return _historyRepository.CountSince(indexerId, date, eventTypes);
         }
     }
 }

@@ -12,5 +12,6 @@ namespace NzbDrone.Core.Test.IndexerTests
         }
 
         public string BaseUrl { get; set; }
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
     }
 }

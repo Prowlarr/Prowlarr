@@ -341,6 +341,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
         public string Cookie { get; set; }
 
+        [FieldDefinition(3)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

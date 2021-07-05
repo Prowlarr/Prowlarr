@@ -30,6 +30,9 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         [FieldDefinition(3, Label = "APIKey", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string APIKey { get; set; }
 
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

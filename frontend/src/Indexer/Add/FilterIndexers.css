@@ -6,13 +6,13 @@
 .protocol {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  width: 12%;
+  width: 14%;
 }
 
 .name {
   composes: cell from '~Components/Table/Cells/TableRowCell.css';
 
-  width: 52%;
+  width: 50%;
 }
 
 .language {

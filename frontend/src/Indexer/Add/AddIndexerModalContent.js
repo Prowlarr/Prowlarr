@@ -60,21 +60,24 @@ function AddIndexerModalContent({
   onModalClose
 }) {
   const [filter, setFilter] = useState('');
-  const store = useSelector(createSelector(createClientSideCollectionSelector('indexers.schema', undefined, 'filteredIndexers'),
+  const { filteredIndexers, externalIndexers } = useSelector(createSelector(createClientSideCollectionSelector('indexers.schema', undefined, 'filteredIndexers'),
     (schema) => {
       const {
-        filteredIndexers,
+        filteredIndexers: internalFilteredIndexers,
         items
       } = schema;
       return {
-        filteredIndexers,
+        filteredIndexers: internalFilteredIndexers,
         externalIndexers: items
       };
     }));
+  const { isExtraSmallScreen } = useSelector((state) => state.app.dimensions);
   const dispatch = useDispatch();
 
   function setFilteredIndexers(param) {
-    dispatch({ type: SET_FILTERED_INDEXERS, payload: param });
+    dispatch({ type: SET_FILTERED_INDEXERS, payload: param.map((indexer) => {
+      return indexer.name;
+    }) });
   }
 
   function setIndexersWrapper(param) {
@@ -82,10 +85,10 @@ function AddIndexerModalContent({
   }
 
   useEffect(() => {
-    if (store.externalIndexers.length > 0 && store.filteredIndexers.length === 0) {
-      setFilteredIndexers(store.externalIndexers);
+    if (externalIndexers.length > 0 && filteredIndexers.length === 0) {
+      setFilteredIndexers(externalIndexers);
     }
-  }, [store.externalIndexers]);
+  }, [externalIndexers]);
 
   //
   // Listeners
@@ -97,6 +100,7 @@ function AddIndexerModalContent({
   const filterLower = filter.toLowerCase();
 
   const errorMessage = getErrorMessage(error, 'Unable to load indexers');
+  const secondaryHeaderRow = isExtraSmallScreen ? null : <FilterIndexers indexers={externalIndexers} setIndexers={setIndexersWrapper} />;
 
   return (
     <ModalContent onModalClose={onModalClose}>
@@ -143,11 +147,14 @@ function AddIndexerModalContent({
                 sortKey={sortKey}
                 sortDirection={sortDirection}
                 onSortPress={onSortPress}
-                secondaryHeaderRow={<FilterIndexers indexers={store.externalIndexers} setIndexers={setIndexersWrapper} />}
+                secondaryHeaderRow={secondaryHeaderRow}
               >
                 <TableBody>
                   {
-                    store.filteredIndexers.map((indexer) => {
+                    externalIndexers.map((indexer) => {
+                      if (!filteredIndexers.includes(indexer.name)) {
+                        return null;
+                      }
                       return indexer.name.toLowerCase().includes(filterLower) ?
                         (
                           <SelectIndexerRow
@@ -165,7 +172,7 @@ function AddIndexerModalContent({
               null
           }
           {
-            (store.filteredIndexers.length === 0 && !isFetching && !error) &&
+            (filteredIndexers.length === 0 && !isFetching && !error) &&
               <Alert
                 kind={kinds.WARNING}
                 className={styles.alert}

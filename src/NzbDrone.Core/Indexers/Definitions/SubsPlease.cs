@@ -21,7 +21,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SubsPlease : TorrentIndexerBase<SubsPleaseSettings>
     {
         public override string Name => "SubsPlease";
-        public override string[] IndexerUrls => new string[] { "https://subsplease.org/" };
+        public override string[] IndexerUrls => new string[]
+        {
+            "https://subsplease.org/",
+            "https://subsplease.nocensor.space/"
+        };
         public override string Language => "en-us";
         public override string Description => "SubsPlease - A better HorribleSubs/Erai replacement";
         public override Encoding Encoding => Encoding.UTF8;

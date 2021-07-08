@@ -58,7 +58,7 @@ param (
 $url=($BaseURL.ToString().TrimEnd("/"))+'/api/v1/Indexer/schema'
 $headers=@{'X-Api-Key'=$APIKey}
 $R= Invoke-WebRequest -Uri $url -Headers $headers -ContentType 'application/json' -Method Get
-$exp_indexername= { IF ($_.baseUrl) {'['+$_.name+']('+$_.baseUrl+')'+'{#'+$_.infoLink.Replace('https://wiki.servarr.com/prowlarr/supported-indexers#','')+'}'} Else {$_.name+'{#'+$_.infoLink.Replace('https://wiki.servarr.com/prowlarr/supported-indexers#','')+'}'}}
+$exp_indexername= { IF ($_.IndexerUrls) {'['+$_.name+']('+($_.IndexerUrls[0])+')'+'{#'+$_.infoLink.Replace('https://wiki.servarr.com/prowlarr/supported-indexers#','')+'}'} Else {$_.name+'{#'+$_.infoLink.Replace('https://wiki.servarr.com/prowlarr/supported-indexers#','')+'}'}}
 $indexerobject= $R.Content | ConvertFrom-Json
 $tblobj= $indexerobject | Sort-Object -Property 'name'
 

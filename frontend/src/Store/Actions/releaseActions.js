@@ -202,7 +202,8 @@ export const defaultState = {
 
 export const persistState = [
   'releases.customFilters',
-  'releases.selectedFilterKey'
+  'releases.selectedFilterKey',
+  'releases.columns'
 ];
 
 //

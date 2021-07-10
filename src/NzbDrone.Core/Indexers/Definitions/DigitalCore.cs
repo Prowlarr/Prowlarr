@@ -327,10 +327,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "UID", HelpText = "Uid from login cookie")]
+        [FieldDefinition(2, Label = "UID", HelpText = "UID from login cookie", Privacy = PrivacyLevel.UserName)]
         public string UId { get; set; }
 
-        [FieldDefinition(3, Label = "Passphrase", HelpText = "Pass from login cookie")]
+        [FieldDefinition(3, Label = "Passphrase", HelpText = "Passphrase from login cookie", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passphrase { get; set; }
 
         [FieldDefinition(4)]

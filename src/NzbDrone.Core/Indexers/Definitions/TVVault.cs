@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "TVVault";
         public override string[] IndexerUrls => new[] { "https://tv-vault.me/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "A TV tracker for old shows";
+        public override string Description => "TV-Vault is a very unique tracker dedicated for old TV shows, TV movies and documentaries.";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -312,10 +312,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Username", Advanced = false, HelpText = "Site Username")]
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password, HelpText = "Site Password")]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(4)]

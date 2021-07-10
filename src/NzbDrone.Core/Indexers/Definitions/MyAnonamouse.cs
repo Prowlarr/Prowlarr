@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "MyAnonamouse";
 
         public override string[] IndexerUrls => new string[] { "https://www.myanonamouse.net/" };
-        public override string Description => "";
+        public override string Description => "MyAnonaMouse (MAM) is a large ebook and audiobook tracker.";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();

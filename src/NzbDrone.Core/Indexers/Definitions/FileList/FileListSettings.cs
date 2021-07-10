@@ -25,10 +25,10 @@ namespace NzbDrone.Core.Indexers.FileList
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Passkey", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(3, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passkey { get; set; }
 
         [FieldDefinition(4)]

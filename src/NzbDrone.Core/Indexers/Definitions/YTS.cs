@@ -51,15 +51,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                   },
+                {
+                },
                 MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                   },
+                {
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                   }
+                {
+                }
             };
 
             caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.MoviesHD, "Movies/x264/720p");

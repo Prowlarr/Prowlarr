@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "CinemaZ";
         public override string[] IndexerUrls => new string[] { "https://cinemaz.to/" };
-        public override string Description => "Part of the Avistaz network.";
+        public override string Description => "CinemaZ (EuTorrents) is a Private Torrent Tracker for FOREIGN NON-ASIAN MOVIES.";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public CinemaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

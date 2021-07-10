@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "Orpheus";
         public override string[] IndexerUrls => new string[] { "https://orpheus.network/" };
-        public override string Description => "";
+        public override string Description => "Orpheus (APOLLO) is a Private Torrent Tracker for MUSIC";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public Orpheus(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -51,4 +51,4 @@ namespace NzbDrone.Core.Indexers.Definitions
             return caps;
         }
     }
- }
+}

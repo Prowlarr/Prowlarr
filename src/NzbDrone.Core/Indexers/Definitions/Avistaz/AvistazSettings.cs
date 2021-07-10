@@ -28,10 +28,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Username", HelpText = "Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]

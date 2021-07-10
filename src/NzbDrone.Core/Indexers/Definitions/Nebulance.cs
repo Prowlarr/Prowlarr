@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Nebulance";
         public override string[] IndexerUrls => new string[] { "https://nebulance.io/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "At Nebulance we will change the way you think about TV";
+        public override string Description => "Nebulance (NBL) is a ratioless Private Torrent Tracker for TV";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -291,7 +291,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Password")]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(4, Label = "Two Factor Auth", HelpText = "Two-Factor Auth")]

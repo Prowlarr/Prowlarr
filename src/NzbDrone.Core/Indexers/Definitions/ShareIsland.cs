@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "ShareIsland";
         public override string[] IndexerUrls => new string[] { "https://shareisland.org/" };
-        public override string Description => "A general italian tracker";
+        public override string Description => "A general italian tracker.";
         public override string Language => "it-it";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 

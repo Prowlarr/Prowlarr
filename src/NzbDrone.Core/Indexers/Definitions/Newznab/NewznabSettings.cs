@@ -67,7 +67,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(1, Label = "API Path", HelpText = "Path to the api, usually /api", Advanced = true)]
         public string ApiPath { get; set; }
 
-        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "API Key", HelpText = "Site API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         [FieldDefinition(5, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]

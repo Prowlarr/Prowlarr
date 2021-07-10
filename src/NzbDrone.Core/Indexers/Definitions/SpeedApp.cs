@@ -415,13 +415,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Email", HelpText = "Site email")]
+        [FieldDefinition(2, Label = "Email", HelpText = "Site Email", Privacy = PrivacyLevel.UserName)]
         public string Email { get; set; }
 
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "Api Key", Hidden = HiddenType.Hidden)]
+        [FieldDefinition(4, Label = "API Key", Hidden = HiddenType.Hidden)]
         public string ApiKey { get; set; }
 
         public NzbDroneValidationResult Validate()

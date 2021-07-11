@@ -1,6 +1,7 @@
-import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
 import NewznabCategorySelectInputConnector from 'Components/Form/NewznabCategorySelectInputConnector';
 import TextInput from 'Components/Form/TextInput';
@@ -11,179 +12,159 @@ import translate from 'Utilities/String/translate';
 import SearchFooterLabel from './SearchFooterLabel';
 import styles from './SearchFooter.css';
 
-class SearchFooter extends Component {
+function createMapStateToProps() {
+  return createSelector(
+    (state) => state.releases,
+    (releases) => {
+      const {
+        searchQuery: defaultSearchQuery,
+        searchIndexerIds: defaultIndexerIds,
+        searchCategories: defaultCategories
+      } = releases.defaults;
 
-  //
-  // Lifecycle
-
-  constructor(props, context) {
-    super(props, context);
-
-    const {
-      defaultIndexerIds,
-      defaultCategories,
-      defaultSearchQuery
-    } = props;
-
-    this.state = {
-      searchingReleases: false,
-      searchQuery: defaultSearchQuery || '',
-      searchIndexerIds: defaultIndexerIds,
-      searchCategories: defaultCategories
-    };
-  }
-
-  componentDidMount() {
-    const {
-      searchIndexerIds,
-      searchCategories,
-      searchQuery
-    } = this.state;
-
-    if (searchQuery !== '' || searchCategories.length > 0 || searchIndexerIds.length > 0) {
-      this.onSearchPress();
+      return {
+        defaultSearchQuery,
+        defaultIndexerIds,
+        defaultCategories
+      };
     }
+  );
+}
 
-    this.props.bindShortcut('enter', this.onSearchPress, { isGlobal: true });
-  }
-
-  componentDidUpdate(prevProps) {
-    const {
-      isFetching,
-      defaultIndexerIds,
-      defaultCategories,
-      searchError
-    } = this.props;
-
-    const {
-      searchIndexerIds,
-      searchCategories
-    } = this.state;
-
-    const newState = {};
-
-    if (searchIndexerIds !== defaultIndexerIds) {
-      newState.searchIndexerIds = defaultIndexerIds;
-    }
-
-    if (searchCategories !== defaultCategories) {
-      newState.searchCategories = defaultCategories;
-    }
-
-    if (prevProps.isFetching && !isFetching && !searchError) {
-      newState.searchingReleases = false;
-    }
-
-    if (!_.isEmpty(newState)) {
-      this.setState(newState);
-    }
-  }
+function SearchFooter({
+  bindShortcut, searchError,
+  isFetching, hasIndexers, onSearchPress: onSearchPressProps
+}) {
+  const [, setSearchingReleases] = useState(false);
+  const { defaultSearchQuery, defaultCategories, defaultIndexerIds } = useSelector(createMapStateToProps());
+  const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
+  const [searchIndexerIds, setSearchIndexerIds] = useState(defaultIndexerIds);
+  const [searchCategories, setSearchCategories] = useState(defaultCategories);
 
   //
   // Listeners
 
-  onSearchPress = () => {
-    this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories);
+  function onSearchPress() {
+    onSearchPressProps(searchQuery, searchIndexerIds, searchCategories);
   }
 
-  onSearchInputChange = ({ value }) => {
-    this.setState({ searchQuery: value });
+  function onTextChange({ value }) {
+    setSearchQuery(value);
   }
+
+  function onCategoryChange({ value }) {
+    setSearchCategories(value);
+  }
+
+  function onIndexerChange({ value }) {
+    setSearchIndexerIds(value);
+  }
+
+  //
+  // State handlers
+
+  useEffect(() => {
+    if (searchQuery !== '' || searchCategories.length > 0 || searchIndexerIds.length > 0) {
+      onSearchPress();
+    }
+
+    bindShortcut('enter', onSearchPress, { isGlobal: true });
+  }, []);
+
+  useEffect(() => {
+    if (searchIndexerIds !== defaultIndexerIds) {
+      setSearchIndexerIds(defaultIndexerIds);
+    }
+  }, [defaultIndexerIds]);
+
+  useEffect(() => {
+    if (searchCategories !== defaultCategories) {
+      setSearchCategories(defaultCategories);
+    }
+  }, [defaultCategories]);
+
+  useEffect(() => {
+    if (!isFetching && !searchError) {
+      setSearchingReleases(false);
+    }
+  }, [isFetching]);
 
   //
   // Render
 
-  render() {
-    const {
-      isFetching,
-      hasIndexers,
-      onInputChange
-    } = this.props;
+  return (
+    <PageContentFooter>
+      <div className={styles.inputContainer}>
+        <SearchFooterLabel
+          label={'Query'}
+          isSaving={false}
+        />
 
-    const {
-      searchQuery,
-      searchIndexerIds,
-      searchCategories
-    } = this.state;
+        <TextInput
+          name='searchQuery'
+          autoFocus={true}
+          value={searchQuery}
+          isDisabled={isFetching}
+          onChange={onTextChange}
+        />
+      </div>
 
-    return (
-      <PageContentFooter>
-        <div className={styles.inputContainer}>
+      <div className={styles.indexerContainer}>
+        <SearchFooterLabel
+          label={'Indexers'}
+          isSaving={false}
+        />
+
+        <IndexersSelectInputConnector
+          name='searchIndexerIds'
+          value={searchIndexerIds}
+          isDisabled={isFetching}
+          onChange={onIndexerChange}
+        />
+      </div>
+
+      <div className={styles.indexerContainer}>
+        <SearchFooterLabel
+          label={'Categories'}
+          isSaving={false}
+        />
+
+        <NewznabCategorySelectInputConnector
+          name='searchCategories'
+          value={searchCategories}
+          isDisabled={isFetching}
+          onChange={onCategoryChange}
+        />
+      </div>
+
+      <div className={styles.buttonContainer}>
+        <div className={styles.buttonContainerContent}>
           <SearchFooterLabel
-            label={'Query'}
+            label={`Search ${searchIndexerIds.length === 0 ? 'all' : searchIndexerIds.length} Indexers`}
             isSaving={false}
           />
 
-          <TextInput
-            name='searchQuery'
-            autoFocus={true}
-            value={searchQuery}
-            isDisabled={isFetching}
-            onChange={this.onSearchInputChange}
-          />
-        </div>
+          <div className={styles.buttons}>
 
-        <div className={styles.indexerContainer}>
-          <SearchFooterLabel
-            label={'Indexers'}
-            isSaving={false}
-          />
-
-          <IndexersSelectInputConnector
-            name='searchIndexerIds'
-            value={searchIndexerIds}
-            isDisabled={isFetching}
-            onChange={onInputChange}
-          />
-        </div>
-
-        <div className={styles.indexerContainer}>
-          <SearchFooterLabel
-            label={'Categories'}
-            isSaving={false}
-          />
-
-          <NewznabCategorySelectInputConnector
-            name='searchCategories'
-            value={searchCategories}
-            isDisabled={isFetching}
-            onChange={onInputChange}
-          />
-        </div>
-
-        <div className={styles.buttonContainer}>
-          <div className={styles.buttonContainerContent}>
-            <SearchFooterLabel
-              label={`Search ${searchIndexerIds.length === 0 ? 'all' : searchIndexerIds.length} Indexers`}
-              isSaving={false}
-            />
-
-            <div className={styles.buttons}>
-
-              <SpinnerButton
-                className={styles.searchButton}
-                isSpinning={isFetching}
-                isDisabled={isFetching || !hasIndexers}
-                onPress={this.onSearchPress}
-              >
-                {translate('Search')}
-              </SpinnerButton>
-            </div>
+            <SpinnerButton
+              className={styles.searchButton}
+              isSpinning={isFetching}
+              isDisabled={isFetching || !hasIndexers}
+              onPress={onSearchPress}
+            >
+              Search
+            </SpinnerButton>
           </div>
         </div>
-      </PageContentFooter>
-    );
-  }
+      </div>
+    </PageContentFooter>
+  );
 }
 
 SearchFooter.propTypes = {
-  defaultIndexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  defaultCategories: PropTypes.arrayOf(PropTypes.number).isRequired,
-  defaultSearchQuery: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired,
-  onInputChange: PropTypes.func.isRequired,
   searchError: PropTypes.object,
   bindShortcut: PropTypes.func.isRequired
 };

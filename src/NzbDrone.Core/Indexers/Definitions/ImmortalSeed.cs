@@ -171,10 +171,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var searchUrl = Settings.BaseUrl + "browse.php";
 
-            //TODO - Actually map some categories here
             if (term.IsNotNullOrWhiteSpace())
             {
                 searchUrl += string.Format("?do=search&keywords={0}&search_type=t_name&category=0&include_dead_torrents=no", WebUtility.UrlEncode(term));
+            }
+
+            if (categories != null && categories.Length > 0)
+            {
+                searchUrl += "&selectedcats2=" + string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(categories));
             }
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);

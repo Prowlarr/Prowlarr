@@ -1,7 +1,15 @@
+using System.Collections.Generic;
 using NzbDrone.Core.Datastore;
 
 namespace NzbDrone.Core.IndexerStats
 {
+    public class CombinedStatistics
+    {
+        public List<IndexerStatistics> IndexerStatistics { get; set; }
+        public List<UserAgentStatistics> UserAgentStatistics { get; set; }
+        public List<HostStatistics> HostStatistics { get; set; }
+    }
+
     public class IndexerStatistics : ResultSet
     {
         public int IndexerId { get; set; }

@@ -14,6 +14,7 @@ namespace NzbDrone.Core.History
         List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType);
         void DeleteForIndexers(List<int> indexerIds);
         History MostRecentForIndexer(int indexerId);
+        List<History> Between(DateTime start, DateTime end);
         List<History> Since(DateTime date, HistoryEventType? eventType);
         void Cleanup(int days);
     }
@@ -74,6 +75,13 @@ namespace NzbDrone.Core.History
             return Query(x => x.IndexerId == indexerId)
                 .OrderByDescending(h => h.Date)
                 .FirstOrDefault();
+        }
+
+        public List<History> Between(DateTime start, DateTime end)
+        {
+            var builder = Builder().Where<History>(x => x.Date >= start && x.Date <= end);
+
+            return Query(builder).OrderBy(h => h.Date).ToList();
         }
 
         public List<History> Since(DateTime date, HistoryEventType? eventType)

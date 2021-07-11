@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchIndexerStats } from 'Store/Actions/indexerStatsActions';
+import { fetchIndexerStats, setIndexerStatsFilter } from 'Store/Actions/indexerStatsActions';
 import Stats from './Stats';
 
 function createMapStateToProps() {
@@ -12,9 +12,16 @@ function createMapStateToProps() {
   );
 }
 
-const mapDispatchToProps = {
-  dispatchFetchIndexers: fetchIndexerStats
-};
+function createMapDispatchToProps(dispatch, props) {
+  return {
+    onFilterSelect(selectedFilterKey) {
+      dispatch(setIndexerStatsFilter({ selectedFilterKey }));
+    },
+    dispatchFetchIndexerStats() {
+      dispatch(fetchIndexerStats());
+    }
+  };
+}
 
 class StatsConnector extends Component {
 
@@ -22,7 +29,7 @@ class StatsConnector extends Component {
   // Lifecycle
 
   componentDidMount() {
-    this.props.dispatchFetchIndexers();
+    this.props.dispatchFetchIndexerStats();
   }
 
   //
@@ -38,7 +45,7 @@ class StatsConnector extends Component {
 }
 
 StatsConnector.propTypes = {
-  dispatchFetchIndexers: PropTypes.func.isRequired
+  dispatchFetchIndexerStats: PropTypes.func.isRequired
 };
 
-export default connect(createMapStateToProps, mapDispatchToProps)(StatsConnector);
+export default connect(createMapStateToProps, createMapDispatchToProps)(StatsConnector);

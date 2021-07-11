@@ -21,7 +21,7 @@ import translate from 'Utilities/String/translate';
 import SearchIndexFilterMenu from './Menus/SearchIndexFilterMenu';
 import SearchIndexSortMenu from './Menus/SearchIndexSortMenu';
 import NoSearchResults from './NoSearchResults';
-import SearchFooterConnector from './SearchFooterConnector';
+import SearchFooter from './SearchFooter';
 import SearchIndexTableConnector from './Table/SearchIndexTableConnector';
 import styles from './SearchIndex.css';
 
@@ -291,7 +291,7 @@ class SearchIndex extends Component {
           }
         </div>
 
-        <SearchFooterConnector
+        <SearchFooter
           isFetching={isFetching}
           hasIndexers={hasIndexers}
           onSearchPress={this.onSearchPress}

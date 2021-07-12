@@ -95,7 +95,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(62, NewznabStandardCategory.MoviesSD, "Movie/MP4");
             caps.Categories.AddCategoryMapping(38, NewznabStandardCategory.MoviesForeign, "Movie/Non-English");
             caps.Categories.AddCategoryMapping(68, NewznabStandardCategory.Movies, "Movie/Packs");
-            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.MoviesHD, "Movie/Web-DL");
+            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.MoviesWEBDL, "Movie/Web-DL");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.MoviesSD, "Movie/Xvid");
             caps.Categories.AddCategoryMapping(100, NewznabStandardCategory.Movies, "Movie/x265");
 
@@ -211,7 +211,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -220,7 +220,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -229,7 +229,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -238,7 +238,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
 
             return pageableRequests;
         }

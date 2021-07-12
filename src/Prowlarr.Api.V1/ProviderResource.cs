@@ -38,7 +38,7 @@ namespace Prowlarr.Api.V1
                 Tags = definition.Tags,
                 Fields = SchemaBuilder.ToSchema(definition.Settings),
 
-                //prowlarr/supported#{0} are custom build redirect pages; if passing a new var, create a new redirect
+                //prowlarr/supported#{0} is an disambagation page. the # should be a header on the page with appropiate details/link
                 // note: indexers get a different link
                 InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported#{0}",
                     definition.Implementation.ToLower().Replace(' ', '-'))

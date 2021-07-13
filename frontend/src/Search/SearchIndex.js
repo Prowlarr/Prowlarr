@@ -49,6 +49,16 @@ class SearchIndex extends Component {
   }
 
   componentDidMount() {
+    const { isSmallScreen, columns, onTableOptionChange } = this.props;
+    if (isSmallScreen) {
+      const mobileColumns = _.cloneDeep(columns);
+
+      for (const columnName of ['protocol', 'age', 'size', 'grabs', 'peers', 'category', 'indexerFlags']) {
+        const column = _.find(mobileColumns, { name: columnName });
+        column.isVisible = false;
+      }
+      onTableOptionChange({ columns: mobileColumns });
+    }
     this.setJumpBarItems();
 
     window.addEventListener('keyup', this.onKeyUp);
@@ -328,7 +338,8 @@ SearchIndex.propTypes = {
   onFilterSelect: PropTypes.func.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   onScroll: PropTypes.func.isRequired,
-  hasIndexers: PropTypes.bool.isRequired
+  hasIndexers: PropTypes.bool.isRequired,
+  onTableOptionChange: PropTypes.func.isRequired
 };
 
 export default SearchIndex;

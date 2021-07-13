@@ -108,13 +108,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
-                                   }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.FreeLeech
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);

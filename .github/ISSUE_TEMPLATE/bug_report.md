@@ -6,17 +6,17 @@ labels: 'Type: Bug'
 assignees: ''
 
 ---
-<!-- Support Requests will be closed immediately, if you are unsure go to our Reddit or Discord first. Exceptions do not mean you found a bug! -->
-<!-- Note: Text between <!- and -> will be hidden -->
+<!-- Support Requests will be closed immediately, if you are not 100% certain this is a bug please go to our Reddit or Discord first. Exceptions do not mean you found a bug! -->
 **Describe the bug**
 <!-- A clear and concise description of what the bug is. -->
+<!-- Text between the symbols will be hidden -->
 
 **To Reproduce**
-<!-- Steps to reproduce the behavior:
+<!-- Steps to reproduce the behavior: -->
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
-4. See error -->
+4. See error
 
 **Expected behavior**
 <!-- A clear and concise description of what you expected to happen.-->
@@ -25,6 +25,7 @@ assignees: ''
 <!-- If applicable, add screenshots to help explain your problem.-->
 
 **Platform Information (please complete the following information):**
+<!-- Simply type after the example text -->
  - OS: <!-- [e.g. Windows 10 2004 / Ubuntu 20.04] -->
  - Docker: <!-- [Yes/No] -->
  - .NET Version (System -> Status): <!--[e.g. .NET 5.0.1] -->

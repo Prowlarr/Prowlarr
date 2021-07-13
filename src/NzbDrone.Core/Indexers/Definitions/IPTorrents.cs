@@ -364,7 +364,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie - Both the UID and Pass are required.")]
         public string Cookie { get; set; }
 
         [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]

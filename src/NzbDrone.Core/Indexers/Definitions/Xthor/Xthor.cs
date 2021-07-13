@@ -426,5 +426,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+
+        public IndexerBaseSettings BaseSettings { get; set; }
     }
 }

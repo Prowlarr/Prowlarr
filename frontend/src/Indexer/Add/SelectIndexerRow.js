@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRowButton from 'Components/Table/TableRowButton';
 import ProtocolLabel from 'Indexer/Index/Table/ProtocolLabel';
-import styles from './SelectIndexerRow.css';
 
 class SelectIndexerRow extends Component {
 
@@ -32,7 +31,7 @@ class SelectIndexerRow extends Component {
 
     return (
       <TableRowButton onPress={this.onPress}>
-        <TableRowCell className={styles.protocol}>
+        <TableRowCell>
           <ProtocolLabel
             protocol={protocol}
           />

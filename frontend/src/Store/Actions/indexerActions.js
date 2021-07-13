@@ -43,7 +43,8 @@ export const defaultState = {
     error: null,
     sortKey: 'name',
     sortDirection: sortDirections.ASCENDING,
-    items: []
+    items: [],
+    filteredIndexers: []
   }
 };
 
@@ -79,6 +80,7 @@ export const DELETE_INDEXER = 'indexers/deleteIndexer';
 export const TEST_INDEXER = 'indexers/testIndexer';
 export const CANCEL_TEST_INDEXER = 'indexers/cancelTestIndexer';
 export const TEST_ALL_INDEXERS = 'indexers/testAllIndexers';
+export const SET_FILTERED_INDEXERS = 'indexers/filtered';
 
 //
 // Action Creators
@@ -186,6 +188,12 @@ export const reducers = createHandleActions({
     newState.pendingChanges = {
       name: `${item.name} - Copy`
     };
+
+    return updateSectionState(state, section, newState);
+  },
+
+  [SET_FILTERED_INDEXERS]: function(state, { payload }) {
+    const newState = { ...state, schema: { ...state.schema, filteredIndexers: payload } };
 
     return updateSectionState(state, section, newState);
   }

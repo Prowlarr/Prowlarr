@@ -38,6 +38,7 @@ function Table(props) {
     children,
     onSortPress,
     onTableOptionChange,
+    secondaryHeaderRow,
     ...otherProps
   } = props;
 
@@ -55,7 +56,7 @@ function Table(props) {
       autoFocus={false}
     >
       <table className={className}>
-        <TableHeader>
+        <TableHeader secondaryHeaderRow={secondaryHeaderRow}>
           {
             selectAll ?
               <TableSelectAllHeaderCell {...otherProps} /> :
@@ -130,7 +131,8 @@ Table.propTypes = {
   canModifyColumns: PropTypes.bool,
   children: PropTypes.node,
   onSortPress: PropTypes.func,
-  onTableOptionChange: PropTypes.func
+  onTableOptionChange: PropTypes.func,
+  secondaryHeaderRow: PropTypes.node
 };
 
 Table.defaultProps = {

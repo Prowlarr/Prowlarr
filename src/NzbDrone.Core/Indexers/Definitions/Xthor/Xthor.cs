@@ -386,85 +386,46 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
             MaxPages = 1;
         }
 
-        [FieldDefinition(1,
-            Label = "Url",
-            Type = FieldType.Select,
-            SelectOptionsProviderAction = "getUrls",
-            HelpText = "Site links")]
+        [FieldDefinition(1, Label = "Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2,
-            Label = "Passkey",
-            Privacy = PrivacyLevel.Password,
-            Type = FieldType.Password,
-            HelpText = "Passkey to use for requests. (see https://xthor.tk/api_doc.php)")]
+        [FieldDefinition(2, Label = "Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Passkey")]
         public string Passkey { get; set; }
 
-        [FieldDefinition(2,
-            Label = "Freeleech only",
-            Privacy = PrivacyLevel.Normal,
-            Type = FieldType.Checkbox,
-            HelpText =
-                "If you want to discover only freeleech torrents to not impact your ratio, check the related box. So only torrents marked as freeleech will be returned instead of all.")]
+        [FieldDefinition(3, Label = "Freeleech only", Privacy = PrivacyLevel.Normal, Type = FieldType.Checkbox, HelpText = "If you want to discover only freeleech torrents to not impact your ratio, check the related box.")]
         public bool FreeleechOnly { get; set; }
 
-        [FieldDefinition(3,
-            Label = "Specific language",
-            Type = FieldType.Select,
-            SelectOptions = typeof(XthorAccent),
-            HelpText = "You can scope your searches with a specific language / accent.")]
+        [FieldDefinition(4, Label = "Specific language", Type = FieldType.Select, SelectOptions = typeof(XthorAccent), HelpText = "You can scope your searches with a specific language / accent.")]
 
         public int Accent { get; set; }
 
+
+        [FieldDefinition(5, Label = "Replace MULTI keyword", Type = FieldType.Checkbox, HelpText = "Useful if you want MULTI release to be parsed as another language")]
+
+        public bool NeedMultiReplacement { get; set; }
+
+        [FieldDefinition(6, Label = "MULTI replacement", Type = FieldType.Textbox, HelpText = "Word used to replace \"MULTI\" keyword in release title")]
+
+        public string MultiReplacement { get; set; }
+
+        [FieldDefinition(7, Label = "SUB replacement", Type = FieldType.Textbox, HelpText = "Do you want to replace \"VOSTFR\" and \"SUBFRENCH\" with specific word ?")]
+
+        public string SubReplacement { get; set; }
+
+        [FieldDefinition(8, Label = "Do you want to use enhanced ANIME search ?", Type = FieldType.Checkbox, HelpText = "if you have \"Anime\", this will improve queries made to this tracker related to this type when making searches. (This will change the episode number to EXXX)")]
+
+        public bool EnhancedAnime { get; set; }
+
+        [FieldDefinition(9, Label = "Do you want to bypass max pages for TMDB searches ? (Radarr) - Hard limit of 4", Type = FieldType.Checkbox, HelpText = "(recommended) this indexer is compatible with TMDB queries (for movies only), so when requesting content with an TMDB ID, we will search directly ID on API. Results will be more accurate, so you can enable a max pages bypass for this query type.", Advanced = true)]
+
+        public bool ByPassPageForTmDbid { get; set; }
+
+        [FieldDefinition(10, Label = "How many pages do you want to follow ?", Type = FieldType.Select, SelectOptions = typeof(XthorPagesNumber), HelpText = "(not recommended) you can increase max pages to follow when making a request. But be aware that this API is very buggy on tracker side, most of time, results of next pages are same as the first page. Even if we deduplicate rows, you will loose performance for the same results.", Advanced = true)]
+
+        public int MaxPages { get; set; }
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
-
-        [FieldDefinition(4,
-            Label = "Replace MULTI keyword",
-            Type = FieldType.Checkbox,
-            HelpText = "Useful if you want MULTI release to be parsed as another language")]
-
-        public bool NeedMultiReplacement { get; set; }
-
-        [FieldDefinition(5,
-            Label = "MULTI replacement",
-            Type = FieldType.Textbox,
-            HelpText = "Word used to replace \"MULTI\" keyword in release title")]
-
-        public string MultiReplacement { get; set; }
-
-        [FieldDefinition(6,
-            Label = "SUB replacement",
-            Type = FieldType.Textbox,
-            HelpText = "Do you want to replace \"VOSTFR\" and \"SUBFRENCH\" with specific word ?")]
-
-        public string SubReplacement { get; set; }
-
-        [FieldDefinition(8,
-            Label = "Do you want to use enhanced ANIME search ?",
-            Type = FieldType.Checkbox,
-            HelpText =
-                "if you have \"Anime\", this will improve queries made to this tracker related to this type when making searches.")]
-
-        public bool EnhancedAnime { get; set; }
-
-        [FieldDefinition(8,
-            Label = "Do you want to bypass max pages for TMDB searches ? (Radarr) - Hard limit of 4",
-            Type = FieldType.Checkbox,
-            HelpText =
-                "(recommended) this indexer is compatible with TMDB queries (for movies only), so when requesting content with an TMDB ID, we will search directly ID on API instead of name. Results will be more accurate, so you can enable a max pages bypass for this query type. You will be at least limited by the hard limit of 4 pages.")]
-
-        public bool ByPassPageForTmDbid { get; set; }
-
-        [FieldDefinition(9,
-            Label = "How many pages do you want to follow ?",
-            Type = FieldType.Select,
-            SelectOptions = typeof(XthorPagesNumber),
-            HelpText =
-                "(not recommended) you can increase max pages to follow when making a request. But be aware that others apps can consider this indexer not working if jackett take too many times to return results. Another thing is that API is very buggy on tracker side, most of time, results of next pages are same ... as the first page. Even if we deduplicate rows, you will loose performance for the same results. You can check logs to see if an higher pages following is not benefical, you will see an error percentage (duplicates) with recommandations.")]
-
-        public int MaxPages { get; set; }
     }
 }

@@ -267,8 +267,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Files = row.numfiles;
                     release.Grabs = row.times_completed;
 
-                    release.Guid = new Uri(_settings.BaseUrl + "torrent/" + row.id.ToString() + "/").ToString();
+                    var infoUrl = _settings.BaseUrl + "torrent/" + row.id.ToString() + "/";
+
+                    release.Guid = infoUrl;
                     release.DownloadUrl = _settings.BaseUrl + "api/v1/torrents/download/" + row.id.ToString();
+                    release.InfoUrl = infoUrl;
 
                     if (row.frileech == 1)
                     {

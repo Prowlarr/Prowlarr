@@ -399,7 +399,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
 
         public int Accent { get; set; }
 
-
         [FieldDefinition(5, Label = "Replace MULTI keyword", Type = FieldType.Checkbox, HelpText = "Useful if you want MULTI release to be parsed as another language")]
 
         public bool NeedMultiReplacement { get; set; }

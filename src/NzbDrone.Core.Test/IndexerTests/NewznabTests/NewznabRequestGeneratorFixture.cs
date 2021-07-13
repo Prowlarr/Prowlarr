@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
     public class NewznabRequestGeneratorFixture : CoreTest<NewznabRequestGenerator>
     {
         private MovieSearchCriteria _movieSearchCriteria;
+        private TvSearchCriteria _tvSearchCriteria;
         private IndexerCapabilities _capabilities;
 
         [SetUp]
@@ -28,6 +29,12 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             {
                 SearchTerm = "Star Wars",
                 Categories = new int[] { 2000 }
+            };
+
+            _tvSearchCriteria = new TvSearchCriteria
+            {
+                SearchTerm = "Breaking Bad",
+                Categories = new int[] { 5000 }
             };
 
             _capabilities = new IndexerCapabilities();
@@ -177,6 +184,152 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             pageTier2.Url.Query.Should().NotContain("tmdbid=11");
             pageTier2.Url.Query.Should().NotContain("imdbid=0076759");
             pageTier2.Url.Query.Should().Contain("q=");
+        }
+
+        [Test]
+        public void should_not_search_by_tv_imdbid_if_not_supported()
+        {
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+
+            results.GetAllTiers().Should().HaveCount(1);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.Query.Should().NotContain("imdbid=0903747");
+            page.Url.Query.Should().Contain("q=Breaking");
+        }
+
+        [Test]
+        public void should_search_by_tv_imdbid_if_supported()
+        {
+            _tvSearchCriteria.ImdbId = "0903747";
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.GetTier(0).Should().HaveCount(1);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.Query.Should().Contain("imdbid=0903747");
+        }
+
+        [Test]
+        public void should_search_by_tvdbid_if_supported()
+        {
+            _tvSearchCriteria.TvdbId = 81189;
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.GetTier(0).Should().HaveCount(1);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.Query.Should().Contain("tvdbid=81189");
+        }
+
+        [Test]
+        public void should_prefer_search_by_tvdbid_if_rid_supported()
+        {
+            _tvSearchCriteria.TvdbId = 81189;
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.GetTier(0).Should().HaveCount(1);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.Query.Should().Contain("tvdbid=81189");
+            page.Url.Query.Should().NotContain("imdbid=0903747");
+        }
+
+        [Test]
+        public void should_use_aggregrated_tv_id_search_if_supported()
+        {
+            _tvSearchCriteria.ImdbId = "0903747";
+            _tvSearchCriteria.TvdbId = 81189;
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.GetTier(0).Should().HaveCount(1);
+
+            var page = results.GetTier(0).First().First();
+
+            page.Url.Query.Should().Contain("tvdbid=81189");
+            page.Url.Query.Should().Contain("imdbid=0903747");
+        }
+
+        [Test]
+        public void should_not_use_aggregrated_tv_id_search_if_no_ids_supported()
+        {
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.Tiers.Should().Be(1);
+            results.GetTier(0).Should().HaveCount(1);
+
+            var page = results.GetTier(0).First().First();
+
+            page.Url.Query.Should().Contain("q=");
+        }
+
+        [Test]
+        public void should_not_use_aggregrated_tv_id_search_if_no_ids_are_known()
+        {
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            _tvSearchCriteria.ImdbId = null;
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+
+            var page = results.GetTier(0).First().First();
+
+            page.Url.Query.Should().Contain("q=");
+        }
+
+        [Test]
+        public void should_fallback_to_tv_q()
+        {
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.Tiers.Should().Be(1);
+
+            var pageTier2 = results.GetTier(0).First().First();
+
+            pageTier2.Url.Query.Should().NotContain("tvdbid=81189");
+            pageTier2.Url.Query.Should().NotContain("imdbid=0903747");
+            pageTier2.Url.Query.Should().Contain("q=");
+        }
+
+        [Test]
+        public void should_not_search_by_tvmazeid_if_not_supported()
+        {
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+
+            results.GetAllTiers().Should().HaveCount(1);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.Query.Should().NotContain("tvmazeid=169");
+            page.Url.Query.Should().Contain("q=Breaking");
+        }
+
+        [Test]
+        public void should_search_by_tvmazeid_if_supported()
+        {
+            _tvSearchCriteria.TvMazeId = 169;
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.TvMazeId, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.GetTier(0).Should().HaveCount(1);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.Query.Should().Contain("tvmazeid=169");
         }
     }
 }

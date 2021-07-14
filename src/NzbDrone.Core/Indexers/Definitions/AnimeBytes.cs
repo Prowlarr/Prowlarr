@@ -315,6 +315,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                         releaseInfo = releaseInfo.Replace("Season ", "S");
                         releaseInfo = releaseInfo.Trim();
 
+                        if (int.TryParse(releaseInfo, out _) && releaseInfo.Length == 1)
+                        {
+                            releaseInfo = "0" + releaseInfo;
+                        }
+
                         var torrentId = torrent.Id;
                         var property = torrent.Property.Replace(" | Freeleech", string.Empty);
                         var link = torrent.Link;

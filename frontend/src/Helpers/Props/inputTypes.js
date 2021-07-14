@@ -1,4 +1,5 @@
 export const AUTO_COMPLETE = 'autoComplete';
+export const APPLICATION_SELECT = 'applicationSelect';
 export const APP_PROFILE_SELECT = 'appProfileSelect';
 export const AVAILABILITY_SELECT = 'availabilitySelect';
 export const CAPTCHA = 'captcha';
@@ -23,6 +24,7 @@ export const TAG_SELECT = 'tagSelect';
 
 export const all = [
   AUTO_COMPLETE,
+  APPLICATION_SELECT,
   APP_PROFILE_SELECT,
   AVAILABILITY_SELECT,
   CAPTCHA,

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using NzbDrone.Core.Applications;
 using NzbDrone.Core.Datastore;
 
 namespace NzbDrone.Core.Profiles
@@ -8,5 +10,6 @@ namespace NzbDrone.Core.Profiles
         public bool EnableRss { get; set; }
         public bool EnableAutomaticSearch { get; set; }
         public bool EnableInteractiveSearch { get; set; }
+        public List<int> ApplicationIds { get; set; }
     }
 }

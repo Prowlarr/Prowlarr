@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Dapper;
 using NzbDrone.Common.Reflection;
 using NzbDrone.Core.Applications;
@@ -42,19 +43,18 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<ScheduledTask>("ScheduledTasks").RegisterModel();
 
             Mapper.Entity<IndexerDefinition>("Indexers").RegisterModel()
-                  .Ignore(x => x.ImplementationName)
-                  .Ignore(i => i.Description)
-                  .Ignore(i => i.Language)
-                  .Ignore(i => i.Encoding)
-                  .Ignore(i => i.IndexerUrls)
-                  .Ignore(i => i.Protocol)
-                  .Ignore(i => i.Privacy)
-                  .Ignore(i => i.SupportsRss)
-                  .Ignore(i => i.SupportsSearch)
-                  .Ignore(i => i.SupportsRedirect)
-                  .Ignore(i => i.Capabilities)
-                  .Ignore(d => d.Tags)
-                  .HasOne(a => a.AppProfile, a => a.AppProfileId);
+                .Ignore(x => x.ImplementationName)
+                .Ignore(i => i.Description)
+                .Ignore(i => i.Language)
+                .Ignore(i => i.Encoding)
+                .Ignore(i => i.IndexerUrls)
+                .Ignore(i => i.Protocol)
+                .Ignore(i => i.Privacy)
+                .Ignore(i => i.SupportsRss)
+                .Ignore(i => i.SupportsSearch)
+                .Ignore(i => i.SupportsRedirect)
+                .Ignore(i => i.Capabilities)
+                .Ignore(d => d.Tags);
 
             Mapper.Entity<DownloadClientDefinition>("DownloadClients").RegisterModel()
                   .Ignore(x => x.ImplementationName)

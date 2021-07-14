@@ -23,8 +23,8 @@ namespace NzbDrone.Core.Indexers
         public int Priority { get; set; } = 25;
         public bool Redirect { get; set; }
         public DateTime Added { get; set; }
-        public int AppProfileId { get; set; }
-        public LazyLoaded<AppSyncProfile> AppProfile { get; set; }
+        public List<int> AppProfileIds { get; set; }
+        public List<AppSyncProfile> AppProfiles { get; set; }
 
         public IndexerStatus Status { get; set; }
 

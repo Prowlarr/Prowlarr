@@ -2,11 +2,11 @@ import { createSelector } from 'reselect';
 
 function createAppProfileSelector() {
   return createSelector(
-    (state, { appProfileId }) => appProfileId,
+    (state, { appProfileIds }) => appProfileIds,
     (state) => state.settings.appProfiles.items,
-    (appProfileId, appProfiles) => {
+    (appProfileIds, appProfiles) => {
       return appProfiles.find((profile) => {
-        return profile.id === appProfileId;
+        return profile.id === appProfileIds;
       });
     }
   );

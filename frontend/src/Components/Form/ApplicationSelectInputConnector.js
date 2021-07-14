@@ -6,14 +6,14 @@ import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
   return createSelector(
-    (state) => state.settings.appProfiles.items,
-    (appProfiles) => {
+    (state) => state.settings.applications.items,
+    (applications) => {
       const values = [];
 
-      appProfiles.forEach((appProfile) => {
+      applications.forEach((application) => {
         values.push({
-          key: appProfile.id,
-          value: appProfile.name
+          key: application.id,
+          value: application.name
         });
       });
 
@@ -24,7 +24,7 @@ function createMapStateToProps() {
   );
 }
 
-class AppProfileSelectInputConnector extends Component {
+class ApplicationSelectInputConnector extends Component {
 
   //
   // Listeners
@@ -46,15 +46,15 @@ class AppProfileSelectInputConnector extends Component {
   }
 }
 
-AppProfileSelectInputConnector.propTypes = {
+ApplicationSelectInputConnector.propTypes = {
   name: PropTypes.string.isRequired,
-  appProfileIds: PropTypes.arrayOf(PropTypes.number),
+  applicationIds: PropTypes.arrayOf(PropTypes.number),
   values: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func.isRequired
 };
 
-AppProfileSelectInputConnector.defaultProps = {
+ApplicationSelectInputConnector.defaultProps = {
   includeNoChange: false
 };
 
-export default connect(createMapStateToProps)(AppProfileSelectInputConnector);
+export default connect(createMapStateToProps)(ApplicationSelectInputConnector);

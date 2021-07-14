@@ -192,7 +192,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var release = new TorrentInfo
                     {
                         InfoUrl = _settings.BaseUrl + $"shows/{value.Page}/",
-                        PublishDate = value.ReleaseDate.DateTime,
+                        PublishDate = value.ReleaseDate.LocalDateTime,
                         Files = 1,
                         Categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
                         Seeders = 1,

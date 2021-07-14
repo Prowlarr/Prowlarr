@@ -115,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "username", Settings.Username },
                 { "torrent_pass", Settings.Passkey },
                 { "type", searchType },
-                { "searchstr", term }
+                { "searchstr", StripEpisodeNumber(term) }
             };
 
             var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
@@ -182,6 +182,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private string StripEpisodeNumber(string term)
+        {
+            // Tracer does not support searching with episode number so strip it if we have one
+            term = Regex.Replace(term, @"\W(\dx)?\d?\d$", string.Empty);
+            term = Regex.Replace(term, @"\W(S\d\d?E)?\d?\d$", string.Empty);
+            term = Regex.Replace(term, @"\W\d+$", string.Empty);
+            return term;
+        }
     }
 
     public class AnimeBytesParser : IParseIndexerResponse

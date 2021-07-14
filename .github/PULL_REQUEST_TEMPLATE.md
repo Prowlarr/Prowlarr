@@ -1,5 +1,5 @@
 #### Database Migration
-YES | NO
+YES - XXXX | NO
 
 #### Description
 A few sentences describing the overall goals of the pull request's commits.
@@ -8,8 +8,8 @@ A few sentences describing the overall goals of the pull request's commits.
 
 #### Todos
 - [ ] Tests
-- [ ] Translation Keys
-- [ ] Wiki Updates
+- [ ] Translation Keys (./src/NzbDrone.Core/Localization/Core/en.json)
+- [ ] [Wiki Updates](https://wiki.servarr.com)
 
 #### Issues Fixed or Closed by this PR
 

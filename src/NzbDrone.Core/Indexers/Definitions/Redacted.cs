@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "Redacted";
         public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
-        public override string Description => "";
+        public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public Redacted(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

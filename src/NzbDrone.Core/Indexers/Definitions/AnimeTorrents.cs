@@ -353,8 +353,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
+
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

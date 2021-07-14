@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using FluentValidation;
+using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
@@ -21,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SubsPlease : TorrentIndexerBase<SubsPleaseSettings>
     {
         public override string Name => "SubsPlease";
-        public override string[] IndexerUrls => new string[]
+        public override string[] IndexerUrls => new[]
         {
             "https://subsplease.org/",
             "https://subsplease.nocensor.space/"
@@ -69,18 +70,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public SubsPleaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public SubsPleaseRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetSearchRequests(string term)
         {
-            var searchUrl = string.Format("{0}/api/?", Settings.BaseUrl.TrimEnd('/'));
+            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/api/?";
 
-            string searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
+            var searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
 
             // If the search terms contain a resolution, remove it from the query sent to the API
-            Match resMatch = Regex.Match(searchTerm, "\\d{3,4}[p|P]");
+            var resMatch = Regex.Match(searchTerm, "\\d{3,4}[p|P]");
             if (resMatch.Success)
             {
                 searchTerm = searchTerm.Replace(resMatch.Value, string.Empty);
@@ -89,7 +86,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var queryParameters = new NameValueCollection
             {
                 { "f", "search" },
-                { "tz", "America/New_York" },
+                { "tz", "UTC" },
                 { "s", searchTerm }
             };
 
@@ -100,12 +97,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetRssRequest()
         {
-            var searchUrl = string.Format("{0}/api/?", Settings.BaseUrl.TrimEnd('/'));
+            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/api/?";
 
             var queryParameters = new NameValueCollection
             {
                 { "f", "latest" },
-                { "tz", "America/New_York" }
+                { "tz", "UTC" }
             };
 
             var request = new IndexerRequest(searchUrl + queryParameters.GetQueryString(), HttpAccept.Json);
@@ -131,14 +128,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            if (searchCriteria.RssSearch)
-            {
-                pageableRequests.Add(GetRssRequest());
-            }
-            else
-            {
-                pageableRequests.Add(GetSearchRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString)));
-            }
+            pageableRequests.Add(searchCriteria.RssSearch
+                ? GetRssRequest()
+                : GetSearchRequests(searchCriteria.SanitizedTvSearchString));
 
             return pageableRequests;
         }
@@ -154,14 +146,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            if (searchCriteria.RssSearch)
-            {
-                pageableRequests.Add(GetRssRequest());
-            }
-            else
-            {
-                pageableRequests.Add(GetSearchRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
-            }
+            pageableRequests.Add(searchCriteria.RssSearch
+                ? GetRssRequest()
+                : GetSearchRequests(searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }
@@ -198,16 +185,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var jsonResponse = new HttpResponse<Dictionary<string, SubPleaseRelease>>(indexerResponse.HttpResponse);
 
-            foreach (var keyValue in jsonResponse.Resource)
+            foreach (var value in jsonResponse.Resource.Values)
             {
-                SubPleaseRelease r = keyValue.Value;
-
-                foreach (var d in r.Downloads)
+                foreach (var d in value.Downloads)
                 {
                     var release = new TorrentInfo
                     {
-                        InfoUrl = _settings.BaseUrl + $"shows/{r.Page}/",
-                        PublishDate = r.Release_Date.DateTime,
+                        InfoUrl = _settings.BaseUrl + $"shows/{value.Page}/",
+                        PublishDate = value.ReleaseDate.DateTime,
                         Files = 1,
                         Categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
                         Seeders = 1,
@@ -219,7 +204,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     };
 
                     // Ex: [SubsPlease] Shingeki no Kyojin (The Final Season) - 64 (1080p)
-                    release.Title += $"[SubsPlease] {r.Show} - {r.Episode} ({d.Res}p)";
+                    release.Title += $"[SubsPlease] {value.Show} - {value.Episode} ({d.Res}p)";
                     release.MagnetUrl = d.Magnet;
                     release.DownloadUrl = null;
                     release.Guid = d.Magnet;
@@ -263,6 +248,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
+        [FieldDefinition(2)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
@@ -272,7 +260,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SubPleaseRelease
     {
         public string Time { get; set; }
-        public DateTimeOffset Release_Date { get; set; }
+
+        [JsonProperty("release_date")]
+        public DateTimeOffset ReleaseDate { get; set; }
         public string Show { get; set; }
         public string Episode { get; set; }
         public SubPleaseDownloadInfo[] Downloads { get; set; }

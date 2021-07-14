@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Messaging.Events;
 
@@ -16,6 +17,7 @@ namespace NzbDrone.Core.History
         History MostRecentForIndexer(int indexerId);
         List<History> Since(DateTime date, HistoryEventType? eventType);
         void Cleanup(int days);
+        int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
     }
 
     public class HistoryRepository : BasicRepository<History>, IHistoryRepository
@@ -86,6 +88,22 @@ namespace NzbDrone.Core.History
             }
 
             return Query(builder).OrderBy(h => h.Date).ToList();
+        }
+
+        public int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes)
+        {
+            var builder = new SqlBuilder()
+                .SelectCount()
+                .Where<History>(x => x.IndexerId == indexerId)
+                .Where<History>(x => x.Date >= date)
+                .Where<History>(x => eventTypes.Contains(x.EventType));
+
+            var sql = builder.AddPageCountTemplate(typeof(History));
+
+            using (var conn = _database.OpenConnection())
+            {
+                return conn.ExecuteScalar<int>(sql.RawSql, sql.Parameters);
+            }
         }
     }
 }

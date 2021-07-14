@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "AnimeBytes";
         public override string[] IndexerUrls => new string[] { "https://animebytes.tv/" };
-        public override string Description => "Powered by Tentacles";
+        public override string Description => "AnimeBytes (AB) is the largest private torrent tracker that specialises in anime and anime-related content.";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -499,11 +499,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Passkey")]
+        [FieldDefinition(2, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passkey { get; set; }
 
         [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
+
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

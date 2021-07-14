@@ -15,7 +15,6 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -52,11 +51,11 @@ namespace NzbDrone.Core.Indexers
 
         public override Task<IndexerPageableQueryResult> Fetch(MovieSearchCriteria searchCriteria)
         {
-            //TODO: Re-Enable when All Indexer Caps are fixed and tests don't fail
-            //if (!SupportsSearch)
-            //{
-            //    return Task.FromResult(new Task<IndexerPageableQueryResult>());
-            //}
+            if (!SupportsSearch)
+            {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
         }
 
@@ -158,13 +157,6 @@ namespace NzbDrone.Core.Indexers
 
                 var pageableRequestChain = pageableRequestChainSelector(generator);
 
-                var fullyUpdated = false;
-                ReleaseInfo lastReleaseInfo = null;
-                if (isRecent)
-                {
-                    lastReleaseInfo = _indexerStatusService.GetLastRssSyncReleaseInfo(Definition.Id);
-                }
-
                 for (int i = 0; i < pageableRequestChain.Tiers; i++)
                 {
                     var pageableRequests = pageableRequestChain.GetTier(i);
@@ -187,33 +179,6 @@ namespace NzbDrone.Core.Indexers
 
                             pagedReleases.AddRange(page.Releases);
 
-                            if (isRecent && page.Releases.Any())
-                            {
-                                if (lastReleaseInfo == null)
-                                {
-                                    fullyUpdated = true;
-                                    break;
-                                }
-
-                                var oldestReleaseDate = page.Releases.Select(v => v.PublishDate).Min();
-                                if (oldestReleaseDate < lastReleaseInfo.PublishDate || page.Releases.Any(v => v.DownloadUrl == lastReleaseInfo.DownloadUrl))
-                                {
-                                    fullyUpdated = true;
-                                    break;
-                                }
-
-                                if (pagedReleases.Count >= MaxNumResultsPerQuery &&
-                                    oldestReleaseDate < DateTime.UtcNow - TimeSpan.FromHours(24))
-                                {
-                                    fullyUpdated = false;
-                                    break;
-                                }
-                            }
-                            else if (pagedReleases.Count >= MaxNumResultsPerQuery)
-                            {
-                                break;
-                            }
-
                             if (!IsFullPage(page.Releases, pageSize))
                             {
                                 break;
@@ -227,21 +192,6 @@ namespace NzbDrone.Core.Indexers
                     {
                         break;
                     }
-                }
-
-                if (isRecent && !releases.Empty())
-                {
-                    var ordered = releases.OrderByDescending(v => v.PublishDate).ToList();
-
-                    if (!fullyUpdated && lastReleaseInfo != null)
-                    {
-                        var gapStart = lastReleaseInfo.PublishDate;
-                        var gapEnd = ordered.Last().PublishDate;
-                        _logger.Warn("Indexer {0} rss sync didn't cover the period between {1} and {2} UTC. Search may be required.", Definition.Name, gapStart, gapEnd);
-                    }
-
-                    lastReleaseInfo = ordered.First();
-                    _indexerStatusService.UpdateRssSyncStatus(Definition.Id, lastReleaseInfo);
                 }
 
                 _indexerStatusService.RecordSuccess(Definition.Id);

@@ -10,7 +10,6 @@ function createMapStateToProps() {
     (state) => state.settings.advancedSettings,
     createIndexerSelector(),
     (advancedSettings, indexer) => {
-      console.log(indexer);
       return {
         advancedSettings,
         ...indexer

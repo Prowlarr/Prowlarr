@@ -18,7 +18,7 @@ function IndexerInfoModalContent(props) {
     description,
     encoding,
     language,
-    baseUrl,
+    indexerUrls,
     protocol,
     onModalClose
   } = props;
@@ -54,10 +54,10 @@ function IndexerInfoModalContent(props) {
 
           <DescriptionListItemTitle>Indexer Site</DescriptionListItemTitle>
           <DescriptionListItemDescription>
-            <Link to={baseUrl}>{baseUrl}</Link>
+            <Link to={indexerUrls[0]}>{indexerUrls[0]}</Link>
           </DescriptionListItemDescription>
 
-          <DescriptionListItemTitle>{protocol === 'usenet' ? 'Newznab' : 'Torznab'} Url</DescriptionListItemTitle>
+          <DescriptionListItemTitle>{`${protocol === 'usenet' ? 'Newznab' : 'Torznab'} Url`}</DescriptionListItemTitle>
           <DescriptionListItemDescription>
             {`${window.location.origin}${window.Prowlarr.urlBase}/${id}/api`}
           </DescriptionListItemDescription>
@@ -74,7 +74,7 @@ IndexerInfoModalContent.propTypes = {
   description: PropTypes.string.isRequired,
   encoding: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
-  baseUrl: PropTypes.string.isRequired,
+  indexerUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
   protocol: PropTypes.string.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

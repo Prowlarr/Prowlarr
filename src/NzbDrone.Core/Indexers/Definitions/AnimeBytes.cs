@@ -288,22 +288,26 @@ namespace NzbDrone.Core.Indexers.Definitions
                             season = ParseUtil.CoerceInt(seasonNumberRegExMatch.Groups[1].Value);
                         }
 
+                        var foundSeason = false;
+
                         if (season != null)
                         {
                             releaseInfo = $"Season {season}";
+
+                            foundSeason = true;
                         }
 
                         if (episode != null)
                         {
                             var epString = $"Episode {episode}";
 
-                            if (releaseInfo == defaultReleaseInfo)
+                            if (foundSeason)
                             {
-                                releaseInfo = epString;
+                                releaseInfo += $" {epString}";
                             }
                             else
                             {
-                                releaseInfo += $" {epString}";
+                                releaseInfo = epString;
                             }
                         }
 

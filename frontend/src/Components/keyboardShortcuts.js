@@ -1,5 +1,5 @@
 import Mousetrap from 'mousetrap';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import getDisplayName from 'Helpers/getDisplayName';
 import translate from 'Utilities/String/translate';
 
@@ -41,7 +41,7 @@ export const shortcuts = {
 };
 
 function keyboardShortcuts(WrappedComponent) {
-  class KeyboardShortcuts extends Component {
+  class KeyboardShortcuts extends PureComponent {
 
     //
     // Lifecycle

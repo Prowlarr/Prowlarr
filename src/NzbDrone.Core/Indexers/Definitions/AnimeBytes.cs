@@ -581,6 +581,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public long Comments { get; set; }
 
         [JsonProperty("Links")]
+        [JsonConverter(typeof(LinksUnionConverter))]
         public LinksUnion Links { get; set; }
 
         [JsonProperty("Votes")]
@@ -703,21 +704,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public static implicit operator Synonymns(Dictionary<string, string> stringMap) => new Synonymns { StringMap = stringMap };
     }
 
-    internal static class Converter
-    {
-        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-            DateParseHandling = DateParseHandling.None,
-            Converters =
-            {
-                LinksUnionConverter.Singleton,
-                SynonymnsConverter.Singleton,
-                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
-            },
-        };
-    }
-
     internal class LinksUnionConverter : JsonConverter
     {
         public override bool CanConvert(Type t) => t == typeof(LinksUnion) || t == typeof(LinksUnion?);
@@ -752,7 +738,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             serializer.Serialize(writer, value.LinksClass);
-            return;
         }
 
         public static readonly LinksUnionConverter Singleton = new LinksUnionConverter();
@@ -788,7 +773,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var value = (long)untypedValue;
             serializer.Serialize(writer, value.ToString());
-            return;
         }
 
         public static readonly ParseStringConverter Singleton = new ParseStringConverter();

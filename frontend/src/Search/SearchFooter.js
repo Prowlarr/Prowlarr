@@ -7,6 +7,7 @@ import TextInput from 'Components/Form/TextInput';
 import keyboardShortcuts from 'Components/keyboardShortcuts';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
+import translate from 'Utilities/String/translate';
 import SearchFooterLabel from './SearchFooterLabel';
 import styles from './SearchFooter.css';
 
@@ -167,7 +168,7 @@ class SearchFooter extends Component {
                 isDisabled={isFetching || !hasIndexers}
                 onPress={this.onSearchPress}
               >
-                Search
+                {translate('Search')}
               </SpinnerButton>
             </div>
           </div>

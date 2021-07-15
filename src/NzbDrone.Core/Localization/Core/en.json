@@ -268,7 +268,7 @@
   "Privacy": "Privacy",
   "Protocol": "Protocol",
   "ProwlarrSupportsAnyDownloadClient": "Prowlarr supports any of the download clients listed below.",
-  "ProwlarrSupportsAnyIndexer": "Prowlarr supports any indexer that uses the Newznab standard, as well as other indexers listed below.",
+  "ProwlarrSupportsAnyIndexer": "Prowlarr supports many indexers in addition to any indexer that uses the Newznab/Torznab standard using 'Generic Newznab' (for usenet) or 'Generic Torznab' (for torrents). Search & Select your indexer from below.",
   "Proxy": "Proxy",
   "ProxyBypassFilterHelpText": "Use ',' as a separator, and '*.' as a wildcard for subdomains",
   "ProxyCheckBadRequestMessage": "Failed to test proxy. StatusCode: {0}",

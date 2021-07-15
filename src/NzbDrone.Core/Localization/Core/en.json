@@ -239,6 +239,7 @@
   "NoLimitForAnyRuntime": "No limit for any runtime",
   "NoLogFiles": "No log files",
   "NoMinimumForAnyRuntime": "No minimum for any runtime",
+  "NoSearchResultsFound": "No search results found, try performing a new search below.",
   "NoTagsHaveBeenAddedYet": "No tags have been added yet",
   "NotificationTriggers": "Notification Triggers",
   "NotificationTriggersHelpText": "Select which events should trigger this notification",

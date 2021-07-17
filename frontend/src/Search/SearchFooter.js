@@ -157,7 +157,7 @@ function SearchFooter({
               isDisabled={isFetching || !hasIndexers}
               onPress={onSearchPress}
             >
-              Search
+              {translate('Search')}
             </SpinnerButton>
           </div>
         </div>

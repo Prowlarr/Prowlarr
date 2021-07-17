@@ -40,7 +40,6 @@ const ScrollerWrapper = forwardRef((props, ref) => (
   <ScrollerWrapperWrapper {...props} forwardedRef={ref} />
 ));
 
-
 // Calculates the width of a given amount of text using the default font family
 // Might be worth looking into if we can check exactly which is used, but that is unlikely
 // Based from https://stackoverflow.com/a/21015393/6216166

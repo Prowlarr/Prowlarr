@@ -8,6 +8,8 @@ import { scrollDirections } from '../../Helpers/Props';
 import SearchIndexHeaderConnector from './SearchIndexHeaderConnector';
 
 // Wrapper for Scroller as it needs callback
+// Used https://github.com/bvaughn/react-window/issues/110#issuecomment-469061213
+// As a baseplate for how to implement
 function ScrollerWrapperWrapper({ onScroll, forwardedRef, style, children }) {
   const refSetter = useCallback((scrollbarsRef) => {
     if (scrollbarsRef) {

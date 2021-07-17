@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Instrumentation.Extensions;
-using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -20,19 +19,19 @@ namespace NzbDrone.Core.IndexerSearch
 
     public class NzbSearchService : ISearchForNzb
     {
+        private readonly IIndexerLimitService _indexerLimitService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IIndexerFactory _indexerFactory;
-        private readonly IDownloadMappingService _downloadMappingService;
         private readonly Logger _logger;
 
         public NzbSearchService(IEventAggregator eventAggregator,
                                 IIndexerFactory indexerFactory,
-                                IDownloadMappingService downloadMappingService,
+                                IIndexerLimitService indexerLimitService,
                                 Logger logger)
         {
             _eventAggregator = eventAggregator;
             _indexerFactory = indexerFactory;
-            _downloadMappingService = downloadMappingService;
+            _indexerLimitService = indexerLimitService;
             _logger = logger;
         }
 
@@ -163,6 +162,11 @@ namespace NzbDrone.Core.IndexerSearch
 
         private async Task<IList<ReleaseInfo>> DispatchIndexer(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, IIndexer indexer, SearchCriteriaBase criteriaBase)
         {
+            if (_indexerLimitService.AtQueryLimit((IndexerDefinition)indexer.Definition))
+            {
+                return new List<ReleaseInfo>();
+            }
+
             try
             {
                 var indexerReports = await searchAction(indexer);

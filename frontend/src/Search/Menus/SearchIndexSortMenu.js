@@ -26,7 +26,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Protocol
+          {translate('Protocol')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -35,7 +35,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Age
+          {translate('Age')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -53,7 +53,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Indexer
+          {translate('Indexer')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -62,7 +62,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Size
+          {translate('Size')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -71,7 +71,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Files
+          {translate('Files')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -80,7 +80,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Grabs
+          {translate('Grabs')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -89,7 +89,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Peers
+          {translate('Peers')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -98,7 +98,7 @@ function SearchIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Category
+          {translate('Category')}
         </SortMenuItem>
       </MenuContent>
     </SortMenu>

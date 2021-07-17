@@ -267,8 +267,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Files = row.numfiles;
                     release.Grabs = row.times_completed;
 
-                    release.Guid = new Uri(_settings.BaseUrl + "torrent/" + row.id.ToString() + "/").ToString();
+                    var infoUrl = _settings.BaseUrl + "torrent/" + row.id.ToString() + "/";
+
+                    release.Guid = infoUrl;
                     release.DownloadUrl = _settings.BaseUrl + "api/v1/torrents/download/" + row.id.ToString();
+                    release.InfoUrl = infoUrl;
 
                     if (row.frileech == 1)
                     {
@@ -327,11 +330,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "UID", HelpText = "Uid from login cookie")]
+        [FieldDefinition(2, Label = "UID", HelpText = "UID from login cookie", Privacy = PrivacyLevel.UserName)]
         public string UId { get; set; }
 
-        [FieldDefinition(3, Label = "Passphrase", HelpText = "Pass from login cookie")]
+        [FieldDefinition(3, Label = "Passphrase", HelpText = "Passphrase from login cookie", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passphrase { get; set; }
+
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

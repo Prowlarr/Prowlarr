@@ -51,15 +51,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                   },
+                {
+                },
                 MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                   },
+                {
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                   }
+                {
+                }
             };
 
             caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.MoviesHD, "Movies/x264/720p");
@@ -295,6 +295,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
+
+        [FieldDefinition(2)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "BakaBT";
 
         public override string[] IndexerUrls => new string[] { "https://bakabt.me/" };
-        public override string Description => "Anime Comunity";
+        public override string Description => "Anime Community";
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -405,7 +405,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, HelpText = "Site Password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
         [FieldDefinition(4, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
@@ -413,6 +413,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(5, Label = "Append Season", Type = FieldType.Checkbox, HelpText = "Append Season for Sonarr Compatibility")]
         public bool AppendSeason { get; set; }
+
+        [FieldDefinition(6)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Milkie";
 
         public override string[] IndexerUrls => new string[] { "https://milkie.cc/" };
-        public override string Description => "";
+        public override string Description => "Milkie is a general tracker providing unpacked and 0day/0sec scene content.";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -235,8 +235,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Apikey", HelpText = "Site ApiKey", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "API Key", HelpText = "Site API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
+
+        [FieldDefinition(3)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

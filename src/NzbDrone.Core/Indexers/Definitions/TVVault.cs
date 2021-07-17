@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using FluentValidation;
@@ -16,36 +17,35 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class Anthelion : TorrentIndexerBase<AnthelionSettings>
+    public class TVVault : TorrentIndexerBase<TVVaultSettings>
     {
-        public override string Name => "Anthelion";
-        public override string[] IndexerUrls => new string[] { "https://anthelion.me/" };
+        public override string Name => "TVVault";
+        public override string[] IndexerUrls => new[] { "https://tv-vault.me/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "A movies tracker";
+        public override string Description => "TV-Vault is a very unique tracker dedicated for old TV shows, TV movies and documentaries.";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Anthelion(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public TVVault(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnthelionRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new TVVaultRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AnthelionParser(Settings, Capabilities.Categories);
+            return new TVVaultParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -57,7 +57,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             requestBuilder.Method = HttpMethod.POST;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var cookies = Cookies;
 
@@ -91,7 +90,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
 
-            _logger.Debug("Anthelion authentication succeeded.");
+            _logger.Debug("TVVault authentication succeeded.");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
@@ -109,30 +108,35 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.FreeLeech
+                }
             };
 
-            caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.Movies, "Film/Feature");
-            caps.Categories.AddCategoryMapping("2", NewznabStandardCategory.Movies, "Film/Short");
-            caps.Categories.AddCategoryMapping("3", NewznabStandardCategory.TV, "TV/Miniseries");
-            caps.Categories.AddCategoryMapping("4", NewznabStandardCategory.Other, "Other");
+            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Movies);
+            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TVHD);
+            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVSD);
 
             return caps;
         }
     }
 
-    public class AnthelionRequestGenerator : IIndexerRequestGenerator
+    public class TVVaultRequestGenerator : IIndexerRequestGenerator
     {
-        public AnthelionSettings Settings { get; set; }
+        public TVVaultSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
+        public string BaseUrl { get; set; }
 
-        public AnthelionRequestGenerator()
+        public TVVaultRequestGenerator()
         {
         }
 
@@ -140,15 +144,22 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var searchUrl = string.Format("{0}/torrents.php", Settings.BaseUrl.TrimEnd('/'));
 
-            // TODO: IMDB search is available but it requires to parse the details page
             var qc = new NameValueCollection
             {
-                { "order_by", "time" },
-                { "order_way", "desc" },
-                { "action", "basic" },
-                { "searchsubmit", "1" },
-                { "searchstr", imdbId.IsNotNullOrWhiteSpace() ? imdbId : term }
+                { "order_by", "s3" },
+                { "order_way", "DESC" },
+                { "disablegrouping", "1" }
             };
+
+            if (imdbId.IsNotNullOrWhiteSpace())
+            {
+                qc.Add("action", "advanced");
+                qc.Add("imdbid", imdbId);
+            }
+            else if (!string.IsNullOrWhiteSpace(term))
+            {
+                qc.Add("searchstr", StripSearchString(term));
+            }
 
             var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
 
@@ -175,9 +186,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
@@ -191,9 +200,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
@@ -205,16 +212,24 @@ namespace NzbDrone.Core.Indexers.Definitions
             return pageableRequests;
         }
 
+        private string StripSearchString(string term)
+        {
+            // Search does not support searching with episode numbers so strip it if we have one
+            // AND filter the result later to achieve the proper result
+            term = Regex.Replace(term, @"[S|E]\d\d", string.Empty);
+            return term.Trim();
+        }
+
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class AnthelionParser : IParseIndexerResponse
+    public class TVVaultParser : IParseIndexerResponse
     {
-        private readonly AnthelionSettings _settings;
+        private readonly TVVaultSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public AnthelionParser(AnthelionSettings settings, IndexerCapabilitiesCategories categories)
+        public TVVaultParser(TVVaultSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -227,18 +242,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             var parser = new HtmlParser();
             var doc = parser.ParseDocument(indexerResponse.Content);
             var rows = doc.QuerySelectorAll("table.torrent_table > tbody > tr.torrent");
+
             foreach (var row in rows)
             {
-                var qDetailsLink = row.QuerySelector("a.torrent_name");
-                var year = qDetailsLink.NextSibling.TextContent.Replace("[", "").Replace("]", "").Trim();
-                var tags = row.QuerySelector("div.torrent_info").FirstChild.TextContent.Replace(" / ", " ").Trim();
-                var title = $"{qDetailsLink.TextContent} {year} {tags}";
-                var description = row.QuerySelector("div.tags").TextContent.Trim();
+                var qDetailsLink = row.QuerySelector("a[href^=\"torrents.php?id=\"]");
+                var title = qDetailsLink.TextContent;
+
+                var description = qDetailsLink.NextSibling.TextContent.Trim();
+                title += " " + description;
                 var details = _settings.BaseUrl + qDetailsLink.GetAttribute("href");
                 var torrentId = qDetailsLink.GetAttribute("href").Split('=').Last();
                 var link = _settings.BaseUrl + "torrents.php?action=download&id=" + torrentId;
-                var posterStr = qDetailsLink.GetAttribute("data-cover");
-                var poster = !string.IsNullOrWhiteSpace(posterStr) ? new Uri(qDetailsLink.GetAttribute("data-cover")) : null;
 
                 var files = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(3)").TextContent);
                 var publishDate = DateTimeUtil.FromTimeAgo(row.QuerySelector("td:nth-child(4)").TextContent);
@@ -247,29 +261,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(7)").TextContent);
                 var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(8)").TextContent);
 
-                var dlVolumeFactor = row.QuerySelector("strong.tl_free") != null ? 0 : 1;
+                var dlVolumeFactor = row.QuerySelector("strong.freeleech_normal") != null ? 0 : 1;
 
-                var cat = row.QuerySelector("td.cats_col > div").GetAttribute("class").Replace("tooltip cats_", "");
-                var category = new List<IndexerCategory>
-                {
-                    cat switch
-                    {
-                        "featurefilm" => NewznabStandardCategory.Movies,
-                        "shortfilm" => NewznabStandardCategory.Movies,
-                        "miniseries" => NewznabStandardCategory.TV,
-                        "other" => NewznabStandardCategory.Other,
-                        _ => throw new Exception($"Unknown category: {cat}")
-                    }
-                };
-
-                // TODO: TMDb is also available
-                var qImdb = row.QuerySelector("a[href^=\"https://www.imdb.com\"]");
-                var imdb = qImdb != null ? ParseUtil.GetImdbID(qImdb.GetAttribute("href").Split('/').Last()) : null;
+                var category = new List<IndexerCategory> { TvCategoryFromQualityParser.ParseTvShowQuality(description) };
 
                 var release = new TorrentInfo
                 {
                     MinimumRatio = 1,
-                    MinimumSeedTime = 259200,
+                    MinimumSeedTime = 0,
                     Description = description,
                     Title = title,
                     PublishDate = publishDate,
@@ -277,7 +276,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = link,
                     InfoUrl = details,
                     Guid = link,
-                    ImdbId = imdb.GetValueOrDefault(),
                     Seeders = seeders,
                     Peers = leechers + seeders,
                     Size = size,
@@ -296,20 +294,20 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class AnthelionSettingsValidator : AbstractValidator<AnthelionSettings>
+    public class TVVaultSettingsValidator : AbstractValidator<TVVaultSettings>
     {
-        public AnthelionSettingsValidator()
+        public TVVaultSettingsValidator()
         {
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Password).NotEmpty();
         }
     }
 
-    public class AnthelionSettings : IIndexerSettings
+    public class TVVaultSettings : IIndexerSettings
     {
-        private static readonly AnthelionSettingsValidator Validator = new AnthelionSettingsValidator();
+        private static readonly TVVaultSettingsValidator Validator = new TVVaultSettingsValidator();
 
-        public AnthelionSettings()
+        public TVVaultSettings()
         {
             Username = "";
             Password = "";

@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "GazelleGames";
         public override string[] IndexerUrls => new string[] { "https://gazellegames.net/" };
-        public override string Description => "A gaming tracker.";
+        public override string Description => "GazelleGames (GGn) is a Private Torrent Tracker for GAMES";
         public override string Language => "en-us";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -418,6 +418,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(3, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
         public bool SearchGroupNames { get; set; }
+
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

@@ -19,7 +19,7 @@ function NoSearchResults(props) {
   return (
     <div>
       <div className={styles.message}>
-        No search results found, try performing a new search below.
+        {translate('NoSearchResultsFound')}
       </div>
     </div>
   );

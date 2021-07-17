@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "BeyondHD";
 
         public override string[] IndexerUrls => new string[] { "https://beyond-hd.me/" };
-        public override string Description => "Without BeyondHD, your HDTV is just a TV";
+        public override string Description => "BeyondHD (BHD) is a Private Torrent Tracker for HD MOVIES / TV";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -250,11 +250,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from Site", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from Site", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from the Site (Found in My Security => RSS Key)", Privacy = PrivacyLevel.ApiKey)]
         public string RssKey { get; set; }
+
+        [FieldDefinition(4)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

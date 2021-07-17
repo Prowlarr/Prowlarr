@@ -66,6 +66,7 @@ class Scroller extends Component {
         )}
         tabIndex={-1}
         {...otherProps}
+        onScroll={onScroll}
       >
         {children}
       </div>

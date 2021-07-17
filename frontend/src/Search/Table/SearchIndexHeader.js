@@ -75,6 +75,7 @@ class SearchIndexHeader extends Component {
 
             return (
               <VirtualTableHeaderCell
+                id={name === 'title' ? 'searchHeaderTitle' : undefined}
                 key={name}
                 className={styles[name]}
                 name={name}

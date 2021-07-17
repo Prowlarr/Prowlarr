@@ -15,6 +15,7 @@
   composes: cell;
 
   flex: 4 0 110px;
+  white-space: normal !important;
 }
 
 .category {

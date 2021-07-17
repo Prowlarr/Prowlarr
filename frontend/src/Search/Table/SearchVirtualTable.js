@@ -54,7 +54,7 @@ function SearchVirtualTable({ items, jumpToCharacter, columns, scroller, sortKey
   }, [jumpToCharacter]);
 
   function onSortPress(eventSortKey) {
-    dispatch({ type: SET_RELEASES_SORT, payload: { eventSortKey } });
+    dispatch({ type: SET_RELEASES_SORT, payload: { sortKey: eventSortKey } });
   }
 
   function onGrabPress(payload) {

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
@@ -39,13 +39,13 @@ function SearchFooter({
   const [searchQuery, setSearchQuery] = useState(defaultSearchQuery);
   const [searchIndexerIds, setSearchIndexerIds] = useState(defaultIndexerIds);
   const [searchCategories, setSearchCategories] = useState(defaultCategories);
-  const ref = useRef({searchQuery, searchIndexerIds, searchCategories})
+  const ref = useRef({ searchQuery, searchIndexerIds, searchCategories });
 
   //
   // Listeners
 
-  const onSearchPress = () => {
-    const {searchQuery: refSQ, searchIndexerIds: refSII, searchCategories: refSC} = ref.current;
+  function onSearchPress() {
+    const { searchQuery: refSQ, searchIndexerIds: refSII, searchCategories: refSC } = ref.current;
     onSearchPressProps(refSQ, refSII, refSC);
   }
 

@@ -368,7 +368,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
                     throw new Exception("Tracker is under DDOS attack, API disabled");
                 case 8:
                     // AntiSpam Protection
-                    throw new Exception("Triggered AntiSpam Protection, please delay your requests !");
+                    throw new Exception("Triggered AntiSpam Protection, please delay your requests!");
                 default:
                     // Unknown state
                     throw new Exception("Unknown state, aborting querying");
@@ -414,7 +414,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
 
         public int Accent { get; set; }
 
-        [FieldDefinition(5, Label = "Do you want to use enhanced FRENCH search ?", Type = FieldType.Checkbox, HelpText = "If you search for VFF or VFQ accent, it will also search with VFF+VFQ accent.")]
+        [FieldDefinition(5, Label = "Do you want to use enhanced FRENCH search?", Type = FieldType.Checkbox, HelpText = "If you search for VFF or VFQ accent, it will also search with VFF+VFQ accent.")]
 
         public bool EnhancedFrenchAccent { get; set; }
 
@@ -426,19 +426,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
 
         public string MultiReplacement { get; set; }
 
-        [FieldDefinition(8, Label = "SUB replacement", Type = FieldType.Textbox, HelpText = "Do you want to replace \"VOSTFR\" and \"SUBFRENCH\" with specific word ?")]
+        [FieldDefinition(8, Label = "SUB replacement", Type = FieldType.Textbox, HelpText = "Do you want to replace \"VOSTFR\" and \"SUBFRENCH\" with specific word?")]
 
         public string SubReplacement { get; set; }
 
-        [FieldDefinition(9, Label = "Do you want to use enhanced ANIME search ?", Type = FieldType.Checkbox, HelpText = "if you have \"Anime\", this will improve queries made to this tracker related to this type when making searches. (This will change the episode number to EXXX)")]
+        [FieldDefinition(9, Label = "Do you want to use enhanced ANIME search?", Type = FieldType.Checkbox, HelpText = "if you have \"Anime\", this will improve queries made to this tracker related to this type when making searches. (This will change the episode number to EXXX)")]
 
         public bool EnhancedAnime { get; set; }
 
-        [FieldDefinition(10, Label = "Do you want to bypass max pages for TMDB searches ? (Radarr) - Hard limit of 4", Type = FieldType.Checkbox, HelpText = "(recommended) this indexer is compatible with TMDB queries (for movies only), so when requesting content with an TMDB ID, we will search directly ID on API. Results will be more accurate, so you can enable a max pages bypass for this query type.", Advanced = true)]
+        [FieldDefinition(10, Label = "Do you want to bypass max pages for TMDB searches? (Radarr) - Hard limit of 4", Type = FieldType.Checkbox, HelpText = "(recommended) this indexer is compatible with TMDB queries (for movies only), so when requesting content with an TMDB ID, we will search directly ID on API. Results will be more accurate, so you can enable a max pages bypass for this query type.", Advanced = true)]
 
         public bool ByPassPageForTmDbid { get; set; }
 
-        [FieldDefinition(11, Label = "How many pages do you want to follow ?", Type = FieldType.Select, SelectOptions = typeof(XthorPagesNumber), HelpText = "(not recommended) you can increase max pages to follow when making a request. But be aware that this API is very buggy on tracker side, most of time, results of next pages are same as the first page. Even if we deduplicate rows, you will loose performance for the same results.", Advanced = true)]
+        [FieldDefinition(11, Label = "How many pages do you want to follow?", Type = FieldType.Select, SelectOptions = typeof(XthorPagesNumber), HelpText = "(not recommended) you can increase max pages to follow when making a request. But be aware that this API is very buggy on tracker side, most of time, results of next pages are same as the first page. Even if we deduplicate rows, you will loose performance for the same results.", Advanced = true)]
 
         public int MaxPages { get; set; }
         public NzbDroneValidationResult Validate()

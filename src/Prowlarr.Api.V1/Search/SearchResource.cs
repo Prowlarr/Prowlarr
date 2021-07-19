@@ -27,6 +27,7 @@ namespace Prowlarr.Api.V1.Search
         public string CommentUrl { get; set; }
         public string DownloadUrl { get; set; }
         public string InfoUrl { get; set; }
+        public string PosterUrl { get; set; }
         public IEnumerable<string> IndexerFlags { get; set; }
         public ICollection<IndexerCategory> Categories { get; set; }
 
@@ -65,6 +66,7 @@ namespace Prowlarr.Api.V1.Search
                 CommentUrl = releaseInfo.CommentUrl,
                 DownloadUrl = releaseInfo.DownloadUrl,
                 InfoUrl = releaseInfo.InfoUrl,
+                PosterUrl = releaseInfo.PosterUrl,
                 Categories = releaseInfo.Categories,
 
                 //ReleaseWeight
@@ -101,6 +103,7 @@ namespace Prowlarr.Api.V1.Search
             model.Size = resource.Size;
             model.DownloadUrl = resource.DownloadUrl;
             model.InfoUrl = resource.InfoUrl;
+            model.PosterUrl = resource.PosterUrl;
             model.CommentUrl = resource.CommentUrl;
             model.IndexerId = resource.IndexerId;
             model.Indexer = resource.Indexer;

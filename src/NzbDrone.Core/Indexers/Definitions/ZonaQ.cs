@@ -375,6 +375,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     InfoUrl = details.AbsoluteUri,
                     Guid = details.AbsoluteUri,
                     DownloadUrl = link.AbsoluteUri,
+                    PosterUrl = poster.AbsoluteUri,
                     PublishDate = publishDate,
                     Categories = cat,
                     Size = size,

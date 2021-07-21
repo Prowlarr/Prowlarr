@@ -424,5 +424,6 @@
     "Edit": "Editar",
     "AddRemoveOnly": "Adicionar e remover apenas",
     "AddDownloadClientToProwlarr": "Adicionar um cliente de download possibilita que o Prowlarr envie lançamentos diretamente da interface ao executar uma pesquisa manual.",
-    "Add": "Adicionar"
+    "Add": "Adicionar",
+    "NoSearchResultsFound": "Nenhum resultado encontrado, tente fazer uma nova busca abaixo."
 }

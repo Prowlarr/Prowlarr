@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.5);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.1);
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public Xthor(IHttpClient httpClient,
@@ -146,7 +146,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         private IEnumerable<IndexerRequest> GetPagedRequests(string term,
             int[] categories,
             int pageNumber,
-            string tmdbid = null)
+            string tmdbid = null,
+            int forced_accent = 0)
         {
             var searchUrl = string.Format("{0}", Settings.BaseUrl.TrimEnd('/'));
 
@@ -185,12 +186,20 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
                 queryCollection.Add("category", string.Join("+", trackerCats));
             }
 
-            if (Settings.Accent >= 1)
+            if (Settings.Accent >= 1 && forced_accent == 0)
             {
                 queryCollection.Add("accent", Settings.Accent.ToString());
             }
 
-            queryCollection.Add("page", pageNumber.ToString());
+            if (forced_accent != 0)
+            {
+                queryCollection.Add("accent", forced_accent.ToString());
+            }
+
+            if (pageNumber > 0)
+            {
+                queryCollection.Add("page", pageNumber.ToString());
+            }
 
             searchUrl = searchUrl + "?" + queryCollection.GetQueryString();
 
@@ -209,6 +218,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
             while (actualPage < Settings.MaxPages)
             {
                 pageableRequests.Add(GetPagedRequests(searchTerm, searchCriteria.Categories, actualPage, tmdbid));
+
+                if (Settings.EnhancedFrenchAccent && (Settings.Accent == 1 || Settings.Accent == 2))
+                {
+                    pageableRequests.Add(GetPagedRequests(searchTerm, searchCriteria.Categories, actualPage, tmdbid, 47));
+                }
 
                 if (tmdbid.IsNotNullOrWhiteSpace() && Settings.ByPassPageForTmDbid)
                 {
@@ -354,7 +368,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
                     throw new Exception("Tracker is under DDOS attack, API disabled");
                 case 8:
                     // AntiSpam Protection
-                    throw new Exception("Triggered AntiSpam Protection, please delay your requests !");
+                    throw new Exception("Triggered AntiSpam Protection, please delay your requests!");
                 default:
                     // Unknown state
                     throw new Exception("Unknown state, aborting querying");
@@ -378,6 +392,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
             Passkey = "";
             FreeleechOnly = false;
             Accent = 0;
+            EnhancedFrenchAccent = false;
             NeedMultiReplacement = false;
             MultiReplacement = "";
             SubReplacement = "";
@@ -399,27 +414,31 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
 
         public int Accent { get; set; }
 
-        [FieldDefinition(5, Label = "Replace MULTI keyword", Type = FieldType.Checkbox, HelpText = "Useful if you want MULTI release to be parsed as another language")]
+        [FieldDefinition(5, Label = "Do you want to use enhanced FRENCH search?", Type = FieldType.Checkbox, HelpText = "If you search for VFF or VFQ accent, it will also search with VFF+VFQ accent.")]
+
+        public bool EnhancedFrenchAccent { get; set; }
+
+        [FieldDefinition(6, Label = "Replace MULTI keyword", Type = FieldType.Checkbox, HelpText = "Useful if you want MULTI release to be parsed as another language")]
 
         public bool NeedMultiReplacement { get; set; }
 
-        [FieldDefinition(6, Label = "MULTI replacement", Type = FieldType.Textbox, HelpText = "Word used to replace \"MULTI\" keyword in release title")]
+        [FieldDefinition(7, Label = "MULTI replacement", Type = FieldType.Textbox, HelpText = "Word used to replace \"MULTI\" keyword in release title")]
 
         public string MultiReplacement { get; set; }
 
-        [FieldDefinition(7, Label = "SUB replacement", Type = FieldType.Textbox, HelpText = "Do you want to replace \"VOSTFR\" and \"SUBFRENCH\" with specific word ?")]
+        [FieldDefinition(8, Label = "SUB replacement", Type = FieldType.Textbox, HelpText = "Do you want to replace \"VOSTFR\" and \"SUBFRENCH\" with specific word?")]
 
         public string SubReplacement { get; set; }
 
-        [FieldDefinition(8, Label = "Do you want to use enhanced ANIME search ?", Type = FieldType.Checkbox, HelpText = "if you have \"Anime\", this will improve queries made to this tracker related to this type when making searches. (This will change the episode number to EXXX)")]
+        [FieldDefinition(9, Label = "Do you want to use enhanced ANIME search?", Type = FieldType.Checkbox, HelpText = "if you have \"Anime\", this will improve queries made to this tracker related to this type when making searches. (This will change the episode number to EXXX)")]
 
         public bool EnhancedAnime { get; set; }
 
-        [FieldDefinition(9, Label = "Do you want to bypass max pages for TMDB searches ? (Radarr) - Hard limit of 4", Type = FieldType.Checkbox, HelpText = "(recommended) this indexer is compatible with TMDB queries (for movies only), so when requesting content with an TMDB ID, we will search directly ID on API. Results will be more accurate, so you can enable a max pages bypass for this query type.", Advanced = true)]
+        [FieldDefinition(10, Label = "Do you want to bypass max pages for TMDB searches? (Radarr) - Hard limit of 4", Type = FieldType.Checkbox, HelpText = "(recommended) this indexer is compatible with TMDB queries (for movies only), so when requesting content with an TMDB ID, we will search directly ID on API. Results will be more accurate, so you can enable a max pages bypass for this query type.", Advanced = true)]
 
         public bool ByPassPageForTmDbid { get; set; }
 
-        [FieldDefinition(10, Label = "How many pages do you want to follow ?", Type = FieldType.Select, SelectOptions = typeof(XthorPagesNumber), HelpText = "(not recommended) you can increase max pages to follow when making a request. But be aware that this API is very buggy on tracker side, most of time, results of next pages are same as the first page. Even if we deduplicate rows, you will loose performance for the same results.", Advanced = true)]
+        [FieldDefinition(11, Label = "How many pages do you want to follow?", Type = FieldType.Select, SelectOptions = typeof(XthorPagesNumber), HelpText = "(not recommended) you can increase max pages to follow when making a request. But be aware that this API is very buggy on tracker side, most of time, results of next pages are same as the first page. Even if we deduplicate rows, you will loose performance for the same results.", Advanced = true)]
 
         public int MaxPages { get; set; }
         public NzbDroneValidationResult Validate()
@@ -427,6 +446,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
 
-        public IndexerBaseSettings BaseSettings { get; set; }
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
     }
 }

@@ -293,21 +293,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         release.TvdbId = (int)ParseUtil.CoerceLong(tvdbId);
                                         value = release.TvdbId.ToString();
                                         break;
+                                    case "poster":
+                                        if (!string.IsNullOrWhiteSpace(value))
+                                        {
+                                            var poster = ResolvePath(value, searchUrlUri);
+                                            release.PosterUrl = poster.AbsoluteUri;
+                                        }
+
+                                        value = release.PosterUrl;
+                                        break;
 
                                     //case "author":
                                     //    release.Author = value;
                                     //    break;
                                     //case "booktitle":
                                     //    release.BookTitle = value;
-                                    //    break;
-                                    //case "banner":
-                                    //    if (!string.IsNullOrWhiteSpace(value))
-                                    //    {
-                                    //        var bannerurl = ResolvePath(value, searchUrlUri);
-                                    //        release.BannerUrl = bannerurl;
-                                    //    }
-
-                                    //    value = release.BannerUrl.ToString();
                                     //    break;
                                     default:
                                         break;

@@ -238,7 +238,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var torrentId = qDetailsLink.GetAttribute("href").Split('=').Last();
                 var link = _settings.BaseUrl + "torrents.php?action=download&id=" + torrentId;
                 var posterStr = qDetailsLink.GetAttribute("data-cover");
-                var poster = !string.IsNullOrWhiteSpace(posterStr) ? new Uri(qDetailsLink.GetAttribute("data-cover")) : null;
+                var poster = !string.IsNullOrWhiteSpace(posterStr) ? posterStr : null;
 
                 var files = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(3)").TextContent);
                 var publishDate = DateTimeUtil.FromTimeAgo(row.QuerySelector("td:nth-child(4)").TextContent);
@@ -276,6 +276,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Categories = category,
                     DownloadUrl = link,
                     InfoUrl = details,
+                    PosterUrl = poster,
                     Guid = link,
                     ImdbId = imdb.GetValueOrDefault(),
                     Seeders = seeders,

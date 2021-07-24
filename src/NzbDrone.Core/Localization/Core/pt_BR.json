@@ -1,7 +1,7 @@
 {
     "CustomFilters": "Filtros personalizados",
     "About": "Sobre",
-    "AcceptConfirmationModal": "Aceitar o modal de confirmação",
+    "AcceptConfirmationModal": "Aceitar o pop-up de confirmação",
     "AllIndexersHiddenDueToFilter": "Todos os indexadores estão ocultos devido ao filtro aplicado.",
     "AnalyticsEnabledHelpText": "Envie informações anônimas de uso e erro para os servidores do Prowlarr. Isso inclui informações sobre seu navegador, quais páginas da interface Web do Prowlarr você usa, relatórios de erros, e a versão do sistema operacional e do tempo de execução. Usaremos essas informações para priorizar recursos e correções de bugs.",
     "AreYouSureYouWantToResetYourAPIKey": "Tem certeza de que deseja redefinir sua chave da API?",

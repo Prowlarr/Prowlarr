@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
@@ -36,10 +37,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SecretCinemaParser(Settings, Capabilities.Categories);
+            return new SecretCinemaParser(Settings, Capabilities);
         }
 
-        private IndexerCapabilities SetCapabilities()
+        protected override IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
@@ -110,7 +111,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                             var artist = WebUtility.HtmlDecode(result.Artist);
                             var album = WebUtility.HtmlDecode(result.GroupName);
 
-                            var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                            //var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                            var title = $"{result.GroupName} ({result.GroupYear}) {torrent.Media}";
+
                             if (torrent.HasCue)
                             {
                                 title += " [Cue]";

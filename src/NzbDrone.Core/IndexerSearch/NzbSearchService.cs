@@ -171,12 +171,27 @@ namespace NzbDrone.Core.IndexerSearch
             {
                 var indexerReports = await searchAction(indexer);
 
+                var releases = indexerReports.Releases;
+
+                //Filter results to only those in searched categories
+                if (criteriaBase.Categories.Length > 0)
+                {
+                    var expandedQueryCats = ((IndexerDefinition)indexer.Definition).Capabilities.Categories.ExpandTorznabQueryCategories(criteriaBase.Categories);
+
+                    releases = releases.Where(result => result.Categories?.Any() != true || expandedQueryCats.Intersect(result.Categories.Select(c => c.Id)).Any()).ToList();
+
+                    if (releases.Count != indexerReports.Releases.Count)
+                    {
+                        _logger.Trace("{0} {1} Releases which didn't contain search categories [{2}] were filtered", indexerReports.Releases.Count - releases.Count, indexer.Name, string.Join(", ", expandedQueryCats));
+                    }
+                }
+
                 foreach (var query in indexerReports.Queries)
                 {
                     _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, query.StatusCode == 200, query.Releases.Count()));
                 }
 
-                return indexerReports.Releases;
+                return releases;
             }
             catch (Exception e)
             {

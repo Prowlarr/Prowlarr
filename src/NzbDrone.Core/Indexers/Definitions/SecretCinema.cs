@@ -111,8 +111,19 @@ namespace NzbDrone.Core.Indexers.Definitions
                             var artist = WebUtility.HtmlDecode(result.Artist);
                             var album = WebUtility.HtmlDecode(result.GroupName);
 
+                            var newMedia = torrent.Media;
+
+                            if (torrent.Media == "SD")
+                            {
+                                newMedia = "480p DVD";
+                            }
+                            else if (torrent.Media == "BDMV")
+                            {
+                                newMedia = "COMPLETE BLURAY";
+                            }
+
                             //var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
-                            var title = $"{result.GroupName} ({result.GroupYear}) {torrent.Media}";
+                            var title = $"{result.GroupName} ({result.GroupYear}) {newMedia}";
 
                             if (torrent.HasCue)
                             {

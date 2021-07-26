@@ -30,6 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
+        public override bool FollowRedirect => true;
 
         public SecretCinema(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -64,6 +65,46 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Audio, "Music");
 
             return caps;
+        }
+
+        protected override async Task DoLogin()
+        {
+            var requestBuilder = new HttpRequestBuilder(LoginUrl)
+            {
+                LogResponseContent = true
+            };
+
+            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+
+            var cookies = Cookies;
+
+            Cookies = null;
+            var authLoginRequest = requestBuilder
+                .AddFormParameter("username", Settings.Username)
+                .AddFormParameter("password", Settings.Password)
+                .AddFormParameter("keeplogged", "1")
+                .SetHeader("Content-Type", "multipart/form-data")
+                .Accept(HttpAccept.Json)
+                .Build();
+
+            var response = await ExecuteAuth(authLoginRequest);
+
+            cookies = response.GetCookies();
+
+            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+
+            _logger.Debug("Secret Cinema authentication succeeded.");
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse response)
+        {
+            if (response.HasHttpRedirect || (response.Content != null && response.Content.Contains("\"Your username or password was incorrect.\"")))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -184,7 +225,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         GazelleInfo release = new GazelleInfo()
                         {
-                            //Guid = string.Format("SecretCinema-{0}", id),
+                            Guid = string.Format("SecretCinema-{0}", id),
 
                             // Splice Title from info to avoid calling API again for every torrent.
                             Title = WebUtility.HtmlDecode(title),

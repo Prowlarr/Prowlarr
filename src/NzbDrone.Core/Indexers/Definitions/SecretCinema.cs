@@ -121,7 +121,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                             var release = new GazelleInfo()
                             {
-                                Guid = string.Format("Gazelle-{0}", id),
+                                Guid = string.Format("SecretCinema-{0}", id),
                                 Title = WebUtility.HtmlDecode(title),
                                 Container = torrent.Encoding,
                                 Files = torrent.FileCount,
@@ -156,7 +156,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         var release = new GazelleInfo()
                         {
-                            Guid = string.Format("Gazelle-{0}", id),
+                            Guid = string.Format("SecretCinema-{0}", id),
                             Title = groupName,
                             Size = long.Parse(result.Size),
                             DownloadUrl = GetDownloadUrl(id),

@@ -203,7 +203,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             protected virtual string GetDownloadUrl(int torrentId)
             {
                 var url = new HttpUri(_settings.BaseUrl)
-                    .CombinePath("/torrents.php")
+                    .CombinePath("/dl.php")
                     .AddQueryParam("action", "download")
                     .AddQueryParam("useToken", _settings.UseFreeleechToken ? "1" : "0")
                     .AddQueryParam("id", torrentId);

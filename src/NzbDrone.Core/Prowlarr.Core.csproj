@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="MailKit" Version="2.11.1" />
+    <PackageReference Include="MailKit" Version="2.13.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0" />
@@ -18,7 +18,7 @@
     <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.113.0-0" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="MonoTorrent" Version="1.0.29" />
-    <PackageReference Include="YamlDotNet" Version="11.1.1" />
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
     <PackageReference Include="AngleSharp" Version="0.15.0" />
   </ItemGroup>
   <ItemGroup>

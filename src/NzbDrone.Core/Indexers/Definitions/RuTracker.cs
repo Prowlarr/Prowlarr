@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string LoginUrl => Settings.BaseUrl + "forum/login.php";
         public override string Description => "RuTracker is a Semi-Private Russian torrent site with a thriving file-sharing community";
-        public override string Language => "ru-ru";
+        public override string Language => "ru-org";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -1652,8 +1652,20 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var director = new Regex(@"(\([А-Яа-яЁё\W]+)\s/\s(.+?)\)");
                 release.Title = director.Replace(release.Title, "");
 
+                // Remove R5 from release names
+                var r5 = new Regex(@"(.*)(.R5.)(.*)");
+                release.Title = r5.Replace(release.Title, "");
+
                 // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
                 release.Title = Regex.Replace(release.Title, "Blu-ray Disc", "BR-DISK", RegexOptions.IgnoreCase);
+
+                //Strip russian letters - make this an option
+                var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
+                release.Title = rusRegex.Replace(release.Title, "");
+
+                // Strip forward slashes remaining in release names after removing russian letters
+                var fwdslashRegex = new Regex(@"(.*\/\ )(.*)");
+                release.Title = fwdslashRegex.Replace(release.Title, "$2");
 
                 // language fix: all rutracker releases contains russian track
                 if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)

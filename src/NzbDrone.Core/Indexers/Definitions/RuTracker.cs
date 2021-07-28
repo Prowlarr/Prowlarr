@@ -1649,7 +1649,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
                 // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
                 // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
-                var director = new Regex(@"(\([А-Яа-яЁё\W]+)\s/\s(.+?)\)");
+                //var director = new Regex(@"(\([А-Яа-яЁё\W]+)\s/\s(.+?)\)");
+                var director = new Regex(@"(\([А-Яа-яЁё\W].+?\))");
                 release.Title = director.Replace(release.Title, "");
 
                 // Remove R5 from release names
@@ -1666,20 +1667,23 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            if (_settings.RussianLetters == true)
+            if (IsAnyTvCategory(release.Categories) | IsAnyMovieCategory(release.Categories))
             {
-                //Strip russian letters - make this an option
-                var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
+                if (_settings.RussianLetters == true)
+                {
+                    //Strip russian letters - make this an option
+                    var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
 
-                release.Title = rusRegex.Replace(release.Title, "");
+                    release.Title = rusRegex.Replace(release.Title, "");
 
-                // Replace everything after first forward slash
-                var fwdslashRegex = new Regex(@"(.*\/\ )(.*)");
-                release.Title = fwdslashRegex.Replace(release.Title, "$2");
+                    // Replace everything after first forward slash with a year (to avoid filtering away releases with an fwdslash after title+year, like: Title Year [stuff / stuff])
+                    var fwdslashRegex = new Regex(@"(\/\s.+?\[)");
+                    release.Title = fwdslashRegex.Replace(release.Title, "[");
 
-                // Remove Sub languages from release names
-                var sub = new Regex(@"(Sub.*\+)|(Sub.*$)");
-                release.Title = sub.Replace(release.Title, "");
+                    // Remove Sub languages from release names
+                    var sub = new Regex(@"(Sub.*\+)|(Sub.*$)");
+                    release.Title = sub.Replace(release.Title, "");
+                }
             }
 
             return release;

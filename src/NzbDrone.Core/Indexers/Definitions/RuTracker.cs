@@ -1659,23 +1659,27 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
                 release.Title = Regex.Replace(release.Title, "Blu-ray Disc", "BR-DISK", RegexOptions.IgnoreCase);
 
-                if (_settings.RussianLetters == true)
-                {
-                    //Strip russian letters - make this an option
-                    var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
-
-                    release.Title = rusRegex.Replace(release.Title, "");
-
-                    // Replace everything after first forward slash
-                    var fwdslashRegex = new Regex(@"(.*\/\ )(.*)");
-                    release.Title = fwdslashRegex.Replace(release.Title, "$2");
-                }
-
                 // language fix: all rutracker releases contains russian track
                 if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
                 {
                     release.Title += " rus";
                 }
+            }
+
+            if (_settings.RussianLetters == true)
+            {
+                //Strip russian letters - make this an option
+                var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
+
+                release.Title = rusRegex.Replace(release.Title, "");
+
+                // Replace everything after first forward slash
+                var fwdslashRegex = new Regex(@"(.*\/\ )(.*)");
+                release.Title = fwdslashRegex.Replace(release.Title, "$2");
+
+                // Remove Sub languages from release names
+                var sub = new Regex(@"(Sub.*\+)|(Sub.*$)");
+                release.Title = sub.Replace(release.Title, "");
             }
 
             return release;

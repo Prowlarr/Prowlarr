@@ -1654,18 +1654,22 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // Remove R5 from release names
                 var r5 = new Regex(@"(.*)(.R5.)(.*)");
-                release.Title = r5.Replace(release.Title, "");
+                release.Title = r5.Replace(release.Title, "$1");
 
                 // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
                 release.Title = Regex.Replace(release.Title, "Blu-ray Disc", "BR-DISK", RegexOptions.IgnoreCase);
 
-                //Strip russian letters - make this an option
-                var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
-                release.Title = rusRegex.Replace(release.Title, "");
+                if (_settings.RussianLetters == true)
+                {
+                    //Strip russian letters - make this an option
+                    var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
 
-                // Strip forward slashes remaining in release names after removing russian letters
-                var fwdslashRegex = new Regex(@"(.*\/\ )(.*)");
-                release.Title = fwdslashRegex.Replace(release.Title, "$2");
+                    release.Title = rusRegex.Replace(release.Title, "");
+
+                    // Replace everything after first forward slash
+                    var fwdslashRegex = new Regex(@"(.*\/\ )(.*)");
+                    release.Title = fwdslashRegex.Replace(release.Title, "$2");
+                }
 
                 // language fix: all rutracker releases contains russian track
                 if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
@@ -1754,6 +1758,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             Username = "";
             Password = "";
+            RussianLetters = false;
         }
 
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
@@ -1768,7 +1773,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Captcha Text", Type = FieldType.Captcha, SelectOptionsProviderAction = "checkCaptcha", HelpText = "Captcha Text")]
         public string CaptchaText { get; set; }
 
-        [FieldDefinition(5)]
+        [FieldDefinition(5, Label = "Strip Russian letters", Type = FieldType.Checkbox, SelectOptionsProviderAction = "stripRussian", HelpText = "Removes russian letters")]
+        public bool RussianLetters { get; set; }
+
+        [FieldDefinition(6)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
         public string CaptchaField { get; set; }
         public string CaptchaSid { get; set; }

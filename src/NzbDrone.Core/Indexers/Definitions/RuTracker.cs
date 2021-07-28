@@ -1526,7 +1526,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.Season.Value));
+            if (searchCriteria.Season == null)
+            {
+                searchCriteria.Season = 0;
+            }
+
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -1632,6 +1637,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (IsAnyTvCategory(release.Categories))
             {
                 // extract season and episodes
+                // if sonarr ever gets support for multi-season then consider changing the wrod Сезоны = season to Сезоны = seasons
                 var regex = new Regex(".+\\/\\s([^а-яА-я\\/]+)\\s\\/.+Сезон\\s*[:]*\\s+(\\d+).+(?:Серии|Эпизод)+\\s*[:]*\\s+(\\d+-*\\d*).+,\\s+(.+)\\][\\s]?(.*)");
 
                 var title = regex.Replace(release.Title, "$1 - S$2E$3 - rus $4 $5");
@@ -1645,30 +1651,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else if (IsAnyMovieCategory(release.Categories))
             {
-                // remove director's name from title
-                // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
-                // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
-                // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
-                //var director = new Regex(@"(\([А-Яа-яЁё\W]+)\s/\s(.+?)\)");
-                var director = new Regex(@"(\([А-Яа-яЁё\W].+?\))");
-                release.Title = director.Replace(release.Title, "");
-
-                // Remove R5 from release names
-                var r5 = new Regex(@"(.*)(.R5.)(.*)");
-                release.Title = r5.Replace(release.Title, "$1");
-
                 // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
                 release.Title = Regex.Replace(release.Title, "Blu-ray Disc", "BR-DISK", RegexOptions.IgnoreCase);
 
-                // language fix: all rutracker releases contains russian track
-                if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
-                {
-                    release.Title += " rus";
-                }
-            }
-
-            if (IsAnyTvCategory(release.Categories) | IsAnyMovieCategory(release.Categories))
-            {
                 if (_settings.RussianLetters == true)
                 {
                     //Strip russian letters - make this an option
@@ -1679,10 +1664,35 @@ namespace NzbDrone.Core.Indexers.Definitions
                     // Replace everything after first forward slash with a year (to avoid filtering away releases with an fwdslash after title+year, like: Title Year [stuff / stuff])
                     var fwdslashRegex = new Regex(@"(\/\s.+?\[)");
                     release.Title = fwdslashRegex.Replace(release.Title, "[");
+                }
+            }
 
-                    // Remove Sub languages from release names
-                    var sub = new Regex(@"(Sub.*\+)|(Sub.*$)");
-                    release.Title = sub.Replace(release.Title, "");
+            if (IsAnyTvCategory(release.Categories) | IsAnyMovieCategory(release.Categories))
+            {
+                // remove director's name from title
+                // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
+                // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
+                // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
+                //var director = new Regex(@"(\([А-Яа-яЁё\W]+)\s/\s(.+?)\)");
+                var director = new Regex(@"(\([А-Яа-яЁё\W].+?\))");
+                release.Title = director.Replace(release.Title, "");
+
+                // Remove VO, MVO and DVO from titles
+                var vo = new Regex(@".VO\s\(.+?\)");
+                release.Title = vo.Replace(release.Title, "");
+
+                // Remove R5 and (R5) from release names
+                var r5 = new Regex(@"(.*)(.R5.)(.*)");
+                release.Title = r5.Replace(release.Title, "$1");
+
+                // Remove Sub languages from release names
+                var sub = new Regex(@"(Sub.*\+)|(Sub.*$)");
+                release.Title = sub.Replace(release.Title, "");
+
+                // language fix: all rutracker releases contains russian track
+                if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    release.Title += " rus";
                 }
             }
 

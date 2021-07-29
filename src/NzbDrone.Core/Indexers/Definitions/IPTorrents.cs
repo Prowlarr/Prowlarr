@@ -174,11 +174,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (imdbId.IsNotNullOrWhiteSpace())
             {
-                qc.Add("q", imdbId);
+                // ipt uses sphinx, which supports boolean operators and grouping
+                qc.Add("q", "+(" + imdbId + ")");
             }
-            else if (!string.IsNullOrWhiteSpace(term))
+
+            if (!string.IsNullOrWhiteSpace(term))
             {
-                qc.Add("q", term);
+                // similar to above
+                qc.Add("q", "+(" + term + ")");
             }
 
             if (Settings.FreeLeechOnly)

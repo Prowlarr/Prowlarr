@@ -110,15 +110,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                         {
                             var id = torrent.TorrentId;
 
-                            // in SC, artist=director
+                            // in SC movies, artist=director and GroupName=title
                             var artist = WebUtility.HtmlDecode(result.Artist);
                             var album = WebUtility.HtmlDecode(result.GroupName);
-
-                            // in SC, media = resolution
-                            var newMedia = torrent.Media;
-
-                            var title = $"{result.GroupName} ({result.GroupYear}) {newMedia}";
-
+                            var title = WebUtility.HtmlDecode(result.GroupName);
 
                             var release = new GazelleInfo()
                             {
@@ -147,17 +142,25 @@ namespace NzbDrone.Core.Indexers.Definitions
                                 release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
                             }
 
-                            if (category == "Movies")
+                            if (IsAnyMovieCategory(release.Categories))
                             {
-                                //var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                                // Remove director from title
+                                // SC API returns no more useful information than this
+                                release.Title = $"{result.GroupName} ({result.GroupYear}) {torrent.Media}";
 
-                                title = Regex.Replace(title, "BDMV", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
-                                title = Regex.Replace(title, "SD", "DVD", RegexOptions.IgnoreCase);
+                                // Replace media formats with standards
+                                release.Title = Regex.Replace(release.Title, "BDMV", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
+                                release.Title = Regex.Replace(release.Title, "SD", "DVDRip", RegexOptions.IgnoreCase);
+                            }
+                            else
+                            {
+                                // SC API currently doesn't return anything but title.
+                                release.Title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
                             }
 
                             if (torrent.HasCue)
                             {
-                                title += " [Cue]";
+                                release.Title += " [Cue]";
                             }
 
                             torrentInfos.Add(release);

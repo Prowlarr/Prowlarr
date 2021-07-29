@@ -294,7 +294,6 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
         {
-            //request.HttpRequest.Encoding = Encoding;
             var response = await FetchIndexerResponse(request);
 
             try

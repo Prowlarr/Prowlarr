@@ -248,6 +248,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(173, NewznabStandardCategory.TVForeign, "|- Черное зеркало / Black Mirror");
             caps.Categories.AddCategoryMapping(195, NewznabStandardCategory.TVForeign, "|- Для некондиционных раздач");
             caps.Categories.AddCategoryMapping(2366, NewznabStandardCategory.TVHD, "Зарубежные сериалы (HD Video)");
+            caps.Categories.AddCategoryMapping(119, NewznabStandardCategory.TVForeign, "|- Зарубежные сериалы (UHD Video)");
             caps.Categories.AddCategoryMapping(1803, NewznabStandardCategory.TVHD, "|- Новинки и сериалы в стадии показа (HD Video)");
             caps.Categories.AddCategoryMapping(266, NewznabStandardCategory.TVHD, "|- Сериалы США и Канады (HD Video)");
             caps.Categories.AddCategoryMapping(193, NewznabStandardCategory.TVHD, "|- Сериалы Великобритании и Ирландии (HD Video)");
@@ -1637,8 +1638,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (IsAnyTvCategory(release.Categories))
             {
                 // extract season and episodes
-                // if sonarr ever gets support for multi-season then consider changing the wrod Сезоны = season to Сезоны = seasons
-                var regex = new Regex(".+\\/\\s([^а-яА-я\\/]+)\\s\\/.+Сезон\\s*[:]*\\s+(\\d+).+(?:Серии|Эпизод)+\\s*[:]*\\s+(\\d+-*\\d*).+,\\s+(.+)\\][\\s]?(.*)");
+                // should also handle multi-season releases listed as Сезон: 1-8 and Сезоны: 1-8
+                var regex = new Regex(@".+\/\s([^а-яА-я\/]+)\s\/.+Сезон.\s*[:]*\s+(\d*\-?\d*).+(?:Серии|Эпизод)+\s*[:]*\s+(\d+-?\d*).+(\[.*\])[\s]?(.*)");
 
                 var title = regex.Replace(release.Title, "$1 - S$2E$3 - rus $4 $5");
                 title = Regex.Replace(title, "-Rip", "Rip", RegexOptions.IgnoreCase);
@@ -1653,23 +1654,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
                 release.Title = Regex.Replace(release.Title, "Blu-ray Disc", "BR-DISK", RegexOptions.IgnoreCase);
-
-                if (_settings.RussianLetters == true)
-                {
-                    //Strip russian letters - make this an option
-                    var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
-
-                    release.Title = rusRegex.Replace(release.Title, "");
-
-                    // Replace everything after first forward slash with a year (to avoid filtering away releases with an fwdslash after title+year, like: Title Year [stuff / stuff])
-                    var fwdslashRegex = new Regex(@"(\/\s.+?\[)");
-                    release.Title = fwdslashRegex.Replace(release.Title, "[");
-                }
             }
 
             if (IsAnyTvCategory(release.Categories) | IsAnyMovieCategory(release.Categories))
             {
-                // remove director's name from title
+                                // remove director's name from title
                 // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
                 // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
                 // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
@@ -1693,6 +1682,19 @@ namespace NzbDrone.Core.Indexers.Definitions
                 if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
                 {
                     release.Title += " rus";
+                }
+
+                // remove russian letters
+                if (_settings.RussianLetters == true)
+                {
+                    //Strip russian letters
+                    var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
+
+                    release.Title = rusRegex.Replace(release.Title, "");
+
+                    // Replace everything after first forward slash with a year (to avoid filtering away releases with an fwdslash after title+year, like: Title Year [stuff / stuff])
+                    var fwdslashRegex = new Regex(@"(\/\s.+?\[)");
+                    release.Title = fwdslashRegex.Replace(release.Title, "[");
                 }
             }
 

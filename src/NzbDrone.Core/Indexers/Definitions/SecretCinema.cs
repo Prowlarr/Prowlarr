@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
@@ -108,27 +109,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                         foreach (var torrent in result.Torrents)
                         {
                             var id = torrent.TorrentId;
+
+                            // in SC, artist=director
                             var artist = WebUtility.HtmlDecode(result.Artist);
                             var album = WebUtility.HtmlDecode(result.GroupName);
 
+                            // in SC, media = resolution
                             var newMedia = torrent.Media;
 
-                            if (torrent.Media == "SD")
-                            {
-                                newMedia = "480p DVD";
-                            }
-                            else if (torrent.Media == "BDMV")
-                            {
-                                newMedia = "COMPLETE BLURAY";
-                            }
-
-                            //var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
                             var title = $"{result.GroupName} ({result.GroupYear}) {newMedia}";
 
-                            if (torrent.HasCue)
-                            {
-                                title += " [Cue]";
-                            }
 
                             var release = new GazelleInfo()
                             {
@@ -155,6 +145,19 @@ namespace NzbDrone.Core.Indexers.Definitions
                             else
                             {
                                 release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
+                            }
+
+                            if (category == "Movies")
+                            {
+                                //var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+
+                                title = Regex.Replace(title, "BDMV", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
+                                title = Regex.Replace(title, "SD", "DVD", RegexOptions.IgnoreCase);
+                            }
+
+                            if (torrent.HasCue)
+                            {
+                                title += " [Cue]";
                             }
 
                             torrentInfos.Add(release);
@@ -198,6 +201,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     torrentInfos
                         .OrderByDescending(o => o.PublishDate)
                         .ToArray();
+            }
+
+            private bool IsAnyMovieCategory(ICollection<IndexerCategory> category)
+            {
+                return category.Contains(NewznabStandardCategory.Movies)
+                    || NewznabStandardCategory.Movies.SubCategories.Any(subCat => category.Contains(subCat));
             }
 
             protected virtual string GetDownloadUrl(int torrentId)

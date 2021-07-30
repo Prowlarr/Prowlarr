@@ -178,6 +178,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("q", "+(" + imdbId + ")");
             }
 
+            // changed from else if to if to support searching imdbid + season/episode in the same query
             if (!string.IsNullOrWhiteSpace(term))
             {
                 // similar to above

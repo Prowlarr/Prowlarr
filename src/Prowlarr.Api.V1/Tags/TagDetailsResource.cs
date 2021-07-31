@@ -9,6 +9,8 @@ namespace Prowlarr.Api.V1.Tags
     {
         public string Label { get; set; }
         public List<int> NotificationIds { get; set; }
+        public List<int> IndexerIds { get; set; }
+        public List<int> IndexerProxyIds { get; set; }
     }
 
     public static class TagDetailsResourceMapper
@@ -24,7 +26,9 @@ namespace Prowlarr.Api.V1.Tags
             {
                 Id = model.Id,
                 Label = model.Label,
-                NotificationIds = model.NotificationIds
+                NotificationIds = model.NotificationIds,
+                IndexerIds = model.IndexerIds,
+                IndexerProxyIds = model.IndexerProxyIds
             };
         }
 

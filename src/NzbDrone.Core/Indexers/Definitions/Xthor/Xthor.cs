@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.1);
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Xthor(IHttpClient httpClient,
+        public Xthor(IIndexerHttpClient httpClient,
             IEventAggregator eventAggregator,
             IIndexerStatusService indexerStatusService,
             IConfigService configService,

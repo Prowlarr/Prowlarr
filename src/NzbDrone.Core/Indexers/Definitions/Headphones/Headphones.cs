@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             return new HeadphonesRssParser(Capabilities.Categories);
         }
 
-        public Headphones(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+        public Headphones(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
         }
@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request);
+                var response = await _httpClient.ExecuteAsync(request, Definition);
                 downloadBytes = response.ResponseData;
             }
             catch (Exception)

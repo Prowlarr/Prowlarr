@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
-        public TorrentPotato(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public TorrentPotato(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

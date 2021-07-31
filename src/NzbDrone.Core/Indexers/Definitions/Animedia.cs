@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Animedia(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Animedia(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -153,7 +153,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static readonly Regex CategorieMovieRegex = new Regex(@"Фильм", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex CategorieOVARegex = new Regex(@"ОВА|OVA|ОНА|ONA|Special", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex CategorieDoramaRegex = new Regex(@"Дорама", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
 
         public AnimediaParser(AnimediaSettings settings, IndexerCapabilitiesCategories categories)

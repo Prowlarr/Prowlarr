@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public ShowRSS(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public ShowRSS(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

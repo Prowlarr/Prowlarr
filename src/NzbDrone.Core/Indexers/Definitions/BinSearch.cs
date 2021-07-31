@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override bool SupportsRss => false;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public BinSearch(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+        public BinSearch(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
         }

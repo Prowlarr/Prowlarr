@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Orpheus (APOLLO) is a Private Torrent Tracker for MUSIC";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public Orpheus(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Orpheus(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

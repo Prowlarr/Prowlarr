@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities = new IndexerCapabilities();
 
             Mocker.GetMock<INewznabCapabilitiesProvider>()
-                .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>()))
+                .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
                 .Returns(_capabilities);
         }
 

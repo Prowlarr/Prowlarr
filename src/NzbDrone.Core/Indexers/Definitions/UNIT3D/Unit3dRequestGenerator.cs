@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
     {
         public Unit3dSettings Settings { get; set; }
 
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 

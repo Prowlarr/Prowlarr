@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
 
-        public Redacted(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Redacted(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -93,7 +93,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerCapabilities Capabilities { get; set; }
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
 
         public RedactedRequestGenerator()
         {

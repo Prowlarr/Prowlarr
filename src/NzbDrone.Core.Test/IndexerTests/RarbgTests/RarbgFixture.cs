@@ -37,9 +37,9 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         {
             var recentFeed = ReadAllText(@"Files/Indexers/Rarbg/RecentFeed_v2.json");
 
-            Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
 
@@ -64,9 +64,9 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         [Test]
         public async Task should_parse_error_20_as_empty_results()
         {
-            Mocker.GetMock<IHttpClient>()
-                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                   .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 20, error: \"some message\" }")));
+            Mocker.GetMock<IIndexerHttpClient>()
+                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                   .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 20, error: \"some message\" }")));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
 
@@ -76,9 +76,9 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         [Test]
         public async Task should_warn_on_unknown_error()
         {
-            Mocker.GetMock<IHttpClient>()
-                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                   .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 25, error: \"some message\" }")));
+            Mocker.GetMock<IIndexerHttpClient>()
+                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                   .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 25, error: \"some message\" }")));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
 

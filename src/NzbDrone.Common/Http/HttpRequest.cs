@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
@@ -31,6 +32,7 @@ namespace NzbDrone.Common.Http
         public HttpMethod Method { get; set; }
         public HttpHeader Headers { get; set; }
         public Encoding Encoding { get; set; }
+        public IWebProxy Proxy { get; set; }
         public byte[] ContentData { get; set; }
         public string ContentSummary { get; set; }
         public bool SuppressHttpError { get; set; }
@@ -84,6 +86,19 @@ namespace NzbDrone.Common.Http
             {
                 var encoding = HttpHeader.GetEncodingFromContentType(Headers.ContentType);
                 ContentData = encoding.GetBytes(data);
+            }
+        }
+
+        public string GetContent()
+        {
+            if (Encoding != null)
+            {
+                return Encoding.GetString(ContentData);
+            }
+            else
+            {
+                var encoding = HttpHeader.GetEncodingFromContentType(Headers.ContentType);
+                return encoding.GetString(ContentData);
             }
         }
 

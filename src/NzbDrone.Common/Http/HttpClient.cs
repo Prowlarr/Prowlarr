@@ -61,7 +61,7 @@ namespace NzbDrone.Common.Http
             _cookieContainerCache = cacheManager.GetCache<CookieContainer>(typeof(HttpClient));
         }
 
-        public async Task<HttpResponse> ExecuteAsync(HttpRequest request)
+        public virtual async Task<HttpResponse> ExecuteAsync(HttpRequest request)
         {
             var cookieContainer = InitializeRequestCookies(request);
 

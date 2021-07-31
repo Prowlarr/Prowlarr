@@ -6,6 +6,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
@@ -15,6 +16,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public int MaxPages { get; set; }
         public int PageSize { get; set; }
         public NewznabSettings Settings { get; set; }
+        public ProviderDefinition Definition { get; set; }
 
         public NewznabRequestGenerator(INewznabCapabilitiesProvider capabilitiesProvider)
         {
@@ -26,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -72,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -113,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -174,7 +176,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -215,7 +217,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
             var pageableRequests = new IndexerPageableRequestChain();
 
             var parameters = new NameValueCollection();

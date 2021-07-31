@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "PrivateHD is a Private Torrent Tracker for HD MOVIES / TV and the sister-site of AvistaZ, CinemaZ, ExoticaZ, and AnimeTorrents";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public PrivateHD(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public PrivateHD(IIndexerRepository indexerRepository, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

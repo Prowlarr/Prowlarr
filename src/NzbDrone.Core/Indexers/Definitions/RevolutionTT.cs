@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public RevolutionTT(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public RevolutionTT(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true
             };
 
-            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(Settings.BaseUrl + "login.php"));
+            var loginPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl + "login.php"));
 
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);

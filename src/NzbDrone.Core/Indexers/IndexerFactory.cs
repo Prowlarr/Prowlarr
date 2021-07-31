@@ -259,7 +259,7 @@ namespace NzbDrone.Core.Indexers
             if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
             {
                 var settings = (NewznabSettings)definition.Settings;
-                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
@@ -279,7 +279,7 @@ namespace NzbDrone.Core.Indexers
             if (definition.Enable && (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name))
             {
                 var settings = (NewznabSettings)definition.Settings;
-                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings)?.Categories.GetTorznabCategoryList() ?? null;
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)

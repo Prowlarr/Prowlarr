@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { fetchNotifications } from 'Store/Actions/settingsActions';
+import { fetchIndexerProxies, fetchNotifications } from 'Store/Actions/settingsActions';
 import { fetchTagDetails } from 'Store/Actions/tagActions';
 import Tags from './Tags';
 
@@ -26,7 +26,8 @@ function createMapStateToProps() {
 
 const mapDispatchToProps = {
   dispatchFetchTagDetails: fetchTagDetails,
-  dispatchFetchNotifications: fetchNotifications
+  dispatchFetchNotifications: fetchNotifications,
+  dispatchFetchIndexerProxies: fetchIndexerProxies
 };
 
 class MetadatasConnector extends Component {
@@ -37,11 +38,13 @@ class MetadatasConnector extends Component {
   componentDidMount() {
     const {
       dispatchFetchTagDetails,
-      dispatchFetchNotifications
+      dispatchFetchNotifications,
+      dispatchFetchIndexerProxies
     } = this.props;
 
     dispatchFetchTagDetails();
     dispatchFetchNotifications();
+    dispatchFetchIndexerProxies();
   }
 
   //
@@ -58,7 +61,8 @@ class MetadatasConnector extends Component {
 
 MetadatasConnector.propTypes = {
   dispatchFetchTagDetails: PropTypes.func.isRequired,
-  dispatchFetchNotifications: PropTypes.func.isRequired
+  dispatchFetchNotifications: PropTypes.func.isRequired,
+  dispatchFetchIndexerProxies: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(MetadatasConnector);

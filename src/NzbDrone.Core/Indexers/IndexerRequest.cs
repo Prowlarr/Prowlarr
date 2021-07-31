@@ -1,4 +1,4 @@
-﻿using NzbDrone.Common.Http;
+using NzbDrone.Common.Http;
 
 namespace NzbDrone.Core.Indexers
 {

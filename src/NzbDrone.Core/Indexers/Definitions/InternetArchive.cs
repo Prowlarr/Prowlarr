@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override bool FollowRedirect => true;
 
-        public InternetArchive(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public InternetArchive(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

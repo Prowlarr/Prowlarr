@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
-        public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _tokenProvider = tokenProvider;

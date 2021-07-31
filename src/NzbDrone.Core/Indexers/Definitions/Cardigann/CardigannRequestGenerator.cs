@@ -688,13 +688,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var httpRequest = new HttpRequestBuilder(requestLinkStr)
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
-                .SetHeaders(pairs ?? new Dictionary<string, string>())
-                .SetHeader("Referer", referer)
-                .Build();
+                .SetHeader("Referer", referer);
 
             httpRequest.Method = method;
 
-            var response = await HttpClient.ExecuteAsync(httpRequest);
+            // Add form data for POST requests
+            if (method == HttpMethod.POST)
+            {
+                foreach (var param in pairs)
+                {
+                    httpRequest.AddFormParameter(param.Key, param.Value);
+                }
+            }
+
+            var response = await HttpClient.ExecuteAsync(httpRequest.Build());
 
             _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() remote server returned {response.StatusCode.ToString()}");
             return response;

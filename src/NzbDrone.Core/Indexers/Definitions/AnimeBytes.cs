@@ -252,82 +252,71 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     foreach (var torrent in group.Torrents)
                     {
-                        const string defaultReleaseInfo = "S01";
-                        var releaseInfo = defaultReleaseInfo;
-                        string episode = null;
+                        var releaseInfo = _settings.EnableSonarrCompatibility ? "S01" : "";
+                        int? episode = null;
                         int? season = null;
                         var editionTitle = torrent.EditionData.EditionTitle;
                         if (!string.IsNullOrWhiteSpace(editionTitle))
                         {
                             releaseInfo = WebUtility.HtmlDecode(editionTitle);
 
-                            var simpleSeasonRegEx = new Regex(@"Season (\d+)", RegexOptions.Compiled);
-                            var simpleSeasonRegExMatch = simpleSeasonRegEx.Match(releaseInfo);
-                            if (simpleSeasonRegExMatch.Success)
+                            if (_settings.EnableSonarrCompatibility)
                             {
-                                season = ParseUtil.CoerceInt(simpleSeasonRegExMatch.Groups[1].Value);
+                                var simpleSeasonRegEx = new Regex(@"Season (\d+)", RegexOptions.Compiled);
+                                var simpleSeasonRegExMatch = simpleSeasonRegEx.Match(releaseInfo);
+                                if (simpleSeasonRegExMatch.Success)
+                                {
+                                    season = ParseUtil.CoerceInt(simpleSeasonRegExMatch.Groups[1].Value);
+                                }
                             }
 
                             var episodeRegEx = new Regex(@"Episode (\d+)", RegexOptions.Compiled);
                             var episodeRegExMatch = episodeRegEx.Match(releaseInfo);
                             if (episodeRegExMatch.Success)
                             {
-                                episode = episodeRegExMatch.Groups[1].Value;
+                                episode = ParseUtil.CoerceInt(episodeRegExMatch.Groups[1].Value);
                             }
                         }
 
-                        var advancedSeasonRegEx = new Regex(@"(\d+)(st|nd|rd|th) Season", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                        var advancedSeasonRegExMatch = advancedSeasonRegEx.Match(mainTitle);
-                        if (advancedSeasonRegExMatch.Success)
+                        if (_settings.EnableSonarrCompatibility)
                         {
-                            season = ParseUtil.CoerceInt(advancedSeasonRegExMatch.Groups[1].Value);
-                        }
+                            var advancedSeasonRegEx = new Regex(@"(\d+)(st|nd|rd|th) Season", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            var advancedSeasonRegExMatch = advancedSeasonRegEx.Match(mainTitle);
+                            if (advancedSeasonRegExMatch.Success)
+                            {
+                                season = ParseUtil.CoerceInt(advancedSeasonRegExMatch.Groups[1].Value);
+                            }
 
-                        var seasonCharactersRegEx = new Regex(@"(I{2,})$", RegexOptions.Compiled);
-                        var seasonCharactersRegExMatch = seasonCharactersRegEx.Match(mainTitle);
-                        if (seasonCharactersRegExMatch.Success)
-                        {
-                            season = seasonCharactersRegExMatch.Groups[1].Value.Length;
-                        }
+                            var seasonCharactersRegEx = new Regex(@"(I{2,})$", RegexOptions.Compiled);
+                            var seasonCharactersRegExMatch = seasonCharactersRegEx.Match(mainTitle);
+                            if (seasonCharactersRegExMatch.Success)
+                            {
+                                season = seasonCharactersRegExMatch.Groups[1].Value.Length;
+                            }
 
-                        var seasonNumberRegEx = new Regex(@"([2-9])$", RegexOptions.Compiled);
-                        var seasonNumberRegExMatch = seasonNumberRegEx.Match(mainTitle);
-                        if (seasonNumberRegExMatch.Success)
-                        {
-                            season = ParseUtil.CoerceInt(seasonNumberRegExMatch.Groups[1].Value);
-                        }
-
-                        var foundSeason = false;
-
-                        if (season != null)
-                        {
-                            releaseInfo = $"Season {season}";
-
-                            foundSeason = true;
+                            var seasonNumberRegEx = new Regex(@"([2-9])$", RegexOptions.Compiled);
+                            var seasonNumberRegExMatch = seasonNumberRegEx.Match(mainTitle);
+                            if (seasonNumberRegExMatch.Success)
+                            {
+                                season = ParseUtil.CoerceInt(seasonNumberRegExMatch.Groups[1].Value);
+                            }
                         }
 
                         if (episode != null)
                         {
-                            var epString = $"Episode {episode}";
-
-                            if (foundSeason)
-                            {
-                                releaseInfo += $" {epString}";
-                            }
-                            else
-                            {
-                                releaseInfo = epString;
-                            }
+                            releaseInfo = episode is > 0 and < 10
+                                ? "0" + episode
+                                : episode.ToString();
                         }
-
-                        releaseInfo = releaseInfo.Replace("Episode ", string.Empty);
-                        releaseInfo = releaseInfo.Replace("Season ", "S");
-                        releaseInfo = releaseInfo.Trim();
-
-                        if (int.TryParse(releaseInfo, out _) && releaseInfo.Length == 1)
+                        else
                         {
-                            releaseInfo = "0" + releaseInfo;
+                            if (season != null && _settings.EnableSonarrCompatibility)
+                            {
+                                releaseInfo = $"S{season}";
+                            }
                         }
+
+                        releaseInfo = releaseInfo.Trim();
 
                         var torrentId = torrent.Id;
                         var property = torrent.Property.Replace(" | Freeleech", string.Empty);
@@ -503,6 +492,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             Passkey = "";
             Username = "";
+            EnableSonarrCompatibility = true;
         }
 
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
@@ -513,6 +503,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
+
+        [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox,  HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
+        public bool EnableSonarrCompatibility { get; set; }
 
         [FieldDefinition(4)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();

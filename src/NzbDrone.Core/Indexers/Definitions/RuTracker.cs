@@ -72,13 +72,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddFormParameter("login", "Login")
                 .SetHeader("Content-Type", "multipart/form-data");
 
-            if (Settings.CaptchaSid.IsNotNullOrWhiteSpace())
-            {
-                requestBuilder
-                .AddFormParameter("cap_sid", Settings.CaptchaSid)
-                .AddFormParameter(Settings.CaptchaField, Settings.CaptchaText);
-            }
-
             var authLoginRequest = requestBuilder.Build();
 
             authLoginRequest.Encoding = Encoding;
@@ -1406,50 +1399,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             return caps;
         }
 
-        public async Task<RuTrackerCaptcha> GetConfigurationForSetup()
-        {
-            var response = await _httpClient.ExecuteAsync(new HttpRequest(LoginUrl));
-
-            RuTrackerCaptcha captcha = null;
-
-            var parser = new HtmlParser();
-            var doc = parser.ParseDocument(response.Content);
-            var captchaElement = doc.QuerySelector("img[src^=\"https://static.t-ru.org/captcha/\"]");
-            if (captchaElement != null)
-            {
-                var captchaImage = await _httpClient.ExecuteAsync(new HttpRequest(captchaElement.GetAttribute("src")));
-
-                var codefield = doc.QuerySelector("input[name^=\"cap_code_\"]");
-
-                var sidfield = doc.QuerySelector("input[name=\"cap_sid\"]");
-
-                return new RuTrackerCaptcha
-                {
-                    ContentType = captchaImage.Headers.ContentType,
-                    ImageData = captchaImage.ResponseData,
-                    CaptchaSid = sidfield.GetAttribute("value"),
-                    CaptchaField = codefield.GetAttribute("name")
-                };
-            }
-            else
-            {
-                _logger.Debug("RuTracker: No captcha image found");
-            }
-
-            return captcha;
-        }
-
         public override object RequestAction(string action, IDictionary<string, string> query)
         {
-            if (action == "checkCaptcha")
-            {
-                var result = GetConfigurationForSetup().GetAwaiter().GetResult();
-                return new
-                {
-                    captchaRequest = result
-                };
-            }
-
             if (action == "getUrls")
             {
                 var links = IndexerUrls;
@@ -1762,14 +1713,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RuTrackerCaptcha
-    {
-        public string ContentType { get; set; }
-        public byte[] ImageData { get; set; }
-        public string CaptchaField { get; set; }
-        public string CaptchaSid { get; set; }
-    }
-
     public class RuTrackerSettings : IIndexerSettings
     {
         private static readonly RuTrackerSettingsValidator Validator = new RuTrackerSettingsValidator();
@@ -1790,16 +1733,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password, HelpText = "Site Password")]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "Captcha Text", Type = FieldType.Captcha, SelectOptionsProviderAction = "checkCaptcha", HelpText = "Captcha Text")]
-        public string CaptchaText { get; set; }
-
-        [FieldDefinition(5, Label = "Strip Russian letters", Type = FieldType.Checkbox, SelectOptionsProviderAction = "stripRussian", HelpText = "Removes russian letters")]
+        [FieldDefinition(4, Label = "Strip Russian letters", Type = FieldType.Checkbox, SelectOptionsProviderAction = "stripRussian", HelpText = "Removes russian letters")]
         public bool RussianLetters { get; set; }
 
-        [FieldDefinition(6)]
+        [FieldDefinition(5)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-        public string CaptchaField { get; set; }
-        public string CaptchaSid { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

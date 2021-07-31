@@ -933,7 +933,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 _logger.Info($"Adding request: {searchUrl}");
 
-                var request = new CardigannRequest(searchUrl, HttpAccept.Html, variables);
+                var requestbuilder = new HttpRequestBuilder(searchUrl);
+
+                requestbuilder.Method = method;
+
+                // Add FormData for searchs that POST
+                if (method == HttpMethod.POST)
+                {
+                    foreach (var param in queryCollection)
+                    {
+                        requestbuilder.AddFormParameter(param.Key, param.Value);
+                    }
+                }
+
+                var request = new CardigannRequest(requestbuilder.Build(), variables);
 
                 // send HTTP request
                 if (search.Headers != null)
@@ -943,8 +956,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         request.HttpRequest.Headers.Add(header.Key, header.Value[0]);
                     }
                 }
-
-                request.HttpRequest.Method = method;
 
                 yield return request;
             }

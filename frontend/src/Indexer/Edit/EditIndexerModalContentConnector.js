@@ -59,7 +59,6 @@ class EditIndexerModalContentConnector extends Component {
   }
 
   onAdvancedSettingsPress = () => {
-    console.log('settings');
     this.props.toggleAdvancedSettings();
   }
 

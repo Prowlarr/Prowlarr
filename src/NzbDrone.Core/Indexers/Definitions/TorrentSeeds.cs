@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public TorrentSeeds(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public TorrentSeeds(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 LogResponseContent = true
             };
 
-            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(TokenUrl));
+            var loginPage = await ExecuteAuth(new HttpRequest(TokenUrl));
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(loginPage.Content);
             var token = dom.QuerySelector("form.form-horizontal > span");
@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = await _httpClient.ExecuteAsync(authLoginRequest);
+            var response = await ExecuteAuth(authLoginRequest);
 
             cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));

@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "ExoticaZ (YourExotic) is a Private Torrent Tracker for 3X";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public ExoticaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public ExoticaZ(IIndexerRepository indexerRepository, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

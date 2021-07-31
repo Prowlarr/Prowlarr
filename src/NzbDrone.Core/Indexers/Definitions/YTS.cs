@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.5);
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public YTS(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public YTS(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

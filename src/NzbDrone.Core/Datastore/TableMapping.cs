@@ -9,6 +9,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.CustomFilters;
 using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.IndexerProxies;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Jobs;
@@ -53,7 +54,6 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(i => i.SupportsSearch)
                   .Ignore(i => i.SupportsRedirect)
                   .Ignore(i => i.Capabilities)
-                  .Ignore(d => d.Tags)
                   .HasOne(a => a.AppProfile, a => a.AppProfileId);
 
             Mapper.Entity<DownloadClientDefinition>("DownloadClients").RegisterModel()
@@ -64,6 +64,9 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
                   .Ignore(x => x.ImplementationName)
                   .Ignore(i => i.SupportsOnHealthIssue);
+
+            Mapper.Entity<IndexerProxyDefinition>("IndexerProxies").RegisterModel()
+                  .Ignore(x => x.ImplementationName);
 
             Mapper.Entity<ApplicationDefinition>("Applications").RegisterModel()
                   .Ignore(x => x.ImplementationName);

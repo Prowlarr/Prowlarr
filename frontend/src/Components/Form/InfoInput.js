@@ -11,8 +11,6 @@ class InfoInput extends Component {
       value
     } = this.props;
 
-    console.log(this.props);
-
     return (
       <span dangerouslySetInnerHTML={{ __html: value }} />
     );

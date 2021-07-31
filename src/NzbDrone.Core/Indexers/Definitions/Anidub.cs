@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPublic;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Anidub(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Anidub(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true
             };
 
-            var mainPage = await _httpClient.ExecuteAsync(new HttpRequest(Settings.BaseUrl));
+            var mainPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl));
 
             requestBuilder.Method = Common.Http.HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
@@ -254,7 +254,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly AnidubSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
 
         private static Dictionary<string, string> CategoriesMap => new Dictionary<string, string>

@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers
     {
         protected const int MaxNumResultsPerQuery = 1000;
 
-        protected readonly IHttpClient _httpClient;
+        protected readonly IIndexerHttpClient _httpClient;
         protected readonly IEventAggregator _eventAggregator;
         public IDictionary<string, string> Cookies { get; set; }
 
@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Indexers
         public abstract IIndexerRequestGenerator GetRequestGenerator();
         public abstract IParseIndexerResponse GetParser();
 
-        public HttpIndexerBase(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public HttpIndexerBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerStatusService, configService, logger)
         {
             _httpClient = httpClient;
@@ -379,7 +379,7 @@ namespace NzbDrone.Core.Indexers
             request.HttpRequest.SuppressHttpError = true;
             request.HttpRequest.Encoding = Encoding;
 
-            var response = await _httpClient.ExecuteAsync(request.HttpRequest);
+            var response = await _httpClient.ExecuteAsync(request.HttpRequest, Definition);
 
             // Check reponse to see if auth is needed, if needed try again
             if (CheckIfLoginNeeded(response))
@@ -391,7 +391,7 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.Url = originalUrl;
                 ModifyRequest(request);
 
-                response = await _httpClient.ExecuteAsync(request.HttpRequest);
+                response = await _httpClient.ExecuteAsync(request.HttpRequest, Definition);
             }
 
             // Throw common http errors here before we try to parse
@@ -414,7 +414,7 @@ namespace NzbDrone.Core.Indexers
         {
             request.Encoding = Encoding;
 
-            var response = await _httpClient.ExecuteAsync(request);
+            var response = await _httpClient.ExecuteAsync(request, Definition);
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));
 

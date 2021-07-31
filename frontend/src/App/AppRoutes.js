@@ -11,6 +11,7 @@ import ApplicationSettingsConnector from 'Settings/Applications/ApplicationSetti
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
 import DownloadClientSettingsConnector from 'Settings/DownloadClients/DownloadClientSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
+import IndexerSettings from 'Settings/Indexers/IndexerSettings';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
@@ -88,6 +89,11 @@ function AppRoutes(props) {
         exact={true}
         path="/settings"
         component={Settings}
+      />
+
+      <Route
+        path="/settings/indexers"
+        component={IndexerSettings}
       />
 
       <Route

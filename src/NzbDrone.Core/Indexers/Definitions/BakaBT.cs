@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public BakaBT(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public BakaBT(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true
             };
 
-            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(LoginUrl));
+            var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
 
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = await _httpClient.ExecuteAsync(authLoginRequest);
+            var response = await ExecuteAuth(authLoginRequest);
 
             if (response.Content != null && response.Content.Contains("<a href=\"logout.php\">Logout</a>"))
             {

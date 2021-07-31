@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         private IIndexerRepository _indexerRepository;
 
         public AvistazBase(IIndexerRepository indexerRepository,
-                       IHttpClient httpClient,
+                       IIndexerHttpClient httpClient,
                        IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
                        IConfigService configService,

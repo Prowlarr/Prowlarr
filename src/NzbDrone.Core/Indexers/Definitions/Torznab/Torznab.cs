@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).LimitsDefault.Value;
+        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
         public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         public override IndexerCapabilities GetCapabilities()
         {
             // Newznab uses different Caps per site, so we need to cache them to db on first indexer add to prevent issues with loading UI and pulling caps every time.
-            return _capabilitiesProvider.GetCapabilities(Settings);
+            return _capabilitiesProvider.GetCapabilities(Settings, Definition);
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions
@@ -89,7 +89,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             }
         }
 
-        public Torznab(INewznabCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Torznab(INewznabCapabilitiesProvider capabilitiesProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
@@ -145,7 +145,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             try
             {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+                var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
                 if (capabilities.SearchParams != null && capabilities.SearchParams.Contains(SearchParam.Q))
                 {

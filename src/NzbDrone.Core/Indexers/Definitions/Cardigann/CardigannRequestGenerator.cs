@@ -13,12 +13,14 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {
     public class CardigannRequestGenerator : CardigannBase, IIndexerRequestGenerator
     {
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
+        public ProviderDefinition Definition { get; set; }
         public IDictionary<string, string> Cookies { get; set; }
         protected HttpResponse landingResult;
         protected IHtmlDocument landingResultDocument;
@@ -192,7 +194,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteAsync(requestBuilder.Build());
+                var response = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
 
                 Cookies = response.GetCookies();
 
@@ -329,7 +331,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     requestBuilder.Headers.Add("Referer", loginUrl);
 
-                    var simpleCaptchaResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
+                    var simpleCaptchaResult = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
 
                     var simpleCaptchaJSON = JObject.Parse(simpleCaptchaResult.Content);
                     var captchaSelection = simpleCaptchaJSON["images"][0]["hash"].ToString();
@@ -409,7 +411,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var request = requestBuilder.Build();
                     request.SetContent(body);
 
-                    loginResult = await HttpClient.ExecuteAsync(request);
+                    loginResult = await HttpClient.ExecuteAsync(request, Definition);
                 }
                 else
                 {
@@ -429,7 +431,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    loginResult = await HttpClient.ExecuteAsync(requestBuilder.Build());
+                    loginResult = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
                 }
 
                 Cookies = loginResult.GetCookies();
@@ -464,7 +466,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteAsync(requestBuilder.Build());
+                var response = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
 
                 Cookies = response.GetCookies();
 
@@ -488,7 +490,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteAsync(requestBuilder.Build());
+                var response = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
 
                 Cookies = response.GetCookies();
 
@@ -567,7 +569,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var request = requestBuilder.Build();
 
-            landingResult = await HttpClient.ExecuteAsync(request);
+            landingResult = await HttpClient.ExecuteAsync(request, Definition);
 
             Cookies = landingResult.GetCookies();
 
@@ -611,7 +613,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         .SetHeader("Referer", loginUrl.AbsoluteUri)
                         .Build();
 
-                    var response = await HttpClient.ExecuteAsync(request);
+                    var response = await HttpClient.ExecuteAsync(request, Definition);
 
                     return new Captcha
                     {
@@ -701,7 +703,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
             }
 
-            var response = await HttpClient.ExecuteAsync(httpRequest.Build());
+            var response = await HttpClient.ExecuteAsync(httpRequest.Build(), Definition);
 
             _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() remote server returned {response.StatusCode.ToString()}");
             return response;
@@ -741,7 +743,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     request.AllowAutoRedirect = true;
 
-                    var response = await HttpClient.ExecuteAsync(request);
+                    var response = await HttpClient.ExecuteAsync(request, Definition);
 
                     var results = response.Content;
                     var searchResultParser = new HtmlParser();

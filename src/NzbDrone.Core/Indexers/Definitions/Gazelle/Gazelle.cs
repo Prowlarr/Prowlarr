@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public override int PageSize => 50;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Gazelle(IHttpClient httpClient,
+        public Gazelle(IIndexerHttpClient httpClient,
                        IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
                        IConfigService configService,

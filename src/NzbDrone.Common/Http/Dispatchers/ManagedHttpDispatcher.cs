@@ -59,7 +59,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 webRequest.Timeout = (int)Math.Ceiling(request.RequestTimeout.TotalMilliseconds);
             }
 
-            webRequest.Proxy = GetProxy(request.Url);
+            webRequest.Proxy = request.Proxy ?? GetProxy(request.Url);
 
             if (request.Headers != null)
             {

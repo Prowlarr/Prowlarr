@@ -194,5 +194,21 @@ namespace NzbDrone.Common.Extensions
             var inputBytes = encoding.GetBytes(searchString);
             return encoding.GetString(WebUtility.UrlDecodeToBytes(inputBytes, 0, inputBytes.Length));
         }
+
+        public static string CleanFileName(this string name)
+        {
+            string result = name;
+            string[] badCharacters = { "\\", "/", "<", ">", "?", "*", ":", "|", "\"" };
+            string[] goodCharacters = { "+", "+", "", "", "!", "-", "-", "", "" };
+
+            result = result.Replace(": ", " - ");
+
+            for (int i = 0; i < badCharacters.Length; i++)
+            {
+                result = result.Replace(badCharacters[i], goodCharacters[i]);
+            }
+
+            return result.TrimStart(' ', '.').TrimEnd(' ');
+        }
     }
 }

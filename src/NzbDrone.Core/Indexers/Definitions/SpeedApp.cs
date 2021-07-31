@@ -378,6 +378,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
                 DownloadUrl = $"{Settings.BaseUrl}/api/torrent/{torrent.Id}/download",
+                PosterUrl = torrent.Poster,
                 InfoUrl = torrent.Url,
                 Grabs = torrent.TimesCompleted,
                 PublishDate = torrent.CreatedAt,

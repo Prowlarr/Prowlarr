@@ -242,6 +242,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Title = title,
                     Guid = details,
                     InfoUrl = details,
+                    PosterUrl = poster.AbsoluteUri,
                     DownloadUrl = link,
                     Categories = new List<IndexerCategory> { TvCategoryFromQualityParser.ParseTvShowQuality(title) },
                     Size = size,

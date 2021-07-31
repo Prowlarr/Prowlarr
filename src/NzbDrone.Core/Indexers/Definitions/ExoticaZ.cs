@@ -45,8 +45,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.XXXPack);
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.XXXPack);
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.XXXDVD);
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXXOther);
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXXx264);
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.XXXImageSet);
+            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.XXXImageSet);
 
             return caps;
         }

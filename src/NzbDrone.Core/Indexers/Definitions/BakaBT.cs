@@ -110,6 +110,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                        {
                            TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
                        },
+                MovieSearchParams = new List<MovieSearchParam>
+                       {
+                           MovieSearchParam.Q
+                       },
                 MusicSearchParams = new List<MusicSearchParam>
                        {
                            MusicSearchParam.Q
@@ -124,7 +128,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "OVA");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.AudioOther, "Soundtrack");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.BooksComics, "Manga");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.TVAnime, "Anime Movie");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "Anime Movie");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVOther, "Live Action");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksOther, "Artbook");
             caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.AudioVideo, "Music Video");
@@ -143,7 +147,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
             var searchString = term;
             var searchUrl = Settings.BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
@@ -165,6 +169,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
+
             return pageableRequests;
         }
 
@@ -172,7 +178,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -181,7 +187,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -190,7 +196,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -199,7 +205,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -296,7 +302,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     release.Categories = currentCategories;
 
-                    //release.Description = row.QuerySelector("span.tags")?.TextContent;
+                    release.Description = row.QuerySelector("span.tags")?.TextContent;
                     release.Guid = _settings.BaseUrl + qTitleLink.GetAttribute("href");
                     release.InfoUrl = release.Guid;
 

@@ -205,6 +205,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Title = row.Name,
                     InfoUrl = $"{_settings.BaseUrl}torrents/{row.Id}",
                     DownloadUrl = $"{_settings.BaseUrl}torrent/download/{row.Id}.{jsonResponse.Resource.Rsskey}",
+                    PosterUrl = row.PosterImage,
                     PublishDate = row.CreatedAt,
                     Categories = _categories.MapTrackerCatToNewznab(row.CategoryId),
                     Size = row.Size,

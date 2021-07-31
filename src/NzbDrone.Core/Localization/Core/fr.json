@@ -91,7 +91,7 @@
     "SearchForMissing": "Recherche les manquants",
     "SearchFiltered": "Recherche filtrée",
     "SearchAll": "Rechercher tout",
-    "Search": "Chercher",
+    "Search": "Rechercher",
     "Scheduled": "Programmé",
     "SaveChanges": "Sauvegarder les modifications",
     "Runtime": "Durée",
@@ -480,7 +480,7 @@
     "GoToInterp": "Aller à  {0}",
     "ForMoreInformationOnTheIndividualImportListsClinkOnTheInfoButtons": "Pour plus d'informations sur les listes d'importation individuelles, cliquez sur les boutons d'information.",
     "ForMoreInformationOnTheIndividualDownloadClients": "Pour plus d'informations sur les clients de téléchargement individuels, cliquez sur les boutons d'information.",
-    "FilterPlaceHolder": "Rechercher des films",
+    "FilterPlaceHolder": "Rechercher des indexeurs",
     "FailedLoadingSearchResults": "Échec du chargement des résultats de la recherche, veuillez réessayer.",
     "Excluded": "Exclu",
     "Exception": "Exception",
@@ -769,7 +769,7 @@
     "ReadTheWikiForMoreInformation": "Consultez le Wiki pour plus d'informations",
     "ProwlarrSupportsCustomConditionsAgainstTheReleasePropertiesBelow": "Prowlarr prend en charge les conditions personnalisées par rapport aux propriétés de publication ci-dessous.",
     "ProwlarrSupportsAnyRSSMovieListsAsWellAsTheOneStatedBelow": "Prowlarr prend en charge toutes les listes de films RSS ainsi que celle indiquée ci-dessous.",
-    "ProwlarrSupportsAnyIndexer": "Prowlarr prend en charge tout indexeur qui utilise le standard Newznab, ainsi que d'autres indexeurs répertoriés ci-dessous.",
+    "ProwlarrSupportsAnyIndexer": "Prowlarr prend en charge de nombreux indexeurs en plus de tout indexeur qui utilise la norme Newznab/Torznab en utilisant « Generic Newznab » (pour usenet) ou « Generic Torznab » (pour les torrents). Recherchez et sélectionnez votre indexeur ci-dessous.",
     "ProwlarrSupportsAnyDownloadClient": "Prowlarr prend en charge tout client de téléchargement qui utilise le standard Newznab, ainsi que d'autres clients de téléchargement répertoriés ci-dessous.",
     "Prowlarr": "Prowlarr",
     "Queued": "En file d'attente",
@@ -933,5 +933,6 @@
     "SyncLevel": "Niveau de synchronisation",
     "FullSync": "Synchronisation complète",
     "AddRemoveOnly": "Ajouter et supprimer uniquement",
-    "AddDownloadClientToProwlarr": "L'ajout d'un client de téléchargement permet à Prowlarr d'envoyer des fichers directement depuis l'interface utilisateur tout en effectuant une recherche manuelle."
+    "AddDownloadClientToProwlarr": "L'ajout d'un client de téléchargement permet à Prowlarr d'envoyer des fichers directement depuis l'interface utilisateur tout en effectuant une recherche manuelle.",
+    "NoSearchResultsFound": "Aucun résultat de recherche trouvé, essayez d'effectuer une nouvelle recherche ci-dessous."
 }

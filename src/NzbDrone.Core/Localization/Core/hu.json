@@ -451,7 +451,7 @@
     "ProwlarrTags": "Prowlarr Címkék",
     "ProwlarrSupportsCustomConditionsAgainstTheReleasePropertiesBelow": "A Prowlarr támogatja az egyéni feltételeket az alábbi kiadási tulajdonságokkal szemben.",
     "ProwlarrSupportsAnyRSSMovieListsAsWellAsTheOneStatedBelow": "A Prowlarr támogatja az RSS filmlistákat, valamint az alábbiakban felsoroltakat.",
-    "ProwlarrSupportsAnyIndexer": "A Prowlarr minden indexert támogat, amely a Newznab szabványt használja, valamint az alább felsorolt egyéb indexereket.",
+    "ProwlarrSupportsAnyIndexer": "A Prowlarr számos indexert támogat, minden olyan indexelő mellett, amely a Newznab / Torznab szabványt használja, valamint a 'Generic Newznab' (usenethez) vagy a 'Generic Torznab' (torrentekhez) használatával. Keresés és az alább felsorolt indexelők kiválasztása.",
     "ProwlarrSupportsAnyDownloadClient": "A Prowlarr minden olyan letöltési klienst támogat, amely a Newznab szabványt használja, valamint az alább felsorolt letöltési klienseket.",
     "Prowlarr": "Prowlarr",
     "QuickImport": "Gyors Importálás",
@@ -926,5 +926,6 @@
     "FullSync": "Teljes Szinkron",
     "AddRemoveOnly": "Csak hozzáadás és eltávolítás",
     "AddDownloadClientToProwlarr": "Letöltőkliens hozzáadásával a Prowlarr kézi keresés közben közvetlenül a felhasználói felületről küldhet kiadásokat.",
-    "Add": "Hozzáadás"
+    "Add": "Hozzáadás",
+    "NoSearchResultsFound": "Nincs találat. Próbálkozzon új kereséssel."
 }

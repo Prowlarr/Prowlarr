@@ -308,14 +308,15 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             {
                 return Settings.TvDirectory.TrimStart('/');
             }
-            else if (Settings.Category.IsNotNullOrWhiteSpace())
-            {
-                var destDir = GetDefaultDir();
 
+            var destDir = GetDefaultDir();
+
+            if (destDir.IsNotNullOrWhiteSpace() && Settings.Category.IsNotNullOrWhiteSpace())
+            {
                 return $"{destDir.TrimEnd('/')}/{Settings.Category}";
             }
 
-            return null;
+            return destDir.TrimEnd('/');
         }
 
         protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)

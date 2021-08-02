@@ -216,23 +216,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var parameters = GetBasicSearchParameters(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories);
-
-            if (searchCriteria.ImdbId != null)
-            {
-                if (ImdbInTags)
-                {
-                    parameters += string.Format("&taglist={0}", searchCriteria.ImdbId);
-                }
-                else
-                {
-                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.ImdbId);
-                }
-            }
-
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            throw new NotImplementedException("Secret Cinema does not support TV search.");
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)

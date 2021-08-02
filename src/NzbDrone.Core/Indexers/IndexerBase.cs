@@ -97,6 +97,7 @@ namespace NzbDrone.Core.Indexers
 
             result.ForEach(c =>
             {
+                //Set common props
                 c.IndexerId = Definition.Id;
                 c.Indexer = Definition.Name;
                 c.DownloadProtocol = Protocol;

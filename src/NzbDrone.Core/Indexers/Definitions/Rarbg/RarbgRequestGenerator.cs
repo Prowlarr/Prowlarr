@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
             _tokenProvider = tokenProvider;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string term, int[] categories, string imdbId = null, int? tmdbId = null)
+        private IEnumerable<IndexerRequest> GetRequest(string term, int[] categories, string imdbId = null, int? tmdbId = null, int? tvdbId = null)
         {
             var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
                 .Resource("/pubapi_v2.php")
@@ -41,6 +41,10 @@ namespace NzbDrone.Core.Indexers.Rarbg
             else if (tmdbId.HasValue && tmdbId > 0)
             {
                 requestBuilder.AddQueryParam("search_themoviedb", tmdbId);
+            }
+            else if (tvdbId.HasValue && tmdbId > 0)
+            {
+                requestBuilder.AddQueryParam("search_tvdb", tvdbId);
             }
             else if (term.IsNotNullOrWhiteSpace())
             {
@@ -70,36 +74,43 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId));
-            return pageableRequests;
+            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId);
+            return GetRequestChain(request, 2);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-            return pageableRequests;
+            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetRequestChain(request, 2);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId));
-            return pageableRequests;
+            var request = GetRequest(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId, tvdbId: searchCriteria.TvdbId);
+            return GetRequestChain(request, 2);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-            return pageableRequests;
+            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetRequestChain(request, 2);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
+            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetRequestChain(request, 2);
+        }
+
+        private IndexerPageableRequestChain GetRequestChain(IEnumerable<IndexerRequest> requests, int retry)
+        {
             var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+
+            for (int i = 0; i < retry; i++)
+            {
+                pageableRequests.AddTier(requests);
+            }
+
             return pageableRequests;
         }
 

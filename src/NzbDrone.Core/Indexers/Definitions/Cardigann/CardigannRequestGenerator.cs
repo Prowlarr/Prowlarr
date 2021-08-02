@@ -688,13 +688,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var httpRequest = new HttpRequestBuilder(requestLinkStr)
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
-                .SetHeaders(pairs ?? new Dictionary<string, string>())
-                .SetHeader("Referer", referer)
-                .Build();
+                .SetHeader("Referer", referer);
 
             httpRequest.Method = method;
 
-            var response = await HttpClient.ExecuteAsync(httpRequest);
+            // Add form data for POST requests
+            if (method == HttpMethod.POST)
+            {
+                foreach (var param in pairs)
+                {
+                    httpRequest.AddFormParameter(param.Key, param.Value);
+                }
+            }
+
+            var response = await HttpClient.ExecuteAsync(httpRequest.Build());
 
             _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() remote server returned {response.StatusCode.ToString()}");
             return response;
@@ -933,7 +940,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 _logger.Info($"Adding request: {searchUrl}");
 
-                var request = new CardigannRequest(searchUrl, HttpAccept.Html, variables);
+                var requestbuilder = new HttpRequestBuilder(searchUrl);
+
+                requestbuilder.Method = method;
+
+                // Add FormData for searchs that POST
+                if (method == HttpMethod.POST)
+                {
+                    foreach (var param in queryCollection)
+                    {
+                        requestbuilder.AddFormParameter(param.Key, param.Value);
+                    }
+                }
+
+                var request = new CardigannRequest(requestbuilder.Build(), variables);
 
                 // send HTTP request
                 if (search.Headers != null)
@@ -943,8 +963,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         request.HttpRequest.Headers.Add(header.Key, header.Value[0]);
                     }
                 }
-
-                request.HttpRequest.Method = method;
 
                 yield return request;
             }

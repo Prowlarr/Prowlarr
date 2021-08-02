@@ -436,7 +436,14 @@ namespace NzbDrone.Core.Indexers
 
                 generator = SetCookieFunctions(generator);
 
-                var firstRequest = generator.GetSearchRequests(new BasicSearchCriteria { SearchType = "search" }).GetAllTiers().FirstOrDefault()?.FirstOrDefault();
+                var testCriteria = new BasicSearchCriteria { SearchType = "search" };
+
+                if (!SupportsRss)
+                {
+                    testCriteria.SearchTerm = "test";
+                }
+
+                var firstRequest = generator.GetSearchRequests(testCriteria).GetAllTiers().FirstOrDefault()?.FirstOrDefault();
 
                 if (firstRequest == null)
                 {

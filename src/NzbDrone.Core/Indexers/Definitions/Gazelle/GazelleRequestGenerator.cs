@@ -75,11 +75,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
             {
                 if (ImdbInTags)
                 {
-                    parameters += string.Format("&taglist={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&taglist={0}", searchCriteria.FullImdbId);
                 }
                 else
                 {
-                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.FullImdbId);
                 }
             }
 
@@ -120,11 +120,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
             {
                 if (ImdbInTags)
                 {
-                    parameters += string.Format("&taglist={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&taglist={0}", searchCriteria.FullImdbId);
                 }
                 else
                 {
-                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.FullImdbId);
                 }
             }
 

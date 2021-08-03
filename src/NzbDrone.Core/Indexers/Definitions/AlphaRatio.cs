@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                        },
                 MovieSearchParams = new List<MovieSearchParam>
                        {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
+                           MovieSearchParam.Q
                        }
             };
 

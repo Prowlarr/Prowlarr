@@ -507,7 +507,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox,  HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
         public bool EnableSonarrCompatibility { get; set; }
 
-        [FieldDefinition(4)]
+        [FieldDefinition(5)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()

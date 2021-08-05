@@ -113,5 +113,7 @@
     "Activity": "Aktivitet",
     "Actions": "Handlinger",
     "About": "Om",
-    "Disabled": "deaktiveret"
+    "Disabled": "deaktiveret",
+    "Add": "Tilføj",
+    "AddDownloadClient": "Tilføj downloadklient"
 }

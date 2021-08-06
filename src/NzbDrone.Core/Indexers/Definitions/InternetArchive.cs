@@ -219,7 +219,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var downloadUrl = string.Format("{0}/download/{1}/{1}_archive.torrent", _settings.BaseUrl.TrimEnd('/'), searchResult.Identifier);
                 var detailsUrl = string.Format("{0}/details/{1}", _settings.BaseUrl.TrimEnd('/'), searchResult.Identifier);
 
-                var category = _categories.MapTrackerCatToNewznab(searchResult.MediaType);
+                var category = _categories.MapTrackerCatToNewznab(searchResult.MediaType ?? "other");
 
                 var release = new TorrentInfo
                 {
@@ -231,7 +231,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Grabs = searchResult.Downloads,
                     InfoHash = searchResult.InfoHash,
                     InfoUrl = detailsUrl,
-                    MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(searchResult.InfoHash, title),
                     Peers = 2,
                     PublishDate = searchResult.PublicDate,
                     Seeders = 1,
@@ -239,6 +238,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Title = title,
                     UploadVolumeFactor = 1
                 };
+
+                if (searchResult.InfoHash != null)
+                {
+                    release.MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(searchResult.InfoHash, title);
+                }
 
                 torrentInfos.Add(release);
             }

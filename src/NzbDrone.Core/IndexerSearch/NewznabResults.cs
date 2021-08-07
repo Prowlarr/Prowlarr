@@ -100,7 +100,8 @@ namespace NzbDrone.Core.IndexerSearch
                             GetNabElement("minimumratio", t.MinimumRatio, protocol),
                             GetNabElement("minimumseedtime", t.MinimumSeedTime, protocol),
                             GetNabElement("downloadvolumefactor", t.DownloadVolumeFactor, protocol),
-                            GetNabElement("uploadvolumefactor", t.UploadVolumeFactor, protocol)))));
+                            GetNabElement("uploadvolumefactor", t.UploadVolumeFactor, protocol),
+                            GetNabElement("coverurl", r.PosterUrl, protocol)))));
 
             return xdoc.Declaration + Environment.NewLine + xdoc;
         }

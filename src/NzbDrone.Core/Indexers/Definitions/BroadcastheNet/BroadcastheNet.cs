@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 LimitsMax = 1000,
                 TvSearchParams = new List<TvSearchParam>
                        {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId, TvSearchParam.RId
                        }
             };
 

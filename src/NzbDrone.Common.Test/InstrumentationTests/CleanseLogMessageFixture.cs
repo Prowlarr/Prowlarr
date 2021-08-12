@@ -77,20 +77,24 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // Download Station
         [TestCase(@"webapi/entry.cgi?api=(removed)&version=2&method=login&account=01233210&passwd=mySecret&format=sid&session=DownloadStation")]
 
+        // Tracker Responses
+        [TestCase(@"tracker"":""http://xxx.yyy/announce.php?passkey=9pr04sg601233210imaveql2tyu8xyui"",""info"":""http://xxx.yyy/info?a=b""")]
+
         // BroadcastheNet
         [TestCase(@"method: ""getTorrents"", ""params"": [ ""mySecret"",")]
         [TestCase(@"getTorrents(""mySecret"", [asdfasdf], 100, 0)")]
         [TestCase(@"""DownloadURL"":""https:\/\/broadcasthe.net\/torrents.php?action=download&id=123&authkey=mySecret&torrent_pass=mySecret""")]
 
-        // Notifiarr
+        // Webhooks - Notifiarr
+        [TestCase(@"https://xxx.yyy/api/v1/notification/prowlarr/9pr04sg6-0123-3210-imav-eql2tyu8xyui")]
         [TestCase("https://notifiarr.com/notifier.php: api=1234530f-422f-4aac-b6b3-01233210aaaa&radarr_health_issue_message=Download")]
-        [TestCase("/readarr/signalr/messages/negotiate?access_token=1234530f422f4aacb6b301233210aaaa&negotiateVersion=1")]
 
         // RSS
         [TestCase(@"<atom:link href = ""https://api.nzb.su/api?t=search&amp;extended=1&amp;cat=3030&apikey=mySecret&amp;q=Diggers"" rel=""self"" type=""application/rss+xml"" />")]
 
         // Internal
         [TestCase(@"[Info] MigrationController: *** Migrating Database=prowlarr-main;Host=postgres14;Username=mySecret;Password=mySecret;Port=5432;Enlist=False ***")]
+        [TestCase("/readarr/signalr/messages/negotiate?access_token=1234530f422f4aacb6b301233210aaaa&negotiateVersion=1")]
 
         public void should_clean_message(string message)
         {

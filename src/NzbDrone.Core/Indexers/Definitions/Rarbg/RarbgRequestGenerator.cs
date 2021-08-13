@@ -46,7 +46,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
             {
                 requestBuilder.AddQueryParam("search_tvdb", tvdbId);
             }
-            else if (term.IsNotNullOrWhiteSpace())
+
+            if (term.IsNotNullOrWhiteSpace())
             {
                 requestBuilder.AddQueryParam("search_string", $"{term}");
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Indexers;
@@ -110,9 +111,6 @@ namespace NzbDrone.Core.Applications
             {
                 var indexerMappings = _appIndexerMapService.GetMappingsForApp(app.Definition.Id);
 
-                //Remote-Local mappings currently stored by Prowlarr
-                var prowlarrMappings = indexerMappings.ToDictionary(i => i.RemoteIndexerId, i => i.IndexerId);
-
                 //Get Dictionary of Remote Indexers point to Prowlarr and what they are mapped to
                 var remoteMappings = ExecuteAction(a => a.GetIndexerMappings(), app);
 
@@ -124,9 +122,16 @@ namespace NzbDrone.Core.Applications
                 //Add mappings if not already in db, these were setup manually in the app or orphaned by a table wipe
                 foreach (var mapping in remoteMappings)
                 {
-                    if (!prowlarrMappings.ContainsKey(mapping.Key))
+                    if (!indexerMappings.Any(m => (m.RemoteIndexerId > 0 && m.RemoteIndexerId == mapping.RemoteIndexerId) || (m.RemoteIndexerName.IsNotNullOrWhiteSpace() && m.RemoteIndexerName == mapping.RemoteIndexerName)))
                     {
-                        var addMapping = new AppIndexerMap { AppId = app.Definition.Id, RemoteIndexerId = mapping.Key, IndexerId = mapping.Value };
+                        var addMapping = new AppIndexerMap
+                        {
+                            AppId = app.Definition.Id,
+                            RemoteIndexerId = mapping.RemoteIndexerId,
+                            RemoteIndexerName = mapping.RemoteIndexerName,
+                            IndexerId = mapping.IndexerId
+                        };
+
                         _appIndexerMapService.Insert(addMapping);
                         indexerMappings.Add(addMapping);
                     }

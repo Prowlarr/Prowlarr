@@ -7,5 +7,6 @@ namespace NzbDrone.Core.Applications
         public int IndexerId { get; set; }
         public int AppId { get; set; }
         public int RemoteIndexerId { get; set; }
+        public string RemoteIndexerName { get; set; }
     }
 }

@@ -55,12 +55,12 @@ namespace NzbDrone.Core.Applications.Readarr
             return new ValidationResult(failures);
         }
 
-        public override Dictionary<int, int> GetIndexerMappings()
+        public override List<AppIndexerMap> GetIndexerMappings()
         {
             var indexers = _readarrV1Proxy.GetIndexers(Settings)
-                                          .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
+                                         .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
 
-            var mappings = new Dictionary<int, int>();
+            var mappings = new List<AppIndexerMap>();
 
             foreach (var indexer in indexers)
             {
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Applications.Readarr
                     if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                     {
                         //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
-                        mappings.Add(indexer.Id, indexerId);
+                        mappings.Add(new AppIndexerMap { RemoteIndexerId = indexer.Id, IndexerId = indexerId });
                     }
                 }
             }

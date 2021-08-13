@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest(searchCriteria.ImdbId));
+                pageableRequests.Add(GetRequest(searchCriteria.FullImdbId));
             }
             else
             {

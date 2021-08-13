@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                        {
-                           TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.TvdbId
+                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId
                        },
                 MovieSearchParams = new List<MovieSearchParam>
                        {
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("3", NewznabStandardCategory.Audio, "Music");
             caps.Categories.AddCategoryMapping("4", NewznabStandardCategory.PCGames, "Games");
             caps.Categories.AddCategoryMapping("5", NewznabStandardCategory.PC0day, "Appz");
-            caps.Categories.AddCategoryMapping("6", NewznabStandardCategory.Books, "Bookz");
+            caps.Categories.AddCategoryMapping("8", NewznabStandardCategory.Books, "Bookz");
 
             return caps;
         }
@@ -293,12 +293,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [JsonProperty(PropertyName = "created_at")]
         public DateTime CreatedAt { get; set; }
-
-        [JsonProperty(PropertyName = "bumped_at")]
-        public DateTime BumpedAt { get; set; }
-
-        [JsonProperty(PropertyName = "type_id")]
-        public int TypeId { get; set; }
 
         [JsonProperty(PropertyName = "resolution_id")]
         public int ResolutionId { get; set; }

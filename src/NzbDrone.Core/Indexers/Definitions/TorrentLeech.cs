@@ -329,6 +329,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Password).NotEmpty();
+
+            RuleFor(c => c.VipExpiration).Must(c => c.IsValidDate())
+                                         .When(c => c.VipExpiration.IsNotNullOrWhiteSpace())
+                                         .WithMessage("Correctly formatted date is required");
+
+            RuleFor(c => c.VipExpiration).Must(c => c.IsFutureDate())
+                                         .When(c => c.VipExpiration.IsNotNullOrWhiteSpace())
+                                         .WithMessage("Must be a future date");
         }
     }
 
@@ -354,7 +362,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
 
-        [FieldDefinition(5)]
+        [FieldDefinition(5, Label = "VIP Expiration", HelpText = "Enter date (yyyy-mm-dd) for VIP Expiration or blank, Prowlarr will notify 1 week from expiration of VIP")]
+        public string VipExpiration { get; set; }
+
+        [FieldDefinition(6)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()

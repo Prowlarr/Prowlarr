@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Applications
     {
         List<AppIndexerMap> GetMappingsForApp(int appId);
         AppIndexerMap Insert(AppIndexerMap appIndexerMap);
+        AppIndexerMap Update(AppIndexerMap appIndexerMap);
         void Delete(int mappingId);
         void DeleteAllForApp(int appId);
     }
@@ -39,6 +40,11 @@ namespace NzbDrone.Core.Applications
         public AppIndexerMap Insert(AppIndexerMap appIndexerMap)
         {
             return _appIndexerMapRepository.Insert(appIndexerMap);
+        }
+
+        public AppIndexerMap Update(AppIndexerMap appIndexerMap)
+        {
+            return _appIndexerMapRepository.Update(appIndexerMap);
         }
 
         public void Handle(ProviderDeletedEvent<IApplication> message)

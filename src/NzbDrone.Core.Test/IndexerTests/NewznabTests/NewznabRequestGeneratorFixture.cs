@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
     public class NewznabRequestGeneratorFixture : CoreTest<NewznabRequestGenerator>
     {
         private MovieSearchCriteria _movieSearchCriteria;
+        private TvSearchCriteria _tvSearchCriteria;
         private IndexerCapabilities _capabilities;
 
         [SetUp]
@@ -28,6 +29,13 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             {
                 SearchTerm = "Star Wars",
                 Categories = new int[] { 2000 }
+            };
+
+            _tvSearchCriteria = new TvSearchCriteria
+            {
+                SearchTerm = "Star Wars",
+                Categories = new int[] { 5000 },
+                Season = 0
             };
 
             _capabilities = new IndexerCapabilities();
@@ -177,6 +185,19 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             pageTier2.Url.Query.Should().NotContain("tmdbid=11");
             pageTier2.Url.Query.Should().NotContain("imdbid=0076759");
             pageTier2.Url.Query.Should().Contain("q=");
+        }
+
+        [Test]
+        public void should_pad_seasons_for_tv_search()
+        {
+            _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep };
+
+            var results = Subject.GetSearchRequests(_tvSearchCriteria);
+            results.Tiers.Should().Be(1);
+
+            var pageTier = results.GetTier(0).First().First();
+
+            pageTier.Url.Query.Should().Contain("season=00");
         }
     }
 }

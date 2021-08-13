@@ -140,7 +140,8 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.Season.HasValue && capabilities.TvSearchSeasonAvailable)
             {
-                parameters.Add("season", searchCriteria.Season.ToString());
+                // Pad seasons to two decimals due to issues with NNTmux handling season = 0
+                parameters.Add("season", searchCriteria.Season.Value.ToString("00"));
             }
 
             if (searchCriteria.Episode.IsNotNullOrWhiteSpace() && capabilities.TvSearchEpAvailable)

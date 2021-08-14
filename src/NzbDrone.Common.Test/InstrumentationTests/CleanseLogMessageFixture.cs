@@ -102,5 +102,13 @@ namespace NzbDrone.Common.Test.InstrumentationTests
 
             cleansedMessage.Should().Be(message);
         }
+
+        [TestCase(@"https://www.torrentleech.org/torrents/browse/list/imdbID/tt8005374/categories/29,2,26,27,32,44,7,34,35")]
+        public void should_not_clean_url(string message)
+        {
+            var cleansedMessage = CleanseLogMessage.Cleanse(message);
+
+            cleansedMessage.Should().Be(message);
+        }
     }
 }

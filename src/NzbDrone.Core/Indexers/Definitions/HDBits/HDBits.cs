@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public override IParseIndexerResponse GetParser()
         {
-            return new HDBitsParser(Settings);
+            return new HDBitsParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()

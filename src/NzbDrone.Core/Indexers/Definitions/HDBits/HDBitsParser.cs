@@ -12,10 +12,12 @@ namespace NzbDrone.Core.Indexers.HDBits
     public class HDBitsParser : IParseIndexerResponse
     {
         private readonly HDBitsSettings _settings;
+        private readonly IndexerCapabilitiesCategories _categories;
 
-        public HDBitsParser(HDBitsSettings settings)
+        public HDBitsParser(HDBitsSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
+            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -65,6 +67,7 @@ namespace NzbDrone.Core.Indexers.HDBits
                     Guid = string.Format("HDBits-{0}", id),
                     Title = result.Name,
                     Size = result.Size,
+                    Categories = _categories.MapTrackerCatToNewznab(result.TypeCategory.ToString()),
                     InfoHash = result.Hash,
                     DownloadUrl = GetDownloadUrl(id),
                     InfoUrl = GetInfoUrl(id),

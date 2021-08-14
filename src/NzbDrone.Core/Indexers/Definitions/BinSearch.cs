@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
+using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -22,13 +24,15 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class BinSearch : UsenetIndexerBase<BinSearchSettings>
     {
         public override string Name => "BinSearch";
+
         public override string[] IndexerUrls => new string[] { "https://binsearch.info/" };
-        public override string Description => "The binary Usenet search engine";
+        public override string Description => "BinSearch is a binary Usenet search engine.";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
-        public override bool SupportsRss => false;
+
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public BinSearch(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
@@ -38,12 +42,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new BinSearchRequestGenerator() { Capabilities = Capabilities, Settings = Settings };
+            return new BinSearchRequestGenerator() { Settings = Settings };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new BinSearchParser(Capabilities.Categories, Settings);
+            return new BinSearchParser(Settings);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -74,28 +78,50 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BinSearchRequestGenerator : IIndexerRequestGenerator
     {
-        public IndexerCapabilities Capabilities { get; set; }
         public BinSearchSettings Settings { get; set; }
 
         public BinSearchRequestGenerator()
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, SearchCriteriaBase searchCriteria)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string searchTerm, SearchCriteriaBase searchCriteria)
         {
-            var qc = new NameValueCollection
+            var isEmptySearch = string.IsNullOrWhiteSpace(searchTerm);
+
+            var standardParameters = new NameValueCollection
             {
-                { "adv_col", "on" },
-                { "postdate", "date" },
-                { "adv_sort", "date" },
-                { "q", term },
-                { "m", searchCriteria.Offset.ToString() },
-                { "max", searchCriteria.Limit?.ToString() ?? "100" }
+                { "max", searchCriteria.Limit?.ToString() ?? "100" }, // max BinSearch allows is 250
+                { "adv_col", "on" }
             };
 
-            var searchUrl = string.Format("{0}/?{1}", Settings.BaseUrl.TrimEnd('/'), qc.GetQueryString());
+            var searchUrl = string.Empty;
+            if (isEmptySearch)
+            {
+                var browseParameters = new NameValueCollection
+                {
+                    { "bg", Settings.FallbackGroup },
+                    { "server",  Settings.FallbackServer.ToString() },
+                    { "all", "1" }
+                };
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+                searchUrl = string.Format("{0}/browse.php?{1}&{2}", Settings.BaseUrl.TrimEnd('/'), standardParameters.GetQueryString(), browseParameters.GetQueryString());
+            }
+            else
+            {
+                var searchParameters = new NameValueCollection
+                {
+                    { "q", searchTerm },
+                    { "adv_sort", "date" },
+                    { "postdate", "date" },
+                    { "min", searchCriteria.Offset.ToString() },
+                    { "hideposter", "on" },
+                    { "hidegroup", "on" }
+                };
+
+                searchUrl = string.Format("{0}/index.php?{1}&{2}", Settings.BaseUrl.TrimEnd('/'), standardParameters.GetQueryString(), searchParameters.GetQueryString());
+            }
+
+            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
             yield return request;
         }
@@ -151,12 +177,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BinSearchParser : IParseIndexerResponse
     {
-        private readonly IndexerCapabilitiesCategories _categories;
+        // c.f. https://github.com/theotherp/nzbhydra2/blob/6e879d635f2db24c711580f4fcc50365057ffa40/core/src/main/java/org/nzbhydra/indexers/Binsearch.java
+        private static readonly Regex TitleRegex = new Regex(@"\""(?<title>.*)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))\""");
+        private static readonly Regex FileSizeRegex = new Regex(@"size: (?<size>[0-9]+(\.[0-9]+)?).(?<unit>(GB|MB|KB|B))");
+
         private readonly BinSearchSettings _settings;
 
-        public BinSearchParser(IndexerCapabilitiesCategories categories, BinSearchSettings settings)
+        public BinSearchParser(BinSearchSettings settings)
         {
-            _categories = categories;
             _settings = settings;
         }
 
@@ -165,65 +193,111 @@ namespace NzbDrone.Core.Indexers.Definitions
             var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var doc = parser.ParseDocument(indexerResponse.Content);
-            var rows = doc.QuerySelectorAll("table.xMenuT > tbody > tr").Skip(1);
+            var document = parser.ParseDocument(indexerResponse.Content);
+
+            var resultTable = document.QuerySelector("table.xMenuT");
+            if (resultTable == null)
+            {
+                return releaseInfos;
+            }
+
+            var rows = resultTable.QuerySelectorAll("tr").Skip(1);
             foreach (var row in rows)
             {
-                var titleElement = row.QuerySelector("td > span.s");
+                var rowDescription = row.QuerySelector("span.d");
+                var rowTitle = row.QuerySelector("span.s") ?? rowDescription?.PreviousSibling;
 
-                if (titleElement == null)
+                if (rowTitle == null)
                 {
                     continue;
                 }
 
-                var parsedTitle = ParseTitleRegex.Match(titleElement.TextContent);
+                var releaseTitle = rowTitle.TextContent;
 
-                if (!parsedTitle.Success || parsedTitle.Groups["title"].Value.IsNullOrWhiteSpace())
+                var titleMatches = TitleRegex.Match(releaseTitle);
+                if (titleMatches.Success)
                 {
-                    continue;
+                    var matchedReleaseTitle = titleMatches.Groups["title"].Value?.Trim();
+                    releaseTitle = matchedReleaseTitle.IsNotNullOrWhiteSpace() ? matchedReleaseTitle : releaseTitle;
+
+                    if (releaseTitle.IsNullOrWhiteSpace())
+                    {
+                        continue;
+                    }
                 }
 
-                var guid = row.QuerySelector("input[type=checkbox]").GetAttribute("name");
-                var publishDate = DateTimeUtil.FromUnknown(row.QuerySelector("td:nth-child(6)").TextContent);
-                var sizeElement = row.QuerySelector("td > span.d");
-                var size = ParseSizeRegex.Match(sizeElement.TextContent);
-                var infoUrl = string.Format("{0}{1}", _settings.BaseUrl.TrimEnd('/'), row.QuerySelector("a").GetAttribute("href"));
-                var downloadUrl = string.Format("{0}/?action=nzb&{1}=1", _settings.BaseUrl.TrimEnd('/'), guid);
+                var releaseGuid = row.QuerySelector("input[type=checkbox]").GetAttribute("name");
+                var releaseUrl = string.Format("{0}/?action=nzb&{1}=1", _settings.BaseUrl.TrimEnd('/'), releaseGuid);
+                var releaseInfoUrl = string.Format("{0}{1}", _settings.BaseUrl.TrimEnd('/'), rowDescription.QuerySelector("a").GetAttribute("href"));
+
+                var trimmedDate = row.LastChild.TextContent.Trim();
+                var releaseDate = DateTime.ParseExact(trimmedDate, new string[] { "dd-MMM-yyyy", "dd-MMM" }, CultureInfo.InvariantCulture);
 
                 var release = new ReleaseInfo
                 {
-                    Guid = guid,
-                    Title = parsedTitle.Groups["title"].Value,
-                    Size = ParseUtil.GetBytes(string.Format("{0} {1}", size.Groups["size"].Value, size.Groups["unit"].Value)),
-                    PublishDate = publishDate,
-                    Categories = new List<IndexerCategory> { NewznabStandardCategory.Other },
-                    InfoUrl = infoUrl,
-                    DownloadUrl = downloadUrl
+                    Guid = releaseGuid,
+                    Title = releaseTitle,
+                    DownloadUrl = releaseUrl,
+                    InfoUrl = releaseInfoUrl,
+                    PublishDate = releaseDate,
+                    Categories = new List<IndexerCategory> { NewznabStandardCategory.Other }
                 };
+
+                var matchReleaseSize = FileSizeRegex.Match(rowDescription.TextContent);
+                if (matchReleaseSize.Success)
+                {
+                    release.Size = ParseUtil.GetBytes(string.Format("{0} {1}", matchReleaseSize.Groups["size"].Value, matchReleaseSize.Groups["unit"].Value));
+                }
 
                 releaseInfos.Add(release);
             }
 
-            return releaseInfos.ToArray();
+            return releaseInfos;
         }
-
-        private static readonly Regex ParseTitleRegex = new Regex(@"\""(?<title>.*)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))\""");
-        private static readonly Regex ParseSizeRegex = new Regex(@"size: (?<size>[0-9]+(\.[0-9]+)?).(?<unit>(GB|MB|KB|B))");
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
+    public class BinSearchSettingsValidator : AbstractValidator<BinSearchSettings>
+    {
+        public BinSearchSettingsValidator()
+        {
+            RuleFor(c => c.FallbackGroup).NotEmpty();
+            RuleFor(c => c.FallbackServer).NotEmpty();
+        }
+    }
+
     public class BinSearchSettings : IIndexerSettings
     {
+        private static readonly BinSearchSettingsValidator Validator = new BinSearchSettingsValidator();
+
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2)]
+        [FieldDefinition(2, Label = "Fallback Newsgroup", Advanced = true, Type = FieldType.Textbox, HelpText = "Use this newsgroup for empty searches.")]
+        public string FallbackGroup { get; set; }
+
+        [FieldDefinition(3, Label = "Fallback Server", Advanced = true, Type = FieldType.Select, SelectOptions = typeof(BinSearchFallbackServer), HelpText = "Use this Binsearch server for empty searches.")]
+        public int FallbackServer { get; set; }
+
+        [FieldDefinition(4)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
+        public BinSearchSettings()
+        {
+            FallbackGroup = "alt.binaries.boneless";
+            FallbackServer = (int)BinSearchFallbackServer.Primary;
+        }
 
         public NzbDroneValidationResult Validate()
         {
-            return new NzbDroneValidationResult();
+            return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    public enum BinSearchFallbackServer
+    {
+        Primary = 1,
+        Secondary = 2
     }
 }

@@ -140,8 +140,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.Season.HasValue && capabilities.TvSearchSeasonAvailable)
             {
-                // Pad seasons to two decimals due to issues with NNTmux handling season = 0
-                parameters.Add("season", searchCriteria.Season.Value.ToString("00"));
+                parameters.Add("season", NewznabifySeasonNumber(searchCriteria.Season.Value));
             }
 
             if (searchCriteria.Episode.IsNotNullOrWhiteSpace() && capabilities.TvSearchEpAvailable)
@@ -268,6 +267,12 @@ namespace NzbDrone.Core.Indexers.Newznab
         private static string NewsnabifyTitle(string title)
         {
             return title.Replace("+", "%20");
+        }
+
+        // Temporary workaround for NNTMux considering season=0 -> null. '00' should work on existing newznab indexers.
+        private static string NewznabifySeasonNumber(int seasonNumber)
+        {
+            return seasonNumber == 0 ? "00" : seasonNumber.ToString();
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

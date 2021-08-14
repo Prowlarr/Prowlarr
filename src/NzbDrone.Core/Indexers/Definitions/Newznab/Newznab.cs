@@ -177,13 +177,31 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
 
                 if (capabilities.MovieSearchParams != null &&
-                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)) &&
-                    new[] { MovieSearchParam.ImdbTitle, MovieSearchParam.ImdbYear }.All(v => capabilities.MovieSearchParams.Contains(v)))
+                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)))
                 {
                     return null;
                 }
 
-                return new ValidationFailure(string.Empty, "This indexer does not support searching for movies :(. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
+                if (capabilities.TvSearchParams != null &&
+                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
+                    new[] { TvSearchParam.Season, TvSearchParam.Ep }.All(v => capabilities.TvSearchParams.Contains(v)))
+                {
+                    return null;
+                }
+
+                if (capabilities.MusicSearchParams != null &&
+                    new[] { MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album }.Any(v => capabilities.MusicSearchParams.Contains(v)))
+                {
+                    return null;
+                }
+
+                if (capabilities.BookSearchParams != null &&
+                    new[] { BookSearchParam.Q, BookSearchParam.Author, BookSearchParam.Title }.Any(v => capabilities.BookSearchParams.Contains(v)))
+                {
+                    return null;
+                }
+
+                return new ValidationFailure(string.Empty, "This indexer does not support searching for tv, music, or movies :(. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
             }
             catch (Exception ex)
             {

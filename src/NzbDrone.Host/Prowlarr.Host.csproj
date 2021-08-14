@@ -7,7 +7,7 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
-    <PackageReference Include="DryIoc.dll" Version="4.7.6" />
+    <PackageReference Include="DryIoc.dll" Version="4.8.1" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>

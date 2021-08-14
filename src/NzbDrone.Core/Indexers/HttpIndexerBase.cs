@@ -377,6 +377,8 @@ namespace NzbDrone.Core.Indexers
             }
 
             request.HttpRequest.SuppressHttpError = true;
+            request.HttpRequest.Encoding = Encoding;
+
             var response = await _httpClient.ExecuteAsync(request.HttpRequest);
 
             // Check reponse to see if auth is needed, if needed try again
@@ -410,6 +412,8 @@ namespace NzbDrone.Core.Indexers
 
         protected async Task<HttpResponse> ExecuteAuth(HttpRequest request)
         {
+            request.Encoding = Encoding;
+
             var response = await _httpClient.ExecuteAsync(request);
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));

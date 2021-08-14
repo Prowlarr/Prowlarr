@@ -74,8 +74,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var authLoginRequest = requestBuilder.Build();
 
-            authLoginRequest.Encoding = Encoding;
-
             var response = await ExecuteAuth(authLoginRequest);
 
             if (!response.Content.Contains("id=\"logged-in-username\""))

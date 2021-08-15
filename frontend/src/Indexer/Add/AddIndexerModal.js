@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Modal from 'Components/Modal/Modal';
-import AddIndexerModalContentConnector from './AddIndexerModalContentConnector';
+import AddIndexerModalContent from './AddIndexerModalContent';
 import styles from './AddIndexerModal.css';
 
 function AddIndexerModal({ isOpen, onModalClose, ...otherProps }) {
@@ -11,7 +11,7 @@ function AddIndexerModal({ isOpen, onModalClose, ...otherProps }) {
       onModalClose={onModalClose}
       className={styles.modal}
     >
-      <AddIndexerModalContentConnector
+      <AddIndexerModalContent
         {...otherProps}
         onModalClose={onModalClose}
       />

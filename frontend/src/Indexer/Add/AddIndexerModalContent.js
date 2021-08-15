@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Alert from 'Components/Alert';
 import TextInput from 'Components/Form/TextInput';
 import Button from 'Components/Link/Button';
@@ -44,125 +44,112 @@ const columns = [
   }
 ];
 
-class AddIndexerModalContent extends Component {
-
+function AddIndexerModalContent({
+  indexers,
+  onIndexerSelect,
+  sortKey,
+  sortDirection,
+  isFetching,
+  isPopulated,
+  error,
+  onSortPress,
+  onModalClose
+}) {
   //
   // Lifecycle
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      filter: ''
-    };
-  }
+  const [filter, setFilter] = useState('');
 
   //
   // Listeners
 
-  onFilterChange = ({ value }) => {
-    this.setState({ filter: value });
+  function onFilterChange({ value }) {
+    setFilter(value);
   }
 
   //
   // Render
 
-  render() {
-    const {
-      indexers,
-      onIndexerSelect,
-      sortKey,
-      sortDirection,
-      isFetching,
-      isPopulated,
-      error,
-      onSortPress,
-      onModalClose
-    } = this.props;
+  const filterLower = filter.toLowerCase();
 
-    const filter = this.state.filter;
-    const filterLower = filter.toLowerCase();
+  const errorMessage = getErrorMessage(error, 'Unable to load indexers');
 
-    const errorMessage = getErrorMessage(error, 'Unable to load indexers');
+  return (
+    <ModalContent onModalClose={onModalClose}>
+      <ModalHeader>
+        Add Indexer
+      </ModalHeader>
 
-    return (
-      <ModalContent onModalClose={onModalClose}>
-        <ModalHeader>
-          Add Indexer
-        </ModalHeader>
+      <ModalBody
+        className={styles.modalBody}
+        scrollDirection={scrollDirections.NONE}
+      >
+        <TextInput
+          className={styles.filterInput}
+          placeholder={translate('FilterPlaceHolder')}
+          name="filter"
+          value={filter}
+          autoFocus
+          onChange={onFilterChange}
+        />
 
-        <ModalBody
-          className={styles.modalBody}
-          scrollDirection={scrollDirections.NONE}
+        <Alert
+          kind={kinds.INFO}
+          className={styles.alert}
         >
-          <TextInput
-            className={styles.filterInput}
-            placeholder={translate('FilterPlaceHolder')}
-            name="filter"
-            value={filter}
-            autoFocus={true}
-            onChange={this.onFilterChange}
-          />
+          <div>
+            {translate('ProwlarrSupportsAnyIndexer')}
+          </div>
+        </Alert>
 
-          <Alert
-            kind={kinds.INFO}
-            className={styles.alert}
-          >
-            <div>
-              {translate('ProwlarrSupportsAnyIndexer')}
-            </div>
-          </Alert>
+        <Scroller
+          className={styles.scroller}
+          autoFocus={false}
+        >
+          {
+            isFetching ? <LoadingIndicator /> : null
+          }
+          {
+            error ? <div>{errorMessage}</div> : null
+          }
+          {
+            isPopulated && !!indexers.length ?
+              <Table
+                columns={columns}
+                sortKey={sortKey}
+                sortDirection={sortDirection}
+                onSortPress={onSortPress}
+              >
+                <TableBody>
+                  {
+                    indexers.map((indexer) => {
+                      return indexer.name.toLowerCase().includes(filterLower) ?
+                        (
+                          <SelectIndexerRow
+                            key={indexer.name}
+                            implementation={indexer.implementation}
+                            {...indexer}
+                            onIndexerSelect={onIndexerSelect}
+                          />
+                        ) :
+                        null;
+                    })
+                  }
+                </TableBody>
+              </Table> :
+              null
+          }
+        </Scroller>
+      </ModalBody>
 
-          <Scroller
-            className={styles.scroller}
-            autoFocus={false}
-          >
-            {
-              isFetching ? <LoadingIndicator /> : null
-            }
-            {
-              error ? <div>{errorMessage}</div> : null
-            }
-            {
-              isPopulated && !!indexers.length ?
-                <Table
-                  columns={columns}
-                  sortKey={sortKey}
-                  sortDirection={sortDirection}
-                  onSortPress={onSortPress}
-                >
-                  <TableBody>
-                    {
-                      indexers.map((indexer) => {
-                        return indexer.name.toLowerCase().includes(filterLower) ?
-                          (
-                            <SelectIndexerRow
-                              key={indexer.name}
-                              implementation={indexer.implementation}
-                              {...indexer}
-                              onIndexerSelect={onIndexerSelect}
-                            />
-                          ) :
-                          null;
-                      })
-                    }
-                  </TableBody>
-                </Table> :
-                null
-            }
-          </Scroller>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button
-            onPress={onModalClose}
-          >
-            {translate('Close')}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    );
-  }
+      <ModalFooter>
+        <Button
+          onPress={onModalClose}
+        >
+          {translate('Close')}
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  );
 }
 
 AddIndexerModalContent.propTypes = {

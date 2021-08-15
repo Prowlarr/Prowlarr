@@ -28,7 +28,7 @@ class AddIndexerProxyModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Add IndexerProxy
+          {translate('AddIndexerProxy')}
         </ModalHeader>
 
         <ModalBody>

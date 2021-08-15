@@ -24,11 +24,11 @@ namespace NzbDrone.Core.IndexerProxies.Socks5
         {
             if (Settings.Username.IsNotNullOrWhiteSpace() && Settings.Password.IsNotNullOrWhiteSpace())
             {
-                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Five), false);
+                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Five, Settings.Username, Settings.Password), false);
             }
             else
             {
-                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Five, Settings.Username, Settings.Password), false);
+                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Five), false);
             }
 
             _logger.Debug("Applying Socks5 Proxy {0} to request {1}", Name, request.Url);

@@ -40,19 +40,19 @@ namespace NzbDrone.Core.IndexerProxies
 
             try
             {
-                var response = _httpClient.Execute(request);
+                var response = PostResponse(_httpClient.Execute(request));
 
                 // We only care about 400 responses, other error codes can be ignored
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     _logger.Error("Proxy Health Check failed: {0}", response.StatusCode);
-                    failures.Add(new NzbDroneValidationFailure("Host", "ProxyCheckBadRequestMessage"));
+                    failures.Add(new NzbDroneValidationFailure("Host", string.Format("Failed to test proxy. StatusCode: {0}", response.StatusCode)));
                 }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Proxy Health Check failed");
-                failures.Add(new NzbDroneValidationFailure("Host", "ProxyCheckFailedToTestMessage"));
+                failures.Add(new NzbDroneValidationFailure("Host", string.Format("Failed to test proxy: {0}", request.Url)));
             }
 
             return new ValidationResult(failures);

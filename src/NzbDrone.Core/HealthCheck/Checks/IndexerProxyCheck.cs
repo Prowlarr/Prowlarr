@@ -7,9 +7,13 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerProxies;
 using NzbDrone.Core.Localization;
+using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.HealthCheck.Checks
 {
+    [CheckOn(typeof(ProviderDeletedEvent<IIndexerProxy>))]
+    [CheckOn(typeof(ProviderAddedEvent<IIndexerProxy>))]
+    [CheckOn(typeof(ProviderUpdatedEvent<IIndexerProxy>))]
     public class IndexerProxyCheck : HealthCheckBase
     {
         private readonly Logger _logger;
@@ -37,7 +41,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             var badProxies = enabledProviders.Where(p => !IsProxyWorking(p)).ToList();
 
-            if (enabledProviders.Empty())
+            if (enabledProviders.Empty() || badProxies.Count == 0)
             {
                 return new HealthCheck(GetType());
             }

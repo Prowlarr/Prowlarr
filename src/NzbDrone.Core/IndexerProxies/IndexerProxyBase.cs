@@ -36,17 +36,5 @@ namespace NzbDrone.Core.IndexerProxies
         {
             return null;
         }
-
-        private bool HasConcreteImplementation(string methodName)
-        {
-            var method = GetType().GetMethod(methodName);
-
-            if (method == null)
-            {
-                throw new MissingMethodException(GetType().Name, Name);
-            }
-
-            return !method.DeclaringType.IsAbstract;
-        }
     }
 }

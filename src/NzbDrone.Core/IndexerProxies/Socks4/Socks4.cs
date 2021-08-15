@@ -23,11 +23,11 @@ namespace NzbDrone.Core.IndexerProxies.Socks4
         {
             if (Settings.Username.IsNotNullOrWhiteSpace() && Settings.Password.IsNotNullOrWhiteSpace())
             {
-                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Four), false);
+                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Four, Settings.Username, Settings.Password), false);
             }
             else
             {
-                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Four, Settings.Username, Settings.Password), false);
+                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Four), false);
             }
 
             _logger.Debug("Applying Socks4 Proxy {0} to request {1}", Name, request.Url);

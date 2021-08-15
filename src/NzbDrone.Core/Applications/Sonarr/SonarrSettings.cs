@@ -23,10 +23,12 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             ProwlarrUrl = "http://localhost:9696";
             BaseUrl = "http://localhost:8989";
-            SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050, 5070 };
+            SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050 };
+            AnimeSyncCategories = new[] { 5070 };
         }
 
         public IEnumerable<int> SyncCategories { get; set; }
+        public IEnumerable<int> AnimeSyncCategories { get; set; }
 
         [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Sonarr sees it, including http(s)://, port, and urlbase if needed")]
         public string ProwlarrUrl { get; set; }

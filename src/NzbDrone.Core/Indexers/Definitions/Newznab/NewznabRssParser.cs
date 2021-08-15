@@ -99,6 +99,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             releaseInfo.ImdbId = GetImdbId(item);
             releaseInfo.Grabs = GetGrabs(item);
             releaseInfo.Files = GetFiles(item);
+            releaseInfo.PosterUrl = GetPosterUrl(item);
 
             return releaseInfo;
         }
@@ -218,6 +219,11 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             return 0;
+        }
+
+        protected virtual string GetPosterUrl(XElement item)
+        {
+            return ParseUrl(TryGetNewznabAttribute(item, "coverurl"));
         }
 
         protected virtual int GetFiles(XElement item)

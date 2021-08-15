@@ -62,6 +62,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 }
 
                 torrentInfo.IndexerFlags = GetFlags(item);
+                torrentInfo.PosterUrl = GetPosterUrl(item);
             }
 
             return torrentInfo;
@@ -131,6 +132,11 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             var imdbIdString = TryGetTorznabAttribute(item, "imdbid");
             return !imdbIdString.IsNullOrWhiteSpace() ? imdbIdString.Substring(2) : null;
+        }
+
+        protected virtual string GetPosterUrl(XElement item)
+        {
+            return ParseUrl(TryGetTorznabAttribute(item, "coverurl"));
         }
 
         protected override string GetInfoHash(XElement item)

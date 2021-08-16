@@ -236,13 +236,18 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     synonyms.Add(mainTitle);
 
-                    if (group.Synonymns.StringArray != null)
+                    if (group.Synonymns != null)
                     {
-                        synonyms.AddRange(group.Synonymns.StringArray);
-                    }
-                    else
-                    {
-                        synonyms.AddRange(group.Synonymns.StringMap.Values);
+                        var syn = (Synonymns)group.Synonymns;
+
+                        if (syn.StringArray != null)
+                        {
+                            synonyms.AddRange(syn.StringArray);
+                        }
+                        else
+                        {
+                            synonyms.AddRange(syn.StringMap.Values);
+                        }
                     }
 
                     List<IndexerCategory> category = null;
@@ -565,7 +570,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [JsonProperty("Synonymns")]
         [JsonConverter(typeof(SynonymnsConverter))]
-        public Synonymns Synonymns { get; set; }
+        public Synonymns? Synonymns { get; set; }
 
         [JsonProperty("Snatched")]
         public long Snatched { get; set; }
@@ -575,7 +580,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [JsonProperty("Links")]
         [JsonConverter(typeof(LinksUnionConverter))]
-        public LinksUnion Links { get; set; }
+        public LinksUnion? Links { get; set; }
 
         [JsonProperty("Votes")]
         public long Votes { get; set; }
@@ -711,6 +716,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<List<object>>(reader);
                     return new LinksUnion { AnythingArray = arrayValue };
+                case JsonToken.Null:
+                    return null;
             }
 
             throw new Exception("Cannot unmarshal type LinksUnion");
@@ -725,12 +732,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return;
             }
 
-            if (value.LinksClass == null)
+            if (value.LinksClass != null)
             {
-                throw new Exception("Cannot marshal type LinksUnion");
+                serializer.Serialize(writer, value.LinksClass);
             }
 
-            serializer.Serialize(writer, value.LinksClass);
+            serializer.Serialize(writer, null);
         }
 
         public static readonly LinksUnionConverter Singleton = new LinksUnionConverter();
@@ -785,6 +792,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<List<string>>(reader);
                     return new Synonymns { StringArray = arrayValue };
+                case JsonToken.Null:
+                    return null;
             }
 
             throw new Exception("Cannot unmarshal type Synonymns");
@@ -799,12 +808,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return;
             }
 
-            if (value.StringMap == null)
+            if (value.StringMap != null)
             {
-                throw new Exception("Cannot marshal type Synonymns");
+                serializer.Serialize(writer, value.StringMap);
             }
 
-            serializer.Serialize(writer, value.StringMap);
+            serializer.Serialize(writer, null);
         }
 
         public static readonly SynonymnsConverter Singleton = new SynonymnsConverter();

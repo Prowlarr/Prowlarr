@@ -27,7 +27,7 @@ class SearchFooter extends Component {
 
     this.state = {
       searchingReleases: false,
-      searchQuery: defaultSearchQuery,
+      searchQuery: defaultSearchQuery || '',
       searchIndexerIds: defaultIndexerIds,
       searchCategories: defaultCategories
     };
@@ -52,14 +52,12 @@ class SearchFooter extends Component {
       isFetching,
       defaultIndexerIds,
       defaultCategories,
-      defaultSearchQuery,
       searchError
     } = this.props;
 
     const {
       searchIndexerIds,
-      searchCategories,
-      searchQuery
+      searchCategories
     } = this.state;
 
     const newState = {};
@@ -70,10 +68,6 @@ class SearchFooter extends Component {
 
     if (searchCategories !== defaultCategories) {
       newState.searchCategories = defaultCategories;
-    }
-
-    if (searchQuery !== defaultSearchQuery) {
-      newState.searchQuery = defaultSearchQuery;
     }
 
     if (prevProps.isFetching && !isFetching && !searchError) {
@@ -90,6 +84,10 @@ class SearchFooter extends Component {
 
   onSearchPress = () => {
     this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories);
+  }
+
+  onSearchInputChange = ({ value }) => {
+    this.setState({ searchQuery: value });
   }
 
   //
@@ -121,7 +119,7 @@ class SearchFooter extends Component {
             autoFocus={true}
             value={searchQuery}
             isDisabled={isFetching}
-            onChange={onInputChange}
+            onChange={this.onSearchInputChange}
           />
         </div>
 

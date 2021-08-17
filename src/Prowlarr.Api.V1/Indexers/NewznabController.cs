@@ -72,7 +72,26 @@ namespace NzbDrone.Api.V1.Indexers
                 switch (requestType)
                 {
                     case "caps":
-                        var caps = new IndexerCapabilities();
+                        var caps = new IndexerCapabilities
+                        {
+                            TvSearchParams = new List<TvSearchParam>
+                                   {
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                                   },
+                            MovieSearchParams = new List<MovieSearchParam>
+                                   {
+                                       MovieSearchParam.Q
+                                   },
+                            MusicSearchParams = new List<MusicSearchParam>
+                                   {
+                                       MusicSearchParam.Q
+                                   },
+                            BookSearchParams = new List<BookSearchParam>
+                                   {
+                                       BookSearchParam.Q
+                                   }
+                        };
+
                         foreach (var cat in NewznabStandardCategory.AllCats)
                         {
                             caps.Categories.AddCategoryMapping(1, cat);

@@ -425,5 +425,17 @@
     "AddRemoveOnly": "Adicionar e remover apenas",
     "AddDownloadClientToProwlarr": "Adicionar um cliente de download possibilita que o Prowlarr envie lançamentos diretamente da interface ao executar uma pesquisa manual.",
     "Add": "Adicionar",
-    "NoSearchResultsFound": "Nenhum resultado encontrado, tente fazer uma nova busca abaixo."
+    "NoSearchResultsFound": "Nenhum resultado encontrado, tente fazer uma nova busca abaixo.",
+    "AppSettingsSummary": "Aplicativos e configurações para configurar como Prowlarr interage com seus programas PVR",
+    "DeleteIndexerProxy": "Apagar Proxy do Indexador",
+    "DeleteIndexerProxyMessageText": "Tem certeza que deseja apagar o proxy '{0}'?",
+    "AddIndexerProxy": "Adicionar Proxy ao Indexador",
+    "IndexerProxies": "Proxies do Indexador",
+    "IndexerSettingsSummary": "Defina várias configurações globais do Indexador, incluindo Proxies.",
+    "IndexerProxyStatusCheckAllClientMessage": "Todos os proxies estão indisponíveis devido a falhas",
+    "IndexerProxyStatusCheckSingleClientMessage": "Proxies indisponíveis devido a falhas: {0}",
+    "IndexerTagsHelpText": "Use etiquetas para especificar clientes padrão, especificar proxies indexadores ou apenas para organizar seus indexadores.",
+    "Notifications": "Notificações",
+    "UnableToAddANewIndexerProxyPleaseTryAgain": "Não foi possível adicionar um novo proxy indexador, tente novamente.",
+    "UnableToLoadIndexerProxies": "Incapaz de carregar proxies indexadores"
 }

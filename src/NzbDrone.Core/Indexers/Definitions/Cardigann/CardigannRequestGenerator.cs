@@ -731,9 +731,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     method = HttpMethod.POST;
                 }
 
-                if (download.Selector != null)
+                if (download.Selectors != null)
                 {
-                    var selector = ApplyGoTemplateText(download.Selector, variables);
                     var headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
 
                     var request = new HttpRequestBuilder(link.ToString())
@@ -746,34 +745,50 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var response = await HttpClient.ExecuteAsync(request, Definition);
 
                     var results = response.Content;
+
                     var searchResultParser = new HtmlParser();
                     var searchResultDocument = searchResultParser.ParseDocument(results);
-                    var downloadElement = searchResultDocument.QuerySelector(selector);
-                    if (downloadElement != null)
-                    {
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): Download selector {1} matched:{2}", _definition.Id, selector, downloadElement.ToHtmlPretty()));
 
-                        var href = "";
-                        if (download.Attribute != null)
+                    foreach (var selector in download.Selectors)
+                    {
+                        var queryselector = ApplyGoTemplateText(selector.Selector, variables);
+
+                        try
                         {
-                            href = downloadElement.GetAttribute(download.Attribute);
-                            if (href == null)
+                            var downloadElement = searchResultDocument.QuerySelector(queryselector);
+                            if (downloadElement != null)
                             {
-                                throw new Exception(string.Format("Attribute \"{0}\" is not set for element {1}", download.Attribute, downloadElement.ToHtmlPretty()));
+                                _logger.Debug(string.Format("CardigannIndexer ({0}): Download selector {1} matched:{2}", _definition.Id, queryselector, downloadElement.ToHtmlPretty()));
+
+                                var href = "";
+                                if (selector.Attribute != null)
+                                {
+                                    href = downloadElement.GetAttribute(selector.Attribute);
+                                    if (href == null)
+                                    {
+                                        throw new Exception(string.Format("Attribute \"{0}\" is not set for element {1}", selector.Attribute, downloadElement.ToHtmlPretty()));
+                                    }
+                                }
+                                else
+                                {
+                                    href = downloadElement.TextContent;
+                                }
+
+                                href = ApplyFilters(href, selector.Filters, variables);
+                                link = ResolvePath(href, link);
+                                break;
+                            }
+                            else
+                            {
+                                _logger.Error(string.Format("CardigannIndexer ({0}): Download selector {1} didn't match:\n{2}", _definition.Id, queryselector, results));
+                                continue;
                             }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            href = downloadElement.TextContent;
+                            _logger.Error(string.Format("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", e, _definition.Id, queryselector));
+                            throw new Exception(string.Format("An exception occurred while trying selector {0}", queryselector));
                         }
-
-                        href = ApplyFilters(href, download.Filters, variables);
-                        link = ResolvePath(href, link);
-                    }
-                    else
-                    {
-                        _logger.Error(string.Format("CardigannIndexer ({0}): Download selector {1} didn't match:\n{2}", _definition.Id, download.Selector, results));
-                        throw new Exception(string.Format("Download selector {0} didn't match", download.Selector));
                     }
                 }
             }

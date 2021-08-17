@@ -24,7 +24,9 @@ namespace NzbDrone.Core.IndexerVersions
 
     public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
     {
-        private const int DEFINITION_VERSION = 1;
+        /* Update Service will fall back if version # does not exist for an indexer  per Ta */
+
+        private const int DEFINITION_VERSION = 2;
         private readonly List<string> _defintionBlocklist = new List<string>()
         {
             "aither",

@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Applications.Mylar
             {
                 Name = originalName ?? $"{indexer.Name} (Prowlarr)",
                 Altername = $"{indexer.Name} (Prowlarr)",
-                Host = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}",
+                Host = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/api",
                 Apikey = _configFileProvider.ApiKey,
                 Categories = string.Join(",", indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),
                 Enabled = indexer.Enable,

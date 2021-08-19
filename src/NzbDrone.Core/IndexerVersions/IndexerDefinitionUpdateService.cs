@@ -19,13 +19,13 @@ namespace NzbDrone.Core.IndexerVersions
     {
         List<CardigannMetaDefinition> All();
         CardigannDefinition GetDefinition(string fileKey);
-        List<string> GetBlacklist();
+        List<string> GetBlocklist();
     }
 
     public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
     {
         private const int DEFINITION_VERSION = 1;
-        private readonly List<string> _defintionBlacklist = new List<string>()
+        private readonly List<string> _defintionBlocklist = new List<string>()
         {
             "aither",
             "animeworld",
@@ -69,7 +69,7 @@ namespace NzbDrone.Core.IndexerVersions
             {
                 var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
                 var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
-                indexerList = response.Resource.Where(i => !_defintionBlacklist.Contains(i.File)).ToList();
+                indexerList = response.Resource.Where(i => !_defintionBlocklist.Contains(i.File)).ToList();
 
                 var definitionFolder = Path.Combine(_appFolderInfo.AppDataFolder, "Definitions", "Custom");
 
@@ -125,9 +125,9 @@ namespace NzbDrone.Core.IndexerVersions
             return definition;
         }
 
-        public List<string> GetBlacklist()
+        public List<string> GetBlocklist()
         {
-            return _defintionBlacklist;
+            return _defintionBlocklist;
         }
 
         private CardigannDefinition GetHttpDefinition(string id)

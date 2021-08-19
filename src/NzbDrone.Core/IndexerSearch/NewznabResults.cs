@@ -80,6 +80,7 @@ namespace NzbDrone.Core.IndexerSearch
                             r.InfoUrl == null ? null : new XElement("comments", r.InfoUrl),
                             r.PublishDate == DateTime.MinValue ? new XElement("pubDate", XmlDateFormat(DateTime.Now)) : new XElement("pubDate", XmlDateFormat(r.PublishDate)),
                             new XElement("size", r.Size),
+                            new XElement("link", r.DownloadUrl ?? t.MagnetUrl ?? string.Empty),
                             r.Categories == null ? null : from c in r.Categories select new XElement("category", c.Id),
                             new XElement(
                                 "enclosure",

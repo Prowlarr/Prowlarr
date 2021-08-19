@@ -25,9 +25,9 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            var blacklist = _indexerDefinitionUpdateService.GetBlacklist();
+            var blocklist = _indexerDefinitionUpdateService.GetBlocklist();
 
-            var oldIndexers = _indexerFactory.All().Where(i => i.Implementation == "Cardigann" && blacklist.Contains(((CardigannSettings)i.Settings).DefinitionFile)).ToList();
+            var oldIndexers = _indexerFactory.All().Where(i => i.Implementation == "Cardigann" && blocklist.Contains(((CardigannSettings)i.Settings).DefinitionFile)).ToList();
 
             if (oldIndexers.Count == 0)
             {

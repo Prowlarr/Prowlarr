@@ -46,6 +46,26 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new BakaBTParser(Settings, Capabilities.Categories);
         }
 
+        public override async Task<byte[]> Download(Uri link)
+        {
+            var request = new HttpRequestBuilder(link.ToString())
+                        .SetCookies(GetCookies() ?? new Dictionary<string, string>())
+                        .Build();
+
+            var response = await _httpClient.ExecuteAsync(request, Definition);
+
+            var parser = new HtmlParser();
+            var dom = parser.ParseDocument(response.Content);
+            var downloadLink = dom.QuerySelectorAll(".download_link").First().GetAttribute("href");
+
+            if (string.IsNullOrWhiteSpace(downloadLink))
+            {
+                throw new Exception("Unable to find download link.");
+            }
+
+            return await base.Download(new Uri(Settings.BaseUrl + downloadLink));
+        }
+
         protected override async Task DoLogin()
         {
             UpdateCookies(null, null);

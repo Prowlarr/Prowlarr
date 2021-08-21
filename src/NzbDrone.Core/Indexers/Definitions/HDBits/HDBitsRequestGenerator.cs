@@ -78,18 +78,17 @@ namespace NzbDrone.Core.Indexers.HDBits
         {
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
+            var tvdbId = searchCriteria.TvdbId.GetValueOrDefault(0);
 
             if (searchCriteria.Categories?.Length > 0)
             {
                 query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
             }
 
-            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            if (tvdbId == 0 && searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
                 query.Search = searchCriteria.SanitizedTvSearchString;
             }
-
-            var tvdbId = searchCriteria.TvdbId;
 
             if (tvdbId != 0)
             {

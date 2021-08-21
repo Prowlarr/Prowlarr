@@ -368,7 +368,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie - Both the UID and Pass are required.")]
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Enter the cookie for the site. Example: `cf_clearance=0f7e7f10c62fd069323da10dcad545b828a44b6-1622730685-9-100; uid=123456789; pass=passhashwillbehere`", HelpLink = "https://wiki.servarr.com/prowlarr/faq#finding-cookies")]
         public string Cookie { get; set; }
 
         [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]

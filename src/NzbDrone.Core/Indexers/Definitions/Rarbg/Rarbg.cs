@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -165,6 +166,15 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 return new
                 {
                     captchaToken = cfClearanceCookie
+                };
+            }
+            else if (action == "getUrls")
+            {
+                var links = IndexerUrls;
+
+                return new
+                {
+                    options = links.Select(d => new { Value = d, Name = d })
                 };
             }
 

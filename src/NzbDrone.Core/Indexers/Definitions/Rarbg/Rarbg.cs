@@ -167,6 +167,15 @@ namespace NzbDrone.Core.Indexers.Rarbg
                     captchaToken = cfClearanceCookie
                 };
             }
+            else if (action == "getUrls")
+            {
+                var links = IndexerUrls;
+
+                return new
+                {
+                    options = links.Select(d => new { Value = d, Name = d })
+                };
+            }
 
             return new { };
         }

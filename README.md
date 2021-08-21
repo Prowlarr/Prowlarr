@@ -13,11 +13,12 @@ Prowlarr is a indexer manager/proxy built on the popular arr .net/reactjs base s
 - Usenet support for 24 indexers natively, including Headphones VIP, and support for any Newznab compatible indexer via "Generic Newznab"
 - Torrent support for over 500 trackers with more added all the time
 - Torrent support for any Torznab compatible tracker via "Generic Torznab"
-- Indexer Sync to Sonarr/Radarr/Readarr/Lidarr, so no manual configuration of the other applications are required
-- Indexer History and Statistics
-- Manual Searching of Trackers & Indexers at a category level
+- Indexer Sync to Sonarr/Radarr/Readarr/Lidarr/Mylar3, so no manual configuration of the other applications are required
+- Indexer history and statistics
+- Manual searching of Trackers & Indexers at a category level
 - Support for pushing releases directly to your download clients from Prowlarr
 - Indexer health and status notifications
+- Per Indexer proxy support (SOCKS4, SOCKS5, HTTP, Flaresolverr)
 
 ## Support
 Note: Prowlarr is currently early in life, thus bugs should be expected

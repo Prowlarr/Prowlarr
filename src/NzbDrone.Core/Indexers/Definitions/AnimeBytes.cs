@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
@@ -33,7 +34,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public AnimeBytes(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public AnimeBytes(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -114,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "username", Settings.Username },
                 { "torrent_pass", Settings.Passkey },
                 { "type", searchType },
-                { "searchstr", term }
+                { "searchstr", StripEpisodeNumber(term) }
             };
 
             var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
@@ -181,6 +182,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private string StripEpisodeNumber(string term)
+        {
+            // Tracer does not support searching with episode number so strip it if we have one
+            term = Regex.Replace(term, @"\W(\dx)?\d?\d$", string.Empty);
+            term = Regex.Replace(term, @"\W(S\d\d?E)?\d?\d$", string.Empty);
+            term = Regex.Replace(term, @"\W\d+$", string.Empty);
+            return term;
+        }
     }
 
     public class AnimeBytesParser : IParseIndexerResponse
@@ -208,29 +218,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
             }
 
-            //TODO: Create API Resource Type
-            var json = JsonConvert.DeserializeObject<dynamic>(indexerResponse.Content);
+            var response = JsonConvert.DeserializeObject<AnimeBytesResponse>(indexerResponse.Content);
 
-            if (json["error"] != null)
+            if (response.Matches > 0)
             {
-                throw new Exception(json["error"].ToString());
-            }
-
-            var matches = (long)json["Matches"];
-
-            if (matches > 0)
-            {
-                var groups = (JArray)json.Groups;
-
-                foreach (var group in groups)
+                foreach (var group in response.Groups)
                 {
                     var synonyms = new List<string>();
-                    var posterStr = (string)group["Image"];
-                    var poster = string.IsNullOrWhiteSpace(posterStr) ? null : new Uri(posterStr);
-                    var year = (int)group["Year"];
-                    var groupName = (string)group["GroupName"];
-                    var seriesName = (string)group["SeriesName"];
-                    var mainTitle = WebUtility.HtmlDecode((string)group["FullName"]);
+                    var year = group.Year;
+                    var groupName = group.GroupName;
+                    var seriesName = group.SeriesName;
+                    var mainTitle = WebUtility.HtmlDecode(group.FullName);
                     if (seriesName != null)
                     {
                         mainTitle = seriesName;
@@ -238,105 +236,116 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     synonyms.Add(mainTitle);
 
-                    // TODO: Do we need all these options?
-                    //if (group["Synonymns"].HasValues)
-                    //{
-                    //    if (group["Synonymns"] is JArray)
-                    //    {
-                    //        var allSyonyms = group["Synonymns"].ToObject<List<string>>();
-
-                    //        if (AddJapaneseTitle && allSyonyms.Count >= 1)
-                    //            synonyms.Add(allSyonyms[0]);
-                    //        if (AddRomajiTitle && allSyonyms.Count >= 2)
-                    //            synonyms.Add(allSyonyms[1]);
-                    //        if (AddAlternativeTitles && allSyonyms.Count >= 3)
-                    //            synonyms.AddRange(allSyonyms[2].Split(',').Select(t => t.Trim()));
-                    //    }
-                    //    else
-                    //    {
-                    //        var allSynonyms = group["Synonymns"].ToObject<Dictionary<int, string>>();
-
-                    //        if (AddJapaneseTitle && allSynonyms.ContainsKey(0))
-                    //            synonyms.Add(allSynonyms[0]);
-                    //        if (AddRomajiTitle && allSynonyms.ContainsKey(1))
-                    //            synonyms.Add(allSynonyms[1]);
-                    //        if (AddAlternativeTitles && allSynonyms.ContainsKey(2))
-                    //        {
-                    //            synonyms.AddRange(allSynonyms[2].Split(',').Select(t => t.Trim()));
-                    //        }
-                    //    }
-                    //}
-                    List<IndexerCategory> category = null;
-                    var categoryName = (string)group["CategoryName"];
-
-                    var description = (string)group["Description"];
-
-                    foreach (var torrent in group["Torrents"])
+                    if (group.Synonymns != null)
                     {
-                        var releaseInfo = "S01";
-                        string episode = null;
+                        var syn = (Synonymns)group.Synonymns;
+
+                        if (syn.StringArray != null)
+                        {
+                            synonyms.AddRange(syn.StringArray);
+                        }
+                        else
+                        {
+                            synonyms.AddRange(syn.StringMap.Values);
+                        }
+                    }
+
+                    List<IndexerCategory> category = null;
+                    var categoryName = group.CategoryName;
+
+                    var description = group.Description;
+
+                    foreach (var torrent in group.Torrents)
+                    {
+                        var releaseInfo = _settings.EnableSonarrCompatibility ? "S01" : "";
+                        int? episode = null;
                         int? season = null;
-                        var editionTitle = (string)torrent["EditionData"]["EditionTitle"];
+                        var editionTitle = torrent.EditionData.EditionTitle;
                         if (!string.IsNullOrWhiteSpace(editionTitle))
                         {
                             releaseInfo = WebUtility.HtmlDecode(editionTitle);
+
+                            if (_settings.EnableSonarrCompatibility)
+                            {
+                                var simpleSeasonRegEx = new Regex(@"Season (\d+)", RegexOptions.Compiled);
+                                var simpleSeasonRegExMatch = simpleSeasonRegEx.Match(releaseInfo);
+                                if (simpleSeasonRegExMatch.Success)
+                                {
+                                    season = ParseUtil.CoerceInt(simpleSeasonRegExMatch.Groups[1].Value);
+                                }
+                            }
+
+                            var episodeRegEx = new Regex(@"Episode (\d+)", RegexOptions.Compiled);
+                            var episodeRegExMatch = episodeRegEx.Match(releaseInfo);
+                            if (episodeRegExMatch.Success)
+                            {
+                                episode = ParseUtil.CoerceInt(episodeRegExMatch.Groups[1].Value);
+                            }
                         }
 
-                        var seasonRegEx = new Regex(@"Season (\d+)", RegexOptions.Compiled);
-                        var seasonRegExMatch = seasonRegEx.Match(releaseInfo);
-                        if (seasonRegExMatch.Success)
+                        if (_settings.EnableSonarrCompatibility)
                         {
-                            season = ParseUtil.CoerceInt(seasonRegExMatch.Groups[1].Value);
+                            var advancedSeasonRegEx = new Regex(@"(\d+)(st|nd|rd|th) Season", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                            var advancedSeasonRegExMatch = advancedSeasonRegEx.Match(mainTitle);
+                            if (advancedSeasonRegExMatch.Success)
+                            {
+                                season = ParseUtil.CoerceInt(advancedSeasonRegExMatch.Groups[1].Value);
+                            }
+
+                            var seasonCharactersRegEx = new Regex(@"(I{2,})$", RegexOptions.Compiled);
+                            var seasonCharactersRegExMatch = seasonCharactersRegEx.Match(mainTitle);
+                            if (seasonCharactersRegExMatch.Success)
+                            {
+                                season = seasonCharactersRegExMatch.Groups[1].Value.Length;
+                            }
+
+                            var seasonNumberRegEx = new Regex(@"([2-9])$", RegexOptions.Compiled);
+                            var seasonNumberRegExMatch = seasonNumberRegEx.Match(mainTitle);
+                            if (seasonNumberRegExMatch.Success)
+                            {
+                                season = ParseUtil.CoerceInt(seasonNumberRegExMatch.Groups[1].Value);
+                            }
                         }
 
-                        var episodeRegEx = new Regex(@"Episode (\d+)", RegexOptions.Compiled);
-                        var episodeRegExMatch = episodeRegEx.Match(releaseInfo);
-                        if (episodeRegExMatch.Success)
+                        if (episode != null)
                         {
-                            episode = episodeRegExMatch.Groups[1].Value;
+                            releaseInfo = episode is > 0 and < 10
+                                ? "0" + episode
+                                : episode.ToString();
+                        }
+                        else
+                        {
+                            if (season != null && _settings.EnableSonarrCompatibility)
+                            {
+                                releaseInfo = $"S{season}";
+                            }
                         }
 
-                        releaseInfo = releaseInfo.Replace("Episode ", "");
-                        releaseInfo = releaseInfo.Replace("Season ", "S");
                         releaseInfo = releaseInfo.Trim();
 
-                        //if (PadEpisode && int.TryParse(releaseInfo, out _) && releaseInfo.Length == 1)
-                        //{
-                        //    releaseInfo = "0" + releaseInfo;
-                        //}
-
-                        //if (FilterSeasonEpisode)
-                        //{
-                        //    if (query.Season != 0 && season != null && season != query.Season) // skip if season doesn't match
-                        //        continue;
-                        //    if (query.Episode != null && episode != null && episode != query.Episode) // skip if episode doesn't match
-                        //        continue;
-                        //}
-                        var torrentId = (long)torrent["ID"];
-                        var property = ((string)torrent["Property"]).Replace(" | Freeleech", "");
-                        var link = (string)torrent["Link"];
-                        var linkUri = new Uri(link);
-                        var uploadTimeString = (string)torrent["UploadTime"];
-                        var uploadTime = DateTime.ParseExact(uploadTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                        var publishDate = DateTime.SpecifyKind(uploadTime, DateTimeKind.Utc).ToLocalTime();
+                        var torrentId = torrent.Id;
+                        var property = torrent.Property.Replace(" | Freeleech", string.Empty);
+                        var link = torrent.Link;
+                        var uploadTime = torrent.UploadTime;
+                        var publishDate = DateTime.SpecifyKind(uploadTime.DateTime, DateTimeKind.Utc).ToLocalTime();
                         var details = new Uri(_settings.BaseUrl + "torrent/" + torrentId + "/group");
-                        var size = (long)torrent["Size"];
-                        var snatched = (int)torrent["Snatched"];
-                        var seeders = (int)torrent["Seeders"];
-                        var leechers = (int)torrent["Leechers"];
-                        var fileCount = (int)torrent["FileCount"];
+                        var size = torrent.Size;
+                        var snatched = torrent.Snatched;
+                        var seeders = torrent.Seeders;
+                        var leechers = torrent.Leechers;
+                        var fileCount = torrent.FileCount;
                         var peers = seeders + leechers;
 
-                        var rawDownMultiplier = (int?)torrent["RawDownMultiplier"] ?? 0;
-                        var rawUpMultiplier = (int?)torrent["RawUpMultiplier"] ?? 0;
+                        var rawDownMultiplier = torrent.RawDownMultiplier;
+                        var rawUpMultiplier = torrent.RawUpMultiplier;
 
+                        // Ignore these categories as they'll cause hell with the matcher
+                        // TV Special, ONA, DVD Special, BD Special
                         if (groupName == "TV Series" || groupName == "OVA")
                         {
                             category = new List<IndexerCategory> { NewznabStandardCategory.TVAnime };
                         }
 
-                        // Ignore these categories as they'll cause hell with the matcher
-                        // TV Special, OVA, ONA, DVD Special, BD Special
                         if (groupName == "Movie" || groupName == "Live Action Movie")
                         {
                             category = new List<IndexerCategory> { NewznabStandardCategory.Movies };
@@ -422,7 +431,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         //{
                         //    continue;
                         //}
-                        var infoString = releaseTags.Aggregate("", (prev, cur) => prev + "[" + cur + "]");
+                        var infoString = releaseTags.Aggregate(string.Empty, (prev, cur) => prev + "[" + cur + "]");
                         var minimumSeedTime = 259200;
 
                         //  Additional 5 hours per GB
@@ -443,7 +452,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                                 Title = releaseTitle,
                                 InfoUrl = details.AbsoluteUri,
                                 Guid = guid.AbsoluteUri,
-                                DownloadUrl = linkUri.AbsoluteUri,
+                                DownloadUrl = link.AbsoluteUri,
                                 PublishDate = publishDate,
                                 Categories = category,
                                 Description = description,
@@ -453,7 +462,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                                 Grabs = snatched,
                                 Files = fileCount,
                                 DownloadVolumeFactor = rawDownMultiplier,
-                                UploadVolumeFactor = rawUpMultiplier
+                                UploadVolumeFactor = rawUpMultiplier,
                             };
 
                             torrentInfos.Add(release);
@@ -488,6 +497,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             Passkey = "";
             Username = "";
+            EnableSonarrCompatibility = true;
         }
 
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
@@ -499,12 +509,313 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(4)]
+        [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox,  HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
+        public bool EnableSonarrCompatibility { get; set; }
+
+        [FieldDefinition(5)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    public class AnimeBytesResponse
+    {
+        [JsonProperty("Matches")]
+        public long Matches { get; set; }
+
+        [JsonProperty("Limit")]
+        public long Limit { get; set; }
+
+        [JsonProperty("Results")]
+        [JsonConverter(typeof(ParseStringConverter))]
+        public long Results { get; set; }
+
+        [JsonProperty("Groups")]
+        public Group[] Groups { get; set; }
+    }
+
+    public class Group
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("CategoryName")]
+        public string CategoryName { get; set; }
+
+        [JsonProperty("FullName")]
+        public string FullName { get; set; }
+
+        [JsonProperty("GroupName")]
+        public string GroupName { get; set; }
+
+        [JsonProperty("SeriesID")]
+        [JsonConverter(typeof(ParseStringConverter))]
+        public long SeriesId { get; set; }
+
+        [JsonProperty("SeriesName")]
+        public string SeriesName { get; set; }
+
+        [JsonProperty("Artists")]
+        public object Artists { get; set; }
+
+        [JsonProperty("Year")]
+        [JsonConverter(typeof(ParseStringConverter))]
+        public long Year { get; set; }
+
+        [JsonProperty("Image")]
+        public Uri Image { get; set; }
+
+        [JsonProperty("Synonymns")]
+        [JsonConverter(typeof(SynonymnsConverter))]
+        public Synonymns? Synonymns { get; set; }
+
+        [JsonProperty("Snatched")]
+        public long Snatched { get; set; }
+
+        [JsonProperty("Comments")]
+        public long Comments { get; set; }
+
+        [JsonProperty("Links")]
+        [JsonConverter(typeof(LinksUnionConverter))]
+        public LinksUnion? Links { get; set; }
+
+        [JsonProperty("Votes")]
+        public long Votes { get; set; }
+
+        [JsonProperty("AvgVote")]
+        public double AvgVote { get; set; }
+
+        [JsonProperty("Associations")]
+        public object Associations { get; set; }
+
+        [JsonProperty("Description")]
+        public string Description { get; set; }
+
+        [JsonProperty("DescriptionHTML")]
+        public string DescriptionHtml { get; set; }
+
+        [JsonProperty("EpCount")]
+        public long EpCount { get; set; }
+
+        [JsonProperty("StudioList")]
+        public string StudioList { get; set; }
+
+        [JsonProperty("PastWeek")]
+        public long PastWeek { get; set; }
+
+        [JsonProperty("Incomplete")]
+        public bool Incomplete { get; set; }
+
+        [JsonProperty("Ongoing")]
+        public bool Ongoing { get; set; }
+
+        [JsonProperty("Tags")]
+        public List<string> Tags { get; set; }
+
+        [JsonProperty("Torrents")]
+        public List<Torrent> Torrents { get; set; }
+    }
+
+    public class LinksClass
+    {
+        [JsonProperty("ANN", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri Ann { get; set; }
+
+        [JsonProperty("Manga-Updates", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri MangaUpdates { get; set; }
+
+        [JsonProperty("Wikipedia", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri Wikipedia { get; set; }
+
+        [JsonProperty("MAL", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri Mal { get; set; }
+
+        [JsonProperty("AniDB", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri AniDb { get; set; }
+    }
+
+    public class Torrent
+    {
+        [JsonProperty("ID")]
+        public long Id { get; set; }
+
+        [JsonProperty("EditionData")]
+        public EditionData EditionData { get; set; }
+
+        [JsonProperty("RawDownMultiplier")]
+        public double? RawDownMultiplier { get; set; }
+
+        [JsonProperty("RawUpMultiplier")]
+        public double? RawUpMultiplier { get; set; }
+
+        [JsonProperty("Link")]
+        public Uri Link { get; set; }
+
+        [JsonProperty("Property")]
+        public string Property { get; set; }
+
+        [JsonProperty("Snatched")]
+        public int Snatched { get; set; }
+
+        [JsonProperty("Seeders")]
+        public int Seeders { get; set; }
+
+        [JsonProperty("Leechers")]
+        public int Leechers { get; set; }
+
+        [JsonProperty("Size")]
+        public long Size { get; set; }
+
+        [JsonProperty("FileCount")]
+        public int FileCount { get; set; }
+
+        [JsonProperty("UploadTime")]
+        public DateTimeOffset UploadTime { get; set; }
+    }
+
+    public class EditionData
+    {
+        [JsonProperty("EditionTitle")]
+        public string EditionTitle { get; set; }
+    }
+
+    public struct LinksUnion
+    {
+        public List<object> AnythingArray;
+        public LinksClass LinksClass;
+
+        public static implicit operator LinksUnion(List<object> anythingArray) => new LinksUnion { AnythingArray = anythingArray };
+
+        public static implicit operator LinksUnion(LinksClass linksClass) => new LinksUnion { LinksClass = linksClass };
+    }
+
+    public struct Synonymns
+    {
+        public List<string> StringArray;
+        public Dictionary<string, string> StringMap;
+
+        public static implicit operator Synonymns(List<string> stringArray) => new Synonymns { StringArray = stringArray };
+
+        public static implicit operator Synonymns(Dictionary<string, string> stringMap) => new Synonymns { StringMap = stringMap };
+    }
+
+    internal class LinksUnionConverter : JsonConverter
+    {
+        public override bool CanConvert(Type t) => t == typeof(LinksUnion) || t == typeof(LinksUnion?);
+
+        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        {
+            switch (reader.TokenType)
+            {
+                case JsonToken.StartObject:
+                    var objectValue = serializer.Deserialize<LinksClass>(reader);
+                    return new LinksUnion { LinksClass = objectValue };
+                case JsonToken.StartArray:
+                    var arrayValue = serializer.Deserialize<List<object>>(reader);
+                    return new LinksUnion { AnythingArray = arrayValue };
+                case JsonToken.Null:
+                    return null;
+            }
+
+            throw new Exception("Cannot unmarshal type LinksUnion");
+        }
+
+        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        {
+            var value = (LinksUnion)untypedValue;
+            if (value.AnythingArray != null)
+            {
+                serializer.Serialize(writer, value.AnythingArray);
+                return;
+            }
+
+            if (value.LinksClass != null)
+            {
+                serializer.Serialize(writer, value.LinksClass);
+            }
+
+            serializer.Serialize(writer, null);
+        }
+
+        public static readonly LinksUnionConverter Singleton = new LinksUnionConverter();
+    }
+
+    internal class ParseStringConverter : JsonConverter
+    {
+        public override bool CanConvert(Type t) => t == typeof(long) || t == typeof(long?);
+
+        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
+
+            var value = serializer.Deserialize<string>(reader);
+            if (long.TryParse(value, out var l))
+            {
+                return l;
+            }
+
+            throw new Exception("Cannot unmarshal type long");
+        }
+
+        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        {
+            if (untypedValue == null)
+            {
+                serializer.Serialize(writer, null);
+                return;
+            }
+
+            var value = (long)untypedValue;
+            serializer.Serialize(writer, value.ToString());
+        }
+
+        public static readonly ParseStringConverter Singleton = new ParseStringConverter();
+    }
+
+    internal class SynonymnsConverter : JsonConverter
+    {
+        public override bool CanConvert(Type t) => t == typeof(Synonymns) || t == typeof(Synonymns?);
+
+        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
+        {
+            switch (reader.TokenType)
+            {
+                case JsonToken.StartObject:
+                    var objectValue = serializer.Deserialize<Dictionary<string, string>>(reader);
+                    return new Synonymns { StringMap = objectValue };
+                case JsonToken.StartArray:
+                    var arrayValue = serializer.Deserialize<List<string>>(reader);
+                    return new Synonymns { StringArray = arrayValue };
+                case JsonToken.Null:
+                    return null;
+            }
+
+            throw new Exception("Cannot unmarshal type Synonymns");
+        }
+
+        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
+        {
+            var value = (Synonymns)untypedValue;
+            if (value.StringArray != null)
+            {
+                serializer.Serialize(writer, value.StringArray);
+                return;
+            }
+
+            if (value.StringMap != null)
+            {
+                serializer.Serialize(writer, value.StringMap);
+            }
+
+            serializer.Serialize(writer, null);
+        }
+
+        public static readonly SynonymnsConverter Singleton = new SynonymnsConverter();
     }
 }

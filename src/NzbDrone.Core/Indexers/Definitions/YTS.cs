@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.5);
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public YTS(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public YTS(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -247,7 +247,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     release.InfoUrl = movie.Value<string>("url");
 
-                    //release.Poster = new Uri(movie.Value<string>("large_cover_image"));
+                    release.PosterUrl = new Uri(movie.Value<string>("large_cover_image")).AbsoluteUri;
                     release.Guid = release.DownloadUrl;
 
                     // map the quality to a newznab category for torznab compatibility (for Radarr, etc)

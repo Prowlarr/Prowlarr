@@ -45,6 +45,7 @@ function EditIndexerModalContent(props) {
     supportsRss,
     supportsRedirect,
     appProfileId,
+    tags,
     fields,
     priority
   } = item;
@@ -89,7 +90,6 @@ function EditIndexerModalContent(props) {
                   type={inputTypes.CHECK}
                   name="enable"
                   helpTextWarning={supportsRss.value ? undefined : translate('RSSIsNotSupportedWithThisIndexer')}
-                  isDisabled={!supportsRss.value}
                   {...enable}
                   onChange={onInputChange}
                 />
@@ -149,6 +149,18 @@ function EditIndexerModalContent(props) {
                   min={1}
                   max={50}
                   {...priority}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <FormLabel>{translate('Tags')}</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.TAG}
+                  name="tags"
+                  helpText="Use tags to specify default clients, specify Indexer Proxies, or just to organize your indexers."
+                  {...tags}
                   onChange={onInputChange}
                 />
               </FormGroup>

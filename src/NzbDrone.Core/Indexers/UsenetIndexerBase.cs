@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers
     {
         private readonly IValidateNzbs _nzbValidationService;
 
-        protected UsenetIndexerBase(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+        protected UsenetIndexerBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _nzbValidationService = nzbValidationService;

@@ -53,11 +53,9 @@ class Tag extends Component {
   render() {
     const {
       label,
-      delayProfileIds,
       notificationIds,
-      restrictionIds,
-      importListIds,
-      movieIds
+      indexerIds,
+      indexerProxyIds
     } = this.props;
 
     const {
@@ -66,11 +64,9 @@ class Tag extends Component {
     } = this.state;
 
     const isTagUsed = !!(
-      delayProfileIds.length ||
+      indexerIds.length ||
       notificationIds.length ||
-      restrictionIds.length ||
-      importListIds.length ||
-      movieIds.length
+      indexerProxyIds.length
     );
 
     return (
@@ -87,16 +83,9 @@ class Tag extends Component {
           isTagUsed &&
             <div>
               {
-                !!movieIds.length &&
+                !!indexerIds.length &&
                   <div>
-                    {movieIds.length} movies
-                  </div>
-              }
-
-              {
-                !!delayProfileIds.length &&
-                  <div>
-                    {delayProfileIds.length} delay profile{delayProfileIds.length > 1 && 's'}
+                    {indexerIds.length} indexer{indexerIds.length > 1 && 's'}
                   </div>
               }
 
@@ -108,16 +97,9 @@ class Tag extends Component {
               }
 
               {
-                !!restrictionIds.length &&
+                !!indexerProxyIds.length &&
                   <div>
-                    {restrictionIds.length} restriction{restrictionIds.length > 1 && 's'}
-                  </div>
-              }
-
-              {
-                !!importListIds.length &&
-                  <div>
-                    {importListIds.length} list{importListIds.length > 1 && 's'}
+                    {indexerProxyIds.length} indexerProxy{indexerProxyIds.length > 1 && 's'}
                   </div>
               }
             </div>
@@ -133,11 +115,9 @@ class Tag extends Component {
         <TagDetailsModal
           label={label}
           isTagUsed={isTagUsed}
-          movieIds={movieIds}
-          delayProfileIds={delayProfileIds}
+          indexerIds={indexerIds}
           notificationIds={notificationIds}
-          restrictionIds={restrictionIds}
-          importListIds={importListIds}
+          indexerProxyIds={indexerProxyIds}
           isOpen={isDetailsModalOpen}
           onModalClose={this.onDetailsModalClose}
           onDeleteTagPress={this.onDeleteTagPress}
@@ -160,20 +140,16 @@ class Tag extends Component {
 Tag.propTypes = {
   id: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
-  delayProfileIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   notificationIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  restrictionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  importListIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-  movieIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  indexerProxyIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onConfirmDeleteTag: PropTypes.func.isRequired
 };
 
 Tag.defaultProps = {
-  delayProfileIds: [],
+  indexerIds: [],
   notificationIds: [],
-  restrictionIds: [],
-  importListIds: [],
-  movieIds: []
+  indexerProxyIds: []
 };
 
 export default Tag;

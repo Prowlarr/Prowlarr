@@ -41,6 +41,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     _logger)
                 {
                     HttpClient = _httpClient,
+                    Definition = Definition,
                     Settings = Settings
                 });
 
@@ -85,7 +86,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         }
 
         public Cardigann(IIndexerDefinitionUpdateService definitionService,
-                         IHttpClient httpClient,
+                         IIndexerHttpClient httpClient,
                          IEventAggregator eventAggregator,
                          IIndexerStatusService indexerStatusService,
                          IConfigService configService,
@@ -176,7 +177,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request);
+                var response = await _httpClient.ExecuteAsync(request, Definition);
                 downloadBytes = response.ResponseData;
             }
             catch (HttpException ex)

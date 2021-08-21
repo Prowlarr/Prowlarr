@@ -8,7 +8,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Dictionary<string, object> Variables { get; private set; }
 
         public CardigannRequest(string url, HttpAccept httpAccept, Dictionary<string, object> variables)
-        : base(url, httpAccept)
+            : base(url, httpAccept)
+        {
+            Variables = variables;
+        }
+
+        public CardigannRequest(HttpRequest httpRequest, Dictionary<string, object> variables)
+            : base(httpRequest)
         {
             Variables = variables;
         }

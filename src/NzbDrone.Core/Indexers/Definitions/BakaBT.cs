@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public BakaBT(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public BakaBT(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -46,6 +46,26 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new BakaBTParser(Settings, Capabilities.Categories);
         }
 
+        public override async Task<byte[]> Download(Uri link)
+        {
+            var request = new HttpRequestBuilder(link.ToString())
+                        .SetCookies(GetCookies() ?? new Dictionary<string, string>())
+                        .Build();
+
+            var response = await _httpClient.ExecuteAsync(request, Definition);
+
+            var parser = new HtmlParser();
+            var dom = parser.ParseDocument(response.Content);
+            var downloadLink = dom.QuerySelectorAll(".download_link").First().GetAttribute("href");
+
+            if (string.IsNullOrWhiteSpace(downloadLink))
+            {
+                throw new Exception("Unable to find download link.");
+            }
+
+            return await base.Download(new Uri(Settings.BaseUrl + downloadLink));
+        }
+
         protected override async Task DoLogin()
         {
             UpdateCookies(null, null);
@@ -56,7 +76,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true
             };
 
-            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(LoginUrl));
+            var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
 
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
@@ -78,7 +98,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
-            var response = await _httpClient.ExecuteAsync(authLoginRequest);
+            var response = await ExecuteAuth(authLoginRequest);
 
             if (response.Content != null && response.Content.Contains("<a href=\"logout.php\">Logout</a>"))
             {
@@ -110,6 +130,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                        {
                            TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
                        },
+                MovieSearchParams = new List<MovieSearchParam>
+                       {
+                           MovieSearchParam.Q
+                       },
                 MusicSearchParams = new List<MusicSearchParam>
                        {
                            MusicSearchParam.Q
@@ -124,7 +148,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "OVA");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.AudioOther, "Soundtrack");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.BooksComics, "Manga");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.TVAnime, "Anime Movie");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "Anime Movie");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVOther, "Live Action");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksOther, "Artbook");
             caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.AudioVideo, "Music Video");
@@ -143,7 +167,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
             var searchString = term;
             var searchUrl = Settings.BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
@@ -165,6 +189,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
+
             return pageableRequests;
         }
 
@@ -172,7 +198,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -181,7 +207,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -190,7 +216,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -199,7 +225,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm)));
 
             return pageableRequests;
         }
@@ -296,7 +322,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     release.Categories = currentCategories;
 
-                    //release.Description = row.QuerySelector("span.tags")?.TextContent;
+                    release.Description = row.QuerySelector("span.tags")?.TextContent;
                     release.Guid = _settings.BaseUrl + qTitleLink.GetAttribute("href");
                     release.InfoUrl = release.Guid;
 

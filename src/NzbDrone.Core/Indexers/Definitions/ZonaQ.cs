@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public ZonaQ(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public ZonaQ(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             _logger.Debug("ZonaQ authentication succeeded.");
 
             // The first page set the cookies and the session_id
-            var loginPage = await _httpClient.ExecuteAsync(new HttpRequest(Login1Url));
+            var loginPage = await ExecuteAuth(new HttpRequest(Login1Url));
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(loginPage.Content);
             var sessionId = dom.QuerySelector("input#session_id")?.GetAttribute("value");
@@ -132,7 +132,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             requestBuilder4.SetCookies(response.GetCookies());
             var authLoginRequest3 = requestBuilder4.Build();
 
-            response = await _httpClient.ExecuteAsync(authLoginRequest3);
+            response = await ExecuteAuth(authLoginRequest3);
 
             UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
         }
@@ -375,6 +375,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     InfoUrl = details.AbsoluteUri,
                     Guid = details.AbsoluteUri,
                     DownloadUrl = link.AbsoluteUri,
+                    PosterUrl = poster.AbsoluteUri,
                     PublishDate = publishDate,
                     Categories = cat,
                     Size = size,

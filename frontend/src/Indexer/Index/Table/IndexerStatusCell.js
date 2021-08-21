@@ -31,7 +31,7 @@ function IndexerStatusCell(props) {
         <Icon
           className={styles.statusIcon}
           kind={enabled ? enableKind : kinds.DEFAULT}
-          name={enabled ? enableIcon: icons.BLACKLIST}
+          name={enabled ? enableIcon: icons.BLOCKLIST}
           title={enabled ? enableTitle : 'Indexer is Disabled'}
         />
       }

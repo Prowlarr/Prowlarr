@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             _caps = new IndexerCapabilities();
             Mocker.GetMock<INewznabCapabilitiesProvider>()
-                .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>()))
+                .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
                 .Returns(_caps);
         }
 
@@ -42,9 +42,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             var recentFeed = ReadAllText(@"Files/Indexers/Newznab/newznab_nzb_su.xml");
 
-            Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
-                .Returns<HttpRequest>(r => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 }, Limit = 100, Offset = 0 })).Releases;
 

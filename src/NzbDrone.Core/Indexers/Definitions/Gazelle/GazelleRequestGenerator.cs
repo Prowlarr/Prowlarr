@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public GazelleSettings Settings { get; set; }
 
         public IDictionary<string, string> AuthCookieCache { get; set; }
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
 
@@ -75,11 +75,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
             {
                 if (ImdbInTags)
                 {
-                    parameters += string.Format("&taglist={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&taglist={0}", searchCriteria.FullImdbId);
                 }
                 else
                 {
-                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.FullImdbId);
                 }
             }
 
@@ -120,11 +120,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
             {
                 if (ImdbInTags)
                 {
-                    parameters += string.Format("&taglist={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&taglist={0}", searchCriteria.FullImdbId);
                 }
                 else
                 {
-                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.ImdbId);
+                    parameters += string.Format("&cataloguenumber={0}", searchCriteria.FullImdbId);
                 }
             }
 

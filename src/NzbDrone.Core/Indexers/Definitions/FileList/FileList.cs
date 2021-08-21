@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Indexers.FileList
         public override bool SupportsRedirect => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public FileList(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public FileList(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

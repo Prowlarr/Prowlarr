@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public IPTorrents(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public IPTorrents(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -174,11 +174,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (imdbId.IsNotNullOrWhiteSpace())
             {
-                qc.Add("q", imdbId);
+                // ipt uses sphinx, which supports boolean operators and grouping
+                qc.Add("q", "+(" + imdbId + ")");
             }
-            else if (!string.IsNullOrWhiteSpace(term))
+
+            // changed from else if to if to support searching imdbid + season/episode in the same query
+            if (!string.IsNullOrWhiteSpace(term))
             {
-                qc.Add("q", term);
+                // similar to above
+                qc.Add("q", "+(" + term + ")");
             }
 
             if (Settings.FreeLeechOnly)

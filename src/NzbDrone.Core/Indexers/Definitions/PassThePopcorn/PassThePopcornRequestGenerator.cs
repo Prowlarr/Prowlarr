@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public IDictionary<string, string> Cookies { get; set; }
 
-        public IHttpClient HttpClient { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest(searchCriteria.ImdbId));
+                pageableRequests.Add(GetRequest(searchCriteria.FullImdbId));
             }
             else
             {

@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Anthelion(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Anthelion(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -238,7 +238,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var torrentId = qDetailsLink.GetAttribute("href").Split('=').Last();
                 var link = _settings.BaseUrl + "torrents.php?action=download&id=" + torrentId;
                 var posterStr = qDetailsLink.GetAttribute("data-cover");
-                var poster = !string.IsNullOrWhiteSpace(posterStr) ? new Uri(qDetailsLink.GetAttribute("data-cover")) : null;
+                var poster = !string.IsNullOrWhiteSpace(posterStr) ? posterStr : null;
 
                 var files = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(3)").TextContent);
                 var publishDate = DateTimeUtil.FromTimeAgo(row.QuerySelector("td:nth-child(4)").TextContent);
@@ -276,6 +276,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Categories = category,
                     DownloadUrl = link,
                     InfoUrl = details,
+                    PosterUrl = poster,
                     Guid = link,
                     ImdbId = imdb.GetValueOrDefault(),
                     Seeders = seeders,

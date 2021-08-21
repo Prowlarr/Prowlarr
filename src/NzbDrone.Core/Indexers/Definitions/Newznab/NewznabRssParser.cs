@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -80,10 +81,25 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         protected override ReleaseInfo ProcessItem(XElement item, ReleaseInfo releaseInfo)
         {
+            if (!item.Elements("enclosure").Any(e =>
+            {
+                var type = e.Attribute("type");
+                if (type == null)
+                {
+                    return true;
+                }
+
+                return type.Value == "application/x-nzb";
+            }))
+            {
+                return null;
+            }
+
             releaseInfo = base.ProcessItem(item, releaseInfo);
             releaseInfo.ImdbId = GetImdbId(item);
             releaseInfo.Grabs = GetGrabs(item);
             releaseInfo.Files = GetFiles(item);
+            releaseInfo.PosterUrl = GetPosterUrl(item);
 
             return releaseInfo;
         }
@@ -151,7 +167,29 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
-                url = ParseUrl((string)item.Element("enclosure").Attribute("url"));
+                var enclosure = item.Elements("enclosure");
+                var filtered = enclosure.Where(e =>
+                {
+                    var type = e.Attribute("type");
+                    if (type == null)
+                    {
+                        return true;
+                    }
+
+                    return type.Value == "application/x-nzb";
+                });
+
+                var xElements = filtered as XElement[] ?? filtered.ToArray();
+                if (!xElements.Any())
+                {
+                    return url;
+                }
+
+                var attr = xElements.First().Attribute("url");
+                if (attr != null)
+                {
+                    url = attr.Value;
+                }
             }
 
             return url;
@@ -181,6 +219,11 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             return 0;
+        }
+
+        protected virtual string GetPosterUrl(XElement item)
+        {
+            return ParseUrl(TryGetNewznabAttribute(item, "coverurl"));
         }
 
         protected virtual int GetFiles(XElement item)

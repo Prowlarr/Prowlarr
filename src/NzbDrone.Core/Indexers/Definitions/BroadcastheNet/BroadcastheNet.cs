@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override string[] IndexerUrls => new string[] { "http://api.broadcasthe.net/" };
         public override string Description => "BroadcasTheNet (BTN) is an invite-only torrent tracker focused on TV shows";
 
-        public BroadcastheNet(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public BroadcastheNet(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 LimitsMax = 1000,
                 TvSearchParams = new List<TvSearchParam>
                        {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId, TvSearchParam.RId
                        }
             };
 

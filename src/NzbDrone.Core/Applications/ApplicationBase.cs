@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Applications
         protected readonly IAppIndexerMapService _appIndexerMapService;
         protected readonly Logger _logger;
 
-        protected static readonly Regex AppIndexerRegex = new Regex(@"(?<indexer>\d*)/api",
+        protected static readonly Regex AppIndexerRegex = new Regex(@"\/(?<indexer>\d{1,3})(?:\/(?:api)?\/?)?$",
                                                                 RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public abstract string Name { get; }
@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Applications
         public abstract void AddIndexer(IndexerDefinition indexer);
         public abstract void UpdateIndexer(IndexerDefinition indexer);
         public abstract void RemoveIndexer(int indexerId);
-        public abstract Dictionary<int, int> GetIndexerMappings();
+        public abstract List<AppIndexerMap> GetIndexerMappings();
 
         public virtual object RequestAction(string action, IDictionary<string, string> query)
         {

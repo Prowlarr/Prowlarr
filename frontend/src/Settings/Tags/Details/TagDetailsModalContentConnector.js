@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import TagDetailsModalContent from './TagDetailsModalContent';
 
 function findMatchingItems(ids, items) {
@@ -9,35 +8,15 @@ function findMatchingItems(ids, items) {
   });
 }
 
-function createUnorderedMatchingMoviesSelector() {
+function createMatchingIndexersSelector() {
   return createSelector(
     (state, { indexerIds }) => indexerIds,
-    createAllIndexersSelector(),
+    (state) => state.indexers.items,
     findMatchingItems
   );
 }
 
-function createMatchingMoviesSelector() {
-  return createSelector(
-    createUnorderedMatchingMoviesSelector(),
-    (movies) => {
-      return movies.sort((movieA, movieB) => {
-        const sortTitleA = movieA.sortTitle;
-        const sortTitleB = movieB.sortTitle;
-
-        if (sortTitleA > sortTitleB) {
-          return 1;
-        } else if (sortTitleA < sortTitleB) {
-          return -1;
-        }
-
-        return 0;
-      });
-    }
-  );
-}
-
-function createMatchingNotificationsSelector() {
+function createMatchingIndexerProxiesSelector() {
   return createSelector(
     (state, { notificationIds }) => notificationIds,
     (state) => state.settings.notifications.items,
@@ -45,13 +24,23 @@ function createMatchingNotificationsSelector() {
   );
 }
 
+function createMatchingNotificationsSelector() {
+  return createSelector(
+    (state, { indexerProxyIds }) => indexerProxyIds,
+    (state) => state.settings.indexerProxies.items,
+    findMatchingItems
+  );
+}
+
 function createMapStateToProps() {
   return createSelector(
-    createMatchingMoviesSelector(),
+    createMatchingIndexersSelector(),
+    createMatchingIndexerProxiesSelector(),
     createMatchingNotificationsSelector(),
-    (movies, notifications) => {
+    (indexers, indexerProxies, notifications) => {
       return {
-        movies,
+        indexers,
+        indexerProxies,
         notifications
       };
     }

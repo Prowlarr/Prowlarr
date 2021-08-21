@@ -6,6 +6,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
@@ -15,6 +16,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public int MaxPages { get; set; }
         public int PageSize { get; set; }
         public NewznabSettings Settings { get; set; }
+        public ProviderDefinition Definition { get; set; }
 
         public NewznabRequestGenerator(INewznabCapabilitiesProvider capabilitiesProvider)
         {
@@ -26,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -72,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -113,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -140,7 +142,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.Season.HasValue && capabilities.TvSearchSeasonAvailable)
             {
-                parameters.Add("season", searchCriteria.Season.ToString());
+                parameters.Add("season", NewznabifySeasonNumber(searchCriteria.Season.Value));
             }
 
             if (searchCriteria.Episode.IsNotNullOrWhiteSpace() && capabilities.TvSearchEpAvailable)
@@ -174,7 +176,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -215,7 +217,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
             var pageableRequests = new IndexerPageableRequestChain();
 
             var parameters = new NameValueCollection();
@@ -267,6 +269,12 @@ namespace NzbDrone.Core.Indexers.Newznab
         private static string NewsnabifyTitle(string title)
         {
             return title.Replace("+", "%20");
+        }
+
+        // Temporary workaround for NNTMux considering season=0 -> null. '00' should work on existing newznab indexers.
+        private static string NewznabifySeasonNumber(int seasonNumber)
+        {
+            return seasonNumber == 0 ? "00" : seasonNumber.ToString();
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

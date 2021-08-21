@@ -4,7 +4,7 @@
     <TargetFrameworks>net5.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DryIoc.dll" Version="4.7.6" />
+    <PackageReference Include="DryIoc.dll" Version="4.8.1" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="5.1.0" />
     <PackageReference Include="NLog" Version="4.7.9" />
   </ItemGroup>

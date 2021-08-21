@@ -286,7 +286,7 @@
     "ConnectionLostMessage": "O Prowlarr perdeu a ligação com o back-end e precisará recarregar para restaurar a funcionalidade.",
     "ConnectionLostAutomaticMessage": "O Prowlarr tentará ligar automaticamente, ou você pode clicar em Recarregar abaixo.",
     "ConnectionLost": "Ligação perdida",
-    "Connect": "Ligar",
+    "Connect": "Conexões",
     "Component": "Componente",
     "CompletedDownloadHandling": "Manuseio de Download Completado",
     "Columns": "Colunas",

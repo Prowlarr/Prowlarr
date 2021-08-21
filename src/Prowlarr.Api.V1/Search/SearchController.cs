@@ -127,8 +127,8 @@ namespace Prowlarr.Api.V1.Search
                 var release = downloadDecision.ToResource();
 
                 _remoteReleaseCache.Set(GetCacheKey(release), downloadDecision, TimeSpan.FromMinutes(30));
-                release.DownloadUrl = release.DownloadUrl != null ? _downloadMappingService.ConvertToProxyLink(new Uri(release.DownloadUrl), serverUrl, release.IndexerId, release.Title).ToString() : null;
-                release.MagnetUrl = release.MagnetUrl != null ? _downloadMappingService.ConvertToProxyLink(new Uri(release.MagnetUrl), serverUrl, release.IndexerId, release.Title).ToString() : null;
+                release.DownloadUrl = release.DownloadUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(release.DownloadUrl), serverUrl, release.IndexerId, release.Title).ToString() : null;
+                release.MagnetUrl = release.MagnetUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(release.MagnetUrl), serverUrl, release.IndexerId, release.Title).ToString() : null;
 
                 result.Add(release);
             }

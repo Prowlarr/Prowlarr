@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Aka AsiaTorrents";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public AvistaZ(IIndexerRepository indexerRepository, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public AvistaZ(IIndexerRepository indexerRepository, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

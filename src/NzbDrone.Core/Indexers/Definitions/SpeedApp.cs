@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IIndexerRepository _indexerRepository;
 
-        public SpeedApp(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, IIndexerRepository indexerRepository)
+        public SpeedApp(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, IIndexerRepository indexerRepository)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _indexerRepository = indexerRepository;
@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request);
+                var response = await _httpClient.ExecuteAsync(request, Definition);
                 torrentData = response.ResponseData;
             }
             catch (HttpException ex)
@@ -378,6 +378,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
                 DownloadUrl = $"{Settings.BaseUrl}/api/torrent/{torrent.Id}/download",
+                PosterUrl = torrent.Poster,
                 InfoUrl = torrent.Url,
                 Grabs = torrent.TimesCompleted,
                 PublishDate = torrent.CreatedAt,

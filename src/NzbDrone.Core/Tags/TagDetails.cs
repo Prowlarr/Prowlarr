@@ -8,12 +8,14 @@ namespace NzbDrone.Core.Tags
     {
         public string Label { get; set; }
         public List<int> NotificationIds { get; set; }
+        public List<int> IndexerIds { get; set; }
+        public List<int> IndexerProxyIds { get; set; }
 
         public bool InUse
         {
             get
             {
-                return NotificationIds.Any();
+                return NotificationIds.Any() || IndexerIds.Any() || IndexerProxyIds.Any();
             }
         }
     }

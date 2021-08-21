@@ -1,10 +1,12 @@
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using System.Xml;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Test.Framework;
 
@@ -14,6 +16,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
     public class NewznabCapabilitiesProviderFixture : CoreTest<NewznabCapabilitiesProvider>
     {
         private NewznabSettings _settings;
+        private IndexerDefinition _definition;
         private string _caps;
 
         [SetUp]
@@ -24,14 +27,24 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
                 BaseUrl = "http://indxer.local"
             };
 
+            _definition = new IndexerDefinition()
+            {
+                Id = 5,
+                Name = "Newznab",
+                Settings = new NewznabSettings()
+                {
+                    BaseUrl = "http://indexer.local/"
+                }
+            };
+
             _caps = ReadAllText("Files/Indexers/Newznab/newznab_caps.xml");
         }
 
         private void GivenCapsResponse(string caps)
         {
-            Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.Get(It.IsAny<HttpRequest>()))
-                .Returns<HttpRequest>(r => new HttpResponse(r, new HttpHeader(), new CookieCollection(), caps));
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.Execute(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) => new HttpResponse(r, new HttpHeader(), new CookieCollection(), caps));
         }
 
         [Test]
@@ -39,11 +52,11 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             GivenCapsResponse(_caps);
 
-            Subject.GetCapabilities(_settings);
-            Subject.GetCapabilities(_settings);
+            Subject.GetCapabilities(_settings, _definition);
+            Subject.GetCapabilities(_settings, _definition);
 
-            Mocker.GetMock<IHttpClient>()
-                .Verify(o => o.Get(It.IsAny<HttpRequest>()), Times.Once());
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Verify(o => o.Execute(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()), Times.Once());
         }
 
         [Test]
@@ -51,7 +64,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             GivenCapsResponse(_caps);
 
-            var caps = Subject.GetCapabilities(_settings);
+            var caps = Subject.GetCapabilities(_settings, _definition);
 
             caps.LimitsDefault.Value.Should().Be(25);
             caps.LimitsMax.Value.Should().Be(60);
@@ -62,7 +75,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             GivenCapsResponse(_caps.Replace("<limits", "<abclimits"));
 
-            var caps = Subject.GetCapabilities(_settings);
+            var caps = Subject.GetCapabilities(_settings, _definition);
 
             caps.LimitsDefault.Value.Should().Be(100);
             caps.LimitsMax.Value.Should().Be(100);
@@ -71,11 +84,11 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [Test]
         public void should_throw_if_failed_to_get()
         {
-            Mocker.GetMock<IHttpClient>()
-                .Setup(o => o.Get(It.IsAny<HttpRequest>()))
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.Execute(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()))
                 .Throws<Exception>();
 
-            Assert.Throws<Exception>(() => Subject.GetCapabilities(_settings));
+            Assert.Throws<Exception>(() => Subject.GetCapabilities(_settings, _definition));
         }
 
         [Test]
@@ -83,7 +96,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             GivenCapsResponse(_caps.Replace("<limits", "<>"));
 
-            Assert.Throws<XmlException>(() => Subject.GetCapabilities(_settings));
+            Assert.Throws<XmlException>(() => Subject.GetCapabilities(_settings, _definition));
         }
 
         [Test]
@@ -91,7 +104,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             GivenCapsResponse(_caps.Replace("5030", "asdf"));
 
-            var result = Subject.GetCapabilities(_settings);
+            var result = Subject.GetCapabilities(_settings, _definition);
 
             result.Should().NotBeNull();
         }

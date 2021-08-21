@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Blutopia (BLU) is a Private Torrent Tracker for HD MOVIES / TV";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public Blutopia(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Blutopia(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }

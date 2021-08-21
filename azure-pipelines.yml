@@ -7,13 +7,13 @@ variables:
   outputFolder: './_output'
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
-  majorVersion: '0.1.0'
+  majorVersion: '0.1.1'
   minorVersion: $[counter('minorVersion', 1)]
   prowlarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(prowlarrVersion)'
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
-  dotnetVersion: '5.0.203'
+  dotnetVersion: '5.0.400'
   yarnCacheFolder: $(Pipeline.Workspace)/.yarn
 
 trigger:

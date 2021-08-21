@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public override int PageSize => 50;
 
-        public PassThePopcorn(IHttpClient httpClient,
+        public PassThePopcorn(IIndexerHttpClient httpClient,
             IEventAggregator eventAggregator,
             ICacheManager cacheManager,
             IIndexerStatusService indexerStatusService,

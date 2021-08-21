@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SubsPlease(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public SubsPlease(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -192,7 +192,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var release = new TorrentInfo
                     {
                         InfoUrl = _settings.BaseUrl + $"shows/{value.Page}/",
-                        PublishDate = value.ReleaseDate.DateTime,
+                        PublishDate = value.ReleaseDate.LocalDateTime,
                         Files = 1,
                         Categories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime },
                         Seeders = 1,

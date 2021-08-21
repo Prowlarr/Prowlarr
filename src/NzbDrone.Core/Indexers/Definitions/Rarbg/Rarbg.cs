@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -27,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
 
-        public Rarbg(IRarbgTokenProvider tokenProvider, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _tokenProvider = tokenProvider;
@@ -49,11 +50,11 @@ namespace NzbDrone.Core.Indexers.Rarbg
             {
                 TvSearchParams = new List<TvSearchParam>
                        {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId
                        },
                 MovieSearchParams = new List<MovieSearchParam>
                        {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
+                           MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId
                        },
                 MusicSearchParams = new List<MusicSearchParam>
                        {
@@ -165,6 +166,15 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 return new
                 {
                     captchaToken = cfClearanceCookie
+                };
+            }
+            else if (action == "getUrls")
+            {
+                var links = IndexerUrls;
+
+                return new
+                {
+                    options = links.Select(d => new { Value = d, Name = d })
                 };
             }
 

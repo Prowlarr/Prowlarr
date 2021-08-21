@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
         public override int PageSize => 50;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Unit3dBase(IHttpClient httpClient,
+        public Unit3dBase(IIndexerHttpClient httpClient,
                        IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
                        IConfigService configService,

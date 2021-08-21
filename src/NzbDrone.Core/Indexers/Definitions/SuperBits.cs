@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SuperBits(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public SuperBits(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -252,10 +252,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 release.UploadVolumeFactor = 1;
 
-                //if (!string.IsNullOrWhiteSpace(row.customcover.ToString()))
-                //{
-                //    release.Poster = new Uri(SiteLink + row.customcover);
-                //}
+                if (!string.IsNullOrWhiteSpace(row.customcover.ToString()))
+                {
+                    release.PosterUrl = _settings.BaseUrl + row.customcover;
+                }
+
                 if (row.imdbid2 != null && row.imdbid2.ToString().StartsWith("tt"))
                 {
                     release.ImdbId = ParseUtil.CoerceInt(row.imdbid2.ToString().Substring(2));
@@ -267,7 +268,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     descriptions.Add("Rating: " + row.rating);
                     descriptions.Add("Plot: " + row.plot);
 
-                    //release.Poster = new Uri(SiteLink + "img/imdb/" + row.imdbid2 + ".jpg");
+                    release.PosterUrl = _settings.BaseUrl + "img/imdb/" + row.imdbid2 + ".jpg";
                 }
 
                 if ((int)row.p2p == 1)

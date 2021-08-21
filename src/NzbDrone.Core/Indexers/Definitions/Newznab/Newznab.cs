@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
 
-        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings).LimitsDefault.Value;
+        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
@@ -77,7 +77,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override IndexerCapabilities GetCapabilities()
         {
             // Newznab uses different Caps per site, so we need to cache them to db on first indexer add to prevent issues with loading UI and pulling caps every time.
-            return _capabilitiesProvider.GetCapabilities(Settings);
+            return _capabilitiesProvider.GetCapabilities(Settings, Definition);
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions
@@ -112,7 +112,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
         }
 
-        public Newznab(INewznabCapabilitiesProvider capabilitiesProvider, IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+        public Newznab(INewznabCapabilitiesProvider capabilitiesProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
@@ -169,7 +169,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             try
             {
-                var capabilities = _capabilitiesProvider.GetCapabilities(Settings);
+                var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
                 if (capabilities.SearchParams != null && capabilities.SearchParams.Contains(SearchParam.Q))
                 {
@@ -177,13 +177,31 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
 
                 if (capabilities.MovieSearchParams != null &&
-                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)) &&
-                    new[] { MovieSearchParam.ImdbTitle, MovieSearchParam.ImdbYear }.All(v => capabilities.MovieSearchParams.Contains(v)))
+                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)))
                 {
                     return null;
                 }
 
-                return new ValidationFailure(string.Empty, "This indexer does not support searching for movies :(. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
+                if (capabilities.TvSearchParams != null &&
+                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
+                    new[] { TvSearchParam.Season, TvSearchParam.Ep }.All(v => capabilities.TvSearchParams.Contains(v)))
+                {
+                    return null;
+                }
+
+                if (capabilities.MusicSearchParams != null &&
+                    new[] { MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album }.Any(v => capabilities.MusicSearchParams.Contains(v)))
+                {
+                    return null;
+                }
+
+                if (capabilities.BookSearchParams != null &&
+                    new[] { BookSearchParam.Q, BookSearchParam.Author, BookSearchParam.Title }.Any(v => capabilities.BookSearchParams.Contains(v)))
+                {
+                    return null;
+                }
+
+                return new ValidationFailure(string.Empty, "This indexer does not support searching for tv, music, or movies :(. Tell your indexer staff to enable this or force add the indexer by disabling search, adding the indexer and then enabling it again.");
             }
             catch (Exception ex)
             {

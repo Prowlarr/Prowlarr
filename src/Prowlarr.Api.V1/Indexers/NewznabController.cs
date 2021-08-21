@@ -72,7 +72,26 @@ namespace NzbDrone.Api.V1.Indexers
                 switch (requestType)
                 {
                     case "caps":
-                        var caps = new IndexerCapabilities();
+                        var caps = new IndexerCapabilities
+                        {
+                            TvSearchParams = new List<TvSearchParam>
+                                   {
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                                   },
+                            MovieSearchParams = new List<MovieSearchParam>
+                                   {
+                                       MovieSearchParam.Q
+                                   },
+                            MusicSearchParams = new List<MusicSearchParam>
+                                   {
+                                       MusicSearchParam.Q
+                                   },
+                            BookSearchParams = new List<BookSearchParam>
+                                   {
+                                       BookSearchParam.Q
+                                   }
+                        };
+
                         foreach (var cat in NewznabStandardCategory.AllCats)
                         {
                             caps.Categories.AddCategoryMapping(1, cat);
@@ -129,11 +148,11 @@ namespace NzbDrone.Api.V1.Indexers
 
                     foreach (var result in results.Releases)
                     {
-                        result.DownloadUrl = result.DownloadUrl != null ? _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexerDef.Id, result.Title).ToString() : null;
+                        result.DownloadUrl = result.DownloadUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexerDef.Id, result.Title).ToString() : null;
 
                         if (result.DownloadProtocol == DownloadProtocol.Torrent)
                         {
-                            ((TorrentInfo)result).MagnetUrl = ((TorrentInfo)result).MagnetUrl != null ? _downloadMappingService.ConvertToProxyLink(new Uri(((TorrentInfo)result).MagnetUrl), request.server, indexerDef.Id, result.Title).ToString() : null;
+                            ((TorrentInfo)result).MagnetUrl = ((TorrentInfo)result).MagnetUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(((TorrentInfo)result).MagnetUrl), request.server, indexerDef.Id, result.Title).ToString() : null;
                         }
                     }
 

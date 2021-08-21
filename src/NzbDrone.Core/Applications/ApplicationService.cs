@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Indexers;
@@ -110,18 +111,27 @@ namespace NzbDrone.Core.Applications
             {
                 var indexerMappings = _appIndexerMapService.GetMappingsForApp(app.Definition.Id);
 
-                //Remote-Local mappings currently stored by Prowlarr
-                var prowlarrMappings = indexerMappings.ToDictionary(i => i.RemoteIndexerId, i => i.IndexerId);
-
                 //Get Dictionary of Remote Indexers point to Prowlarr and what they are mapped to
-                var remoteMappings = app.GetIndexerMappings();
+                var remoteMappings = ExecuteAction(a => a.GetIndexerMappings(), app);
+
+                if (remoteMappings == null)
+                {
+                    continue;
+                }
 
                 //Add mappings if not already in db, these were setup manually in the app or orphaned by a table wipe
                 foreach (var mapping in remoteMappings)
                 {
-                    if (!prowlarrMappings.ContainsKey(mapping.Key))
+                    if (!indexerMappings.Any(m => (m.RemoteIndexerId > 0 && m.RemoteIndexerId == mapping.RemoteIndexerId) || (m.RemoteIndexerName.IsNotNullOrWhiteSpace() && m.RemoteIndexerName == mapping.RemoteIndexerName)))
                     {
-                        var addMapping = new AppIndexerMap { AppId = app.Definition.Id, RemoteIndexerId = mapping.Key, IndexerId = mapping.Value };
+                        var addMapping = new AppIndexerMap
+                        {
+                            AppId = app.Definition.Id,
+                            RemoteIndexerId = mapping.RemoteIndexerId,
+                            RemoteIndexerName = mapping.RemoteIndexerName,
+                            IndexerId = mapping.IndexerId
+                        };
+
                         _appIndexerMapService.Insert(addMapping);
                         indexerMappings.Add(addMapping);
                     }
@@ -213,6 +223,65 @@ namespace NzbDrone.Core.Applications
                 _applicationStatusService.RecordFailure(application.Definition.Id);
                 _logger.Error(ex, "An error occurred while talking to remote application.");
             }
+        }
+
+        private TResult ExecuteAction<TResult>(Func<IApplication, TResult> applicationAction, IApplication application)
+        {
+            TResult result;
+
+            try
+            {
+                result = applicationAction(application);
+                _applicationStatusService.RecordSuccess(application.Definition.Id);
+                return result;
+            }
+            catch (WebException webException)
+            {
+                if (webException.Status == WebExceptionStatus.NameResolutionFailure ||
+                    webException.Status == WebExceptionStatus.ConnectFailure)
+                {
+                    _applicationStatusService.RecordConnectionFailure(application.Definition.Id);
+                }
+                else
+                {
+                    _applicationStatusService.RecordFailure(application.Definition.Id);
+                }
+
+                if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
+                    webException.Message.Contains("timed out"))
+                {
+                    _logger.Warn("{0} server is currently unavailable. {1}", this, webException.Message);
+                }
+                else
+                {
+                    _logger.Warn("{0} {1}", this, webException.Message);
+                }
+            }
+            catch (TooManyRequestsException ex)
+            {
+                if (ex.RetryAfter != TimeSpan.Zero)
+                {
+                    _applicationStatusService.RecordFailure(application.Definition.Id, ex.RetryAfter);
+                }
+                else
+                {
+                    _applicationStatusService.RecordFailure(application.Definition.Id, TimeSpan.FromHours(1));
+                }
+
+                _logger.Warn("API Request Limit reached for {0}", this);
+            }
+            catch (HttpException ex)
+            {
+                _applicationStatusService.RecordFailure(application.Definition.Id);
+                _logger.Warn("{0} {1}", this, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _applicationStatusService.RecordFailure(application.Definition.Id);
+                _logger.Error(ex, "An error occurred while talking to remote application.");
+            }
+
+            return default(TResult);
         }
     }
 }

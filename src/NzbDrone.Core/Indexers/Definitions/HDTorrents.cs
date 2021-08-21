@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public HDTorrents(IHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public HDTorrents(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
@@ -255,7 +255,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var details = new Uri(_settings.BaseUrl + mainLink.GetAttribute("href"));
 
                 var posterMatch = _posterRegex.Match(mainLink.GetAttribute("onmouseover"));
-                var poster = posterMatch.Success ? new Uri(_settings.BaseUrl + posterMatch.Groups[1].Value.Replace("\\", "/")) : null;
+                var poster = posterMatch.Success ? _settings.BaseUrl + posterMatch.Groups[1].Value.Replace("\\", "/") : null;
 
                 var link = new Uri(_settings.BaseUrl + row.Children[4].FirstElementChild.GetAttribute("href"));
                 var description = row.Children[2].QuerySelector("span").TextContent;
@@ -331,6 +331,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Guid = details.AbsoluteUri,
                     DownloadUrl = link.AbsoluteUri,
                     InfoUrl = details.AbsoluteUri,
+                    PosterUrl = poster,
                     PublishDate = publishDate,
                     Categories = cat,
                     ImdbId = imdb ?? 0,

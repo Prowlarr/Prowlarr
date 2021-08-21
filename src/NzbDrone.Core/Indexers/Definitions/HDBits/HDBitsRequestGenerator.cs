@@ -66,9 +66,6 @@ namespace NzbDrone.Core.Indexers.HDBits
 
             request.SetContent(query.ToJson());
 
-            var json = query.ToJson();
-            var a = new IndexerRequest(request);
-
             yield return new IndexerRequest(request);
         }
 

@@ -7,7 +7,7 @@
 [![Backers on Open Collective](https://opencollective.com/Prowlarr/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/Prowlarr/sponsors/badge.svg)](#sponsors)
 
-Prowlarr is a indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
+Prowlarr is an indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports management of both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
 
 ## Major Features Include:
 - Usenet support for 24 indexers natively, including Headphones VIP, and support for any Newznab compatible indexer via "Generic Newznab"

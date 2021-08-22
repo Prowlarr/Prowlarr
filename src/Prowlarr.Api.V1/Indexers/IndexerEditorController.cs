@@ -72,7 +72,7 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpDelete]
-        public object DeleteIndexers(IndexerEditorResource resource)
+        public object DeleteIndexers([FromBody] IndexerEditorResource resource)
         {
             _indexerService.DeleteIndexers(resource.IndexerIds);
 

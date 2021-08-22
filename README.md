@@ -7,7 +7,7 @@
 [![Backers on Open Collective](https://opencollective.com/Prowlarr/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/Prowlarr/sponsors/badge.svg)](#sponsors)
 
-Prowlarr is a indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Sonarr, Radarr, Lidarr, and Readarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
+Prowlarr is an indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports management of both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr, and Sonarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
 
 ## Major Features Include:
 - Usenet support for 24 indexers natively, including Headphones VIP, and support for any Newznab compatible indexer via "Generic Newznab"
@@ -36,9 +36,13 @@ Note: Prowlarr is currently early in life, thus bugs should be expected
 - Request or vote on an existing request for a new tracker/indexer
 
 ## Contributors & Developers
-This project exists thanks to all the people who contribute. [Contribute](CONTRIBUTING.md).
-<a href="https://github.com/Prowlarr/Prowlarr/graphs/contributors"><img src="https://opencollective.com/Prowlarr/contributors.svg?width=890&button=false" /></a>
 
+- [Contribute (GitHub)](CONTRIBUTING.md)
+- [Contribution (Wiki Article)](https://wiki.servarr.com/prowlarr/contributing)
+- [YML Indexer Defintion (Wiki Article)](https://wiki.servarr.com/prowlarr/cardigann-yml-definition)
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/Prowlarr/Prowlarr/graphs/contributors"><img src="https://opencollective.com/Prowlarr/contributors.svg?width=890&button=false" /></a>
 
 ## Backers
 

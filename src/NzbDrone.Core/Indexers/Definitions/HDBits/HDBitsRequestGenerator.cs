@@ -5,6 +5,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.HDBits
 {
@@ -17,26 +18,22 @@ namespace NzbDrone.Core.Indexers.HDBits
         {
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
+            var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
 
             if (searchCriteria.Categories?.Length > 0)
             {
                 query.Category = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories).Select(int.Parse).ToArray();
             }
 
-            if (searchCriteria.ImdbId.IsNullOrWhiteSpace() && searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
+            if (imdbId == 0 && searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
                 query.Search = searchCriteria.SanitizedSearchTerm;
             }
 
-            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
+            if (imdbId != 0)
             {
-                var imdbId = int.Parse(searchCriteria.ImdbId.Substring(2));
-
-                if (imdbId != 0)
-                {
-                    query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
-                    query.ImdbInfo.Id = imdbId;
-                }
+                query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
+                query.ImdbInfo.Id = imdbId;
             }
 
             pageableRequests.Add(GetRequest(query));

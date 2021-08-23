@@ -19,10 +19,10 @@ namespace NzbDrone.Core.Applications.Mylar
         private readonly IMylarV3Proxy _mylarV3Proxy;
         private readonly IConfigFileProvider _configFileProvider;
 
-        public Mylar(IMylarV3Proxy lidarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Mylar(IMylarV3Proxy mylarV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
             : base(appIndexerMapService, logger)
         {
-            _mylarV3Proxy = lidarrV1Proxy;
+            _mylarV3Proxy = mylarV3Proxy;
             _configFileProvider = configFileProvider;
         }
 
@@ -70,9 +70,9 @@ namespace NzbDrone.Core.Applications.Mylar
         {
             if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
             {
-                var lidarrIndexer = BuildMylarIndexer(indexer, indexer.Protocol);
+                var mylarIndexer = BuildMylarIndexer(indexer, indexer.Protocol);
 
-                var remoteIndexer = _mylarV3Proxy.AddIndexer(lidarrIndexer, Settings);
+                var remoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
             }
         }
@@ -137,7 +137,7 @@ namespace NzbDrone.Core.Applications.Mylar
         {
             var schema = protocol == DownloadProtocol.Usenet ? MylarProviderType.Newznab : MylarProviderType.Torznab;
 
-            var lidarrIndexer = new MylarIndexer
+            var mylarIndexer = new MylarIndexer
             {
                 Name = originalName ?? $"{indexer.Name} (Prowlarr)",
                 Altername = $"{indexer.Name} (Prowlarr)",
@@ -148,7 +148,7 @@ namespace NzbDrone.Core.Applications.Mylar
                 Type = schema,
             };
 
-            return lidarrIndexer;
+            return mylarIndexer;
         }
     }
 }

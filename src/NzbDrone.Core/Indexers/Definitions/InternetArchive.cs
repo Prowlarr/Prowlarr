@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     UploadVolumeFactor = 1
                 };
 
-                if (searchResult.InfoHash != null)
+                if (!_settings.TorrentFileOnly && searchResult.InfoHash != null)
                 {
                     release.MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(searchResult.InfoHash, title);
                 }
@@ -292,7 +292,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Title Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Whether to search in title only.")]
         public bool TitleOnly { get; set; }
 
-        [FieldDefinition(5)]
+        [FieldDefinition(5, Label = "Torrent File Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Only use torrent files, not magnet links.")]
+        public bool TorrentFileOnly { get; set; }
+
+        [FieldDefinition(6)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public InternetArchiveSettings()
@@ -300,6 +303,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             SortBy = (int)InternetArchiveSort.PublicDate;
             SortOrder = (int)InternetArchiveSortOrder.Descending;
             TitleOnly = false;
+            TorrentFileOnly = false;
         }
 
         public NzbDroneValidationResult Validate()

@@ -939,5 +939,6 @@
     "DeleteIndexerProxyMessageText": "Êtes-vous sur de vouloir supprimer le proxy '{0}'  ?",
     "AddIndexerProxy": "Ajouter proxy indexeur",
     "AppSettingsSummary": "Applications et paramètres pour configurer comment Prowlarr interagit avec vos programmes PVR",
-    "IndexerTagsHelpText": "Utilisez des balises pour spécifier des clients par défaut, spécifier les proxies d'indexeur ou pour organiser vos indexeurs."
+    "IndexerTagsHelpText": "Utilisez des balises pour spécifier des clients par défaut, spécifier les proxies d'indexeur ou pour organiser vos indexeurs.",
+    "Notifications": "Notifications"
 }

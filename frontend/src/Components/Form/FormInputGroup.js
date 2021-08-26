@@ -16,7 +16,6 @@ import FormInputHelpText from './FormInputHelpText';
 import IndexerFlagsSelectInputConnector from './IndexerFlagsSelectInputConnector';
 import InfoInput from './InfoInput';
 import KeyValueListInput from './KeyValueListInput';
-import MovieMonitoredSelectInput from './MovieMonitoredSelectInput';
 import NumberInput from './NumberInput';
 import OAuthInputConnector from './OAuthInputConnector';
 import PasswordInput from './PasswordInput';
@@ -68,9 +67,6 @@ function getComponent(type) {
 
     case inputTypes.PATH:
       return PathInputConnector;
-
-    case inputTypes.MOVIE_MONITORED_SELECT:
-      return MovieMonitoredSelectInput;
 
     case inputTypes.INDEXER_FLAGS_SELECT:
       return IndexerFlagsSelectInputConnector;

@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
-                .AddQueryParam("useToken", _settings.UseFreeleechToken ? "1" : "0")
+                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? "1" : "0")
                 .AddQueryParam("id", torrentId);
 
             return url.FullUri;

@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             {
                 yield return GetDefinition("AnimeTosho", GetSettings("https://feed.animetosho.org"));
                 yield return GetDefinition("HD4Free.xyz", GetSettings("http://hd4free.xyz"));
-                yield return GetDefinition("Generic Torznab", GetSettings(""));
+                yield return GetDefinition("Generic Torznab", GetSettings(""), true);
             }
         }
 
@@ -95,7 +95,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, TorznabSettings settings)
+        private IndexerDefinition GetDefinition(string name, TorznabSettings settings, bool pinned = false)
         {
             return new IndexerDefinition
             {
@@ -107,7 +107,8 @@ namespace NzbDrone.Core.Indexers.Torznab
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
-                Capabilities = Capabilities
+                Capabilities = Capabilities,
+                Pinned = pinned
             };
         }
 

@@ -20,6 +20,7 @@ namespace Prowlarr.Api.V1.Indexers
         public string Encoding { get; set; }
         public bool Enable { get; set; }
         public bool Redirect { get; set; }
+        public bool Pinned { get; set; }
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public bool SupportsRedirect { get; set; }
@@ -80,6 +81,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.Encoding = definition.Encoding?.EncodingName ?? null;
             resource.Enable = definition.Enable;
             resource.Redirect = definition.Redirect;
+            resource.Pinned = definition.Pinned;
             resource.SupportsRss = definition.SupportsRss;
             resource.SupportsSearch = definition.SupportsSearch;
             resource.SupportsRedirect = definition.SupportsRedirect;
@@ -130,6 +132,7 @@ namespace Prowlarr.Api.V1.Indexers
             definition.AppProfileId = resource.AppProfileId;
             definition.Enable = resource.Enable;
             definition.Redirect = resource.Redirect;
+            definition.Pinned = resource.Pinned;
             definition.IndexerUrls = resource.IndexerUrls;
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;

@@ -1,3 +1,4 @@
+import partition from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Alert from 'Components/Alert';
@@ -133,18 +134,21 @@ class AddIndexerModalContent extends Component {
                 >
                   <TableBody>
                     {
-                      indexers.map((indexer) => {
-                        return indexer.name.toLowerCase().includes(filterLower) ?
-                          (
-                            <SelectIndexerRow
-                              key={indexer.name}
-                              implementation={indexer.implementation}
-                              {...indexer}
-                              onIndexerSelect={onIndexerSelect}
-                            />
-                          ) :
-                          null;
-                      })
+                      partition(indexers, (indexer) => indexer.pinned)
+                        .flatMap((partedIndexers) =>
+                          partedIndexers.map((indexer) => {
+                            return indexer.name.toLowerCase().includes(filterLower) ?
+                              (
+                                <SelectIndexerRow
+                                  key={indexer.name}
+                                  implementation={indexer.implementation}
+                                  {...indexer}
+                                  onIndexerSelect={onIndexerSelect}
+                                />
+                              ) :
+                              null;
+                          })
+                        )
                     }
                   </TableBody>
                 </Table> :

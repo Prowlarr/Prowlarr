@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("SpotNZB", GetSettings("https://spotnzb.xyz"));
                 yield return GetDefinition("Tabula Rasa", GetSettings("https://www.tabula-rasa.pw", apiPath: @"/api/v1/api"));
                 yield return GetDefinition("Usenet Crawler", GetSettings("https://www.usenet-crawler.com"));
-                yield return GetDefinition("Generic Newznab", GetSettings(""));
+                yield return GetDefinition("Generic Newznab", GetSettings(""), true);
             }
         }
 
@@ -118,7 +118,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, NewznabSettings settings)
+        private IndexerDefinition GetDefinition(string name, NewznabSettings settings, bool pinned = false)
         {
             return new IndexerDefinition
             {
@@ -131,7 +131,8 @@ namespace NzbDrone.Core.Indexers.Newznab
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
-                Capabilities = Capabilities
+                Capabilities = Capabilities,
+                Pinned = pinned
             };
         }
 

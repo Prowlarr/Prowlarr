@@ -147,7 +147,7 @@ namespace NzbDrone.Core.IndexerSearch
                     .ToList();
             }
 
-            _logger.ProgressInfo("Searching indexers: [{0}] for {1}", string.Join(", ", indexers.Select(i => i.Definition.Name).ToList()), criteriaBase.ToString());
+            _logger.ProgressInfo("Searching indexer(s): [{0}] for {1}", string.Join(", ", indexers.Select(i => i.Definition.Name).ToList()), criteriaBase.ToString());
 
             var tasks = indexers.Select(x => DispatchIndexer(searchAction, x, criteriaBase));
 
@@ -155,7 +155,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             var reports = batch.SelectMany(x => x).ToList();
 
-            _logger.Debug("Total of {0} reports were found for {1} from {2} indexers", reports.Count, criteriaBase, indexers.Count);
+            _logger.Debug("Total of {0} reports were found for {1} from {2} indexer(s)", reports.Count, criteriaBase, indexers.Count);
 
             return reports;
         }

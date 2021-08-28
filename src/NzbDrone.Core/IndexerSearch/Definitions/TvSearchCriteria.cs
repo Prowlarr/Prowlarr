@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Text;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Parser;
 
@@ -31,6 +32,50 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
                 }
 
                 return false;
+            }
+        }
+
+        public override string SearchQuery
+        {
+            get
+            {
+                var searchQueryTerm = $"Term: []";
+                var searchEpisodeTerm = $" for Season / Episode:[{EpisodeSearchString}]";
+                if (SearchTerm.IsNotNullOrWhiteSpace())
+                {
+                    searchQueryTerm = $"Term: [{SearchTerm}]";
+                }
+
+                if (!ImdbId.IsNotNullOrWhiteSpace() && !TvdbId.HasValue && !RId.HasValue && !TraktId.HasValue)
+                {
+                    return $"{searchQueryTerm}{searchEpisodeTerm}";
+                }
+
+                var builder = new StringBuilder(searchQueryTerm);
+                builder = builder.Append(" | ID(s):");
+
+                if (ImdbId.IsNotNullOrWhiteSpace())
+                {
+                    builder.Append($" IMDbId:[{ImdbId}]");
+                }
+
+                if (TvdbId.HasValue)
+                {
+                    builder.Append($" TVDbId:[{TvdbId}]");
+                }
+
+                if (RId.HasValue)
+                {
+                    builder.Append($" TVRageId:[{RId}]");
+                }
+
+                if (TraktId.HasValue)
+                {
+                    builder.Append($" TraktId:[{TraktId}]");
+                }
+
+                builder = builder.Append(searchEpisodeTerm);
+                return builder.ToString().Trim();
             }
         }
 

@@ -16,13 +16,13 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
     {
         public override string Name => "LazyLibrarian";
 
-        private readonly ILazyLibrarianV3Proxy _lazylibrarianV3Proxy;
+        private readonly ILazyLibrarianV1Proxy _lazylibrarianV1Proxy;
         private readonly IConfigFileProvider _configFileProvider;
 
-        public LazyLibrarian(ILazyLibrarianV3Proxy lazylibrarianV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public LazyLibrarian(ILazyLibrarianV1Proxy lazylibrarianV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
             : base(appIndexerMapService, logger)
         {
-            _lazylibrarianV3Proxy = lazylibrarianV3Proxy;
+            _lazylibrarianV1Proxy = lazylibrarianV1Proxy;
             _configFileProvider = configFileProvider;
         }
 
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
             try
             {
-                failures.AddIfNotNull(_lazylibrarianV3Proxy.TestConnection(Settings));
+                failures.AddIfNotNull(_lazylibrarianV1Proxy.TestConnection(Settings));
             }
             catch (WebException ex)
             {
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         public override List<AppIndexerMap> GetIndexerMappings()
         {
-            var indexers = _lazylibrarianV3Proxy.GetIndexers(Settings);
+            var indexers = _lazylibrarianV1Proxy.GetIndexers(Settings);
 
             var mappings = new List<AppIndexerMap>();
 
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
             {
                 var lazylibrarianIndexer = BuildLazyLibrarianIndexer(indexer, indexer.Protocol);
 
-                var remoteIndexer = _lazylibrarianV3Proxy.AddIndexer(lazylibrarianIndexer, Settings);
+                var remoteIndexer = _lazylibrarianV1Proxy.AddIndexer(lazylibrarianIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
             }
         }
@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
             {
                 //Remove Indexer remotely and then remove the mapping
                 var indexerProps = indexerMapping.RemoteIndexerName.Split(",");
-                _lazylibrarianV3Proxy.RemoveIndexer(indexerProps[1], (LazyLibrarianProviderType)Enum.Parse(typeof(LazyLibrarianProviderType), indexerProps[0]), Settings);
+                _lazylibrarianV1Proxy.RemoveIndexer(indexerProps[1], (LazyLibrarianProviderType)Enum.Parse(typeof(LazyLibrarianProviderType), indexerProps[0]), Settings);
                 _appIndexerMapService.Delete(indexerMapping.Id);
             }
         }
@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
             var lazylibrarianIndexer = BuildLazyLibrarianIndexer(indexer, indexer.Protocol, indexerProps[1]);
 
             //Use the old remote id to find the indexer on LazyLibrarian incase the update was from a name change in Prowlarr
-            var remoteIndexer = _lazylibrarianV3Proxy.GetIndexer(indexerProps[1], lazylibrarianIndexer.Type, Settings);
+            var remoteIndexer = _lazylibrarianV1Proxy.GetIndexer(indexerProps[1], lazylibrarianIndexer.Type, Settings);
 
             if (remoteIndexer != null)
             {
@@ -111,7 +111,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
                 if (!lazylibrarianIndexer.Equals(remoteIndexer))
                 {
-                    _lazylibrarianV3Proxy.UpdateIndexer(lazylibrarianIndexer, Settings);
+                    _lazylibrarianV1Proxy.UpdateIndexer(lazylibrarianIndexer, Settings);
                     indexerMapping.RemoteIndexerName = $"{lazylibrarianIndexer.Type},{lazylibrarianIndexer.Altername}";
                     _appIndexerMapService.Update(indexerMapping);
                 }
@@ -123,7 +123,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} to LazyLibrarian", indexer.Name);
-                    var newRemoteIndexer = _lazylibrarianV3Proxy.AddIndexer(lazylibrarianIndexer, Settings);
+                    var newRemoteIndexer = _lazylibrarianV1Proxy.AddIndexer(lazylibrarianIndexer, Settings);
                     _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{newRemoteIndexer.Type},{newRemoteIndexer.Name}" });
                 }
                 else

@@ -21,9 +21,17 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string Source { get; set; }
         public string Host { get; set; }
 
+        public virtual string SearchQuery
+        {
+            get
+            {
+                return $"Term: [{SearchTerm}]";
+            }
+        }
+
         public override string ToString()
         {
-            return $"{{Term: {SearchTerm}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]}}";
+            return $"{SearchQuery}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]";
         }
 
         public virtual bool RssSearch

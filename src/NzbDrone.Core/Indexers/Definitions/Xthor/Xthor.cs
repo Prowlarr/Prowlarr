@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.1);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.5);
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public Xthor(IIndexerHttpClient httpClient,

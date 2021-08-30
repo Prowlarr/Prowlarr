@@ -252,6 +252,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                     ImdbId = imdbId.GetValueOrDefault()
                 };
 
+                if (item.InfoHash != null)
+                {
+                    torrentItem.MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(item.InfoHash, item.Name);
+                }
+
                 torrentInfos.Add(torrentItem);
             }
 

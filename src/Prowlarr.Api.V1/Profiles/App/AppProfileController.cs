@@ -20,6 +20,7 @@ namespace Prowlarr.Api.V1.Profiles.App
         }
 
         [RestPostById]
+        [Produces("application/json")]
         public ActionResult<AppProfileResource> Create(AppProfileResource resource)
         {
             var model = resource.ToModel();
@@ -28,12 +29,14 @@ namespace Prowlarr.Api.V1.Profiles.App
         }
 
         [RestDeleteById]
+        [Produces("application/json")]
         public void DeleteProfile(int id)
         {
             _profileService.Delete(id);
         }
 
         [RestPutById]
+        [Produces("application/json")]
         public ActionResult<AppProfileResource> Update(AppProfileResource resource)
         {
             var model = resource.ToModel();
@@ -43,12 +46,17 @@ namespace Prowlarr.Api.V1.Profiles.App
             return Accepted(model.Id);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(AppProfileResource), 200)]
+        [ProducesResponseType(typeof(IDictionary<string, string>), 404)]
+        [ProducesResponseType(500)]
         public override AppProfileResource GetResourceById(int id)
         {
             return _profileService.Get(id).ToResource();
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<AppProfileResource> GetAll()
         {
             return _profileService.All().ToResource();

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation;
@@ -89,6 +90,63 @@ namespace NzbDrone.Host
                 STJson.ApplySerializerSettings(options.JsonSerializerOptions);
             })
             .AddControllersAsServices();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "1.0.0",
+                    Title = "Prowlarr",
+                    Description = "Prowlarr API docs",
+                    License = new OpenApiLicense
+                    {
+                        Name = "GPL-3.0",
+                        Url = new Uri("https://github.com/Prowlarr/Prowlarr/blob/develop/LICENSE")
+                    }
+                });
+
+                var apiKeyHeader = new OpenApiSecurityScheme
+                {
+                    Name = "X-Api-Key",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "apiKey",
+                    Description = "Apikey passed as header",
+                    In = ParameterLocation.Header,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "X-Api-Key"
+                    },
+                };
+
+                c.AddSecurityDefinition("X-Api-Key", apiKeyHeader);
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { apiKeyHeader, new string[] { } }
+                });
+
+                var apikeyQuery = new OpenApiSecurityScheme
+                {
+                    Name = "apikey",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "apiKey",
+                    Description = "Apikey passed as header",
+                    In = ParameterLocation.Query,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "apikey"
+                    },
+                };
+
+                c.AddSecurityDefinition("apikey", apikeyQuery);
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { apikeyQuery, new string[] { } }
+                });
+            });
 
             services
             .AddSignalR()
@@ -180,6 +238,20 @@ namespace NzbDrone.Host
             app.UseMiddleware<BufferingMiddleware>(new List<string> { "/api/v1/command" });
 
             app.UseWebSockets();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            if (BuildInfo.IsDebug)
+            {
+                app.UseSwagger(c =>
+                {
+                    c.PreSerializeFilters.Add((swagger, httpReq) =>
+                    {
+                        swagger.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } };
+                    });
+
+                    c.RouteTemplate = "docs/{documentName}/openapi.json";
+                });
+            }
 
             app.UseEndpoints(x =>
             {

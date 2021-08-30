@@ -823,6 +823,50 @@ stages:
           FORCE_COLOR: 0
           YARN_CACHE_FOLDER: $(yarnCacheFolder)
 
+    - job: Api_Docs
+      displayName: API Docs
+      dependsOn: Prepare
+      condition: |
+        and
+        (
+          and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop')),
+          and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+        )
+
+      pool:
+        vmImage: windows-2019
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Install .net core'
+        inputs:
+          version: $(dotnetVersion)
+      - checkout: self # Need history for Sonar analysis
+        submodules: true      
+      - bash: ./docs.sh Windows
+        displayName: Create Openapi.json
+      - bash: git commit -am 'Automated API Docs update'
+        displayName: Commit APIDoc Change  
+      - task: CreatePullRequest@1
+        inputs:
+          repoType: 'GitHub'
+          githubEndpoint: 'github release'
+          githubRepository: '$(Build.Repository.Name)'
+          sourceBranch: 'api-docs'
+          targetBranch: 'develop'
+          title: 'Update API Docs'
+      - task: CopyFiles@2
+        displayName: 'Copy openapi.json to: $(Build.ArtifactStagingDirectory)'
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)'
+          Contents: |
+            **/*openapi.json
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/api_docs'
+      - publish: $(Build.ArtifactStagingDirectory)/api_docs
+        artifact: 'APIDocs'
+        displayName: Publish API Docs Bundle
+        condition: and(succeeded(), eq(variables['System.JobAttempt'], '1'))
+
     - job: Analyze_Backend
       displayName: Backend
       dependsOn: Prepare

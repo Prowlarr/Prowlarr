@@ -7,10 +7,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using FluentValidation;
+using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -26,6 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new string[] { "https://torrentseeds.org/" };
         public override string Description => "TorrentSeeds is a Private site for MOVIES / TV / GENERAL";
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
+        private string CaptchaUrl => Settings.BaseUrl + "simpleCaptcha.php?numImages=1";
         private string TokenUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -53,30 +56,32 @@ namespace NzbDrone.Core.Indexers.Definitions
                 LogResponseContent = true
             };
 
-            var loginPage = await ExecuteAuth(new HttpRequest(TokenUrl));
-            var parser = new HtmlParser();
-            var dom = parser.ParseDocument(loginPage.Content);
-            var token = dom.QuerySelector("form.form-horizontal > span");
-            var csrf = token.Children[1].GetAttribute("value");
+            Cookies = null;
+
+            var loginPage = await ExecuteAuth(new HttpRequest(CaptchaUrl));
+            var json1 = JObject.Parse(loginPage.Content);
+            var captchaSelection = json1["images"][0]["hash"];
 
             requestBuilder.Method = HttpMethod.POST;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+            requestBuilder.SetCookies(loginPage.GetCookies());
 
-            var cookies = Cookies;
-
-            Cookies = null;
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
-                .AddFormParameter("perm_ssl", "1")
-                .AddFormParameter("returnto", "/")
-                .AddFormParameter("csrf_token", csrf)
+                .AddFormParameter("submitme", "X")
+                .AddFormParameter("captchaSelection", (string)captchaSelection)
                 .SetHeader("Content-Type", "multipart/form-data")
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
 
-            cookies = response.GetCookies();
+            if (CheckIfLoginNeeded(response))
+            {
+                throw new IndexerAuthException("TorrentSeeds Login Failed");
+            }
+
+            var cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             _logger.Debug("TorrentSeeds authentication succeeded.");

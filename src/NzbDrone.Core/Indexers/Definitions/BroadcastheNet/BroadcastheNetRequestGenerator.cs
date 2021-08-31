@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
@@ -69,17 +71,26 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             }
 
             // If only the season/episode is searched for then change format to match expected format
-            if (searchCriteria.Season > 0 && searchCriteria.Episode == null)
+            if (searchCriteria.Season > 0 && searchCriteria.Episode.IsNullOrWhiteSpace())
             {
+                // Season Only
                 parameters.Name = string.Format("Season {0}%", searchCriteria.Season.Value);
                 parameters.Category = "Season";
             }
-            else if (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
+            else if (searchCriteria.Season > 0 && Regex.IsMatch(searchCriteria.EpisodeSearchString, "(\\d{4}\\.\\d{2}\\.\\d{2})"))
             {
+                // Daily Episode
+                parameters.Name = searchCriteria.EpisodeSearchString;
+                parameters.Category = "Episode";
+            }
+            else if    (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
+            {
+                // Standard (S/E) Episode
                 parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
                 parameters.Category = "Episode";
             }
 
+            // Neither a season only search nor daily nor standard, fall back to query
             parameters.Search = searchString.Replace(" ", "%");
 
             pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));

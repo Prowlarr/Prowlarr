@@ -11,8 +11,8 @@ namespace NzbDrone.Common.Instrumentation
         private static readonly Regex[] CleansingRules = new[]
             {
                 // Url
-                new Regex(@"(?<=\?|&|: |;)(apikey|token|passkey|auth|authkey|user|uid|api|[a-z_]*apikey|account|passwd|pwd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                new Regex(@"(?<=\?|&| )[^=]*?(_?(?<!use)token|username|passwo?rd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"(?<=[?&: ;])(apikey|token|pass(?:key|wd)?|auth|authkey|user|u?id|api|[a-z_]*apikey|account|pwd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"(?<=[?& ])[^=]*?(_?(?<!use)token|username|passwo?rd)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"rss\.torrentleech\.org/(?!rss)(?<secret>[0-9a-z]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"rss\.torrentleech\.org/rss/download/[0-9]+/(?<secret>[0-9a-z]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"iptorrents\.com/[/a-z0-9?&;]*?(?:[?&;](u|tp)=(?<secret>[^&=;]+?))+(?= |;|&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),

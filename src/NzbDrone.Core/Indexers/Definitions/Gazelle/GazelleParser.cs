@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        public virtual IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
 

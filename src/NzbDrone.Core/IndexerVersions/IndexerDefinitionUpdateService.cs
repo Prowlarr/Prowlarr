@@ -33,6 +33,7 @@ namespace NzbDrone.Core.IndexerVersions
             "beyond-hd",
             "beyond-hd-oneurl",
             "danishbytes",
+            "desitorrents",
             "hdbits",
             "shareisland"
         };

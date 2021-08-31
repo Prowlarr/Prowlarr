@@ -60,7 +60,7 @@ function createMapStateToProps() {
 function createMapDispatchToProps(dispatch, props) {
   return {
     onGoToAddNewMovie(query) {
-      dispatch(setSearchDefault({ searchQuery: query, searchIndexerIds: [-1, -2] }));
+      dispatch(setSearchDefault({ searchQuery: query }));
       dispatch(push(`${window.Prowlarr.urlBase}/search`));
     }
   };

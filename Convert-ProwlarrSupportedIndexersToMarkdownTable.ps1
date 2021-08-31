@@ -62,7 +62,7 @@ $wiki_bookmark = '#'
 ### Page Formating
 $wiki_1newline = "`r`n"
 $wiki_2newline = "`r`n`r`n"
-#$wiki_encoding = 'utf8'
+$wiki_encoding = 'utf8'
 ### Github Details
 $gh_web = 'https://github.com'
 $gh_web_commit = 'commit/'
@@ -135,7 +135,6 @@ $tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and 
 @{Name = 'Description'; Expression = { $_.description } }         
 
 ## Convert Data to Markdown Table
-#$tbl_fmt_PubUse= ConvertTo-Markdown($tbl_PubUse)
 $tbl_fmt_PubUse = if ( 'None' -eq $tbl_PubUse ) { $tbl_PubUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard }
 $tbl_fmt_PrvUse = $tbl_PrvUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard
 $tbl_fmt_PubTor = $tbl_PubTor | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard 
@@ -147,8 +146,8 @@ $wiki_page_start = $wiki_2newline + "- Supported Indexers as of Build ``" + $bui
 Write-Information 'Page Header Built'
 
 ## Build Page Pieces'
-$tbl_fmt_tor = $wiki_1newline + '## Torrents' + $wiki_2newline + '### Public' + $wiki_2newline + $tbl_fmt_PubTor + $wiki_2newline + '### Private' + $wiki_2newline + $tbl_fmt_PrvTor + $wiki_2newline
-$tbl_fmt_use = '## Usenet' + $wiki_2newline + '### Public' + $wiki_2newline + $tbl_fmt_PubUse + $wiki_2newline + '### Private' + $wiki_2newline + $tbl_fmt_PrvUse
+$tbl_fmt_tor = $wiki_1newline + '## Torrents' + $wiki_2newline + '### Public' + $wiki_2newline + $tbl_fmt_PubTor + $wiki_1newline + '### Private' + $wiki_2newline + $tbl_fmt_PrvTor
+$tbl_fmt_use = $wiki_1newline + '## Usenet' + $wiki_2newline + '### Public' + $wiki_2newline + $tbl_fmt_PubUse + $wiki_1newline + '### Private' + $wiki_2newline + $tbl_fmt_PrvUse
 Write-Information 'Wiki Markdown Tables Built'
 $date = [DateTime]::UtcNow.ToString('o')
 $mdHeader = 

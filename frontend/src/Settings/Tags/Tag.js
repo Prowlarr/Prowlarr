@@ -85,21 +85,21 @@ class Tag extends Component {
               {
                 !!indexerIds.length &&
                   <div>
-                    {indexerIds.length} indexer{indexerIds.length > 1 && 's'}
+                    {indexerIds.length} {indexerIds.length > 1 ? translate('Indexers') : translate('Indexer')}
                   </div>
               }
 
               {
                 !!notificationIds.length &&
                   <div>
-                    {notificationIds.length} connection{notificationIds.length > 1 && 's'}
+                    {notificationIds.length} {notificationIds.length > 1 ? translate('Notifications') : translate('Notification')}
                   </div>
               }
 
               {
                 !!indexerProxyIds.length &&
                   <div>
-                    {indexerProxyIds.length} indexerProxy{indexerProxyIds.length > 1 && 's'}
+                    {indexerProxyIds.length} {indexerProxyIds.length > 1 ? translate('IndexerProxies') : translate('IndexerProxy')}
                   </div>
               }
             </div>
@@ -108,7 +108,7 @@ class Tag extends Component {
         {
           !isTagUsed &&
             <div>
-              No links
+              {translate('NoLinks')}
             </div>
         }
 

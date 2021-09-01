@@ -8,13 +8,14 @@ using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Localization;
 
 namespace NzbDrone.Core.IndexerProxies.Socks5
 {
     public class Socks5 : HttpIndexerProxyBase<Socks5Settings>
     {
-        public Socks5(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger)
-            : base(cloudRequestBuilder, httpClient, logger)
+        public Socks5(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService)
+            : base(cloudRequestBuilder, httpClient, logger, localizationService)
         {
         }
 

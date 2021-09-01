@@ -3,13 +3,14 @@ using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Localization;
 
 namespace NzbDrone.Core.IndexerProxies.Http
 {
     public class Http : HttpIndexerProxyBase<HttpSettings>
     {
-        public Http(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger)
-            : base(cloudRequestBuilder, httpClient, logger)
+        public Http(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService)
+            : base(cloudRequestBuilder, httpClient, logger, localizationService)
         {
         }
 

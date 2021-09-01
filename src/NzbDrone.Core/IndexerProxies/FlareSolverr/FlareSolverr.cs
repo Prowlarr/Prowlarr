@@ -7,14 +7,15 @@ using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 {
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
-        public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger)
-            : base(cloudRequestBuilder, httpClient, logger)
+        public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService)
+            : base(cloudRequestBuilder, httpClient, logger, localizationService)
         {
         }
 
@@ -133,13 +134,13 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                 if (response.StatusCode == HttpStatusCode.BadRequest)
                 {
                     _logger.Error("Proxy Health Check failed: {0}", response.StatusCode);
-                    failures.Add(new NzbDroneValidationFailure("Host", "ProxyCheckBadRequestMessage"));
+                    failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckBadRequestMessage"), response.StatusCode)));
                 }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Proxy Health Check failed");
-                failures.Add(new NzbDroneValidationFailure("Host", "ProxyCheckFailedToTestMessage"));
+                failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckFailedToTestMessage"), request.Url.Host)));
             }
 
             return new ValidationResult(failures);

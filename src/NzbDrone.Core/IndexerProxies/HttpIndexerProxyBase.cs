@@ -6,6 +6,7 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.IndexerProxies
@@ -16,12 +17,14 @@ namespace NzbDrone.Core.IndexerProxies
         protected readonly IHttpClient _httpClient;
         protected readonly IHttpRequestBuilderFactory _cloudRequestBuilder;
         protected readonly Logger _logger;
+        protected readonly ILocalizationService _localizationService;
 
-        public HttpIndexerProxyBase(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger)
+        public HttpIndexerProxyBase(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService)
         {
             _httpClient = httpClient;
             _logger = logger;
             _cloudRequestBuilder = cloudRequestBuilder.Services;
+            _localizationService = localizationService;
         }
 
         public override ValidationResult Test()
@@ -31,7 +34,7 @@ namespace NzbDrone.Core.IndexerProxies
             var addresses = Dns.GetHostAddresses(Settings.Host);
             if (!addresses.Any())
             {
-                failures.Add(new NzbDroneValidationFailure("Host", "ProxyCheckResolveIpMessage"));
+                failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckResolveIpMessage"), addresses)));
             }
 
             var request = PreRequest(_cloudRequestBuilder.Create()

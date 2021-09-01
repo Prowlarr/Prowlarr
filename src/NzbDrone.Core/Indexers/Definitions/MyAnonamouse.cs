@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -269,6 +271,23 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
+            // Throw common http errors here before we try to parse
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                // Remove cookie cache
+                CookiesUpdater(null, null);
+
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+            }
+
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            {
+                // Remove cookie cache
+                CookiesUpdater(null, null);
+
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            }
+
             var torrentInfos = new List<TorrentInfo>();
 
             var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseResponse>(indexerResponse.Content);

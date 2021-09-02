@@ -5,7 +5,7 @@
         Name: Convert-ProwlarrSupportedIndexersToMarkdownTable.ps1
         The purpose of this script is to export a markdown table for the wiki of the available indexers
     .DESCRIPTION
-        Grabs build number and available indexers from a local or remotely installed Prowlarr instance
+        Grabs build number and available indexers from a local or remotely installed Prowlarr instance. Requires Commit Hash and App API Key
     .NOTES
         This script has been tested on Windows PowerShell 7.1.3
     .EXAMPLE
@@ -30,20 +30,17 @@ param (
     [string]$AppAPIKey,
 
     [Parameter(Position = 4)]
-    [System.IO.FileInfo]
-    $OutputFile = ".$([System.IO.Path]::DirectorySeparatorChar)supported-indexers.md",
+    [System.IO.FileInfo]$OutputFile = ".$([System.IO.Path]::DirectorySeparatorChar)supported-indexers.md",
 
     [Parameter(Position = 5)]
     [uri]$AppBaseURL = 'http://localhost:9696'
 ),
 
-## Gather Inputs & Variables
-### User Inputs
-#### Convert Params to match vars
+# Gather Inputs & Variables #
+## User Inputs
+### Convert Params to match vars
 $app_baseUrl = $AppBaseURL
 $app_apikey = $AppAPIKey
-####
-
 ## Start Variables
 ### Application Details
 $app_api_version = 'v1'
@@ -51,7 +48,7 @@ $app_api_path = '/api/'
 $app_api_endpoint_version = '/system/status'
 $app_api_endpoint_indexer = '/indexer/schema'
 $headers = @{'X-Api-Key' = $app_apikey }
-#### Github App Info
+### Github App Info
 $gh_app_org = 'Prowlarr'
 $gh_app_repo = 'Prowlarr'
 ### Wiki Details
@@ -67,8 +64,8 @@ $wiki_encoding = 'utf8'
 $gh_web = 'https://github.com'
 $gh_web_commit = 'commit/'
 ## End Variables
-Write-Information 'Variables and Inputs Imported'
 
+Write-Information 'Variables and Inputs Imported'
 ## Build Parameters
 ### App
 $api_url = ($app_baseUrl.ToString().TrimEnd('/')) + $app_api_path + $app_api_version
@@ -76,7 +73,6 @@ $version_url = $api_url + $app_api_endpoint_version
 $indexer_url = $api_url + $app_api_endpoint_indexer
 ### Github
 $gh_repo_org = $gh_app_org + '/' + $gh_app_repo + '/'
-## 
 ### Wiki
 $wiki_infolink = ($wiki_link.ToString().TrimEnd('/')) + $wiki_app_path + '/' + $wiki_page + $wiki_bookmark
 $wiki_commiturl = ($gh_web.ToString().TrimEnd('/')) + '/' + $gh_repo_org + $gh_web_commit
@@ -105,28 +101,25 @@ $indexer_tbl_obj = $indexer_obj | Sort-Object -Property 'name'
 
 ## Build Table Fields
 Write-Information 'Building Indexer Tables'
-## Public Usenet
+### Public Usenet
 Write-Information 'Building: Usenet - Public'
 $tbl_PubUse = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'usenet') } | `
     Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, `
 @{Name = 'Language'; Expression = { $_.language } }, `
 @{Name = 'Description'; Expression = { $_.description } }
 if ( $null -eq $tbl_PubUse ) { $tbl_PubUse = 'None' }
-
 ### Private Usenet
 Write-Information 'Building: Usenet - Private'
 $tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'usenet') } | `
     Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, `
 @{Name = 'Language'; Expression = { $_.language } }, `
 @{Name = 'Description'; Expression = { $_.description } }
-
 ### Public Torrents
 Write-Information 'Building: Torrents - Public'
 $tbl_PubTor = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'torrent') } | `
     Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, `
 @{Name = 'Language'; Expression = { $_.language } }, `
-@{Name = 'Description'; Expression = { $_.description } }
-        
+@{Name = 'Description'; Expression = { $_.description } }      
 ### Private Torrents
 Write-Information 'Building: Torrents - Private'
 $tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'torrent') } | `
@@ -161,7 +154,7 @@ editor: markdown
 dateCreated: $date
 ---"
 Write-Information 'Wiki Page pieces built'
-## Build and output Page
+## Build and Output Page
 $wiki_page_file = $mdHeader + $wiki_page_start + $wiki_1newline + $tbl_fmt_tor + $tbl_fmt_use
 Write-Information 'Wiki Page Built'
 $wiki_page_file | Out-File $OutputFile -Encoding $wiki_encoding

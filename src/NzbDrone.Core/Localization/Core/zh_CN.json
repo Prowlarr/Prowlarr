@@ -192,12 +192,12 @@
     "BranchUpdateMechanism": "外部更新机制使用的分支",
     "BranchUpdate": "更新Prowlarr的分支",
     "Branch": "分支",
-    "BindAddressHelpText": "有效的IPV4地址或以“*”代表所以地址",
+    "BindAddressHelpText": "有效的IPV4地址或以'*'代表所有地址",
     "BindAddress": "绑定地址",
     "BeforeUpdate": "更新前",
     "Backups": "备份",
     "BackupRetentionHelpText": "早于保留周期的自动备份将被自动清除",
-    "BackupNow": "现在备份",
+    "BackupNow": "马上备份",
     "BackupFolderHelpText": "相对路径将在 Prowlarr 的 AppData 目录下",
     "Backup": "备份",
     "AutomaticSearch": "自动搜索",
@@ -274,10 +274,11 @@
     "NewznabVipCheckExpiredClientMessage": "搜刮器VIP权益已过期：{0}",
     "New": "新的",
     "NetCore": ".NET",
-    "Name": "名字",
+    "Name": "名称",
     "Movies": "电影",
     "MovieIndexScrollTop": "影片索引：滚动到顶部",
     "MovieIndexScrollBottom": "影片索引：滚动到底部",
     "MovieDetailsPreviousMovie": "影片详细：前一个",
-    "MovieDetailsNextMovie": "影片详细：下一个"
+    "MovieDetailsNextMovie": "影片详细：下一个",
+    "BackupIntervalHelpText": "自动备份时间间隔"
 }

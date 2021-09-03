@@ -437,5 +437,10 @@
     "IndexerTagsHelpText": "Use etiquetas para especificar clientes padrão, especificar proxies indexadores ou apenas para organizar seus indexadores.",
     "Notifications": "Notificações",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Não foi possível adicionar um novo proxy indexador, tente novamente.",
-    "UnableToLoadIndexerProxies": "Incapaz de carregar proxies indexadores"
+    "UnableToLoadIndexerProxies": "Incapaz de carregar proxies indexadores",
+    "IndexerVipCheckExpiredClientMessage": "Benefícios VIP do Indexador expiraram: {0}",
+    "IndexerProxy": "Proxy do Indexador",
+    "IndexerVipCheckExpiringClientMessage": "Os benefícios VIPS do Indexador expirarão em breve: {0}",
+    "NoLinks": "Sem Links",
+    "Notification": "Notificação"
 }

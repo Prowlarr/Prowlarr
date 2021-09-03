@@ -941,5 +941,8 @@
     "Notifications": "Értesítések",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Nem lehet új Indexer Proxyt hozzáadni, próbálja újra.",
     "IndexerVipCheckExpiredClientMessage": "Az Indexer VIP előnyei lejártak: {0}",
-    "IndexerVipCheckExpiringClientMessage": "Az Indexer VIP előnyei hamarosan lejárnak: {0}"
+    "IndexerVipCheckExpiringClientMessage": "Az Indexer VIP előnyei hamarosan lejárnak: {0}",
+    "IndexerProxy": "Indexelő Proxy",
+    "NoLinks": "Nincsenek Linkek",
+    "Notification": "Értesítés"
 }

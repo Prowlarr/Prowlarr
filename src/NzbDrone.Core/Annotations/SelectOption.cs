@@ -6,5 +6,6 @@ namespace NzbDrone.Core.Annotations
         public string Name { get; set; }
         public int Order { get; set; }
         public string Hint { get; set; }
+        public int? ParentValue { get; set; }
     }
 }

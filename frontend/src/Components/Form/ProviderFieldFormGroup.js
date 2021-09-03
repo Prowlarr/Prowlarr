@@ -53,7 +53,8 @@ function getSelectValues(selectOptions) {
     result.push({
       key: option.value,
       value: option.name,
-      hint: option.hint
+      hint: option.hint,
+      parentKey: option.parentValue
     });
 
     return result;

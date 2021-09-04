@@ -248,7 +248,7 @@
   "NoLimitForAnyRuntime": "No limit for any runtime",
   "NoLogFiles": "No log files",
   "NoMinimumForAnyRuntime": "No minimum for any runtime",
-  "NoSearchResultsFound": "No search results found, try performing a new search below.",
+  "NoResultsFound": "No results found",
   "NoTagsHaveBeenAddedYet": "No tags have been added yet",
   "Notifications": "Notifications",
   "NotificationTriggers": "Notification Triggers",

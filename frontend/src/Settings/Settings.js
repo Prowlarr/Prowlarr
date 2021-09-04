@@ -18,7 +18,7 @@ function Settings() {
           className={styles.link}
           to="/settings/indexers"
         >
-          {translate('Indexers')}
+          {translate('IndexerProxies')}
         </Link>
 
         <div className={styles.summary}>

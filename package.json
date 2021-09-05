@@ -123,13 +123,11 @@
     "run-sequence": "2.2.1",
     "streamqueue": "1.1.2",
     "style-loader": "2.0.0",
-    "stylelint": "13.13.0",
+    "stylelint": "13.13.1",
     "stylelint-order": "4.1.0",
     "url-loader": "4.1.1",
     "webpack": "5.35.1",
     "webpack-cli": "4.6.0",
-    "webpack-livereload-plugin": "3.0.1",
-    "stylelint": "13.13.1",
-    "stylelint-order": "4.1.0"
+    "webpack-livereload-plugin": "3.0.1"
   }
 }

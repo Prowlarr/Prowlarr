@@ -103,6 +103,12 @@ namespace NzbDrone.Core.Parser.Model
         public static long GetBytes(string str)
         {
             var valStr = new string(str.Where(c => char.IsDigit(c) || c == '.').ToArray());
+            if (valStr.Count(c => c == '.') > 1)
+            {
+                var lastOcc = valStr.LastIndexOf('.');
+                valStr = valStr.Substring(0, lastOcc).Replace(".", string.Empty) + valStr.Substring(lastOcc);
+            }
+
             var unit = new string(str.Where(char.IsLetter).ToArray());
             var val = ParseUtil.CoerceFloat(valStr);
             return GetBytes(unit, val);

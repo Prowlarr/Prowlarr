@@ -680,10 +680,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 if (!requestLinkStr.Contains("?"))
                 {
                     // TODO Need Encoding here if we add it back
-                    requestLinkStr += "?" + queryCollection.GetQueryString(separator: request.Queryseparator).Substring(1);
-                }
-                else
-                {
+                    requestLinkStr += "?";
                     requestLinkStr += queryCollection.GetQueryString(separator: request.Queryseparator);
                 }
             }
@@ -721,9 +718,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
 
+                HttpResponse response = null;
                 if (download.Before != null)
                 {
-                    await HandleRequest(download.Before, variables, link.ToString());
+                    response = await HandleRequest(download.Before, variables, link.ToString());
                 }
 
                 if (download.Method == "post")
@@ -731,7 +729,76 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     method = HttpMethod.POST;
                 }
 
-                if (download.Selectors != null)
+                if (download.Infohash != null)
+                {
+                    var hashBlock = download.Infohash.Hash;
+                    var hashSelector = ApplyGoTemplateText(hashBlock.Selector, variables);
+                    var titleBlock = download.Infohash.Title;
+                    var titleSelector = ApplyGoTemplateText(titleBlock.Selector, variables);
+                    try
+                    {
+                        var headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+                        var results = "";
+
+                        var request = new HttpRequestBuilder(link.ToString())
+                            .SetCookies(Cookies ?? new Dictionary<string, string>())
+                            .SetHeaders(headers ?? new Dictionary<string, string>())
+                            .Build();
+
+                        request.AllowAutoRedirect = true;
+
+                        response = await HttpClient.ExecuteAsync(request, Definition);
+
+                        results = response.Content;
+
+                        var searchResultParser = new HtmlParser();
+                        var searchResultDocument = searchResultParser.ParseDocument(results);
+                        var hashElement = searchResultDocument.QuerySelector(hashSelector);
+                        if (hashElement == null)
+                        {
+                            _logger.Debug(string.Format("CardigannIndexer ({0}): Hash selector {1} could not match any elements:\n{2}", _definition.Id, hashSelector, results));
+                        }
+
+                        var hash = string.Empty;
+                        if (hashBlock.Attribute != null)
+                        {
+                            hash = hashElement.GetAttribute(hashBlock.Attribute);
+                        }
+                        else
+                        {
+                            hash = hashElement.TextContent;
+                        }
+
+                        hash = ApplyFilters(hash, hashBlock.Filters, variables);
+
+                        var titleElement = searchResultDocument.QuerySelector(titleSelector);
+                        if (titleElement == null)
+                        {
+                            _logger.Error(string.Format("CardigannIndexer ({0}): Title selector {1} didn't match:\n{2}", _definition.Id, titleSelector, results));
+                        }
+
+                        var title = string.Empty;
+                        if (titleBlock.Attribute != null)
+                        {
+                            title = titleElement.GetAttribute(titleBlock.Attribute);
+                        }
+                        else
+                        {
+                            title = titleElement.TextContent;
+                        }
+
+                        title = ApplyFilters(title, titleBlock.Filters, variables);
+
+                        var magnet = MagnetLinkBuilder.BuildPublicMagnetLink(hash, title);
+                        link = ResolvePath(magnet, link);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error(string.Format("{0} CardigannIndexer ({1}): An exception occurred while trying infohash block with hashSelector {2} and titleSelector {3}", e, _definition.Id, hashSelector, titleSelector));
+                        throw new Exception(string.Format("An exception occurred while trying selector {0}", hashSelector));
+                    }
+                }
+                else if (download.Selectors != null)
                 {
                     var headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
 
@@ -742,7 +809,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     request.AllowAutoRedirect = true;
 
-                    var response = await HttpClient.ExecuteAsync(request, Definition);
+                    response = await HttpClient.ExecuteAsync(request, Definition);
 
                     var results = response.Content;
 

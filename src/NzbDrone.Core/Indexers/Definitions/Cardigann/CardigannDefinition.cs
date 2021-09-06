@@ -165,11 +165,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public string Queryseparator { get; set; } = "&";
     }
 
+    public class InfohashBlock
+    {
+        public DownloadsField Hash { get; set; }
+        public DownloadsField Title { get; set; }
+        public bool Before { get; set; } = false;
+    }
+
     public class DownloadBlock
     {
         public List<DownloadsField> Selectors { get; set; }
         public string Method { get; set; }
         public RequestBlock Before { get; set; }
+        public InfohashBlock Infohash { get; set; }
     }
 
     public class DownloadsField

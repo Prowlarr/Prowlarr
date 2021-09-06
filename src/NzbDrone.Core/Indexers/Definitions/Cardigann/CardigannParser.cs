@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.Size.ToString();
                                         break;
                                     case "leechers":
-                                        var leechers = ParseUtil.CoerceLong(value);
+                                        var leechers = ReleaseInfo.GetBytes(value);
                                         leechers = leechers < 5000000L ? leechers : 0; // to fix #6558
                                         if (release.Peers == null)
                                         {
@@ -227,7 +227,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = leechers.ToString();
                                         break;
                                     case "seeders":
-                                        release.Seeders = ParseUtil.CoerceInt(value);
+                                        release.Seeders = (int?)ReleaseInfo.GetBytes(value);
                                         release.Seeders = release.Seeders < 5000000L ? release.Seeders : 0; // to fix #6558
                                         if (release.Peers == null)
                                         {
@@ -245,11 +245,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.PublishDate.ToString(DateTimeUtil.Rfc1123ZPattern);
                                         break;
                                     case "files":
-                                        release.Files = ParseUtil.CoerceInt(value);
+                                        release.Files = (int?)ReleaseInfo.GetBytes(value);
                                         value = release.Files.ToString();
                                         break;
                                     case "grabs":
-                                        release.Grabs = ParseUtil.CoerceInt(value);
+                                        release.Grabs = (int?)ReleaseInfo.GetBytes(value);
                                         value = release.Grabs.ToString();
                                         break;
                                     case "downloadvolumefactor":

@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Aither";
         public override string[] IndexerUrls => new string[] { "https://aither.cc/" };
         public override string Description => "Aither is a Private Torrent Tracker for HD MOVIES / TV";
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public Aither(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

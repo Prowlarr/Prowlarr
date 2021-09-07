@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "YTS";
         public override string[] IndexerUrls => new string[] { "https://yts.mx/" };
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override string Description => "YTS is a Public torrent site specialising in HD movies of small size";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1252");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

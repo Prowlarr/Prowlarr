@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "AnimeBytes";
         public override string[] IndexerUrls => new string[] { "https://animebytes.tv/" };
         public override string Description => "AnimeBytes (AB) is the largest private torrent tracker that specialises in anime and anime-related content.";
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

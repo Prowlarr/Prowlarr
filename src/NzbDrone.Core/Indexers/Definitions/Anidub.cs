@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Anidub";
         public override string[] IndexerUrls => new string[] { "https://tr.anidub.com/" };
         public override string Description => "Anidub is russian anime voiceover group and eponymous anime tracker.";
-        public override string Language => "ru-ru";
+        public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPublic;

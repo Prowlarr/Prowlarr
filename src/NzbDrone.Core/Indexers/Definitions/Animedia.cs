@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Animedia";
         public override string[] IndexerUrls => new string[] { "https://tt.animedia.tv/" };
         public override string Description => "Animedia is russian anime voiceover group and eponymous anime tracker.";
-        public override string Language => "ru-ru";
+        public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;

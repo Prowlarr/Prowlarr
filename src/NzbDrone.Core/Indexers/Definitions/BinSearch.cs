@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "BinSearch";
         public override string[] IndexerUrls => new string[] { "https://binsearch.info/" };
         public override string Description => "The binary Usenet search engine";
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;

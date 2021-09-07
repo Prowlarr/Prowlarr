@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
     {
         public override string Name => "Xthor";
         public override string[] IndexerUrls => new string[] { "https://api.xthor.tk/" };
-        public override string Language => "fr-fr";
+        public override string Language => "fr-FR";
         public override string Description => "Xthor is a general Private torrent site";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1252");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

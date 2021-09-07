@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private string Login3Url => Settings.BaseUrl + "retorno/include/puerta_8_ajax.php";
         private string Login4Url => Settings.BaseUrl + "retorno/index.php";
         public override string Description => "ZonaQ is a SPANISH Private Torrent Tracker for MOVIES / TV";
-        public override string Language => "es-es";
+        public override string Language => "es-ES";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

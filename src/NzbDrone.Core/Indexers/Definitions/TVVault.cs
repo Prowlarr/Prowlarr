@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new[] { "https://tv-vault.me/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override string Description => "TV-Vault is a very unique tracker dedicated for old TV shows, TV movies and documentaries.";
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "ShowRSS";
         public override string[] IndexerUrls => new string[] { "https://showrss.info/" };
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override string Description => "showRSS is a service that allows you to keep track of your favorite TV shows";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override string Description => "SpeedApp is a ROMANIAN Private Torrent Tracker for MOVIES / TV / GENERAL";
 
-        public override string Language => "ro-ro";
+        public override string Language => "ro-RO";
 
         public override Encoding Encoding => Encoding.UTF8;
 

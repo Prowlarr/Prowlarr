@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "SceneTime";
         public override string[] IndexerUrls => new[] { "https://www.scenetime.com/" };
         public override string Description => "Always on time";
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

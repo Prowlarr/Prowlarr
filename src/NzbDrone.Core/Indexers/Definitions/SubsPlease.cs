@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://subsplease.org/",
             "https://subsplease.nocensor.space/"
         };
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override string Description => "SubsPlease - A better HorribleSubs/Erai replacement";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Redacted";
         public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
         public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

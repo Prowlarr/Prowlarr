@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "TorrentSyndikat";
         public override string[] IndexerUrls => new[] { "https://torrent-syndikat.org/" };
         public override string Description => "A German general tracker";
-        public override string Language => "de-de";
+        public override string Language => "de-DE";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

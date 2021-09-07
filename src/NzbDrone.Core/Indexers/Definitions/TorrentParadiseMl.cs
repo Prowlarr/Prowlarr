@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "TorrentParadiseMl";
         public override string[] IndexerUrls => new[] { "https://torrent-paradise.ml/" };
-        public override string Language => "en-us";
+        public override string Language => "en-US";
         public override string Description => "The most innovative torrent site";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

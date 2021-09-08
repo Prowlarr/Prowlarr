@@ -21,13 +21,9 @@ import translate from 'Utilities/String/translate';
 import SearchIndexFilterMenu from './Menus/SearchIndexFilterMenu';
 import SearchIndexSortMenu from './Menus/SearchIndexSortMenu';
 import NoSearchResults from './NoSearchResults';
-import SearchFooterConnector from './SearchFooterConnector';
-import SearchIndexTableConnector from './Table/SearchIndexTableConnector';
+import SearchFooter from './SearchFooter';
+import SearchVirtualTable from './Table/SearchVirtualTable';
 import styles from './SearchIndex.css';
-
-function getViewComponent() {
-  return SearchIndexTableConnector;
-}
 
 class SearchIndex extends Component {
 
@@ -62,8 +58,8 @@ class SearchIndex extends Component {
     } = this.props;
 
     if (sortKey !== prevProps.sortKey ||
-        sortDirection !== prevProps.sortDirection ||
-        hasDifferentItemsOrOrder(prevProps.items, items)
+      sortDirection !== prevProps.sortDirection ||
+      hasDifferentItemsOrOrder(prevProps.items, items)
     ) {
       this.setJumpBarItems();
     }
@@ -193,7 +189,6 @@ class SearchIndex extends Component {
       jumpToCharacter
     } = this.state;
 
-    const ViewComponent = getViewComponent();
     const isLoaded = !!(!error && isPopulated && items.length && scroller);
     const hasNoIndexer = !totalItems;
 
@@ -255,15 +250,13 @@ class SearchIndex extends Component {
             {
               isLoaded &&
                 <div className={styles.contentBodyContainer}>
-                  <ViewComponent
-                    scroller={scroller}
+                  <SearchVirtualTable
                     items={items}
-                    filters={filters}
-                    sortKey={sortKey}
-                    sortDirection={sortDirection}
-                    columns={columns}
                     jumpToCharacter={jumpToCharacter}
-                    {...otherProps}
+                    columns={columns}
+                    scroller={scroller}
+                    sortDirection={sortDirection}
+                    sortKey={sortKey}
                   />
                 </div>
             }
@@ -291,7 +284,7 @@ class SearchIndex extends Component {
           }
         </div>
 
-        <SearchFooterConnector
+        <SearchFooter
           isFetching={isFetching}
           hasIndexers={hasIndexers}
           onSearchPress={this.onSearchPress}

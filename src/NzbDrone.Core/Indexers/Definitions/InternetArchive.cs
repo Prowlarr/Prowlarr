@@ -71,10 +71,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             // c.f. https://archive.org/services/docs/api/metadata-schema/index.html?highlight=mediatype#mediatype
+            // "Movies" is a catch all category for videos
             caps.Categories.AddCategoryMapping("texts", NewznabStandardCategory.Books);
             caps.Categories.AddCategoryMapping("etree", NewznabStandardCategory.Audio);
             caps.Categories.AddCategoryMapping("audio", NewznabStandardCategory.Audio);
             caps.Categories.AddCategoryMapping("movies", NewznabStandardCategory.Movies);
+            caps.Categories.AddCategoryMapping("movies", NewznabStandardCategory.TV);
             caps.Categories.AddCategoryMapping("software", NewznabStandardCategory.PC);
             caps.Categories.AddCategoryMapping("image", NewznabStandardCategory.OtherMisc);
             caps.Categories.AddCategoryMapping("data", NewznabStandardCategory.Other);

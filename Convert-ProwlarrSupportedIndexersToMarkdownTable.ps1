@@ -53,6 +53,8 @@ $wiki_app_path = '/prowlarr'
 $wiki_page = 'supported-indexers'
 $wiki_bookmark = '#'
 ### Page Formating
+$markdown_escape_regex = '(\w)(\.|\[|\])(\w)'
+$markdown_escape_regex_rep = '$1\$2$3'
 $wiki_1newline = "`r`n"
 $wiki_2newline = "`r`n`r`n"
 $wiki_encoding = 'utf8'
@@ -81,8 +83,10 @@ Write-Information 'Got App Version'
 Write-Information 'Getting Indexer Data and Converting Response to Object'
 $indexer_obj = (Invoke-WebRequest -Uri $indexer_url -Headers $headers -ContentType 'application/json' -Method Get).Content | ConvertFrom-Json
 Write-Information 'Got Indexer Data'
-$indexer_name_exp = { IF ($_.IndexerUrls) { '[' + $_.name + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } }
-$usenet_indexer_name_exp = { IF ($_.IndexerUrls) { '[' + $_.name + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { IF ($_.fields.value[0]) { '[' + $_.name + '](' + ($_.fields.value[0].Replace('api.', '').Replace('feed.', '')) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } } }
+## We use the regex to escape dots (URLS) and Brackets (markdown links) in names and descriptions
+$indexer_name_exp = { IF ($_.IndexerUrls) { '[' + ($_.name -replace $markdown_escape_regex, $markdown_escape_regex_rep) + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { ($_.name -replace $markdown_escape_regex, $markdown_escape_regex_rep) + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } }
+$usenet_indexer_name_exp = { IF ($_.IndexerUrls) { '[' + ($_.name -replace $markdown_escape_regex, $markdown_escape_regex_rep) + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { IF ($_.fields.value[0]) { '[' + ($_.name -replace $markdown_escape_regex, $markdown_escape_regex_rep) + '](' + ($_.fields.value[0].Replace('api.', '').Replace('feed.', '')) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { ($_.name -replace $markdown_escape_regex, $markdown_escape_regex_rep) + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } } }
+$indexer_description_exp = { ($_.description -replace $markdown_escape_regex, $markdown_escape_regex_rep) }
 
 ## Determine Commit
 Write-Information "Commit is $commit"
@@ -100,16 +104,16 @@ $indexer_tbl_obj = $indexer_obj | Sort-Object -Property 'name'
 Write-Information 'Building Indexer Tables'
 ### Public Usenet
 Write-Information 'Building: Usenet - Public'
-$tbl_PubUse = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
+$tbl_PubUse = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 ### Private Usenet
 Write-Information 'Building: Usenet - Private'
-$tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
+$tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 ### Public Torrents
 Write-Information 'Building: Torrents - Public'
-$tbl_PubTor = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
+$tbl_PubTor = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 ### Private Torrents
 Write-Information 'Building: Torrents - Private'
-$tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
+$tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 
 ## Convert Data to Markdown Table
 $tbl_fmt_PubUse = $tbl_PubUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard
@@ -119,7 +123,7 @@ $tbl_fmt_PrvTor = $tbl_PrvTor | Format-MarkdownTableTableStyle Indexer, Descript
 Write-Information 'Builds Converted to Markdown Tables'
 
 ## Page Header Info
-$wiki_page_start = $wiki_2newline + "- Supported Indexers as of Build ``" + $build + "`` / [Commit: " + $commit + '](' + $wiki_commiturl + $commit + ')'
+$wiki_page_start = $wiki_1newline + "- Supported Indexers as of Build ``" + $build + "`` / [Commit: " + $commit + '](' + $wiki_commiturl + $commit + ')'
 Write-Information 'Page Header Built'
 
 ## Build Page Pieces'
@@ -139,7 +143,8 @@ dateCreated: $date
 ---"
 Write-Information 'Wiki Page pieces built'
 ## Build and Output Page
-$wiki_page_file = $mdHeader + $wiki_page_start + $wiki_1newline + $tbl_fmt_tor + $tbl_fmt_use
+## We replace because converting to markdown escaped the `\` as `\\` and thus `\\\\` is `\\` in file (due to regex)
+$wiki_page_file = $mdHeader + $wiki_1newline + $wiki_page_start + $wiki_1newline + ($tbl_fmt_tor -replace '\\\\', '\') + ($tbl_fmt_use -replace '\\\\', '\') + $wiki_1newline 
 Write-Information 'Wiki Page Built'
 $wiki_page_file | Out-File $OutputFile -Encoding $wiki_encoding
 Write-Information 'Wiki Page Output'

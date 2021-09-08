@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override string Name => "Newznab";
         public override string[] IndexerUrls => GetBaseUrlFromSettings();
-        public override string Description => "";
+        public override string Description => "Newznab is an API search specification for Usenet";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
 

@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "BB";
         public override string[] IndexerUrls => new string[] { StringUtil.FromBase64("aHR0cHM6Ly9iYWNvbmJpdHMub3JnLw==") };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "bB is a Private Torrent Tracker for 0DAY / GENERAL";
+        public override string Description => "BB is a Private Torrent Tracker for 0DAY / GENERAL";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;

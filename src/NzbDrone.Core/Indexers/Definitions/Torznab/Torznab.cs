@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override string Name => "Torznab";
         public override string[] IndexerUrls => GetBaseUrlFromSettings();
-        public override string Description => "";
+        public override string Description => "A Newznab-like api for torrents.";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
 

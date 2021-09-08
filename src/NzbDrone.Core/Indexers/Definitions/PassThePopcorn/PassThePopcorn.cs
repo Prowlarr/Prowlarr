@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
     {
         public override string Name => "PassThePopcorn";
         public override string[] IndexerUrls => new string[] { "https://passthepopcorn.me" };
-        public override string Description => "";
+        public override string Description => "PassThePopcorn (PTP) is a Private site for MOVIES / TV";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;

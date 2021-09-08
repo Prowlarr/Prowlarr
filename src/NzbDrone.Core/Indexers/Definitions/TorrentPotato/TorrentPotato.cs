@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
     {
         public override string Name => "TorrentPotato";
         public override string[] IndexerUrls => new string[] { "http://127.0.0.1" };
-        public override string Description => "";
+        public override string Description => "A JSON based torrent provider previously developed for CouchPotato";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

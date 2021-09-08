@@ -82,7 +82,7 @@ Write-Information 'Getting Indexer Data and Converting Response to Object'
 $indexer_obj = (Invoke-WebRequest -Uri $indexer_url -Headers $headers -ContentType 'application/json' -Method Get).Content | ConvertFrom-Json
 Write-Information 'Got Indexer Data'
 $indexer_name_exp = { IF ($_.IndexerUrls) { '[' + $_.name + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } }
-$usenet_indexer_name_exp = { IF ($_.fields.value[0]) { '[' + $_.name + '](' + ($_.fields.value[0].Replace('api.', '').Replace('feed.', '')) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } }
+$usenet_indexer_name_exp = { IF ($_.IndexerUrls) { '[' + $_.name + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { IF ($_.fields.value[0]) { '[' + $_.name + '](' + ($_.fields.value[0].Replace('api.', '').Replace('feed.', '')) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } } }
 
 ## Determine Commit
 Write-Information "Commit is $commit"

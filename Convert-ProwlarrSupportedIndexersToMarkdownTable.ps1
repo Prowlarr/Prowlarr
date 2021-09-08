@@ -82,6 +82,7 @@ Write-Information 'Getting Indexer Data and Converting Response to Object'
 $indexer_obj = (Invoke-WebRequest -Uri $indexer_url -Headers $headers -ContentType 'application/json' -Method Get).Content | ConvertFrom-Json
 Write-Information 'Got Indexer Data'
 $indexer_name_exp = { IF ($_.IndexerUrls) { '[' + $_.name + '](' + ($_.IndexerUrls[0]) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } }
+$usenet_indexer_name_exp = { IF ($_.fields.value[0]) { '[' + $_.name + '](' + ($_.fields.value[0].Replace('api.', '').Replace('feed.', '')) + ')' + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } Else { $_.name + '{#' + $_.infoLink.Replace($wiki_infolink.ToString(), '') + '}' } }
 
 ## Determine Commit
 Write-Information "Commit is $commit"
@@ -99,11 +100,10 @@ $indexer_tbl_obj = $indexer_obj | Sort-Object -Property 'name'
 Write-Information 'Building Indexer Tables'
 ### Public Usenet
 Write-Information 'Building: Usenet - Public'
-$tbl_PubUse = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
-if ( $null -eq $tbl_PubUse ) { ($tbl_PubUse = 'None') }
+$tbl_PubUse = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
 ### Private Usenet
 Write-Information 'Building: Usenet - Private'
-$tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
+$tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
 ### Public Torrents
 Write-Information 'Building: Torrents - Public'
 $tbl_PubTor = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
@@ -112,7 +112,7 @@ Write-Information 'Building: Torrents - Private'
 $tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = { $_.description } }
 
 ## Convert Data to Markdown Table
-$tbl_fmt_PubUse = if ( 'None' -eq $tbl_PubUse ) { ('None') } else { ($tbl_PubUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard) }
+$tbl_fmt_PubUse = $tbl_PubUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard
 $tbl_fmt_PrvUse = $tbl_PrvUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard
 $tbl_fmt_PubTor = $tbl_PubTor | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard 
 $tbl_fmt_PrvTor = $tbl_PrvTor | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard

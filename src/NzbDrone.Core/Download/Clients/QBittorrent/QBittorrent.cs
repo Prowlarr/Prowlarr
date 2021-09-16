@@ -214,16 +214,6 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                         DetailedDescription = "Prowlarr will not attempt to import completed downloads without a category."
                     };
                 }
-
-                // Complain if qBittorrent is configured to remove torrents on max ratio
-                var config = Proxy.GetConfig(Settings);
-                if ((config.MaxRatioEnabled || config.MaxSeedingTimeEnabled) && (config.MaxRatioAction == QBittorrentMaxRatioAction.Remove || config.MaxRatioAction == QBittorrentMaxRatioAction.DeleteFiles))
-                {
-                    return new NzbDroneValidationFailure(string.Empty, "qBittorrent is configured to remove torrents when they reach their Share Ratio Limit")
-                    {
-                        DetailedDescription = "Prowlarr will be unable to perform Completed Download Handling as configured. You can fix this in qBittorrent ('Tools -> Options...' in the menu) by changing 'Options -> BitTorrent -> Share Ratio Limiting' from 'Remove them' to 'Pause them'."
-                    };
-                }
             }
             catch (DownloadClientAuthenticationException ex)
             {

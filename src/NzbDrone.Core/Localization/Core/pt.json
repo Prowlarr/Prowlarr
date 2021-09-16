@@ -538,7 +538,7 @@
     "ApplyTagsHelpTexts2": "Adicionar: agregar as etiquetas à lista existente de etiquetas",
     "ApplyTagsHelpTexts1": "Como aplicar etiquetas aos indexadores selecionados",
     "AllowMovieChangeClickToChangeMovie": "Clique para trocar o filme",
-    "AddingTag": "Adicionando etiqueta",
+    "AddingTag": "A adicionar etiqueta",
     "AddImportExclusionHelpText": "Impedir filme de ser adicionado ao Prowlarr através de listas",
     "DelayingDownloadUntilInterp": "Suspendendo download até {0} às {1}",
     "CopyToClipboard": "Copiar à Área de Transferência",
@@ -934,5 +934,12 @@
     "FullSync": "Sincronização completa",
     "AddRemoveOnly": "Adicionar e remover apenas",
     "AddDownloadClientToProwlarr": "Adicionar um cliente de transferências possibilita ao Prowlarr enviar versões diretamente da IU ao realizar uma pesquisa manual.",
-    "Add": "Adicionar"
+    "Add": "Adicionar",
+    "DeleteIndexerProxy": "Apagar Proxy de Indexador",
+    "DeleteIndexerProxyMessageText": "Tem a certeza que quer apagar o proxy '{0}'?",
+    "IndexerProxy": "Proxy de Indexador",
+    "AddIndexerProxy": "Adicionar Proxy de Indexador",
+    "IndexerProxyStatusCheckSingleClientMessage": "Proxys indisponíveis devido a falhas: {0}",
+    "IndexerProxies": "Proxys de Indexadores",
+    "IndexerProxyStatusCheckAllClientMessage": "Todos os proxys estão indisponíveis devido a falhas"
 }

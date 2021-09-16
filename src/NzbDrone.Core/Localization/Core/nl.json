@@ -852,5 +852,7 @@
     "AddToDownloadClient": "Release toevoegen aan download client",
     "AddNewIndexer": "Voeg nieuwe Indexeerder Toe",
     "AddedToDownloadClient": "Release toegevoegd aan client",
-    "PrioritySettings": "Prioriteit"
+    "PrioritySettings": "Prioriteit",
+    "AddDownloadClient": "Download Client Toevoegen",
+    "Add": "Toevoegen"
 }

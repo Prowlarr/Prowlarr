@@ -8,10 +8,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class LatTeam : Unit3dBase
     {
-        public override string Name => "LatTeam";
+        public override string Name => "Lat-Team";
         public override string Language => "es";
         public override string[] IndexerUrls => new[] { "https://lat-team.com/" };
-        public override string Description => "LatTeam is a Private Torrent Tracker for HD MOVIES / TV";
+        public override string Description => "Lat-Team is a Private Torrent Tracker for HD MOVIES / TV";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public LatTeam(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

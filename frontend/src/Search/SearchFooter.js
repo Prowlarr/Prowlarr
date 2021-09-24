@@ -52,6 +52,7 @@ class SearchFooter extends Component {
       isFetching,
       defaultIndexerIds,
       defaultCategories,
+      defaultSearchQuery,
       searchError
     } = this.props;
 
@@ -61,6 +62,10 @@ class SearchFooter extends Component {
     } = this.state;
 
     const newState = {};
+
+    if (defaultSearchQuery && defaultSearchQuery !== prevProps.defaultSearchQuery) {
+      newState.searchQuery = defaultSearchQuery;
+    }
 
     if (searchIndexerIds !== defaultIndexerIds) {
       newState.searchIndexerIds = defaultIndexerIds;

@@ -270,6 +270,7 @@ class IndexerIndex extends Component {
       isSaving,
       saveError,
       isDeleting,
+      isTestingAll,
       deleteError,
       onScroll,
       onSortSelect,
@@ -310,7 +311,7 @@ class IndexerIndex extends Component {
             <PageToolbarButton
               label={'Test All Indexers'}
               iconName={icons.TEST}
-              spinningName={icons.TEST}
+              isSpinning={isTestingAll}
               isDisabled={hasNoIndexer}
               onPress={this.props.onTestAllPress}
             />
@@ -489,6 +490,7 @@ IndexerIndex.propTypes = {
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   isDeleting: PropTypes.bool.isRequired,
+  isTestingAll: PropTypes.bool.isRequired,
   deleteError: PropTypes.object,
   onSortSelect: PropTypes.func.isRequired,
   onFilterSelect: PropTypes.func.isRequired,

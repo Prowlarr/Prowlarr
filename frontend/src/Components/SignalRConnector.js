@@ -168,9 +168,9 @@ class SignalRConnector extends Component {
     this.props.dispatchFetchIndexerStatus();
   }
 
-  handleMovie = (body) => {
+  handleIndexer = (body) => {
     const action = body.action;
-    const section = 'movies';
+    const section = 'indexers';
 
     if (action === 'updated') {
       this.props.dispatchUpdateItem({ section, ...body.resource });

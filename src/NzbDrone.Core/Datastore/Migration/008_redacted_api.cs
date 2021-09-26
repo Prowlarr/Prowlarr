@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Datastore.Migration
             using (var cmd = conn.CreateCommand())
             {
                 cmd.Transaction = tran;
-                cmd.CommandText = "SELECT Id, Settings FROM Indexers WHERE Implementation = 'Redacted'";
+                cmd.CommandText = "SELECT \"Id\", \"Settings\" FROM \"Indexers\" WHERE \"Implementation\" = 'Redacted'";
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Datastore.Migration
                             using (var updateCmd = conn.CreateCommand())
                             {
                                 updateCmd.Transaction = tran;
-                                updateCmd.CommandText = "UPDATE Indexers SET Settings = ?, ConfigContract = ?, Enable = 0 WHERE Id = ?";
+                                updateCmd.CommandText = "UPDATE \"Indexers\" SET \"Settings\" = ?, \"ConfigContract\" = ?, \"Enable\" = 0 WHERE \"Id\" = ?";
                                 updateCmd.AddParameter(settings);
                                 updateCmd.AddParameter("RedactedSettings");
                                 updateCmd.AddParameter(id);

@@ -8,6 +8,8 @@ namespace NzbDrone.Core.Datastore
 {
     public class TableMapper
     {
+        private readonly HashSet<string> _allowedOrderBy = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         public TableMapper()
         {
             IgnoreList = new Dictionary<Type, List<PropertyInfo>>();
@@ -27,17 +29,75 @@ namespace NzbDrone.Core.Datastore
 
             if (IgnoreList.TryGetValue(type, out var list))
             {
-                return new ColumnMapper<TEntity>(list, LazyLoadList[type]);
+                return new ColumnMapper<TEntity>(list, LazyLoadList[type], _allowedOrderBy);
             }
 
             IgnoreList[type] = new List<PropertyInfo>();
             LazyLoadList[type] = new List<LazyLoadedProperty>();
-            return new ColumnMapper<TEntity>(IgnoreList[type], LazyLoadList[type]);
+            return new ColumnMapper<TEntity>(IgnoreList[type], LazyLoadList[type], _allowedOrderBy);
         }
 
         public List<PropertyInfo> ExcludeProperties(Type x)
         {
             return IgnoreList.ContainsKey(x) ? IgnoreList[x] : new List<PropertyInfo>();
+        }
+
+        public bool IsValidSortKey(string sortKey)
+        {
+            string table = null;
+
+            if (sortKey.Contains('.'))
+            {
+                var split = sortKey.Split('.');
+                if (split.Length != 2)
+                {
+                    return false;
+                }
+
+                table = split[0];
+                sortKey = split[1];
+            }
+
+            if (table != null && !TableMap.Values.Contains(table, StringComparer.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (!_allowedOrderBy.Contains(sortKey))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public string GetSortKey(string sortKey)
+        {
+            string table = null;
+
+            if (sortKey.Contains('.'))
+            {
+                var split = sortKey.Split('.');
+                if (split.Length != 2)
+                {
+                    return sortKey;
+                }
+
+                table = split[0];
+                sortKey = split[1];
+            }
+
+            if (table != null && !TableMap.Values.Contains(table, StringComparer.OrdinalIgnoreCase))
+            {
+                return sortKey;
+            }
+
+            if (!_allowedOrderBy.Contains(sortKey))
+            {
+                return sortKey;
+            }
+
+            return _allowedOrderBy.First(x => x.Equals(sortKey, StringComparison.OrdinalIgnoreCase));
         }
 
         public string TableNameMapping(Type x)
@@ -47,17 +107,17 @@ namespace NzbDrone.Core.Datastore
 
         public string SelectTemplate(Type x)
         {
-            return $"SELECT /**select**/ FROM {TableMap[x]} /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/ /**orderby**/";
+            return $"SELECT /**select**/ FROM \"{TableMap[x]}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/ /**orderby**/";
         }
 
         public string DeleteTemplate(Type x)
         {
-            return $"DELETE FROM {TableMap[x]} /**where**/";
+            return $"DELETE FROM \"{TableMap[x]}\" /**where**/";
         }
 
         public string PageCountTemplate(Type x)
         {
-            return $"SELECT /**select**/ FROM {TableMap[x]} /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/";
+            return $"SELECT /**select**/ FROM \"{TableMap[x]}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/";
         }
     }
 
@@ -72,17 +132,20 @@ namespace NzbDrone.Core.Datastore
     {
         private readonly List<PropertyInfo> _ignoreList;
         private readonly List<LazyLoadedProperty> _lazyLoadList;
+        private readonly HashSet<string> _allowedOrderBy;
 
-        public ColumnMapper(List<PropertyInfo> ignoreList, List<LazyLoadedProperty> lazyLoadList)
+        public ColumnMapper(List<PropertyInfo> ignoreList, List<LazyLoadedProperty> lazyLoadList, HashSet<string> allowedOrderBy)
         {
             _ignoreList = ignoreList;
             _lazyLoadList = lazyLoadList;
+            _allowedOrderBy = allowedOrderBy;
         }
 
         public ColumnMapper<T> AutoMapPropertiesWhere(Func<PropertyInfo, bool> predicate)
         {
             var properties = typeof(T).GetProperties();
             _ignoreList.AddRange(properties.Where(x => !predicate(x)));
+            _allowedOrderBy.UnionWith(properties.Where(x => predicate(x)).Select(x => x.Name));
 
             return this;
         }

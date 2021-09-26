@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Datastore
 
         public static SqlBuilder Select(this SqlBuilder builder, params Type[] types)
         {
-            return builder.Select(types.Select(x => TableMapping.Mapper.TableNameMapping(x) + ".*").Join(", "));
+            return builder.Select(types.Select(x => $"\"{TableMapping.Mapper.TableNameMapping(x)}\".*").Join(", "));
         }
 
         public static SqlBuilder SelectDistinct(this SqlBuilder builder, params Type[] types)

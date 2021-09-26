@@ -20,10 +20,11 @@ class About extends Component {
       packageVersion,
       packageAuthor,
       isNetCore,
-      isMono,
       isDocker,
       runtimeVersion,
       migrationVersion,
+      databaseVersion,
+      databaseType,
       appData,
       startupPath,
       mode,
@@ -49,14 +50,6 @@ class About extends Component {
           }
 
           {
-            isMono &&
-              <DescriptionListItem
-                title={translate('MonoVersion')}
-                data={runtimeVersion}
-              />
-          }
-
-          {
             isNetCore &&
               <DescriptionListItem
                 title={translate('NetCore')}
@@ -75,6 +68,11 @@ class About extends Component {
           <DescriptionListItem
             title={translate('DBMigration')}
             data={migrationVersion}
+          />
+
+          <DescriptionListItem
+            title={translate('Database')}
+            data={`${titleCase(databaseType)} ${databaseVersion}`}
           />
 
           <DescriptionListItem
@@ -114,9 +112,10 @@ About.propTypes = {
   packageVersion: PropTypes.string,
   packageAuthor: PropTypes.string,
   isNetCore: PropTypes.bool.isRequired,
-  isMono: PropTypes.bool.isRequired,
   runtimeVersion: PropTypes.string.isRequired,
   isDocker: PropTypes.bool.isRequired,
+  databaseType: PropTypes.string.isRequired,
+  databaseVersion: PropTypes.string.isRequired,
   migrationVersion: PropTypes.number.isRequired,
   appData: PropTypes.string.isRequired,
   startupPath: PropTypes.string.isRequired,

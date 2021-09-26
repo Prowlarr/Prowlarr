@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Datastore.Migration
     {
         protected override void MainDbUpgrade()
         {
-            Update.Table("Indexers").Set(new { ConfigContract = "Unit3dSettings", Enable = 0 }).Where(new { Implementation = "DesiTorrents" });
+            Update.Table("Indexers").Set(new { ConfigContract = "Unit3dSettings", Enable = true }).Where(new { Implementation = "DesiTorrents" });
         }
     }
 }

@@ -35,7 +35,8 @@ namespace NzbDrone.Core.IndexerVersions
             "danishbytes",
             "desitorrents",
             "hdbits",
-            "shareisland"
+            "shareisland",
+            "lat-team"
         };
 
         private readonly IHttpClient _httpClient;

@@ -1,4 +1,4 @@
-﻿#Requires -Module FormatMarkdownTable
+﻿#Requires -Module FormatMarkdownTable -Version 7.1
 
 <#
     .SYNOPSIS

@@ -132,7 +132,8 @@ $tbl_fmt_use = $wiki_1newline + '## Usenet' + $wiki_2newline + '### Public Index
 Write-Information 'Wiki Markdown Tables Built'
 $date = [DateTime]::UtcNow.ToString('o')
 $mdHeader = 
-"---
+"
+---
 title: Prowlarr Supported Indexers
 description: Indexers currently named as supported in the current nightly build of Prowlarr. Other indexers are available via either Generic Newznab or Generic Torznab.
 published: true
@@ -140,7 +141,8 @@ date: $date
 tags: prowlarr, indexers
 editor: markdown
 dateCreated: $date
----"
+---
+"
 Write-Information 'Wiki Page pieces built'
 ## Build and Output Page
 ## We replace because converting to markdown escaped the `\` as `\\` and thus `\\\\` is `\\` in file (due to regex)

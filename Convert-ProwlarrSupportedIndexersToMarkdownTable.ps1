@@ -144,7 +144,7 @@ dateCreated: $date
 Write-Information 'Wiki Page pieces built'
 ## Build and Output Page
 ## We replace because converting to markdown escaped the `\` as `\\` and thus `\\\\` is `\\` in file (due to regex)
-$wiki_page_file = ($mdHeader + $wiki_1newline + $wiki_page_start + $wiki_1newline + $tbl_fmt_tor + $tbl_fmt_use + $wiki_1newline) -replace '\\\\', '\'
+$wiki_page_file = (($mdHeader + $wiki_1newline + $wiki_page_start + $wiki_1newline + $tbl_fmt_tor + $tbl_fmt_use) -replace '\\\\', '\').Trim()
 Write-Information 'Wiki Page Built'
 $wiki_page_file | Out-File $OutputFile -Encoding $wiki_encoding
 Write-Information 'Wiki Page Output'

@@ -141,8 +141,7 @@ date: $date
 tags: prowlarr, indexers
 editor: markdown
 dateCreated: $date
----
-"
+---"
 Write-Information 'Wiki Page pieces built'
 ## Build and Output Page
 ## We replace because converting to markdown escaped the `\` as `\\` and thus `\\\\` is `\\` in file (due to regex)

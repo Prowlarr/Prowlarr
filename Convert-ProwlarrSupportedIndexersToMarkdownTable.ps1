@@ -132,8 +132,7 @@ $tbl_fmt_use = $wiki_1newline + '## Usenet' + $wiki_2newline + '### Public Index
 Write-Information 'Wiki Markdown Tables Built'
 $date = [DateTime]::UtcNow.ToString('o')
 $mdHeader = 
-"
----
+"`r`n---
 title: Prowlarr Supported Indexers
 description: Indexers currently named as supported in the current nightly build of Prowlarr. Other indexers are available via either Generic Newznab or Generic Torznab.
 published: true

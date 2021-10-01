@@ -74,7 +74,7 @@
     "UpdateCheckStartupNotWritableMessage": "Impossible d'installer la mise à jour car le dossier de démarrage '{0}' n'est pas accessible en écriture par l'utilisateur '{1}'.",
     "UnselectAll": "Tout déselectionner",
     "Unmonitored": "Non surveillé",
-    "UISettingsSummary": "Calendrier, date et les options d'altération des couleurs",
+    "UISettingsSummary": "Options de date, de langue et de contraste de couleur",
     "TagsSettingsSummary": "Voir toutes les tags et leur utilisation. Les tags inutilisées peuvent être supprimées",
     "Style": "Style",
     "Studio": "Studio",
@@ -940,5 +940,16 @@
     "AddIndexerProxy": "Ajouter proxy indexeur",
     "AppSettingsSummary": "Applications et paramètres pour configurer comment Prowlarr interagit avec vos programmes PVR",
     "IndexerTagsHelpText": "Utilisez des balises pour spécifier des clients par défaut, spécifier les proxies d'indexeur ou pour organiser vos indexeurs.",
-    "Notifications": "Notifications"
+    "Notifications": "Notifications",
+    "IndexerVipCheckExpiredClientMessage": "Les avantages VIP de l'indexeur ont expiré: {0}",
+    "IndexerProxy": "Proxy d'indexation",
+    "IndexerSettingsSummary": "Configuration de divers paramètres globaux de l'indexeur, y compris les proxys.",
+    "IndexerProxies": "Proxys d'indexation",
+    "IndexerProxyStatusCheckAllClientMessage": "Tous les proxys sont indisponibles en raison d'échecs",
+    "IndexerProxyStatusCheckSingleClientMessage": "Proxys indisponibles en raison d'échecs: {0}",
+    "IndexerVipCheckExpiringClientMessage": "Les avantages VIP de l'indexeur arrivent bientôt à expiration: {0}",
+    "NoLinks": "Aucun liens",
+    "Notification": "Notification",
+    "UnableToAddANewIndexerProxyPleaseTryAgain": "Impossible d'ajouter un nouveau proxy d'indexation, veuillez réessayer.",
+    "UnableToLoadIndexerProxies": "Impossible de charger les proxys d'indexation"
 }

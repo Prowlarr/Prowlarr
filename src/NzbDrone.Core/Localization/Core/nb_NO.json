@@ -39,5 +39,19 @@
     "BranchUpdateMechanism": "Gren brukt av ekstern oppdateringsmekanisme",
     "BypassProxyForLocalAddresses": "Omgå proxy for lokale adresser",
     "CancelPendingTask": "Er du sikker på at du vil avbryte denne ventende oppgaven?",
-    "CertificateValidationHelpText": "Endre hvor streng HTTPS -sertifisering validering er"
+    "CertificateValidationHelpText": "Endre hvor streng HTTPS -sertifisering validering er",
+    "ApplyTagsHelpTexts1": "Slik bruker du tagger på de valgte filmene",
+    "DeleteBackupMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "AllIndexersHiddenDueToFilter": "Alle filmer er skjult på grunn av påført filter.",
+    "AnalyticsEnabledHelpText": "Send anonym bruk og feilinformasjon til Radarrs servere. Dette inkluderer informasjon om nettleseren din, hvilke Radarr WebUI -sider du bruker, feilrapportering samt OS og kjøretidsversjon. Vi vil bruke denne informasjonen til å prioritere funksjoner og feilrettinger.",
+    "ApplyTagsHelpTexts2": "Legg til: Legg til taggene i den eksisterende listen med tagger",
+    "AuthenticationMethodHelpText": "Krev brukernavn og passord for å få tilgang til Radarr",
+    "BackupFolderHelpText": "Relative stier vil være under Radarr's AppData -katalog",
+    "BranchUpdate": "Gren som skal brukes til å oppdatere Radarr",
+    "DeleteApplicationMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteDownloadClientMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteIndexerMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteIndexerProxyMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteNotificationMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
+    "DeleteTagMessageText": "Er du sikker på at du vil slette formattaggen {0}?"
 }

@@ -31,5 +31,19 @@
     "AutomaticSearch": "Automatické vyhľadávanie",
     "BackupIntervalHelpText": "Interval medzi automatickými zálohami",
     "BackupRetentionHelpText": "Automatické zálohy staršie než doba uchovania budú automaticky vyčistené",
-    "BranchUpdateMechanism": "Vetva používaná externým mechanizmom aktualizácie"
+    "BranchUpdateMechanism": "Vetva používaná externým mechanizmom aktualizácie",
+    "DeleteApplicationMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "DeleteBackupMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "DeleteIndexerMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "DeleteIndexerProxyMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "DeleteNotificationMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "DeleteTagMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "AllIndexersHiddenDueToFilter": "Všetky filmy sú skryté kvôli použitému filtru.",
+    "AnalyticsEnabledHelpText": "Odosielajte anonymné informácie o používaní a chybách na servery Readarru. To zahŕňa informácie o vašom prehliadači, ktoré stránky Radarr WebUI používate, hlásenia chýb a taktiež verziu operačného systému a spúšťacieho prostredia. Tieto informácie použijeme k uprednostňovaniu funkcií a oprav chýb.",
+    "ApplyTagsHelpTexts1": "Ako použiť značky na vybrané filmy",
+    "ApplyTagsHelpTexts2": "Pridať: Pridajte značky do existujúceho zoznamu značiek",
+    "AuthenticationMethodHelpText": "Vyžadovať používateľské meno a heslo pre prístup k Radarru",
+    "BackupFolderHelpText": "Relatívne cesty budú v priečinku AppData Radarru",
+    "BranchUpdate": "Vetva, ktorá sa má použiť k aktualizácií Radarru",
+    "DeleteDownloadClientMessageText": "Naozaj chcete zmazať značku formátu {0} ?"
 }

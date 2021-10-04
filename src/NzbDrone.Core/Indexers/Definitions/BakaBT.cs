@@ -170,7 +170,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
             var searchString = term;
-            var searchUrl = Settings.BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
+            var searchUrl = Settings.BaseUrl + " browse.php?only=0&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
+            if (Settings.AdultContent)
+            {
+                searchUrl = Settings.BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
+            }
 
             var match = Regex.Match(term, @".*(?=\s(?:[Ee]\d+|\d+)$)");
             if (match.Success)
@@ -440,7 +444,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(5, Label = "Append Season", Type = FieldType.Checkbox, HelpText = "Append Season for Sonarr Compatibility")]
         public bool AppendSeason { get; set; }
 
-        [FieldDefinition(6)]
+        [FieldDefinition(6, Label = "Adult Content", Type = FieldType.Checkbox, HelpText = "Allow Adult Content (Must be enabled in BakaBT settings)")]
+        public bool AdultContent { get; set; }
+
+        [FieldDefinition(7)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()

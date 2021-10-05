@@ -9,4 +9,4 @@ Setup guides, [FAQ](https://wiki.servarr.com/prowlarr/faq), the more information
 
 ## Development
 
-See the [Wiki Page]((https://wiki.servarr.com/prowlarr/contributing))
+See the [Wiki Page](https://wiki.servarr.com/prowlarr/contributing)

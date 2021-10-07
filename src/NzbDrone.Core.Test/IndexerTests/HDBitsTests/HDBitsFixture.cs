@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             var responseJson = ReadAllText(fileName);
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), responseJson)));
 
             var torrents = (await Subject.Fetch(_movieSearchCriteria)).Releases;
@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             var responseJson = new { status = 5, message = "Invalid authentication credentials" }.ToJson();
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), Encoding.UTF8.GetBytes(responseJson))));
 
             var torrents = (await Subject.Fetch(_movieSearchCriteria)).Releases;

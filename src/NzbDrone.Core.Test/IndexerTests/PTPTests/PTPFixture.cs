@@ -37,11 +37,11 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
             var responseJson = ReadAllText(fileName);
 
             Mocker.GetMock<IIndexerHttpClient>()
-                  .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST), Subject.Definition))
+                  .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST), Subject.Definition))
                   .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), authStream.ToString())));
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
                   .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { ContentType = HttpAccept.Json.Value }, new CookieCollection(), responseJson)));
 
             var torrents = (await Subject.Fetch(new MovieSearchCriteria())).Releases;

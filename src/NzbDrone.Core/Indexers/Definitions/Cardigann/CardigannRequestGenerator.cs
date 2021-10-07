@@ -194,7 +194,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
+                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
 
                 Cookies = response.GetCookies();
 
@@ -331,7 +331,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     requestBuilder.Headers.Add("Referer", loginUrl);
 
-                    var simpleCaptchaResult = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
+                    var simpleCaptchaResult = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
 
                     var simpleCaptchaJSON = JObject.Parse(simpleCaptchaResult.Content);
                     var captchaSelection = simpleCaptchaJSON["images"][0]["hash"].ToString();
@@ -411,7 +411,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var request = requestBuilder.Build();
                     request.SetContent(body);
 
-                    loginResult = await HttpClient.ExecuteAsync(request, Definition);
+                    loginResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
                 }
                 else
                 {
@@ -431,7 +431,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    loginResult = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
+                    loginResult = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
                 }
 
                 Cookies = loginResult.GetCookies();
@@ -466,7 +466,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
+                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
 
                 Cookies = response.GetCookies();
 
@@ -490,7 +490,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteAsync(requestBuilder.Build(), Definition);
+                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
 
                 Cookies = response.GetCookies();
 
@@ -569,7 +569,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var request = requestBuilder.Build();
 
-            landingResult = await HttpClient.ExecuteAsync(request, Definition);
+            landingResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
             Cookies = landingResult.GetCookies();
 
@@ -613,7 +613,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         .SetHeader("Referer", loginUrl.AbsoluteUri)
                         .Build();
 
-                    var response = await HttpClient.ExecuteAsync(request, Definition);
+                    var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                     return new Captcha
                     {
@@ -703,7 +703,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
             }
 
-            var response = await HttpClient.ExecuteAsync(httpRequest.Build(), Definition);
+            var response = await HttpClient.ExecuteProxiedAsync(httpRequest.Build(), Definition);
 
             _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() remote server returned {response.StatusCode.ToString()}");
             return response;
@@ -743,7 +743,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     request.AllowAutoRedirect = true;
 
-                    var response = await HttpClient.ExecuteAsync(request, Definition);
+                    var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                     var results = response.Content;
                     var searchResultParser = new HtmlParser();

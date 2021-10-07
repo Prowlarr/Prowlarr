@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         private void GivenCapsResponse(string caps)
         {
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.Execute(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()))
+                .Setup(o => o.ExecuteProxied(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => new HttpResponse(r, new HttpHeader(), new CookieCollection(), caps));
         }
 
@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             Subject.GetCapabilities(_settings, _definition);
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Verify(o => o.Execute(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()), Times.Once());
+                .Verify(o => o.ExecuteProxied(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()), Times.Once());
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         public void should_throw_if_failed_to_get()
         {
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.Execute(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()))
+                .Setup(o => o.ExecuteProxied(It.IsAny<HttpRequest>(), It.IsAny<IndexerDefinition>()))
                 .Throws<Exception>();
 
             Assert.Throws<Exception>(() => Subject.GetCapabilities(_settings, _definition));

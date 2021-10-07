@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request, Definition);
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                 nzbData = response.ResponseData;
 
                 _logger.Debug("Downloaded nzb for release finished ({0} bytes from {1})", nzbData.Length, link.AbsoluteUri);

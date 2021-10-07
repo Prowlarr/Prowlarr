@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request, Definition);
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                 torrentData = response.ResponseData;
             }
             catch (HttpException ex)

@@ -14,8 +14,8 @@ namespace NzbDrone.Core.Indexers
 {
     public interface IIndexerHttpClient : IHttpClient
     {
-        Task<HttpResponse> ExecuteAsync(HttpRequest request, ProviderDefinition definition);
-        HttpResponse Execute(HttpRequest request, ProviderDefinition definition);
+        Task<HttpResponse> ExecuteProxiedAsync(HttpRequest request, ProviderDefinition definition);
+        HttpResponse ExecuteProxied(HttpRequest request, ProviderDefinition definition);
     }
 
     public class IndexerHttpClient : HttpClient, IIndexerHttpClient
@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers
             _indexerProxyFactory = indexerProxyFactory;
         }
 
-        public async Task<HttpResponse> ExecuteAsync(HttpRequest request, ProviderDefinition definition)
+        public async Task<HttpResponse> ExecuteProxiedAsync(HttpRequest request, ProviderDefinition definition)
         {
             var selectedProxy = GetProxy(definition);
 
@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers
             return PostResponse(await ExecuteAsync(request), selectedProxy);
         }
 
-        public HttpResponse Execute(HttpRequest request, ProviderDefinition definition)
+        public HttpResponse ExecuteProxied(HttpRequest request, ProviderDefinition definition)
         {
             var selectedProxy = GetProxy(definition);
 

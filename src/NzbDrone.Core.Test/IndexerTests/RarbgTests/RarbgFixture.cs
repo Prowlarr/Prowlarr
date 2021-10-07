@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
             var recentFeed = ReadAllText(@"Files/Indexers/Rarbg/RecentFeed_v2.json");
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         public async Task should_parse_error_20_as_empty_results()
         {
             Mocker.GetMock<IIndexerHttpClient>()
-                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                   .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
                    .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 20, error: \"some message\" }")));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
@@ -77,7 +77,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         public async Task should_warn_on_unknown_error()
         {
             Mocker.GetMock<IIndexerHttpClient>()
-                   .Setup(o => o.ExecuteAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                   .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
                    .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{ error_code: 25, error: \"some message\" }")));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;

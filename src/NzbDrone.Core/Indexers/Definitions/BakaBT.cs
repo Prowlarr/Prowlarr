@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         .SetCookies(GetCookies() ?? new Dictionary<string, string>())
                         .Build();
 
-            var response = await _httpClient.ExecuteAsync(request, Definition);
+            var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(response.Content);

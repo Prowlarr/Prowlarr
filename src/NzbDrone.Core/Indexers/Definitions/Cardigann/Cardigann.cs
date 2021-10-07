@@ -177,7 +177,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request, Definition);
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                 downloadBytes = response.ResponseData;
             }
             catch (HttpException ex)

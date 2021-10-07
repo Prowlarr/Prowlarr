@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             try
             {
-                response = _httpClient.Execute(request, definition);
+                response = _httpClient.ExecuteProxied(request, definition);
             }
             catch (Exception ex)
             {

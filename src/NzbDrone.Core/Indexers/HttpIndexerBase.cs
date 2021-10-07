@@ -379,7 +379,7 @@ namespace NzbDrone.Core.Indexers
             request.HttpRequest.SuppressHttpError = true;
             request.HttpRequest.Encoding = Encoding;
 
-            var response = await _httpClient.ExecuteAsync(request.HttpRequest, Definition);
+            var response = await _httpClient.ExecuteProxiedAsync(request.HttpRequest, Definition);
 
             // Check reponse to see if auth is needed, if needed try again
             if (CheckIfLoginNeeded(response))
@@ -391,7 +391,7 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.Url = originalUrl;
                 ModifyRequest(request);
 
-                response = await _httpClient.ExecuteAsync(request.HttpRequest, Definition);
+                response = await _httpClient.ExecuteProxiedAsync(request.HttpRequest, Definition);
             }
 
             // Throw common http errors here before we try to parse
@@ -414,7 +414,7 @@ namespace NzbDrone.Core.Indexers
         {
             request.Encoding = Encoding;
 
-            var response = await _httpClient.ExecuteAsync(request, Definition);
+            var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));
 

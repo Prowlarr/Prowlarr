@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             try
             {
-                var response = await _httpClient.ExecuteAsync(request, Definition);
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                 downloadBytes = response.ResponseData;
             }
             catch (Exception)

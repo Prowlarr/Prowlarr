@@ -97,6 +97,7 @@ namespace NzbDrone.Core.Indexers
             definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
             definition.Capabilities = new IndexerCapabilities();
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
+            definition.Capabilities.SupportsRawSearch = defFile.Caps.AllowRawSearch;
             MapCardigannCategories(definition, defFile);
         }
 

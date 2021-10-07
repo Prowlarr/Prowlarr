@@ -70,6 +70,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Dictionary<string, string> Categories { get; set; }
         public List<CategorymappingBlock> Categorymappings { get; set; }
         public Dictionary<string, List<string>> Modes { get; set; }
+        public bool AllowRawSearch { get; set; }
     }
 
     public class CaptchaBlock

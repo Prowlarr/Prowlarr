@@ -304,7 +304,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Torrents - Category column == Icons
                 var cat = _categories.MapTrackerCatToNewznab(catIcon.GetAttribute("href").Substring(1));
 
-                var size = ReleaseInfo.GetBytes(row.Children[5].TextContent);
+                var size = ParseUtil.GetBytes(row.Children[5].TextContent);
 
                 var colIndex = 6;
                 int? files = null;

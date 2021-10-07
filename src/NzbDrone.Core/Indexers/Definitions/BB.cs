@@ -279,7 +279,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.PublishDate = DateTimeUtil.FromTimeAgo(dateStr);
 
                 var sizeStr = row.Children[4].TextContent;
-                release.Size = ReleaseInfo.GetBytes(sizeStr);
+                release.Size = ParseUtil.GetBytes(sizeStr);
 
                 release.Files = ParseUtil.CoerceInt(row.Children[2].TextContent.Trim());
                 release.Seeders = ParseUtil.CoerceInt(row.Children[7].TextContent.Trim());

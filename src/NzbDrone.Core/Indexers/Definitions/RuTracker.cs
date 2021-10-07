@@ -1672,7 +1672,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private long GetSizeOfRelease(in IElement row)
         {
             var qSize = row.QuerySelector("td.tor-size");
-            var size = ReleaseInfo.GetBytes(qSize.GetAttribute("data-ts_text"));
+            var size = ParseUtil.GetBytes(qSize.GetAttribute("data-ts_text"));
             return size;
         }
 

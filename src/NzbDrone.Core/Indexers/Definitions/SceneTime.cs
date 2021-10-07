@@ -254,7 +254,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = string.Format("{0}/download.php/{1}/download.torrent", _settings.BaseUrl, torrentId),
                     Guid = details,
                     PublishDate = DateTimeUtil.FromTimeAgo(qDescCol.ChildNodes.Last().TextContent),
-                    Size = ReleaseInfo.GetBytes(sizeStr),
+                    Size = ParseUtil.GetBytes(sizeStr),
                     Seeders = seeders,
                     Peers = ParseUtil.CoerceInt(row.Children[leechersIndex].TextContent.Trim()) + seeders,
                     DownloadVolumeFactor = row.QuerySelector("font > b:contains(Freeleech)") != null ? 0 : 1,

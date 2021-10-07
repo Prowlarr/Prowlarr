@@ -18,10 +18,20 @@ namespace NzbDrone.Core.Parser
         public static string NormalizeMultiSpaces(string s) =>
             new Regex(@"\s+").Replace(NormalizeSpace(s), " ");
 
-        public static string NormalizeNumber(string s) =>
-            NormalizeSpace(s)
-                .Replace("-", "0")
-                .Replace(",", "");
+        public static string NormalizeNumber(string s)
+        {
+            s = (s.Length == 0) ? "0" : s.Replace(",", ".");
+
+            s = NormalizeSpace(s).Replace("-", "0");
+
+            if (s.Count(c => c == '.') > 1)
+            {
+                var lastOcc = s.LastIndexOf('.');
+                s = s.Substring(0, lastOcc).Replace(".", string.Empty) + s.Substring(lastOcc);
+            }
+
+            return s;
+        }
 
         public static string RemoveInvalidXmlChars(string text) => string.IsNullOrEmpty(text) ? "" : InvalidXmlChars.Replace(text, "");
 
@@ -98,5 +108,47 @@ namespace NzbDrone.Core.Parser
             var qs = QueryHelpers.ParseQuery(qsStr);
             return qs[argument].FirstOrDefault();
         }
+
+        public static long GetBytes(string str)
+        {
+            var valStr = new string(str.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
+            var unit = new string(str.Where(char.IsLetter).ToArray());
+            var val = CoerceFloat(valStr);
+            return GetBytes(unit, val);
+        }
+
+        public static long GetBytes(string unit, float value)
+        {
+            unit = unit.Replace("i", "").ToLowerInvariant();
+            if (unit.Contains("kb"))
+            {
+                return BytesFromKB(value);
+            }
+
+            if (unit.Contains("mb"))
+            {
+                return BytesFromMB(value);
+            }
+
+            if (unit.Contains("gb"))
+            {
+                return BytesFromGB(value);
+            }
+
+            if (unit.Contains("tb"))
+            {
+                return BytesFromTB(value);
+            }
+
+            return (long)value;
+        }
+
+        public static long BytesFromTB(float tb) => BytesFromGB(tb * 1024f);
+
+        public static long BytesFromGB(float gb) => BytesFromMB(gb * 1024f);
+
+        public static long BytesFromMB(float mb) => BytesFromKB(mb * 1024f);
+
+        public static long BytesFromKB(float kb) => (long)(kb * 1024f);
     }
 }

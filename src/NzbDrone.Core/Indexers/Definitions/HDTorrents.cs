@@ -259,7 +259,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var link = new Uri(_settings.BaseUrl + row.Children[4].FirstElementChild.GetAttribute("href"));
                 var description = row.Children[2].QuerySelector("span").TextContent;
-                var size = ReleaseInfo.GetBytes(row.Children[7].TextContent);
+                var size = ParseUtil.GetBytes(row.Children[7].TextContent);
 
                 var dateTag = row.Children[6].FirstElementChild;
                 var dateString = string.Join(" ", dateTag.Attributes.Select(attr => attr.Name));

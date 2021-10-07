@@ -209,7 +209,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                         value = release.Categories.ToString();
                                         break;
                                     case "size":
-                                        release.Size = ReleaseInfo.GetBytes(value);
+                                        release.Size = ParseUtil.GetBytes(value);
                                         value = release.Size.ToString();
                                         break;
                                     case "leechers":

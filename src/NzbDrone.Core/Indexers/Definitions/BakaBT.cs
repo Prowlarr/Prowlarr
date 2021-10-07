@@ -15,6 +15,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -342,7 +343,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.MinimumSeedTime = 172800; // 48 hours
 
                     var size = row.QuerySelector(".size").TextContent;
-                    release.Size = ReleaseInfo.GetBytes(size);
+                    release.Size = ParseUtil.GetBytes(size);
 
                     //22 Jul 15
                     var dateStr = row.QuerySelector(".added").TextContent.Replace("'", string.Empty);

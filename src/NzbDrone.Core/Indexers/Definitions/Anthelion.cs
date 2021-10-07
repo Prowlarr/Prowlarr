@@ -242,7 +242,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var files = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(3)").TextContent);
                 var publishDate = DateTimeUtil.FromTimeAgo(row.QuerySelector("td:nth-child(4)").TextContent);
-                var size = ReleaseInfo.GetBytes(row.QuerySelector("td:nth-child(5)").FirstChild.TextContent);
+                var size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(5)").FirstChild.TextContent);
                 var grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(6)").TextContent);
                 var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(7)").TextContent);
                 var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(8)").TextContent);

@@ -99,47 +99,5 @@ namespace NzbDrone.Core.Parser.Model
                     return ToString();
             }
         }
-
-        public static long GetBytes(string str)
-        {
-            var valStr = new string(str.Where(c => char.IsDigit(c) || c == '.').ToArray());
-            var unit = new string(str.Where(char.IsLetter).ToArray());
-            var val = ParseUtil.CoerceFloat(valStr);
-            return GetBytes(unit, val);
-        }
-
-        public static long GetBytes(string unit, float value)
-        {
-            unit = unit.Replace("i", "").ToLowerInvariant();
-            if (unit.Contains("kb"))
-            {
-                return BytesFromKB(value);
-            }
-
-            if (unit.Contains("mb"))
-            {
-                return BytesFromMB(value);
-            }
-
-            if (unit.Contains("gb"))
-            {
-                return BytesFromGB(value);
-            }
-
-            if (unit.Contains("tb"))
-            {
-                return BytesFromTB(value);
-            }
-
-            return (long)value;
-        }
-
-        public static long BytesFromTB(float tb) => BytesFromGB(tb * 1024f);
-
-        public static long BytesFromGB(float gb) => BytesFromMB(gb * 1024f);
-
-        public static long BytesFromMB(float mb) => BytesFromKB(mb * 1024f);
-
-        public static long BytesFromKB(float kb) => (long)(kb * 1024f);
     }
 }

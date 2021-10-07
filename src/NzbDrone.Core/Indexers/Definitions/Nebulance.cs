@@ -224,7 +224,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var link = _settings.BaseUrl + row.QuerySelector("a[href*='action=download']").GetAttribute("href");
 
                 var qColSize = row.QuerySelector("td:nth-child(3)");
-                var size = ReleaseInfo.GetBytes(qColSize.Children[0].TextContent);
+                var size = ParseUtil.GetBytes(qColSize.Children[0].TextContent);
                 var files = ParseUtil.CoerceInt(qColSize.Children[1].TextContent.Split(':')[1].Trim());
 
                 var qPublishdate = row.QuerySelector("td:nth-child(4) span");

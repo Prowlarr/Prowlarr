@@ -360,7 +360,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.Seeders = item.Seeders;
                 release.Peers = item.Leechers + release.Seeders;
                 var size = item.Size;
-                release.Size = ReleaseInfo.GetBytes(size);
+                release.Size = ParseUtil.GetBytes(size);
 
                 release.DownloadVolumeFactor = item.Free ? 0 : 1;
                 release.UploadVolumeFactor = 1;

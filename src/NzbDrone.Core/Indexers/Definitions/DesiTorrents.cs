@@ -1,16 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers.Gazelle;
+using NzbDrone.Core.Indexers.Definitions.UNIT3D;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class DesiTorrents : Gazelle.Gazelle
+    public class DesiTorrents : Unit3dBase
     {
         public override string Name => "DesiTorrents";
-        public override string[] IndexerUrls => new string[] { "https://desitorrents.tv/" };
+        public override string Language => "en-US";
+        public override string[] IndexerUrls => new[] { "https://desitorrents.tv/" };
         public override string Description => "Desitorrents is a  Private Torrent Tracker for BOLLYWOOD / TOLLYWOOD / GENERAL";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
@@ -21,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new DesiTorrentsParser(Settings, Capabilities);
+            return new DesiTorrentsParser(Settings, Capabilities.Categories);
         }
 
         protected override IndexerCapabilities SetCapabilities()
@@ -47,7 +49,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies, "Movies");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TV, "Tv shows");
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TV, "TV");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio, "Music");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.BooksEBook, "ebooks");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.TVSport, "Sports");
@@ -57,10 +59,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class DesiTorrentsParser : Gazelle.GazelleParser
+    public class DesiTorrentsParser : Unit3dParser
     {
-        public DesiTorrentsParser(GazelleSettings settings, IndexerCapabilities capabilities)
-            : base(settings, capabilities)
+        public DesiTorrentsParser(Unit3dSettings settings, IndexerCapabilitiesCategories categories)
+            : base(settings, categories)
         {
         }
 

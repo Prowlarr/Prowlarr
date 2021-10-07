@@ -52,6 +52,8 @@ namespace NzbDrone.Core.Indexers
         public int? LimitsMax { get; set; }
         public int? LimitsDefault { get; set; }
 
+        public bool SupportsRawSearch { get; set; }
+
         public List<SearchParam> SearchParams;
         public bool SearchAvailable => SearchParams.Count > 0;
 
@@ -87,6 +89,7 @@ namespace NzbDrone.Core.Indexers
 
         public IndexerCapabilities()
         {
+            SupportsRawSearch = false;
             SearchParams = new List<SearchParam> { SearchParam.Q };
             TvSearchParams = new List<TvSearchParam>();
             MovieSearchParams = new List<MovieSearchParam>();
@@ -364,22 +367,28 @@ namespace NzbDrone.Core.Indexers
                     new XElement("searching",
                         new XElement("search",
                             new XAttribute("available", SearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedSearchParams())),
+                            new XAttribute("supportedParams", SupportedSearchParams()),
+                            SupportsRawSearch ? new XAttribute("searchEngine", "raw") : null),
                         new XElement("tv-search",
                             new XAttribute("available", TvSearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedTvSearchParams())),
+                            new XAttribute("supportedParams", SupportedTvSearchParams()),
+                            SupportsRawSearch ? new XAttribute("searchEngine", "raw") : null),
                         new XElement("movie-search",
                             new XAttribute("available", MovieSearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedMovieSearchParams())),
+                            new XAttribute("supportedParams", SupportedMovieSearchParams()),
+                            SupportsRawSearch ? new XAttribute("searchEngine", "raw") : null),
                         new XElement("music-search",
                             new XAttribute("available", MusicSearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedMusicSearchParams())),
+                            new XAttribute("supportedParams", SupportedMusicSearchParams()),
+                            SupportsRawSearch ? new XAttribute("searchEngine", "raw") : null),
                         new XElement("audio-search",
                             new XAttribute("available", MusicSearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedMusicSearchParams())),
+                            new XAttribute("supportedParams", SupportedMusicSearchParams()),
+                            SupportsRawSearch ? new XAttribute("searchEngine", "raw") : null),
                         new XElement("book-search",
                             new XAttribute("available", BookSearchAvailable ? "yes" : "no"),
-                            new XAttribute("supportedParams", SupportedBookSearchParams()))),
+                            new XAttribute("supportedParams", SupportedBookSearchParams()),
+                            SupportsRawSearch ? new XAttribute("searchEngine", "raw") : null)),
                     new XElement("categories",
                         from c in Categories.GetTorznabCategoryTree(true)
                         select new XElement("category",

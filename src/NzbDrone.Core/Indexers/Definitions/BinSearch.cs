@@ -194,7 +194,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     Guid = guid,
                     Title = parsedTitle.Groups["title"].Value,
-                    Size = ReleaseInfo.GetBytes(string.Format("{0} {1}", size.Groups["size"].Value, size.Groups["unit"].Value)),
+                    Size = ParseUtil.GetBytes(string.Format("{0} {1}", size.Groups["size"].Value, size.Groups["unit"].Value)),
                     PublishDate = publishDate,
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Other },
                     InfoUrl = infoUrl,

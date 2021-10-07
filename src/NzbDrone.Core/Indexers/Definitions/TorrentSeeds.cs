@@ -314,7 +314,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var qColumns = row.QuerySelectorAll("td");
                 release.Files = ParseUtil.CoerceInt(qColumns[3].TextContent);
                 release.PublishDate = DateTimeUtil.FromUnknown(qColumns[5].TextContent);
-                release.Size = ReleaseInfo.GetBytes(qColumns[6].TextContent);
+                release.Size = ParseUtil.GetBytes(qColumns[6].TextContent);
                 release.Grabs = ParseUtil.CoerceInt(qColumns[7].TextContent.Replace("Times", ""));
                 release.Seeders = ParseUtil.CoerceInt(qColumns[8].TextContent);
                 release.Peers = ParseUtil.CoerceInt(qColumns[9].TextContent) + release.Seeders;

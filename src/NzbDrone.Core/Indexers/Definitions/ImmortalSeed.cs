@@ -280,7 +280,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.PublishDate = DateTime.ParseExact(dateString, "yyyy-MM-dd hh:mm tt", CultureInfo.InvariantCulture);
 
                 var sizeStr = row.QuerySelector("td:nth-of-type(5)").TextContent.Trim();
-                release.Size = ReleaseInfo.GetBytes(sizeStr);
+                release.Size = ParseUtil.GetBytes(sizeStr);
 
                 release.Seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(7)").TextContent.Trim());
                 release.Peers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-of-type(8)").TextContent.Trim()) + release.Seeders;

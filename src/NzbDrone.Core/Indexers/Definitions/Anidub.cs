@@ -405,7 +405,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             const string SizeSelector = ".list.down > .red";
 
             var sizeStr = tabNode.QuerySelector(SizeSelector).TextContent;
-            return ReleaseInfo.GetBytes(sizeStr);
+            return ParseUtil.GetBytes(sizeStr);
         }
 
         private string GetReleaseLink(AngleSharp.Dom.IElement tabNode)

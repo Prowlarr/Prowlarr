@@ -361,7 +361,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var details = _settings.BaseUrl + qDetailsLink.GetAttribute("href");
                     var grabs = ParseUtil.CoerceInt(qGrabs.TextContent);
                     var leechers = ParseUtil.CoerceInt(qLeechers.TextContent);
-                    var size = ReleaseInfo.GetBytes(sizeString);
+                    var size = ParseUtil.GetBytes(sizeString);
 
                     var release = new TorrentInfo
                     {

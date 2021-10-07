@@ -342,7 +342,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var dateStr = Regex.Replace(row.Children[5].InnerHtml, @"\<br[\s]{0,1}[\/]{0,1}\>", " ");
                 var publishDate = DateTimeUtil.FromTimeAgo(dateStr);
                 var files = ParseUtil.CoerceInt(row.Children[3].TextContent);
-                var size = ReleaseInfo.GetBytes(row.Children[7].TextContent);
+                var size = ParseUtil.GetBytes(row.Children[7].TextContent);
                 var grabs = ParseUtil.CoerceInt(row.Children[8].TextContent);
                 var seeders = ParseUtil.CoerceInt(row.Children[9].TextContent);
                 var leechers = ParseUtil.CoerceInt(row.Children[10].TextContent);

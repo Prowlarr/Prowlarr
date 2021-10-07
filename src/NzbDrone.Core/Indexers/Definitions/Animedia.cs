@@ -210,7 +210,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private long getReleaseSize(AngleSharp.Dom.IElement tr)
         {
             var sizeStr = tr.QuerySelector("div.tracker_info_left").TextContent;
-            return ReleaseInfo.GetBytes(SizeInfoQueryRegex.Match(sizeStr).Groups[1].Value.Trim());
+            return ParseUtil.GetBytes(SizeInfoQueryRegex.Match(sizeStr).Groups[1].Value.Trim());
         }
 
         private DateTime getReleaseDate(AngleSharp.Dom.IElement tr)

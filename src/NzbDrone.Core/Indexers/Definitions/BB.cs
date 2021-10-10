@@ -103,6 +103,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
+            if (!httpResponse.Content.Contains("logout.php"))
+            {
+                return true;
+            }
+
             return false;
         }
 

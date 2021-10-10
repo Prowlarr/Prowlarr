@@ -172,6 +172,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var torrentInfos = new List<ReleaseInfo>();
             var queryResponseItems = JsonConvert.DeserializeObject<List<AnilibriaTitle>>(indexerResponse.Content);
+            var wwwUrl = Regex.Replace(_settings.BaseUrl, @"(https?:\/\/)(.*)", "$1www.$2/");
 
             foreach (var tl in queryResponseItems)
             {
@@ -190,8 +191,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         // API provides timestamp in UTC+3 timezone, so we need to substract 3 hours
                         PublishDate = DateTimeUtil.UnixTimestampToDateTime(tr.UploadedTimestamp).AddHours(-3),
-                        Guid = _settings.BaseUrl + tr.Url,
-                        DownloadUrl = _settings.BaseUrl + tr.Url,
+                        Guid = wwwUrl + tr.Url,
+                        DownloadUrl = wwwUrl + tr.Url,
                         Size = tr.TotalSize,
                         Resolution = tr.Quality.Resolution,
                         Codec = tr.Quality.Encoder

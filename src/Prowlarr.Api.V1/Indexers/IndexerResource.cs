@@ -63,7 +63,9 @@ namespace Prowlarr.Api.V1.Indexers
                 foreach (var setting in settings.ExtraFieldData)
                 {
                     var field = extraFields.FirstOrDefault(x => x.Name == setting.Key);
-                    if (field != null)
+
+                    //Use values from db for all but info type fields
+                    if (field != null && field.Type != "info")
                     {
                         field.Value = setting.Value;
                     }

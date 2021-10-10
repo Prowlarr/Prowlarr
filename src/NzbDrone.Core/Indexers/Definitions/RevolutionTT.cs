@@ -269,6 +269,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var details = _settings.BaseUrl + qDetails.GetAttribute("href");
                 var title = qDetails.QuerySelector("b").TextContent;
 
+                // Remove auto-generated [REQ] tag from fulfilled requests
+                if (title.StartsWith("[REQ] "))
+                {
+                    title = title.Substring(6);
+                }
+
                 var qLink = row.QuerySelector("td:nth-child(4) > a");
                 if (qLink == null)
                 {

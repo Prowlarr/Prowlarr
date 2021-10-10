@@ -590,7 +590,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (captcha != null && automaticlogin)
             {
-                _logger.Error(string.Format("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id));
+                _logger.Error("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id);
             }
 
             return captcha;
@@ -623,7 +623,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else
                 {
-                    _logger.Debug(string.Format("CardigannIndexer ({0}): No captcha image found", _definition.Id));
+                    _logger.Debug("CardigannIndexer ({0}): No captcha image found", _definition.Id);
                 }
             }
             else
@@ -650,7 +650,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected async Task<HttpResponse> HandleRequest(RequestBlock request, Dictionary<string, object> variables = null, string referer = null)
         {
             var requestLinkStr = ResolvePath(ApplyGoTemplateText(request.Path, variables)).ToString();
-            _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() requestLinkStr= {requestLinkStr}");
+
+            _logger.Debug("CardigannIndexer ({0}): handleRequest() requestLinkStr= {1}", _definition.Id, requestLinkStr);
 
             Dictionary<string, string> pairs = null;
             var queryCollection = new NameValueCollection();
@@ -705,7 +706,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var response = await HttpClient.ExecuteProxiedAsync(httpRequest.Build(), Definition);
 
-            _logger.Debug($"CardigannIndexer ({_definition.Id}): handleRequest() remote server returned {response.StatusCode.ToString()}");
+            _logger.Debug("CardigannIndexer ({0}): handleRequest() remote server returned {1}", _definition.Id, response.StatusCode);
             return response;
         }
 

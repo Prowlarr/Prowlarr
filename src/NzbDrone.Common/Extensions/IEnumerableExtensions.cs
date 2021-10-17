@@ -160,5 +160,16 @@ namespace NzbDrone.Common.Extensions
         {
             return new HashSet<T>(source, comparer);
         }
+
+        public static T FirstIfSingleOrDefault<T>(this IEnumerable<T> source, T replace = default)
+        {
+            if (source is ICollection<T> collection)
+            {
+                return collection.Count == 1 ? collection.First() : replace;
+            }
+
+            var test = source.Take(2).ToList();
+            return test.Count == 1 ? test[0] : replace;
+        }
     }
 }

@@ -89,7 +89,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                                    {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                                       // Torrentleech does technically support ImdbId Search but only with no other params
+                                       // ImdbId + S/E search returns unrelated results
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
                                    },
                 MovieSearchParams = new List<MovieSearchParam>
                                    {
@@ -228,7 +230,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
 
             return pageableRequests;
         }

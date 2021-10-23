@@ -24,6 +24,10 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"https://beyond-hd.me/api/torrents/2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"Req: [POST] https://www3.yggtorrent.nz/user/login: id=mySecret&pass=mySecret&ci_csrf_token=2b51db35e1912ffc138825a12b9933d2")]
 
+        // avistaz response
+        [TestCase(@"""download"":""https:\/\/avistaz.to\/rss\/download\/2b51db35e1910123321025a12b9933d2\/tb51db35e1910123321025a12b9933d2.torrent"",")]
+        [TestCase(@",""info_hash"":""2b51db35e1910123321025a12b9933d2"",")]
+
         // NzbGet
         [TestCase(@"{ ""Name"" : ""ControlUsername"", ""Value"" : ""mySecret"" }, { ""Name"" : ""ControlPassword"", ""Value"" : ""mySecret"" }, ")]
         [TestCase(@"{ ""Name"" : ""Server1.Username"", ""Value"" : ""mySecret"" }, { ""Name"" : ""Server1.Password"", ""Value"" : ""mySecret"" }, ")]

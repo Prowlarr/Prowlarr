@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "DesiTorrents";
         public override string Language => "en-US";
-        public override string[] IndexerUrls => new[] { "https://desitorrents.tv/" };
+        public override string[] IndexerUrls => new[] { "https://desitorrents.tv/", "https://desitorrents.rocks/" };
         public override string Description => "Desitorrents is a  Private Torrent Tracker for BOLLYWOOD / TOLLYWOOD / GENERAL";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 

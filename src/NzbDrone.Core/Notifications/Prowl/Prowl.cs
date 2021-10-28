@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Notifications.Prowl
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings.ApiKey, (ProwlPriority)Settings.Priority);
+            _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
         }
 
         public override ValidationResult Test()

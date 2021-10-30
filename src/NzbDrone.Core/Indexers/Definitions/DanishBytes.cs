@@ -108,7 +108,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("tvdb", tvdbId.ToString());
             }
 
-            var searchUrl = string.Format("{0}/api/torrents/v2/filter?{1}", Settings.BaseUrl, qc.GetQueryString());
+            var searchUrl = string.Format("{0}/api/torrents/v2/filter?{1}", Settings.BaseUrl.TrimEnd('/'), qc.GetQueryString());
 
             foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
             {

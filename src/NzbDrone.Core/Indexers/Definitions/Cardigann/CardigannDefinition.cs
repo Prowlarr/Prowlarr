@@ -150,13 +150,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
     {
         public int After { get; set; }
         public SelectorBlock Dateheaders { get; set; }
+        public SelectorBlock Count { get; set; }
     }
 
     public class SearchPathBlock : RequestBlock
     {
         public List<string> Categories { get; set; }
         public bool Inheritinputs { get; set; } = true;
-        public bool Followredirect { get; set; } = false;
+        public bool Followredirect { get; set; }
+        public ResponseBlock Response { get; set; }
     }
 
     public class RequestBlock
@@ -193,5 +195,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
     public class BeforeBlock : RequestBlock
     {
         public SelectorField Pathselector { get; set; }
+    }
+
+    public class ResponseBlock
+    {
+        public string Type { get; set; }
+        public string Attribute { get; set; }
+        public bool Multiple { get; set; }
+        public string NoResultsMessage { get; set; }
     }
 }

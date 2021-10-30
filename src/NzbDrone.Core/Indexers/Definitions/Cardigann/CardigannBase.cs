@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return element.QuerySelector(selector);
         }
 
-        protected string HandleSelector(SelectorBlock selector, IElement dom, Dictionary<string, object> variables = null)
+        protected string HandleSelector(SelectorBlock selector, IElement dom, Dictionary<string, object> variables = null, bool required = true)
         {
             if (selector.Text != null)
             {
@@ -164,7 +164,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 if (selection == null)
                 {
-                    throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selector.Selector, dom.ToHtmlPretty()));
+                    if (required)
+                    {
+                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selector.Selector, dom.ToHtmlPretty()));
+                    }
+
+                    return null;
                 }
             }
 
@@ -189,7 +194,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 if (value == null)
                 {
-                    throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), selection.ToHtmlPretty()));
+                    if (required)
+                    {
+                        throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), selection.ToHtmlPretty()));
+                    }
+
+                    return null;
                 }
             }
             else if (selector.Attribute != null)
@@ -197,12 +207,68 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 value = selection.GetAttribute(selector.Attribute);
                 if (value == null)
                 {
-                    throw new Exception(string.Format("Attribute \"{0}\" is not set for element {1}", selector.Attribute, selection.ToHtmlPretty()));
+                    if (required)
+                    {
+                        throw new Exception(string.Format("Attribute \"{0}\" is not set for element {1}", selector.Attribute, selection.ToHtmlPretty()));
+                    }
+
+                    return null;
                 }
             }
             else
             {
                 value = selection.TextContent;
+            }
+
+            return ApplyFilters(ParseUtil.NormalizeSpace(value), selector.Filters, variables);
+        }
+
+        protected string HandleJsonSelector(SelectorBlock selector, JToken parentObj, Dictionary<string, object> variables = null, bool required = true)
+        {
+            if (selector.Text != null)
+            {
+                return ApplyFilters(ApplyGoTemplateText(selector.Text, variables), selector.Filters, variables);
+            }
+
+            string value = null;
+
+            if (selector.Selector != null)
+            {
+                var selector_Selector = ApplyGoTemplateText(selector.Selector.TrimStart('.'), variables);
+                var selection = parentObj.SelectToken(selector_Selector);
+                if (selection == null)
+                {
+                    if (required)
+                    {
+                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selector_Selector, parentObj.ToString()));
+                    }
+
+                    return null;
+                }
+
+                value = selection.Value<string>();
+            }
+
+            if (selector.Case != null)
+            {
+                foreach (var jcase in selector.Case)
+                {
+                    if (value.Equals(jcase.Key) || jcase.Key.Equals("*"))
+                    {
+                        value = jcase.Value;
+                        break;
+                    }
+                }
+
+                if (value == null)
+                {
+                    if (required)
+                    {
+                        throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), parentObj.ToString()));
+                    }
+
+                    return null;
+                }
             }
 
             return ApplyFilters(ParseUtil.NormalizeSpace(value), selector.Filters, variables);

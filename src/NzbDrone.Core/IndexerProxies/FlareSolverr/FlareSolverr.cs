@@ -110,8 +110,9 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var apiUrl = string.Format("{0}/v1", Settings.Host.TrimEnd('/'));
             var newRequest = new HttpRequest(apiUrl, HttpAccept.Json);
 
-            newRequest.SetContent(req.ToJson());
+            newRequest.Headers.ContentType = "application/json";
             newRequest.Method = HttpMethod.POST;
+            newRequest.SetContent(req.ToJson());
 
             _logger.Debug("Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);
 

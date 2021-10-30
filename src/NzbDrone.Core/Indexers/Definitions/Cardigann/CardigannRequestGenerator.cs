@@ -1067,7 +1067,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
                 }
 
-                var request = new CardigannRequest(requestbuilder.Build(), variables);
+                var request = new CardigannRequest(requestbuilder.Build(), variables, searchPath);
 
                 // send HTTP request
                 if (search.Headers != null)

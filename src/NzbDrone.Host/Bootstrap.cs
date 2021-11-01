@@ -8,8 +8,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using NLog;
@@ -129,6 +131,7 @@ namespace NzbDrone.Host
                 })
                 .ConfigureWebHost(builder =>
                 {
+                    builder.UseConfiguration(config);
                     builder.UseUrls(urls.ToArray());
                     builder.UseKestrel(options =>
                     {
@@ -195,6 +198,7 @@ namespace NzbDrone.Host
             var appFolder = new AppFolderInfo(context);
             return new ConfigurationBuilder()
                 .AddXmlFile(appFolder.GetConfigPath(), optional: true, reloadOnChange: false)
+                .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new ("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
                 .Build();
         }
 

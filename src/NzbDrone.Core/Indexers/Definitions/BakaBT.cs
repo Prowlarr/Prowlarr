@@ -171,7 +171,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
             var searchString = term;
-            var searchUrl = Settings.BaseUrl + " browse.php?only=0&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
+            var searchUrl = Settings.BaseUrl + "browse.php?only=0&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";
             if (Settings.AdultContent)
             {
                 searchUrl = Settings.BaseUrl + "browse.php?only=0&hentai=1&incomplete=1&lossless=1&hd=1&multiaudio=1&bonus=1&reorder=1&q=";

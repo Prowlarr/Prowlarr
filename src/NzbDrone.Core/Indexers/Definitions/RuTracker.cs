@@ -1443,7 +1443,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 queryCollection.Add("nm", searchString);
             }
 
-            if (categories.Length > 0)
+            if (categories != null && categories.Length > 0)
             {
                 queryCollection.Add("f", string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(categories)));
             }

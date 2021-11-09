@@ -57,11 +57,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var requestBuilder = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "checkpoint/API"))
             {
+                Method = HttpMethod.POST,
                 LogResponseContent = true,
                 AllowAutoRedirect = true
             };
 
-            var loginPage = await ExecuteAuth(requestBuilder.Build());
+            var loginPage = await ExecuteAuth(requestBuilder.AddFormParameter("username", Settings.Username).Build());
 
             var tokenRegex = new Regex(@"name=\\""a\\"" value=\\""([^""]+)\\""");
             var matches = tokenRegex.Match(loginPage.Content);
@@ -76,6 +77,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var requestBuilder2 = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "checkpoint/"))
             {
+                Method = HttpMethod.POST,
                 LogResponseContent = true,
                 AllowAutoRedirect = true
             };

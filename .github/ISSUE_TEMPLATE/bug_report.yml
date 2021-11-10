@@ -1,5 +1,4 @@
 name: Bug Report
-title: "[BUG]: "
 description: 'Report a new bug, if you are not 100% certain this is a bug please go to our Reddit or Discord first'
 labels: ['Type: Bug', 'Status: Needs Triage']
 body:

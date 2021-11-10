@@ -17,14 +17,14 @@ namespace NzbDrone.Core.IndexerSearch
         Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch);
     }
 
-    public class NzbSearchService : ISearchForNzb
+    public class ReleaseSearchService : ISearchForNzb
     {
         private readonly IIndexerLimitService _indexerLimitService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IIndexerFactory _indexerFactory;
         private readonly Logger _logger;
 
-        public NzbSearchService(IEventAggregator eventAggregator,
+        public ReleaseSearchService(IEventAggregator eventAggregator,
                                 IIndexerFactory indexerFactory,
                                 IIndexerLimitService indexerLimitService,
                                 Logger logger)

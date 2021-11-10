@@ -40,7 +40,10 @@ namespace NzbDrone.Core.Applications.Radarr
                 Capabilities = new IndexerCapabilities()
             };
 
-            testIndexer.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies);
+            foreach (var cat in NewznabStandardCategory.AllCats)
+            {
+                testIndexer.Capabilities.Categories.AddCategoryMapping(1, cat);
+            }
 
             try
             {

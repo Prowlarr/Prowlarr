@@ -40,7 +40,10 @@ namespace NzbDrone.Core.Applications.Readarr
                 Capabilities = new IndexerCapabilities()
             };
 
-            testIndexer.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.Books);
+            foreach (var cat in NewznabStandardCategory.AllCats)
+            {
+                testIndexer.Capabilities.Categories.AddCategoryMapping(1, cat);
+            }
 
             try
             {

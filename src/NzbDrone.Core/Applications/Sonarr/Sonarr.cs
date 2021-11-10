@@ -40,7 +40,10 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Capabilities = new IndexerCapabilities()
             };
 
-            testIndexer.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
+            foreach (var cat in NewznabStandardCategory.AllCats)
+            {
+                testIndexer.Capabilities.Categories.AddCategoryMapping(1, cat);
+            }
 
             try
             {

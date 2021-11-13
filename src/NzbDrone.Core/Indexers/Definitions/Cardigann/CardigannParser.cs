@@ -490,6 +490,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.MinimumSeedTime.ToString();
                     break;
                 case "imdb":
+                case "imdbid":
                     release.ImdbId = (int)ParseUtil.GetLongFromString(value);
                     value = release.ImdbId.ToString();
                     break;

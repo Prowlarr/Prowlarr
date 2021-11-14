@@ -75,6 +75,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
 
         // Notifiarr
         [TestCase("https://notifiarr.com/notifier.php: api=1234530f-422f-4aac-b6b3-01233210aaaa&radarr_health_issue_message=Download")]
+        [TestCase("/readarr/signalr/messages/negotiate?access_token=1234530f422f4aacb6b301233210aaaa&negotiateVersion=1")]
 
         // RSS
         [TestCase(@"<atom:link href = ""https://api.nzb.su/api?t=search&amp;extended=1&amp;cat=3030&apikey=mySecret&amp;q=Diggers"" rel=""self"" type=""application/rss+xml"" />")]

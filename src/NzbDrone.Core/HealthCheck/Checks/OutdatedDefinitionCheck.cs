@@ -27,7 +27,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
         {
             var blocklist = _indexerDefinitionUpdateService.GetBlocklist();
 
-            var oldIndexers = _indexerFactory.All().Where(i => i.Implementation == "Cardigann" && blocklist.Contains(((CardigannSettings)i.Settings).DefinitionFile)).ToList();
+            var oldIndexers = _indexerFactory.AllProviders(false)
+                    .Where(i => i.IsObsolete() || (i.Definition.Implementation == "Cardigann" && blocklist.Contains(((CardigannSettings)i.Definition.Settings).DefinitionFile))).ToList();
 
             if (oldIndexers.Count == 0)
             {

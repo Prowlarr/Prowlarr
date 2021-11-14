@@ -18,6 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class TorrentParadiseMl : TorrentIndexerBase<TorrentParadiseMlSettings>
     {
         public override string Name => "TorrentParadiseMl";

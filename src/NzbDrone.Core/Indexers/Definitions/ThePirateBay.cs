@@ -16,6 +16,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class ThePirateBay : TorrentIndexerBase<ThePirateBaySettings>
     {
         public override string Name => "ThePirateBay";

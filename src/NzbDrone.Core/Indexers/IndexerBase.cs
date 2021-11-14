@@ -45,6 +45,18 @@ namespace NzbDrone.Core.Indexers
 
         public Type ConfigContract => typeof(TSettings);
 
+        public bool IsObsolete()
+        {
+            var attributes = GetType().GetCustomAttributes(false);
+
+            foreach (ObsoleteAttribute attribute in attributes.OfType<ObsoleteAttribute>())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public virtual ProviderMessage Message => null;
 
         public virtual IEnumerable<ProviderDefinition> DefaultDefinitions

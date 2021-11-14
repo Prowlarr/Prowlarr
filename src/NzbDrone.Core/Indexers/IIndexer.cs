@@ -27,6 +27,7 @@ namespace NzbDrone.Core.Indexers
         Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
 
         Task<byte[]> Download(Uri link);
+        bool IsObsolete();
 
         IndexerCapabilities GetCapabilities();
     }

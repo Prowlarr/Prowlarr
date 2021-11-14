@@ -18,6 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class SuperBits : TorrentIndexerBase<SuperBitsSettings>
     {
         public override string Name => "SuperBits";

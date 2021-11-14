@@ -17,6 +17,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class InternetArchive : TorrentIndexerBase<InternetArchiveSettings>
     {
         public override string Name => "Internet Archive";

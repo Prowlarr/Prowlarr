@@ -20,6 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class DigitalCore : TorrentIndexerBase<DigitalCoreSettings>
     {
         public override string Name => "DigitalCore";

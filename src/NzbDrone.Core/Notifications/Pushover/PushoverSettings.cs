@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
@@ -23,7 +24,7 @@ namespace NzbDrone.Core.Notifications.Pushover
         public PushoverSettings()
         {
             Priority = 0;
-            Devices = System.Array.Empty<string>();
+            Devices = Array.Empty<string>();
         }
 
         //TODO: Get Pushover to change our app name (or create a new app) when we have a new logo
@@ -33,7 +34,7 @@ namespace NzbDrone.Core.Notifications.Pushover
         [FieldDefinition(1, Label = "User Key", Privacy = PrivacyLevel.UserName, HelpLink = "https://pushover.net/")]
         public string UserKey { get; set; }
 
-        [FieldDefinition(2, Label = "Devices", HelpText = "List of device names (leave blank to send to all devices)", Type = FieldType.Tag)]
+        [FieldDefinition(2, Label = "Devices", HelpText = "List of device names (leave blank to send to all devices)", Type = FieldType.Tag, Placeholder = "device1")]
         public IEnumerable<string> Devices { get; set; }
 
         [FieldDefinition(3, Label = "Priority", Type = FieldType.Select, SelectOptions = typeof(PushoverPriority))]

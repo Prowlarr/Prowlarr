@@ -15,6 +15,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class Milkie : TorrentIndexerBase<MilkieSettings>
     {
         public override string Name => "Milkie";

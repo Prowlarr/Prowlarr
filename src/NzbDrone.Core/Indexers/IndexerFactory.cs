@@ -147,6 +147,11 @@ namespace NzbDrone.Core.Indexers
         {
             foreach (var provider in _providers)
             {
+                if (provider.IsObsolete())
+                {
+                    continue;
+                }
+
                 var definitions = provider.DefaultDefinitions
                     .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name || v.Name != typeof(Torznab.Torznab).Name));
 

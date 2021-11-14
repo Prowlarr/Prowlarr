@@ -29,15 +29,11 @@ namespace NzbDrone.Core.IndexerVersions
         private const int DEFINITION_VERSION = 3;
         private readonly List<string> _defintionBlocklist = new List<string>()
         {
-            "aither",
             "animeworld",
-            "blutopia",
             "beyond-hd",
             "beyond-hd-oneurl",
             "danishbytes",
-            "desitorrents",
             "hdbits",
-            "shareisland",
             "lat-team"
         };
 

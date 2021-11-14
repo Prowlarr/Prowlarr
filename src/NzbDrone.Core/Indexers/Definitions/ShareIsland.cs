@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Http;
@@ -7,6 +8,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete]
     public class ShareIsland : Unit3dBase
     {
         public override string Name => "ShareIsland";

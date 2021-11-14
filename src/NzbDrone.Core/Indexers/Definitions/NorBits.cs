@@ -78,7 +78,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder3 = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "takelogin.php"))
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.POST
             };
 
             var authLoginCheckRequest = requestBuilder3
@@ -87,8 +88,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetCookies(indexPage.GetCookies())
                 .SetHeader("Referer", loginUrl)
                 .Build();
-
-            authLoginCheckRequest.Method = HttpMethod.POST;
 
             var loginResponse = await ExecuteAuth(authLoginCheckRequest);
 

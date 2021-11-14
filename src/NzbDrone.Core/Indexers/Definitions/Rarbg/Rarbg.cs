@@ -59,10 +59,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 MusicSearchParams = new List<MusicSearchParam>
                        {
                            MusicSearchParam.Q
-                       },
-                BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
                        }
             };
 
@@ -76,7 +72,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
             caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.PCGames, "Games/PC RIP");
             caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.ConsoleXBox360, "Games/XBOX-360");
             caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.PCISO, "Software/PC ISO");
-            caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.BooksEBook, "e-Books");
             caps.Categories.AddCategoryMapping(40, NewznabStandardCategory.ConsolePS3, "Games/PS3");
             caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.TVHD, "TV HD Episodes");
             caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.MoviesBluRay, "Movies/Full BD");

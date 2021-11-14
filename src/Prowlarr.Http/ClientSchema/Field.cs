@@ -19,6 +19,7 @@ namespace Prowlarr.Http.ClientSchema
         public string SelectOptionsProviderAction { get; set; }
         public string Section { get; set; }
         public string Hidden { get; set; }
+        public string Placeholder { get; set; }
 
         public Field Clone()
         {

@@ -93,7 +93,9 @@ namespace NzbDrone.Core.Parser
                 return null;
             }
 
-            return "tt" + ((int)imdbid).ToString("D7");
+            var imdbLen = ((int)imdbid > 9999999) ? "D8" : "D7";
+
+            return "tt" + ((int)imdbid).ToString(imdbLen);
         }
 
         public static string GetArgumentFromQueryString(string url, string argument)

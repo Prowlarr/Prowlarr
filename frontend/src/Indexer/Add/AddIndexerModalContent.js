@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Alert from 'Components/Alert';
+import EnhancedSelectInput from 'Components/Form/EnhancedSelectInput';
 import TextInput from 'Components/Form/TextInput';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
@@ -44,6 +45,17 @@ const columns = [
   }
 ];
 
+const protocols = [
+  {
+    key: 'torrent',
+    value: 'torrent'
+  },
+  {
+    key: 'usenet',
+    value: 'nzb'
+  }
+];
+
 class AddIndexerModalContent extends Component {
 
   //
@@ -53,7 +65,10 @@ class AddIndexerModalContent extends Component {
     super(props, context);
 
     this.state = {
-      filter: ''
+      filter: '',
+      filterProtocols: [],
+      filterLanguages: [],
+      filterPrivacyLevels: []
     };
   }
 
@@ -80,8 +95,35 @@ class AddIndexerModalContent extends Component {
       onModalClose
     } = this.props;
 
-    const filter = this.state.filter;
-    const filterLower = filter.toLowerCase();
+    const languages = Array.from(new Set(indexers.map(({ language }) => language)))
+      .sort((a, b) => a.localeCompare(b))
+      .map((language) => ({ key: language, value: language }));
+
+    const privacyLevels = Array.from(new Set(indexers.map(({ privacy }) => privacy)))
+      .sort((a, b) => a.localeCompare(b))
+      .map((privacy) => ({ key: privacy, value: privacy }));
+
+    const filteredIndexers = indexers.filter((indexer) => {
+      const { filter, filterProtocols, filterLanguages, filterPrivacyLevels } = this.state;
+
+      if (!indexer.name.toLowerCase().includes(filter.toLocaleLowerCase())) {
+        return false;
+      }
+
+      if (filterProtocols.length && !filterProtocols.includes(indexer.protocol)) {
+        return false;
+      }
+
+      if (filterLanguages.length && !filterLanguages.includes(indexer.language)) {
+        return false;
+      }
+
+      if (filterPrivacyLevels.length && !filterPrivacyLevels.includes(indexer.privacy)) {
+        return false;
+      }
+
+      return true;
+    });
 
     const errorMessage = getErrorMessage(error, 'Unable to load indexers');
 
@@ -99,10 +141,42 @@ class AddIndexerModalContent extends Component {
             className={styles.filterInput}
             placeholder={translate('FilterPlaceHolder')}
             name="filter"
-            value={filter}
+            value={this.state.filter}
             autoFocus={true}
             onChange={this.onFilterChange}
           />
+
+          <div className={styles.filterRow}>
+            <div className={styles.filterContainer}>
+              <label className={styles.filterLabel}>Protocol</label>
+              <EnhancedSelectInput
+                name="indexerProtocols"
+                value={this.state.filterProtocols}
+                values={protocols}
+                onChange={({ value }) => this.setState({ filterProtocols: value })}
+              />
+            </div>
+
+            <div className={styles.filterContainer}>
+              <label className={styles.filterLabel}>Language</label>
+              <EnhancedSelectInput
+                name="indexerLanguages"
+                value={this.state.filterLanguages}
+                values={languages}
+                onChange={({ value }) => this.setState({ filterLanguages: value })}
+              />
+            </div>
+
+            <div className={styles.filterContainer}>
+              <label className={styles.filterLabel}>Privacy</label>
+              <EnhancedSelectInput
+                name="indexerPrivacyLevels"
+                value={this.state.filterPrivacyLevels}
+                values={privacyLevels}
+                onChange={({ value }) => this.setState({ filterPrivacyLevels: value })}
+              />
+            </div>
+          </div>
 
           <Alert
             kind={kinds.INFO}
@@ -133,18 +207,14 @@ class AddIndexerModalContent extends Component {
                 >
                   <TableBody>
                     {
-                      indexers.map((indexer) => {
-                        return indexer.name.toLowerCase().includes(filterLower) ?
-                          (
-                            <SelectIndexerRow
-                              key={indexer.name}
-                              implementation={indexer.implementation}
-                              {...indexer}
-                              onIndexerSelect={onIndexerSelect}
-                            />
-                          ) :
-                          null;
-                      })
+                      filteredIndexers.map((indexer) => (
+                        <SelectIndexerRow
+                          key={indexer.name}
+                          implementation={indexer.implementation}
+                          {...indexer}
+                          onIndexerSelect={onIndexerSelect}
+                        />
+                      ))
                     }
                   </TableBody>
                 </Table> :

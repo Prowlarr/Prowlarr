@@ -1067,16 +1067,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
                 }
 
-                var request = new CardigannRequest(requestbuilder.Build(), variables, searchPath);
-
                 // send HTTP request
                 if (search.Headers != null)
                 {
-                    foreach (var header in search.Headers)
-                    {
-                        request.HttpRequest.Headers.Add(header.Key, header.Value[0]);
-                    }
+                    var headers = ParseCustomHeaders(search.Headers, variables);
+                    requestbuilder.SetHeaders(headers ?? new Dictionary<string, string>());
                 }
+
+                var request = new CardigannRequest(requestbuilder.Build(), variables, searchPath);
 
                 yield return request;
             }

@@ -292,7 +292,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var name = ".Config." + setting.Name;
                 var value = Settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);
 
-                if (setting.Type != "password" && indexerLogging)
+                if ((setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey") && indexerLogging)
                 {
                     _logger.Trace($"{name} got value {value.ToJson()}");
                 }
@@ -334,7 +334,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new NotSupportedException();
                 }
 
-                if (setting.Type != "password" && indexerLogging)
+                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging)
                 {
                     _logger.Debug($"Setting {setting.Name} to {variables[name]}");
                 }

@@ -714,6 +714,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             Cookies = GetCookies();
             var method = HttpMethod.GET;
+            var headers = new Dictionary<string, string>();
 
             if (_definition.Download != null)
             {
@@ -722,7 +723,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
 
-                var headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+                headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
                 HttpResponse response = null;
 
                 var request = new HttpRequestBuilder(link.ToString())
@@ -753,8 +754,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     try
                     {
-                        headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
-
                         if (!download.Infohash.UseBeforeResponse || download.Before == null || response == null)
                         {
                             response = await HttpClient.ExecuteProxiedAsync(request, Definition);
@@ -777,6 +776,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                         var hashDownloadRequest = new HttpRequestBuilder(torrentLink.AbsoluteUri)
                             .SetCookies(Cookies ?? new Dictionary<string, string>())
+                            .SetHeaders(headers ?? new Dictionary<string, string>())
                             .Build();
 
                         hashDownloadRequest.Method = method;
@@ -793,8 +793,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (download.Selectors != null)
                 {
-                    headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
-
                     foreach (var selector in download.Selectors)
                     {
                         var queryselector = ApplyGoTemplateText(selector.Selector, variables);
@@ -836,6 +834,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                             var selectorDownloadRequest = new HttpRequestBuilder(link.AbsoluteUri)
                                 .SetCookies(Cookies ?? new Dictionary<string, string>())
+                                .SetHeaders(headers ?? new Dictionary<string, string>())
                                 .Build();
 
                             selectorDownloadRequest.Method = method;
@@ -854,6 +853,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var downloadRequest = new HttpRequestBuilder(link.AbsoluteUri)
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetHeaders(headers ?? new Dictionary<string, string>())
                 .Build();
 
             downloadRequest.Method = method;

@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
+using AngleSharp.Xml.Parser;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -159,20 +160,39 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 try
                 {
-                    var searchResultParser = new HtmlParser();
-                    var searchResultDocument = searchResultParser.ParseDocument(results);
+                    IHtmlCollection<IElement> rowsDom;
 
-                    /* checkForError(response, Definition.Search.Error); */
-
-                    if (search.Preprocessingfilters != null)
+                    if (request.SearchPath.Response != null && request.SearchPath.Response.Type.Equals("xml"))
                     {
-                        results = ApplyFilters(results, search.Preprocessingfilters, variables);
-                        searchResultDocument = searchResultParser.ParseDocument(results);
-                        _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
+                        var searchResultParser = new XmlParser();
+                        var searchResultDocument = searchResultParser.ParseDocument(results);
+
+                        if (search.Preprocessingfilters != null)
+                        {
+                            results = ApplyFilters(results, search.Preprocessingfilters, variables);
+                            searchResultDocument = searchResultParser.ParseDocument(results);
+                            _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
+                        }
+
+                        var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
+                        rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
+                    }
+                    else
+                    {
+                        var searchResultParser = new HtmlParser();
+                        var searchResultDocument = searchResultParser.ParseDocument(results);
+
+                        if (search.Preprocessingfilters != null)
+                        {
+                            results = ApplyFilters(results, search.Preprocessingfilters, variables);
+                            searchResultDocument = searchResultParser.ParseDocument(results);
+                            _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
+                        }
+
+                        var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
+                        rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
                     }
 
-                    var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
-                    var rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
                     var rows = new List<IElement>();
                     foreach (var rowDom in rowsDom)
                     {

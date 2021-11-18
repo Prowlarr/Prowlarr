@@ -1,9 +1,5 @@
 using System;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using com.LandonKey.SocksWebProxy;
-using com.LandonKey.SocksWebProxy.Proxy;
 using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
@@ -23,13 +19,20 @@ namespace NzbDrone.Core.IndexerProxies.Socks5
 
         public override HttpRequest PreRequest(HttpRequest request)
         {
+            var uri = GetProxyUri(Settings);
+
+            if (uri == null)
+            {
+                return null;
+            }
+
             if (Settings.Username.IsNotNullOrWhiteSpace() && Settings.Password.IsNotNullOrWhiteSpace())
             {
-                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Five, Settings.Username, Settings.Password), false);
+                request.Proxy = new WebProxy(uri, false, null, new NetworkCredential(Settings.Username, Settings.Password));
             }
             else
             {
-                request.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Loopback, GetNextFreePort(), GetProxyIpAddress(Settings.Host), Settings.Port, ProxyConfig.SocksVersion.Five), false);
+                request.Proxy = new WebProxy(uri);
             }
 
             _logger.Debug("Applying Socks5 Proxy {0} to request {1}", Name, request.Url);
@@ -37,32 +40,9 @@ namespace NzbDrone.Core.IndexerProxies.Socks5
             return request;
         }
 
-        private static int GetNextFreePort()
+        private Uri GetProxyUri(Socks5Settings proxySettings)
         {
-            var listener = new TcpListener(IPAddress.Loopback, 0);
-            listener.Start();
-            var port = ((IPEndPoint)listener.LocalEndpoint).Port;
-            listener.Stop();
-
-            return port;
-        }
-
-        private static IPAddress GetProxyIpAddress(string host)
-        {
-            IPAddress ipAddress;
-            if (!IPAddress.TryParse(host, out ipAddress))
-            {
-                try
-                {
-                    ipAddress = Dns.GetHostEntry(host).AddressList.OrderByDescending(a => a.AddressFamily == AddressFamily.InterNetwork).First();
-                }
-                catch (Exception e)
-                {
-                    throw new InvalidOperationException(string.Format("Unable to resolve proxy hostname '{0}' to a valid IP address.", host), e);
-                }
-            }
-
-            return ipAddress;
+            return new Uri("socks5://" + proxySettings.Host + ":" + proxySettings.Port);
         }
     }
 }

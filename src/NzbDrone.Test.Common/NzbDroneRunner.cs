@@ -55,7 +55,7 @@ namespace NzbDrone.Test.Common
 
             if (BuildInfo.IsDebug)
             {
-                var frameworkFolder = "net5.0";
+                var frameworkFolder = "net6.0";
                 Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", frameworkFolder, consoleExe));
             }
             else

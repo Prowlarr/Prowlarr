@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Dapper;
 using NzbDrone.Common.Serializer;
 
@@ -15,7 +16,7 @@ namespace NzbDrone.Core.Datastore.Converters
             var serializerSettings = new JsonSerializerOptions
             {
                 AllowTrailingCommas = true,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
                 WriteIndented = true
             };

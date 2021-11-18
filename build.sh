@@ -141,12 +141,13 @@ PackageLinux()
 PackageMacOS()
 {
     local framework="$1"
+    local runtime="$2"
     
-    ProgressStart "Creating MacOS Package for $framework"
+    ProgressStart "Creating MacOS Package for $framework $runtime"
 
-    local folder=$artifactsFolder/macos/$framework/Prowlarr
+    local folder=$artifactsFolder/$runtime/$framework/Prowlarr
 
-    PackageFiles "$folder" "$framework" "osx-x64"
+    PackageFiles "$folder" "$framework" "$runtime"
 
     echo "Removing Service helpers"
     rm -f $folder/ServiceUninstall.*
@@ -168,10 +169,11 @@ PackageMacOS()
 PackageMacOSApp()
 {
     local framework="$1"
+    local runtime="$2"
     
-    ProgressStart "Creating macOS App Package for $framework"
+    ProgressStart "Creating macOS App Package for $framework $runtime"
 
-    local folder=$artifactsFolder/macos-app/$framework
+    local folder="$artifactsFolder/$runtime-app/$framework"
 
     rm -rf $folder
     mkdir -p $folder
@@ -179,7 +181,7 @@ PackageMacOSApp()
     mkdir -p $folder/Prowlarr.app/Contents/MacOS
 
     echo "Copying Binaries"
-    cp -r $artifactsFolder/macos/$framework/Prowlarr/* $folder/Prowlarr.app/Contents/MacOS
+    cp -r $artifactsFolder/$runtime/$framework/Prowlarr/* $folder/Prowlarr.app/Contents/MacOS
 
     echo "Removing Update Folder"
     rm -r $folder/Prowlarr.app/Contents/MacOS/Prowlarr.Update
@@ -226,8 +228,8 @@ Package()
             PackageWindows "$framework" "$runtime"
             ;;
         osx)
-            PackageMacOS "$framework"
-            PackageMacOSApp "$framework"
+            PackageMacOS "$framework" "$runtime"
+            PackageMacOSApp "$framework" "$runtime"
             ;;
     esac
 }
@@ -370,7 +372,9 @@ then
         Package "net6.0" "linux-arm64"
         Package "net6.0" "linux-musl-arm64"
         Package "net6.0" "linux-arm"
+        Package "net6.0" "linux-musl-arm"
         Package "net6.0" "osx-x64"
+        Package "net6.0" "osx-arm64"
         if [ "$ENABLE_BSD" = "YES" ];
         then
             Package "net6.0" "freebsd-x64"

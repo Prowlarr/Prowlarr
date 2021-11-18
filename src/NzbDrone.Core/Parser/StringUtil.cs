@@ -242,7 +242,8 @@ namespace NzbDrone.Core.Parser
         {
             var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
             var randBytes = new byte[length];
-            using (var rngCsp = new RNGCryptoServiceProvider())
+
+            using (var rngCsp = RandomNumberGenerator.Create())
             {
                 rngCsp.GetBytes(randBytes);
                 var key = "";

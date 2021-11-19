@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
@@ -1079,6 +1080,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 var request = new CardigannRequest(requestbuilder.Build(), variables, searchPath);
+
+                request.HttpRequest.Encoding = Encoding.GetEncoding(_definition.Encoding);
 
                 yield return request;
             }

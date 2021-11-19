@@ -377,7 +377,7 @@ namespace NzbDrone.Core.Indexers
             }
 
             request.HttpRequest.SuppressHttpError = true;
-            request.HttpRequest.Encoding = Encoding;
+            request.HttpRequest.Encoding = request.HttpRequest.Encoding ?? Encoding;
 
             var response = await _httpClient.ExecuteProxiedAsync(request.HttpRequest, Definition);
 

@@ -124,6 +124,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Name = definition.Name,
                 Language = definition.Language,
                 Description = definition.Description,
+                Encoding = Encoding.GetEncoding(definition.Encoding),
                 Implementation = GetType().Name,
                 IndexerUrls = definition.Links.ToArray(),
                 Settings = new CardigannSettings { DefinitionFile = definition.File },

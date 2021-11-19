@@ -925,7 +925,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             // Only run html test selector on html responses
-            if (response.Headers.ContentType.Contains("text/html"))
+            if (response.Headers.ContentType?.Contains("text/html") ?? true)
             {
                 var parser = new HtmlParser();
                 var document = parser.ParseDocument(response.Content);

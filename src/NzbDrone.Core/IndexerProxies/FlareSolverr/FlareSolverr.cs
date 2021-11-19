@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using Newtonsoft.Json;
@@ -14,6 +15,8 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 {
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
+        private static readonly HashSet<string> CloudflareServerNames = new HashSet<string> { "cloudflare", "cloudflare-nginx" };
+
         public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService)
             : base(cloudRequestBuilder, httpClient, logger, localizationService)
         {
@@ -23,19 +26,28 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         public override HttpRequest PreRequest(HttpRequest request)
         {
-            return GenerateFlareSolverrRequest(request);
+            //Try original request first, detect CF in post response
+            return request;
         }
 
         public override HttpResponse PostResponse(HttpResponse response)
         {
+            if (!IsCloudflareProtected(response))
+            {
+                _logger.Debug("CF Protection not detected, returning original response");
+                return response;
+            }
+
+            var flaresolverrResponse = _httpClient.Execute(GenerateFlareSolverrRequest(response.Request));
+
             FlareSolverrResponse result = null;
 
-            if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.InternalServerError)
+            if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
                 throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
             }
 
-            result = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
+            result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
 
             var cookieCollection = new CookieCollection();
             var responseHeader = new HttpHeader();
@@ -49,6 +61,20 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var newResponse = new HttpResponse(response.Request, responseHeader, cookieCollection, result.Solution.Response);
 
             return newResponse;
+        }
+
+        private static bool IsCloudflareProtected(HttpResponse response)
+        {
+            // check status code
+            if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
+                response.StatusCode.Equals(HttpStatusCode.Forbidden))
+            {
+                // check response headers
+                return response.Headers.Any(i =>
+                    i.Key != null && i.Key == "server" && CloudflareServerNames.Contains(i.Value.ToLower()));
+            }
+
+            return false;
         }
 
         private HttpRequest GenerateFlareSolverrRequest(HttpRequest request)
@@ -152,6 +178,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public string Cmd { get; set; }
             public string Url { get; set; }
             public string UserAgent { get; set; }
+            public Cookie[] Cookies { get; set; }
         }
 
         public class FlareSolverrRequestGet : FlareSolverrRequest

@@ -71,7 +71,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             {
                 // check response headers
                 return response.Headers.Any(i =>
-                    i.Key != null && i.Key == "server" && CloudflareServerNames.Contains(i.Value.ToLower()));
+                    i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower()));
             }
 
             return false;

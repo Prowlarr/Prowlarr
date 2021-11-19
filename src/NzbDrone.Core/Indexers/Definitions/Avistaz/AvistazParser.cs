@@ -71,8 +71,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 if (row.MovieTvinfo != null)
                 {
                     release.ImdbId = ParseUtil.GetImdbID(row.MovieTvinfo.Imdb).GetValueOrDefault();
-                    release.TmdbId = row.MovieTvinfo.Tmdb.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.MovieTvinfo.Tmdb);
-                    release.TvdbId = row.MovieTvinfo.Tvdb.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.MovieTvinfo.Tvdb);
+                    release.TmdbId = row.MovieTvinfo.Tmdb.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.MovieTvinfo.Tmdb, out var tmdbResult) ? tmdbResult : 0;
+                    release.TvdbId = row.MovieTvinfo.Tvdb.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.MovieTvinfo.Tvdb, out var tvdbResult) ? tvdbResult : 0;
                 }
 
                 torrentInfos.Add(release);

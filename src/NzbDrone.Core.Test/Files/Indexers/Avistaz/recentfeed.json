@@ -1,0 +1,4872 @@
+﻿{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 187240,
+      "url": "https:\/\/avistaz.to\/torrent\/187240-japan-sinks-people-of-hope-2021-s01e05-720p-nf-web-dl-ddp20-x264-seikel",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "a879261d4e6e792402f92401141a21de70d51bf2",
+      "file_name": "JAPAN SINKS: People of Hope 2021 S01E05 720p NF WEB-DL DDP2.0 x264-SEIKEL",
+      "file_size": 935127615,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 0,
+      "completed": 23,
+      "downloaded": 33,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15569106",
+        "tmdb": "135144",
+        "tvdb": "410548",
+        "title": "JAPAN SINKS: People of Hope",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 39,
+          "language": "Croatian"
+        },
+        {
+          "id": 40,
+          "language": "Czech"
+        },
+        {
+          "id": 41,
+          "language": "Danish"
+        },
+        {
+          "id": 43,
+          "language": "Dutch"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 51,
+          "language": "Finnish"
+        },
+        {
+          "id": 52,
+          "language": "French"
+        },
+        {
+          "id": 58,
+          "language": "German"
+        },
+        {
+          "id": 59,
+          "language": "Greek"
+        },
+        {
+          "id": 64,
+          "language": "Hebrew"
+        },
+        {
+          "id": 68,
+          "language": "Hungarian"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 78,
+          "language": "Italian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 130,
+          "language": "Polish"
+        },
+        {
+          "id": 131,
+          "language": "Portuguese"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        },
+        {
+          "id": 137,
+          "language": "Russian"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 155,
+          "language": "Swedish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 168,
+          "language": "Turkish"
+        },
+        {
+          "id": 172,
+          "language": "Ukrainian"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 23:26:21"
+    },
+    {
+      "id": 187239,
+      "url": "https:\/\/avistaz.to\/torrent\/187239-the-heartland-hero-2021-s01e54-1080p-web-dl-aac-20-h264-ordinaryperson",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Heartland Hero 2021 S01E54 1080p WEB-DL AAC 2.0 H.264 - OrdinaryPerson",
+      "file_size": 703242056,
+      "file_count": 1,
+      "seed": 5,
+      "leech": 1,
+      "completed": 4,
+      "downloaded": 10,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "409041",
+        "title": "The Heartland Hero",
+        "tv_season": 1,
+        "tv_episode": 54,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 23:11:49"
+    },
+    {
+      "id": 187238,
+      "url": "https:\/\/avistaz.to\/torrent\/187238-the-heartland-hero-2021-s01e54-720p-web-dl-aac-20-h264-ordinaryperson",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Heartland Hero 2021 S01E54 720p WEB-DL AAC 2.0 H.264 - OrdinaryPerson",
+      "file_size": 446243216,
+      "file_count": 1,
+      "seed": 1,
+      "leech": 0,
+      "completed": 0,
+      "downloaded": 6,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "409041",
+        "title": "The Heartland Hero",
+        "tv_season": 1,
+        "tv_episode": 54,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 23:09:11"
+    },
+    {
+      "id": 187237,
+      "url": "https:\/\/avistaz.to\/torrent\/187237-this-land-is-mine-2021-s01-1080p-web-dl-aac-20-h264-ordinaryperson",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "This Land Is Mine 2021 S01 1080p WEB-DL AAC 2.0 H.264 - OrdinaryPerson",
+      "file_size": 21195285723,
+      "file_count": 15,
+      "seed": 2,
+      "leech": 1,
+      "completed": 1,
+      "downloaded": 8,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15212912",
+        "tmdb": "136236",
+        "tvdb": "408898",
+        "title": "This Land Is Mine",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 23:05:30"
+    },
+    {
+      "id": 187236,
+      "url": "https:\/\/avistaz.to\/torrent\/187236-this-land-is-mine-2021-s01-720p-web-dl-aac-20-h264-ordinaryperson",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "This Land Is Mine 2021 S01 720p WEB-DL AAC 2.0 H.264 - OrdinaryPerson",
+      "file_size": 13507070774,
+      "file_count": 15,
+      "seed": 1,
+      "leech": 0,
+      "completed": 0,
+      "downloaded": 5,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15212912",
+        "tmdb": "136236",
+        "tvdb": "408898",
+        "title": "This Land Is Mine",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 22:59:26"
+    },
+    {
+      "id": 187234,
+      "url": "https:\/\/avistaz.to\/torrent\/187234-this-land-is-mine-2021-s01e15-1080p-web-dl-aac-20-h264-ordinaryperson",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "This Land Is Mine 2021 S01E15 1080p WEB-DL AAC 2.0 H.264 - OrdinaryPerson",
+      "file_size": 1593348666,
+      "file_count": 1,
+      "seed": 4,
+      "leech": 0,
+      "completed": 3,
+      "downloaded": 12,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15212912",
+        "tmdb": "136236",
+        "tvdb": "408898",
+        "title": "This Land Is Mine",
+        "tv_season": 1,
+        "tv_episode": 15,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 22:38:33"
+    },
+    {
+      "id": 187233,
+      "url": "https:\/\/avistaz.to\/torrent\/187233-this-land-is-mine-2021-s01e15-720p-web-dl-aac-20-h264-ordinaryperson",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "This Land Is Mine 2021 S01E15 720p WEB-DL AAC 2.0 H.264 - OrdinaryPerson",
+      "file_size": 1014623541,
+      "file_count": 1,
+      "seed": 1,
+      "leech": 0,
+      "completed": 0,
+      "downloaded": 5,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15212912",
+        "tmdb": "136236",
+        "tvdb": "408898",
+        "title": "This Land Is Mine",
+        "tv_season": 1,
+        "tv_episode": 15,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 22:35:13"
+    },
+    {
+      "id": 187231,
+      "url": "https:\/\/avistaz.to\/torrent\/187231-kaikyou-sp-2007-complete-720p-hdtv-mp3-divx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Kaikyou SP 2007 Complete 720p HDTV mp3 DivX",
+      "file_size": 6821851136,
+      "file_count": 3,
+      "seed": 7,
+      "leech": 2,
+      "completed": 7,
+      "downloaded": 35,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt1143942",
+        "tmdb": "83665",
+        "tvdb": null,
+        "title": "Kaiky\u00f4",
+        "tv_season": 1,
+        "tv_episode": null,
+        "tv_full_season": true,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 18:02:28"
+    },
+    {
+      "id": 187229,
+      "url": "https:\/\/avistaz.to\/torrent\/187229-chimera-s01e06-1080p-viu-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E06 1080p VIU WEB-DL AAC H.264-iTs",
+      "file_size": 1010568184,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 1,
+      "completed": 19,
+      "downloaded": 35,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 15:41:55"
+    },
+    {
+      "id": 187225,
+      "url": "https:\/\/avistaz.to\/torrent\/187225-fragrance-of-the-first-flower-s01e02-1080p-web-dl-aac20-h264-fre3lov",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Fragrance of the First Flower S01E02 1080p WEB-DL AAC2.0 H.264-FRE3LOV",
+      "file_size": 650349912,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 17,
+      "downloaded": 34,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "135422",
+        "tvdb": "409450",
+        "title": "Fragrance of the First Flower",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 107,
+          "language": "Mandarin"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 13:49:11"
+    },
+    {
+      "id": 187224,
+      "url": "https:\/\/avistaz.to\/torrent\/187224-game-winning-hit-2009-720p-webrip-aac-h264",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Game Winning Hit 2009 720p WEBRip AAC H.264",
+      "file_size": 45518363661,
+      "file_count": 40,
+      "seed": 10,
+      "leech": 3,
+      "completed": 11,
+      "downloaded": 38,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 13,
+      "rip_type": "WEBRip",
+      "movie_tv": {
+        "imdb": "https:\/\/www.imdb.com",
+        "tmdb": "https:\/\/www.themovie",
+        "tvdb": "https:\/\/thetvdb.com\/",
+        "title": "Game Winning Hit \/ Play Ball \/ \u6bd4\u8cfd\u958b\u59cb",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 13:15:51"
+    },
+    {
+      "id": 187223,
+      "url": "https:\/\/avistaz.to\/torrent\/187223-viral-scandal-2021-s01e02-1080p-web-dl-aac-x264",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Viral Scandal 2021 S01E02 1080p WEB-DL AAC x264",
+      "file_size": 406379186,
+      "file_count": 1,
+      "seed": 7,
+      "leech": 0,
+      "completed": 6,
+      "downloaded": 22,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": null,
+        "title": "Viral Scandal",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 156,
+          "language": "Tagalog"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 12:56:09"
+    },
+    {
+      "id": 187221,
+      "url": "https:\/\/avistaz.to\/torrent\/187221-1-night-2-days-s04e100-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "1 Night 2 Days S04E100 720p HDTV AAC H.264-NEXT",
+      "file_size": 2010287890,
+      "file_count": 1,
+      "seed": 22,
+      "leech": 0,
+      "completed": 22,
+      "downloaded": 35,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt3247300",
+        "tmdb": "30801",
+        "tvdb": "212151",
+        "title": "2 Days & 1 Night",
+        "tv_season": 4,
+        "tv_episode": 100,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 11:47:24"
+    },
+    {
+      "id": 187219,
+      "url": "https:\/\/avistaz.to\/torrent\/187219-inspector-koo-2021-s01e06-1080p-nf-web-dl-ddp20-x264-hbo",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo 2021 S01E06 1080p NF WEB-DL DDP2.0 x264-HBO",
+      "file_size": 3250064430,
+      "file_count": 1,
+      "seed": 57,
+      "leech": 0,
+      "completed": 66,
+      "downloaded": 78,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 10:59:37"
+    },
+    {
+      "id": 187218,
+      "url": "https:\/\/avistaz.to\/torrent\/187218-inspector-koo-2021-s01e05-1080p-nf-web-dl-ddp20-x264-hbo",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo 2021 S01E05 1080p NF WEB-DL DDP2.0 x264-HBO",
+      "file_size": 2846807072,
+      "file_count": 1,
+      "seed": 34,
+      "leech": 0,
+      "completed": 34,
+      "downloaded": 52,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 79,
+          "language": "Japanese"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 10:58:36"
+    },
+    {
+      "id": 187216,
+      "url": "https:\/\/avistaz.to\/torrent\/187216-chimera-s01e06-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E06 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2575771367,
+      "file_count": 1,
+      "seed": 39,
+      "leech": 0,
+      "completed": 42,
+      "downloaded": 53,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 10:31:45"
+    },
+    {
+      "id": 187215,
+      "url": "https:\/\/avistaz.to\/torrent\/187215-chimera-s01e06-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E06 720p HDTV AAC H.264-NEXT",
+      "file_size": 1449508477,
+      "file_count": 1,
+      "seed": 58,
+      "leech": 0,
+      "completed": 70,
+      "downloaded": 85,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 10:31:44"
+    },
+    {
+      "id": 187214,
+      "url": "https:\/\/avistaz.to\/torrent\/187214-chimera-s01e06-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E06 450p HDTV AAC H.264-NEXT",
+      "file_size": 743146271,
+      "file_count": 1,
+      "seed": 9,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 20,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 10:31:43"
+    },
+    {
+      "id": 187213,
+      "url": "https:\/\/avistaz.to\/torrent\/187213-chimera-s01e06-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E06 360p HDTV AAC H.264-NEXT",
+      "file_size": 549881711,
+      "file_count": 1,
+      "seed": 10,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 10:31:42"
+    },
+    {
+      "id": 187212,
+      "url": "https:\/\/avistaz.to\/torrent\/187212-inspector-koo-s01e06-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E06 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2851058883,
+      "file_count": 1,
+      "seed": 35,
+      "leech": 0,
+      "completed": 37,
+      "downloaded": 48,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 10:28:11"
+    },
+    {
+      "id": 187210,
+      "url": "https:\/\/avistaz.to\/torrent\/187210-inspector-koo-s01e06-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E06 450p HDTV AAC H.264-NEXT",
+      "file_size": 823500419,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 13,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 10:28:10"
+    },
+    {
+      "id": 187211,
+      "url": "https:\/\/avistaz.to\/torrent\/187211-inspector-koo-s01e06-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E06 720p HDTV AAC H.264-NEXT",
+      "file_size": 1607084970,
+      "file_count": 1,
+      "seed": 55,
+      "leech": 0,
+      "completed": 67,
+      "downloaded": 73,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 10:28:10"
+    },
+    {
+      "id": 187209,
+      "url": "https:\/\/avistaz.to\/torrent\/187209-inspector-koo-s01e06-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E06 360p HDTV AAC H.264-NEXT",
+      "file_size": 609276889,
+      "file_count": 1,
+      "seed": 11,
+      "leech": 0,
+      "completed": 14,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 10:28:09"
+    },
+    {
+      "id": 187208,
+      "url": "https:\/\/avistaz.to\/torrent\/187208-jirisan-s01e08-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E08 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2421653977,
+      "file_count": 1,
+      "seed": 38,
+      "leech": 0,
+      "completed": 43,
+      "downloaded": 54,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 8,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 09:24:47"
+    },
+    {
+      "id": 187207,
+      "url": "https:\/\/avistaz.to\/torrent\/187207-jirisan-s01e08-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E08 720p HDTV AAC H.264-NEXT",
+      "file_size": 1362045049,
+      "file_count": 1,
+      "seed": 83,
+      "leech": 0,
+      "completed": 102,
+      "downloaded": 107,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 8,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 09:24:46"
+    },
+    {
+      "id": 187206,
+      "url": "https:\/\/avistaz.to\/torrent\/187206-jirisan-s01e08-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E08 450p HDTV AAC H.264-NEXT",
+      "file_size": 697453395,
+      "file_count": 1,
+      "seed": 14,
+      "leech": 0,
+      "completed": 17,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 8,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:24:45"
+    },
+    {
+      "id": 187205,
+      "url": "https:\/\/avistaz.to\/torrent\/187205-jirisan-s01e08-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E08 360p HDTV AAC H.264-NEXT",
+      "file_size": 515601960,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 0,
+      "completed": 28,
+      "downloaded": 36,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 8,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:24:44"
+    },
+    {
+      "id": 187204,
+      "url": "https:\/\/avistaz.to\/torrent\/187204-young-lady-and-gentleman-s01e16-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Young Lady and Gentleman S01E16 720p HDTV AAC H.264-NEXT",
+      "file_size": 1644051553,
+      "file_count": 1,
+      "seed": 65,
+      "leech": 0,
+      "completed": 72,
+      "downloaded": 84,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15514606",
+        "tmdb": "129473",
+        "tvdb": "408414",
+        "title": "Young Lady and Gentleman",
+        "tv_season": 1,
+        "tv_episode": 16,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 09:20:56"
+    },
+    {
+      "id": 187203,
+      "url": "https:\/\/avistaz.to\/torrent\/187203-young-lady-and-gentleman-s01e16-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Young Lady and Gentleman S01E16 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2914026524,
+      "file_count": 1,
+      "seed": 42,
+      "leech": 0,
+      "completed": 46,
+      "downloaded": 59,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15514606",
+        "tmdb": "129473",
+        "tvdb": "408414",
+        "title": "Young Lady and Gentleman",
+        "tv_season": 1,
+        "tv_episode": 16,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:20:55"
+    },
+    {
+      "id": 187202,
+      "url": "https:\/\/avistaz.to\/torrent\/187202-young-lady-and-gentleman-s01e16-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Young Lady and Gentleman S01E16 450p HDTV AAC H.264-NEXT",
+      "file_size": 842283097,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 19,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15514606",
+        "tmdb": "129473",
+        "tvdb": "408414",
+        "title": "Young Lady and Gentleman",
+        "tv_season": 1,
+        "tv_episode": 16,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:20:54"
+    },
+    {
+      "id": 187201,
+      "url": "https:\/\/avistaz.to\/torrent\/187201-young-lady-and-gentleman-s01e16-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Young Lady and Gentleman S01E16 360p HDTV AAC H.264-NEXT",
+      "file_size": 622795198,
+      "file_count": 1,
+      "seed": 14,
+      "leech": 0,
+      "completed": 18,
+      "downloaded": 26,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15514606",
+        "tmdb": "129473",
+        "tvdb": "408414",
+        "title": "Young Lady and Gentleman",
+        "tv_season": 1,
+        "tv_episode": 16,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:20:53"
+    },
+    {
+      "id": 187200,
+      "url": "https:\/\/avistaz.to\/torrent\/187200-king-of-masked-singer-e331-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "King of Masked Singer E331 1080p HDTV AAC H.264-NEXT",
+      "file_size": 3509344239,
+      "file_count": 1,
+      "seed": 5,
+      "leech": 0,
+      "completed": 6,
+      "downloaded": 13,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt6289510",
+        "tmdb": "66046",
+        "tvdb": "296529",
+        "title": "King of Masked Singer",
+        "tv_season": 1,
+        "tv_episode": 331,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:17:35"
+    },
+    {
+      "id": 187199,
+      "url": "https:\/\/avistaz.to\/torrent\/187199-king-of-masked-singer-e331-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "King of Masked Singer E331 720p HDTV AAC H.264-NEXT",
+      "file_size": 1981240764,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 11,
+      "downloaded": 21,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt6289510",
+        "tmdb": "66046",
+        "tvdb": "296529",
+        "title": "King of Masked Singer",
+        "tv_season": 1,
+        "tv_episode": 331,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:17:34"
+    },
+    {
+      "id": 187197,
+      "url": "https:\/\/avistaz.to\/torrent\/187197-let-me-be-your-knight-s01e02-1080p-iq-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Let Me Be Your Knight S01E02 1080p IQ WEB-DL AAC H.264-iTs",
+      "file_size": 800912574,
+      "file_count": 1,
+      "seed": 54,
+      "leech": 0,
+      "completed": 69,
+      "downloaded": 73,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15729630",
+        "tmdb": "134071",
+        "tvdb": "377959",
+        "title": "Let Me Be Your Knight",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 09:14:24"
+    },
+    {
+      "id": 187196,
+      "url": "https:\/\/avistaz.to\/torrent\/187196-running-man-e579-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Running Man E579 1080p HDTV AAC H.264-NEXT",
+      "file_size": 3546791641,
+      "file_count": 1,
+      "seed": 160,
+      "leech": 5,
+      "completed": 206,
+      "downloaded": 212,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt2185037",
+        "tmdb": "33238",
+        "tvdb": "248870",
+        "title": "Running Man",
+        "tv_season": 1,
+        "tv_episode": 579,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 09:08:42"
+    },
+    {
+      "id": 187195,
+      "url": "https:\/\/avistaz.to\/torrent\/187195-running-man-e579-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Running Man E579 720p HDTV AAC H.264-NEXT",
+      "file_size": 1999500573,
+      "file_count": 1,
+      "seed": 233,
+      "leech": 3,
+      "completed": 320,
+      "downloaded": 319,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt2185037",
+        "tmdb": "33238",
+        "tvdb": "248870",
+        "title": "Running Man",
+        "tv_season": 1,
+        "tv_episode": 579,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-14 09:08:29"
+    },
+    {
+      "id": 187191,
+      "url": "https:\/\/avistaz.to\/torrent\/187191-beware-of-your-bosom-buddies-1984-720p-complete-web-dl-aac-h264-carmee",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Beware of Your Bosom Buddies \u78a7\u8840\u6d17\u94f6\u67aa (1984) 720p Complete WEB-DL AAC H.264-CARMEE",
+      "file_size": 4075094335,
+      "file_count": 5,
+      "seed": 7,
+      "leech": 0,
+      "completed": 8,
+      "downloaded": 13,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "107936",
+        "tvdb": null,
+        "title": "\u78a7\u8840\u6d17\u94f6\u67aa",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 107,
+          "language": "Mandarin"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 07:34:25"
+    },
+    {
+      "id": 187190,
+      "url": "https:\/\/avistaz.to\/torrent\/187190-novoland-pearl-eclipse-s01e14-1080p-web-dl-aac-h264-kmx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Novoland: Pearl Eclipse S01E14 1080p WEB-DL AAC H.264-KMX",
+      "file_size": 889019421,
+      "file_count": 1,
+      "seed": 28,
+      "leech": 1,
+      "completed": 41,
+      "downloaded": 51,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt13130228",
+        "tmdb": "103310",
+        "tvdb": "382022",
+        "title": "Novoland: Pearl Eclipse",
+        "tv_season": 1,
+        "tv_episode": 14,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 07:24:31"
+    },
+    {
+      "id": 187189,
+      "url": "https:\/\/avistaz.to\/torrent\/187189-novoland-pearl-eclipse-s01e13-1080p-web-dl-aac-h264-kmx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Novoland: Pearl Eclipse S01E13 1080p WEB-DL AAC H.264-KMX",
+      "file_size": 616490137,
+      "file_count": 1,
+      "seed": 28,
+      "leech": 1,
+      "completed": 40,
+      "downloaded": 51,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt13130228",
+        "tmdb": "103310",
+        "tvdb": "382022",
+        "title": "Novoland: Pearl Eclipse",
+        "tv_season": 1,
+        "tv_episode": 13,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 07:24:26"
+    },
+    {
+      "id": 187188,
+      "url": "https:\/\/avistaz.to\/torrent\/187188-jirisan-s01e08-1080p-iq-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E08 1080p IQ WEB-DL AAC H.264-iTs",
+      "file_size": 932907486,
+      "file_count": 1,
+      "seed": 110,
+      "leech": 0,
+      "completed": 150,
+      "downloaded": 144,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 8,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 07:12:25"
+    },
+    {
+      "id": 187169,
+      "url": "https:\/\/avistaz.to\/torrent\/187169-daughters-2020-s01-1080p-iqiyi-web-dl-aac-h265-hbo",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Daughters (2020) S01 1080p IQiyi WEB-DL AAC H.265-HBO",
+      "file_size": 39159699312,
+      "file_count": 24,
+      "seed": 26,
+      "leech": 1,
+      "completed": 25,
+      "downloaded": 46,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "392886",
+        "title": "Daughters",
+        "tv_season": 1,
+        "tv_episode": null,
+        "tv_full_season": true,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 91,
+          "language": "Korean"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 151,
+          "language": "Spanish"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 01:18:23"
+    },
+    {
+      "id": 187168,
+      "url": "https:\/\/avistaz.to\/torrent\/187168-pasabuy-2021-complete-1080p-web-dl-aac-x264",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Pasabuy 2021 Complete 1080p WEB-DL AAC x264",
+      "file_size": 2730588469,
+      "file_count": 5,
+      "seed": 13,
+      "leech": 0,
+      "completed": 15,
+      "downloaded": 30,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": null,
+        "title": "Pasabuy",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 156,
+          "language": "Tagalog"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 00:57:43"
+    },
+    {
+      "id": 187167,
+      "url": "https:\/\/avistaz.to\/torrent\/187167-viral-scandal-2021-s01e01-1080p-web-dl-aac-x264",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Viral Scandal 2021 S01E01 1080p WEB-DL AAC x264",
+      "file_size": 685278374,
+      "file_count": 1,
+      "seed": 23,
+      "leech": 0,
+      "completed": 26,
+      "downloaded": 41,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": null,
+        "title": "Viral Scandal",
+        "tv_season": 1,
+        "tv_episode": 1,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 156,
+          "language": "Tagalog"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 00:42:20"
+    },
+    {
+      "id": 187165,
+      "url": "https:\/\/avistaz.to\/torrent\/187165-jikou-keisatsu-2006-s01-amzn-1080p-web-dl-ddp20-h264-hdctv",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jikou Keisatsu (2006) S01 AMZN 1080p WEB-DL DDP2.0 H.264-HDCTV",
+      "file_size": 39007353371,
+      "file_count": 9,
+      "seed": 23,
+      "leech": 2,
+      "completed": 27,
+      "downloaded": 45,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt0809732",
+        "tmdb": "36916",
+        "tvdb": "82349",
+        "title": "Time Limit Investigator",
+        "tv_season": 1,
+        "tv_episode": null,
+        "tv_full_season": true,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-14 00:03:50"
+    },
+    {
+      "id": 187164,
+      "url": "https:\/\/avistaz.to\/torrent\/187164-happiness-s01e04-1080p-iq-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Happiness S01E04 1080p IQ WEB-DL AAC H.264-iTs",
+      "file_size": 918517651,
+      "file_count": 1,
+      "seed": 30,
+      "leech": 0,
+      "completed": 39,
+      "downloaded": 52,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14979052",
+        "tmdb": "135340",
+        "tvdb": "404667",
+        "title": "Happiness",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 7,
+          "language": "Arabic"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 72,
+          "language": "Indonesian"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 162,
+          "language": "Thai"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 23:07:25"
+    },
+    {
+      "id": 187163,
+      "url": "https:\/\/avistaz.to\/torrent\/187163-the-adventures-1980-720p-complete-web-dl-aac-h264-carmee",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Adventures \u51b2\u51fb (1980) 720p Complete WEB-DL AAC H.264-CARMEE",
+      "file_size": 26365692689,
+      "file_count": 45,
+      "seed": 13,
+      "leech": 2,
+      "completed": 14,
+      "downloaded": 33,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "138573",
+        "tvdb": null,
+        "title": "\u51b2\u51fb",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 22:46:14"
+    },
+    {
+      "id": 187162,
+      "url": "https:\/\/avistaz.to\/torrent\/187162-until-we-meet-again-2019-s01-1080p-iqiyi-web-dl-aac-h265-hbo",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Until We Meet Again (2019) S01 1080p IQiyi WEB-DL AAC H.265-HBO",
+      "file_size": 13388115901,
+      "file_count": 17,
+      "seed": 9,
+      "leech": 1,
+      "completed": 9,
+      "downloaded": 25,
+      "upload_multiply": 1,
+      "download_multiply": 0.5,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt11815104",
+        "tmdb": "95279",
+        "tvdb": "367677",
+        "title": "Until We Meet Again",
+        "tv_season": 1,
+        "tv_episode": null,
+        "tv_full_season": true,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 162,
+          "language": "Thai"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 104,
+          "language": "Malay"
+        },
+        {
+          "id": 176,
+          "language": "Vietnamese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 22:10:28"
+    },
+    {
+      "id": 187158,
+      "url": "https:\/\/avistaz.to\/torrent\/187158-kids-lives-matter-2021-s01e20-1080p-hdtv-dd51-h264-kmx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Kids' Lives Matter 2021 S01E20 1080p HDTV DD5.1 H.264-KMX",
+      "file_size": 1513563143,
+      "file_count": 1,
+      "seed": 42,
+      "leech": 0,
+      "completed": 55,
+      "downloaded": 60,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "136197",
+        "tvdb": "411282",
+        "title": "Kids' Lives Matter",
+        "tv_season": 1,
+        "tv_episode": 20,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 20:58:54"
+    },
+    {
+      "id": 187157,
+      "url": "https:\/\/avistaz.to\/torrent\/187157-kids-lives-matter-2021-s01e19-1080p-hdtv-dd51-h264-kmx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Kids' Lives Matter 2021 S01E19 1080p HDTV DD5.1 H.264-KMX",
+      "file_size": 1522787978,
+      "file_count": 1,
+      "seed": 40,
+      "leech": 0,
+      "completed": 54,
+      "downloaded": 58,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "136197",
+        "tvdb": "411282",
+        "title": "Kids' Lives Matter",
+        "tv_season": 1,
+        "tv_episode": 19,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 20:58:52"
+    },
+    {
+      "id": 187156,
+      "url": "https:\/\/avistaz.to\/torrent\/187156-kids-lives-matter-2021-s01e18-1080p-hdtv-dd51-h264-kmx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Kids' Lives Matter 2021 S01E18 1080p HDTV DD5.1 H.264-KMX",
+      "file_size": 1695599088,
+      "file_count": 1,
+      "seed": 40,
+      "leech": 0,
+      "completed": 54,
+      "downloaded": 56,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "136197",
+        "tvdb": "411282",
+        "title": "Kids' Lives Matter",
+        "tv_season": 1,
+        "tv_episode": 18,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 20:58:49"
+    },
+    {
+      "id": 187155,
+      "url": "https:\/\/avistaz.to\/torrent\/187155-huwag-kang-mangamba-2021-complete-1080p-web-dl-aac-x264",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Huwag Kang Mangamba 2021 Complete 1080p WEB-DL AAC x264",
+      "file_size": 76871091758,
+      "file_count": 168,
+      "seed": 21,
+      "leech": 3,
+      "completed": 23,
+      "downloaded": 47,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": null,
+        "title": "Huwag Kang Mangamba",
+        "tv_season": null,
+        "tv_episode": null,
+        "tv_full_season": false,
+        "tv_complete": true
+      },
+      "audio": [
+        {
+          "id": 156,
+          "language": "Tagalog"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 19:53:29"
+    },
+    {
+      "id": 187150,
+      "url": "https:\/\/avistaz.to\/torrent\/187150-momo-ume-s01e16-1080p-hulu-web-dl-aac-h264-magicstar",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Momo Ume S01E16 1080p HULU WEB-DL AAC H.264-MagicStar",
+      "file_size": 273332660,
+      "file_count": 1,
+      "seed": 8,
+      "leech": 0,
+      "completed": 8,
+      "downloaded": 17,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "409295",
+        "title": "Momo Ume",
+        "tv_season": 1,
+        "tv_episode": 16,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 17:04:28"
+    },
+    {
+      "id": 187149,
+      "url": "https:\/\/avistaz.to\/torrent\/187149-momo-ume-s01e15-1080p-hulu-web-dl-aac-h264-magicstar",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Momo Ume S01E15 1080p HULU WEB-DL AAC H.264-MagicStar",
+      "file_size": 269996533,
+      "file_count": 1,
+      "seed": 8,
+      "leech": 0,
+      "completed": 8,
+      "downloaded": 16,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "409295",
+        "title": "Momo Ume",
+        "tv_season": 1,
+        "tv_episode": 15,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 17:04:26"
+    },
+    {
+      "id": 187148,
+      "url": "https:\/\/avistaz.to\/torrent\/187148-momo-ume-s01e14-1080p-hulu-web-dl-aac-h264-magicstar",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Momo Ume S01E14 1080p HULU WEB-DL AAC H.264-MagicStar",
+      "file_size": 289130625,
+      "file_count": 1,
+      "seed": 8,
+      "leech": 0,
+      "completed": 8,
+      "downloaded": 16,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "409295",
+        "title": "Momo Ume",
+        "tv_season": 1,
+        "tv_episode": 14,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 17:04:23"
+    },
+    {
+      "id": 187147,
+      "url": "https:\/\/avistaz.to\/torrent\/187147-momo-ume-s01e13-1080p-hulu-web-dl-aac-h264-magicstar",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Momo Ume S01E13 1080p HULU WEB-DL AAC H.264-MagicStar",
+      "file_size": 292439914,
+      "file_count": 1,
+      "seed": 8,
+      "leech": 0,
+      "completed": 8,
+      "downloaded": 16,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": null,
+        "tvdb": "409295",
+        "title": "Momo Ume",
+        "tv_season": 1,
+        "tv_episode": 13,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 17:04:11"
+    },
+    {
+      "id": 187146,
+      "url": "https:\/\/avistaz.to\/torrent\/187146-kenjushou-mitsukuni-kou-to-ore-e02-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Kenjushou: Mitsukuni Kou to Ore E02 1080p HDTV AAC x265",
+      "file_size": 902068803,
+      "file_count": 1,
+      "seed": 7,
+      "leech": 0,
+      "completed": 10,
+      "downloaded": 19,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "137550",
+        "tvdb": null,
+        "title": "Kenjushou ~Mitsukuni-kou to Ore~",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:59:50"
+    },
+    {
+      "id": 187145,
+      "url": "https:\/\/avistaz.to\/torrent\/187145-gunjou-ryouiki-e04-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Gunjou Ryouiki E04 1080p HDTV AAC x265",
+      "file_size": 934541483,
+      "file_count": 1,
+      "seed": 6,
+      "leech": 0,
+      "completed": 6,
+      "downloaded": 14,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "135542",
+        "tvdb": "411192",
+        "title": "Gunjou Ryouiki",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:57:51"
+    },
+    {
+      "id": 187144,
+      "url": "https:\/\/avistaz.to\/torrent\/187144-come-come-everybody-e10-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Come Come Everybody E10 1080p HDTV AAC x265",
+      "file_size": 409659322,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 16,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "137265",
+        "tvdb": null,
+        "title": "Come Come Everybody",
+        "tv_season": 1,
+        "tv_episode": 10,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:54:53"
+    },
+    {
+      "id": 187143,
+      "url": "https:\/\/avistaz.to\/torrent\/187143-come-come-everybody-e09-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Come Come Everybody E09 1080p HDTV AAC x265",
+      "file_size": 231372429,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 16,
+      "downloaded": 22,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "137265",
+        "tvdb": null,
+        "title": "Come Come Everybody",
+        "tv_season": 1,
+        "tv_episode": 9,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:54:51"
+    },
+    {
+      "id": 187142,
+      "url": "https:\/\/avistaz.to\/torrent\/187142-come-come-everybody-e08-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Come Come Everybody E08 1080p HDTV AAC x265",
+      "file_size": 257436470,
+      "file_count": 1,
+      "seed": 14,
+      "leech": 0,
+      "completed": 16,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "137265",
+        "tvdb": null,
+        "title": "Come Come Everybody",
+        "tv_season": 1,
+        "tv_episode": 8,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:54:49"
+    },
+    {
+      "id": 187141,
+      "url": "https:\/\/avistaz.to\/torrent\/187141-come-come-everybody-e07-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Come Come Everybody E07 1080p HDTV AAC x265",
+      "file_size": 286473908,
+      "file_count": 1,
+      "seed": 15,
+      "leech": 0,
+      "completed": 17,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "137265",
+        "tvdb": null,
+        "title": "Come Come Everybody",
+        "tv_season": 1,
+        "tv_episode": 7,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:54:46"
+    },
+    {
+      "id": 187140,
+      "url": "https:\/\/avistaz.to\/torrent\/187140-come-come-everybody-e06-1080p-hdtv-aac-x265",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Come Come Everybody E06 1080p HDTV AAC x265",
+      "file_size": 434941389,
+      "file_count": 1,
+      "seed": 13,
+      "leech": 0,
+      "completed": 14,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "137265",
+        "tvdb": null,
+        "title": "Come Come Everybody",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:54:43"
+    },
+    {
+      "id": 187139,
+      "url": "https:\/\/avistaz.to\/torrent\/187139-the-red-sleeve-s01e02-1080p-viu-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Red Sleeve S01E02 1080p VIU WEB-DL AAC H.264-iTs",
+      "file_size": 1190616474,
+      "file_count": 1,
+      "seed": 19,
+      "leech": 0,
+      "completed": 21,
+      "downloaded": 28,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14687200",
+        "tmdb": "132925",
+        "tvdb": "402635",
+        "title": "The Red Sleeve",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:03:36"
+    },
+    {
+      "id": 187138,
+      "url": "https:\/\/avistaz.to\/torrent\/187138-chimera-s01e05-1080p-viu-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E05 1080p VIU WEB-DL AAC H.264-iTs",
+      "file_size": 1002083306,
+      "file_count": 1,
+      "seed": 18,
+      "leech": 0,
+      "completed": 18,
+      "downloaded": 27,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 16:03:31"
+    },
+    {
+      "id": 187137,
+      "url": "https:\/\/avistaz.to\/torrent\/187137-the-red-sleeve-2021-s01e02-1080p-viki-web-dl-aac-x264-honeyg",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Red Sleeve 2021 S01E02 1080p Viki WEB-DL AAC x264-HoneyG",
+      "file_size": 1100872682,
+      "file_count": 1,
+      "seed": 26,
+      "leech": 0,
+      "completed": 33,
+      "downloaded": 48,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14687200",
+        "tmdb": "132925",
+        "tvdb": "402635",
+        "title": "The Red Sleeve",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 14:47:56"
+    },
+    {
+      "id": 187136,
+      "url": "https:\/\/avistaz.to\/torrent\/187136-now-we-are-breaking-up-2021-s01e02-1080p-viki-web-dl-aac-x264-honeyg",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now, We Are Breaking Up 2021 S01E02 1080p Viki WEB-DL AAC x264-HoneyG",
+      "file_size": 1045465733,
+      "file_count": 1,
+      "seed": 17,
+      "leech": 0,
+      "completed": 20,
+      "downloaded": 36,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 13:54:18"
+    },
+    {
+      "id": 187135,
+      "url": "https:\/\/avistaz.to\/torrent\/187135-i-live-alone-e421-1080p-web-dl-aac-h264-mmr",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "I Live Alone E421 1080p WEB-DL AAC H.264-MMR",
+      "file_size": 2556057863,
+      "file_count": 1,
+      "seed": 57,
+      "leech": 0,
+      "completed": 66,
+      "downloaded": 78,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt7997010",
+        "tmdb": "65282",
+        "tvdb": "298704",
+        "title": "I Live Alone",
+        "tv_season": 1,
+        "tv_episode": 421,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 13:01:47"
+    },
+    {
+      "id": 187134,
+      "url": "https:\/\/avistaz.to\/torrent\/187134-stars-top-recipe-at-fun-staurant-s01e105-1080p-web-dl-aac-h264-mmr",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Stars Top Recipe at Fun-Staurant S01E105 1080p WEB-DL AAC H.264-MMR",
+      "file_size": 2923142162,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 0,
+      "completed": 22,
+      "downloaded": 34,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": null,
+        "tmdb": "96108",
+        "tvdb": "382874",
+        "title": "Stars' Top Recipe at Fun-Staurant",
+        "tv_season": 1,
+        "tv_episode": 105,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 12:57:53"
+    },
+    {
+      "id": 187133,
+      "url": "https:\/\/avistaz.to\/torrent\/187133-now-we-are-breaking-up-s01e02-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now We Are Breaking Up S01E02 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 2410391135,
+      "file_count": 1,
+      "seed": 67,
+      "leech": 0,
+      "completed": 95,
+      "downloaded": 106,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 12:48:57"
+    },
+    {
+      "id": 187132,
+      "url": "https:\/\/avistaz.to\/torrent\/187132-reincarnated-1979-s01-remastered-576i-dvd-remux-mpeg-2-dd-20-kmx",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Reincarnated (1979) S01 Remastered 576i DVD REMUX MPEG-2 DD 2.0-KMX",
+      "file_size": 106571873382,
+      "file_count": 60,
+      "seed": 16,
+      "leech": 2,
+      "completed": 20,
+      "downloaded": 44,
+      "upload_multiply": 1,
+      "download_multiply": 0,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 17,
+      "rip_type": "DVD Remux",
+      "movie_tv": {
+        "imdb": "tt1988438",
+        "tmdb": "17454",
+        "tvdb": "403197",
+        "title": "Reincarnated ",
+        "tv_season": 1,
+        "tv_episode": null,
+        "tv_full_season": true,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        },
+        {
+          "id": 107,
+          "language": "Mandarin"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 27,
+          "language": "Cantonese"
+        },
+        {
+          "id": 33,
+          "language": "Chinese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 12:10:57"
+    },
+    {
+      "id": 187131,
+      "url": "https:\/\/avistaz.to\/torrent\/187131-young-lady-and-gentleman-s01e15-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Young Lady and Gentleman S01E15 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 5543272093,
+      "file_count": 1,
+      "seed": 19,
+      "leech": 0,
+      "completed": 20,
+      "downloaded": 38,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15514606",
+        "tmdb": "129473",
+        "tvdb": "408414",
+        "title": "Young Lady and Gentleman",
+        "tv_season": 1,
+        "tv_episode": 15,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 11:35:53"
+    },
+    {
+      "id": 187130,
+      "url": "https:\/\/avistaz.to\/torrent\/187130-kieta-hatsukoi-2021-s01e06-1080p-web-dl-aac-h264mar",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Kieta Hatsukoi 2021 S01E06 1080p WEB-DL AAC H.264.MAR",
+      "file_size": 512339577,
+      "file_count": 1,
+      "seed": 51,
+      "leech": 0,
+      "completed": 98,
+      "downloaded": 102,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15666846",
+        "tmdb": "135929",
+        "tvdb": "408996",
+        "title": "My Love Mix-Up!",
+        "tv_season": 1,
+        "tv_episode": 6,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 79,
+          "language": "Japanese"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 11:03:19"
+    },
+    {
+      "id": 187129,
+      "url": "https:\/\/avistaz.to\/torrent\/187129-amazing-saturday-e186-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Amazing Saturday E186 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 3382552795,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 12,
+      "downloaded": 27,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt10160132",
+        "tmdb": "78648",
+        "tvdb": "350134",
+        "title": "Amazing Saturday",
+        "tv_season": 1,
+        "tv_episode": 186,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 11:02:54"
+    },
+    {
+      "id": 187128,
+      "url": "https:\/\/avistaz.to\/torrent\/187128-jirisan-s01e07-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E07 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 2388468637,
+      "file_count": 1,
+      "seed": 83,
+      "leech": 0,
+      "completed": 102,
+      "downloaded": 114,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 7,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 11:00:29"
+    },
+    {
+      "id": 187127,
+      "url": "https:\/\/avistaz.to\/torrent\/187127-chimera-s01e05-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E05 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 2260893774,
+      "file_count": 1,
+      "seed": 51,
+      "leech": 0,
+      "completed": 68,
+      "downloaded": 77,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 10:57:36"
+    },
+    {
+      "id": 187126,
+      "url": "https:\/\/avistaz.to\/torrent\/187126-happiness-s01e04-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Happiness S01E04 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 2349441937,
+      "file_count": 1,
+      "seed": 100,
+      "leech": 0,
+      "completed": 127,
+      "downloaded": 139,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14979052",
+        "tmdb": "135340",
+        "tvdb": "404667",
+        "title": "Happiness",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 129,
+          "language": "Persian"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 10:55:31"
+    },
+    {
+      "id": 187125,
+      "url": "https:\/\/avistaz.to\/torrent\/187125-inspector-koo-s01e05-1080p-web-dl-aac-h264-appletor",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E05 1080p WEB-DL AAC H.264-AppleTor",
+      "file_size": 1749182320,
+      "file_count": 1,
+      "seed": 36,
+      "leech": 0,
+      "completed": 40,
+      "downloaded": 49,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 10:53:16"
+    },
+    {
+      "id": 187124,
+      "url": "https:\/\/avistaz.to\/torrent\/187124-happiness-s01e04-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Happiness S01E04 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2616325535,
+      "file_count": 1,
+      "seed": 40,
+      "leech": 0,
+      "completed": 46,
+      "downloaded": 57,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14979052",
+        "tmdb": "135340",
+        "tvdb": "404667",
+        "title": "Happiness",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 10:23:32"
+    },
+    {
+      "id": 187123,
+      "url": "https:\/\/avistaz.to\/torrent\/187123-happiness-s01e04-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Happiness S01E04 720p HDTV AAC H.264-NEXT",
+      "file_size": 1474463312,
+      "file_count": 1,
+      "seed": 106,
+      "leech": 0,
+      "completed": 163,
+      "downloaded": 163,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14979052",
+        "tmdb": "135340",
+        "tvdb": "404667",
+        "title": "Happiness",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 129,
+          "language": "Persian"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 10:23:31"
+    },
+    {
+      "id": 187122,
+      "url": "https:\/\/avistaz.to\/torrent\/187122-happiness-s01e04-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Happiness S01E04 450p HDTV AAC H.264-NEXT",
+      "file_size": 756608772,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 14,
+      "downloaded": 23,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14979052",
+        "tmdb": "135340",
+        "tvdb": "404667",
+        "title": "Happiness",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 10:23:30"
+    },
+    {
+      "id": 187121,
+      "url": "https:\/\/avistaz.to\/torrent\/187121-happiness-s01e04-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Happiness S01E04 360p HDTV AAC H.264-NEXT",
+      "file_size": 559858586,
+      "file_count": 1,
+      "seed": 14,
+      "leech": 0,
+      "completed": 22,
+      "downloaded": 33,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14979052",
+        "tmdb": "135340",
+        "tvdb": "404667",
+        "title": "Happiness",
+        "tv_season": 1,
+        "tv_episode": 4,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 10:23:29"
+    },
+    {
+      "id": 187120,
+      "url": "https:\/\/avistaz.to\/torrent\/187120-inspector-koo-s01e05-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E05 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2498350340,
+      "file_count": 1,
+      "seed": 31,
+      "leech": 0,
+      "completed": 39,
+      "downloaded": 52,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 10:15:29"
+    },
+    {
+      "id": 187119,
+      "url": "https:\/\/avistaz.to\/torrent\/187119-inspector-koo-s01e05-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E05 720p HDTV AAC H.264-NEXT",
+      "file_size": 1407465853,
+      "file_count": 1,
+      "seed": 68,
+      "leech": 0,
+      "completed": 91,
+      "downloaded": 100,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 10:15:28"
+    },
+    {
+      "id": 187118,
+      "url": "https:\/\/avistaz.to\/torrent\/187118-inspector-koo-s01e05-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E05 450p HDTV AAC H.264-NEXT",
+      "file_size": 720829719,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 13,
+      "downloaded": 24,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 10:15:27"
+    },
+    {
+      "id": 187117,
+      "url": "https:\/\/avistaz.to\/torrent\/187117-inspector-koo-s01e05-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Inspector Koo S01E05 360p HDTV AAC H.264-NEXT",
+      "file_size": 533191281,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 17,
+      "downloaded": 31,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14731794",
+        "tmdb": "129475",
+        "tvdb": "401493",
+        "title": "Inspector Koo",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 10:15:26"
+    },
+    {
+      "id": 187116,
+      "url": "https:\/\/avistaz.to\/torrent\/187116-chimera-s01e05-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E05 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2507362185,
+      "file_count": 1,
+      "seed": 31,
+      "leech": 0,
+      "completed": 36,
+      "downloaded": 45,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:54:52"
+    },
+    {
+      "id": 187115,
+      "url": "https:\/\/avistaz.to\/torrent\/187115-chimera-s01e05-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E05 720p HDTV AAC H.264-NEXT",
+      "file_size": 1412291838,
+      "file_count": 1,
+      "seed": 69,
+      "leech": 0,
+      "completed": 88,
+      "downloaded": 98,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 09:54:51"
+    },
+    {
+      "id": 187114,
+      "url": "https:\/\/avistaz.to\/torrent\/187114-chimera-s01e05-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E05 450p HDTV AAC H.264-NEXT",
+      "file_size": 722863649,
+      "file_count": 1,
+      "seed": 10,
+      "leech": 0,
+      "completed": 12,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:54:50"
+    },
+    {
+      "id": 187113,
+      "url": "https:\/\/avistaz.to\/torrent\/187113-chimera-s01e05-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Chimera S01E05 360p HDTV AAC H.264-NEXT",
+      "file_size": 534431415,
+      "file_count": 1,
+      "seed": 11,
+      "leech": 0,
+      "completed": 19,
+      "downloaded": 25,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt15616218",
+        "tmdb": "96262",
+        "tvdb": "410613",
+        "title": "Chimera",
+        "tv_season": 1,
+        "tv_episode": 5,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:54:48"
+    },
+    {
+      "id": 187112,
+      "url": "https:\/\/avistaz.to\/torrent\/187112-the-red-sleeve-s01e02-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Red Sleeve S01E02 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2938482783,
+      "file_count": 1,
+      "seed": 38,
+      "leech": 0,
+      "completed": 44,
+      "downloaded": 47,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14687200",
+        "tmdb": "132925",
+        "tvdb": "402635",
+        "title": "The Red Sleeve",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:50:35"
+    },
+    {
+      "id": 187111,
+      "url": "https:\/\/avistaz.to\/torrent\/187111-the-red-sleeve-s01e02-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Red Sleeve S01E02 720p HDTV AAC H.264-NEXT",
+      "file_size": 1656808519,
+      "file_count": 1,
+      "seed": 86,
+      "leech": 0,
+      "completed": 122,
+      "downloaded": 122,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14687200",
+        "tmdb": "132925",
+        "tvdb": "402635",
+        "title": "The Red Sleeve",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 134,
+          "language": "Romanian"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 09:50:34"
+    },
+    {
+      "id": 187110,
+      "url": "https:\/\/avistaz.to\/torrent\/187110-the-red-sleeve-s01e02-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Red Sleeve S01E02 450p HDTV AAC H.264-NEXT",
+      "file_size": 847103434,
+      "file_count": 1,
+      "seed": 13,
+      "leech": 0,
+      "completed": 18,
+      "downloaded": 21,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14687200",
+        "tmdb": "132925",
+        "tvdb": "402635",
+        "title": "The Red Sleeve",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:50:32"
+    },
+    {
+      "id": 187109,
+      "url": "https:\/\/avistaz.to\/torrent\/187109-the-red-sleeve-s01e02-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "The Red Sleeve S01E02 360p HDTV AAC H.264-NEXT",
+      "file_size": 626493282,
+      "file_count": 1,
+      "seed": 17,
+      "leech": 0,
+      "completed": 29,
+      "downloaded": 33,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14687200",
+        "tmdb": "132925",
+        "tvdb": "402635",
+        "title": "The Red Sleeve",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:50:31"
+    },
+    {
+      "id": 187107,
+      "url": "https:\/\/avistaz.to\/torrent\/187107-now-we-are-breaking-up-s01e02-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now, We Are Breaking Up S01E02 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2445446006,
+      "file_count": 1,
+      "seed": 36,
+      "leech": 0,
+      "completed": 50,
+      "downloaded": 47,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:44:55"
+    },
+    {
+      "id": 187106,
+      "url": "https:\/\/avistaz.to\/torrent\/187106-now-we-are-breaking-up-s01e02-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now, We Are Breaking Up S01E02 720p HDTV AAC H.264-NEXT",
+      "file_size": 1378479991,
+      "file_count": 1,
+      "seed": 94,
+      "leech": 0,
+      "completed": 144,
+      "downloaded": 141,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 09:44:54"
+    },
+    {
+      "id": 187105,
+      "url": "https:\/\/avistaz.to\/torrent\/187105-now-we-are-breaking-up-s01e02-450p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now, We Are Breaking Up S01E02 450p HDTV AAC H.264-NEXT",
+      "file_size": 707254650,
+      "file_count": 1,
+      "seed": 12,
+      "leech": 0,
+      "completed": 17,
+      "downloaded": 18,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:44:53"
+    },
+    {
+      "id": 187104,
+      "url": "https:\/\/avistaz.to\/torrent\/187104-now-we-are-breaking-up-s01e02-360p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now, We Are Breaking Up S01E02 360p HDTV AAC H.264-NEXT",
+      "file_size": 523997519,
+      "file_count": 1,
+      "seed": 20,
+      "leech": 0,
+      "completed": 32,
+      "downloaded": 34,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 1,
+      "video_quality": "SD",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": null,
+      "music_type": null,
+      "created_at": "2021-11-13 09:44:51"
+    },
+    {
+      "id": 187103,
+      "url": "https:\/\/avistaz.to\/torrent\/187103-now-we-are-breaking-up-s01e02-1080p-viu-web-dl-aac-h264-its",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Now, We Are Breaking Up S01E02 1080p VIU WEB-DL AAC H.264-iTs",
+      "file_size": 1083586807,
+      "file_count": 1,
+      "seed": 51,
+      "leech": 1,
+      "completed": 84,
+      "downloaded": 77,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 12,
+      "rip_type": "WEB-DL",
+      "movie_tv": {
+        "imdb": "tt14408016",
+        "tmdb": "129887",
+        "tvdb": "398219",
+        "title": "Now, We Are Breaking Up",
+        "tv_season": 1,
+        "tv_episode": 2,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 09:40:07"
+    },
+    {
+      "id": 187102,
+      "url": "https:\/\/avistaz.to\/torrent\/187102-jirisan-s01e07-1080p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E07 1080p HDTV AAC H.264-NEXT",
+      "file_size": 2371074239,
+      "file_count": 1,
+      "seed": 38,
+      "leech": 1,
+      "completed": 46,
+      "downloaded": 47,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 3,
+      "video_quality": "1080p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 7,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        },
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 09:39:53"
+    },
+    {
+      "id": 187101,
+      "url": "https:\/\/avistaz.to\/torrent\/187101-jirisan-s01e07-720p-hdtv-aac-h264-next",
+      "download": "https:\/\/avistaz.to\/rss\/download\/(removed)\/(removed).torrent",
+      "type_id": 2,
+      "type": "TV-Show",
+      "info_hash": "(removed)",
+      "file_name": "Jirisan S01E07 720p HDTV AAC H.264-NEXT",
+      "file_size": 1330835290,
+      "file_count": 1,
+      "seed": 94,
+      "leech": 0,
+      "completed": 129,
+      "downloaded": 124,
+      "upload_multiply": 1,
+      "download_multiply": 1,
+      "adult": false,
+      "video_quality_id": 2,
+      "video_quality": "720p",
+      "rip_type_id": 7,
+      "rip_type": "HDTV",
+      "movie_tv": {
+        "imdb": "tt13400300",
+        "tmdb": "110533",
+        "tvdb": "393773",
+        "title": "Jirisan",
+        "tv_season": 1,
+        "tv_episode": 7,
+        "tv_full_season": false,
+        "tv_complete": false
+      },
+      "audio": [
+        {
+          "id": 91,
+          "language": "Korean"
+        }
+      ],
+      "subtitle": [
+        {
+          "id": 45,
+          "language": "English"
+        }
+      ],
+      "music_type": null,
+      "created_at": "2021-11-13 09:39:52"
+    }
+  ],
+  "first_page_url": "https:\/\/avistaz.to\/api\/v1\/jackett\/torrents?type=2&page=1",
+  "from": 1,
+  "last_page": 314,
+  "last_page_url": "https:\/\/avistaz.to\/api\/v1\/jackett\/torrents?type=2&page=314",
+  "next_page_url": "https:\/\/avistaz.to\/api\/v1\/jackett\/torrents?type=2&page=2",
+  "path": "https:\/\/avistaz.to\/api\/v1\/jackett\/torrents",
+  "per_page": 100,
+  "prev_page_url": null,
+  "to": 100,
+  "total": 31393
+}

@@ -200,11 +200,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in jsonResponse.Resource.Torrents)
             {
+                var infoUrl = $"{_settings.BaseUrl}torrents/{row.Id}";
+
                 var release = new TorrentInfo
                 {
                     Title = row.Name,
-                    InfoUrl = $"{_settings.BaseUrl}torrents/{row.Id}",
+                    InfoUrl = infoUrl,
                     DownloadUrl = $"{_settings.BaseUrl}torrent/download/{row.Id}.{jsonResponse.Resource.Rsskey}",
+                    Guid = infoUrl,
                     PosterUrl = row.PosterImage,
                     PublishDate = row.CreatedAt,
                     Categories = _categories.MapTrackerCatToNewznab(row.CategoryId),

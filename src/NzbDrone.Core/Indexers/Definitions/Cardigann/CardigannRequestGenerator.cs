@@ -924,15 +924,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return true;
             }
 
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(response.Content);
-
-            if (_definition.Login.Test.Selector != null)
+            // Only run html test selector on html responses
+            if (response.Headers.ContentType.Contains("text/html"))
             {
-                var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
-                if (selection.Length == 0)
+                var parser = new HtmlParser();
+                var document = parser.ParseDocument(response.Content);
+
+                if (_definition.Login.Test.Selector != null)
                 {
-                    return true;
+                    var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
+                    if (selection.Length == 0)
+                    {
+                        return true;
+                    }
                 }
             }
 

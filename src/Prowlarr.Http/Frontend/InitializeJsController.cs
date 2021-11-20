@@ -50,6 +50,7 @@ namespace Prowlarr.Http.Frontend
             builder.AppendLine($"  release: '{BuildInfo.Release}',");
             builder.AppendLine($"  version: '{BuildInfo.Version.ToString()}',");
             builder.AppendLine($"  instanceName: '{_configFileProvider.InstanceName.ToString()}',");
+            builder.AppendLine($"  theme: '{_configFileProvider.Theme.ToString()}',");
             builder.AppendLine($"  branch: '{_configFileProvider.Branch.ToLower()}',");
             builder.AppendLine($"  analytics: {_analyticsService.IsEnabled.ToString().ToLowerInvariant()},");
             builder.AppendLine($"  userHash: '{HashUtil.AnonymousToken()}',");

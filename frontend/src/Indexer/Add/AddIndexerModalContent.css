@@ -16,7 +16,7 @@
   composes: input from '~Components/Form/TextInput.css';
 
   flex: 0 0 auto;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .alert {
@@ -27,4 +27,47 @@
 
 .scroller {
   flex: 1 1 auto;
+}
+
+.filterRow {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.filterContainer {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  flex-direction: column;
+  margin-right: 12px;
+}
+
+.filterContainer:last-child {
+  margin-right: 0;
+}
+
+.filterLabel {
+  margin-bottom: 3px;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: $breakpointSmall) {
+  .alert {
+    display: none;
+  }
+
+  .filterRow {
+    flex-direction: column;
+  }
+
+  .filterContainer {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+
+  .scroller {
+    margin-right: -30px;
+    margin-bottom: -30px;
+    margin-left: -30px;
+  }
 }

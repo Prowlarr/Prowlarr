@@ -52,6 +52,10 @@
 }
 
 @media only screen and (max-width: $breakpointSmall) {
+  .alert {
+    display: none;
+  }
+
   .filterRow {
     flex-direction: column;
   }

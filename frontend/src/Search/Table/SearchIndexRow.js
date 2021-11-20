@@ -5,6 +5,7 @@ import IconButton from 'Components/Link/IconButton';
 import Link from 'Components/Link/Link';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
+import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import formatDateTime from 'Utilities/Date/formatDateTime';
@@ -75,6 +76,7 @@ class SearchIndexRow extends Component {
 
   render() {
     const {
+      guid,
       protocol,
       categories,
       age,
@@ -96,7 +98,9 @@ class SearchIndexRow extends Component {
       isGrabbed,
       grabError,
       longDateFormat,
-      timeFormat
+      timeFormat,
+      isSelected,
+      onSelectedChange
     } = this.props;
 
     return (
@@ -109,6 +113,19 @@ class SearchIndexRow extends Component {
 
             if (!isVisible) {
               return null;
+            }
+
+            if (column.name === 'select') {
+              return (
+                <VirtualTableSelectCell
+                  inputClassName={styles.checkInput}
+                  id={guid}
+                  key={column.name}
+                  isSelected={isSelected}
+                  isDisabled={false}
+                  onSelectedChange={onSelectedChange}
+                />
+              );
             }
 
             if (column.name === 'protocol') {
@@ -322,7 +339,9 @@ SearchIndexRow.propTypes = {
   isGrabbed: PropTypes.bool.isRequired,
   grabError: PropTypes.string,
   longDateFormat: PropTypes.string.isRequired,
-  timeFormat: PropTypes.string.isRequired
+  timeFormat: PropTypes.string.isRequired,
+  isSelected: PropTypes.bool,
+  onSelectedChange: PropTypes.func.isRequired
 };
 
 SearchIndexRow.defaultProps = {

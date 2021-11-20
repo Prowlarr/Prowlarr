@@ -12,13 +12,15 @@ function createMapStateToProps() {
       const {
         searchQuery: defaultSearchQuery,
         searchIndexerIds: defaultIndexerIds,
-        searchCategories: defaultCategories
+        searchCategories: defaultCategories,
+        searchType: defaultSearchType
       } = releases.defaults;
 
       return {
         defaultSearchQuery,
         defaultIndexerIds,
-        defaultCategories
+        defaultCategories,
+        defaultSearchType
       };
     }
   );

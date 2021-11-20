@@ -17,16 +17,11 @@
   flex: 4 0 110px;
 }
 
+.indexer,
 .category {
   composes: cell;
 
   flex: 0 0 110px;
-}
-
-.indexer {
-  composes: cell;
-
-  flex: 0 0 85px;
 }
 
 .age,

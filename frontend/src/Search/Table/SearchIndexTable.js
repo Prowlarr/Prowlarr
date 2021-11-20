@@ -49,6 +49,8 @@ class SearchIndexTable extends Component {
       columns,
       longDateFormat,
       timeFormat,
+      selectedState,
+      onSelectedChange,
       onGrabPress
     } = this.props;
 
@@ -64,6 +66,8 @@ class SearchIndexTable extends Component {
           component={SearchIndexRow}
           columns={columns}
           guid={release.guid}
+          isSelected={selectedState[release.guid]}
+          onSelectedChange={onSelectedChange}
           longDateFormat={longDateFormat}
           timeFormat={timeFormat}
           onGrabPress={onGrabPress}
@@ -83,7 +87,11 @@ class SearchIndexTable extends Component {
       sortDirection,
       isSmallScreen,
       onSortPress,
-      scroller
+      scroller,
+      allSelected,
+      allUnselected,
+      onSelectAllChange,
+      selectedState
     } = this.props;
 
     return (
@@ -102,8 +110,12 @@ class SearchIndexTable extends Component {
             sortKey={sortKey}
             sortDirection={sortDirection}
             onSortPress={onSortPress}
+            allSelected={allSelected}
+            allUnselected={allUnselected}
+            onSelectAllChange={onSelectAllChange}
           />
         }
+        selectedState={selectedState}
         columns={columns}
       />
     );
@@ -121,7 +133,12 @@ SearchIndexTable.propTypes = {
   longDateFormat: PropTypes.string.isRequired,
   timeFormat: PropTypes.string.isRequired,
   onSortPress: PropTypes.func.isRequired,
-  onGrabPress: PropTypes.func.isRequired
+  onGrabPress: PropTypes.func.isRequired,
+  allSelected: PropTypes.bool.isRequired,
+  allUnselected: PropTypes.bool.isRequired,
+  selectedState: PropTypes.object.isRequired,
+  onSelectedChange: PropTypes.func.isRequired,
+  onSelectAllChange: PropTypes.func.isRequired
 };
 
 export default SearchIndexTable;

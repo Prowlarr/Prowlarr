@@ -119,6 +119,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         }
 
         [TestCase(@"https://www.torrentleech.org/torrents/browse/list/imdbID/tt8005374/categories/29,2,26,27,32,44,7,34,35")]
+        [TestCase(@"https://torrentapi.org/pubapi_v2.php?get_token=get_token&app_id=Prowlarr")]
         public void should_not_clean_url(string message)
         {
             var cleansedMessage = CleanseLogMessage.Cleanse(message);

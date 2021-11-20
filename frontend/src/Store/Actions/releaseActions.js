@@ -1,10 +1,12 @@
 import { createAction } from 'redux-actions';
+import { batchActions } from 'redux-batched-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import getSectionState from 'Utilities/State/getSectionState';
 import updateSectionState from 'Utilities/State/updateSectionState';
 import translate from 'Utilities/String/translate';
+import { set } from './baseActions';
 import createFetchHandler from './Creators/createFetchHandler';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
@@ -24,7 +26,9 @@ let abortCurrentRequest = null;
 export const defaultState = {
   isFetching: false,
   isPopulated: false,
+  isGrabbing: false,
   error: null,
+  grabError: null,
   items: [],
   sortKey: 'title',
   sortDirection: sortDirections.ASCENDING,
@@ -32,12 +36,21 @@ export const defaultState = {
   secondarySortDirection: sortDirections.ASCENDING,
 
   defaults: {
+    searchType: 'basic',
     searchQuery: '',
     searchIndexerIds: [],
     searchCategories: []
   },
 
   columns: [
+    {
+      name: 'select',
+      columnLabel: 'Select',
+      isSortable: false,
+      isVisible: true,
+      isModifiable: false,
+      isHidden: true
+    },
     {
       name: 'protocol',
       label: translate('Protocol'),
@@ -201,6 +214,8 @@ export const defaultState = {
 };
 
 export const persistState = [
+  'releases.sortKey',
+  'releases.sortDirection',
   'releases.customFilters',
   'releases.selectedFilterKey',
   'releases.columns'
@@ -214,6 +229,7 @@ export const CANCEL_FETCH_RELEASES = 'releases/cancelFetchReleases';
 export const SET_RELEASES_SORT = 'releases/setReleasesSort';
 export const CLEAR_RELEASES = 'releases/clearReleases';
 export const GRAB_RELEASE = 'releases/grabRelease';
+export const BULK_GRAB_RELEASES = 'release/bulkGrabReleases';
 export const UPDATE_RELEASE = 'releases/updateRelease';
 export const SET_RELEASES_FILTER = 'releases/setReleasesFilter';
 export const SET_RELEASES_TABLE_OPTION = 'releases/setReleasesTableOption';
@@ -227,6 +243,7 @@ export const cancelFetchReleases = createThunk(CANCEL_FETCH_RELEASES);
 export const setReleasesSort = createAction(SET_RELEASES_SORT);
 export const clearReleases = createAction(CLEAR_RELEASES);
 export const grabRelease = createThunk(GRAB_RELEASE);
+export const bulkGrabReleases = createThunk(BULK_GRAB_RELEASES);
 export const updateRelease = createAction(UPDATE_RELEASE);
 export const setReleasesFilter = createAction(SET_RELEASES_FILTER);
 export const setReleasesTableOption = createAction(SET_RELEASES_TABLE_OPTION);
@@ -283,6 +300,47 @@ export const actionHandlers = handleThunks({
         isGrabbing: false,
         isGrabbed: false,
         grabError
+      }));
+    });
+  },
+
+  [BULK_GRAB_RELEASES]: function(getState, payload, dispatch) {
+    dispatch(set({
+      section,
+      isGrabbing: true
+    }));
+
+    console.log(payload);
+
+    const promise = createAjaxRequest({
+      url: '/search/bulk',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(payload)
+    }).request;
+
+    promise.done((data) => {
+      dispatch(batchActions([
+        ...data.map((release) => {
+          return updateRelease({
+            isGrabbing: false,
+            isGrabbed: true,
+            grabError: null
+          });
+        }),
+
+        set({
+          section,
+          isGrabbing: false
+        })
+      ]));
+    });
+
+    promise.fail((xhr) => {
+      dispatch(set({
+        section,
+        isGrabbing: false,
+        grabError: xhr
       }));
     });
   }

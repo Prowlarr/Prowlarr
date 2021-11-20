@@ -52,7 +52,7 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpPost]
-        public ActionResult<SearchResource> Create(SearchResource release)
+        public ActionResult<SearchResource> GrabRelease(SearchResource release)
         {
             ValidateResource(release);
 
@@ -75,31 +75,66 @@ namespace Prowlarr.Api.V1.Search
             return Ok(release);
         }
 
+        [HttpPost("bulk")]
+        public ActionResult<SearchResource> GrabReleases(List<SearchResource> releases)
+        {
+            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var host = Request.GetHostName();
+
+            var groupedReleases = releases.GroupBy(r => r.IndexerId);
+
+            foreach (var indexerReleases in groupedReleases)
+            {
+                var indexerDef = _indexerFactory.Get(indexerReleases.Key);
+
+                foreach (var release in indexerReleases)
+                {
+                    ValidateResource(release);
+
+                    var releaseInfo = _remoteReleaseCache.Find(GetCacheKey(release));
+
+                    try
+                    {
+                        _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect);
+                    }
+                    catch (ReleaseDownloadException ex)
+                    {
+                        _logger.Error(ex, "Getting release from indexer failed");
+                    }
+                }
+            }
+
+            return Ok(releases);
+        }
+
         [HttpGet]
-        public Task<List<SearchResource>> GetAll(string query, [FromQuery] List<int> indexerIds, [FromQuery] List<int> categories)
+        public Task<List<SearchResource>> GetAll(string query, [FromQuery] List<int> indexerIds, [FromQuery] List<int> categories, [FromQuery] string type = "search")
         {
             if (indexerIds.Any())
             {
-                return GetSearchReleases(query, indexerIds, categories);
+                return GetSearchReleases(query, type, indexerIds, categories);
             }
             else
             {
-                return GetSearchReleases(query, null, categories);
+                return GetSearchReleases(query, type, null, categories);
             }
         }
 
-        private async Task<List<SearchResource>> GetSearchReleases(string query, List<int> indexerIds, List<int> categories)
+        private async Task<List<SearchResource>> GetSearchReleases(string query, string type, List<int> indexerIds, List<int> categories)
         {
             try
             {
                 var request = new NewznabRequest
                 {
-                    q = query, source = "Prowlarr",
-                    t = "search",
+                    q = query,
+                    t = type,
+                    source = "Prowlarr",
                     cat = string.Join(",", categories),
                     server = Request.GetServerUrl(),
                     host = Request.GetHostName()
                 };
+
+                request.QueryToParams();
 
                 var result = await _nzbSearhService.Search(request, indexerIds, true);
                 var decisions = result.Releases;

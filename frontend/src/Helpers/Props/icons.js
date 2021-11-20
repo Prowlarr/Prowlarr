@@ -22,10 +22,12 @@ import {
 import {
   faArrowCircleLeft as fasArrowCircleLeft,
   faArrowCircleRight as fasArrowCircleRight,
+  faAsterisk as fasAsterisk,
   faBackward as fasBackward,
   faBan as fasBan,
   faBars as fasBars,
   faBolt as fasBolt,
+  faBook as fasBook,
   faBookmark as fasBookmark,
   faBookReader as fasBookReader,
   faBroadcastTower as fasBroadcastTower,
@@ -74,6 +76,7 @@ import {
   faLock as fasLock,
   faMedkit as fasMedkit,
   faMinus as fasMinus,
+  faMusic as fasMusic,
   faPause as fasPause,
   faPlay as fasPlay,
   faPlus as fasPlus,
@@ -104,6 +107,7 @@ import {
   faTimes as fasTimes,
   faTimesCircle as fasTimesCircle,
   faTrashAlt as fasTrashAlt,
+  faTv as fasTv,
   faUser as fasUser,
   faUserPlus as fasUserPlus,
   faVial as fasVial,
@@ -121,7 +125,9 @@ export const ADVANCED_SETTINGS = fasCog;
 export const ANNOUNCED = fasBullhorn;
 export const ARROW_LEFT = fasArrowCircleLeft;
 export const ARROW_RIGHT = fasArrowCircleRight;
+export const AUDIO = fasMusic;
 export const BACKUP = farFileArchive;
+export const BOOK = fasBook;
 export const BUG = fasBug;
 export const CALENDAR = fasCalendarAlt;
 export const CALENDAR_O = farCalendar;
@@ -158,6 +164,7 @@ export const FILTER = fasFilter;
 export const FLAG = fasFlag;
 export const FOLDER = farFolder;
 export const FOLDER_OPEN = fasFolderOpen;
+export const FOOTNOTE = fasAsterisk;
 export const GENRE = fasTheaterMasks;
 export const GROUP = farObjectGroup;
 export const HEALTH = fasMedkit;
@@ -220,6 +227,7 @@ export const TAGS = fasTags;
 export const TBA = fasQuestionCircle;
 export const TEST = fasVial;
 export const TRANSLATE = fasLanguage;
+export const TV = fasTv;
 export const UNGROUP = farObjectUngroup;
 export const UNKNOWN = fasQuestion;
 export const UNMONITORED = farBookmark;

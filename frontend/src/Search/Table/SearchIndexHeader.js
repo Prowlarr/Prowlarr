@@ -4,6 +4,7 @@ import IconButton from 'Components/Link/IconButton';
 import TableOptionsModal from 'Components/Table/TableOptions/TableOptionsModal';
 import VirtualTableHeader from 'Components/Table/VirtualTableHeader';
 import VirtualTableHeaderCell from 'Components/Table/VirtualTableHeaderCell';
+import VirtualTableSelectAllHeaderCell from 'Components/Table/VirtualTableSelectAllHeaderCell';
 import { icons } from 'Helpers/Props';
 import styles from './SearchIndexHeader.css';
 
@@ -38,6 +39,9 @@ class SearchIndexHeader extends Component {
     const {
       columns,
       onTableOptionChange,
+      allSelected,
+      allUnselected,
+      onSelectAllChange,
       ...otherProps
     } = this.props;
 
@@ -54,6 +58,17 @@ class SearchIndexHeader extends Component {
 
             if (!isVisible) {
               return null;
+            }
+
+            if (name === 'select') {
+              return (
+                <VirtualTableSelectAllHeaderCell
+                  key={name}
+                  allSelected={allSelected}
+                  allUnselected={allUnselected}
+                  onSelectAllChange={onSelectAllChange}
+                />
+              );
             }
 
             if (name === 'actions') {
@@ -100,6 +115,9 @@ class SearchIndexHeader extends Component {
 
 SearchIndexHeader.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  allSelected: PropTypes.bool.isRequired,
+  allUnselected: PropTypes.bool.isRequired,
+  onSelectAllChange: PropTypes.func.isRequired,
   onTableOptionChange: PropTypes.func.isRequired
 };
 

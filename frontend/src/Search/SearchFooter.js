@@ -1,13 +1,17 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import FormInputButton from 'Components/Form/FormInputButton';
+import FormInputGroup from 'Components/Form/FormInputGroup';
 import IndexersSelectInputConnector from 'Components/Form/IndexersSelectInputConnector';
 import NewznabCategorySelectInputConnector from 'Components/Form/NewznabCategorySelectInputConnector';
-import TextInput from 'Components/Form/TextInput';
+import Icon from 'Components/Icon';
 import keyboardShortcuts from 'Components/keyboardShortcuts';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
+import { icons, inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import QueryParameterModal from './QueryParameterModal';
 import SearchFooterLabel from './SearchFooterLabel';
 import styles from './SearchFooter.css';
 
@@ -22,10 +26,14 @@ class SearchFooter extends Component {
     const {
       defaultIndexerIds,
       defaultCategories,
-      defaultSearchQuery
+      defaultSearchQuery,
+      defaultSearchType
     } = props;
 
     this.state = {
+      isQueryParameterModalOpen: false,
+      queryModalOptions: null,
+      searchType: defaultSearchType,
       searchingReleases: false,
       searchQuery: defaultSearchQuery || '',
       searchIndexerIds: defaultIndexerIds,
@@ -53,18 +61,24 @@ class SearchFooter extends Component {
       defaultIndexerIds,
       defaultCategories,
       defaultSearchQuery,
+      defaultSearchType,
       searchError
     } = this.props;
 
     const {
       searchIndexerIds,
-      searchCategories
+      searchCategories,
+      searchType
     } = this.state;
 
     const newState = {};
 
     if (defaultSearchQuery && defaultSearchQuery !== prevProps.defaultSearchQuery) {
       newState.searchQuery = defaultSearchQuery;
+    }
+
+    if (searchType !== defaultSearchType) {
+      newState.searchType = defaultSearchType;
     }
 
     if (searchIndexerIds !== defaultIndexerIds) {
@@ -87,8 +101,21 @@ class SearchFooter extends Component {
   //
   // Listeners
 
+  onQueryParameterModalOpenClick = () => {
+    this.setState({
+      queryModalOptions: {
+        name: 'queryParameters'
+      },
+      isQueryParameterModalOpen: true
+    });
+  }
+
+  onQueryParameterModalClose = () => {
+    this.setState({ isQueryParameterModalOpen: false });
+  }
+
   onSearchPress = () => {
-    this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories);
+    this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories, this.state.searchType);
   }
 
   onSearchInputChange = ({ value }) => {
@@ -101,36 +128,77 @@ class SearchFooter extends Component {
   render() {
     const {
       isFetching,
+      isPopulated,
+      isGrabbing,
       hasIndexers,
-      onInputChange
+      onInputChange,
+      onBulkGrabPress,
+      itemCount,
+      selectedCount
     } = this.props;
 
     const {
       searchQuery,
       searchIndexerIds,
-      searchCategories
+      searchCategories,
+      isQueryParameterModalOpen,
+      queryModalOptions,
+      searchType
     } = this.state;
+
+    let icon = icons.SEARCH;
+
+    switch (searchType) {
+      case 'book':
+        icon = icons.BOOK;
+        break;
+      case 'tvsearch':
+        icon = icons.TV;
+        break;
+      case 'movie':
+        icon = icons.FILM;
+        break;
+      case 'music':
+        icon = icons.AUDIO;
+        break;
+      default:
+        icon = icons.SEARCH;
+    }
+
+    let footerLabel = `Search ${searchIndexerIds.length === 0 ? 'all' : searchIndexerIds.length} Indexers`;
+
+    if (isPopulated) {
+      footerLabel = selectedCount === 0 ? `Found ${itemCount} releases` : `Selected ${selectedCount} of ${itemCount} releases`;
+    }
 
     return (
       <PageContentFooter>
         <div className={styles.inputContainer}>
           <SearchFooterLabel
-            label={'Query'}
+            label={translate('Query')}
             isSaving={false}
           />
 
-          <TextInput
-            name='searchQuery'
-            autoFocus={true}
+          <FormInputGroup
+            type={inputTypes.TEXT}
+            name="searchQuery"
             value={searchQuery}
-            isDisabled={isFetching}
+            buttons={
+              <FormInputButton onPress={this.onQueryParameterModalOpenClick}>
+                <Icon
+                  name={icon}
+                />
+              </FormInputButton>}
             onChange={this.onSearchInputChange}
+            onFocus={this.onApikeyFocus}
+            isDisabled={isFetching}
+            {...searchQuery}
           />
         </div>
 
         <div className={styles.indexerContainer}>
           <SearchFooterLabel
-            label={'Indexers'}
+            label={translate('Indexers')}
             isSaving={false}
           />
 
@@ -144,7 +212,7 @@ class SearchFooter extends Component {
 
         <div className={styles.indexerContainer}>
           <SearchFooterLabel
-            label={'Categories'}
+            label={translate('Categories')}
             isSaving={false}
           />
 
@@ -159,11 +227,25 @@ class SearchFooter extends Component {
         <div className={styles.buttonContainer}>
           <div className={styles.buttonContainerContent}>
             <SearchFooterLabel
-              label={`Search ${searchIndexerIds.length === 0 ? 'all' : searchIndexerIds.length} Indexers`}
+              className={styles.selectedReleasesLabel}
+              label={footerLabel}
               isSaving={false}
             />
 
             <div className={styles.buttons}>
+
+              {
+                isPopulated &&
+                  <SpinnerButton
+                    className={styles.searchButton}
+                    kind={kinds.SUCCESS}
+                    isSpinning={isGrabbing}
+                    isDisabled={isFetching || !hasIndexers || selectedCount === 0}
+                    onPress={onBulkGrabPress}
+                  >
+                    {translate('Grab Releases')}
+                  </SpinnerButton>
+              }
 
               <SpinnerButton
                 className={styles.searchButton}
@@ -176,6 +258,17 @@ class SearchFooter extends Component {
             </div>
           </div>
         </div>
+
+        <QueryParameterModal
+          isOpen={isQueryParameterModalOpen}
+          {...queryModalOptions}
+          name='queryParameters'
+          value={searchQuery}
+          searchType={searchType}
+          onSearchInputChange={this.onSearchInputChange}
+          onInputChange={onInputChange}
+          onModalClose={this.onQueryParameterModalClose}
+        />
       </PageContentFooter>
     );
   }
@@ -185,8 +278,14 @@ SearchFooter.propTypes = {
   defaultIndexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   defaultCategories: PropTypes.arrayOf(PropTypes.number).isRequired,
   defaultSearchQuery: PropTypes.string.isRequired,
+  defaultSearchType: PropTypes.string.isRequired,
+  selectedCount: PropTypes.number.isRequired,
+  itemCount: PropTypes.number.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  isPopulated: PropTypes.bool.isRequired,
+  isGrabbing: PropTypes.bool.isRequired,
   onSearchPress: PropTypes.func.isRequired,
+  onBulkGrabPress: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,
   searchError: PropTypes.object,

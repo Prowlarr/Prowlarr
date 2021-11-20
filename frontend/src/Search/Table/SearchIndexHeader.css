@@ -10,16 +10,11 @@
   flex: 4 0 110px;
 }
 
+.indexer,
 .category {
   composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
 
   flex: 0 0 110px;
-}
-
-.indexer {
-  composes: headerCell from '~Components/Table/VirtualTableHeaderCell.css';
-
-  flex: 0 0 85px;
 }
 
 .age,

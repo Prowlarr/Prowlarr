@@ -18,6 +18,9 @@ import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import hasDifferentItemsOrOrder from 'Utilities/Object/hasDifferentItemsOrOrder';
 import translate from 'Utilities/String/translate';
+import getSelectedIds from 'Utilities/Table/getSelectedIds';
+import selectAll from 'Utilities/Table/selectAll';
+import toggleSelected from 'Utilities/Table/toggleSelected';
 import SearchIndexFilterMenu from './Menus/SearchIndexFilterMenu';
 import SearchIndexSortMenu from './Menus/SearchIndexSortMenu';
 import NoSearchResults from './NoSearchResults';
@@ -44,12 +47,16 @@ class SearchIndex extends Component {
       isAddIndexerModalOpen: false,
       isEditIndexerModalOpen: false,
       searchType: null,
-      lastToggled: null
+      lastToggled: null,
+      allSelected: false,
+      allUnselected: false,
+      selectedState: {}
     };
   }
 
   componentDidMount() {
     this.setJumpBarItems();
+    this.setSelectedState();
 
     window.addEventListener('keyup', this.onKeyUp);
   }
@@ -66,6 +73,7 @@ class SearchIndex extends Component {
         hasDifferentItemsOrOrder(prevProps.items, items)
     ) {
       this.setJumpBarItems();
+      this.setSelectedState();
     }
 
     if (this.state.jumpToCharacter != null) {
@@ -78,6 +86,48 @@ class SearchIndex extends Component {
 
   setScrollerRef = (ref) => {
     this.setState({ scroller: ref });
+  }
+
+  getSelectedIds = () => {
+    if (this.state.allUnselected) {
+      return [];
+    }
+    return getSelectedIds(this.state.selectedState, { parseIds: false });
+  }
+
+  setSelectedState() {
+    const {
+      items
+    } = this.props;
+
+    const {
+      selectedState
+    } = this.state;
+
+    const newSelectedState = {};
+
+    items.forEach((release) => {
+      const isItemSelected = selectedState[release.guid];
+
+      if (isItemSelected) {
+        newSelectedState[release.guid] = isItemSelected;
+      } else {
+        newSelectedState[release.guid] = false;
+      }
+    });
+
+    const selectedCount = getSelectedIds(newSelectedState).length;
+    const newStateCount = Object.keys(newSelectedState).length;
+    let isAllSelected = false;
+    let isAllUnselected = false;
+
+    if (selectedCount === 0) {
+      isAllUnselected = true;
+    } else if (selectedCount === newStateCount) {
+      isAllSelected = true;
+    }
+
+    this.setState({ selectedState: newSelectedState, allSelected: isAllSelected, allUnselected: isAllUnselected });
   }
 
   setJumpBarItems() {
@@ -146,8 +196,14 @@ class SearchIndex extends Component {
     this.setState({ jumpToCharacter });
   }
 
-  onSearchPress = (query, indexerIds, categories) => {
-    this.props.onSearchPress({ query, indexerIds, categories });
+  onSearchPress = (query, indexerIds, categories, type) => {
+    this.props.onSearchPress({ query, indexerIds, categories, type });
+  }
+
+  onBulkGrabPress = () => {
+    const selectedIds = this.getSelectedIds();
+    const result = _.filter(this.props.items, (release) => _.indexOf(selectedIds, release.guid) !== -1);
+    this.props.onBulkGrabPress(result);
   }
 
   onKeyUp = (event) => {
@@ -162,6 +218,20 @@ class SearchIndex extends Component {
     }
   }
 
+  onSelectAllChange = ({ value }) => {
+    this.setState(selectAll(this.state.selectedState, value));
+  }
+
+  onSelectAllPress = () => {
+    this.onSelectAllChange({ value: !this.state.allSelected });
+  }
+
+  onSelectedChange = ({ id, value, shiftKey = false }) => {
+    this.setState((state) => {
+      return toggleSelected(state, this.props.items, id, value, shiftKey);
+    });
+  }
+
   //
   // Render
 
@@ -169,7 +239,9 @@ class SearchIndex extends Component {
     const {
       isFetching,
       isPopulated,
+      isGrabbing,
       error,
+      grabError,
       totalItems,
       items,
       columns,
@@ -190,8 +262,13 @@ class SearchIndex extends Component {
       jumpBarItems,
       isAddIndexerModalOpen,
       isEditIndexerModalOpen,
-      jumpToCharacter
+      jumpToCharacter,
+      selectedState,
+      allSelected,
+      allUnselected
     } = this.state;
+
+    const selectedIndexerIds = this.getSelectedIds();
 
     const ViewComponent = getViewComponent();
     const isLoaded = !!(!error && isPopulated && items.length && scroller);
@@ -263,6 +340,11 @@ class SearchIndex extends Component {
                     sortDirection={sortDirection}
                     columns={columns}
                     jumpToCharacter={jumpToCharacter}
+                    allSelected={allSelected}
+                    allUnselected={allUnselected}
+                    onSelectedChange={this.onSelectedChange}
+                    onSelectAllChange={this.onSelectAllChange}
+                    selectedState={selectedState}
                     {...otherProps}
                   />
                 </div>
@@ -293,8 +375,14 @@ class SearchIndex extends Component {
 
         <SearchFooterConnector
           isFetching={isFetching}
+          isPopulated={isPopulated}
+          isGrabbing={isGrabbing}
+          grabError={grabError}
+          selectedCount={selectedIndexerIds.length}
+          itemCount={items.length}
           hasIndexers={hasIndexers}
           onSearchPress={this.onSearchPress}
+          onBulkGrabPress={this.onBulkGrabPress}
         />
 
         <AddIndexerModal
@@ -314,7 +402,9 @@ class SearchIndex extends Component {
 SearchIndex.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
+  isGrabbing: PropTypes.bool.isRequired,
   error: PropTypes.object,
+  grabError: PropTypes.object,
   totalItems: PropTypes.number.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -327,6 +417,7 @@ SearchIndex.propTypes = {
   onSortSelect: PropTypes.func.isRequired,
   onFilterSelect: PropTypes.func.isRequired,
   onSearchPress: PropTypes.func.isRequired,
+  onBulkGrabPress: PropTypes.func.isRequired,
   onScroll: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired
 };

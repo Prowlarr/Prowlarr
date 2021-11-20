@@ -31,6 +31,12 @@
   height: 35px;
 }
 
+.selectedReleasesLabel {
+  margin-bottom: 3px;
+  text-align: right;
+  font-weight: bold;
+}
+
 @media only screen and (max-width: $breakpointSmall) {
   .inputContainer {
     margin-right: 0;
@@ -46,9 +52,5 @@
 
   .buttons {
     justify-content: space-between;
-  }
-
-  .selectedMovieLabel {
-    text-align: left;
   }
 }

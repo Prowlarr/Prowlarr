@@ -65,5 +65,5 @@
 .externalLink {
   composes: link from '~Components/Link/Link.css';
 
-  color: $textColor;
+  color: var(--textColor);
 }

@@ -1,7 +1,12 @@
 import Chart from 'chart.js/auto';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import colors from 'Styles/Variables/colors';
+
+function getColors(kind) {
+
+  const style = getComputedStyle(document.body);
+  return style.getPropertyValue('--chartColorsDiversified').split(',');
+}
 
 class DoughnutChart extends Component {
   constructor(props) {
@@ -29,7 +34,7 @@ class DoughnutChart extends Component {
         datasets: [{
           label: this.props.title,
           data: this.props.data.map((d) => d.value),
-          backgroundColor: colors.chartColorsDiversified
+          backgroundColor: getColors()
         }]
       }
     });

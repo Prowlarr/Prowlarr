@@ -58,7 +58,7 @@
 
   margin: 0 2px;
   width: 22px;
-  color: $textColor;
+  color: var(--textColor);
 }
 
 .externalLinks {

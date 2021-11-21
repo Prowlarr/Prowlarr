@@ -3,9 +3,9 @@
   align-items: stretch;
   overflow: hidden;
   margin: 2px 4px;
-  border: 1px solid $borderColor;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
-  background-color: #eee;
+  background-color: var(--defaultHoverBackgroundColor);
   cursor: default;
 }
 
@@ -16,7 +16,7 @@
 
 .value {
   padding: 0 4px;
-  background-color: $white;
-  color: $defaultColor;
+  background-color: var(--defaultButtonBackgroundColor);
+  color: var(--defaultColor);
   white-space: nowrap;
 }

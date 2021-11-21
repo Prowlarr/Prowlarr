@@ -21,28 +21,28 @@
 .disabled {
   composes: legendItemColor;
 
-  background-color: $darkGray;
+  background-color: var(--darkGray);
 }
 
 .enabled {
   composes: legendItemColor;
 
-  background-color: $successColor;
+  background-color: var(--successColor);
 }
 
 .redirected {
   composes: legendItemColor;
 
-  background-color: $infoColor;
+  background-color: var(--infoColor);
 }
 
 .error {
   composes: legendItemColor;
 
-  background-color: $dangerColor;
+  background-color: var(--dangerColor);
 
   &:global(.colorImpaired) {
-    background: repeating-linear-gradient(90deg, color($dangerColor shade(5%)), color($dangerColor shade(5%)) 5px, color($dangerColor shade(15%)) 5px, color($dangerColor shade(15%)) 10px);
+    background: repeating-linear-gradient(90deg, color(var(--dangerColor) shade(5%)), color(var(--dangerColor) shade(5%)) 5px, color(var(--dangerColor) shade(15%)) 5px, color(var(--dangerColor) shade(15%)) 10px);
   }
 }
 

@@ -2,15 +2,16 @@ import Chart from 'chart.js/auto';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { kinds } from 'Helpers/Props';
-import colors from 'Styles/Variables/colors';
 
 function getColors(kind) {
 
+  const style = getComputedStyle(document.body);
+
   if (kind === kinds.WARNING) {
-    return colors.failedColors.reverse();
+    return style.getPropertyValue('--failedColors').split(',');
   }
 
-  return colors.chartColors;
+  return style.getPropertyValue('--chartColors').split(',');
 }
 
 class BarChart extends Component {

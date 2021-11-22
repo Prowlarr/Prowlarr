@@ -60,7 +60,7 @@
     "Added": "Adicionado",
     "AddedToDownloadClient": "Lançamento adicionado ao cliente",
     "AddIndexer": "Adicionar indexador",
-    "AddingTag": "Adicionando tag",
+    "AddingTag": "Adicionando etiqueta",
     "AddNewIndexer": "Adicionar novo indexador",
     "AddToDownloadClient": "Adicionar lançamento ao cliente de download",
     "Age": "Tempo de vida",
@@ -329,7 +329,7 @@
     "TestAll": "Testar tudo",
     "TestAllApps": "Testar todos os aplicativos",
     "TestAllClients": "Testar todos os clientes",
-    "Time": "Hora",
+    "Time": "Tempo",
     "Title": "Título",
     "Today": "Hoje",
     "Tomorrow": "Amanhã",
@@ -439,5 +439,11 @@
     "IndexerProxy": "Proxy do Indexador",
     "IndexerVipCheckExpiringClientMessage": "Os benefícios VIPS do Indexador expirarão em breve: {0}",
     "NoLinks": "Sem Links",
-    "Notification": "Notificação"
+    "Notification": "Notificação",
+    "BookSearch": "Pesquisar Livro",
+    "AudioSearch": "Pesquisar Áudio",
+    "MovieSearch": "Pesquisar Filme",
+    "QueryOptions": "Opções de Consulta",
+    "SearchType": "Tipo de Pesquisa",
+    "TvSearch": "Pesquisar Séries"
 }

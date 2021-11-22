@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
@@ -115,7 +116,7 @@ namespace NzbDrone.Core.History
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
                 EventType = message.Query.RssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
-                Successful = message.Successful
+                Successful = message.QueryResult.Response?.StatusCode == HttpStatusCode.OK
             };
 
             if (message.Query is MovieSearchCriteria)
@@ -148,13 +149,14 @@ namespace NzbDrone.Core.History
                 history.Data.Add("BookTitle", ((BookSearchCriteria)message.Query).Title ?? string.Empty);
             }
 
-            history.Data.Add("ElapsedTime", message.Time.ToString());
+            history.Data.Add("ElapsedTime", message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);
             history.Data.Add("Query", message.Query.SearchTerm ?? string.Empty);
             history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Host", message.Query.Host ?? string.Empty);
-            history.Data.Add("QueryResults", message.Results.HasValue ? message.Results.ToString() : null);
+            history.Data.Add("QueryResults", message.QueryResult.Releases?.Count().ToString() ?? string.Empty);
+            history.Data.Add("Url", message.QueryResult.Response?.Request.Url.FullUri ?? string.Empty);
 
             _historyRepository.Insert(history);
         }
@@ -173,6 +175,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("Host", message.Host ?? string.Empty);
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("Title", message.Title);
+            history.Data.Add("Url", message.Url ?? string.Empty);
 
             _historyRepository.Insert(history);
         }

@@ -188,14 +188,14 @@ namespace NzbDrone.Core.IndexerSearch
 
                 foreach (var query in indexerReports.Queries)
                 {
-                    _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query.ElapsedTime, query.StatusCode == 200, query.Releases.Count()));
+                    _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, query));
                 }
 
                 return releases;
             }
             catch (Exception e)
             {
-                _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, 0, false));
+                _eventAggregator.PublishEvent(new IndexerQueryEvent(indexer.Definition.Id, criteriaBase, new IndexerQueryResult()));
                 _logger.Error(e, "Error while searching for {0}", criteriaBase);
             }
 

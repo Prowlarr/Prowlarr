@@ -10,8 +10,9 @@ namespace NzbDrone.Core.Indexers.Events
         public string Host { get; set; }
         public string Title { get; set; }
         public bool Redirect { get; set; }
+        public string Url { get; set; }
 
-        public IndexerDownloadEvent(int indexerId, bool successful, string source, string host, string title, bool redirect = false)
+        public IndexerDownloadEvent(int indexerId, bool successful, string source, string host, string title, string url, bool redirect = false)
         {
             IndexerId = indexerId;
             Successful = successful;
@@ -19,6 +20,7 @@ namespace NzbDrone.Core.Indexers.Events
             Host = host;
             Title = title;
             Redirect = redirect;
+            Url = url;
         }
     }
 }

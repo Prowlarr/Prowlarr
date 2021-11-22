@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers
@@ -11,7 +12,6 @@ namespace NzbDrone.Core.Indexers
         }
 
         public IList<ReleaseInfo> Releases { get; set; }
-        public long ElapsedTime { get; set; }
-        public int StatusCode { get; set; }
+        public HttpResponse Response { get; set; }
     }
 }

@@ -7,17 +7,13 @@ namespace NzbDrone.Core.Indexers.Events
     {
         public int IndexerId { get; set; }
         public SearchCriteriaBase Query { get; set; }
-        public long Time { get; set; }
-        public bool Successful { get; set; }
-        public int? Results { get; set; }
+        public IndexerQueryResult QueryResult { get; set; }
 
-        public IndexerQueryEvent(int indexerId, SearchCriteriaBase query, long time, bool successful, int? results = null)
+        public IndexerQueryEvent(int indexerId, SearchCriteriaBase query, IndexerQueryResult result)
         {
             IndexerId = indexerId;
             Query = query;
-            Time = time;
-            Successful = successful;
-            Results = results;
+            QueryResult = result;
         }
     }
 }

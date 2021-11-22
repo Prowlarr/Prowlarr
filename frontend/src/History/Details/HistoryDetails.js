@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
+import Link from 'Components/Link/Link';
 import translate from 'Utilities/String/translate';
 import styles from './HistoryDetails.css';
 
@@ -17,7 +18,8 @@ function HistoryDetails(props) {
       query,
       queryResults,
       categories,
-      source
+      source,
+      url
     } = data;
 
     return (
@@ -59,6 +61,14 @@ function HistoryDetails(props) {
               data={source}
             />
         }
+
+        {
+          !!data &&
+            <DescriptionListItem
+              title={'Url'}
+              data={url ? <Link to={url}>{translate('Link')}</Link> : '-'}
+            />
+        }
       </DescriptionList>
     );
   }
@@ -66,7 +76,8 @@ function HistoryDetails(props) {
   if (eventType === 'releaseGrabbed') {
     const {
       source,
-      title
+      title,
+      url
     } = data;
 
     return (
@@ -92,6 +103,14 @@ function HistoryDetails(props) {
             <DescriptionListItem
               title={'Title'}
               data={title ? title : '-'}
+            />
+        }
+
+        {
+          !!data &&
+            <DescriptionListItem
+              title={'Url'}
+              data={url ? <Link to={url}>{translate('Link')}</Link> : '-'}
             />
         }
       </DescriptionList>

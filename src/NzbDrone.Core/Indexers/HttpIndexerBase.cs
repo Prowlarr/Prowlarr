@@ -220,7 +220,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (TooManyRequestsException ex)
             {
-                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.ElapsedTime, StatusCode = (int)ex.Response.StatusCode });
+                result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
 
                 if (ex.RetryAfter != TimeSpan.Zero)
                 {
@@ -235,13 +235,13 @@ namespace NzbDrone.Core.Indexers
             }
             catch (HttpException ex)
             {
-                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.ElapsedTime, StatusCode = (int)ex.Response.StatusCode });
+                result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn("{0} {1}", this, ex.Message);
             }
             catch (RequestLimitReachedException ex)
             {
-                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.HttpResponse.ElapsedTime, StatusCode = (int)ex.Response.HttpResponse.StatusCode });
+                result.Queries.Add(new IndexerQueryResult { Response = ex.Response.HttpResponse });
                 _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
@@ -252,7 +252,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (CloudFlareCaptchaException ex)
             {
-                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.ElapsedTime, StatusCode = (int)ex.Response.StatusCode });
+                result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 ex.WithData("FeedUrl", url);
                 if (ex.IsExpired)
@@ -266,7 +266,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (IndexerException ex)
             {
-                result.Queries.Add(new IndexerQueryResult { ElapsedTime = ex.Response.HttpResponse.ElapsedTime, StatusCode = (int)ex.Response.HttpResponse.StatusCode });
+                result.Queries.Add(new IndexerQueryResult { Response = ex.Response.HttpResponse });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn(ex, "{0}", url);
             }
@@ -308,8 +308,7 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerQueryResult
                 {
                     Releases = releases,
-                    ElapsedTime = response.HttpResponse.ElapsedTime,
-                    StatusCode = (int)response.HttpResponse.StatusCode
+                    Response = response.HttpResponse
                 };
             }
             catch (Exception ex)

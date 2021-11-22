@@ -53,6 +53,12 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'grabTitle',
+      label: 'Grab Title',
+      isSortable: false,
+      isVisible: false
+    },
+    {
       name: 'categories',
       label: 'Categories',
       isSortable: false,

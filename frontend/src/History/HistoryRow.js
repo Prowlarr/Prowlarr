@@ -247,6 +247,21 @@ class HistoryRow extends Component {
               );
             }
 
+            if (name === 'grabTitle') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.indexer}
+                >
+                  {
+                    data.title ?
+                      data.title :
+                      null
+                  }
+                </TableRowCell>
+              );
+            }
+
             if (name === 'categories') {
               return (
                 <TableRowCell

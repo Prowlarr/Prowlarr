@@ -12,35 +12,9 @@ namespace NzbDrone.Core.Configuration
 
         //Download Client
         string DownloadClientWorkingFolders { get; set; }
-        int DownloadClientHistoryLimit { get; set; }
-        int CheckForFinishedDownloadInterval { get; set; }
-
-        //Completed/Failed Download Handling (Download client)
-        bool EnableCompletedDownloadHandling { get; set; }
-        bool RemoveCompletedDownloads { get; set; }
-
-        bool AutoRedownloadFailed { get; set; }
-        bool RemoveFailedDownloads { get; set; }
 
         //History
         int HistoryCleanupDays { get; set; }
-
-        //Indexers
-        int Retention { get; set; }
-        int RssSyncInterval { get; set; }
-        int MaximumSize { get; set; }
-        int MinimumAge { get; set; }
-
-        bool PreferIndexerFlags { get; set; }
-
-        int AvailabilityDelay { get; set; }
-
-        bool AllowHardcodedSubs { get; set; }
-        string WhitelistedHardcodedSubs { get; set; }
-
-        int ImportListSyncInterval { get; set; }
-        string ListSyncLevel { get; set; }
-        string ImportExclusions { get; set; }
 
         //UI
         int FirstDayOfWeek { get; set; }
@@ -55,7 +29,6 @@ namespace NzbDrone.Core.Configuration
         int UILanguage { get; set; }
 
         //Internal
-        bool CleanupMetadataImages { get; set; }
         string PlexClientIdentifier { get; }
 
         //Forms Auth

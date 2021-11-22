@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -20,10 +20,10 @@ namespace NzbDrone.Core.Test.Configuration
         [Test]
         public void Add_new_value_to_database()
         {
-            const string key = "RssSyncInterval";
-            const int value = 12;
+            const string key = "HistoryCleanupDays";
+            const int value = 20;
 
-            Subject.RssSyncInterval = value;
+            Subject.HistoryCleanupDays = value;
 
             AssertUpsert(key, value);
         }
@@ -31,7 +31,7 @@ namespace NzbDrone.Core.Test.Configuration
         [Test]
         public void Get_value_should_return_default_when_no_value()
         {
-            Subject.RssSyncInterval.Should().Be(60);
+            Subject.HistoryCleanupDays.Should().Be(365);
         }
 
         [Test]
@@ -45,8 +45,8 @@ namespace NzbDrone.Core.Test.Configuration
         [Test]
         public void get_value_with_out_persist_should_not_store_default_value()
         {
-            var interval = Subject.RssSyncInterval;
-            interval.Should().Be(60);
+            var interval = Subject.HistoryCleanupDays;
+            interval.Should().Be(365);
             Mocker.GetMock<IConfigRepository>().Verify(c => c.Insert(It.IsAny<Config>()), Times.Never());
         }
 

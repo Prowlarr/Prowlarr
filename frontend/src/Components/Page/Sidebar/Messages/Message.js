@@ -13,20 +13,8 @@ function getIconName(name) {
       return icons.BACKUP;
     case 'CheckHealth':
       return icons.HEALTH;
-    case 'EpisodeSearch':
-      return icons.SEARCH;
     case 'Housekeeping':
       return icons.HOUSEKEEPING;
-    case 'RefreshMovie':
-      return icons.REFRESH;
-    case 'RssSync':
-      return icons.RSS;
-    case 'SeasonSearch':
-      return icons.SEARCH;
-    case 'MovieSearch':
-      return icons.SEARCH;
-    case 'UpdateSceneMapping':
-      return icons.REFRESH;
     default:
       return icons.SPINNER;
   }

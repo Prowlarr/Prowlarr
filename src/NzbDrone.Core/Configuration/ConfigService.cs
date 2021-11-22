@@ -77,75 +77,10 @@ namespace NzbDrone.Core.Configuration
             return _repository.Get(key.ToLower()) != null;
         }
 
-        public int Retention
-        {
-            get { return GetValueInt("Retention", 0); }
-            set { SetValue("Retention", value); }
-        }
-
         public int HistoryCleanupDays
         {
             get { return GetValueInt("HistoryCleanupDays", 365); }
             set { SetValue("HistoryCleanupDays", value); }
-        }
-
-        public int RssSyncInterval
-        {
-            get { return GetValueInt("RssSyncInterval", 60); }
-
-            set { SetValue("RssSyncInterval", value); }
-        }
-
-        public int AvailabilityDelay
-        {
-            get { return GetValueInt("AvailabilityDelay", 0); }
-            set { SetValue("AvailabilityDelay", value); }
-        }
-
-        public int ImportListSyncInterval
-        {
-            get { return GetValueInt("ImportListSyncInterval", 240); }
-
-            set { SetValue("ImportListSyncInterval", value); }
-        }
-
-        public string ListSyncLevel
-        {
-            get { return GetValue("ListSyncLevel", "disabled"); }
-            set { SetValue("ListSyncLevel", value); }
-        }
-
-        public string ImportExclusions
-        {
-            get { return GetValue("ImportExclusions", string.Empty); }
-            set { SetValue("ImportExclusions", value); }
-        }
-
-        public int MaximumSize
-        {
-            get { return GetValueInt("MaximumSize", 0); }
-            set { SetValue("MaximumSize", value); }
-        }
-
-        public int MinimumAge
-        {
-            get { return GetValueInt("MinimumAge", 0); }
-
-            set { SetValue("MinimumAge", value); }
-        }
-
-        public bool EnableCompletedDownloadHandling
-        {
-            get { return GetValueBoolean("EnableCompletedDownloadHandling", true); }
-
-            set { SetValue("EnableCompletedDownloadHandling", value); }
-        }
-
-        public bool PreferIndexerFlags
-        {
-            get { return GetValueBoolean("PreferIndexerFlags", false); }
-
-            set { SetValue("PreferIndexerFlags", value); }
         }
 
         public bool LogIndexerResponse
@@ -155,59 +90,10 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("LogIndexerResponse", value); }
         }
 
-        public bool AllowHardcodedSubs
-        {
-            get { return GetValueBoolean("AllowHardcodedSubs", false); }
-
-            set { SetValue("AllowHardcodedSubs", value); }
-        }
-
-        public string WhitelistedHardcodedSubs
-        {
-            get { return GetValue("WhitelistedHardcodedSubs", ""); }
-
-            set { SetValue("WhitelistedHardcodedSubs", value); }
-        }
-
-        public bool RemoveCompletedDownloads
-        {
-            get { return GetValueBoolean("RemoveCompletedDownloads", false); }
-
-            set { SetValue("RemoveCompletedDownloads", value); }
-        }
-
-        public bool AutoRedownloadFailed
-        {
-            get { return GetValueBoolean("AutoRedownloadFailed", true); }
-
-            set { SetValue("AutoRedownloadFailed", value); }
-        }
-
-        public bool RemoveFailedDownloads
-        {
-            get { return GetValueBoolean("RemoveFailedDownloads", true); }
-
-            set { SetValue("RemoveFailedDownloads", value); }
-        }
-
         public string DownloadClientWorkingFolders
         {
             get { return GetValue("DownloadClientWorkingFolders", "_UNPACK_|_FAILED_"); }
             set { SetValue("DownloadClientWorkingFolders", value); }
-        }
-
-        public int CheckForFinishedDownloadInterval
-        {
-            get { return GetValueInt("CheckForFinishedDownloadInterval", 1); }
-
-            set { SetValue("CheckForFinishedDownloadInterval", value); }
-        }
-
-        public int DownloadClientHistoryLimit
-        {
-            get { return GetValueInt("DownloadClientHistoryLimit", 30); }
-
-            set { SetValue("DownloadClientHistoryLimit", value); }
         }
 
         public int FirstDayOfWeek
@@ -271,13 +157,6 @@ namespace NzbDrone.Core.Configuration
             get { return GetValueInt("UILanguage", (int)Language.English); }
 
             set { SetValue("UILanguage", value); }
-        }
-
-        public bool CleanupMetadataImages
-        {
-            get { return GetValueBoolean("CleanupMetadataImages", true); }
-
-            set { SetValue("CleanupMetadataImages", value); }
         }
 
         public string PlexClientIdentifier => GetValue("PlexClientIdentifier", Guid.NewGuid().ToString(), true);

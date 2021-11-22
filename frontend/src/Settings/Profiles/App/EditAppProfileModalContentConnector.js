@@ -45,11 +45,11 @@ class EditAppProfileModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setAppProfileValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveAppProfile({ id: this.props.id });
-  }
+  };
 
   //
   // Render

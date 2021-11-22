@@ -46,7 +46,7 @@ class AddIndexerProxyModalContentConnector extends Component {
   onIndexerProxySelect = ({ implementation, name }) => {
     this.props.selectIndexerProxySchema({ implementation, presetName: name });
     this.props.onModalClose({ indexerProxySelected: true });
-  }
+  };
 
   //
   // Render

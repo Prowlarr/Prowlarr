@@ -31,7 +31,7 @@ class CardigannCaptchaInputConnector extends Component {
 
   componentWillUnmount = () => {
     this.props.resetCaptcha();
-  }
+  };
 
   //
   // Listeners
@@ -48,7 +48,7 @@ class CardigannCaptchaInputConnector extends Component {
     this.props.resetCaptcha();
     this.props.refreshCaptcha({ provider, providerData });
 
-  }
+  };
 
   //
   // Render

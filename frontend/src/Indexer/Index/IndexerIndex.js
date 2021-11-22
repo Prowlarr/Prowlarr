@@ -98,14 +98,14 @@ class IndexerIndex extends Component {
 
   setScrollerRef = (ref) => {
     this.setState({ scroller: ref });
-  }
+  };
 
   getSelectedIds = () => {
     if (this.state.allUnselected) {
       return [];
     }
     return getSelectedIds(this.state.selectedState);
-  }
+  };
 
   setSelectedState() {
     const {
@@ -191,18 +191,18 @@ class IndexerIndex extends Component {
 
   onAddIndexerPress = () => {
     this.setState({ isAddIndexerModalOpen: true });
-  }
+  };
 
   onAddIndexerModalClose = ({ indexerSelected = false } = {}) => {
     this.setState({
       isAddIndexerModalOpen: false,
       isEditIndexerModalOpen: indexerSelected
     });
-  }
+  };
 
   onEditIndexerModalClose = () => {
     this.setState({ isEditIndexerModalOpen: false });
-  }
+  };
 
   onMovieEditorTogglePress = () => {
     if (this.state.isMovieEditorActive) {
@@ -212,11 +212,11 @@ class IndexerIndex extends Component {
       newState.isMovieEditorActive = true;
       this.setState(newState);
     }
-  }
+  };
 
   onJumpBarItemPress = (jumpToCharacter) => {
     this.setState({ jumpToCharacter });
-  }
+  };
 
   onKeyUp = (event) => {
     const jumpBarItems = this.state.jumpBarItems.order;
@@ -228,28 +228,28 @@ class IndexerIndex extends Component {
         this.setState({ jumpToCharacter: jumpBarItems[jumpBarItems.length - 1] });
       }
     }
-  }
+  };
 
   onSelectAllChange = ({ value }) => {
     this.setState(selectAll(this.state.selectedState, value));
-  }
+  };
 
   onSelectAllPress = () => {
     this.onSelectAllChange({ value: !this.state.allSelected });
-  }
+  };
 
   onSelectedChange = ({ id, value, shiftKey = false }) => {
     this.setState((state) => {
       return toggleSelected(state, this.props.items, id, value, shiftKey);
     });
-  }
+  };
 
   onSaveSelected = (changes) => {
     this.props.onSaveSelected({
       indexerIds: this.getSelectedIds(),
       ...changes
     });
-  }
+  };
 
   //
   // Render

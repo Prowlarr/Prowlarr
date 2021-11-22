@@ -139,7 +139,7 @@ class SignalRConnector extends Component {
     }
 
     console.error(`signalR: Unable to find handler for ${name}`);
-  }
+  };
 
   handleCommand = (body) => {
     if (body.action === 'sync') {
@@ -158,15 +158,15 @@ class SignalRConnector extends Component {
     } else {
       this.props.dispatchUpdateCommand(resource);
     }
-  }
+  };
 
   handleHealth = () => {
     this.props.dispatchFetchHealth();
-  }
+  };
 
   handleIndexerstatus = () => {
     this.props.dispatchFetchIndexerStatus();
-  }
+  };
 
   handleIndexer = (body) => {
     const action = body.action;
@@ -177,17 +177,17 @@ class SignalRConnector extends Component {
     } else if (action === 'deleted') {
       this.props.dispatchRemoveItem({ section, id: body.resource.id });
     }
-  }
+  };
 
   handleVersion = (body) => {
     const version = body.version;
 
     this.props.dispatchSetVersion({ version });
-  }
+  };
 
   handleSystemTask = () => {
     this.props.dispatchFetchCommands();
-  }
+  };
 
   handleTag = (body) => {
     if (body.action === 'sync') {
@@ -195,7 +195,7 @@ class SignalRConnector extends Component {
       this.props.dispatchFetchTagDetails();
       return;
     }
-  }
+  };
 
   //
   // Listeners
@@ -210,7 +210,7 @@ class SignalRConnector extends Component {
       isDisconnected: false,
       isRestarting: false
     });
-  }
+  };
 
   onStart = () => {
     console.debug('[signalR] connected');
@@ -221,11 +221,11 @@ class SignalRConnector extends Component {
       isDisconnected: false,
       isRestarting: false
     });
-  }
+  };
 
   onReconnecting = () => {
     this.props.dispatchSetAppValue({ isReconnecting: true });
-  }
+  };
 
   onReconnected = () => {
 
@@ -247,17 +247,17 @@ class SignalRConnector extends Component {
     dispatchFetchIndexers();
     dispatchFetchCommands();
     repopulatePage();
-  }
+  };
 
   onClose = () => {
     console.debug('[signalR] connection closed');
-  }
+  };
 
   onReceiveMessage = (message) => {
     console.debug('[signalR] received', message.name, message.body);
 
     this.handleMessage(message);
-  }
+  };
 
   //
   // Render

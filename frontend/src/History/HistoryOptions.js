@@ -43,7 +43,7 @@ class HistoryOptions extends Component {
     this.setState(setting, () => {
       dispatchSaveGeneralSettings(setting);
     });
-  }
+  };
 
   //
   // Render

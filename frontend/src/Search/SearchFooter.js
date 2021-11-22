@@ -108,19 +108,19 @@ class SearchFooter extends Component {
       },
       isQueryParameterModalOpen: true
     });
-  }
+  };
 
   onQueryParameterModalClose = () => {
     this.setState({ isQueryParameterModalOpen: false });
-  }
+  };
 
   onSearchPress = () => {
     this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories, this.state.searchType);
-  }
+  };
 
   onSearchInputChange = ({ value }) => {
     this.setState({ searchQuery: value });
-  }
+  };
 
   //
   // Render

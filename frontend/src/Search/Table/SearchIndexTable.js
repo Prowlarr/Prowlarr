@@ -74,7 +74,7 @@ class SearchIndexTable extends Component {
         />
       </VirtualTableRow>
     );
-  }
+  };
 
   //
   // Render

@@ -46,7 +46,7 @@ class AddApplicationModalContentConnector extends Component {
   onApplicationSelect = ({ implementation, name }) => {
     this.props.selectApplicationSchema({ implementation, presetName: name });
     this.props.onModalClose({ applicationSelected: true });
-  }
+  };
 
   //
   // Render

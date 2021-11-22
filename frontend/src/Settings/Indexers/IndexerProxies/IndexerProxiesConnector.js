@@ -42,7 +42,7 @@ class IndexerProxiesConnector extends Component {
 
   onConfirmDeleteIndexerProxy = (id) => {
     this.props.deleteIndexerProxy({ id });
-  }
+  };
 
   //
   // Render

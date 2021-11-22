@@ -59,7 +59,7 @@ class IndexerEditorFooter extends Component {
       default:
         this.props.onSaveSelected({ [name]: value });
     }
-  }
+  };
 
   onApplyTagsPress = (tags, applyTags) => {
     this.setState({
@@ -71,23 +71,23 @@ class IndexerEditorFooter extends Component {
       tags,
       applyTags
     });
-  }
+  };
 
   onDeleteSelectedPress = () => {
     this.setState({ isDeleteMovieModalOpen: true });
-  }
+  };
 
   onDeleteMovieModalClose = () => {
     this.setState({ isDeleteMovieModalOpen: false });
-  }
+  };
 
   onTagsPress = () => {
     this.setState({ isTagsModalOpen: true });
-  }
+  };
 
   onTagsModalClose = () => {
     this.setState({ isTagsModalOpen: false });
-  }
+  };
 
   //
   // Render

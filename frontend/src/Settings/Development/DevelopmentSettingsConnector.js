@@ -47,11 +47,11 @@ class DevelopmentSettingsConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setDevelopmentSettingsValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveDevelopmentSettings();
-  }
+  };
 
   //
   // Render

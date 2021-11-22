@@ -69,7 +69,7 @@ class SearchIndexConnector extends Component {
 
   onScroll = ({ scrollTop }) => {
     scrollPositions.movieIndex = scrollTop;
-  }
+  };
 
   //
   // Render

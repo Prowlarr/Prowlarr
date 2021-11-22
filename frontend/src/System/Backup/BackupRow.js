@@ -31,19 +31,19 @@ class BackupRow extends Component {
 
   onRestorePress = () => {
     this.setState({ isRestoreModalOpen: true });
-  }
+  };
 
   onRestoreModalClose = () => {
     this.setState({ isRestoreModalOpen: false });
-  }
+  };
 
   onDeletePress = () => {
     this.setState({ isConfirmDeleteModalOpen: true });
-  }
+  };
 
   onConfirmDeleteModalClose = () => {
     this.setState({ isConfirmDeleteModalOpen: false });
-  }
+  };
 
   onConfirmDeletePress = () => {
     const {
@@ -54,7 +54,7 @@ class BackupRow extends Component {
     this.setState({ isConfirmDeleteModalOpen: false }, () => {
       onDeleteBackupPress(id);
     });
-  }
+  };
 
   //
   // Render

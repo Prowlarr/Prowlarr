@@ -70,7 +70,7 @@ class IndexerIndexTable extends Component {
         />
       </VirtualTableRow>
     );
-  }
+  };
 
   //
   // Render

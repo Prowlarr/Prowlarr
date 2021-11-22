@@ -33,7 +33,7 @@ class EditIndexerProxyModalConnector extends Component {
     this.props.dispatchCancelTestIndexerProxy();
     this.props.dispatchCancelSaveIndexerProxy();
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

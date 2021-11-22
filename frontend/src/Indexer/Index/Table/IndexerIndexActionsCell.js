@@ -27,22 +27,22 @@ class IndexerIndexActionsCell extends Component {
 
   onEditMoviePress = () => {
     this.setState({ isEditMovieModalOpen: true });
-  }
+  };
 
   onEditMovieModalClose = () => {
     this.setState({ isEditMovieModalOpen: false });
-  }
+  };
 
   onDeleteMoviePress = () => {
     this.setState({
       isEditMovieModalOpen: false,
       isDeleteMovieModalOpen: true
     });
-  }
+  };
 
   onDeleteMovieModalClose = () => {
     this.setState({ isDeleteMovieModalOpen: false });
-  }
+  };
 
   //
   // Render

@@ -42,19 +42,19 @@ class EditApplicationModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setApplicationValue({ name, value });
-  }
+  };
 
   onFieldChange = ({ name, value }) => {
     this.props.setApplicationFieldValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveApplication({ id: this.props.id });
-  }
+  };
 
   onTestPress = () => {
     this.props.testApplication({ id: this.props.id });
-  }
+  };
 
   //
   // Render

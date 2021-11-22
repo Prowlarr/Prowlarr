@@ -28,26 +28,26 @@ class AppProfile extends Component {
 
   onEditAppProfilePress = () => {
     this.setState({ isEditAppProfileModalOpen: true });
-  }
+  };
 
   onEditAppProfileModalClose = () => {
     this.setState({ isEditAppProfileModalOpen: false });
-  }
+  };
 
   onDeleteAppProfilePress = () => {
     this.setState({
       isEditAppProfileModalOpen: false,
       isDeleteAppProfileModalOpen: true
     });
-  }
+  };
 
   onDeleteAppProfileModalClose = () => {
     this.setState({ isDeleteAppProfileModalOpen: false });
-  }
+  };
 
   onConfirmDeleteAppProfile = () => {
     this.props.onConfirmDeleteAppProfile(this.props.id);
-  }
+  };
 
   onCloneAppProfilePress = () => {
     const {
@@ -56,7 +56,7 @@ class AppProfile extends Component {
     } = this.props;
 
     onCloneAppProfilePress(id);
-  }
+  };
 
   //
   // Render

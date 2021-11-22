@@ -29,26 +29,26 @@ class IndexerProxy extends Component {
 
   onEditIndexerProxyPress = () => {
     this.setState({ isEditIndexerProxyModalOpen: true });
-  }
+  };
 
   onEditIndexerProxyModalClose = () => {
     this.setState({ isEditIndexerProxyModalOpen: false });
-  }
+  };
 
   onDeleteIndexerProxyPress = () => {
     this.setState({
       isEditIndexerProxyModalOpen: false,
       isDeleteIndexerProxyModalOpen: true
     });
-  }
+  };
 
   onDeleteIndexerProxyModalClose= () => {
     this.setState({ isDeleteIndexerProxyModalOpen: false });
-  }
+  };
 
   onConfirmDeleteIndexerProxy = () => {
     this.props.onConfirmDeleteIndexerProxy(this.props.id);
-  }
+  };
 
   //
   // Render

@@ -51,11 +51,11 @@ class HistoryRowConnector extends Component {
   onSearchPress = (term, indexerId, categories) => {
     this.props.setSearchDefault({ searchQuery: term, searchIndexerIds: [indexerId], searchCategories: categories });
     this.props.push(`${window.Prowlarr.urlBase}/search`);
-  }
+  };
 
   onMarkAsFailedPress = () => {
     this.props.markAsFailed({ id: this.props.id });
-  }
+  };
 
   //
   // Render

@@ -20,7 +20,7 @@ class AddIndexerProxyItem extends Component {
     } = this.props;
 
     this.props.onIndexerProxySelect({ implementation });
-  }
+  };
 
   //
   // Render

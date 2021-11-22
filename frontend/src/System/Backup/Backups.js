@@ -52,11 +52,11 @@ class Backups extends Component {
 
   onRestorePress = () => {
     this.setState({ isRestoreModalOpen: true });
-  }
+  };
 
   onRestoreModalClose = () => {
     this.setState({ isRestoreModalOpen: false });
-  }
+  };
 
   //
   // Render

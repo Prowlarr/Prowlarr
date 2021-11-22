@@ -108,7 +108,7 @@ class PageToolbarSection extends Component {
       isMeasured: true,
       width
     });
-  }
+  };
 
   //
   // Render

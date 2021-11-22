@@ -77,7 +77,7 @@ class AddIndexerModalContent extends Component {
 
   onFilterChange = ({ value }) => {
     this.setState({ filter: value });
-  }
+  };
 
   //
   // Render

@@ -30,18 +30,18 @@ class Applications extends Component {
 
   onAddApplicationPress = () => {
     this.setState({ isAddApplicationModalOpen: true });
-  }
+  };
 
   onAddApplicationModalClose = ({ applicationSelected = false } = {}) => {
     this.setState({
       isAddApplicationModalOpen: false,
       isEditApplicationModalOpen: applicationSelected
     });
-  }
+  };
 
   onEditApplicationModalClose = () => {
     this.setState({ isEditApplicationModalOpen: false });
-  }
+  };
 
   //
   // Render

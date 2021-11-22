@@ -44,23 +44,23 @@ class EditIndexerModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setIndexerValue({ name, value });
-  }
+  };
 
   onFieldChange = ({ name, value }) => {
     this.props.setIndexerFieldValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveIndexer({ id: this.props.id });
-  }
+  };
 
   onTestPress = () => {
     this.props.testIndexer({ id: this.props.id });
-  }
+  };
 
   onAdvancedSettingsPress = () => {
     this.props.toggleAdvancedSettings();
-  }
+  };
 
   //
   // Render

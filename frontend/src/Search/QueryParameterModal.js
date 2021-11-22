@@ -68,7 +68,7 @@ class QueryParameterModal extends Component {
   onInputSelectionChange = (selectionStart, selectionEnd) => {
     this._selectionStart = selectionStart;
     this._selectionEnd = selectionEnd;
-  }
+  };
 
   onOptionPress = ({ isFullFilename, tokenValue }) => {
     const {
@@ -96,12 +96,12 @@ class QueryParameterModal extends Component {
       this._selectionStart = newValue.length - 1;
       this._selectionEnd = newValue.length - 1;
     }
-  }
+  };
 
   onInputChange = ({ name, value }) => {
     this.props.onSearchInputChange({ value: '' });
     this.props.onInputChange({ name, value });
-  }
+  };
 
   //
   // Render

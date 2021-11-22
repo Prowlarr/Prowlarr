@@ -52,11 +52,11 @@ class AddIndexerModalContentConnector extends Component {
   onIndexerSelect = ({ implementation, name }) => {
     this.props.selectIndexerSchema({ implementation, name });
     this.props.onModalClose({ indexerSelected: true });
-  }
+  };
 
   onSortPress = (sortKey, sortDirection) => {
     this.props.setIndexerSchemaSort({ sortKey, sortDirection });
-  }
+  };
 
   //
   // Render

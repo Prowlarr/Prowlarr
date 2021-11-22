@@ -34,11 +34,11 @@ class AppProfilesConnector extends Component {
 
   onConfirmDeleteAppProfile = (id) => {
     this.props.dispatchDeleteAppProfile({ id });
-  }
+  };
 
   onCloneAppProfilePress = (id) => {
     this.props.dispatchCloneAppProfile({ id });
-  }
+  };
 
   //
   // Render

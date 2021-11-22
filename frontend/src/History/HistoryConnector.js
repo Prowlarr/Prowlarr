@@ -69,42 +69,42 @@ class HistoryConnector extends Component {
 
   repopulate = () => {
     this.props.fetchHistory();
-  }
+  };
 
   //
   // Listeners
 
   onFirstPagePress = () => {
     this.props.gotoHistoryFirstPage();
-  }
+  };
 
   onPreviousPagePress = () => {
     this.props.gotoHistoryPreviousPage();
-  }
+  };
 
   onNextPagePress = () => {
     this.props.gotoHistoryNextPage();
-  }
+  };
 
   onLastPagePress = () => {
     this.props.gotoHistoryLastPage();
-  }
+  };
 
   onPageSelect = (page) => {
     this.props.gotoHistoryPage({ page });
-  }
+  };
 
   onSortPress = (sortKey) => {
     this.props.setHistorySort({ sortKey });
-  }
+  };
 
   onFilterSelect = (selectedFilterKey) => {
     this.props.setHistoryFilter({ selectedFilterKey });
-  }
+  };
 
   onClearHistoryPress = () => {
     this.props.executeCommand({ name: commandNames.CLEAR_HISTORY });
-  }
+  };
 
   onTableOptionChange = (payload) => {
     this.props.setHistoryTableOption(payload);
@@ -112,7 +112,7 @@ class HistoryConnector extends Component {
     if (payload.pageSize) {
       this.props.gotoHistoryFirstPage();
     }
-  }
+  };
 
   //
   // Render

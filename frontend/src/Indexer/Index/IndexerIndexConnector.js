@@ -57,11 +57,11 @@ class IndexerIndexConnector extends Component {
 
   onSaveSelected = (payload) => {
     this.props.dispatchSaveIndexerEditor(payload);
-  }
+  };
 
   onScroll = ({ scrollTop }) => {
     scrollPositions.movieIndex = scrollTop;
-  }
+  };
 
   //
   // Render

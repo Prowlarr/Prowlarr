@@ -36,12 +36,12 @@ class IndexerSearchInput extends Component {
 
   setAutosuggestRef = (ref) => {
     this._autosuggest = ref;
-  }
+  };
 
   focusInput = (event) => {
     event.preventDefault();
     this._autosuggest.input.focus();
-  }
+  };
 
   getSectionSuggestions(section) {
     return section.suggestions;
@@ -102,7 +102,7 @@ class IndexerSearchInput extends Component {
     }
 
     this.setState({ value: newValue });
-  }
+  };
 
   onKeyDown = (event) => {
     if (event.shiftKey || event.altKey || event.ctrlKey) {
@@ -137,31 +137,31 @@ class IndexerSearchInput extends Component {
 
     this._autosuggest.input.blur();
     this.reset();
-  }
+  };
 
   onBlur = () => {
     this.reset();
-  }
+  };
 
   onSuggestionsClearRequested = () => {
     this.setState({
       suggestions: [],
       loading: false
     });
-  }
+  };
 
   onSuggestionsFetchRequested = () => {
     this.setState({
       suggestions: [],
       loading: false
     });
-  }
+  };
 
   onSuggestionSelected = (event, { suggestion }) => {
     if (suggestion.type === ADD_NEW_TYPE) {
       this.props.onGoToAddNewMovie(this.state.value);
     }
-  }
+  };
 
   //
   // Render

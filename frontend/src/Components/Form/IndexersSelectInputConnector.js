@@ -43,7 +43,7 @@ class IndexersSelectInputConnector extends Component {
 
   onChange = ({ name, value }) => {
     this.props.onChange({ name, value });
-  }
+  };
 
   //
   // Render

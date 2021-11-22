@@ -138,7 +138,7 @@ class FilterBuilderRow extends Component {
 
     this.selectedFilterBuilderProp = selectedFilterBuilderProp;
     onFilterChange(index, filter);
-  }
+  };
 
   onFilterChange = ({ name, value }) => {
     const {
@@ -158,7 +158,7 @@ class FilterBuilderRow extends Component {
     filter[name] = value;
 
     onFilterChange(index, filter);
-  }
+  };
 
   onAddPress = () => {
     const {
@@ -167,7 +167,7 @@ class FilterBuilderRow extends Component {
     } = this.props;
 
     onAddPress(index);
-  }
+  };
 
   onRemovePress = () => {
     const {
@@ -176,7 +176,7 @@ class FilterBuilderRow extends Component {
     } = this.props;
 
     onRemovePress(index);
-  }
+  };
 
   //
   // Render

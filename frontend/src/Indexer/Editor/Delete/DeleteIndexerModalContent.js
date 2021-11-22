@@ -12,7 +12,7 @@ import styles from './DeleteIndexerModalContent.css';
 class DeleteIndexerModalContent extends Component {
   onDeleteMovieConfirmed = () => {
     this.props.onDeleteSelectedPress();
-  }
+  };
 
   //
   // Render

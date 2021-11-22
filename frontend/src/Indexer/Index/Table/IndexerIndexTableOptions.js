@@ -43,7 +43,7 @@ class IndexerIndexTableOptions extends Component {
         }
       });
     });
-  }
+  };
 
   //
   // Render

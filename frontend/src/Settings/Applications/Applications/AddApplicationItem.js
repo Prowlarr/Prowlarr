@@ -20,7 +20,7 @@ class AddApplicationItem extends Component {
     } = this.props;
 
     this.props.onApplicationSelect({ implementation });
-  }
+  };
 
   //
   // Render

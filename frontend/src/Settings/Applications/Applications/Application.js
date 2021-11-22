@@ -27,26 +27,26 @@ class Application extends Component {
 
   onEditApplicationPress = () => {
     this.setState({ isEditApplicationModalOpen: true });
-  }
+  };
 
   onEditApplicationModalClose = () => {
     this.setState({ isEditApplicationModalOpen: false });
-  }
+  };
 
   onDeleteApplicationPress = () => {
     this.setState({
       isEditApplicationModalOpen: false,
       isDeleteApplicationModalOpen: true
     });
-  }
+  };
 
   onDeleteApplicationModalClose= () => {
     this.setState({ isDeleteApplicationModalOpen: false });
-  }
+  };
 
   onConfirmDeleteApplication = () => {
     this.props.onConfirmDeleteApplication(this.props.id);
-  }
+  };
 
   //
   // Render

@@ -101,7 +101,7 @@ class PageJumpBar extends Component {
 
   onMeasure = ({ height }) => {
     this.setState({ height });
-  }
+  };
 
   //
   // Render

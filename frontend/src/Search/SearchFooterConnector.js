@@ -37,7 +37,7 @@ class SearchFooterConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setSearchDefault({ [name]: value });
-  }
+  };
 
   //
   // Render

@@ -33,7 +33,7 @@ class EditApplicationModalConnector extends Component {
     this.props.dispatchCancelTestApplication();
     this.props.dispatchCancelSaveApplication();
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

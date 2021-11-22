@@ -52,15 +52,15 @@ class HistoryRow extends Component {
     }
 
     this.props.onSearchPress(data.query, indexer.id, categories);
-  }
+  };
 
   onDetailsPress = () => {
     this.setState({ isDetailsModalOpen: true });
-  }
+  };
 
   onDetailsModalClose = () => {
     this.setState({ isDetailsModalOpen: false });
-  }
+  };
 
   //
   // Render

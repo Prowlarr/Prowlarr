@@ -42,19 +42,19 @@ class EditIndexerProxyModalContentConnector extends Component {
 
   onInputChange = ({ name, value }) => {
     this.props.setIndexerProxyValue({ name, value });
-  }
+  };
 
   onFieldChange = ({ name, value }) => {
     this.props.setIndexerProxyFieldValue({ name, value });
-  }
+  };
 
   onSavePress = () => {
     this.props.saveIndexerProxy({ id: this.props.id });
-  }
+  };
 
   onTestPress = () => {
     this.props.testIndexerProxy({ id: this.props.id });
-  }
+  };
 
   //
   // Render

@@ -17,7 +17,7 @@ class SelectIndexerRow extends Component {
     } = this.props;
 
     this.props.onIndexerSelect({ implementation, name });
-  }
+  };
 
   //
   // Render

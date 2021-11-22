@@ -69,7 +69,7 @@ class SearchIndexRow extends Component {
       guid,
       indexerId
     });
-  }
+  };
 
   //
   // Render

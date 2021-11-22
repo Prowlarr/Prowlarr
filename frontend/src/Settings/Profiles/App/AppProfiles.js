@@ -29,15 +29,15 @@ class AppProfiles extends Component {
   onCloneAppProfilePress = (id) => {
     this.props.onCloneAppProfilePress(id);
     this.setState({ isAppProfileModalOpen: true });
-  }
+  };
 
   onEditAppProfilePress = () => {
     this.setState({ isAppProfileModalOpen: true });
-  }
+  };
 
   onModalClose = () => {
     this.setState({ isAppProfileModalOpen: false });
-  }
+  };
 
   //
   // Render

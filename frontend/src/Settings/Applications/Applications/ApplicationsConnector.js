@@ -33,7 +33,7 @@ class ApplicationsConnector extends Component {
 
   onConfirmDeleteApplication = (id) => {
     this.props.deleteApplication({ id });
-  }
+  };
 
   //
   // Render

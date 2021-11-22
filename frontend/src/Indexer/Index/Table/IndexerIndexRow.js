@@ -34,35 +34,35 @@ class IndexerIndexRow extends Component {
 
   onEditIndexerPress = () => {
     this.setState({ isEditIndexerModalOpen: true });
-  }
+  };
 
   onIndexerInfoPress = () => {
     this.setState({ isIndexerInfoModalOpen: true });
-  }
+  };
 
   onEditIndexerModalClose = () => {
     this.setState({ isEditIndexerModalOpen: false });
-  }
+  };
 
   onIndexerInfoModalClose = () => {
     this.setState({ isIndexerInfoModalOpen: false });
-  }
+  };
 
   onDeleteMoviePress = () => {
     this.setState({
       isEditIndexerModalOpen: false,
       isDeleteMovieModalOpen: true
     });
-  }
+  };
 
   onDeleteMovieModalClose = () => {
     this.setState({ isDeleteMovieModalOpen: false });
-  }
+  };
 
   onUseSceneNumberingChange = () => {
     // Mock handler to satisfy `onChange` being required for `CheckInput`.
     //
-  }
+  };
 
   //
   // Render

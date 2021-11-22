@@ -30,18 +30,18 @@ class IndexerProxies extends Component {
 
   onAddIndexerProxyPress = () => {
     this.setState({ isAddIndexerProxyModalOpen: true });
-  }
+  };
 
   onAddIndexerProxyModalClose = ({ indexerProxySelected = false } = {}) => {
     this.setState({
       isAddIndexerProxyModalOpen: false,
       isEditIndexerProxyModalOpen: indexerProxySelected
     });
-  }
+  };
 
   onEditIndexerProxyModalClose = () => {
     this.setState({ isEditIndexerProxyModalOpen: false });
-  }
+  };
 
   //
   // Render

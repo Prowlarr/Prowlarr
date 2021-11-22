@@ -20,7 +20,7 @@ class EditAppProfileModalConnector extends Component {
   onModalClose = () => {
     this.props.clearPendingChanges({ section: 'settings.appProfiles' });
     this.props.onModalClose();
-  }
+  };
 
   //
   // Render

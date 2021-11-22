@@ -17,7 +17,7 @@ class AddApplicationPresetMenuItem extends Component {
       name,
       implementation
     });
-  }
+  };
 
   //
   // Render

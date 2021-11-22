@@ -24,7 +24,7 @@ class QueryParameterOption extends Component {
     tokenValue = tokenValue.replace(/ /g, tokenSeparator);
 
     onPress({ isFullFilename, tokenValue });
-  }
+  };
 
   //
   // Render

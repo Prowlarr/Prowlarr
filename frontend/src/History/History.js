@@ -35,16 +35,16 @@ class History extends Component {
 
   onClearHistoryPress = () => {
     this.setState({ isClearHistoryModalOpen: true });
-  }
+  };
 
   onClearHistoryModalClose = () => {
     this.setState({ isClearHistoryModalOpen: false });
-  }
+  };
 
   onConfirmClearHistory = () => {
     this.setState({ isClearHistoryModalOpen: false });
     this.props.onClearHistoryPress();
-  }
+  };
 
   //
   // Render

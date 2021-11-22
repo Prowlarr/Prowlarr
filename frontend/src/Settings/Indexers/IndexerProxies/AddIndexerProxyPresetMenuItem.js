@@ -17,7 +17,7 @@ class AddIndexerProxyPresetMenuItem extends Component {
       name,
       implementation
     });
-  }
+  };
 
   //
   // Render

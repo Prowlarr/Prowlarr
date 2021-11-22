@@ -36,7 +36,7 @@ export const defaultState = {
   secondarySortDirection: sortDirections.ASCENDING,
 
   defaults: {
-    searchType: 'basic',
+    searchType: 'search',
     searchQuery: '',
     searchIndexerIds: [],
     searchCategories: []

@@ -80,6 +80,9 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // RSS
         [TestCase(@"<atom:link href = ""https://api.nzb.su/api?t=search&amp;extended=1&amp;cat=3030&apikey=mySecret&amp;q=Diggers"" rel=""self"" type=""application/rss+xml"" />")]
 
+        // Internal
+        [TestCase(@"[Info] MigrationController: *** Migrating Database=prowlarr-main;Host=postgres14;Username=mySecret;Password=mySecret;Port=5432;Enlist=False ***")]
+
         public void should_clean_message(string message)
         {
             var cleansedMessage = CleanseLogMessage.Cleanse(message);

@@ -439,5 +439,11 @@
     "IndexerVipCheckExpiringClientMessage": "Az Indexer VIP előnyei hamarosan lejárnak: {0}",
     "IndexerProxy": "Indexelő Proxy",
     "NoLinks": "Nincsenek Linkek",
-    "Notification": "Értesítés"
+    "Notification": "Értesítés",
+    "BookSearch": "Könyv kereső",
+    "TvSearch": "TV keresés",
+    "AudioSearch": "Hang keresés",
+    "MovieSearch": "Film Kereső",
+    "QueryOptions": "Lekérdezési beállítások",
+    "SearchType": "Keresés típusa"
 }

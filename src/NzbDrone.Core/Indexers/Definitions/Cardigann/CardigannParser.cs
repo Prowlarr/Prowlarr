@@ -385,6 +385,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         value = release.DownloadUrl;
                     }
 
+                    release.Guid = value;
+
                     break;
                 case "magnet":
                     var magnetUri = value;
@@ -397,7 +399,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 case "details":
                     var url = ResolvePath(value, searchUrlUri)?.AbsoluteUri;
                     release.InfoUrl = url;
-                    release.Guid = url;
                     value = url.ToString();
                     break;
                 case "comments":

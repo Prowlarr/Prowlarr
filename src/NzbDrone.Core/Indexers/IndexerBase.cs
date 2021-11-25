@@ -105,10 +105,27 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
         {
-            var result = releases.DistinctBy(v => v.Guid).ToList();
+            var result = releases.ToList();
 
             result.ForEach(c =>
             {
+                //Set GUID if not set
+                if (c.Guid.IsNullOrWhiteSpace())
+                {
+                    if (c.DownloadUrl.IsNotNullOrWhiteSpace())
+                    {
+                        c.Guid = c.DownloadUrl;
+                    }
+                    else if (Protocol == DownloadProtocol.Torrent && ((TorrentInfo)c).MagnetUrl.IsNotNullOrWhiteSpace())
+                    {
+                        c.Guid = ((TorrentInfo)c).MagnetUrl;
+                    }
+                    else if (c.InfoUrl.IsNotNullOrWhiteSpace())
+                    {
+                        c.Guid = c.InfoUrl;
+                    }
+                }
+
                 //Set common props
                 c.IndexerId = Definition.Id;
                 c.Indexer = Definition.Name;
@@ -122,7 +139,7 @@ namespace NzbDrone.Core.Indexers
                 }
             });
 
-            return result;
+            return result.DistinctBy(v => v.Guid).ToList();
         }
 
         protected TSettings GetDefaultBaseUrl(TSettings settings)

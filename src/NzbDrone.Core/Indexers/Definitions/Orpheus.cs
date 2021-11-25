@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             // Orpheus fails to download if usetoken=0 so we need to only add if we will use one
             if (_settings.UseFreeleechToken)
             {
-                url = url.AddQueryParam("useToken", "1");
+                url = url.AddQueryParam("usetoken", "1");
             }
 
             return url.FullUri;

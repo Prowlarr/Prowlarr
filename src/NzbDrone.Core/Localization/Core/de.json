@@ -425,5 +425,9 @@
     "IndexerProxyStatusCheckAllClientMessage": "Alle Indexer sind aufgrund von Fehlern nicht verfügbar",
     "IndexerProxyStatusCheckSingleClientMessage": "Listen aufgrund von Fehlern nicht verfügbar: {0}",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Der neue Indexer konnte nicht hinzugefügt werden, bitte erneut probieren.",
-    "DeleteIndexerProxyMessageText": "Tag '{0}' wirklich löschen?"
+    "DeleteIndexerProxyMessageText": "Tag '{0}' wirklich löschen?",
+    "AudioSearch": "Audio Suche",
+    "AddIndexerProxy": "Indexer Proxy hinzufügen",
+    "AppSettingsSummary": "Anwendungen und Einstellungen um zu konfigurieren, wie Prowlarr mit deinen PVR Programmen interagiert",
+    "DeleteIndexerProxy": "Indexer Proxy löschen"
 }

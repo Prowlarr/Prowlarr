@@ -166,6 +166,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var login = _definition.Login;
 
+            var defEncoding = Encoding.GetEncoding(_definition.Encoding);
+
             if (login.Method == "post")
             {
                 var pairs = new Dictionary<string, string>();
@@ -195,7 +197,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                var request = requestBuilder.Build();
+                request.Encoding = defEncoding;
+
+                var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                 Cookies = response.GetCookies();
 
@@ -411,6 +416,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     var request = requestBuilder.Build();
                     request.SetContent(body);
+                    request.Encoding = defEncoding;
 
                     loginResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
                 }
@@ -432,7 +438,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    loginResult = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                    var request = requestBuilder.Build();
+                    request.Encoding = defEncoding;
+
+                    loginResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
                 }
 
                 Cookies = loginResult.GetCookies();
@@ -466,8 +475,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 };
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
+                var request = requestBuilder.Build();
+                request.Encoding = defEncoding;
 
-                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                 Cookies = response.GetCookies();
 
@@ -491,7 +502,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
-                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                var request = requestBuilder.Build();
+                request.Encoding = defEncoding;
+
+                var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                 Cookies = response.GetCookies();
 

@@ -19,7 +19,6 @@ namespace NzbDrone.Host
         private readonly IBrowserService _browserService;
         private readonly IProcessProvider _processProvider;
         private readonly IEventAggregator _eventAggregator;
-        private readonly IUtilityModeRouter _utilityModeRouter;
         private readonly Logger _logger;
 
         public AppLifetime(IHostApplicationLifetime appLifetime,
@@ -29,7 +28,6 @@ namespace NzbDrone.Host
             IBrowserService browserService,
             IProcessProvider processProvider,
             IEventAggregator eventAggregator,
-            IUtilityModeRouter utilityModeRouter,
             Logger logger)
         {
             _appLifetime = appLifetime;
@@ -39,7 +37,6 @@ namespace NzbDrone.Host
             _browserService = browserService;
             _processProvider = processProvider;
             _eventAggregator = eventAggregator;
-            _utilityModeRouter = utilityModeRouter;
             _logger = logger;
 
             appLifetime.ApplicationStarted.Register(OnAppStarted);

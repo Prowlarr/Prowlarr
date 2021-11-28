@@ -187,6 +187,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     Method = HttpMethod.POST,
                     AllowAutoRedirect = true,
                     SuppressHttpError = true,
+                    Encoding = _encoding
                 };
 
                 foreach (var pair in pairs)
@@ -328,7 +329,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var requestBuilder = new HttpRequestBuilder(captchaUrl.ToString())
                     {
                         LogResponseContent = true,
-                        Method = HttpMethod.GET
+                        Method = HttpMethod.GET,
+                        Encoding = _encoding
                     };
 
                     requestBuilder.Headers.Add("Referer", loginUrl);
@@ -393,7 +395,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     {
                         LogResponseContent = true,
                         Method = HttpMethod.POST,
-                        AllowAutoRedirect = true
+                        AllowAutoRedirect = true,
+                        Encoding = _encoding
                     };
 
                     requestBuilder.Headers.Add("Referer", SiteLink);
@@ -422,7 +425,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         LogResponseContent = true,
                         Method = HttpMethod.POST,
                         AllowAutoRedirect = true,
-                        SuppressHttpError = true
+                        SuppressHttpError = true,
+                        Encoding = _encoding
                     };
 
                     requestBuilder.SetCookies(Cookies);
@@ -463,7 +467,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     LogResponseContent = true,
                     Method = HttpMethod.GET,
-                    SuppressHttpError = true
+                    SuppressHttpError = true,
+                    Encoding = _encoding
                 };
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
@@ -487,7 +492,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     LogResponseContent = true,
                     Method = HttpMethod.GET,
-                    SuppressHttpError = true
+                    SuppressHttpError = true,
+                    Encoding = _encoding
                 };
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
@@ -559,7 +565,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var requestBuilder = new HttpRequestBuilder(loginUrl.AbsoluteUri)
             {
                 LogResponseContent = true,
-                Method = HttpMethod.GET
+                Method = HttpMethod.GET,
+                Encoding = _encoding
             };
 
             requestBuilder.Headers.Add("Referer", SiteLink);
@@ -613,6 +620,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var request = new HttpRequestBuilder(captchaUrl.ToString())
                         .SetCookies(landingResult.GetCookies())
                         .SetHeader("Referer", loginUrl.AbsoluteUri)
+                        .SetEncoding(_encoding)
                         .Build();
 
                     var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
@@ -693,6 +701,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var httpRequest = new HttpRequestBuilder(requestLinkStr)
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetEncoding(_encoding)
                 .SetHeader("Referer", referer);
 
             httpRequest.Method = method;
@@ -731,6 +740,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var request = new HttpRequestBuilder(link.ToString())
                     .SetCookies(Cookies ?? new Dictionary<string, string>())
                     .SetHeaders(headers ?? new Dictionary<string, string>())
+                    .SetEncoding(_encoding)
                     .Build();
 
                 request.AllowAutoRedirect = true;
@@ -779,6 +789,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         var hashDownloadRequest = new HttpRequestBuilder(torrentLink.AbsoluteUri)
                             .SetCookies(Cookies ?? new Dictionary<string, string>())
                             .SetHeaders(headers ?? new Dictionary<string, string>())
+                            .SetEncoding(_encoding)
                             .Build();
 
                         hashDownloadRequest.Method = method;
@@ -819,6 +830,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                 var testLinkRequest = new HttpRequestBuilder(torrentLink.ToString())
                                     .SetCookies(Cookies ?? new Dictionary<string, string>())
                                     .SetHeaders(headers ?? new Dictionary<string, string>())
+                                    .SetEncoding(_encoding)
                                     .Build();
 
                                 response = await HttpClient.ExecuteProxiedAsync(testLinkRequest, Definition);
@@ -837,6 +849,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             var selectorDownloadRequest = new HttpRequestBuilder(link.AbsoluteUri)
                                 .SetCookies(Cookies ?? new Dictionary<string, string>())
                                 .SetHeaders(headers ?? new Dictionary<string, string>())
+                                .SetEncoding(_encoding)
                                 .Build();
 
                             selectorDownloadRequest.Method = method;
@@ -856,6 +869,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var downloadRequest = new HttpRequestBuilder(link.AbsoluteUri)
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
                 .SetHeaders(headers ?? new Dictionary<string, string>())
+                .SetEncoding(_encoding)
                 .Build();
 
             downloadRequest.Method = method;
@@ -1080,9 +1094,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     requestbuilder.SetHeaders(headers ?? new Dictionary<string, string>());
                 }
 
-                var request = new CardigannRequest(requestbuilder.Build(), variables, searchPath);
-
-                request.HttpRequest.Encoding = Encoding.GetEncoding(_definition.Encoding);
+                var request = new CardigannRequest(requestbuilder.SetEncoding(_encoding).Build(), variables, searchPath);
 
                 yield return request;
             }

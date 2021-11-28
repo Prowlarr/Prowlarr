@@ -14,6 +14,7 @@ namespace NzbDrone.Common.Http
         public HttpAccept HttpAccept { get; set; }
         public HttpUri BaseUrl { get; private set; }
         public string ResourceUrl { get; set; }
+        public Encoding Encoding { get; set; }
         public List<KeyValuePair<string, string>> QueryParams { get; private set; }
         public List<KeyValuePair<string, string>> SuffixQueryParams { get; private set; }
         public Dictionary<string, string> Segments { get; private set; }
@@ -37,6 +38,7 @@ namespace NzbDrone.Common.Http
             BaseUrl = new HttpUri(baseUrl);
             ResourceUrl = string.Empty;
             Method = HttpMethod.GET;
+            Encoding = Encoding.UTF8;
             QueryParams = new List<KeyValuePair<string, string>>();
             SuffixQueryParams = new List<KeyValuePair<string, string>>();
             Segments = new Dictionary<string, string>();
@@ -101,6 +103,7 @@ namespace NzbDrone.Common.Http
         protected virtual void Apply(HttpRequest request)
         {
             request.Method = Method;
+            request.Encoding = Encoding;
             request.SuppressHttpError = SuppressHttpError;
             request.UseSimplifiedUserAgent = UseSimplifiedUserAgent;
             request.AllowAutoRedirect = AllowAutoRedirect;
@@ -297,6 +300,13 @@ namespace NzbDrone.Common.Http
             {
                 Headers.Set(header.Key, header.Value);
             }
+
+            return this;
+        }
+
+        public virtual HttpRequestBuilder SetEncoding(Encoding encoding)
+        {
+            Encoding = encoding;
 
             return this;
         }

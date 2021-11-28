@@ -17,7 +17,7 @@
     <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="TinyTwitter" Version="1.1.2" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.1.1" />
-    <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.115.5-12" />
+    <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.115.5-18" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
     <PackageReference Include="MonoTorrent" Version="1.0.29" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />

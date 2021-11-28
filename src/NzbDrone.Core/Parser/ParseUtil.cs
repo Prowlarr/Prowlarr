@@ -20,17 +20,19 @@ namespace NzbDrone.Core.Parser
 
         public static string NormalizeNumber(string s)
         {
-            s = (s.Length == 0) ? "0" : s.Replace(",", ".");
+            var valStr = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
 
-            s = NormalizeSpace(s).Replace("-", "0");
+            valStr = (valStr.Length == 0) ? "0" : valStr.Replace(",", ".");
 
-            if (s.Count(c => c == '.') > 1)
+            valStr = NormalizeSpace(valStr).Replace("-", "0");
+
+            if (valStr.Count(c => c == '.') > 1)
             {
-                var lastOcc = s.LastIndexOf('.');
-                s = s.Substring(0, lastOcc).Replace(".", string.Empty) + s.Substring(lastOcc);
+                var lastOcc = valStr.LastIndexOf('.');
+                valStr = valStr.Substring(0, lastOcc).Replace(".", string.Empty) + valStr.Substring(lastOcc);
             }
 
-            return s;
+            return valStr;
         }
 
         public static string RemoveInvalidXmlChars(string text) => string.IsNullOrEmpty(text) ? "" : InvalidXmlChars.Replace(text, "");
@@ -113,9 +115,8 @@ namespace NzbDrone.Core.Parser
 
         public static long GetBytes(string str)
         {
-            var valStr = new string(str.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
             var unit = new string(str.Where(char.IsLetter).ToArray());
-            var val = CoerceFloat(valStr);
+            var val = CoerceFloat(str);
             return GetBytes(unit, val);
         }
 

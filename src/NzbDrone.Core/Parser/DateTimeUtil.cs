@@ -121,7 +121,7 @@ namespace NzbDrone.Core.Parser
         {
             try
             {
-                str = ParseUtil.NormalizeSpace(str);
+                str = str.Trim();
                 if (str.ToLower().Contains("now"))
                 {
                     return DateTime.UtcNow;
@@ -254,7 +254,7 @@ namespace NzbDrone.Core.Parser
         // converts a date/time string to a DateTime object using a GoLang layout
         public static DateTime ParseDateTimeGoLang(string date, string layout)
         {
-            date = ParseUtil.NormalizeSpace(date);
+            date = date.Trim();
             var pattern = layout;
 
             // year

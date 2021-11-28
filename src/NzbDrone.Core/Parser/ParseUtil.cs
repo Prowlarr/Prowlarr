@@ -13,18 +13,16 @@ namespace NzbDrone.Core.Parser
                 RegexOptions.Compiled);
         private static readonly Regex ImdbId = new Regex(@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
 
-        public static string NormalizeSpace(string s) => s.Trim();
-
         public static string NormalizeMultiSpaces(string s) =>
-            new Regex(@"\s+").Replace(NormalizeSpace(s), " ");
+            new Regex(@"\s+").Replace(s.Trim(), " ");
 
-        public static string NormalizeNumber(string s)
+        private static string NormalizeNumber(string s)
         {
             var valStr = new string(s.Where(c => char.IsDigit(c) || c == '.' || c == ',').ToArray());
 
             valStr = (valStr.Length == 0) ? "0" : valStr.Replace(",", ".");
 
-            valStr = NormalizeSpace(valStr).Replace("-", "0");
+            valStr = valStr.Trim().Replace("-", "0");
 
             if (valStr.Count(c => c == '.') > 1)
             {
@@ -120,7 +118,7 @@ namespace NzbDrone.Core.Parser
             return GetBytes(unit, val);
         }
 
-        public static long GetBytes(string unit, float value)
+        private static long GetBytes(string unit, float value)
         {
             unit = unit.Replace("i", "").ToLowerInvariant();
             if (unit.Contains("kb"))
@@ -146,12 +144,12 @@ namespace NzbDrone.Core.Parser
             return (long)value;
         }
 
-        public static long BytesFromTB(float tb) => BytesFromGB(tb * 1024f);
+        private static long BytesFromTB(float tb) => BytesFromGB(tb * 1024f);
 
-        public static long BytesFromGB(float gb) => BytesFromMB(gb * 1024f);
+        private static long BytesFromGB(float gb) => BytesFromMB(gb * 1024f);
 
-        public static long BytesFromMB(float mb) => BytesFromKB(mb * 1024f);
+        private static long BytesFromMB(float mb) => BytesFromKB(mb * 1024f);
 
-        public static long BytesFromKB(float kb) => (long)(kb * 1024f);
+        private static long BytesFromKB(float kb) => (long)(kb * 1024f);
     }
 }

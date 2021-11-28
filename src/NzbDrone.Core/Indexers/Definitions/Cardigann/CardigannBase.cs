@@ -220,7 +220,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 value = selection.TextContent;
             }
 
-            return ApplyFilters(ParseUtil.NormalizeSpace(value), selector.Filters, variables);
+            return ApplyFilters(value.Trim(), selector.Filters, variables);
         }
 
         protected string HandleJsonSelector(SelectorBlock selector, JToken parentObj, Dictionary<string, object> variables = null, bool required = true)
@@ -271,7 +271,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
             }
 
-            return ApplyFilters(ParseUtil.NormalizeSpace(value), selector.Filters, variables);
+            return ApplyFilters(value.Trim(), selector.Filters, variables);
         }
 
         protected Dictionary<string, object> GetBaseTemplateVariables()

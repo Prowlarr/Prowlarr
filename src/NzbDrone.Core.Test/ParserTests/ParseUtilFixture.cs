@@ -20,5 +20,19 @@ namespace NzbDrone.Core.Test.ParserTests
         {
             ParseUtil.GetBytes(stringSize).Should().Be(size);
         }
+
+        [TestCase(" some  string ", "some string")]
+        public void should_normalize_multiple_spaces(string original, string newString)
+        {
+            ParseUtil.NormalizeMultiSpaces(original).Should().Be(newString);
+        }
+
+        [TestCase("1", 1)]
+        [TestCase("11", 11)]
+        [TestCase("1000 grabs", 1000)]
+        public void should_parse_int_from_string(string original, int parsedInt)
+        {
+            ParseUtil.CoerceInt(original).Should().Be(parsedInt);
+        }
     }
 }

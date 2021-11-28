@@ -59,6 +59,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.ImdbId = request.imdbid;
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
+            searchSpec.Year = request.year;
 
             return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }

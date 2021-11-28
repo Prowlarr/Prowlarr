@@ -9,6 +9,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string ImdbId { get; set; }
         public int? TmdbId { get; set; }
         public int? TraktId { get; set; }
+        public int? Year { get; set; }
 
         public override bool RssSearch
         {
@@ -46,6 +47,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
                 if (ImdbId.IsNotNullOrWhiteSpace())
                 {
                     builder = builder.Append($" IMDbId:[{ImdbId}]");
+                }
+
+                if (Year.HasValue)
+                {
+                    builder = builder.Append($" Year:[{Year}]");
                 }
 
                 if (TmdbId.HasValue)

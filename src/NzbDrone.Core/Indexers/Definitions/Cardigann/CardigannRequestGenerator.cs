@@ -46,11 +46,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var variables = GetQueryVariableDefaults(searchCriteria);
 
             variables[".Query.Movie"] = null;
-            variables[".Query.Year"] = null;
+            variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
             variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
-            variables[".Query.TMDBID"] = searchCriteria.TmdbId;
-            variables[".Query.TraktID"] = searchCriteria.TraktId;
+            variables[".Query.TMDBID"] = searchCriteria.TmdbId?.ToString() ?? null;
+            variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -81,13 +81,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             variables[".Query.Series"] = null;
             variables[".Query.Ep"] = searchCriteria.Episode;
-            variables[".Query.Season"] = searchCriteria.Season;
+            variables[".Query.Season"] = searchCriteria.Season?.ToString() ?? null;
             variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
             variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
-            variables[".Query.TVDBID"] = searchCriteria.TvdbId;
-            variables[".Query.TVRageID"] = searchCriteria.RId;
-            variables[".Query.TVMazeID"] = searchCriteria.TvMazeId;
-            variables[".Query.TraktID"] = searchCriteria.TraktId;
+            variables[".Query.TVDBID"] = searchCriteria.TvdbId?.ToString() ?? null;
+            variables[".Query.TVRageID"] = searchCriteria.RId?.ToString() ?? null;
+            variables[".Query.TVMazeID"] = searchCriteria.TvMazeId?.ToString() ?? null;
+            variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
             pageableRequests.Add(GetRequest(variables));
@@ -127,8 +127,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Type"] = searchCriteria.SearchType;
             variables[".Query.Q"] = searchCriteria.SearchTerm;
             variables[".Query.Categories"] = searchCriteria.Categories;
-            variables[".Query.Limit"] = searchCriteria.Limit;
-            variables[".Query.Offset"] = searchCriteria.Offset;
+            variables[".Query.Limit"] = searchCriteria.Limit?.ToString() ?? null;
+            variables[".Query.Offset"] = searchCriteria.Offset?.ToString() ?? null;
             variables[".Query.Extended"] = null;
             variables[".Query.APIKey"] = null;
 

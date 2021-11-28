@@ -12,6 +12,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.ThingiProvider;
@@ -288,7 +289,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception(string.Format("Error while parsing selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
+                            throw new CardigannException(string.Format("Error while parsing selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
                         }
                     }
                 }
@@ -306,7 +307,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception(string.Format("Error while parsing get selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
+                            throw new CardigannException(string.Format("Error while parsing get selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
                         }
                     }
                 }
@@ -763,13 +764,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         var hash = MatchSelector(response, download.Infohash.Hash, variables);
                         if (hash == null)
                         {
-                            throw new Exception($"InfoHash selectors didn't match");
+                            throw new CardigannException($"InfoHash selectors didn't match");
                         }
 
                         var title = MatchSelector(response, download.Infohash.Title, variables);
                         if (title == null)
                         {
-                            throw new Exception($"InfoHash selectors didn't match");
+                            throw new CardigannException($"InfoHash selectors didn't match");
                         }
 
                         var magnet = MagnetLinkBuilder.BuildPublicMagnetLink(hash, title);
@@ -846,7 +847,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         {
                             _logger.Error("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", e, _definition.Id, queryselector);
 
-                            throw new Exception(string.Format("An exception occurred while trying selector {0}", queryselector));
+                            throw new CardigannException(string.Format("An exception occurred while trying selector {0}", queryselector));
                         }
                     }
                 }
@@ -888,7 +889,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 val = element.GetAttribute(selector.Attribute);
                 if (val == null)
                 {
-                    throw new Exception($"Attribute \"{selector.Attribute}\" is not set for element {element.ToHtmlPretty()}");
+                    throw new CardigannException($"Attribute \"{selector.Attribute}\" is not set for element {element.ToHtmlPretty()}");
                 }
             }
             else
@@ -909,7 +910,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     var errormessage = "Got redirected to another domain. Try changing the indexer URL to " + domainHint + ".";
 
-                    throw new Exception(errormessage);
+                    throw new CardigannException(errormessage);
                 }
 
                 return true;

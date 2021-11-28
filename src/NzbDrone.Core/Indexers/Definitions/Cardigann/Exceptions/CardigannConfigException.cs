@@ -1,9 +1,9 @@
 using NzbDrone.Common.Exceptions;
 using NzbDrone.Core.Indexers.Cardigann;
 
-namespace NzbDrone.Core.Indexers.Definitions.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions
 {
-    public class CardigannConfigException : NzbDroneException
+    public class CardigannConfigException : CardigannException
     {
         private readonly CardigannDefinition _configuration;
 

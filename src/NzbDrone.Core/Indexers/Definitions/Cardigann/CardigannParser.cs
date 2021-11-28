@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -67,7 +68,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var parsedJson = JToken.Parse(results);
                 if (parsedJson == null)
                 {
-                    throw new Exception("Error Parsing Json Response");
+                    throw new IndexerException(indexerResponse, "Error Parsing Json Response");
                 }
 
                 if (search.Rows.Count != null)
@@ -85,7 +86,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var rowsObj = parsedJson.SelectToken(search.Rows.Selector);
                 if (rowsObj == null)
                 {
-                    throw new Exception("Error Parsing Rows Selector");
+                    throw new IndexerException(indexerResponse, "Error Parsing Rows Selector");
                 }
 
                 foreach (var row in rowsObj.Value<JArray>())
@@ -140,7 +141,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                     continue;
                                 }
 
-                                throw new Exception(string.Format("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value ?? "<null>", ex.Message));
+                                throw new CardigannException(string.Format("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value ?? "<null>", ex.Message));
                             }
 
                             var filters = search.Rows.Filters;
@@ -327,7 +328,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                                 if (value == null && dateHeaders.Optional == false)
                                 {
-                                    throw new Exception(string.Format("No date header row found for {0}", release.ToString()));
+                                    throw new CardigannException(string.Format("No date header row found for {0}", release.ToString()));
                                 }
 
                                 if (value != null)

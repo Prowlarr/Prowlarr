@@ -2,16 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
+using AngleSharp.Xml.Parser;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions;
 using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.Cardigann
@@ -28,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected readonly List<CategoryMapping> _categoryMapping = new List<CategoryMapping>();
         protected readonly List<string> _defaultCategories = new List<string>();
 
-        protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "rageid", "tmdbid", "tvdbid", "poster", "banner", "description" };
+        protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "rageid", "tmdbid", "tvdbid", "poster", "banner", "description", "traktid", "genre", "year" };
 
         protected static readonly string[] _SupportedLogicFunctions =
         {
@@ -68,7 +73,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var cat = NewznabStandardCategory.GetCatByName(category.Value);
                     if (cat == null)
                     {
-                        _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value));
+                        _logger.Error(string.Format("CardigannIndexer ({0}): invalid Newznab/Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value));
                         continue;
                     }
 
@@ -551,7 +556,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
                     else
                     {
-                        throw new Exception(string.Format("Unexpceted type for variable {0}: {1}", condition, value.GetType()));
+                        throw new Exception(string.Format("Unexpected type for variable {0}: {1}", condition, value.GetType()));
                     }
 
                     if (conditionResultState)
@@ -831,6 +836,58 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected Uri ResolvePath(string path, Uri currentUrl = null)
         {
             return new Uri(currentUrl ?? new Uri(SiteLink), path);
+        }
+
+        protected bool CheckForError(HttpResponse response, IList<ErrorBlock> errorBlocks, string responseType)
+        {
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new HttpException(response);
+            }
+
+            if (errorBlocks == null)
+            {
+                return true;
+            }
+
+            responseType = responseType.ToLower();
+
+            dynamic resultParser;
+            dynamic resultDocument;
+
+            switch (responseType)
+            {
+                case "html":
+                    resultParser = new HtmlParser();
+                    resultDocument = resultParser.ParseDocument(response.Content);
+                    break;
+                case "xml":
+                    resultParser = new XmlParser();
+                    resultDocument = resultParser.ParseDocument(response.Content);
+                    break;
+                case "json":
+                    // Skip JSON checking for now
+                    return true;
+                default:
+                    throw new CardigannException($"Unexpected Response Type [{responseType}] while checking for error");
+            }
+
+            foreach (var error in errorBlocks)
+            {
+                var selection = resultDocument.QuerySelector(error.Selector);
+                if (selection != null)
+                {
+                    var errorMessage = selection.TextContent;
+                    if (error.Message != null)
+                    {
+                        errorMessage = HandleSelector(error.Message, resultDocument.FirstElementChild);
+                    }
+
+                    throw new CardigannConfigException(_definition, string.Format("Error: {0}", errorMessage.Trim()));
+                }
+            }
+
+            return true;
         }
 
         protected string ResolveSiteLink()

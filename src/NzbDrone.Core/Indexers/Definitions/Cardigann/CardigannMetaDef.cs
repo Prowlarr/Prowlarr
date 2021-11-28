@@ -16,5 +16,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public List<SettingsField> Settings { get; set; }
         public string Sha { get; set; }
         public LoginBlock Login { get; set; }
+        public string Protocol { get; set; }
+        public bool Allowdownloadredirect { get; set; }
     }
 }

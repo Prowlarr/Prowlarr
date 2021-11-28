@@ -119,9 +119,11 @@ namespace NzbDrone.Core.Indexers
                 "public" => IndexerPrivacy.Public,
                 _ => IndexerPrivacy.SemiPrivate
             };
+            definition.Protocol = defFile.Protocol == "usenet" ? DownloadProtocol.Usenet : DownloadProtocol.Torrent;
             definition.Capabilities = new IndexerCapabilities();
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
             definition.Capabilities.SupportsRawSearch = defFile.Caps.Allowrawsearch;
+            definition.SupportsRedirect = defFile.Allowdownloadredirect;
             MapCardigannCategories(definition, defFile);
         }
 
@@ -196,12 +198,10 @@ namespace NzbDrone.Core.Indexers
         {
             base.SetProviderCharacteristics(provider, definition);
 
-            definition.Protocol = provider.Protocol;
             definition.SupportsRss = provider.SupportsRss;
             definition.SupportsSearch = provider.SupportsSearch;
-            definition.SupportsRedirect = provider.SupportsRedirect;
 
-            //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
+            //We want to use the definition Caps, Protocol, Redirect, and Privacy for Cardigann instead of the provider. Protocol and Redirect are for Newznab.
             if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
             {
                 definition.IndexerUrls = provider.IndexerUrls;
@@ -210,6 +210,8 @@ namespace NzbDrone.Core.Indexers
                 definition.Encoding = provider.Encoding;
                 definition.Language = provider.Language;
                 definition.Capabilities = provider.Capabilities;
+                definition.Protocol = provider.Protocol;
+                definition.SupportsRedirect = provider.SupportsRedirect;
             }
         }
 

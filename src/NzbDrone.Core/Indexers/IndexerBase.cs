@@ -129,10 +129,10 @@ namespace NzbDrone.Core.Indexers
                 //Set common props
                 c.IndexerId = Definition.Id;
                 c.Indexer = Definition.Name;
-                c.DownloadProtocol = Protocol;
+                c.DownloadProtocol = Protocol != DownloadProtocol.Unknown ? Protocol : ((IndexerDefinition)Definition).Protocol;
                 c.IndexerPriority = ((IndexerDefinition)Definition).Priority;
 
-                if (Protocol == DownloadProtocol.Torrent)
+                if (c.DownloadProtocol == DownloadProtocol.Torrent)
                 {
                     //Add common flags
                     if (((TorrentInfo)c).DownloadVolumeFactor == 0)

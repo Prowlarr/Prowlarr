@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
+using MonoTorrent;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
@@ -17,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Cardigann
 {
-    public class Cardigann : TorrentIndexerBase<CardigannSettings>
+    public class Cardigann : HttpIndexerBase<CardigannSettings>
     {
         private readonly IIndexerDefinitionUpdateService _definitionService;
         private readonly ICached<CardigannRequestGenerator> _generatorCache;
@@ -25,12 +26,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public override string Name => "Cardigann";
         public override string[] IndexerUrls => new string[] { "" };
         public override string Description => "";
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override bool SupportsRedirect => false;
+        public override DownloadProtocol Protocol => DownloadProtocol.Unknown;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
-        // thinking its a partial page and insteaad all search_path requests are run for each indexer
+        // thinking its a partial page and instead all search_path requests are run for each indexer
         public override int PageSize => 1;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -127,7 +128,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Implementation = GetType().Name,
                 IndexerUrls = definition.Links.ToArray(),
                 Settings = new CardigannSettings { DefinitionFile = definition.File },
-                Protocol = DownloadProtocol.Torrent,
+                Protocol = definition.Protocol == "usenet" ? DownloadProtocol.Usenet : DownloadProtocol.Torrent,
                 Privacy = definition.Type switch
                 {
                     "private" => IndexerPrivacy.Private,
@@ -136,7 +137,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 },
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
-                SupportsRedirect = SupportsRedirect,
+                SupportsRedirect = definition.Allowdownloadredirect,
                 Capabilities = new IndexerCapabilities(),
                 ExtraFields = settings
             };
@@ -164,6 +165,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
             await generator.DoLogin();
         }
 
+        protected void ValidateMagnet(string link)
+        {
+            MagnetLink.Parse(link);
+        }
+
         public override async Task<byte[]> Download(Uri link)
         {
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
@@ -189,8 +195,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 if (ex.Response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", request.Url.FullUri);
-                    throw new ReleaseUnavailableException("Downloading torrent failed", ex);
+                    _logger.Error(ex, "Downloading torrent or nzb file for release failed since it no longer exists ({0})", request.Url.FullUri);
+                    throw new ReleaseUnavailableException("Downloading torrent or nzb failed", ex);
                 }
 
                 if ((int)ex.Response.StatusCode == 429)
@@ -199,21 +205,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else
                 {
-                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
+                    _logger.Error(ex, "Downloading torrent or nzb file for release failed ({0})", request.Url.FullUri);
                 }
 
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
+                throw new ReleaseDownloadException("Downloading torrent or nzb failed", ex);
             }
             catch (WebException ex)
             {
-                _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
+                _logger.Error(ex, "Downloading torrent or nzb file for release failed ({0})", request.Url.FullUri);
 
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
+                throw new ReleaseDownloadException("Downloading torrent or nzb failed", ex);
             }
             catch (Exception)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Downloading torrent failed");
+                _logger.Error("Downloading torrent or nzb failed");
                 throw;
             }
 

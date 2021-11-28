@@ -40,6 +40,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public List<string> Legacylinks { get; set; }
         public bool Followredirect { get; set; } = false;
         public bool TestLinkTorrent { get; set; } = true;
+        public string Protocol { get; set; }
+        public bool Allowdownloadredirect { get; set; }
         public List<string> Certificates { get; set; }
         public CapabilitiesBlock Caps { get; set; }
         public LoginBlock Login { get; set; }
@@ -136,6 +138,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
     public class SearchBlock
     {
         public string Path { get; set; }
+        public bool Ignoreblankinputs { get; set; }
         public List<SearchPathBlock> Paths { get; set; }
         public Dictionary<string, List<string>> Headers { get; set; }
         public List<FilterBlock> Keywordsfilters { get; set; }
@@ -173,6 +176,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
     {
         public List<SelectorField> Selectors { get; set; }
         public string Method { get; set; }
+        public List<ErrorBlock> Error { get; set; }
         public BeforeBlock Before { get; set; }
         public InfohashBlock Infohash { get; set; }
     }

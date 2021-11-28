@@ -53,6 +53,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
             variables[".Query.TMDBID"] = searchCriteria.TmdbId?.ToString() ?? null;
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
+            variables[".Query.Genre"] = searchCriteria.Genre;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -71,6 +72,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Artist"] = searchCriteria.Artist;
             variables[".Query.Label"] = searchCriteria.Label;
             variables[".Query.Track"] = null;
+            variables[".Query.Genre"] = searchCriteria.Genre;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -94,6 +96,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TVRageID"] = searchCriteria.RId?.ToString() ?? null;
             variables[".Query.TVMazeID"] = searchCriteria.TvMazeId?.ToString() ?? null;
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
+            variables[".Query.TMDBID"] = searchCriteria.TmdbId;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
             pageableRequests.Add(GetRequest(variables));
@@ -148,6 +151,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.IMDBID"] = null;
             variables[".Query.IMDBIDShort"] = null;
             variables[".Query.TMDBID"] = null;
+            variables[".Query.TraktId"] = null;
+            variables[".Query.Genre"] = null;
 
             //Tv
             variables[".Query.Series"] = null;
@@ -156,7 +161,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TVDBID"] = null;
             variables[".Query.TVRageID"] = null;
             variables[".Query.TVMazeID"] = null;
-            variables[".Query.TraktID"] = null;
             variables[".Query.Episode"] = null;
 
             //Music
@@ -210,7 +214,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 Cookies = response.GetCookies();
 
-                CheckForError(response, login.Error);
+                CheckForError(response, login.Error, "html");
 
                 CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
             }
@@ -450,7 +454,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 Cookies = loginResult.GetCookies();
-                CheckForError(loginResult, login.Error);
+                CheckForError(loginResult, login.Error, "html");
                 CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
             }
             else if (login.Method == "cookie")
@@ -486,7 +490,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 Cookies = response.GetCookies();
 
-                CheckForError(response, login.Error);
+                CheckForError(response, login.Error, "html");
 
                 CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
             }
@@ -511,7 +515,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 Cookies = response.GetCookies();
 
-                CheckForError(response, login.Error);
+                CheckForError(response, login.Error, "html");
 
                 CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
             }
@@ -519,38 +523,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 throw new NotImplementedException("Login method " + login.Method + " not implemented");
             }
-        }
-
-        protected bool CheckForError(HttpResponse loginResult, IList<ErrorBlock> errorBlocks)
-        {
-            if (loginResult.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new HttpException(loginResult);
-            }
-
-            if (errorBlocks == null)
-            {
-                return true;
-            }
-
-            var resultParser = new HtmlParser();
-            var resultDocument = resultParser.ParseDocument(loginResult.Content);
-            foreach (var error in errorBlocks)
-            {
-                var selection = resultDocument.QuerySelector(error.Selector);
-                if (selection != null)
-                {
-                    var errorMessage = selection.TextContent;
-                    if (error.Message != null)
-                    {
-                        errorMessage = HandleSelector(error.Message, resultDocument.FirstElementChild);
-                    }
-
-                    throw new CardigannConfigException(_definition, string.Format("Error: {0}", errorMessage.Trim()));
-                }
-            }
-
-            return true;
         }
 
         public async Task<Captcha> GetConfigurationForSetup(bool automaticlogin)
@@ -1070,7 +1042,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             }
                             else
                             {
-                                queryCollection.Add(input.Key, ApplyGoTemplateText(input.Value, variables));
+                                var inputText = ApplyGoTemplateText(input.Value, variables);
+
+                                // Prop Ignoreblankinputs determines if empty inputs are passed during search request
+                                if (!string.IsNullOrWhiteSpace(inputText) || !_definition.Search.Ignoreblankinputs)
+                                {
+                                    queryCollection.Add(input.Key, inputText);
+                                }
                             }
                         }
                     }

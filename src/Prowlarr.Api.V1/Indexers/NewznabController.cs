@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
-using NzbDrone.Core.History;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
@@ -156,7 +154,7 @@ namespace NzbDrone.Api.V1.Indexers
                         }
                     }
 
-                    return Content(results.ToXml(indexer.Protocol), "application/rss+xml");
+                    return Content(results.ToXml(indexerDef.Protocol), "application/rss+xml");
                 default:
                     return Content(CreateErrorXML(202, $"No such function ({requestType})"), "application/rss+xml");
             }
@@ -215,8 +213,8 @@ namespace NzbDrone.Api.V1.Indexers
                 return RedirectPermanent(magnetUrl);
             }
 
-            var contentType = indexer.Protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb";
-            var extension = indexer.Protocol == DownloadProtocol.Torrent ? "torrent" : "nzb";
+            var contentType = indexerDef.Protocol == DownloadProtocol.Torrent ? "application/x-bittorrent" : "application/x-nzb";
+            var extension = indexerDef.Protocol == DownloadProtocol.Torrent ? "torrent" : "nzb";
             var filename = $"{file}.{extension}";
 
             return File(downloadBytes, contentType, filename);

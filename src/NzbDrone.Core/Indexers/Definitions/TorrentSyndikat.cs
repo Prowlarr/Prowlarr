@@ -244,7 +244,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     UploadVolumeFactor = 1,
                     Guid = details,
                     InfoUrl = details,
-                    DownloadUrl = _settings.BaseUrl + "download.php?id=" + id,
+                    DownloadUrl = _settings.BaseUrl + "download.php?id=" + id + "&apikey=" + _settings.ApiKey,
                     Title = row.Value<string>("name"),
                     Categories = _categories.MapTrackerCatToNewznab(row.Value<int>("category").ToString()),
                     PublishDate = dateTime.AddSeconds(row.Value<long>("added")).ToLocalTime(),

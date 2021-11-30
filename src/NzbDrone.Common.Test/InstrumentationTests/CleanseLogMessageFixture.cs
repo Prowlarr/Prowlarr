@@ -26,16 +26,20 @@ namespace NzbDrone.Common.Test.InstrumentationTests
 
         //Indexer Responses
 
-          // avistaz response
+        // avistaz response
         [TestCase(@"""download"":""https:\/\/avistaz.to\/rss\/download\/2b51db35e1910123321025a12b9933d2\/tb51db35e1910123321025a12b9933d2.torrent"",")]
         [TestCase(@",""info_hash"":""2b51db35e1910123321025a12b9933d2"",")]
 
-          // danish bytes response
+        // danish bytes response
         [TestCase(@",""rsskey"":""2b51db35e1910123321025a12b9933d2"",")]
         [TestCase(@",""passkey"":""2b51db35e1910123321025a12b9933d2"",")]
 
-          // nzbgeek & usenet response
+        // nzbgeek & usenet response
         [TestCase(@"<guid isPermaLink=""true"">https://api.nzbgeek.info/api?t=details&amp;id=2b51db35e1910123321025a12b9933d2&amp;apikey=2b51db35e1910123321025a12b9933d2</guid>")]
+
+        // UNIT3D Response
+        [TestCase(@"""download_link"":""https://blutopia.xyz/torrent/download/114592.2b51db35e1910123321025a12b9933d2"",")]
+        [TestCase(@"""download_link"":""https://desitorrents.tv/torrent/download/114592.2b51db35e1910123321025a12b9933d2"",")]
 
         // NzbGet
         [TestCase(@"{ ""Name"" : ""ControlUsername"", ""Value"" : ""mySecret"" }, { ""Name"" : ""ControlPassword"", ""Value"" : ""mySecret"" }, ")]

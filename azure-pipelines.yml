@@ -163,7 +163,6 @@ stages:
           key: 'yarn | "$(osName)" | yarn.lock'
           restoreKeys: |
              yarn | "$(osName)"
-             yarn
           path: $(yarnCacheFolder)
         displayName: Cache Yarn packages
       - bash: ./build.sh --frontend
@@ -816,7 +815,6 @@ stages:
           key: 'yarn | "$(osName)" | yarn.lock'
           restoreKeys: |
              yarn | "$(osName)"
-             yarn
           path: $(yarnCacheFolder)
         displayName: Cache Yarn packages
       - bash: ./build.sh --lint

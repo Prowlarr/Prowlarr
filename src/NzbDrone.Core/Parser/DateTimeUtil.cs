@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Parser
                 return dateTimeParsed;
             }
 
-            throw new Exception("FromFuzzyTime parsing failed");
+            throw new Exception($"FromFuzzyTime parsing failed for string {str}");
         }
 
         public static DateTime FromUnknown(string str, string format = null)

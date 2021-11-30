@@ -149,7 +149,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
         {
             var failures = new List<ValidationFailure>();
 
-            var request = PreRequest(_cloudRequestBuilder.Create()
+            var request = GenerateFlareSolverrRequest(_cloudRequestBuilder.Create()
                                   .Resource("/ping")
                                   .Build());
 
@@ -157,12 +157,13 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             {
                 var response = _httpClient.Execute(request);
 
-                // We only care about 400 responses, other error codes can be ignored
-                if (response.StatusCode == HttpStatusCode.BadRequest)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     _logger.Error("Proxy Health Check failed: {0}", response.StatusCode);
                     failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckBadRequestMessage"), response.StatusCode)));
                 }
+
+                var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
             }
             catch (Exception ex)
             {

@@ -31,12 +31,6 @@ namespace NzbDrone.Core.IndexerProxies
         {
             var failures = new List<ValidationFailure>();
 
-            var addresses = Dns.GetHostAddresses(Settings.Host);
-            if (!addresses.Any())
-            {
-                failures.Add(new NzbDroneValidationFailure("Host", string.Format(_localizationService.GetLocalizedString("ProxyCheckResolveIpMessage"), addresses)));
-            }
-
             var request = PreRequest(_cloudRequestBuilder.Create()
                                               .Resource("/ping")
                                               .Build());
@@ -55,7 +49,7 @@ namespace NzbDrone.Core.IndexerProxies
             catch (Exception ex)
             {
                 _logger.Error(ex, "Proxy Health Check failed");
-                failures.Add(new NzbDroneValidationFailure("Host", string.Format("Failed to test proxy: {0}", request.Url)));
+                failures.Add(new NzbDroneValidationFailure("Host", string.Format("Failed to test proxy: {0}", ex.Message)));
             }
 
             return new ValidationResult(failures);

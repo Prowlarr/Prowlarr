@@ -90,7 +90,7 @@ namespace NzbDrone.Core.IndexerSearch
                             r.Categories == null ? null : from c in r.Categories select GetNabElement("category", c.Id, protocol),
                             r.IndexerFlags == null ? null : from f in r.IndexerFlags select GetNabElement("tag", f.Name, protocol),
                             GetNabElement("rageid", r.TvRageId, protocol),
-                            GetNabElement("thetvdb", r.TvdbId, protocol),
+                            GetNabElement("tvdbid", r.TvdbId, protocol),
                             GetNabElement("imdb", r.ImdbId.ToString("D7"), protocol),
                             GetNabElement("tmdb", r.TmdbId, protocol),
                             GetNabElement("seeders", t.Seeders, protocol),

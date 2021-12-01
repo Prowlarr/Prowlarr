@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -96,9 +95,12 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             releaseInfo = base.ProcessItem(item, releaseInfo);
-            releaseInfo.ImdbId = GetImdbId(item);
-            releaseInfo.Grabs = GetGrabs(item);
-            releaseInfo.Files = GetFiles(item);
+            releaseInfo.ImdbId = GetIntAttribute(item, "imdb");
+            releaseInfo.TmdbId = GetIntAttribute(item, "tmdb");
+            releaseInfo.TvdbId = GetIntAttribute(item, "tvdbid");
+            releaseInfo.TvRageId = GetIntAttribute(item, "rageid");
+            releaseInfo.Grabs = GetIntAttribute(item, "grabs");
+            releaseInfo.Files = GetIntAttribute(item, "files");
             releaseInfo.PosterUrl = GetPosterUrl(item);
 
             return releaseInfo;
@@ -195,27 +197,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             return url;
         }
 
-        protected virtual int GetImdbId(XElement item)
+        protected virtual int GetIntAttribute(XElement item, string attribute)
         {
-            var imdbIdString = TryGetNewznabAttribute(item, "imdb");
-            int imdbId;
+            var idString = TryGetNewznabAttribute(item, attribute);
+            int idInt;
 
-            if (!imdbIdString.IsNullOrWhiteSpace() && int.TryParse(imdbIdString, out imdbId))
+            if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
             {
-                return imdbId;
-            }
-
-            return 0;
-        }
-
-        protected virtual int GetGrabs(XElement item)
-        {
-            var grabsString = TryGetNewznabAttribute(item, "grabs");
-            int grabs;
-
-            if (!grabsString.IsNullOrWhiteSpace() && int.TryParse(grabsString, out grabs))
-            {
-                return grabs;
+                return idInt;
             }
 
             return 0;
@@ -224,19 +213,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         protected virtual string GetPosterUrl(XElement item)
         {
             return ParseUrl(TryGetNewznabAttribute(item, "coverurl"));
-        }
-
-        protected virtual int GetFiles(XElement item)
-        {
-            var filesString = TryGetNewznabAttribute(item, "files");
-            int files;
-
-            if (!filesString.IsNullOrWhiteSpace() && int.TryParse(filesString, out files))
-            {
-                return files;
-            }
-
-            return 0;
         }
 
         protected virtual int GetImdbYear(XElement item)

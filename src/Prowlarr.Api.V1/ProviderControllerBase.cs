@@ -102,9 +102,11 @@ namespace Prowlarr.Api.V1
         }
 
         [RestDeleteById]
-        public void DeleteProvider(int id)
+        public object DeleteProvider(int id)
         {
             _providerFactory.Delete(id);
+
+            return new { };
         }
 
         [HttpGet("schema")]

@@ -76,7 +76,7 @@ namespace Prowlarr.Api.V1.Indexers
         {
             _indexerService.DeleteIndexers(resource.IndexerIds);
 
-            return new object();
+            return new { };
         }
     }
 }

@@ -26,7 +26,9 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         public override HttpRequest PreRequest(HttpRequest request)
         {
-            //Try original request first, detect CF in post response
+            //Try original request first, ignore errors, detect CF in post response
+            request.SuppressHttpError = true;
+
             return request;
         }
 

@@ -18,7 +18,7 @@ namespace Prowlarr.Api.V1.Indexers
         [HttpGet]
         public IndexerStatsResource GetAll(DateTime? startDate, DateTime? endDate)
         {
-            var statsStartDate = startDate ?? DateTime.Now.AddDays(-30);
+            var statsStartDate = startDate ?? DateTime.MinValue;
             var statsEndDate = endDate ?? DateTime.Now;
 
             var indexerResource = new IndexerStatsResource

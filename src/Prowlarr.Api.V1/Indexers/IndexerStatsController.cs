@@ -21,11 +21,13 @@ namespace Prowlarr.Api.V1.Indexers
             var statsStartDate = startDate ?? DateTime.MinValue;
             var statsEndDate = endDate ?? DateTime.Now;
 
+            var indexerStats = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate);
+
             var indexerResource = new IndexerStatsResource
             {
-                Indexers = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate).IndexerStatistics,
-                UserAgents = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate).UserAgentStatistics,
-                Hosts = _indexerStatisticsService.IndexerStatistics(statsStartDate, statsEndDate).HostStatistics
+                Indexers = indexerStats.IndexerStatistics,
+                UserAgents = indexerStats.UserAgentStatistics,
+                Hosts = indexerStats.HostStatistics
             };
 
             return indexerResource;

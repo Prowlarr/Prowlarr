@@ -358,6 +358,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 releases = releases.Take(query.Limit).ToList();
             }*/
 
+            releases.ForEach(c =>
+            {
+                // generate magnet link from info hash (not allowed for private sites)
+                if (((TorrentInfo)c).MagnetUrl == null && !string.IsNullOrWhiteSpace(((TorrentInfo)c).InfoHash) && _definition.Type != "private")
+                {
+                    ((TorrentInfo)c).MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(((TorrentInfo)c).InfoHash, c.Title);
+                }
+
+                // generate info hash from magnet link
+                if (((TorrentInfo)c).MagnetUrl != null && string.IsNullOrWhiteSpace(((TorrentInfo)c).InfoHash))
+                {
+                    ((TorrentInfo)c).InfoHash = MagnetLinkBuilder.GetInfoHashFromMagnet(((TorrentInfo)c).MagnetUrl);
+                }
+            });
+
             _logger.Debug($"Got {releases.Count} releases");
 
             return releases;

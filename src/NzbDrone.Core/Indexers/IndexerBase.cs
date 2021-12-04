@@ -134,18 +134,6 @@ namespace NzbDrone.Core.Indexers
 
                 if (Protocol == DownloadProtocol.Torrent)
                 {
-                    // generate magnet link from info hash (not allowed for private sites)
-                    if (((TorrentInfo)c).MagnetUrl == null && !string.IsNullOrWhiteSpace(((TorrentInfo)c).InfoHash) && ((IndexerDefinition)Definition).Privacy != IndexerPrivacy.Private)
-                    {
-                        ((TorrentInfo)c).MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(((TorrentInfo)c).InfoHash, c.Title);
-                    }
-
-                    // generate info hash from magnet link
-                    if (((TorrentInfo)c).MagnetUrl != null && string.IsNullOrWhiteSpace(((TorrentInfo)c).InfoHash))
-                    {
-                        ((TorrentInfo)c).InfoHash = MagnetLinkBuilder.GetInfoHashFromMagnet(((TorrentInfo)c).MagnetUrl);
-                    }
-
                     //Add common flags
                     if (((TorrentInfo)c).DownloadVolumeFactor == 0)
                     {

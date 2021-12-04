@@ -97,7 +97,7 @@ namespace NzbDrone.Core.IndexerSearch
                             GetNabElement("files", r.Files, protocol),
                             GetNabElement("grabs", r.Grabs, protocol),
                             GetNabElement("peers", t.Peers, protocol),
-                            GetNabElement("infohash", RemoveInvalidXMLChars(r.Guid), protocol),
+                            GetNabElement("infohash", RemoveInvalidXMLChars(t.InfoHash), protocol),
                             GetNabElement("minimumratio", t.MinimumRatio, protocol),
                             GetNabElement("minimumseedtime", t.MinimumSeedTime, protocol),
                             GetNabElement("downloadvolumefactor", t.DownloadVolumeFactor, protocol),

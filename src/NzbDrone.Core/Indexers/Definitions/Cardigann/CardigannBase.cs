@@ -271,7 +271,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
             }
 
-            return ApplyFilters(value.Trim(), selector.Filters, variables);
+            return ApplyFilters(value?.Trim(), selector.Filters, variables) ?? null;
         }
 
         protected Dictionary<string, object> GetBaseTemplateVariables()

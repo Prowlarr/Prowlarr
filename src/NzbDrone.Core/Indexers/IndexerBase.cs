@@ -132,10 +132,25 @@ namespace NzbDrone.Core.Indexers
                 c.DownloadProtocol = Protocol;
                 c.IndexerPriority = ((IndexerDefinition)Definition).Priority;
 
-                //Add common flags
-                if (Protocol == DownloadProtocol.Torrent && ((TorrentInfo)c).DownloadVolumeFactor == 0)
+                if (Protocol == DownloadProtocol.Torrent)
                 {
-                    c.IndexerFlags.Add(IndexerFlag.FreeLeech);
+                    // generate magnet link from info hash (not allowed for private sites)
+                    if (((TorrentInfo)c).MagnetUrl == null && !string.IsNullOrWhiteSpace(((TorrentInfo)c).InfoHash) && ((IndexerDefinition)Definition).Privacy != IndexerPrivacy.Private)
+                    {
+                        ((TorrentInfo)c).MagnetUrl = MagnetLinkBuilder.BuildPublicMagnetLink(((TorrentInfo)c).InfoHash, c.Title);
+                    }
+
+                    // generate info hash from magnet link
+                    if (((TorrentInfo)c).MagnetUrl != null && string.IsNullOrWhiteSpace(((TorrentInfo)c).InfoHash))
+                    {
+                        ((TorrentInfo)c).InfoHash = MagnetLinkBuilder.GetInfoHashFromMagnet(((TorrentInfo)c).MagnetUrl);
+                    }
+
+                    //Add common flags
+                    if (((TorrentInfo)c).DownloadVolumeFactor == 0)
+                    {
+                        ((TorrentInfo)c).IndexerFlags.Add(IndexerFlag.FreeLeech);
+                    }
                 }
             });
 

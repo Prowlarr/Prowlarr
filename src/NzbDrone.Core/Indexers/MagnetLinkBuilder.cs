@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using MonoTorrent;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -32,6 +35,19 @@ namespace NzbDrone.Core.Indexers
         public static string BuildPublicMagnetLink(string infoHash, string releaseTitle)
         {
             return new MagnetLink(InfoHash.FromHex(infoHash), releaseTitle, _trackers).ToV1String();
+        }
+
+        public static string GetInfoHashFromMagnet(string magnet)
+        {
+            try
+            {
+                var xt = ParseUtil.GetArgumentFromQueryString(magnet.ToString(), "xt");
+                return xt.Split(':').Last(); // remove prefix urn:btih:
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

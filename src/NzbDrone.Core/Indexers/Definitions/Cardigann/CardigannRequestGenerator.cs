@@ -727,14 +727,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var method = HttpMethod.GET;
             var headers = new Dictionary<string, string>();
 
+            var variables = GetBaseTemplateVariables();
+            AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
+            headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+
             if (_definition.Download != null)
             {
                 var download = _definition.Download;
-                var variables = GetBaseTemplateVariables();
 
-                AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
-
-                headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
                 HttpResponse response = null;
 
                 var request = new HttpRequestBuilder(link.ToString())

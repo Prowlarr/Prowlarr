@@ -31,6 +31,10 @@ namespace NzbDrone.Core.Parser.Model
         public int TvRageId { get; set; }
         public int ImdbId { get; set; }
         public int TmdbId { get; set; }
+        public string Author { get; set; }
+        public string BookTitle { get; set; }
+        public string Artist { get; set; }
+        public string Album { get; set; }
         public DateTime PublishDate { get; set; }
 
         public string PosterUrl { get; set; }
@@ -93,6 +97,7 @@ namespace NzbDrone.Core.Parser.Model
                     stringBuilder.AppendLine("TvdbId: " + TvdbId ?? "Empty");
                     stringBuilder.AppendLine("TvRageId: " + TvRageId ?? "Empty");
                     stringBuilder.AppendLine("ImdbId: " + ImdbId ?? "Empty");
+                    stringBuilder.AppendLine("TmdbId: " + TmdbId ?? "Empty");
                     stringBuilder.AppendLine("PublishDate: " + PublishDate ?? "Empty");
                     return stringBuilder.ToString();
                 default:

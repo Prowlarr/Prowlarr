@@ -561,13 +561,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     value = release.PosterUrl;
                     break;
-
-                //case "author":
-                //    release.Author = value;
-                //    break;
-                //case "booktitle":
-                //    release.BookTitle = value;
-                //    break;
+                case "author":
+                    release.Author = value;
+                    break;
+                case "booktitle":
+                    release.BookTitle = value;
+                    break;
+                case "artist":
+                    release.Artist = value;
+                    break;
+                case "album":
+                    release.Album = value;
+                    break;
                 default:
                     break;
             }

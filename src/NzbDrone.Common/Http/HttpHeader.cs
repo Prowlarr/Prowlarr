@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -104,6 +104,18 @@ namespace NzbDrone.Common.Http
             set
             {
                 SetSingleValue("Content-Type", value);
+            }
+        }
+
+        public string UserAgent
+        {
+            get
+            {
+                return GetSingleValue("User-Agent");
+            }
+            set
+            {
+                SetSingleValue("User-Agent", value);
             }
         }
 

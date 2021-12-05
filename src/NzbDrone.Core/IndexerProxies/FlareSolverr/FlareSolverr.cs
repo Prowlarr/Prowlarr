@@ -5,7 +5,9 @@ using System.Net;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Cloud;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Localization;
@@ -16,10 +18,12 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
         private static readonly HashSet<string> CloudflareServerNames = new HashSet<string> { "cloudflare", "cloudflare-nginx" };
+        private readonly ICached<string> _cache;
 
-        public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService)
+        public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService, ICacheManager cacheManager)
             : base(cloudRequestBuilder, httpClient, logger, localizationService)
         {
+            _cache = cacheManager.GetCache<string>(typeof(string), "UserAgent");
         }
 
         public override string Name => "FlareSolverr";
@@ -28,6 +32,12 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
         {
             //Try original request first, ignore errors, detect CF in post response
             request.SuppressHttpError = true;
+
+            //Inject UA if not present
+            if (_cache.Find(request.Url.Host).IsNotNullOrWhiteSpace() && request.Headers.UserAgent.IsNullOrWhiteSpace())
+            {
+                request.Headers.UserAgent = _cache.Find(request.Url.Host);
+            }
 
             return request;
         }
@@ -51,18 +61,18 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
 
-            var cookieCollection = new CookieCollection();
-            var responseHeader = new HttpHeader();
+            var newRequest = response.Request;
 
-            foreach (var cookie in result.Solution.Cookies)
-            {
-                cookieCollection.Add(cookie.ToCookieObj());
-            }
+            //Cache the user-agent so we can inject it in next request to avoid re-solve
+            _cache.Set(response.Request.Url.Host, result.Solution.UserAgent);
+            newRequest.Headers.UserAgent = result.Solution.UserAgent;
 
-            //Build new response with FS Cookie and Site Response
-            var newResponse = new HttpResponse(response.Request, responseHeader, cookieCollection, result.Solution.Response);
+            InjectCookies(newRequest, result);
 
-            return newResponse;
+            //Request again with User-Agent and Cookies from Flaresolvrr
+            var finalResponse = _httpClient.Execute(newRequest);
+
+            return finalResponse;
         }
 
         private static bool IsCloudflareProtected(HttpResponse response)
@@ -77,6 +87,24 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             }
 
             return false;
+        }
+
+        private void InjectCookies(HttpRequest request, FlareSolverrResponse flareSolverrResponse)
+        {
+            var rCookies = flareSolverrResponse.Solution.Cookies;
+
+            if (!rCookies.Any())
+            {
+                return;
+            }
+
+            var rCookiesList = rCookies.Select(x => x.Name).ToList();
+
+            foreach (var rCookie in rCookies)
+            {
+                request.Cookies.Remove(rCookie.Name);
+                request.Cookies.Add(rCookie.Name, rCookie.Value);
+            }
         }
 
         private HttpRequest GenerateFlareSolverrRequest(HttpRequest request)

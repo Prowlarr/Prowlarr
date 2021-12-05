@@ -254,7 +254,8 @@ namespace NzbDrone.Common.Http.Dispatchers
                         webRequest.TransferEncoding = header.Value;
                         break;
                     case "User-Agent":
-                        throw new NotSupportedException("User-Agent other than Prowlarr not allowed.");
+                        webRequest.UserAgent = header.Value;
+                        break;
                     case "Proxy-Connection":
                         throw new NotImplementedException();
                     default:

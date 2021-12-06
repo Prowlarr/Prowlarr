@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         public List<LazyLibrarianIndexer> GetIndexers(LazyLibrarianSettings settings)
         {
-            var request = BuildRequest(settings, "/api", "listProviders", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api", "listNabProviders", HttpMethod.GET);
 
             var response = Execute<LazyLibrarianIndexerResponse>(request);
 

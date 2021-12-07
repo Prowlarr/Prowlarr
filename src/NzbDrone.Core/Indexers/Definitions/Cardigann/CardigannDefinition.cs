@@ -90,6 +90,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public string Method { get; set; }
         public string Form { get; set; }
         public bool Selectors { get; set; } = false;
+        public Dictionary<string, List<string>> Headers { get; set; }
         public Dictionary<string, string> Inputs { get; set; }
         public Dictionary<string, SelectorBlock> Selectorinputs { get; set; }
         public Dictionary<string, SelectorBlock> Getselectorinputs { get; set; }
@@ -173,6 +174,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
     {
         public List<SelectorField> Selectors { get; set; }
         public string Method { get; set; }
+        public Dictionary<string, List<string>> Headers { get; set; }
         public BeforeBlock Before { get; set; }
         public InfohashBlock Infohash { get; set; }
     }

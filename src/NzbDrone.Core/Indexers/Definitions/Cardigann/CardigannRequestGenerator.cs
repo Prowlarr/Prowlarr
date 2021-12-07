@@ -167,6 +167,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public async Task DoLogin()
         {
             var login = _definition.Login;
+            var headers = new Dictionary<string, string>();
+
+            var variables = GetBaseTemplateVariables();
+            if (login.Headers != null)
+            {
+                headers = ParseCustomHeaders(login.Headers, variables);
+            }
 
             if (login.Method == "post")
             {
@@ -374,7 +381,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var enctype = form.GetAttribute("enctype");
                 if (enctype == "multipart/form-data")
                 {
-                    var headers = new Dictionary<string, string>();
                     var boundary = "---------------------------" + DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString().Replace(".", "");
                     var bodyParts = new List<string>();
 
@@ -730,11 +736,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var variables = GetBaseTemplateVariables();
             AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
-            headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
 
             if (_definition.Download != null)
             {
                 var download = _definition.Download;
+
+                // Use Download headers if they exist; else use Search Headers
+                if (download.Headers != null)
+                {
+                    headers = ParseCustomHeaders(download.Headers, variables);
+                }
+                else
+                {
+                    headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+                }
 
                 HttpResponse response = null;
 

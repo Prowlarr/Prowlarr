@@ -3,7 +3,26 @@
   "info": {
     "title": "Prowlarr",
     "version": "1.0.0"
+    "description": "The way users should interact with Prowlarr programatically. To utilize any of these endpoints you will need a few pieces of information:\n\nex: localhost:9696/api/v1/indexer?apiKey={key_here}\n\n* url: localhost, 10.1.0.1, 192.168.1.1, etc\n* port: 9696 (unless you modify it)\n* apiKey: Located in Settings > General > Security"
   },
+  "servers": [
+    {
+      "url": "{protocol}://{hostPath}/api/v1",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "https",
+            "http"
+          ],
+          "default": "https"
+        },
+        "hostPath": {
+          "default": "localhost:9696",
+          "description": "Your Prowlarr Server URL"
+        }
+      }
+    }
+  ],
   "paths": {
     "/api/v1/applications/{id}": {
       "get": {

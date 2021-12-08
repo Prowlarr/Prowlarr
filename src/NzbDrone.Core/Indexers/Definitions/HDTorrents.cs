@@ -158,7 +158,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             // manually url encode parenthesis to prevent "hacking" detection
-            searchUrl += queryCollection.GetQueryString().Replace("(", "%28").Replace(")", "%29");
+            searchUrl += queryCollection.GetQueryString().Replace("(", "%28").Replace(")", "%29").Replace(".", " ");
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Rss);
 

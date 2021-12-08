@@ -633,7 +633,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
                             data = date.ToString(DateTimeUtil.Rfc1123ZPattern);
                         }
-                        catch (FormatException ex)
+                        catch (InvalidDateException ex)
                         {
                             _logger.Debug(ex.Message);
                         }

@@ -91,7 +91,7 @@ namespace NzbDrone.Core.Parser
                 }
                 else
                 {
-                    throw new Exception("TimeAgo parsing failed, unknown unit: " + unit);
+                    throw new InvalidDateException("TimeAgo parsing failed, unknown unit: " + unit);
                 }
             }
 
@@ -102,19 +102,17 @@ namespace NzbDrone.Core.Parser
         // http://www.codeproject.com/Articles/33298/C-Date-Time-Parser
         public static DateTime FromFuzzyTime(string str, string format = null)
         {
-            //var dtFormat = format == "UK" ?
-            //    DateTimeRoutines.DateTimeRoutines.DateTimeFormat.UkDate :
-            //    DateTimeRoutines.DateTimeRoutines.DateTimeFormat.UsaDate;
+            var dtFormat = format == "UK" ?
+                DateTimeRoutines.DateTimeFormat.UKDate :
+                DateTimeRoutines.DateTimeFormat.UKDate;
 
-            //if (DateTimeRoutines.DateTimeRoutines.TryParseDateOrTime(
-            //    str, dtFormat, out DateTimeRoutines.DateTimeRoutines.ParsedDateTime dt))
-            //    return dt.DateTime;
-            if (DateTime.TryParse(str, out var dateTimeParsed))
+            if (DateTimeRoutines.TryParseDateOrTime(
+                str, dtFormat, out var dt))
             {
-                return dateTimeParsed;
+                return dt.DateTime;
             }
 
-            throw new Exception($"FromFuzzyTime parsing failed for string {str}");
+            throw new InvalidDateException($"FromFuzzyTime parsing failed for string {str}");
         }
 
         public static DateTime FromUnknown(string str, string format = null)
@@ -244,7 +242,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (Exception ex)
             {
-                throw new Exception($"DateTime parsing failed for \"{str}\": {ex}");
+                throw new InvalidDateException($"DateTime parsing failed for \"{str}\": {ex}");
             }
         }
 
@@ -314,7 +312,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (FormatException ex)
             {
-                throw new FormatException($"Error while parsing DateTime \"{date}\", using layout \"{layout}\" ({pattern}): {ex.Message}");
+                throw new InvalidDateException($"Error while parsing DateTime \"{date}\", using layout \"{layout}\" ({pattern}): {ex.Message}");
             }
         }
 

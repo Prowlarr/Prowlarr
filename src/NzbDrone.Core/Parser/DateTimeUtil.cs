@@ -104,10 +104,10 @@ namespace NzbDrone.Core.Parser
         {
             var dtFormat = format == "UK" ?
                 DateTimeRoutines.DateTimeFormat.UKDate :
-                DateTimeRoutines.DateTimeFormat.UKDate;
+                DateTimeRoutines.DateTimeFormat.USDate;
 
             if (DateTimeRoutines.TryParseDateOrTime(
-                str, dtFormat, out var dt))
+                str, dtFormat, out DateTimeRoutines.ParsedDateTime dt))
             {
                 return dt.DateTime;
             }

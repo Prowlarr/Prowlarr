@@ -171,8 +171,6 @@ namespace NzbDrone.Host
                 return ApplicationModes.UninstallService;
             }
 
-            Logger.Debug("Getting windows service status");
-
             // IsWindowsService can throw sometimes, so wrap it
             var isWindowsService = false;
             try

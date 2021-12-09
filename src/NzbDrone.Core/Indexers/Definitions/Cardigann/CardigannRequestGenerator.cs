@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            _logger.Trace("Getting search");
+            _logger.Trace("Getting Movie search");
 
             var pageableRequests = new IndexerPageableRequestChain();
 
@@ -61,6 +61,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
+            _logger.Trace("Getting Music search");
+
             var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
@@ -77,6 +79,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
+            _logger.Trace("Getting TV search");
+
             var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
@@ -99,6 +103,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
+            _logger.Trace("Getting Book search");
+
             var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
@@ -113,6 +119,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
+            _logger.Trace("Getting Basic search");
+
             var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);

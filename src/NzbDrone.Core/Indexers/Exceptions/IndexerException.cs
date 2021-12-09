@@ -1,4 +1,4 @@
-﻿using NzbDrone.Common.Exceptions;
+using NzbDrone.Common.Exceptions;
 
 namespace NzbDrone.Core.Indexers.Exceptions
 {
@@ -14,6 +14,18 @@ namespace NzbDrone.Core.Indexers.Exceptions
 
         public IndexerException(IndexerResponse response, string message)
             : base(message)
+        {
+            _indexerResponse = response;
+        }
+
+        public IndexerException(string message)
+            : base(message)
+        {
+            _indexerResponse = response;
+        }
+
+        public IndexerException(string message, params object[] args)
+            : base(message, args)
         {
             _indexerResponse = response;
         }

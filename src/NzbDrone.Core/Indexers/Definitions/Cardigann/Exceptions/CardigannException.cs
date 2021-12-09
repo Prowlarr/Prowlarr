@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NzbDrone.Common.Exceptions;
+using NzbDrone.Core.Indexers.Exceptions;
 
 namespace NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions
 {
-    public class CardigannException : NzbDroneException
+    public class CardigannException : IndexerException
     {
         public CardigannException(string message)
             : base(message)

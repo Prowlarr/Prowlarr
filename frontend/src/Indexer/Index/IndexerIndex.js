@@ -302,14 +302,14 @@ class IndexerIndex extends Component {
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton
-              label={'Add Indexer'}
+              label={translate('AddIndexer')}
               iconName={icons.ADD}
               spinningName={icons.ADD}
               onPress={this.onAddIndexerPress}
             />
 
             <PageToolbarButton
-              label={'Test All Indexers'}
+              label={translate('TestAllIndexers')}
               iconName={icons.TEST}
               isSpinning={isTestingAll}
               isDisabled={hasNoIndexer}
@@ -321,13 +321,13 @@ class IndexerIndex extends Component {
             {
               isMovieEditorActive ?
                 <PageToolbarButton
-                  label={'Indexers'}
+                  label={translate('Indexers')}
                   iconName={icons.MOVIE_CONTINUING}
                   isDisabled={hasNoIndexer}
                   onPress={this.onMovieEditorTogglePress}
                 /> :
                 <PageToolbarButton
-                  label={'Mass Editor'}
+                  label={translate('MassEditor')}
                   iconName={icons.EDIT}
                   isDisabled={hasNoIndexer}
                   onPress={this.onMovieEditorTogglePress}

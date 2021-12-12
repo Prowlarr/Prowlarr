@@ -41,7 +41,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Query Results'}
+              title={translate('QueryResults')}
               data={queryResults ? queryResults : '-'}
             />
         }
@@ -49,7 +49,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Categories'}
+              title={translate('Categories')}
               data={categories ? categories : '-'}
             />
         }
@@ -57,7 +57,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Source'}
+              title={translate('Source')}
               data={source}
             />
         }
@@ -65,7 +65,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Url'}
+              title={translate('Url')}
               data={url ? <Link to={url}>{translate('Link')}</Link> : '-'}
             />
         }
@@ -93,7 +93,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Source'}
+              title={translate('Source')}
               data={source ? source : '-'}
             />
         }
@@ -101,7 +101,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Title'}
+              title={translate('Title')}
               data={title ? title : '-'}
             />
         }
@@ -109,7 +109,7 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={'Url'}
+              title={translate('Url')}
               data={url ? <Link to={url}>{translate('Link')}</Link> : '-'}
             />
         }

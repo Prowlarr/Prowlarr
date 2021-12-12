@@ -77,7 +77,9 @@ function AppUpdatedModalContent(props) {
             <div>
               {
                 !update.changes &&
-                  <div className={styles.maintenance}>Maintenance release</div>
+                  <div className={styles.maintenance}>
+                    {translate('MaintenanceRelease')}
+                  </div>
               }
 
               {

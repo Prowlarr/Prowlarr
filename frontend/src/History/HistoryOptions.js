@@ -4,6 +4,7 @@ import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 class HistoryOptions extends Component {
 
@@ -56,14 +57,14 @@ class HistoryOptions extends Component {
     return (
       <Fragment>
         <FormGroup>
-          <FormLabel>History Cleanup</FormLabel>
+          <FormLabel>{translate('HistoryCleanup')}</FormLabel>
 
           <FormInputGroup
             type={inputTypes.NUMBER}
             name="historyCleanupDays"
             value={historyCleanupDays}
-            helpText="Set to 0 to disable automatic cleanup"
-            helpTextWarning="History items older than the selected number of days will be cleaned up automatically"
+            helpText={translate('HistoryCleanupDaysHelpText')}
+            helpTextWarning={translate('HistoryCleanupDaysHelpTextWarning')}
             onChange={this.onGlobalInputChange}
           />
         </FormGroup>

@@ -61,7 +61,7 @@ class IndexerProxies extends Component {
     } = this.state;
 
     return (
-      <FieldSet legend={translate('Indexer Proxies')}>
+      <FieldSet legend={translate('IndexerProxies')}>
         <PageSectionContent
           errorMessage={translate('UnableToLoadIndexerProxies')}
           {...otherProps}

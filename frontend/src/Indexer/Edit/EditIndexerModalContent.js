@@ -159,7 +159,7 @@ function EditIndexerModalContent(props) {
                 <FormInputGroup
                   type={inputTypes.TAG}
                   name="tags"
-                  helpText="Use tags to specify default clients, specify Indexer Proxies, or just to organize your indexers."
+                  helpText={translate('IndexerTagsHelpText')}
                   {...tags}
                   onChange={onInputChange}
                 />

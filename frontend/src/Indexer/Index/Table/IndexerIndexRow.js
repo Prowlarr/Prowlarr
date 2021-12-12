@@ -240,14 +240,14 @@ class IndexerIndexRow extends Component {
                 >
                   <IconButton
                     name={icons.INFO}
-                    title={'Indexer info'}
+                    title={translate('IndexerInfo')}
                     onPress={this.onIndexerInfoPress}
                   />
 
                   <IconButton
                     className={styles.externalLink}
                     name={icons.EXTERNAL_LINK}
-                    title={'Website'}
+                    title={translate('Website')}
                     to={indexerUrls[0].replace('api.', '')}
                   />
 

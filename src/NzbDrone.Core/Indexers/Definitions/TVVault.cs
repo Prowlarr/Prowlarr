@@ -22,6 +22,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Remove per Site Request Prowlarr Issue 573")]
     public class TVVault : TorrentIndexerBase<TVVaultSettings>
     {
         public override string Name => "TVVault";

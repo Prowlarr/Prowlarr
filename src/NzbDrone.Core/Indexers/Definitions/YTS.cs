@@ -18,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    [Obsolete]
+    [Obsolete("Moved to YML for Cardigann v3")]
     public class YTS : TorrentIndexerBase<YTSSettings>
     {
         public override string Name => "YTS";

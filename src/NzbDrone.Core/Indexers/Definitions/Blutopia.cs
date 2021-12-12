@@ -8,7 +8,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    [Obsolete]
+    [Obsolete("Moved to YML for Cardigann v3")]
     public class Blutopia : Unit3dBase
     {
         public override string Name => "Blutopia";

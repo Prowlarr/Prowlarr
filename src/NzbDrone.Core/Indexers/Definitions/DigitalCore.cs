@@ -20,7 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    [Obsolete]
+    [Obsolete("Moved to YML for Cardigann v3")]
     public class DigitalCore : TorrentIndexerBase<DigitalCoreSettings>
     {
         public override string Name => "DigitalCore";

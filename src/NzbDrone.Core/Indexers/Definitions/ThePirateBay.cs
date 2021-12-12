@@ -16,7 +16,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    [Obsolete]
+    [Obsolete("Moved to YML for Cardigann v3")]
     public class ThePirateBay : TorrentIndexerBase<ThePirateBaySettings>
     {
         public override string Name => "ThePirateBay";

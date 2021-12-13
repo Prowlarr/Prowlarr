@@ -178,7 +178,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "searchtags", "" },
                 { "tags_type", "0" },
                 { "action", "basic" },
-                { "searchstr", term }
+                { "searchstr", term.Replace(".", " ") }
             };
 
             var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);

@@ -23,14 +23,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var caps = new IndexerCapabilities
             {
-                TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       },
                 MusicSearchParams = new List<MusicSearchParam>
                        {
                            MusicSearchParam.Q, MusicSearchParam.Album, MusicSearchParam.Artist, MusicSearchParam.Label, MusicSearchParam.Year

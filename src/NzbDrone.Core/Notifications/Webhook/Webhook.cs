@@ -19,13 +19,26 @@ namespace NzbDrone.Core.Notifications.Webhook
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var payload = new WebhookHealthPayload
-                          {
-                              EventType = WebhookEventType.Health,
-                              Level = healthCheck.Type,
-                              Message = healthCheck.Message,
-                              Type = healthCheck.Source.Name,
-                              WikiUrl = healthCheck.WikiUrl?.ToString()
-                          };
+            {
+                EventType = WebhookEventType.Health,
+                Level = healthCheck.Type,
+                Message = healthCheck.Message,
+                Type = healthCheck.Source.Name,
+                WikiUrl = healthCheck.WikiUrl?.ToString()
+            };
+
+            _proxy.SendWebhook(payload, Settings);
+        }
+
+        public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+            var payload = new WebhookApplicationUpdatePayload
+            {
+                EventType = WebhookEventType.ApplicationUpdate,
+                Message = updateMessage.Message,
+                PreviousVersion = updateMessage.PreviousVersion.ToString(),
+                NewVersion = updateMessage.NewVersion.ToString()
+            };
 
             _proxy.SendWebhook(payload, Settings);
         }

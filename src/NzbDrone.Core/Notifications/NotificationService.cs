@@ -2,12 +2,14 @@ using System;
 using NLog;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Update.History.Events;
 
 namespace NzbDrone.Core.Notifications
 {
     public class NotificationService
         : IHandle<HealthCheckFailedEvent>,
-          IHandleAsync<HealthCheckCompleteEvent>
+          IHandleAsync<HealthCheckCompleteEvent>,
+          IHandle<UpdateInstalledEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly Logger _logger;
@@ -54,6 +56,26 @@ namespace NzbDrone.Core.Notifications
         public void HandleAsync(HealthCheckCompleteEvent message)
         {
             ProcessQueue();
+        }
+
+        public void Handle(UpdateInstalledEvent message)
+        {
+            var updateMessage = new ApplicationUpdateMessage();
+            updateMessage.Message = $"Prowlarr updated from {message.PreviousVerison.ToString()} to {message.NewVersion.ToString()}";
+            updateMessage.PreviousVersion = message.PreviousVerison;
+            updateMessage.NewVersion = message.NewVersion;
+
+            foreach (var notification in _notificationFactory.OnApplicationUpdateEnabled())
+            {
+                try
+                {
+                    notification.OnApplicationUpdate(updateMessage);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
+                }
+            }
         }
 
         private void ProcessQueue()

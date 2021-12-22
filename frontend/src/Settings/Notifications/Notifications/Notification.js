@@ -40,7 +40,7 @@ class Notification extends Component {
     });
   };
 
-  onDeleteNotificationModalClose= () => {
+  onDeleteNotificationModalClose = () => {
     this.setState({ isDeleteNotificationModalOpen: false });
   };
 
@@ -61,12 +61,14 @@ class Notification extends Component {
       onRename,
       onDelete,
       onHealthIssue,
+      onApplicationUpdate,
       supportsOnGrab,
       supportsOnDownload,
       supportsOnUpgrade,
       supportsOnRename,
       supportsOnDelete,
-      supportsOnHealthIssue
+      supportsOnHealthIssue,
+      supportsOnApplicationUpdate
     } = this.props;
 
     return (
@@ -82,53 +84,62 @@ class Notification extends Component {
         {
           supportsOnGrab && onGrab &&
             <Label kind={kinds.SUCCESS}>
-              On Grab
+              {translate('OnGrab')}
             </Label>
         }
 
         {
           supportsOnDelete && onDelete &&
             <Label kind={kinds.SUCCESS}>
-              On Delete
+              {translate('OnDelete')}
             </Label>
         }
 
         {
           supportsOnDownload && onDownload &&
             <Label kind={kinds.SUCCESS}>
-              On Import
+              {translate('OnImport')}
             </Label>
         }
 
         {
           supportsOnUpgrade && onDownload && onUpgrade &&
             <Label kind={kinds.SUCCESS}>
-              On Upgrade
+              {translate('OnUpgrade')}
             </Label>
         }
 
         {
           supportsOnRename && onRename &&
             <Label kind={kinds.SUCCESS}>
-              On Rename
+              {translate('OnRename')}
             </Label>
         }
 
         {
           supportsOnHealthIssue && onHealthIssue &&
             <Label kind={kinds.SUCCESS}>
-              On Health Issue
+              {translate('OnHealthIssue')}
             </Label>
         }
 
         {
-          !onGrab && !onDownload && !onRename && !onHealthIssue && !onDelete &&
+          supportsOnApplicationUpdate && onApplicationUpdate ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnApplicationUpdate')}
+            </Label> :
+            null
+        }
+
+        {
+          !onGrab && !onDownload && !onRename && !onHealthIssue && !onDelete && !onApplicationUpdate ?
             <Label
               kind={kinds.DISABLED}
               outline={true}
             >
-              Disabled
-            </Label>
+              {translate('Disabled')}
+            </Label> :
+            null
         }
 
         <EditNotificationModalConnector
@@ -161,12 +172,14 @@ Notification.propTypes = {
   onRename: PropTypes.bool.isRequired,
   onDelete: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
+  onApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnDownload: PropTypes.bool.isRequired,
   supportsOnDelete: PropTypes.bool.isRequired,
   supportsOnUpgrade: PropTypes.bool.isRequired,
   supportsOnRename: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
+  supportsOnApplicationUpdate: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 

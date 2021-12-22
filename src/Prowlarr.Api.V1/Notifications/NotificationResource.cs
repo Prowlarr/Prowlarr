@@ -6,8 +6,10 @@ namespace Prowlarr.Api.V1.Notifications
     {
         public string Link { get; set; }
         public bool OnHealthIssue { get; set; }
+        public bool OnApplicationUpdate { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
         public bool IncludeHealthWarnings { get; set; }
+        public bool SupportsOnApplicationUpdate { get; set; }
         public string TestCommand { get; set; }
     }
 
@@ -25,6 +27,8 @@ namespace Prowlarr.Api.V1.Notifications
             resource.OnHealthIssue = definition.OnHealthIssue;
             resource.SupportsOnHealthIssue = definition.SupportsOnHealthIssue;
             resource.IncludeHealthWarnings = definition.IncludeHealthWarnings;
+            resource.OnApplicationUpdate = definition.OnApplicationUpdate;
+            resource.SupportsOnApplicationUpdate = definition.SupportsOnApplicationUpdate;
 
             return resource;
         }
@@ -41,6 +45,8 @@ namespace Prowlarr.Api.V1.Notifications
             definition.OnHealthIssue = resource.OnHealthIssue;
             definition.SupportsOnHealthIssue = resource.SupportsOnHealthIssue;
             definition.IncludeHealthWarnings = resource.IncludeHealthWarnings;
+            definition.OnApplicationUpdate = resource.OnApplicationUpdate;
+            definition.SupportsOnApplicationUpdate = resource.SupportsOnApplicationUpdate;
 
             return definition;
         }

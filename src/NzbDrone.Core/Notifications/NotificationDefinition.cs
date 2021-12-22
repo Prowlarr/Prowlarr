@@ -5,9 +5,11 @@ namespace NzbDrone.Core.Notifications
     public class NotificationDefinition : ProviderDefinition
     {
         public bool OnHealthIssue { get; set; }
+        public bool OnApplicationUpdate { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
         public bool IncludeHealthWarnings { get; set; }
+        public bool SupportsOnApplicationUpdate { get; set; }
 
-        public override bool Enable => OnHealthIssue;
+        public override bool Enable => OnHealthIssue || OnApplicationUpdate;
     }
 }

@@ -16,8 +16,10 @@ function NotificationEventItems(props) {
 
   const {
     onHealthIssue,
+    onApplicationUpdate,
     supportsOnHealthIssue,
-    includeHealthWarnings
+    includeHealthWarnings,
+    supportsOnApplicationUpdate
   } = item;
 
   return (
@@ -53,6 +55,17 @@ function NotificationEventItems(props) {
                 />
               </div>
           }
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onApplicationUpdate"
+              helpText={translate('OnApplicationUpdateHelpText')}
+              isDisabled={!supportsOnApplicationUpdate.value}
+              {...onApplicationUpdate}
+              onChange={onInputChange}
+            />
+          </div>
         </div>
       </div>
     </FormGroup>

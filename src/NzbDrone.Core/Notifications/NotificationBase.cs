@@ -9,8 +9,10 @@ namespace NzbDrone.Core.Notifications
         where TSettings : IProviderConfig, new()
     {
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
+        protected const string APPLICATION_UPDATE_TITLE = "Application Updated";
 
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Prowlarr - " + HEALTH_ISSUE_TITLE;
+        protected const string APPLICATION_UPDATE_TITLE_BRANDED = "Prowlarr - " + APPLICATION_UPDATE_TITLE;
 
         public abstract string Name { get; }
 
@@ -29,11 +31,16 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
+        {
+        }
+
         public virtual void ProcessQueue()
         {
         }
 
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
+        public bool SupportsOnApplicationUpdate => HasConcreteImplementation("OnApplicationUpdate");
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 

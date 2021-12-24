@@ -142,6 +142,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1836, NewznabStandardCategory.XXX, "Сайтрипы 2019 (HD Video) / SiteRip's 2019 (HD Video)");
             caps.Categories.AddCategoryMapping(1842, NewznabStandardCategory.XXX, "Сайтрипы 2020 (HD Video) / SiteRip's 2020 (HD Video)");
             caps.Categories.AddCategoryMapping(1846, NewznabStandardCategory.XXX, "Сайтрипы 2021 (HD Video) / SiteRip's 2021 (HD Video)");
+            caps.Categories.AddCategoryMapping(1857, NewznabStandardCategory.XXX, "Сайтрипы 2022 (HD Video) / SiteRip's 2022 (HD Video)");
 
             caps.Categories.AddCategoryMapping(1451, NewznabStandardCategory.XXX, "Сайтрипы 1991-2010 / SiteRip's 1991-2010");
             caps.Categories.AddCategoryMapping(1788, NewznabStandardCategory.XXX, "Сайтрипы 2011-2012 / SiteRip's 2011-2012");
@@ -154,6 +155,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1837, NewznabStandardCategory.XXX, "Сайтрипы 2019 / SiteRip's 2019");
             caps.Categories.AddCategoryMapping(1843, NewznabStandardCategory.XXX, "Сайтрипы 2020 / SiteRip's 2020");
             caps.Categories.AddCategoryMapping(1847, NewznabStandardCategory.XXX, "Сайтрипы 2021 / SiteRip's 2021");
+            caps.Categories.AddCategoryMapping(1856, NewznabStandardCategory.XXX, "Сайтрипы 2022 / SiteRip's 2022");
 
             caps.Categories.AddCategoryMapping(1707, NewznabStandardCategory.XXX, "Сцены из фильмов / Movie Scenes");
             caps.Categories.AddCategoryMapping(284, NewznabStandardCategory.XXX, "Порноролики Разное / Clips (various)");

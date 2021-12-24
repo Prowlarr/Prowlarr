@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class DanishBytes : TorrentIndexerBase<DanishBytesSettings>
     {
         public override string Name => "DanishBytes";
-        public override string[] IndexerUrls => new string[] { "https://danishbytes.org/" };
+        public override string[] IndexerUrls => new string[] { "https://danishbytes.club/" };
         public override string Description => "DanishBytes is a Private Danish Tracker";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

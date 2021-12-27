@@ -227,7 +227,7 @@ namespace NzbDrone.Core.Configuration
                     return urlBase;
                 }
 
-                return "/" + urlBase.Trim('/').ToLower();
+                return "/" + urlBase;
             }
         }
 

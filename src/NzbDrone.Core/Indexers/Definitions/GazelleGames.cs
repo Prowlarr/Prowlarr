@@ -359,7 +359,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         DateTime.ParseExact(time, "MMM dd yyyy, HH:mm", CultureInfo.InvariantCulture),
                         DateTimeKind.Unspecified).ToLocalTime();
                     var details = _settings.BaseUrl + qDetailsLink.GetAttribute("href");
-                    var grabs = ParseUtil.CoerceInt(qGrabs.TextContent);
+                    var grabs = ParseUtil.CoerceLong(qGrabs.TextContent);
                     var leechers = ParseUtil.CoerceInt(qLeechers.TextContent);
                     var size = ParseUtil.GetBytes(sizeString);
 

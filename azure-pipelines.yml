@@ -853,7 +853,7 @@ stages:
           git checkout -b api-docs
           git add .
           git commit -m 'Automated API Docs update'
-          git push -f
+          git push --set-upstream origin api-docs
         displayName: Commit API Doc Change  
       - task: CreatePullRequest@1
         displayName: PR Change to Github

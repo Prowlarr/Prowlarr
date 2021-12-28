@@ -195,4 +195,3 @@ node_modules.nosync
 
 # API doc generation
 .config/
-openapi.json

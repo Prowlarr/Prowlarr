@@ -840,6 +840,15 @@ stages:
         submodules: true      
       - bash: ./docs.sh Windows
         displayName: Create openapi.json  
+      - task: CreatePullRequest@1
+        inputs:
+          repoType: 'GitHub'
+          githubEndpoint: 'github release'
+          githubRepository: '$(Build.Repository.Name)'
+          sourceBranch: '$(Build.SourceBranch)'
+          targetBranch: 'develop'
+          title: 'Update API Docs'
+          isDraft: true
       - task: CopyFiles@2
         displayName: 'Copy openapi.json to: $(Build.ArtifactStagingDirectory)'
         inputs:

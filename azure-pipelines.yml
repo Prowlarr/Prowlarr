@@ -853,8 +853,13 @@ stages:
           git config --global user.name "Servarr"
           git checkout -b api-docs
           git add .
-          git commit -m 'Automated API Docs update'
-          git push -f --set-upstream origin api-docs
+          if git status | grep -q modified
+          then
+            git commit -am 'Automated API Docs update'
+            git push -f --set-upstream origin api-docs
+          else
+            echo "No changes since last run"
+          fi
         displayName: Commit API Doc Change  
       - task: CreatePullRequest@1
         displayName: PR Change to Github

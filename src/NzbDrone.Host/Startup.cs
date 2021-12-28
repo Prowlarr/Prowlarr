@@ -105,20 +105,46 @@ namespace NzbDrone.Host
                     }
                 });
 
-                c.AddSecurityDefinition("X-Api-Key", new OpenApiSecurityScheme
+                var apiKeyHeader = new OpenApiSecurityScheme
                 {
+                    Name = "X-Api-Key",
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "apiKey",
                     Description = "Apikey passed as header",
-                    In = ParameterLocation.Header
+                    In = ParameterLocation.Header,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "X-Api-Key"
+                    },
+                };
+
+                c.AddSecurityDefinition("X-Api-Key", apiKeyHeader);
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { apiKeyHeader, new string[] { } }
                 });
 
-                c.AddSecurityDefinition("apikey", new OpenApiSecurityScheme
+                var apikeyQuery = new OpenApiSecurityScheme
                 {
+                    Name = "apikey",
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "apiKey",
                     Description = "Apikey passed as header",
-                    In = ParameterLocation.Query
+                    In = ParameterLocation.Query,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "apikey"
+                    },
+                };
+
+                c.AddSecurityDefinition("apikey", apikeyQuery);
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { apikeyQuery, new string[] { } }
                 });
             });
 

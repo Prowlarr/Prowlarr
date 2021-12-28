@@ -29,6 +29,7 @@ pr:
   paths:
     exclude:
     - src/NzbDrone.Core/Localization/Core
+    - src/Prowlarr.API.*/openapi.json
 
 stages:
   - stage: Setup
@@ -857,6 +858,7 @@ stages:
         displayName: Commit API Doc Change  
       - task: CreatePullRequest@1
         displayName: PR Change to Github
+        continueOnError: true
         inputs:
           repoType: 'GitHub'
           githubEndpoint: 'github release'

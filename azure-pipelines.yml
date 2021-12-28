@@ -845,9 +845,11 @@ stages:
         inputs:
           SourceFolder: '$(Build.SourcesDirectory)'
           Contents: |
-            ./openapi.json
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/openapi'
-      - publish: $(Build.ArtifactStagingDirectory)/openapi
+            **/*openapi.json
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/api_docs'
+      - bash: |
+          ls -R $(Build.ArtifactStagingDirectory)
+      - publish: $(Build.ArtifactStagingDirectory)/api_docs
         artifact: 'APIDocs'
         displayName: Publish API Docs Bundle
         condition: and(succeeded(), eq(variables['System.JobAttempt'], '1'))

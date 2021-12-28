@@ -31,7 +31,7 @@ dotnet tool install --version 6.2.3 Swashbuckle.AspNetCore.Cli
 
 dotnet tool run swagger tofile --output openapi.json "$outputFolder/net6.0/$RUNTIME/prowlarr.console.dll" v1 &
 
-sleep 5
+sleep 10
 
 kill %1
 

@@ -847,8 +847,6 @@ stages:
           Contents: |
             **/*openapi.json
           TargetFolder: '$(Build.ArtifactStagingDirectory)/api_docs'
-      - bash: |
-          ls -R $(Build.ArtifactStagingDirectory)
       - publish: $(Build.ArtifactStagingDirectory)/api_docs
         artifact: 'APIDocs'
         displayName: Publish API Docs Bundle

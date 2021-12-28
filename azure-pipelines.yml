@@ -841,8 +841,9 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
-      - checkout: self # Need history for Sonar analysis
-        submodules: true      
+      - checkout: self
+        submodules: true
+        fetchDepth: 1    
       - bash: ./docs.sh Windows
         displayName: Create openapi.json
       - bash: |

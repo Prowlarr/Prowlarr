@@ -844,10 +844,15 @@ stages:
       - checkout: self # Need history for Sonar analysis
         submodules: true      
       - bash: ./docs.sh Windows
-        displayName: Create Openapi.json
-      - bash: git commit -am 'Automated API Docs update'
-        displayName: Commit APIDoc Change  
+        displayName: Create openapi.json
+      - bash: |
+          git config --global user.email "development@lidarr.audio"
+          git config --global user.name "Servarr"
+          git add .
+          git commit -m 'Automated API Docs update'
+        displayName: Commit API Doc Change  
       - task: CreatePullRequest@1
+        displayName: PR Change to Github
         inputs:
           repoType: 'GitHub'
           githubEndpoint: 'github release'

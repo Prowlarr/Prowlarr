@@ -829,8 +829,7 @@ stages:
       condition: |
         and
         (
-          and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop')),
-          and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+          succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0')
         )
 
       pool:
@@ -853,7 +852,7 @@ stages:
           git checkout -b api-docs
           git add .
           git commit -m 'Automated API Docs update'
-          git push -f
+          git push --set-upstream origin api-docs
         displayName: Commit API Doc Change  
       - task: CreatePullRequest@1
         displayName: PR Change to Github

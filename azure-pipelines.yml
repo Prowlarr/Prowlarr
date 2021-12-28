@@ -823,6 +823,35 @@ stages:
           FORCE_COLOR: 0
           YARN_CACHE_FOLDER: $(yarnCacheFolder)
 
+    - job: Api_Docs
+      displayName: API Docs
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+
+      pool:
+        vmImage: windows-2019
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Install .net core'
+        inputs:
+          version: $(dotnetVersion)
+      - checkout: self # Need history for Sonar analysis
+        submodules: true      
+      - bash: ./docs.sh Windows
+        displayName: Create openapi.json  
+      - task: CopyFiles@2
+        displayName: 'Copy openapi.json to: $(Build.ArtifactStagingDirectory)'
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)'
+          Contents: |
+            ./openapi.json
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/openapi'
+      - publish: $(Build.ArtifactStagingDirectory)/openapi
+        artifact: 'APIDocs'
+        displayName: Publish API Docs Bundle
+        condition: and(succeeded(), eq(variables['System.JobAttempt'], '1'))
+
     - job: Analyze_Backend
       displayName: Backend
       dependsOn: Prepare

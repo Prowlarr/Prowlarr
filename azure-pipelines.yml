@@ -843,14 +843,17 @@ stages:
           version: $(dotnetVersion)
       - checkout: self
         submodules: true
+        persistCredentials: true
         fetchDepth: 1    
       - bash: ./docs.sh Windows
         displayName: Create openapi.json
       - bash: |
           git config --global user.email "development@lidarr.audio"
           git config --global user.name "Servarr"
+          git checkout -b api-docs
           git add .
           git commit -m 'Automated API Docs update'
+          git push -f
         displayName: Commit API Doc Change  
       - task: CreatePullRequest@1
         displayName: PR Change to Github

@@ -140,6 +140,16 @@ namespace NzbDrone.Host
                     },
                 };
 
+                c.AddServer(new OpenApiServer
+                {
+                    Url = "{protocol}://{hostpath}",
+                    Variables = new Dictionary<string, OpenApiServerVariable>
+                    {
+                        { "protocol", new OpenApiServerVariable { Default = "http", Enum = new List<string> { "http", "https" } } },
+                        { "hostpath", new OpenApiServerVariable { Default = "localhost:9696" } }
+                    }
+                });
+
                 c.AddSecurityDefinition("apikey", apikeyQuery);
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -244,11 +254,6 @@ namespace NzbDrone.Host
             {
                 app.UseSwagger(c =>
                 {
-                    c.PreSerializeFilters.Add((swagger, httpReq) =>
-                    {
-                        swagger.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } };
-                    });
-
                     c.RouteTemplate = "docs/{documentName}/openapi.json";
                 });
             }

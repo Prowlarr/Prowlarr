@@ -9,6 +9,23 @@
     },
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "{protocol}://{hostpath}",
+      "variables": {
+        "protocol": {
+          "default": "http",
+          "enum": [
+            "http",
+            "https"
+          ]
+        },
+        "hostpath": {
+          "default": "localhost:9696"
+        }
+      }
+    }
+  ],
   "paths": {
     "/api/v1/applications/{id}": {
       "get": {

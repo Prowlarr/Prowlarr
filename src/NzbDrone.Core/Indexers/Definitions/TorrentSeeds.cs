@@ -21,6 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Moved to YML for Cardigann v3")]
     public class TorrentSeeds : TorrentIndexerBase<TorrentSeedsSettings>
     {
         public override string Name => "TorrentSeeds";

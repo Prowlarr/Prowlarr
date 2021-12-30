@@ -46,6 +46,7 @@ namespace Prowlarr.Api.V1.Commands
         }
 
         [RestPostById]
+        [Produces("application/json")]
         public ActionResult<CommandResource> StartCommand(CommandResource commandResource)
         {
             var commandType =
@@ -69,6 +70,7 @@ namespace Prowlarr.Api.V1.Commands
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<CommandResource> GetStartedCommands()
         {
             return _commandQueueManager.All().ToResource();

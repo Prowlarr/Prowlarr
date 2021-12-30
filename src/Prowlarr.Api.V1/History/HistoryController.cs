@@ -27,6 +27,7 @@ namespace Prowlarr.Api.V1.History
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public PagingResource<HistoryResource> GetHistory()
         {
             var pagingResource = Request.ReadPagingResourceFromRequest<HistoryResource>();
@@ -58,12 +59,14 @@ namespace Prowlarr.Api.V1.History
         }
 
         [HttpGet("since")]
+        [Produces("application/json")]
         public List<HistoryResource> GetHistorySince(DateTime date, HistoryEventType? eventType = null)
         {
             return _historyService.Since(date, eventType).Select(h => MapToResource(h)).ToList();
         }
 
         [HttpGet("indexer")]
+        [Produces("application/json")]
         public List<HistoryResource> GetIndexerHistory(int indexerId, HistoryEventType? eventType = null)
         {
             return _historyService.GetByIndexerId(indexerId, eventType).Select(h => MapToResource(h)).ToList();

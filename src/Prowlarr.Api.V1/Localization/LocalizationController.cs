@@ -21,6 +21,7 @@ namespace Prowlarr.Api.V1.Localization
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public string GetLocalizationDictionary()
         {
             return JsonSerializer.Serialize(_localizationService.GetLocalizationDictionary().ToResource(), _serializerSettings);

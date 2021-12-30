@@ -41,6 +41,7 @@ namespace Prowlarr.Api.V1
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<TProviderResource> GetAll()
         {
             var providerDefinitions = _providerFactory.All().OrderBy(p => p.ImplementationName);
@@ -58,6 +59,7 @@ namespace Prowlarr.Api.V1
         }
 
         [RestPostById]
+        [Produces("application/json")]
         public ActionResult<TProviderResource> CreateProvider(TProviderResource providerResource)
         {
             var providerDefinition = GetDefinition(providerResource, false);
@@ -73,6 +75,7 @@ namespace Prowlarr.Api.V1
         }
 
         [RestPutById]
+        [Produces("application/json")]
         public ActionResult<TProviderResource> UpdateProvider(TProviderResource providerResource)
         {
             var providerDefinition = GetDefinition(providerResource, false);
@@ -110,6 +113,7 @@ namespace Prowlarr.Api.V1
         }
 
         [HttpGet("schema")]
+        [Produces("application/json")]
         public virtual List<TProviderResource> GetTemplates()
         {
             var defaultDefinitions = _providerFactory.GetDefaultDefinitions().OrderBy(p => p.ImplementationName).ToList();

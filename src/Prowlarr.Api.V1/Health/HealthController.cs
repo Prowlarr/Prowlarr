@@ -28,6 +28,7 @@ namespace Prowlarr.Api.V1.Health
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<HealthResource> GetHealth()
         {
             return _healthCheckService.Results().ToResource();

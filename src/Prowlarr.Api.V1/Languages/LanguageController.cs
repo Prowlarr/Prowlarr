@@ -22,6 +22,7 @@ namespace Prowlarr.Api.V1.Languages
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<LanguageResource> GetAll()
         {
             return Language.All.Select(l => new LanguageResource

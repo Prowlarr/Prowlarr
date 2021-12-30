@@ -106,7 +106,37 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string searchType, string term, int[] categories)
+        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+            => GetRequestWithSearchType(searchCriteria, "anime");
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+            => GetRequestWithSearchType(searchCriteria, "music");
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+            => GetRequestWithSearchType(searchCriteria, "anime");
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+            => GetRequestWithSearchType(searchCriteria, "anime");
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+            => GetRequestWithSearchType(searchCriteria, "anime");
+
+        private IndexerPageableRequestChain GetRequestWithSearchType(SearchCriteriaBase searchCriteria, string searchType)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            // TODO: Remove this once Prowlarr has proper support for non Pageable Indexers and can tell Sonarr that indexer doesn't support pagination in a proper way, for now just return empty release list on all request containing an offset
+            if (searchCriteria.Offset is > 0)
+            {
+                return pageableRequests;
+            }
+
+            pageableRequests.Add(GetRequest(searchType, searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+
+            return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetRequest(string searchType, string term, int[] categories)
         {
             var searchUrl = string.Format("{0}/scrape.php", Settings.BaseUrl.TrimEnd('/'));
 
@@ -133,51 +163,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             var request = new IndexerRequest(queryUrl, HttpAccept.Json);
 
             yield return request;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("anime", searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("music", searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("anime", searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("anime", searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("anime", searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

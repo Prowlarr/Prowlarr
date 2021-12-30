@@ -128,7 +128,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 IndexerUrls = definition.Links.ToArray(),
                 Settings = new CardigannSettings { DefinitionFile = definition.File },
                 Protocol = DownloadProtocol.Torrent,
-                Privacy = definition.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public,
+                Privacy = definition.Type switch
+                {
+                    "private" => IndexerPrivacy.Private,
+                    "public" => IndexerPrivacy.Public,
+                    _ => IndexerPrivacy.SemiPublic
+                },
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,

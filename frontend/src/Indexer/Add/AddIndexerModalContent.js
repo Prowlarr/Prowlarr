@@ -56,6 +56,21 @@ const protocols = [
   }
 ];
 
+const privacyLevels = [
+  {
+    key: 'private',
+    value: translate('Private')
+  },
+  {
+    key: 'semiPublic',
+    value: translate('SemiPublic')
+  },
+  {
+    key: 'public',
+    value: translate('Public')
+  }
+];
+
 class AddIndexerModalContent extends Component {
 
   //
@@ -98,10 +113,6 @@ class AddIndexerModalContent extends Component {
     const languages = Array.from(new Set(indexers.map(({ language }) => language)))
       .sort((a, b) => a.localeCompare(b))
       .map((language) => ({ key: language, value: language }));
-
-    const privacyLevels = Array.from(new Set(indexers.map(({ privacy }) => privacy)))
-      .sort((a, b) => a.localeCompare(b))
-      .map((privacy) => ({ key: privacy, value: privacy }));
 
     const filteredIndexers = indexers.filter((indexer) => {
       const { filter, filterProtocols, filterLanguages, filterPrivacyLevels } = this.state;

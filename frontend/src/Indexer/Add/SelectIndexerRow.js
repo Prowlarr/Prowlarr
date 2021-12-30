@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRowButton from 'Components/Table/TableRowButton';
 import ProtocolLabel from 'Indexer/Index/Table/ProtocolLabel';
+import firstCharToUpper from 'Utilities/String/firstCharToUpper';
+import translate from 'Utilities/String/translate';
 import styles from './SelectIndexerRow.css';
 
 class SelectIndexerRow extends Component {
@@ -47,7 +49,7 @@ class SelectIndexerRow extends Component {
         </TableRowCell>
 
         <TableRowCell>
-          {privacy}
+          {translate(firstCharToUpper(privacy))}
         </TableRowCell>
       </TableRowButton>
     );

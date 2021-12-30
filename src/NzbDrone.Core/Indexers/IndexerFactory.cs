@@ -94,7 +94,12 @@ namespace NzbDrone.Core.Indexers
             definition.Description = defFile.Description;
             definition.Language = defFile.Language;
             definition.Encoding = Encoding.GetEncoding(defFile.Encoding);
-            definition.Privacy = defFile.Type == "private" ? IndexerPrivacy.Private : IndexerPrivacy.Public;
+            definition.Privacy = defFile.Type switch
+            {
+                "private" => IndexerPrivacy.Private,
+                "public" => IndexerPrivacy.Public,
+                _ => IndexerPrivacy.SemiPublic
+            };
             definition.Capabilities = new IndexerCapabilities();
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
             definition.Capabilities.SupportsRawSearch = defFile.Caps.Allowrawsearch;

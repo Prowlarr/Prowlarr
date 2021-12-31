@@ -77,6 +77,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             {
                 parameters.Add("imdb", searchCriteria.FullImdbId);
             }
+            else if (searchCriteria.TmdbId.HasValue)
+            {
+                parameters.Add("tmdb", searchCriteria.TmdbId.Value.ToString());
+            }
             else
             {
                 parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
@@ -105,6 +109,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
                 parameters.Add("imdb", searchCriteria.FullImdbId);
+                parameters.Add("search", GetSearchTerm(searchCriteria.EpisodeSearchString).Trim());
+            }
+            else if (searchCriteria.TvdbId.HasValue)
+            {
+                parameters.Add("tvdb", searchCriteria.TvdbId.Value.ToString());
+                parameters.Add("search", GetSearchTerm(searchCriteria.EpisodeSearchString).Trim());
             }
             else
             {

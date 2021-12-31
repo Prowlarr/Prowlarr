@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SpeedAppParser(Settings);
+            return new SpeedAppParser(Settings, Capabilities.Categories);
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
@@ -347,13 +347,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SpeedAppParser : IParseIndexerResponse
     {
-        public SpeedAppSettings Settings { get; set; }
+        private readonly SpeedAppSettings _settings;
+        private readonly IndexerCapabilitiesCategories _categories;
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public SpeedAppParser(SpeedAppSettings settings)
+        public SpeedAppParser(SpeedAppSettings settings, IndexerCapabilitiesCategories categories)
         {
-            Settings = settings;
+            _settings = settings;
+            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -377,12 +379,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
-                DownloadUrl = $"{Settings.BaseUrl}/api/torrent/{torrent.Id}/download",
+                DownloadUrl = $"{_settings.BaseUrl}/api/torrent/{torrent.Id}/download",
                 PosterUrl = torrent.Poster,
                 InfoUrl = torrent.Url,
                 Grabs = torrent.TimesCompleted,
                 PublishDate = torrent.CreatedAt,
-                Categories = new List<IndexerCategory> { new (torrent.Category.Id, torrent.Category.Name), },
+                Categories = _categories.MapTrackerCatToNewznab(torrent.Category.Id.ToString()),
                 InfoHash = null,
                 Seeders = torrent.Seeders,
                 Peers = torrent.Leechers + torrent.Seeders,

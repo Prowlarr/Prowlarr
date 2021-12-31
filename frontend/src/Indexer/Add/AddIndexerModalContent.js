@@ -62,8 +62,8 @@ const privacyLevels = [
     value: translate('Private')
   },
   {
-    key: 'semiPublic',
-    value: translate('SemiPublic')
+    key: 'semiPrivate',
+    value: translate('SemiPrivate')
   },
   {
     key: 'public',

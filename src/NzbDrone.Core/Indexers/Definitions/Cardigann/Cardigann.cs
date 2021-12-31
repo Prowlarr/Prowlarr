@@ -132,7 +132,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     "private" => IndexerPrivacy.Private,
                     "public" => IndexerPrivacy.Public,
-                    _ => IndexerPrivacy.SemiPublic
+                    _ => IndexerPrivacy.SemiPrivate
                 },
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,

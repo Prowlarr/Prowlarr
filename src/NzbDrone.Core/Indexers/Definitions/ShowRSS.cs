@@ -16,6 +16,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Moved to YML for Cardigann v3")]
     public class ShowRSS : TorrentIndexerBase<ShowRSSSettings>
     {
         public override string Name => "ShowRSS";

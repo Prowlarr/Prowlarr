@@ -335,7 +335,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            var searchUrl = Settings.BaseUrl + "/api/torrent?" + qc.GetQueryString();
+            var searchUrl = Settings.BaseUrl + "/api/torrent?" + qc.GetQueryString(duplicateKeysIfMulti: true);
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 

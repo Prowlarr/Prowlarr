@@ -281,7 +281,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var torrentId = row.fid.ToString();
                 var details = new Uri(_settings.BaseUrl + "torrent/" + torrentId);
                 var link = new Uri(_settings.BaseUrl + "download/" + torrentId + "/" + row.filename);
-                var publishDate = DateTime.ParseExact(row.addedTimestamp.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                var publishDate = DateTime.ParseExact(row.addedTimestamp.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
                 var seeders = (int)row.seeders;
                 var leechers = (int)row.leechers;
                 var grabs = (int)row.completed;

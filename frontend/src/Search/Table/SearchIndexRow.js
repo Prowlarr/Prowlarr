@@ -299,7 +299,7 @@ class SearchIndexRow extends Component {
                   <IconButton
                     className={styles.downloadLink}
                     name={icons.SAVE}
-                    title={'Save'}
+                    title={translate('Save')}
                     to={downloadUrl}
                   />
                 </VirtualTableRowCell>

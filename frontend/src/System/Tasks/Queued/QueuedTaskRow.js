@@ -199,7 +199,7 @@ class QueuedTaskRow extends Component {
           </span>
           {
             clientUserAgent ?
-              <span className={styles.userAgent} title="User-Agent provided by the app that called the API">
+              <span className={styles.userAgent} title={translate('UserAgentProvidedByTheAppThatCalledTheAPI')}>
                 from: {clientUserAgent}
               </span> :
               null

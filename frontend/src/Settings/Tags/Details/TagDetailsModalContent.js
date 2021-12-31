@@ -67,7 +67,7 @@ function TagDetailsModalContent(props) {
 
         {
           !!indexerProxies.length &&
-            <FieldSet legend={translate('Indexer Proxies')}>
+            <FieldSet legend={translate('IndexerProxies')}>
               {
                 indexerProxies.map((item) => {
                   return (

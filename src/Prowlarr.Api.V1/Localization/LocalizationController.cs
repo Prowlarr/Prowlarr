@@ -22,9 +22,9 @@ namespace Prowlarr.Api.V1.Localization
 
         [HttpGet]
         [Produces("application/json")]
-        public string GetLocalizationDictionary()
+        public IActionResult GetLocalizationDictionary()
         {
-            return JsonSerializer.Serialize(_localizationService.GetLocalizationDictionary().ToResource(), _serializerSettings);
+            return Json(_localizationService.GetLocalizationDictionary().ToResource(), _serializerSettings);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPublic;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public Anidub(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

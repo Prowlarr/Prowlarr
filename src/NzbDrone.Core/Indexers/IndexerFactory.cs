@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Indexers
             {
                 "private" => IndexerPrivacy.Private,
                 "public" => IndexerPrivacy.Public,
-                _ => IndexerPrivacy.SemiPublic
+                _ => IndexerPrivacy.SemiPrivate
             };
             definition.Capabilities = new IndexerCapabilities();
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);

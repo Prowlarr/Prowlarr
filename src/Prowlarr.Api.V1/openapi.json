@@ -5300,7 +5300,7 @@
       "IndexerPrivacy": {
         "enum": [
           "public",
-          "semiPublic",
+          "semiPrivate",
           "private"
         ],
         "type": "string"

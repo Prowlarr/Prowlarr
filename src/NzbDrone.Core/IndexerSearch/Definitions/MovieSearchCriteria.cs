@@ -10,6 +10,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? TmdbId { get; set; }
         public int? TraktId { get; set; }
         public int? Year { get; set; }
+        public string Genre { get; set; }
 
         public override bool RssSearch
         {
@@ -62,6 +63,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
                 if (TraktId.HasValue)
                 {
                     builder = builder.Append($" TraktId:[{TraktId}]");
+                }
+
+                if (Genre.IsNotNullOrWhiteSpace())
+                {
+                    builder = builder.Append($" Genre:[{Genre}]");
                 }
 
                 return builder.ToString().Trim();

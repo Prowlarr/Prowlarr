@@ -26,6 +26,7 @@ namespace NzbDrone.Core.Indexers
         ImdbTitle,
         ImdbYear,
         TraktId,
+        Genre
     }
 
     public enum MusicSearchParam
@@ -75,6 +76,7 @@ namespace NzbDrone.Core.Indexers
         public bool MovieSearchImdbAvailable => MovieSearchParams.Contains(MovieSearchParam.ImdbId);
         public bool MovieSearchTmdbAvailable => MovieSearchParams.Contains(MovieSearchParam.TmdbId);
         public bool MovieSearchTraktAvailable => MovieSearchParams.Contains(MovieSearchParam.TraktId);
+        public bool MovieSearchGenreAvailable => MovieSearchParams.Contains(MovieSearchParam.Genre);
 
         public List<MusicSearchParam> MusicSearchParams;
         public bool MusicSearchAvailable => MusicSearchParams.Count > 0;
@@ -319,6 +321,16 @@ namespace NzbDrone.Core.Indexers
             if (MovieSearchTmdbAvailable)
             {
                 parameters.Add("tmdbid");
+            }
+
+            if (MovieSearchTraktAvailable)
+            {
+                parameters.Add("traktid");
+            }
+
+            if (MovieSearchGenreAvailable)
+            {
+                parameters.Add("genre");
             }
 
             return string.Join(",", parameters);

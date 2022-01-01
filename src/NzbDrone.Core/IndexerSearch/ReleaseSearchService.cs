@@ -60,6 +60,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.Year = request.year;
+            searchSpec.Genre = request.genre;
 
             return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }

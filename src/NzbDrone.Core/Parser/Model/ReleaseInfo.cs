@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Languages;
 
 namespace NzbDrone.Core.Parser.Model
 {
@@ -44,8 +45,9 @@ namespace NzbDrone.Core.Parser.Model
         public string Container { get; set; }
         public string Codec { get; set; }
         public string Resolution { get; set; }
+        public ICollection<Language> Languages { get; set; }
+        public ICollection<Language> Subs { get; set; }
         public ICollection<IndexerCategory> Categories { get; set; }
-
         public ICollection<IndexerFlag> IndexerFlags { get; set; }
 
         public int Age

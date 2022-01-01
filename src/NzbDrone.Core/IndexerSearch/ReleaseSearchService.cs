@@ -72,6 +72,8 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Artist = request.artist;
             searchSpec.Album = request.album;
             searchSpec.Label = request.label;
+            searchSpec.Genre = request.genre;
+            searchSpec.Year = request.year;
 
             return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }

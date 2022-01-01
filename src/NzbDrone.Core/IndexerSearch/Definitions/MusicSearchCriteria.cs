@@ -7,6 +7,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string Album { get; set; }
         public string Artist { get; set; }
         public string Label { get; set; }
+        public string Genre { get; set; }
+        public int? Year { get; set; }
 
         public override bool RssSearch
         {

@@ -35,7 +35,8 @@ namespace NzbDrone.Core.Indexers
         Album,
         Artist,
         Label,
-        Year
+        Year,
+        Genre
     }
 
     public enum SearchParam
@@ -84,6 +85,7 @@ namespace NzbDrone.Core.Indexers
         public bool MusicSearchArtistAvailable => MusicSearchParams.Contains(MusicSearchParam.Artist);
         public bool MusicSearchLabelAvailable => MusicSearchParams.Contains(MusicSearchParam.Label);
         public bool MusicSearchYearAvailable => MusicSearchParams.Contains(MusicSearchParam.Year);
+        public bool MusicSearchGenreAvailable => MusicSearchParams.Contains(MusicSearchParam.Genre);
 
         public List<BookSearchParam> BookSearchParams;
         public bool BookSearchAvailable => BookSearchParams.Count > 0;
@@ -357,6 +359,11 @@ namespace NzbDrone.Core.Indexers
             if (MusicSearchYearAvailable)
             {
                 parameters.Add("year");
+            }
+
+            if (MusicSearchGenreAvailable)
+            {
+                parameters.Add("genre");
             }
 
             return string.Join(",", parameters);

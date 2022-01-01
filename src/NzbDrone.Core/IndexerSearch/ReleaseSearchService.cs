@@ -84,6 +84,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.TvdbId = request.tvdbid;
             searchSpec.ImdbId = request.imdbid;
             searchSpec.TraktId = request.traktid;
+            searchSpec.TmdbId = request.tmdbid;
             searchSpec.RId = request.rid;
             searchSpec.TvMazeId = request.tvmazeid;
 

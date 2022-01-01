@@ -16,6 +16,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? RId { get; set; }
         public int? TvMazeId { get; set; }
         public int? TraktId { get; set; }
+        public int? TmdbId { get; set; }
 
         public string SanitizedTvSearchString => (SanitizedSearchTerm + " " + EpisodeSearchString).Trim();
         public string EpisodeSearchString => GetEpisodeSearchString();
@@ -72,6 +73,11 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
                 if (TraktId.HasValue)
                 {
                     builder.Append($" TraktId:[{TraktId}]");
+                }
+
+                if (TmdbId.HasValue)
+                {
+                    builder.Append($" TmdbId:[{TmdbId}]");
                 }
 
                 builder = builder.Append(searchEpisodeTerm);

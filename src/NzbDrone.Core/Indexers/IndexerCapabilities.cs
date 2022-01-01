@@ -13,7 +13,9 @@ namespace NzbDrone.Core.Indexers
         ImdbId,
         TvdbId,
         RId,
-        TvMazeId
+        TvMazeId,
+        TraktId,
+        TmdbId
     }
 
     public enum MovieSearchParam
@@ -65,6 +67,8 @@ namespace NzbDrone.Core.Indexers
         public bool TvSearchTvdbAvailable => TvSearchParams.Contains(TvSearchParam.TvdbId);
         public bool TvSearchTvRageAvailable => TvSearchParams.Contains(TvSearchParam.RId);
         public bool TvSearchTvMazeAvailable => TvSearchParams.Contains(TvSearchParam.TvMazeId);
+        public bool TvSearchTraktAvailable => TvSearchParams.Contains(TvSearchParam.TraktId);
+        public bool TvSearchTmdbAvailable => TvSearchParams.Contains(TvSearchParam.TmdbId);
 
         public List<MovieSearchParam> MovieSearchParams;
         public bool MovieSearchAvailable => MovieSearchParams.Count > 0;
@@ -282,6 +286,16 @@ namespace NzbDrone.Core.Indexers
             if (TvSearchTvMazeAvailable)
             {
                 parameters.Add("tvmazeid");
+            }
+
+            if (TvSearchTraktAvailable)
+            {
+                parameters.Add("traktid");
+            }
+
+            if (TvSearchTmdbAvailable)
+            {
+                parameters.Add("tmdbid");
             }
 
             return string.Join(",", parameters);

@@ -221,9 +221,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                             title += " [Cue]";
                         }
 
+                        var infoUrl = GetInfoUrl(result.GroupId, id);
+
                         GazelleInfo release = new GazelleInfo()
                         {
-                            Guid = string.Format("Redacted-{0}", id),
+                            Guid = infoUrl,
 
                             // Splice Title from info to avoid calling API again for every torrent.
                             Title = WebUtility.HtmlDecode(title),
@@ -232,7 +234,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
                             DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
-                            InfoUrl = GetInfoUrl(result.GroupId, id),
+                            InfoUrl = infoUrl,
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
@@ -240,6 +242,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Freeleech = torrent.IsFreeLeech || torrent.IsPersonalFreeLeech,
                             Files = torrent.FileCount,
                             Grabs = torrent.Snatches,
+                            DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
+                            UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
                         };
 
                         var category = torrent.Category;
@@ -260,19 +264,23 @@ namespace NzbDrone.Core.Indexers.Definitions
                 else
                 {
                     var id = result.TorrentId;
+                    var infoUrl = GetInfoUrl(result.GroupId, id);
+
                     GazelleInfo release = new GazelleInfo()
                     {
-                        Guid = string.Format("Redacted-{0}", id),
+                        Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(result.GroupName),
                         Size = long.Parse(result.Size),
                         DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
-                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
                         Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
                         Files = result.FileCount,
                         Grabs = result.Snatches,
+                        DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
+                        UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
                     };
 
                     var category = result.Category;

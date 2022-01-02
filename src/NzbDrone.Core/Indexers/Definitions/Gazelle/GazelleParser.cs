@@ -52,6 +52,8 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             foreach (var result in jsonResponse.Resource.Response.Results)
             {
+                var posterUrl = GetPosterUrl(result.Cover);
+
                 if (result.Torrents != null)
                 {
                     foreach (var torrent in result.Torrents)
@@ -66,9 +68,11 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             title += " [Cue]";
                         }
 
+                        var infoUrl = GetInfoUrl(result.GroupId, id);
+
                         var release = new GazelleInfo()
                         {
-                            Guid = string.Format("Gazelle-{0}", id),
+                            Guid = infoUrl,
                             Title = WebUtility.HtmlDecode(title),
                             Container = torrent.Encoding,
                             Files = torrent.FileCount,
@@ -76,11 +80,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
                             DownloadUrl = GetDownloadUrl(id),
-                            InfoUrl = GetInfoUrl(result.GroupId, id),
+                            InfoUrl = infoUrl,
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
                             Scene = torrent.Scene,
+                            PosterUrl = posterUrl
                         };
 
                         var category = torrent.Category;
@@ -100,19 +105,21 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 {
                     var id = result.TorrentId;
                     var groupName = WebUtility.HtmlDecode(result.GroupName);
+                    var infoUrl = GetInfoUrl(result.GroupId, id);
 
                     var release = new GazelleInfo()
                     {
-                        Guid = string.Format("Gazelle-{0}", id),
+                        Guid = infoUrl,
                         Title = groupName,
                         Size = long.Parse(result.Size),
                         DownloadUrl = GetDownloadUrl(id),
-                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         Files = result.FileCount,
                         Grabs = result.Snatches,
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
+                        PosterUrl = posterUrl
                     };
 
                     var category = result.Category;
@@ -147,7 +154,19 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return url.FullUri;
         }
 
-        private string GetInfoUrl(string groupId, int torrentId)
+        protected virtual string GetPosterUrl(string cover)
+        {
+            if (!string.IsNullOrEmpty(cover))
+            {
+                return cover.StartsWith("http") ?
+                    new HttpUri(cover).FullUri :
+                    new HttpUri(_settings.BaseUrl).CombinePath(cover).FullUri;
+            }
+
+            return null;
+        }
+
+        protected virtual string GetInfoUrl(string groupId, int torrentId)
         {
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")

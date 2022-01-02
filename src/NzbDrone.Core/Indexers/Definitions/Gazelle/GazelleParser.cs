@@ -85,7 +85,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
                             Scene = torrent.Scene,
-                            PosterUrl = posterUrl
+                            PosterUrl = posterUrl,
+                            DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
+                            UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
                         };
 
                         var category = torrent.Category;
@@ -119,7 +121,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
                         Files = result.FileCount,
                         Grabs = result.Snatches,
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
-                        PosterUrl = posterUrl
+                        PosterUrl = posterUrl,
+                        DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
+                        UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
                     };
 
                     var category = result.Category;

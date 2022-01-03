@@ -95,7 +95,7 @@ $gh_repo_org = $gh_app_org + '/' + $gh_app_repo + '/'
 ## Determine Commit
 if ( $PSBoundParameters.ContainsKey('commit') )
 {
-        Write-Information "Commit passed from argument. Skipping Github Query"
+    Write-Information 'Commit passed from argument. Skipping Github Query'
 }
 else
 
@@ -103,7 +103,7 @@ else
     $gh_url = ('https://api.github.com/repos/' + $gh_repo_org + 'commits')
     Write-Information "Getting commit info from Github [$gh_url]"
     $github_req = Invoke-RestMethod -Uri $gh_url -ContentType 'application/json' -Method Get
-    $commit = ($github_req | select-object -first 1).sha
+    $commit = ($github_req | Select-Object -First 1).sha
 }
 Write-Information "Commit is $commit"
 ## Determine Commit
@@ -124,13 +124,13 @@ Write-Information 'Building: Usenet - Public'
 $tbl_PubUse = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 ### Private Usenet
 Write-Information 'Building: Usenet - Private'
-$tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
+$tbl_PrvUse = $indexer_tbl_obj | Where-Object { ($_.privacy -in 'private', 'semiprivate') -and ($_.protocol -eq 'usenet') } | Select-Object @{Name = 'Indexer'; Expression = $usenet_indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 ### Public Torrents
 Write-Information 'Building: Torrents - Public'
 $tbl_PubTor = $indexer_tbl_obj | Where-Object { ($_.privacy -eq 'public') -and ($_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 ### Private Torrents
 Write-Information 'Building: Torrents - Private'
-$tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -CIn 'private' -and $_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
+$tbl_PrvTor = $indexer_tbl_obj | Where-Object { ($_.privacy -in 'private', 'semiprivate') -and ($_.protocol -eq 'torrent') } | Select-Object @{Name = 'Indexer'; Expression = $indexer_name_exp }, @{Name = 'Language'; Expression = { $_.language } }, @{Name = 'Description'; Expression = $indexer_description_exp }
 
 ## Convert Data to Markdown Table
 $tbl_fmt_PubUse = $tbl_PubUse | Format-MarkdownTableTableStyle Indexer, Description, Language -HideStandardOutput -ShowMarkdown -DoNotCopyToClipboard

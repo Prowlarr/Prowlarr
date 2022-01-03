@@ -2,6 +2,7 @@ import { createAction } from 'redux-actions';
 import { batchActions } from 'redux-batched-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
+import sortByName from 'Utilities/Array/sortByName';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import translate from 'Utilities/String/translate';
 import { removeItem, set, updateItem } from './baseActions';
@@ -118,12 +119,12 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'name',
-      label: 'Indexer Name',
+      label: translate('IndexerName'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'enable',
-      label: 'Enabled',
+      label: translate('Enabled'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
@@ -135,14 +136,20 @@ export const defaultState = {
     },
     {
       name: 'priority',
-      label: 'Priority',
+      label: translate('Priority'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'protocol',
-      label: 'Protocol',
+      label: translate('Protocol'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.PROTOCOL
+    },
+    {
+      name: 'privacy',
+      label: translate('Privacy'),
+      type: filterBuilderTypes.EXACT,
+      valueType: filterBuilderValueTypes.PRIVACY
     },
     {
       name: 'appProfileId',

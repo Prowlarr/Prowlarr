@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
@@ -33,13 +34,13 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public SonarrStatus GetStatus(SonarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/system/status", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api/v3/system/status", HttpMethod.Get);
             return Execute<SonarrStatus>(request);
         }
 
         public List<SonarrIndexer> GetIndexers(SonarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.Get);
             return Execute<List<SonarrIndexer>>(request);
         }
 
@@ -47,7 +48,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             try
             {
-                var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.GET);
+                var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.Get);
                 return Execute<SonarrIndexer>(request);
             }
             catch (HttpException ex)
@@ -63,19 +64,19 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public void RemoveIndexer(int indexerId, SonarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.DELETE);
+            var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.Delete);
             _httpClient.Execute(request);
         }
 
         public List<SonarrIndexer> GetIndexerSchema(SonarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/indexer/schema", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api/v3/indexer/schema", HttpMethod.Get);
             return Execute<List<SonarrIndexer>>(request);
         }
 
         public SonarrIndexer AddIndexer(SonarrIndexer indexer, SonarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.POST);
+            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
 
@@ -84,7 +85,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public SonarrIndexer UpdateIndexer(SonarrIndexer indexer, SonarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v3/indexer/{indexer.Id}", HttpMethod.PUT);
+            var request = BuildRequest(settings, $"/api/v3/indexer/{indexer.Id}", HttpMethod.Put);
 
             request.SetContent(indexer.ToJson());
 
@@ -93,7 +94,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public ValidationFailure TestConnection(SonarrIndexer indexer, SonarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v3/indexer/test", HttpMethod.POST);
+            var request = BuildRequest(settings, $"/api/v3/indexer/test", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
 

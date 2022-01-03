@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using NzbDrone.Common.Extensions;
 
@@ -37,7 +38,7 @@ namespace NzbDrone.Common.Http
         {
             BaseUrl = new HttpUri(baseUrl);
             ResourceUrl = string.Empty;
-            Method = HttpMethod.GET;
+            Method = HttpMethod.Get;
             Encoding = Encoding.UTF8;
             QueryParams = new List<KeyValuePair<string, string>>();
             SuffixQueryParams = new List<KeyValuePair<string, string>>();
@@ -275,7 +276,7 @@ namespace NzbDrone.Common.Http
 
         public virtual HttpRequestBuilder Post()
         {
-            Method = HttpMethod.POST;
+            Method = HttpMethod.Post;
 
             return this;
         }
@@ -397,7 +398,7 @@ namespace NzbDrone.Common.Http
 
         public virtual HttpRequestBuilder AddFormParameter(string key, object value)
         {
-            if (Method != HttpMethod.POST)
+            if (Method != HttpMethod.Post)
             {
                 throw new NotSupportedException("HttpRequest Method must be POST to add FormParameter.");
             }
@@ -413,7 +414,7 @@ namespace NzbDrone.Common.Http
 
         public virtual HttpRequestBuilder AddFormUpload(string name, string fileName, byte[] data, string contentType = "application/octet-stream")
         {
-            if (Method != HttpMethod.POST)
+            if (Method != HttpMethod.Post)
             {
                 throw new NotSupportedException("HttpRequest Method must be POST to add FormUpload.");
             }

@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Http;
@@ -56,7 +57,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                 LogResponseContent = true
             };
 
-            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var cookies = Cookies;

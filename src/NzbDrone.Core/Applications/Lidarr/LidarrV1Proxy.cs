@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
@@ -33,13 +34,13 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public LidarrStatus GetStatus(LidarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v1/system/status", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api/v1/system/status", HttpMethod.Get);
             return Execute<LidarrStatus>(request);
         }
 
         public List<LidarrIndexer> GetIndexers(LidarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v1/indexer", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api/v1/indexer", HttpMethod.Get);
             return Execute<List<LidarrIndexer>>(request);
         }
 
@@ -47,7 +48,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             try
             {
-                var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.GET);
+                var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.Get);
                 return Execute<LidarrIndexer>(request);
             }
             catch (HttpException ex)
@@ -63,19 +64,19 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public void RemoveIndexer(int indexerId, LidarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.DELETE);
+            var request = BuildRequest(settings, $"/api/v1/indexer/{indexerId}", HttpMethod.Delete);
             _httpClient.Execute(request);
         }
 
         public List<LidarrIndexer> GetIndexerSchema(LidarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v1/indexer/schema", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api/v1/indexer/schema", HttpMethod.Get);
             return Execute<List<LidarrIndexer>>(request);
         }
 
         public LidarrIndexer AddIndexer(LidarrIndexer indexer, LidarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v1/indexer", HttpMethod.POST);
+            var request = BuildRequest(settings, "/api/v1/indexer", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
 
@@ -84,7 +85,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public LidarrIndexer UpdateIndexer(LidarrIndexer indexer, LidarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v1/indexer/{indexer.Id}", HttpMethod.PUT);
+            var request = BuildRequest(settings, $"/api/v1/indexer/{indexer.Id}", HttpMethod.Put);
 
             request.SetContent(indexer.ToJson());
 
@@ -93,7 +94,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public ValidationFailure TestConnection(LidarrIndexer indexer, LidarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v1/indexer/test", HttpMethod.POST);
+            var request = BuildRequest(settings, $"/api/v1/indexer/test", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
 

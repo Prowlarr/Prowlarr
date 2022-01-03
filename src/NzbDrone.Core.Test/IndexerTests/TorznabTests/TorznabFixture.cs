@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -44,7 +45,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             var recentFeed = ReadAllText(@"Files/Indexers/Torznab/torznab_hdaccess_net.xml");
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria())).Releases;
@@ -73,7 +74,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             var recentFeed = ReadAllText(@"Files/Indexers/Torznab/torznab_tpb.xml");
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria())).Releases;
@@ -103,7 +104,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             var recentFeed = ReadAllText(@"Files/Indexers/Torznab/torznab_animetosho.xml");
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria())).Releases;

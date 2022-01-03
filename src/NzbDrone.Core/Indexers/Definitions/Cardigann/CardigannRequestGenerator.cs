@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
@@ -184,7 +185,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var requestBuilder = new HttpRequestBuilder(loginUrl)
                 {
                     LogResponseContent = true,
-                    Method = HttpMethod.POST,
+                    Method = HttpMethod.Post,
                     AllowAutoRedirect = true,
                     SuppressHttpError = true,
                     Encoding = _encoding
@@ -329,7 +330,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var requestBuilder = new HttpRequestBuilder(captchaUrl.ToString())
                     {
                         LogResponseContent = true,
-                        Method = HttpMethod.GET,
+                        Method = HttpMethod.Get,
                         Encoding = _encoding
                     };
 
@@ -394,7 +395,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var requestBuilder = new HttpRequestBuilder(submitUrl.ToString())
                     {
                         LogResponseContent = true,
-                        Method = HttpMethod.POST,
+                        Method = HttpMethod.Post,
                         AllowAutoRedirect = true,
                         Encoding = _encoding
                     };
@@ -423,7 +424,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var requestBuilder = new HttpRequestBuilder(submitUrl.ToString())
                     {
                         LogResponseContent = true,
-                        Method = HttpMethod.POST,
+                        Method = HttpMethod.Post,
                         AllowAutoRedirect = true,
                         SuppressHttpError = true,
                         Encoding = _encoding
@@ -466,7 +467,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var requestBuilder = new HttpRequestBuilder(loginUrl)
                 {
                     LogResponseContent = true,
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.Get,
                     SuppressHttpError = true,
                     Encoding = _encoding
                 };
@@ -491,7 +492,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var requestBuilder = new HttpRequestBuilder(loginUrl)
                 {
                     LogResponseContent = true,
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.Get,
                     SuppressHttpError = true,
                     Encoding = _encoding
                 };
@@ -565,7 +566,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var requestBuilder = new HttpRequestBuilder(loginUrl.AbsoluteUri)
             {
                 LogResponseContent = true,
-                Method = HttpMethod.GET,
+                Method = HttpMethod.Get,
                 Encoding = _encoding
             };
 
@@ -666,21 +667,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
             Dictionary<string, string> pairs = null;
             var queryCollection = new NameValueCollection();
 
-            var method = HttpMethod.GET;
+            var method = HttpMethod.Get;
             if (string.Equals(request.Method, "post", StringComparison.OrdinalIgnoreCase))
             {
-                method = HttpMethod.POST;
+                method = HttpMethod.Post;
                 pairs = new Dictionary<string, string>();
             }
 
             foreach (var input in request.Inputs)
             {
                 var value = ApplyGoTemplateText(input.Value, variables);
-                if (method == HttpMethod.GET)
+                if (method == HttpMethod.Get)
                 {
                     queryCollection.Add(input.Key, value);
                 }
-                else if (method == HttpMethod.POST)
+                else if (method == HttpMethod.Post)
                 {
                     pairs.Add(input.Key, value);
                 }
@@ -707,7 +708,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             httpRequest.Method = method;
 
             // Add form data for POST requests
-            if (method == HttpMethod.POST)
+            if (method == HttpMethod.Post)
             {
                 foreach (var param in pairs)
                 {
@@ -724,7 +725,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public async Task<HttpRequest> DownloadRequest(Uri link)
         {
             Cookies = GetCookies();
-            var method = HttpMethod.GET;
+            var method = HttpMethod.Get;
             var headers = new Dictionary<string, string>();
 
             var variables = GetBaseTemplateVariables();
@@ -759,7 +760,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 if (download.Method == "post")
                 {
-                    method = HttpMethod.POST;
+                    method = HttpMethod.Post;
                 }
 
                 if (download.Infohash != null)
@@ -1014,11 +1015,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 // HttpUtility.UrlPathEncode seems to only encode spaces, we use UrlEncode and replace + with %20 as a workaround
                 var searchUrl = ResolvePath(ApplyGoTemplateText(searchPath.Path, variables, WebUtility.UrlEncode).Replace("+", "%20")).AbsoluteUri;
                 var queryCollection = new List<KeyValuePair<string, string>>();
-                var method = HttpMethod.GET;
+                var method = HttpMethod.Get;
 
                 if (string.Equals(searchPath.Method, "post", StringComparison.OrdinalIgnoreCase))
                 {
-                    method = HttpMethod.POST;
+                    method = HttpMethod.Post;
                 }
 
                 var inputsList = new List<Dictionary<string, string>>();
@@ -1064,7 +1065,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
                 }
 
-                if (method == HttpMethod.GET)
+                if (method == HttpMethod.Get)
                 {
                     if (queryCollection.Count > 0)
                     {
@@ -1079,7 +1080,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 requestbuilder.Method = method;
 
                 // Add FormData for searchs that POST
-                if (method == HttpMethod.POST)
+                if (method == HttpMethod.Post)
                 {
                     foreach (var param in queryCollection)
                     {

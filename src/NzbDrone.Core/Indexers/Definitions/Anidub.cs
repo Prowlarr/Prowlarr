@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var mainPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl));
 
-            requestBuilder.Method = Common.Http.HttpMethod.POST;
+            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
             requestBuilder.SetCookies(mainPage.GetCookies());
 
@@ -167,7 +167,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (isSearch)
             {
-                request.HttpRequest.Method = NzbDrone.Common.Http.HttpMethod.POST;
+                request.HttpRequest.Method = HttpMethod.Post;
                 var postData = new NameValueCollection
                 {
                     { "do", "search" },

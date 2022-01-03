@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 LogResponseContent = true,
                 AllowAutoRedirect = true,
-                Method = HttpMethod.POST,
+                Method = HttpMethod.Post,
             };
 
             var request = requestBuilder.Build();

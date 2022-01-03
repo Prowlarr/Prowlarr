@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -105,7 +106,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 LogResponseContent = true
             };
 
-            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var authLoginRequest = requestBuilder

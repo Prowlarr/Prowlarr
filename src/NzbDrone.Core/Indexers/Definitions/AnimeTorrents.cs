@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
@@ -57,7 +58,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
-            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
             requestBuilder.SetCookies(loginPage.GetCookies());
 

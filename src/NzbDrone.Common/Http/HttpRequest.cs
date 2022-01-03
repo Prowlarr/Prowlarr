@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;

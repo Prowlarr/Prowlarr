@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
@@ -115,7 +116,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36";
             var maxTimeout = Settings.RequestTimeout * 1000;
 
-            if (request.Method == HttpMethod.GET)
+            if (request.Method == HttpMethod.Get)
             {
                 req = new FlareSolverrRequestGet
                 {
@@ -125,7 +126,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     UserAgent = userAgent
                 };
             }
-            else if (request.Method == HttpMethod.POST)
+            else if (request.Method == HttpMethod.Post)
             {
                 var contentTypeType = request.Headers.ContentType;
 
@@ -167,7 +168,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var newRequest = new HttpRequest(apiUrl, HttpAccept.Json);
 
             newRequest.Headers.ContentType = "application/json";
-            newRequest.Method = HttpMethod.POST;
+            newRequest.Method = HttpMethod.Post;
             newRequest.SetContent(req.ToJson());
 
             _logger.Debug("Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);

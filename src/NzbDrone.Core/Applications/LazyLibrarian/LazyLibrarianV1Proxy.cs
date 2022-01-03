@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
@@ -31,13 +32,13 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         public LazyLibrarianStatus GetStatus(LazyLibrarianSettings settings)
         {
-            var request = BuildRequest(settings, "/api", "getVersion", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api", "getVersion", HttpMethod.Get);
             return Execute<LazyLibrarianStatus>(request);
         }
 
         public List<LazyLibrarianIndexer> GetIndexers(LazyLibrarianSettings settings)
         {
-            var request = BuildRequest(settings, "/api", "listNabProviders", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api", "listNabProviders", HttpMethod.Get);
 
             var response = Execute<LazyLibrarianIndexerResponse>(request);
 
@@ -76,7 +77,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 { "providertype", indexerType.ToString().ToLower() }
             };
 
-            var request = BuildRequest(settings, "/api", "delProvider", HttpMethod.GET, parameters);
+            var request = BuildRequest(settings, "/api", "delProvider", HttpMethod.Get, parameters);
             CheckForError(Execute<LazyLibrarianStatus>(request));
         }
 
@@ -92,7 +93,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 { "categories", indexer.Categories }
             };
 
-            var request = BuildRequest(settings, "/api", "addProvider", HttpMethod.GET, parameters);
+            var request = BuildRequest(settings, "/api", "addProvider", HttpMethod.Get, parameters);
             CheckForError(Execute<LazyLibrarianStatus>(request));
             return indexer;
         }
@@ -110,7 +111,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 { "altername", indexer.Altername }
             };
 
-            var request = BuildRequest(settings, "/api", "changeProvider", HttpMethod.GET, parameters);
+            var request = BuildRequest(settings, "/api", "changeProvider", HttpMethod.Get, parameters);
             CheckForError(Execute<LazyLibrarianStatus>(request));
             return indexer;
         }

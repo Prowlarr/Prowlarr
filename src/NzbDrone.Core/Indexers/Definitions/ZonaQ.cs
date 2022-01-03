@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -79,7 +80,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 LogResponseContent = true
             };
 
-            requestBuilder.Method = HttpMethod.POST;
+            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
             requestBuilder.SetCookies(loginPage.GetCookies());
 
@@ -102,7 +103,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     LogResponseContent = true
                 };
 
-                requestBuilder2.Method = HttpMethod.POST;
+                requestBuilder2.Method = HttpMethod.Post;
                 requestBuilder2.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
                 requestBuilder2.SetCookies(response.GetCookies());
 

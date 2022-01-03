@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
@@ -31,13 +32,13 @@ namespace NzbDrone.Core.Applications.Mylar
 
         public MylarStatus GetStatus(MylarSettings settings)
         {
-            var request = BuildRequest(settings, "/api", "getVersion", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api", "getVersion", HttpMethod.Get);
             return Execute<MylarStatus>(request);
         }
 
         public List<MylarIndexer> GetIndexers(MylarSettings settings)
         {
-            var request = BuildRequest(settings, "/api", "listProviders", HttpMethod.GET);
+            var request = BuildRequest(settings, "/api", "listProviders", HttpMethod.Get);
 
             var response = Execute<MylarIndexerResponse>(request);
 
@@ -76,7 +77,7 @@ namespace NzbDrone.Core.Applications.Mylar
                 { "providertype", indexerType.ToString().ToLower() }
             };
 
-            var request = BuildRequest(settings, "/api", "delProvider", HttpMethod.GET, parameters);
+            var request = BuildRequest(settings, "/api", "delProvider", HttpMethod.Get, parameters);
             CheckForError(Execute<MylarStatus>(request));
         }
 
@@ -92,7 +93,7 @@ namespace NzbDrone.Core.Applications.Mylar
                 { "categories", indexer.Categories }
             };
 
-            var request = BuildRequest(settings, "/api", "addProvider", HttpMethod.GET, parameters);
+            var request = BuildRequest(settings, "/api", "addProvider", HttpMethod.Get, parameters);
             CheckForError(Execute<MylarStatus>(request));
             return indexer;
         }
@@ -110,7 +111,7 @@ namespace NzbDrone.Core.Applications.Mylar
                 { "altername", indexer.Altername }
             };
 
-            var request = BuildRequest(settings, "/api", "changeProvider", HttpMethod.GET, parameters);
+            var request = BuildRequest(settings, "/api", "changeProvider", HttpMethod.Get, parameters);
             CheckForError(Execute<MylarStatus>(request));
             return indexer;
         }

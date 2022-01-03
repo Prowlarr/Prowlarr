@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -45,7 +46,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             var responseJson = ReadAllText(fileName);
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Post), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), responseJson)));
 
             var torrents = (await Subject.Fetch(_movieSearchCriteria)).Releases;

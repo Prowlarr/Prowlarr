@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -87,7 +88,7 @@ namespace NzbDrone.Common.Http
                     // 302 or 303 should default to GET on redirect even if POST on original
                     if (response.StatusCode == HttpStatusCode.Redirect || response.StatusCode == HttpStatusCode.RedirectMethod)
                     {
-                        request.Method = HttpMethod.GET;
+                        request.Method = HttpMethod.Get;
                         request.ContentData = null;
                     }
 
@@ -263,7 +264,7 @@ namespace NzbDrone.Common.Http
 
         public Task<HttpResponse> GetAsync(HttpRequest request)
         {
-            request.Method = HttpMethod.GET;
+            request.Method = HttpMethod.Get;
             return ExecuteAsync(request);
         }
 
@@ -288,7 +289,7 @@ namespace NzbDrone.Common.Http
 
         public Task<HttpResponse> HeadAsync(HttpRequest request)
         {
-            request.Method = HttpMethod.HEAD;
+            request.Method = HttpMethod.Head;
             return ExecuteAsync(request);
         }
 
@@ -299,7 +300,7 @@ namespace NzbDrone.Common.Http
 
         public Task<HttpResponse> PostAsync(HttpRequest request)
         {
-            request.Method = HttpMethod.POST;
+            request.Method = HttpMethod.Post;
             return ExecuteAsync(request);
         }
 

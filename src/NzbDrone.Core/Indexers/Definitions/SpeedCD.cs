@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -57,7 +58,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var requestBuilder = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "checkpoint/API"))
             {
-                Method = HttpMethod.POST,
+                Method = HttpMethod.Post,
                 LogResponseContent = true,
                 AllowAutoRedirect = true
             };
@@ -77,7 +78,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var requestBuilder2 = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "checkpoint/"))
             {
-                Method = HttpMethod.POST,
+                Method = HttpMethod.Post,
                 LogResponseContent = true,
                 AllowAutoRedirect = true
             };

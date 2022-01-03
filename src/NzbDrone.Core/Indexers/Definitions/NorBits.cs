@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -79,7 +80,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 LogResponseContent = true,
                 AllowAutoRedirect = true,
-                Method = HttpMethod.POST
+                Method = HttpMethod.Post
             };
 
             var authLoginCheckRequest = requestBuilder3

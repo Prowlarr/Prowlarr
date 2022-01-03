@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Xml;
 using System.Xml.Linq;
 using NLog;
@@ -50,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             var request = new HttpRequest(url, HttpAccept.Rss);
             request.AllowAutoRedirect = true;
-            request.Method = HttpMethod.GET;
+            request.Method = HttpMethod.Get;
 
             HttpResponse response;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -43,7 +44,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             var recentFeed = ReadAllText(@"Files/Indexers/Newznab/newznab_nzb_su.xml");
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 }, Limit = 100, Offset = 0 })).Releases;

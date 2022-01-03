@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
@@ -110,7 +111,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var request = new HttpRequest(searchUrl, HttpAccept.Json);
 
             request.Headers.Add("Content-type", "application/json");
-            request.Method = HttpMethod.POST;
+            request.Method = HttpMethod.Post;
             request.SetContent(body.ToJson());
 
             var indexerRequest = new IndexerRequest(request);

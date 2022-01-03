@@ -142,7 +142,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         private async Task<List<ReleaseInfo>> Dispatch(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, SearchCriteriaBase criteriaBase)
         {
-            var indexers = _indexerFactory.GetAvailableProviders();
+            var indexers = _indexerFactory.Enabled();
 
             if (criteriaBase.IndexerIds != null && criteriaBase.IndexerIds.Count > 0)
             {

@@ -44,10 +44,6 @@ namespace NzbDrone.Test.Common
             {
                 consoleExe = "Prowlarr.Console.exe";
             }
-            else if (PlatformInfo.IsMono)
-            {
-                consoleExe = "Prowlarr.exe";
-            }
             else
             {
                 consoleExe = "Prowlarr";

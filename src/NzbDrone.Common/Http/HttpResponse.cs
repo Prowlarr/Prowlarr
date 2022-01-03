@@ -11,21 +11,19 @@ namespace NzbDrone.Common.Http
     {
         private static readonly Regex RegexSetCookie = new Regex("^(.*?)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             Request = request;
             Headers = headers;
-            Cookies = cookies;
             ResponseData = binaryData;
             StatusCode = statusCode;
             ElapsedTime = elapsedTime;
         }
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, string content, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, string content, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             Request = request;
             Headers = headers;
-            Cookies = cookies;
             ResponseData = Headers.GetEncodingFromContentType().GetBytes(content);
             _content = content;
             StatusCode = statusCode;
@@ -34,7 +32,6 @@ namespace NzbDrone.Common.Http
 
         public HttpRequest Request { get; private set; }
         public HttpHeader Headers { get; private set; }
-        public CookieCollection Cookies { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
         public long ElapsedTime { get; private set; }
         public byte[] ResponseData { get; private set; }
@@ -92,9 +89,14 @@ namespace NzbDrone.Common.Http
         {
             var result = new Dictionary<string, string>();
 
-            foreach (Cookie cookie in Cookies)
+            var setCookieHeaders = CookieUtil.CookieHeaderToDictionary();
+            foreach (var cookie in setCookieHeaders)
             {
-                result[cookie.Name] = cookie.Value;
+                var match = RegexSetCookie.Match(cookie);
+                if (match.Success)
+                {
+                    result[match.Groups[1].Value] = match.Groups[2].Value;
+                }
             }
 
             return result;

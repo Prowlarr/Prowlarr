@@ -91,7 +91,9 @@ namespace NzbDrone.Common.Http
                         request.ContentData = null;
                     }
 
-                    response = await ExecuteRequestAsync(request, cookieContainer);
+                    var redirectContainer = HandleRedirectCookies(request, response);
+
+                    response = await ExecuteRequestAsync(request, redirectContainer);
                 }
                 while (response.HasHttpRedirect);
             }
@@ -160,6 +162,41 @@ namespace NzbDrone.Common.Http
             }
 
             return response;
+        }
+
+        private CookieContainer HandleRedirectCookies(HttpRequest request, HttpResponse response)
+        {
+            var sourceContainer = new CookieContainer();
+
+            var responseCookies = response.GetCookies();
+
+            if (responseCookies.Count != 0)
+            {
+                foreach (var pair in responseCookies)
+                {
+                    Cookie cookie;
+                    if (pair.Value == null)
+                    {
+                        cookie = new Cookie(pair.Key, "", "/")
+                        {
+                            Expires = DateTime.Now.AddDays(-1)
+                        };
+                    }
+                    else
+                    {
+                        cookie = new Cookie(pair.Key, pair.Value, "/")
+                        {
+                            // Use Now rather than UtcNow to work around Mono cookie expiry bug.
+                            // See https://gist.github.com/ta264/7822b1424f72e5b4c961
+                            Expires = DateTime.Now.AddHours(1)
+                        };
+                    }
+
+                    sourceContainer.Add((Uri)request.Url, cookie);
+                }
+            }
+
+            return sourceContainer;
         }
 
         private CookieContainer InitializeRequestCookies(HttpRequest request)

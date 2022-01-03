@@ -133,11 +133,18 @@ namespace NzbDrone.Core.Applications.Mylar
                 {
                     return new ValidationFailure("ApiKey", status.Error.Message);
                 }
+
+                var indexers = GetIndexers(settings);
             }
             catch (HttpException ex)
             {
                 _logger.Error(ex, "Unable to send test message");
                 return new ValidationFailure("BaseUrl", "Unable to complete application test");
+            }
+            catch (MylarException ex)
+            {
+                _logger.Error(ex, "Connection test failed");
+                return new ValidationFailure("", ex.Message);
             }
             catch (Exception ex)
             {

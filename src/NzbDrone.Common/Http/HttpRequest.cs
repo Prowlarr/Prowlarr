@@ -14,6 +14,7 @@ namespace NzbDrone.Common.Http
         {
             Url = new HttpUri(url);
             Headers = new HttpHeader();
+            Method = HttpMethod.Get;
             ConnectionKeepAlive = true;
             AllowAutoRedirect = true;
             Cookies = new Dictionary<string, string>();

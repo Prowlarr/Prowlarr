@@ -57,6 +57,14 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
             {
+                var errorCode = jsonResponse.Error.First.Value<string>("code");
+                var errorMessage = jsonResponse.Error.Last.Value<string>("message");
+
+                if (errorCode == "-3002" || errorMessage == "Call Limit Exceeded")
+                {
+                    throw new RequestLimitReachedException(indexerResponse, "Cannot do more than 150 API requests per hour.");
+                }
+
                 throw new IndexerException(indexerResponse, "Indexer API call returned an error [{0}]", jsonResponse.Error);
             }
 

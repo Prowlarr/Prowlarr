@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;
@@ -45,16 +46,27 @@ namespace NzbDrone.Core.Indexers
         public override List<IndexerDefinition> All()
         {
             var definitions = base.All();
+            var filteredDefinitions = new List<IndexerDefinition>();
 
             foreach (var definition in definitions)
             {
                 if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
                 {
-                    MapCardigannDefinition(definition);
+                    try
+                    {
+                        MapCardigannDefinition(definition);
+                    }
+                    catch
+                    {
+                        // Skip indexer if we fail in Cardigann mapping
+                        continue;
+                    }
                 }
+
+                filteredDefinitions.Add(definition);
             }
 
-            return definitions;
+            return filteredDefinitions;
         }
 
         public override IndexerDefinition Get(int id)
@@ -63,7 +75,14 @@ namespace NzbDrone.Core.Indexers
 
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
             {
-                MapCardigannDefinition(definition);
+                try
+                {
+                    MapCardigannDefinition(definition);
+                }
+                catch
+                {
+                    throw new ModelNotFoundException(typeof(IndexerDefinition), id);
+                }
             }
 
             return definition;

@@ -197,7 +197,7 @@ namespace NzbDrone.Core.Configuration
         public string PostgresPassword => GetValue("PostgresPassword", string.Empty, persist: false);
         public string PostgresMainDb => GetValue("PostgresMainDb", "prowlarr-main", persist: false);
         public string PostgresLogDb => GetValue("PostgresLogDb", "prowlarr-log", persist: false);
-        public int PostgresPort => GetValueInt("PostgresPort", 5436, persist: false);
+        public int PostgresPort => GetValueInt("PostgresPort", 5432, persist: false);
         public bool LogSql => GetValueBoolean("LogSql", false, persist: false);
         public int LogRotate => GetValueInt("LogRotate", 50, persist: false);
         public bool FilterSentryEvents => GetValueBoolean("FilterSentryEvents", true, persist: false);

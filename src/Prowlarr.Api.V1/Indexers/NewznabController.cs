@@ -148,7 +148,7 @@ namespace NzbDrone.Api.V1.Indexers
 
                     foreach (var result in results.Releases)
                     {
-                        result.DownloadUrl = result.DownloadUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexerDef.Id, result.Title).ToString() : null;
+                        result.DownloadUrl = result.DownloadUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexerDef.Id, result.Title).AbsoluteUri : null;
 
                         if (result.DownloadProtocol == DownloadProtocol.Torrent)
                         {

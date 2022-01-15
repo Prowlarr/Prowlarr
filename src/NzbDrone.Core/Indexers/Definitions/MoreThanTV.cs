@@ -328,7 +328,7 @@ public class MoreThanTVSettings : IIndexerSettings
     [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
     public string BaseUrl { get; set; }
 
-    [FieldDefinition(2, Label = "Cookie", HelpText = "Enter the cookie for the site", HelpLink = "https://wiki.servarr.com/prowlarr/faq#finding-cookies")]
+    [FieldDefinition(2, Label = "Cookie", HelpText = "Enter the cookies for the site, just copy everything after 'cookie:' from the request headers to the site", HelpLink = "https://wiki.servarr.com/prowlarr/faq#finding-cookies")]
     public string Cookie { get; set; }
 
     [FieldDefinition(5)]

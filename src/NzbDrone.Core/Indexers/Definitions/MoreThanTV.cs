@@ -331,7 +331,7 @@ public class MoreThanTVSettings : IIndexerSettings
     [FieldDefinition(2, Label = "Cookie", HelpText = "Enter the cookies for the site, just copy everything after 'cookie:' from the request headers to the site", HelpLink = "https://wiki.servarr.com/prowlarr/faq#finding-cookies")]
     public string Cookie { get; set; }
 
-    [FieldDefinition(5)]
+    [FieldDefinition(3)]
     public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
     public NzbDroneValidationResult Validate()

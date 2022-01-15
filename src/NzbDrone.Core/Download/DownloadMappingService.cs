@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Download
 
             var encryptedLink = _protectionService.Protect(link.ToString());
             var encodedLink = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(encryptedLink));
-            var urlEncodedFile = WebUtility.UrlEncode(file);
+            var urlEncodedFile = Uri.EscapeDataString(file);
             var proxyLink = $"{serverUrl}{urlBase}/{indexerId}/download?apikey={_configFileProvider.ApiKey}&link={encodedLink}&file={urlEncodedFile}";
             return new Uri(proxyLink);
         }

@@ -192,7 +192,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else if (!string.IsNullOrWhiteSpace(searchString))
             {
-                searchUrl += "exact/1/query/" + WebUtility.UrlEncode(searchString) + "/";
+                searchUrl += "exact/1/query/" + Uri.EscapeDataString(searchString) + "/";
             }
 
             var cats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);

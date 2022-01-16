@@ -375,6 +375,22 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return results;
         }
 
+        public ICollection<IndexerCategory> MapTrackerCatDescToNewznab(string trackerCategoryDesc)
+        {
+            if (string.IsNullOrWhiteSpace(trackerCategoryDesc))
+            {
+                return new List<IndexerCategory>();
+            }
+
+            var cats = _categoryMapping
+                .Where(m =>
+                    !string.IsNullOrWhiteSpace(m.TrackerCategoryDesc) &&
+                    string.Equals(m.TrackerCategoryDesc, trackerCategoryDesc, StringComparison.InvariantCultureIgnoreCase))
+                .Select(c => NewznabStandardCategory.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
+                .ToList();
+            return cats;
+        }
+
         protected delegate string TemplateTextModifier(string str);
 
         protected string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)

@@ -1,3 +1,4 @@
+using System.Data.SQLite;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -6,6 +7,7 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Lifecycle;
+using NzbDrone.Core.Messaging;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Host
@@ -99,6 +101,7 @@ namespace NzbDrone.Host
             return args;
         }
 
+        [EventHandleOrder(EventHandleOrder.Last)]
         public void Handle(ApplicationShutdownRequested message)
         {
             if (!_runtimeInfo.IsWindowsService)

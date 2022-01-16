@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -99,6 +100,11 @@ namespace NzbDrone.Host
                 Logger.Info(e.Message);
                 LogManager.Configuration = null;
             }
+
+            // Make sure there are no lingering database connections
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            SQLiteConnection.ClearAllPools();
         }
 
         public static IHostBuilder CreateConsoleHostBuilder(string[] args, StartupContext context)

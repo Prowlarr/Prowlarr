@@ -466,6 +466,22 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     value = release.Categories.ToString();
                     break;
+                case "categorydesc":
+                    var catsDesc = MapTrackerCatDescToNewznab(value);
+                    if (catsDesc.Any())
+                    {
+                        if (release.Category == null || fieldModifiers.Contains("noappend"))
+                        {
+                            release.Category = catsDesc;
+                        }
+                        else
+                        {
+                            release.Category = release.Category.Union(catsDesc).ToList();
+                        }
+                    }
+
+                    value = release.Category.ToString();
+                    break;
                 case "size":
                     release.Size = ParseUtil.GetBytes(value);
                     value = release.Size.ToString();

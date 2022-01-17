@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Language => "ru-org";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public RuTracker(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

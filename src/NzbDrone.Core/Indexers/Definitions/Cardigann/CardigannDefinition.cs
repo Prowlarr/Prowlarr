@@ -98,6 +98,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public List<ErrorBlock> Error { get; set; }
         public PageTestBlock Test { get; set; }
         public CaptchaBlock Captcha { get; set; }
+        public Dictionary<string, List<string>> Headers { get; set; }
     }
 
     public class ErrorBlock
@@ -179,6 +180,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public List<ErrorBlock> Error { get; set; }
         public BeforeBlock Before { get; set; }
         public InfohashBlock Infohash { get; set; }
+        public Dictionary<string, List<string>> Headers { get; set; }
     }
 
     public class InfohashBlock

@@ -176,6 +176,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var login = _definition.Login;
 
+            var headers = new Dictionary<string, string>();
+
+            var variables = GetBaseTemplateVariables();
+
+            if (login.Headers != null)
+            {
+                headers = ParseCustomHeaders(login.Headers, variables);
+            }
+
             if (login.Method == "post")
             {
                 var pairs = new Dictionary<string, string>();
@@ -198,6 +207,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     SuppressHttpError = true,
                     Encoding = _encoding
                 };
+
+                requestBuilder.SetHeaders(headers);
 
                 foreach (var pair in pairs)
                 {
@@ -382,7 +393,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var enctype = form.GetAttribute("enctype");
                 if (enctype == "multipart/form-data")
                 {
-                    var headers = new Dictionary<string, string>();
                     var boundary = "---------------------------" + DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString().Replace(".", "");
                     var bodyParts = new List<string>();
 
@@ -439,6 +449,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     };
 
                     requestBuilder.SetCookies(Cookies);
+                    requestBuilder.SetHeaders(headers);
+
                     requestBuilder.Headers.Add("Referer", loginUrl);
 
                     foreach (var pair in pairs)
@@ -480,6 +492,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     Encoding = _encoding
                 };
 
+                requestBuilder.SetHeaders(headers);
+
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
                 var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
@@ -504,6 +518,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     SuppressHttpError = true,
                     Encoding = _encoding
                 };
+
+                requestBuilder.SetHeaders(headers);
 
                 requestBuilder.Headers.Add("Referer", SiteLink);
 
@@ -741,11 +757,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var variables = GetBaseTemplateVariables();
             AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
-            headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
 
             if (_definition.Download != null)
             {
                 var download = _definition.Download;
+
+                // Use Download headers if they exist; else use Search Headers
+                if (download.Headers != null)
+                {
+                    headers = ParseCustomHeaders(download.Headers, variables);
+                }
+                else
+                {
+                    headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+                }
 
                 HttpResponse response = null;
 

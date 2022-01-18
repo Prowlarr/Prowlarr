@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Icon from 'Components/Icon';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRowButton from 'Components/Table/TableRowButton';
+import { icons } from 'Helpers/Props';
 import ProtocolLabel from 'Indexer/Index/Table/ProtocolLabel';
 import firstCharToUpper from 'Utilities/String/firstCharToUpper';
 import translate from 'Utilities/String/translate';
@@ -29,7 +31,8 @@ class SelectIndexerRow extends Component {
       protocol,
       privacy,
       name,
-      language
+      language,
+      isExistingIndexer
     } = this.props;
 
     return (
@@ -42,6 +45,16 @@ class SelectIndexerRow extends Component {
 
         <TableRowCell>
           {name}
+          {
+            isExistingIndexer ?
+              <Icon
+                className={styles.alreadyExistsIcon}
+                name={icons.CHECK_CIRCLE}
+                size={15}
+                title={translate('IndexerAlreadySetup')}
+              /> :
+              null
+          }
         </TableRowCell>
 
         <TableRowCell>
@@ -62,7 +75,8 @@ SelectIndexerRow.propTypes = {
   privacy: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
-  onIndexerSelect: PropTypes.func.isRequired
+  onIndexerSelect: PropTypes.func.isRequired,
+  isExistingIndexer: PropTypes.bool.isRequired
 };
 
 export default SelectIndexerRow;

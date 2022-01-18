@@ -169,6 +169,7 @@
   "IllRestartLater": "I'll restart later",
   "IncludeHealthWarningsHelpText": "Include Health Warnings",
   "Indexer": "Indexer",
+  "IndexerAlreadySetup": "At least one instace of indexer is already setup",
   "IndexerAuth": "Indexer Auth",
   "IndexerFlags": "Indexer Flags",
   "IndexerHealthCheckNoIndexers": "No indexers enabled, Prowlarr will not return search results",

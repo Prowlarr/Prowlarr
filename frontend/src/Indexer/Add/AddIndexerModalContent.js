@@ -15,7 +15,7 @@ import TableBody from 'Components/Table/TableBody';
 import { kinds, scrollDirections } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
-import SelectIndexerRow from './SelectIndexerRow';
+import SelectIndexerRowConnector from './SelectIndexerRowConnector';
 import styles from './AddIndexerModalContent.css';
 
 const columns = [
@@ -219,7 +219,7 @@ class AddIndexerModalContent extends Component {
                   <TableBody>
                     {
                       filteredIndexers.map((indexer) => (
-                        <SelectIndexerRow
+                        <SelectIndexerRowConnector
                           key={indexer.name}
                           implementation={indexer.implementation}
                           {...indexer}

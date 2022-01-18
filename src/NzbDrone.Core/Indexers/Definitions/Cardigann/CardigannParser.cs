@@ -588,6 +588,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     release.TvRageId = (int)ParseUtil.CoerceLong(rageID);
                     value = release.TvRageId.ToString();
                     break;
+                case "traktid":
+                    var traktIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var traktIDMatch = traktIDRegEx.Match(value);
+                    var traktID = traktIDMatch.Groups[1].Value;
+                    release.TvRageId = (int)ParseUtil.CoerceLong(traktID);
+                    value = release.TvRageId.ToString();
+                    break;
                 case "tvdbid":
                     var tvdbIdRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
                     var tvdbIdMatch = tvdbIdRegEx.Match(value);
@@ -603,6 +610,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
 
                     value = release.PosterUrl;
+                    break;
+                case "genre":
+                    release.Genres.Union(value.Split(','));
+                    value = release.Genres.ToString();
+                    break;
+                case "year":
+                    release.Year = ParseUtil.CoerceInt(value);
+                    value = release.Year.ToString();
                     break;
                 case "author":
                     release.Author = value;

@@ -4,7 +4,7 @@ import Modal from 'Components/Modal/Modal';
 import AddIndexerModalContentConnector from './AddIndexerModalContentConnector';
 import styles from './AddIndexerModal.css';
 
-function AddIndexerModal({ isOpen, onModalClose, ...otherProps }) {
+function AddIndexerModal({ isOpen, onModalClose, onSelectIndexer, ...otherProps }) {
   return (
     <Modal
       isOpen={isOpen}
@@ -14,6 +14,7 @@ function AddIndexerModal({ isOpen, onModalClose, ...otherProps }) {
       <AddIndexerModalContentConnector
         {...otherProps}
         onModalClose={onModalClose}
+        onSelectIndexer={onSelectIndexer}
       />
     </Modal>
   );
@@ -21,7 +22,8 @@ function AddIndexerModal({ isOpen, onModalClose, ...otherProps }) {
 
 AddIndexerModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onModalClose: PropTypes.func.isRequired
+  onModalClose: PropTypes.func.isRequired,
+  onSelectIndexer: PropTypes.func.isRequired
 };
 
 export default AddIndexerModal;

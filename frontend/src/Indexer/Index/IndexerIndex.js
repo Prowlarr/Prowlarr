@@ -193,11 +193,12 @@ class IndexerIndex extends Component {
     this.setState({ isAddIndexerModalOpen: true });
   };
 
-  onAddIndexerModalClose = ({ indexerSelected = false } = {}) => {
-    this.setState({
-      isAddIndexerModalOpen: false,
-      isEditIndexerModalOpen: indexerSelected
-    });
+  onAddIndexerModalClose = () => {
+    this.setState({ isAddIndexerModalOpen: false });
+  };
+
+  onAddIndexerSelectIndexer = () => {
+    this.setState({ isEditIndexerModalOpen: true });
   };
 
   onEditIndexerModalClose = () => {
@@ -463,6 +464,7 @@ class IndexerIndex extends Component {
         <AddIndexerModal
           isOpen={isAddIndexerModalOpen}
           onModalClose={this.onAddIndexerModalClose}
+          onSelectIndexer={this.onAddIndexerSelectIndexer}
         />
 
         <EditIndexerModalConnector

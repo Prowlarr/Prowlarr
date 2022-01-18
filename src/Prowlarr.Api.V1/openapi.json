@@ -5438,6 +5438,10 @@
             },
             "nullable": true
           },
+          "definitionName": {
+            "type": "string",
+            "nullable": true
+          },
           "description": {
             "type": "string",
             "nullable": true

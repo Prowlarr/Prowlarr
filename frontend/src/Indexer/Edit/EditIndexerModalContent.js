@@ -39,6 +39,7 @@ function EditIndexerModalContent(props) {
   const {
     id,
     implementationName,
+    definitionName,
     name,
     enable,
     redirect,
@@ -50,10 +51,12 @@ function EditIndexerModalContent(props) {
     priority
   } = item;
 
+  const indexerDisplayName = implementationName === definitionName ? implementationName : `${implementationName} (${definitionName})`;
+
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? translate('EditIndexer') : translate('AddIndexer')} - ${implementationName}`}
+        {`${id ? translate('EditIndexer') : translate('AddIndexer')} - ${indexerDisplayName}`}
       </ModalHeader>
 
       <ModalBody>

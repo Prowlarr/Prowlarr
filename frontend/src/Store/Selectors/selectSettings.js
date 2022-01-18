@@ -36,6 +36,12 @@ function selectSettings(item, pendingChanges, saveError) {
       return result;
     }
 
+    if (key === 'definitionName') {
+      result.definitionName = item[key];
+
+      return result;
+    }
+
     const setting = {
       value: item[key],
       errors: _.map(_.remove(validationFailures, (failure) => {

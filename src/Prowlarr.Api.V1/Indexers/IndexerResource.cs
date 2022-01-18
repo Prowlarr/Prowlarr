@@ -15,6 +15,7 @@ namespace Prowlarr.Api.V1.Indexers
     public class IndexerResource : ProviderResource<IndexerResource>
     {
         public string[] IndexerUrls { get; set; }
+        public string DefinitionName { get; set; }
         public string Description { get; set; }
         public string Language { get; set; }
         public string Encoding { get; set; }
@@ -51,6 +52,8 @@ namespace Prowlarr.Api.V1.Indexers
 
             var resource = base.ToResource(definition);
 
+            resource.DefinitionName = definition.ImplementationName;
+
             var infoLinkName = definition.ImplementationName;
 
             if (definition.Implementation == typeof(Cardigann).Name)
@@ -71,6 +74,7 @@ namespace Prowlarr.Api.V1.Indexers
                     }
                 }
 
+                resource.DefinitionName = settings.DefinitionFile;
                 infoLinkName = settings.DefinitionFile;
             }
 

@@ -1,7 +1,11 @@
+using System.Collections.Generic;
 using System.Threading;
+using Microsoft.Extensions.Configuration;
 using NLog;
+using Npgsql;
 using NUnit.Framework;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers.FileList;
 using NzbDrone.Test.Common;
 using Prowlarr.Http.ClientSchema;
@@ -19,6 +23,8 @@ namespace NzbDrone.Integration.Test
 
         protected int Port { get; private set; }
 
+        protected PostgresOptions PostgresOptions { get; set; } = new ();
+
         protected override string RootUrl => $"http://localhost:{Port}/";
 
         protected override string ApiKey => _runner.ApiKey;
@@ -27,7 +33,21 @@ namespace NzbDrone.Integration.Test
         {
             Port = Interlocked.Increment(ref StaticPort);
 
-            _runner = new NzbDroneRunner(LogManager.GetCurrentClassLogger(), Port);
+            var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables("Prowlarr__")
+                .Build();
+
+            config.GetSection("Postgres").Bind(PostgresOptions);
+
+            if (PostgresOptions.Host != null)
+            {
+                var uid = TestBase.GetUID();
+                PostgresOptions.MainDb = uid + "_main";
+                PostgresOptions.LogDb = uid + "_log";
+                CreatePostgresDb(PostgresOptions);
+            }
+
+            _runner = new NzbDroneRunner(LogManager.GetCurrentClassLogger(), PostgresOptions, Port);
             _runner.Kill();
 
             _runner.Start();
@@ -56,6 +76,57 @@ namespace NzbDrone.Integration.Test
         protected override void StopTestTarget()
         {
             _runner.Kill();
+            if (PostgresOptions.Host != null)
+            {
+                DropPostgresDb(PostgresOptions);
+            }
+        }
+
+        private void CreatePostgresDb(PostgresOptions options)
+        {
+            var connectionString = GetConnectionString(options);
+            CreateDatabase(connectionString, options.User, options.MainDb);
+            CreateDatabase(connectionString, options.User, options.LogDb);
+        }
+
+        private void CreateDatabase(string connectionString, string user, string db)
+        {
+            using var conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $"CREATE DATABASE \"{db}\" WITH OWNER = {user} ENCODING = 'UTF8' CONNECTION LIMIT = -1;";
+            cmd.ExecuteNonQuery();
+        }
+
+        private void DropPostgresDb(PostgresOptions options)
+        {
+            var connectionString = GetConnectionString(options);
+            DropDatabase(connectionString, options.MainDb);
+            DropDatabase(connectionString, options.LogDb);
+        }
+
+        private void DropDatabase(string connectionString, string db)
+        {
+            using var conn = new NpgsqlConnection(connectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $"DROP DATABASE \"{db}\";";
+            cmd.ExecuteNonQuery();
+        }
+
+        private string GetConnectionString(PostgresOptions options)
+        {
+            var builder = new NpgsqlConnectionStringBuilder()
+            {
+                Host = options.Host,
+                Port = options.Port,
+                Username = options.User,
+                Password = options.Password
+            };
+
+            return builder.ConnectionString;
         }
     }
 }

@@ -32,6 +32,8 @@ namespace NzbDrone.Core.Parser.Model
         public int TvRageId { get; set; }
         public int ImdbId { get; set; }
         public int TmdbId { get; set; }
+        public int TraktId { get; set; }
+        public int Year { get; set; }
         public string Author { get; set; }
         public string BookTitle { get; set; }
         public string Artist { get; set; }
@@ -45,6 +47,7 @@ namespace NzbDrone.Core.Parser.Model
         public string Container { get; set; }
         public string Codec { get; set; }
         public string Resolution { get; set; }
+        public ICollection<string> Genres { get; set; }
         public ICollection<Language> Languages { get; set; }
         public ICollection<Language> Subs { get; set; }
         public ICollection<IndexerCategory> Categories { get; set; }

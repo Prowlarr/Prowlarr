@@ -28,17 +28,17 @@ namespace NzbDrone.Core.Indexers
         {
             if (indexer.Id > 0 && ((IIndexerSettings)indexer.Settings).BaseSettings.GrabLimit.HasValue)
             {
-                var grabCount = _historyService.CountSince(indexer.Id, DateTime.Now.StartOfDay(), new List<HistoryEventType> { HistoryEventType.ReleaseGrabbed });
+                var grabCount = _historyService.CountSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.ReleaseGrabbed });
                 var grabLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit;
 
                 if (grabCount > grabLimit)
                 {
-                    _logger.Info("Indexer {0} has exceeded maximum grab limit for today", indexer.Name);
+                    _logger.Info("Indexer {0} has exceeded maximum grab limit for last 24 hours", indexer.Name);
 
                     return true;
                 }
 
-                _logger.Debug("Indexer {0} has performed {1} of possible {2} grabs for today, proceeding", indexer.Name, grabCount, grabLimit);
+                _logger.Debug("Indexer {0} has performed {1} of possible {2} grabs in last 24 hours, proceeding", indexer.Name, grabCount, grabLimit);
             }
 
             return false;
@@ -48,17 +48,17 @@ namespace NzbDrone.Core.Indexers
         {
             if (indexer.Id > 0 && ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit.HasValue)
             {
-                var queryCount = _historyService.CountSince(indexer.Id, DateTime.Now.StartOfDay(), new List<HistoryEventType> { HistoryEventType.IndexerQuery, HistoryEventType.IndexerRss });
+                var queryCount = _historyService.CountSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.IndexerQuery, HistoryEventType.IndexerRss });
                 var queryLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit;
 
                 if (queryCount > queryLimit)
                 {
-                    _logger.Info("Indexer {0} has exceeded maximum query limit for today", indexer.Name);
+                    _logger.Info("Indexer {0} has exceeded maximum query limit for last 24 hours", indexer.Name);
 
                     return true;
                 }
 
-                _logger.Debug("Indexer {0} has performed {1} of possible {2} queries for today, proceeding", indexer.Name, queryCount, queryLimit);
+                _logger.Debug("Indexer {0} has performed {1} of possible {2} queries in last 24 hours, proceeding", indexer.Name, queryCount, queryLimit);
             }
 
             return false;

@@ -7,6 +7,8 @@ variables:
   outputFolder: './_output'
   artifactsFolder: './_artifacts'
   testsFolder: './_tests'
+  yarnCacheFolder: $(Pipeline.Workspace)/.yarn
+  nugetCacheFolder: $(Pipeline.Workspace)/.nuget/packages
   majorVersion: '0.3.0'
   minorVersion: $[counter('minorVersion', 1)]
   prowlarrVersion: '$(majorVersion).$(minorVersion)'
@@ -16,7 +18,9 @@ variables:
   dotnetVersion: '6.0.201'
   innoVersion: '6.2.0'
   nodeVersion: '16.x'
-  yarnCacheFolder: $(Pipeline.Workspace)/.yarn
+  windowsImage: 'windows-2022'
+  linuxImage: 'ubuntu-20.04'
+  macImage: 'macOS-11'
 
 trigger:
   branches:
@@ -40,7 +44,7 @@ stages:
     - job:
       displayName: Build Variables
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       # Set the build name properly.  The 'name' property won't recursively expand so hack here:
       - bash: echo "##vso[build.updatebuildnumber]$PROWLARRVERSION"
@@ -66,15 +70,15 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
             enableAnalysis: 'true'
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
             enableAnalysis: 'false'
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
             enableAnalysis: 'false'
 
       pool:
@@ -144,13 +148,13 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
       pool:
         vmImage: $(imageName)
       steps:
@@ -186,7 +190,7 @@ stages:
     - job: Windows_Installer
       displayName: Create Installer
       pool:
-        vmImage: 'windows-2019'
+        vmImage: ${{ variables.windowsImage }}
       steps:
       - checkout: self
         fetchDepth: 1
@@ -219,7 +223,7 @@ stages:
     - job: Other_Packages
       displayName: Create Standard Packages
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: self
         fetchDepth: 1
@@ -379,7 +383,7 @@ stages:
     jobs:
     - job: Prepare
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: none
       - task: DownloadPipelineArtifact@2
@@ -403,17 +407,17 @@ stages:
             osName: 'Mac'
             testName: 'MacCore'
             poolName: 'Azure Pipelines'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
             poolName: 'Azure Pipelines'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
             poolName: 'Azure Pipelines'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
           FreebsdCore:
             osName: 'Linux'
             testName: 'FreebsdCore'
@@ -469,7 +473,7 @@ stages:
             containerImage: ghcr.io/servarr/testimages:alpine
 
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       
       container: $[ variables['containerImage'] ]
 
@@ -510,7 +514,7 @@ stages:
     jobs:
     - job: Prepare
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: none
       - task: DownloadPipelineArtifact@2
@@ -530,17 +534,17 @@ stages:
           MacCore:
             osName: 'Mac'
             testName: 'MacCore'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
             pattern: 'Prowlarr.*.osx-core-x64.tar.gz'
           WindowsCore:
             osName: 'Windows'
             testName: 'WindowsCore'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
             pattern: 'Prowlarr.*.windows-core-x64.zip'
           LinuxCore:
             osName: 'Linux'
             testName: 'LinuxCore'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
             pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
 
       pool:
@@ -645,7 +649,7 @@ stages:
             pattern: 'Prowlarr.*.linux-musl-core-x64.tar.gz'
 
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
 
       container: $[ variables['containerImage'] ]
 
@@ -701,17 +705,17 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
             pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
             failBuild: true
           Mac:
             osName: 'Mac'
-            imageName: 'macos-10.15'
+            imageName: ${{ variables.macImage }}
             pattern: 'Prowlarr.*.osx-core-x64.tar.gz'
             failBuild: true
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
             pattern: 'Prowlarr.*.windows-core-x64.zip'
             failBuild: true
 
@@ -777,7 +781,7 @@ stages:
     jobs:
     - job: Prepare
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
       - checkout: none
       - task: DownloadPipelineArtifact@2
@@ -794,10 +798,10 @@ stages:
         matrix:
           Linux:
             osName: 'Linux'
-            imageName: 'ubuntu-18.04'
+            imageName: ${{ variables.linuxImage }}
           Windows:
             osName: 'Windows'
-            imageName: 'windows-2019'
+            imageName: ${{ variables.windowsImage }}
       pool:
         vmImage: $(imageName)
       steps:
@@ -832,7 +836,7 @@ stages:
         )
 
       pool:
-        vmImage: windows-2019
+        vmImage: ${{ variables.windowsImage }}
 
       steps:
       - task: UseDotNet@2
@@ -884,7 +888,7 @@ stages:
         EnableAnalyzers: 'false'
 
       pool:
-        vmImage: windows-2019
+        vmImage: ${{ variables.windowsImage }}
 
       steps:
       - task: UseDotNet@2
@@ -941,7 +945,7 @@ stages:
     - job:
       displayName: Discord Notification
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
       steps:
         - task: DownloadPipelineArtifact@2
           continueOnError: true

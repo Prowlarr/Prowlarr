@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -26,6 +27,7 @@ namespace NzbDrone.Core.IndexerVersions
     {
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
 
+        private const string DEFINITION_BRANCH = "master";
         private const int DEFINITION_VERSION = 3;
         private readonly List<string> _defintionBlocklist = new List<string>()
         {
@@ -76,7 +78,7 @@ namespace NzbDrone.Core.IndexerVersions
 
             try
             {
-                var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
+                var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
                 var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
                 indexerList = response.Resource.Where(i => !_defintionBlocklist.Contains(i.File)).ToList();
 
@@ -141,7 +143,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         private CardigannDefinition GetHttpDefinition(string id)
         {
-            var req = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}/{id}");
+            var req = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{id}");
             var response = _httpClient.Get(req);
             var definition = _deserializer.Deserialize<CardigannDefinition>(response.Content);
             return CleanIndexerDefinition(definition);
@@ -238,29 +240,31 @@ namespace NzbDrone.Core.IndexerVersions
 
         private void UpdateLocalDefinitions()
         {
-            var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
-            var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
+            var startupFolder = _appFolderInfo.AppDataFolder;
 
-            foreach (var def in response.Resource)
+            try
             {
-                try
+                EnsureDefinitionsFolder();
+
+                var definitionsFolder = Path.Combine(startupFolder, "Definitions");
+                var saveFile = Path.Combine(startupFolder, "Definitions", $"indexers.zip");
+
+                _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/package.zip", saveFile);
+
+                using (ZipArchive archive = ZipFile.OpenRead(saveFile))
                 {
-                    var startupFolder = _appFolderInfo.AppDataFolder;
-
-                    EnsureDefinitionsFolder();
-
-                    var saveFile = Path.Combine(startupFolder, "Definitions", $"{def.File}.yml");
-
-                    _httpClient.DownloadFile($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}/{def.File}", saveFile);
-
-                    _cache.Remove(def.File);
-
-                    _logger.Debug("Updated definition: {0}", def.File);
+                    archive.ExtractToDirectory(definitionsFolder, true);
                 }
-                catch (Exception ex)
-                {
-                    _logger.Error("Definition download failed: {0}, {1}", def.File, ex.Message);
-                }
+
+                _diskProvider.DeleteFile(saveFile);
+
+                _cache.Clear();
+
+                _logger.Debug("Updated indexer definitions");
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Definition update failed");
             }
         }
     }

@@ -23,29 +23,29 @@ namespace NzbDrone.Core.Indexers.HDBits
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
+            var indexerHttpResponse = indexerResponse.HttpResponse;
 
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            if (indexerHttpResponse.StatusCode == HttpStatusCode.Forbidden)
             {
-                throw new IndexerException(indexerResponse,
-                    "Unexpected response status {0} code from API request",
-                    indexerResponse.HttpResponse.StatusCode);
+                throw new RequestLimitReachedException(indexerResponse, "HDBits Query Limit Reached. Please try again later.");
+            }
+
+            if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new IndexerException(indexerResponse, "Unexpected response status {0} code from API request", indexerHttpResponse.StatusCode);
             }
 
             var jsonResponse = JsonConvert.DeserializeObject<HDBitsResponse>(indexerResponse.Content);
 
             if (jsonResponse.Status != StatusCode.Success)
             {
-                throw new IndexerException(indexerResponse,
-                    "HDBits API request returned status code {0}: {1}",
-                    jsonResponse.Status,
-                    jsonResponse.Message ?? string.Empty);
+                throw new IndexerException(indexerResponse, "HDBits API request returned status code {0}: {1}", jsonResponse.Status, jsonResponse.Message ?? string.Empty);
             }
 
             var responseData = jsonResponse.Data as JArray;
             if (responseData == null)
             {
-                throw new IndexerException(indexerResponse,
-                    "Indexer API call response missing result data");
+                throw new IndexerException(indexerResponse, "Indexer API call response missing result data");
             }
 
             var queryResults = responseData.ToObject<TorrentQueryResponse[]>();

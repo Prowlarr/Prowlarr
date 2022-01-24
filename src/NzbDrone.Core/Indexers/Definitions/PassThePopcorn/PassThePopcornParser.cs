@@ -25,26 +25,32 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
+            var indexerhttpresp = indexerResponse.HttpResponse;
 
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            if (indexerhttpresp.StatusCode != HttpStatusCode.OK)
             {
                 // Remove cookie cache
-                if (indexerResponse.HttpResponse.HasHttpRedirect && indexerResponse.HttpResponse.RedirectUrl
+                if (indexerhttpresp.HasHttpRedirect && indexerhttpresp.RedirectUrl
                         .ContainsIgnoreCase("login.php"))
                 {
                     CookiesUpdater(null, null);
-                    throw new IndexerException(indexerResponse, "We are being redirected to the PTP login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
+                    throw new IndexerAuthException("We are being redirected to the PTP login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
+                }
+
+                if (indexerhttpresp.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    throw new RequestLimitReachedException(indexerResponse, "PTP Query Limit Reached. Please try again later.");
                 }
 
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 
-            if (indexerResponse.HttpResponse.Headers.ContentType != HttpAccept.Json.Value)
+            if (indexerhttpresp.Headers.ContentType != HttpAccept.Json.Value)
             {
-                if (indexerResponse.HttpResponse.Request.Url.Path.ContainsIgnoreCase("login.php"))
+                if (indexerhttpresp.Request.Url.Path.ContainsIgnoreCase("login.php"))
                 {
                     CookiesUpdater(null, null);
-                    throw new IndexerException(indexerResponse, "We are currently on the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
+                    throw new IndexerAuthException("We are currently on the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
                 }
 
                 // Remove cookie cache

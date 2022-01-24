@@ -1013,7 +1013,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 // build search URL
                 // HttpUtility.UrlPathEncode seems to only encode spaces, we use UrlEncode and replace + with %20 as a workaround
-                var searchUrl = ResolvePath(ApplyGoTemplateText(searchPath.Path, variables, Uri.EscapeDataString).Replace("+", "%20")).AbsoluteUri;
+                var searchUrl = ResolvePath(ApplyGoTemplateText(searchPath.Path, variables, WebUtility.UrlEncode).Replace("+", "%20")).AbsoluteUri;
                 var queryCollection = new List<KeyValuePair<string, string>>();
                 var method = HttpMethod.Get;
 
@@ -1038,7 +1038,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         {
                             if (input.Key == "$raw")
                             {
-                                var rawStr = ApplyGoTemplateText(input.Value, variables, Uri.EscapeDataString);
+                                var rawStr = ApplyGoTemplateText(input.Value, variables, WebUtility.UrlEncode);
                                 foreach (var part in rawStr.Split('&'))
                                 {
                                     var parts = part.Split(new char[] { '=' }, 2);

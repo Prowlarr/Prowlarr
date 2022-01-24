@@ -184,7 +184,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 searchString = match.Value;
             }
 
-            var episodeSearchUrl = searchUrl + Uri.EscapeDataString(searchString);
+            var episodeSearchUrl = searchUrl + WebUtility.UrlEncode(searchString);
 
             var request = new IndexerRequest(episodeSearchUrl, null);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
@@ -25,8 +26,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var results = new List<ReleaseInfo>();
+            var indexerHttpResponse = indexerResponse.HttpResponse;
 
-            switch (indexerResponse.HttpResponse.StatusCode)
+            switch (indexerHttpResponse.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
                     throw new IndexerAuthException("API Key invalid or not authorized");
@@ -35,17 +37,22 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 case HttpStatusCode.ServiceUnavailable:
                     throw new RequestLimitReachedException(indexerResponse, "Cannot do more than 150 API requests per hour.");
                 default:
-                    if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+                    if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
                     {
-                        throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
+                        throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", indexerHttpResponse.StatusCode);
                     }
 
                     break;
             }
 
-            if (indexerResponse.HttpResponse.Headers.ContentType != null && indexerResponse.HttpResponse.Headers.ContentType.Contains("text/html"))
+            if (indexerHttpResponse.Headers.ContentType != null && indexerHttpResponse.Headers.ContentType.Contains("text/html"))
             {
                 throw new IndexerException(indexerResponse, "Indexer responded with html content. Site is likely blocked or unavailable.");
+            }
+
+            if (indexerResponse.Content.ContainsIgnoreCase("Call Limit Exceeded"))
+            {
+                throw new RequestLimitReachedException(indexerResponse, "Cannot do more than 150 API requests per hour.");
             }
 
             if (indexerResponse.Content == "Query execution was interrupted")
@@ -53,7 +60,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 throw new IndexerException(indexerResponse, "Indexer API returned an internal server error");
             }
 
-            JsonRpcResponse<BroadcastheNetTorrents> jsonResponse = new HttpResponse<JsonRpcResponse<BroadcastheNetTorrents>>(indexerResponse.HttpResponse).Resource;
+            JsonRpcResponse<BroadcastheNetTorrents> jsonResponse = new HttpResponse<JsonRpcResponse<BroadcastheNetTorrents>>(indexerHttpResponse).Resource;
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
             {

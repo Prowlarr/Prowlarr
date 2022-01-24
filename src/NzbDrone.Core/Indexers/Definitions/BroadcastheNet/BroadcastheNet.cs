@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NLog;
 using NzbDrone.Common.Http;
@@ -16,6 +17,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override bool SupportsSearch => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
 
         public override string[] IndexerUrls => new string[] { "http://api.broadcasthe.net/" };
         public override string Description => "BroadcasTheNet (BTN) is an invite-only torrent tracker focused on TV shows";

@@ -85,6 +85,7 @@
   "CouldNotConnectSignalR": "Could not connect to SignalR, UI won't update",
   "Custom": "Custom",
   "CustomFilters": "Custom Filters",
+  "Database": "Database",
   "Date": "Date",
   "Dates": "Dates",
   "DBMigration": "DB Migration",

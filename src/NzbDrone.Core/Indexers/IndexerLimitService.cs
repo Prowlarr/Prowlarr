@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Indexers
             if (indexer.Id > 0 && ((IIndexerSettings)indexer.Settings).BaseSettings.GrabLimit.HasValue)
             {
                 var grabCount = _historyService.CountSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.ReleaseGrabbed });
-                var grabLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit;
+                var grabLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.GrabLimit;
 
                 if (grabCount > grabLimit)
                 {

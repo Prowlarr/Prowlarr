@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
                 new CardigannRequestGenerator(_configService,
-                    _definitionService.GetDefinition(Settings.DefinitionFile),
+                    _definitionService.GetCachedDefinition(Settings.DefinitionFile),
                     _logger)
                 {
                     HttpClient = _httpClient,
@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public override IParseIndexerResponse GetParser()
         {
             return new CardigannParser(_configService,
-                _definitionService.GetDefinition(Settings.DefinitionFile),
+                _definitionService.GetCachedDefinition(Settings.DefinitionFile),
                 _logger)
             {
                 Settings = Settings

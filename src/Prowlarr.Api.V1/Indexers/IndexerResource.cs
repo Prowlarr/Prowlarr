@@ -114,7 +114,7 @@ namespace Prowlarr.Api.V1.Indexers
 
                 var settings = (CardigannSettings)definition.Settings;
 
-                var cardigannDefinition = _definitionService.GetDefinition(settings.DefinitionFile);
+                var cardigannDefinition = _definitionService.GetCachedDefinition(settings.DefinitionFile);
 
                 foreach (var field in resource.Fields)
                 {

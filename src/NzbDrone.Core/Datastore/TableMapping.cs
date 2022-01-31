@@ -11,6 +11,7 @@ using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.IndexerProxies;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Jobs;
 using NzbDrone.Core.Languages;
@@ -94,6 +95,7 @@ namespace NzbDrone.Core.Datastore
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();
 
             Mapper.Entity<AppSyncProfile>("AppSyncProfiles").RegisterModel();
+            Mapper.Entity<IndexerDefinitionVersion>("IndexerDefinitionVersions").RegisterModel();
         }
 
         private static void RegisterMappers()

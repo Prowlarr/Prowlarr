@@ -244,12 +244,15 @@ class IndexerIndexRow extends Component {
                     onPress={this.onIndexerInfoPress}
                   />
 
-                  <IconButton
-                    className={styles.externalLink}
-                    name={icons.EXTERNAL_LINK}
-                    title={translate('Website')}
-                    to={indexerUrls[0].replace('api.', '')}
-                  />
+                  {
+                    indexerUrls ?
+                      <IconButton
+                        className={styles.externalLink}
+                        name={icons.EXTERNAL_LINK}
+                        title={translate('Website')}
+                        to={indexerUrls[0].replace('api.', '')}
+                      /> : null
+                  }
 
                   <IconButton
                     name={icons.EDIT}
@@ -289,7 +292,7 @@ class IndexerIndexRow extends Component {
 
 IndexerIndexRow.propTypes = {
   id: PropTypes.number.isRequired,
-  indexerUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+  indexerUrls: PropTypes.arrayOf(PropTypes.string),
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
   priority: PropTypes.number.isRequired,
@@ -298,7 +301,7 @@ IndexerIndexRow.propTypes = {
   redirect: PropTypes.bool.isRequired,
   appProfile: PropTypes.object.isRequired,
   status: PropTypes.object,
-  capabilities: PropTypes.object.isRequired,
+  capabilities: PropTypes.object,
   added: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

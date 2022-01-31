@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers
                     catch
                     {
                         // Skip indexer if we fail in Cardigann mapping
-                        continue;
+                        _logger.Debug("Indexer {0} has no definition", definition.Name);
                     }
                 }
 
@@ -96,7 +96,7 @@ namespace NzbDrone.Core.Indexers
         private void MapCardigannDefinition(IndexerDefinition definition)
         {
             var settings = (CardigannSettings)definition.Settings;
-            var defFile = _definitionService.GetDefinition(settings.DefinitionFile);
+            var defFile = _definitionService.GetCachedDefinition(settings.DefinitionFile);
             definition.ExtraFields = defFile.Settings;
 
             if (defFile.Login?.Captcha != null && !definition.ExtraFields.Any(x => x.Type == "cardigannCaptcha"))

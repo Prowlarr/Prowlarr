@@ -8,7 +8,9 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
+using NzbDrone.Core.Messaging.Events;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -21,7 +23,7 @@ namespace NzbDrone.Core.IndexerVersions
         List<string> GetBlocklist();
     }
 
-    public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
+    public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>, IHandle<ApplicationStartedEvent>
     {
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
 
@@ -199,8 +201,10 @@ namespace NzbDrone.Core.IndexerVersions
                 }
             }
 
+            var dbDefs = _versionService.All();
+
             //Check to ensure it's in versioned defs before we go to web
-            if (!_versionService.All().Any(x => x.File == fileKey))
+            if (dbDefs.Count > 0 && dbDefs.Any(x => x.File == fileKey))
             {
                 throw new ArgumentNullException(nameof(fileKey));
             }
@@ -254,6 +258,12 @@ namespace NzbDrone.Core.IndexerVersions
             }
 
             return definition;
+        }
+
+        public void Handle(ApplicationStartedEvent message)
+        {
+            // Sync indexers on app start
+            UpdateLocalDefinitions();
         }
 
         public void Execute(IndexerDefinitionUpdateCommand message)

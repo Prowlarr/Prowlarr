@@ -38,6 +38,12 @@ const columns = [
     isVisible: true
   },
   {
+    name: 'description',
+    label: translate('Description'),
+    isSortable: false,
+    isVisible: true
+  },
+  {
     name: 'privacy',
     label: translate('Privacy'),
     isSortable: true,
@@ -136,12 +142,12 @@ class AddIndexerModalContent extends Component {
       return true;
     });
 
-    const errorMessage = getErrorMessage(error, 'Unable to load indexers');
+    const errorMessage = getErrorMessage(error, translate('UnableToLoadIndexers'));
 
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Add Indexer
+          {translate('AddIndexer')}
         </ModalHeader>
 
         <ModalBody

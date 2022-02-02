@@ -264,7 +264,7 @@ class SearchFooter extends Component {
                     isDisabled={isFetching || !hasIndexers || selectedCount === 0}
                     onPress={onBulkGrabPress}
                   >
-                    {translate('Grab Releases')}
+                    {translate('GrabReleases')}
                   </SpinnerButton>
               }
 

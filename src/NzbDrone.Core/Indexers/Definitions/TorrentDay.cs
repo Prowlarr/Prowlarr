@@ -153,15 +153,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var catStr = string.Join(";", cats);
             searchUrl = searchUrl + "?" + catStr;
+            searchUrl += ";q=";
 
             if (imdbId.IsNotNullOrWhiteSpace())
             {
-                searchUrl += ";q=" + imdbId;
+                searchUrl += imdbId + " ".UrlEncode(Encoding.UTF8);
             }
-            else
-            {
-                searchUrl += ";q=" + term.UrlEncode(Encoding.UTF8);
-            }
+
+            searchUrl += term.UrlEncode(Encoding.UTF8);
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Rss);
 

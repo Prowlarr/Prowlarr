@@ -32,6 +32,7 @@ class SelectIndexerRow extends Component {
       privacy,
       name,
       language,
+      description,
       isExistingIndexer
     } = this.props;
 
@@ -62,6 +63,10 @@ class SelectIndexerRow extends Component {
         </TableRowCell>
 
         <TableRowCell>
+          {description}
+        </TableRowCell>
+
+        <TableRowCell>
           {translate(firstCharToUpper(privacy))}
         </TableRowCell>
       </TableRowButton>
@@ -74,6 +79,7 @@ SelectIndexerRow.propTypes = {
   protocol: PropTypes.string.isRequired,
   privacy: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
   onIndexerSelect: PropTypes.func.isRequired,
   isExistingIndexer: PropTypes.bool.isRequired

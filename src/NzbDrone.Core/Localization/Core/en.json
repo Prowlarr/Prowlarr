@@ -416,6 +416,7 @@
   "UnableToLoadGeneralSettings": "Unable to load General settings",
   "UnableToLoadHistory": "Unable to load history",
   "UnableToLoadIndexerProxies": "Unable To Load Indexer Proxies",
+  "UnableToLoadIndexers": "Unable to load Indexers",
   "UnableToLoadNotifications": "Unable to load Notifications",
   "UnableToLoadTags": "Unable to load Tags",
   "UnableToLoadUISettings": "Unable to load UI settings",

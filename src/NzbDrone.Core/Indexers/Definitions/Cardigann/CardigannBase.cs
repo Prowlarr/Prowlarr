@@ -816,5 +816,24 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             return new Uri(currentUrl ?? new Uri(SiteLink), path);
         }
+
+        protected string ResolveSiteLink()
+        {
+            var settingsBaseUrl = Settings?.BaseUrl;
+            var defaultLink = _definition.Links.First();
+
+            if (settingsBaseUrl == null)
+            {
+                return defaultLink;
+            }
+
+            if (_definition.Legacylinks.Contains(settingsBaseUrl))
+            {
+                _logger.Trace("Changing legacy site link from {0} to {1}", settingsBaseUrl, defaultLink);
+                return defaultLink;
+            }
+
+            return settingsBaseUrl;
+        }
     }
 }

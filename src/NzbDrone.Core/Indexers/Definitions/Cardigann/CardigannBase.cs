@@ -827,7 +827,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return defaultLink;
             }
 
-            if (_definition.Legacylinks.Contains(settingsBaseUrl))
+            if (_definition?.Legacylinks?.Contains(settingsBaseUrl) ?? false)
             {
                 _logger.Trace("Changing legacy site link from {0} to {1}", settingsBaseUrl, defaultLink);
                 return defaultLink;

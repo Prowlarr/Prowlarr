@@ -647,10 +647,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         protected string GetRedirectDomainHint(string requestUrl, string redirectUrl)
         {
-            if (requestUrl.StartsWith(SiteLink) && !redirectUrl.StartsWith(SiteLink))
+            var siteLinkUri = new HttpUri(SiteLink);
+            var requestUri = new HttpUri(requestUrl);
+            var redirectUri = new HttpUri(redirectUrl);
+
+            if (requestUri.Host.StartsWith(siteLinkUri.Host) && !redirectUri.Host.StartsWith(siteLinkUri.Host))
             {
-                var uri = new HttpUri(redirectUrl);
-                return uri.Scheme + "://" + uri.Host + "/";
+                return redirectUri.Scheme + "://" + redirectUri.Host + "/";
             }
 
             return null;

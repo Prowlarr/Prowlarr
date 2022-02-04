@@ -271,6 +271,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
+            // Throw auth errors here before we try to parse
+            if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new IndexerAuthException("[403 Forbidden] - mam_session_id expired or invalid");
+            }
+
             // Throw common http errors here before we try to parse
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {

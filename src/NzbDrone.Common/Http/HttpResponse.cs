@@ -9,7 +9,7 @@ namespace NzbDrone.Common.Http
 {
     public class HttpResponse
     {
-        private static readonly Regex RegexSetCookie = new Regex("^(.*?)=(.*?)(?:;|$)", RegexOptions.Compiled);
+        private static readonly Regex RegexRefresh = new Regex("^(.*?url)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
         public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
@@ -67,7 +67,8 @@ namespace NzbDrone.Common.Http
                                        StatusCode == HttpStatusCode.MovedPermanently ||
                                        StatusCode == HttpStatusCode.RedirectMethod ||
                                        StatusCode == HttpStatusCode.TemporaryRedirect ||
-                                       StatusCode == HttpStatusCode.Found;
+                                       StatusCode == HttpStatusCode.Found ||
+                                       Headers.ContainsKey("Refresh");
 
         public string RedirectUrl
         {
@@ -76,6 +77,20 @@ namespace NzbDrone.Common.Http
                 var newUrl = Headers["Location"];
                 if (newUrl == null)
                 {
+                    newUrl = Headers["Refresh"];
+
+                    if (newUrl == null)
+                    {
+                        return string.Empty;
+                    }
+
+                    var match = RegexRefresh.Match(newUrl);
+
+                    if (match.Success)
+                    {
+                        return (Request.Url += new HttpUri(match.Groups[2].Value)).FullUri;
+                    }
+
                     return string.Empty;
                 }
 

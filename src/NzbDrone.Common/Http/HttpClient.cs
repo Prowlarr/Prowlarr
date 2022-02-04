@@ -75,7 +75,7 @@ namespace NzbDrone.Common.Http
 
                 do
                 {
-                    request.Url += new HttpUri(response.Headers.GetSingleValue("Location"));
+                    request.Url = new HttpUri(response.RedirectUrl);
                     autoRedirectChain.Add(request.Url.ToString());
 
                     _logger.Trace("Redirected to {0}", request.Url);

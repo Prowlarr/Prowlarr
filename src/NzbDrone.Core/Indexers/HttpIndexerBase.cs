@@ -493,19 +493,27 @@ namespace NzbDrone.Core.Indexers
 
                 return new ValidationFailure(string.Empty, "Unable to connect to indexer. " + ex.Message);
             }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.NameResolutionFailure || ex.Status == WebExceptionStatus.ConnectFailure)
+                {
+                    _logger.Warn("{0} server could not be reached. {1}", this, ex.Message);
+                    return new ValidationFailure(string.Empty, string.Format("{0} server could not be reached. {1}", this, ex.Message));
+                }
+            }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.BadRequest &&
-                    ex.Response.Content.Contains("not support the requested query"))
+                if (ex.Message.Contains("502") || ex.Message.Contains("503") ||
+                    ex.Message.Contains("timed out"))
+                {
+                    _logger.Warn("{0} server is currently unavailable. {1} {2}", this, ex.Request.Url, ex.Message);
+                    return new ValidationFailure(string.Empty, string.Format("{0} server is currently unavailable. {1} {2}", this, ex.Request.Url, ex.Message));
+                }
+
+                if (ex.Response.StatusCode == HttpStatusCode.BadRequest && ex.Response.Content.Contains("not support the requested query"))
                 {
                     _logger.Warn(ex, "Indexer does not support the query");
-                    return new ValidationFailure(string.Empty, "Indexer does not support the current query. Check if the categories and or searching for movies are supported. Check the log for more details.");
-                }
-                else
-                {
-                    _logger.Warn(ex, "Unable to connect to indexer");
-
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+                    return new ValidationFailure(string.Empty, "Indexer does not support the current query. Check the log for more details.");
                 }
             }
             catch (Exception ex)

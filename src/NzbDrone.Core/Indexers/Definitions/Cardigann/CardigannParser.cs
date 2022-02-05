@@ -9,6 +9,7 @@ using AngleSharp.Xml.Parser;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -37,8 +38,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
             _logger.Debug("Parsing");
 
             var indexerLogging = _configService.LogIndexerResponse;
+            var indexerResponseStatus = indexerResponse.HttpResponse.StatusCode;
 
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            if (indexerResponseStatus != HttpStatusCode.OK)
             {
                 // Remove cookie cache
                 if (indexerResponse.HttpResponse.HasHttpRedirect && indexerResponse.HttpResponse.RedirectUrl
@@ -48,7 +50,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
                 }
 
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                // Catch common http exceptions before parsing
+                switch (indexerResponseStatus)
+                {
+                    case HttpStatusCode.BadRequest:
+                    case HttpStatusCode.Forbidden:
+                    case HttpStatusCode.BadGateway:
+                    case HttpStatusCode.ServiceUnavailable:
+                    case HttpStatusCode.GatewayTimeout:
+                        throw new HttpException(indexerResponse.HttpResponse);
+                    case HttpStatusCode.Unauthorized:
+                        throw new IndexerAuthException(indexerResponse.HttpResponse.Content.ToString());
+                    default:
+                        throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                }
             }
 
             var results = indexerResponse.Content;

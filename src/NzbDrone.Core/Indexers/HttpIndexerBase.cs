@@ -197,28 +197,6 @@ namespace NzbDrone.Core.Indexers
 
                 _indexerStatusService.RecordSuccess(Definition.Id);
             }
-            catch (WebException webException)
-            {
-                if (webException.Status == WebExceptionStatus.NameResolutionFailure ||
-                    webException.Status == WebExceptionStatus.ConnectFailure)
-                {
-                    _indexerStatusService.RecordConnectionFailure(Definition.Id);
-                }
-                else
-                {
-                    _indexerStatusService.RecordFailure(Definition.Id);
-                }
-
-                if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
-                    webException.Message.Contains("timed out"))
-                {
-                    _logger.Warn("{0} server is currently unavailable. {1} {2}", this, url, webException.Message);
-                }
-                else
-                {
-                    _logger.Warn("{0} {1} {2}", this, url, webException.Message);
-                }
-            }
             catch (TooManyRequestsException ex)
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
@@ -234,11 +212,34 @@ namespace NzbDrone.Core.Indexers
 
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
+            catch (WebException ex)
+            {
+                var indexerResponseStatus = ex.Status;
+                if (indexerResponseStatus == WebExceptionStatus.NameResolutionFailure ||
+                    indexerResponseStatus == WebExceptionStatus.ConnectFailure)
+                {
+                    _indexerStatusService.RecordConnectionFailure(Definition.Id);
+                    _logger.Warn("Error Resolving (DNS Name Resolution Failure) or Connecting to {0}", ex);
+                }
+            }
             catch (HttpException ex)
             {
-                result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn("{0} {1}", this, ex.Message);
+                var indexerResponse = ex.Response;
+                var indexerResponseStatus = indexerResponse.StatusCode;
+                if (indexerResponseStatus == HttpStatusCode.BadGateway || indexerResponseStatus == HttpStatusCode.ServiceUnavailable)
+                {
+                    _indexerStatusService.RecordConnectionFailure(Definition.Id);
+                    _logger.Warn("{0} server is currently unavailable. {1} {2}", this, ex.Request.Url, ex.Message);
+                }
+
+                if (indexerResponseStatus == HttpStatusCode.BadRequest && indexerResponse.Content.Contains("not support the requested query"))
+                {
+                    _indexerStatusService.RecordFailure(Definition.Id);
+                    _logger.Warn(ex, "Indexer does not support the current query. Check the log for more details.");
+                }
+
+                _indexerStatusService.RecordConnectionFailure(Definition.Id);
+                _logger.Warn(ex, "Unknown HTTP Exception - Unable to connect to indexer");
             }
             catch (RequestLimitReachedException ex)
             {
@@ -399,7 +400,7 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn("HTTP Error - {0}", response);
 
-                if ((int)response.StatusCode == 429)
+                if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     throw new TooManyRequestsException(request.HttpRequest, response);
                 }
@@ -482,6 +483,10 @@ namespace NzbDrone.Core.Indexers
                     return new ValidationFailure("CaptchaToken", "Site protected by CloudFlare CAPTCHA. Valid CAPTCHA token required.");
                 }
             }
+            catch (CloudFlareProtectedException ex)
+            {
+                return new ValidationFailure(string.Empty, "CloudFlare detected - Unable to connect to indexer. FlareSolver may be needed or your Cookie has expired [" + ex.Response.Request.Url.Host.ToString() + "]");
+            }
             catch (UnsupportedFeedException ex)
             {
                 _logger.Warn(ex, "Indexer feed is not supported");
@@ -494,20 +499,32 @@ namespace NzbDrone.Core.Indexers
 
                 return new ValidationFailure(string.Empty, "Unable to connect to indexer. " + ex.Message);
             }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.NameResolutionFailure || ex.Status == WebExceptionStatus.ConnectFailure)
+                {
+                    _logger.Warn("{0} server could not be reached. {1}", this, ex.Message);
+                    return new ValidationFailure(string.Empty, string.Format("{0} server could not be reached. {1}", this, ex.Message));
+                }
+            }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.BadRequest &&
-                    ex.Response.Content.Contains("not support the requested query"))
+                var indexerResponse = ex.Response;
+                var indexerResponseStatus = indexerResponse.StatusCode;
+                if (indexerResponseStatus == HttpStatusCode.BadGateway || indexerResponseStatus == HttpStatusCode.ServiceUnavailable)
+                {
+                    _logger.Warn("{0} server is currently unavailable. {1} {2}", this, ex.Request.Url, ex.Message);
+                    return new ValidationFailure(string.Empty, string.Format("{0} server is currently unavailable. {1} {2}", this, ex.Request.Url, ex.Message));
+                }
+
+                if (indexerResponseStatus == HttpStatusCode.BadRequest && indexerResponse.Content.Contains("not support the requested query"))
                 {
                     _logger.Warn(ex, "Indexer does not support the query");
-                    return new ValidationFailure(string.Empty, "Indexer does not support the current query. Check if the categories and or searching for movies are supported. Check the log for more details.");
+                    return new ValidationFailure(string.Empty, "Indexer does not support the current query. Check the log for more details.");
                 }
-                else
-                {
-                    _logger.Warn(ex, "Unable to connect to indexer");
 
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
-                }
+                _logger.Warn(ex, "Unknown HTTP Exception - Unable to connect to indexer");
+                return new ValidationFailure(string.Empty, "Unknown HTTP Exception - Unable to connect to indexer");
             }
             catch (Exception ex)
             {

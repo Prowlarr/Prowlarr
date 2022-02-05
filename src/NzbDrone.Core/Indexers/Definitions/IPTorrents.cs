@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using AngleSharp.Html.Parser;
 using FluentValidation;
 using NLog;
@@ -264,6 +265,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new HttpException(indexerResponse.HttpResponse);
+            }
+
             var torrentInfos = new List<TorrentInfo>();
 
             var parser = new HtmlParser();

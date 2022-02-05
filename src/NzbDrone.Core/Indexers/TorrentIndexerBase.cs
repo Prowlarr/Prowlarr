@@ -48,22 +48,24 @@ namespace NzbDrone.Core.Indexers
             }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                var indexerResponse = ex.Response;
+                var indexerResponseStatus = indexerResponse.StatusCode;
+                if (indexerResponseStatus == HttpStatusCode.NotFound)
                 {
                     _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", link.AbsoluteUri);
                     throw new ReleaseUnavailableException("Downloading torrent failed", ex);
                 }
 
-                if ((int)ex.Response.StatusCode == 429)
+                if (indexerResponseStatus == HttpStatusCode.TooManyRequests)
                 {
                     _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
+                    throw new ReleaseDownloadException("Downloading torrent failed - Request Limit Reached", ex);
                 }
                 else
                 {
                     _logger.Error(ex, "Downloading torrent file for release failed ({0})", link.AbsoluteUri);
+                    throw new ReleaseDownloadException("Downloading torrent failed", ex);
                 }
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
             }
             catch (WebException ex)
             {

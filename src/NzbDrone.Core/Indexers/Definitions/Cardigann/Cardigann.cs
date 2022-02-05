@@ -188,19 +188,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                var response = ex.Response;
+                var responseStatus = response.StatusCode;
+                if (responseStatus == HttpStatusCode.NotFound)
                 {
-                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", request.Url.FullUri);
+                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", link.AbsoluteUri);
                     throw new ReleaseUnavailableException("Downloading torrent failed", ex);
                 }
 
-                if ((int)ex.Response.StatusCode == 429)
+                if (responseStatus == HttpStatusCode.TooManyRequests)
                 {
-                    _logger.Error("API Grab Limit reached for {0}", request.Url.FullUri);
+                    _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
                 }
                 else
                 {
-                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
+                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", link.AbsoluteUri);
                 }
 
                 throw new ReleaseDownloadException("Downloading torrent failed", ex);

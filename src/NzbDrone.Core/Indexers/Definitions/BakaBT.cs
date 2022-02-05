@@ -16,6 +16,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -27,15 +28,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "BakaBT";
 
-        public override string[] IndexerUrls => new string[] { "https://bakabt.me/" };
-        public override string Description => "Anime Community";
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public BakaBT(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public BakaBT(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -123,41 +120,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
-                BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "Anime Series");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "OVA");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.AudioOther, "Soundtrack");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.BooksComics, "Manga");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "Anime Movie");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVOther, "Live Action");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksOther, "Artbook");
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.AudioVideo, "Music Video");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.BooksEBook, "Light Novel");
-
-            return caps;
         }
     }
 

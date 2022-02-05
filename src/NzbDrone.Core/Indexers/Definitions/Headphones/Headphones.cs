@@ -7,6 +7,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Headphones
@@ -16,10 +17,6 @@ namespace NzbDrone.Core.Indexers.Headphones
         public override string Name => "Headphones VIP";
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override string[] IndexerUrls => new string[] { "https://indexer.codeshy.com" };
-        public override string Description => "A Private Usenet indexer for music";
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
@@ -36,8 +33,8 @@ namespace NzbDrone.Core.Indexers.Headphones
             return new HeadphonesRssParser(Capabilities.Categories);
         }
 
-        public Headphones(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
+        public Headphones(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, nzbValidationService, logger)
         {
         }
 
@@ -73,23 +70,6 @@ namespace NzbDrone.Core.Indexers.Headphones
             }
 
             return downloadBytes;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
-            };
-
-            caps.Categories.AddCategoryMapping(3000, NewznabStandardCategory.Audio);
-            caps.Categories.AddCategoryMapping(3010, NewznabStandardCategory.AudioMP3);
-            caps.Categories.AddCategoryMapping(3040, NewznabStandardCategory.AudioLossless);
-
-            return caps;
         }
     }
 }

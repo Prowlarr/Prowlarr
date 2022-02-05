@@ -13,6 +13,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -23,20 +24,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SubsPlease : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "SubsPlease";
-        public override string[] IndexerUrls => new[]
-        {
-            "https://subsplease.org/",
-            "https://subsplease.nocensor.space/"
-        };
-        public override string Language => "en-US";
-        public override string Description => "SubsPlease - A better HorribleSubs/Erai replacement";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SubsPlease(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public SubsPlease(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -48,21 +39,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new SubsPleaseParser(Settings, Capabilities.Categories);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "Anime");
-
-            return caps;
         }
     }
 

@@ -12,6 +12,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -22,16 +23,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class TorrentSyndikat : TorrentIndexerBase<TorrentSyndikatSettings>
     {
         public override string Name => "TorrentSyndikat";
-        public override string[] IndexerUrls => new[] { "https://torrent-syndikat.org/" };
-        public override string Description => "A German general tracker";
-        public override string Language => "de-DE";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public TorrentSyndikat(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public TorrentSyndikat(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -43,76 +38,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new TorrentSyndikatParser(Settings, Capabilities.Categories);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
-                                   },
-                MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
-                BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.PC, "Apps / Windows");
-            caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.PC, "Apps / Linux");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCMac, "Apps / MacOS");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.PC, "Apps / Misc");
-
-            caps.Categories.AddCategoryMapping(50, NewznabStandardCategory.PCGames, "Spiele / Windows");
-            caps.Categories.AddCategoryMapping(51, NewznabStandardCategory.PCGames, "Spiele / MacOS");
-            caps.Categories.AddCategoryMapping(52, NewznabStandardCategory.PCGames, "Spiele / Linux");
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.ConsoleOther, "Spiele / Playstation");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.ConsoleOther, "Spiele / Nintendo");
-            caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.ConsoleOther, "Spiele / XBOX");
-
-            caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.MoviesUHD, "Filme / 2160p");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.MoviesHD, "Filme / 1080p");
-            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.MoviesHD, "Filme / 720p");
-            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.MoviesSD, "Filme / SD");
-
-            caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.TVUHD, "Serien / 2160p");
-            caps.Categories.AddCategoryMapping(53, NewznabStandardCategory.TVHD, "Serien / 1080p");
-            caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.TVHD, "Serien / 720p");
-            caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.TVSD, "Serien / SD");
-            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.TVSport, "Serien / Sport");
-
-            caps.Categories.AddCategoryMapping(44, NewznabStandardCategory.TVUHD, "Serienpacks / 2160p");
-            caps.Categories.AddCategoryMapping(55, NewznabStandardCategory.TVHD, "Serienpacks / 1080p");
-            caps.Categories.AddCategoryMapping(56, NewznabStandardCategory.TVHD, "Serienpacks / 720p");
-            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.TVSD, "Serienpacks / SD");
-
-            caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.AudioLossless, "Audio / Musik / FLAC");
-            caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.AudioMP3, "Audio / Musik / MP3");
-            caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.AudioOther, "Audio / Other");
-            caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.AudioAudiobook, "Audio / aBooks");
-            caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.AudioVideo, "Audio / Videos");
-
-            caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.Books, "Misc / eBooks");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.PCMobileOther, "Misc / Mobile");
-            caps.Categories.AddCategoryMapping(39, NewznabStandardCategory.Other, "Misc / Bildung");
-
-            caps.Categories.AddCategoryMapping(36, NewznabStandardCategory.TVForeign, "Englisch / Serien");
-            caps.Categories.AddCategoryMapping(57, NewznabStandardCategory.TVForeign, "Englisch / Serienpacks");
-            caps.Categories.AddCategoryMapping(37, NewznabStandardCategory.MoviesForeign, "Englisch / Filme");
-            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Books, "Englisch / eBooks");
-            caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Other, "Englisch / Bildung");
-            caps.Categories.AddCategoryMapping(49, NewznabStandardCategory.TVSport, "Englisch / Sport");
-
-            return caps;
         }
     }
 

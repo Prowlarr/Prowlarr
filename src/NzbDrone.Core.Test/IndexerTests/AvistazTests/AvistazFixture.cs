@@ -17,7 +17,7 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
 {
     [TestFixture]
-    public class AvistazFixture : CoreTest<AvistaZ>
+    public class AvistazFixture : CoreTest<Avistaz>
     {
         [SetUp]
         public void Setup()

@@ -15,6 +15,7 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -25,17 +26,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Redacted : TorrentIndexerBase<RedactedSettings>
     {
         public override string Name => "Redacted";
-        public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
-        public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
 
-        public Redacted(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Redacted(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -47,39 +42,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new RedactedParser(Settings, Capabilities.Categories);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q, MusicSearchParam.Album, MusicSearchParam.Artist, MusicSearchParam.Label, MusicSearchParam.Year
-                       },
-                BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Audio, "Music");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.PC, "Applications");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.BooksEBook, "E-Books");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Other, "E-Learning Videos");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Other, "Comedy");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksComics, "Comics");
-
-            return caps;
         }
 
         protected override async Task Test(List<ValidationFailure> failures)

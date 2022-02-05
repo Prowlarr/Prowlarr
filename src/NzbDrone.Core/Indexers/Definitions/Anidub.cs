@@ -17,6 +17,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -27,16 +28,15 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Anidub : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Anidub";
-        public override string[] IndexerUrls => new string[] { "https://tr.anidub.com/" };
-        public override string Description => "Anidub is russian anime voiceover group and eponymous anime tracker.";
-        public override string Language => "ru-RU";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Anidub(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Anidub(IIndexerHttpClient httpClient,
+                      IEventAggregator eventAggregator,
+                      IIndexerStatusService indexerStatusService,
+                      IIndexerDefinitionUpdateService definitionService,
+                      IConfigService configService,
+                      Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -98,47 +98,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return true;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                },
-                MovieSearchParams = new List<MovieSearchParam>
-                {
-                    MovieSearchParam.Q
-                },
-                BookSearchParams = new List<BookSearchParam>
-                {
-                    BookSearchParam.Q
-                },
-                MusicSearchParams = new List<MusicSearchParam>
-                {
-                    MusicSearchParam.Q
-                }
-            };
-
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "Аниме TV");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Movies, "Аниме Фильмы");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVAnime, "Аниме OVA");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.TVAnime, "Аниме OVA |- Аниме ONA");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TV, "Дорамы / Японские Сериалы и Фильмы");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.TV, "Дорамы / Корейские Сериалы и Фильмы");
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.TV, "Дорамы / Китайские Сериалы и Фильмы");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TV, "Дорамы");
-            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.TVAnime, "Аниме TV / Аниме Ongoing");
-            caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.TVAnime, "Аниме TV / Многосерийный сёнэн");
-            caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.Other, "Аниме Ongoing Анонсы");
-            caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.XXX, "18+");
-            caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.TVAnime, "Аниме TV / Законченные сериалы");
-            caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.BooksComics, "Манга");
-            caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.Audio, "OST");
-            caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.Audio, "Подкасты");
-            return caps;
         }
     }
 

@@ -8,6 +8,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -89,35 +90,12 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             get
             {
-                yield return GetDefinition("abNZB", GetSettings("https://abnzb.com"));
-                yield return GetDefinition("altHUB", GetSettings("https://api.althub.co.za"));
-                yield return GetDefinition("AnimeTosho (Usenet)", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("DOGnzb", GetSettings("https://api.dognzb.cr"));
-                yield return GetDefinition("DrunkenSlug", GetSettings("https://drunkenslug.com"));
-                yield return GetDefinition("GingaDADDY", GetSettings("https://www.gingadaddy.com"));
-                yield return GetDefinition("Miatrix", GetSettings("https://www.miatrix.com"));
-                yield return GetDefinition("Newz-Complex", GetSettings("https://newz-complex.org/www"));
-                yield return GetDefinition("Newz69", GetSettings("https://newz69.keagaming.com"));
-                yield return GetDefinition("NinjaCentral", GetSettings("https://ninjacentral.co.za"));
-                yield return GetDefinition("Nzb.su", GetSettings("https://api.nzb.su"));
-                yield return GetDefinition("NZBCat", GetSettings("https://nzb.cat"));
-                yield return GetDefinition("NZBFinder", GetSettings("https://nzbfinder.ws"));
-                yield return GetDefinition("NZBgeek", GetSettings("https://api.nzbgeek.info"));
-                yield return GetDefinition("NzbNoob", GetSettings("https://www.nzbnoob.com"));
-                yield return GetDefinition("NZBNDX", GetSettings("https://www.nzbndx.com"));
-                yield return GetDefinition("NzbPlanet", GetSettings("https://api.nzbplanet.net"));
-                yield return GetDefinition("NZBStars", GetSettings("https://nzbstars.com"));
-                yield return GetDefinition("OZnzb", GetSettings("https://api.oznzb.com"));
-                yield return GetDefinition("SimplyNZBs", GetSettings("https://simplynzbs.com"));
-                yield return GetDefinition("SpotNZB", GetSettings("https://spotnzb.xyz"));
-                yield return GetDefinition("Tabula Rasa", GetSettings("https://www.tabula-rasa.pw", apiPath: @"/api/v1/api"));
-                yield return GetDefinition("Usenet Crawler", GetSettings("https://www.usenet-crawler.com"));
                 yield return GetDefinition("Generic Newznab", GetSettings(""));
             }
         }
 
-        public Newznab(INewznabCapabilitiesProvider capabilitiesProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
+        public Newznab(INewznabCapabilitiesProvider capabilitiesProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, nzbValidationService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
         }

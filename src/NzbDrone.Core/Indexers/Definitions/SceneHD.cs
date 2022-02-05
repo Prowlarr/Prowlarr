@@ -14,6 +14,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -24,16 +25,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SceneHD : TorrentIndexerBase<SceneHDSettings>
     {
         public override string Name => "SceneHD";
-        public override string[] IndexerUrls => new[] { "https://scenehd.org/" };
-        public override string Description => "SceneHD is Private site for HD TV / MOVIES";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SceneHD(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public SceneHD(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -50,40 +45,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
-                                   },
-                MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.MoviesUHD, "Movie/2160");
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesHD, "Movie/1080");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.MoviesHD, "Movie/720");
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.MoviesBluRay, "Movie/BD5/9");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVUHD, "TV/2160");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.TVHD, "TV/1080");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.TVHD, "TV/720");
-            caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.MoviesBluRay, "Bluray/Complete");
-            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.XXX, "XXX");
-            caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.MoviesOther, "Subpacks");
-            caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.AudioVideo, "MVID");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.Other, "Other");
-
-            return caps;
         }
     }
 

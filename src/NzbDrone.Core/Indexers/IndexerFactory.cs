@@ -50,17 +50,21 @@ namespace NzbDrone.Core.Indexers
 
             foreach (var definition in definitions)
             {
-                if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+                try
                 {
-                    try
+                    if (definition.Implementation != typeof(Newznab.Newznab).Name)
+                    {
+                        MapBaseDefinition(definition);
+                    }
+
+                    if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
                     {
                         MapCardigannDefinition(definition);
                     }
-                    catch
-                    {
-                        // Skip indexer if we fail in Cardigann mapping
-                        _logger.Debug("Indexer {0} has no definition", definition.Name);
-                    }
+                }
+                catch
+                {
+                    _logger.Debug("Indexer {0} has no definition", definition.Name);
                 }
 
                 filteredDefinitions.Add(definition);
@@ -73,16 +77,21 @@ namespace NzbDrone.Core.Indexers
         {
             var definition = base.Get(id);
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            try
             {
-                try
+                if (definition.Implementation != typeof(Newznab.Newznab).Name)
+                {
+                    MapBaseDefinition(definition);
+                }
+
+                if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
                 {
                     MapCardigannDefinition(definition);
                 }
-                catch
-                {
-                    throw new ModelNotFoundException(typeof(IndexerDefinition), id);
-                }
+            }
+            catch
+            {
+                throw new ModelNotFoundException(typeof(IndexerDefinition), id);
             }
 
             return definition;
@@ -93,21 +102,9 @@ namespace NzbDrone.Core.Indexers
             return base.Active().Where(c => c.Enable).ToList();
         }
 
-        private void MapCardigannDefinition(IndexerDefinition definition)
+        private void MapBaseDefinition(IndexerDefinition definition)
         {
-            var settings = (CardigannSettings)definition.Settings;
-            var defFile = _definitionService.GetCachedDefinition(settings.DefinitionFile);
-            definition.ExtraFields = defFile.Settings;
-
-            if (defFile.Login?.Captcha != null && !definition.ExtraFields.Any(x => x.Type == "cardigannCaptcha"))
-            {
-                definition.ExtraFields.Add(new SettingsField
-                {
-                    Name = "cardigannCaptcha",
-                    Type = "cardigannCaptcha",
-                    Label = "CAPTCHA"
-                });
-            }
+            var defFile = _definitionService.GetCachedDefinition(definition.DefinitionFile);
 
             definition.IndexerUrls = defFile.Links.ToArray();
             definition.LegacyUrls = defFile.Legacylinks.ToArray();
@@ -123,10 +120,27 @@ namespace NzbDrone.Core.Indexers
             definition.Capabilities = new IndexerCapabilities();
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
             definition.Capabilities.SupportsRawSearch = defFile.Caps.Allowrawsearch;
-            MapCardigannCategories(definition, defFile);
+            MapIndexerCategories(definition, defFile);
         }
 
-        private void MapCardigannCategories(IndexerDefinition def, CardigannDefinition defFile)
+        private void MapCardigannDefinition(IndexerDefinition definition)
+        {
+            var settings = (CardigannSettings)definition.Settings;
+            var defFile = _definitionService.GetCachedDefinition(definition.DefinitionFile);
+            definition.ExtraFields = defFile.Settings;
+
+            if (defFile.Login?.Captcha != null && !definition.ExtraFields.Any(x => x.Type == "cardigannCaptcha"))
+            {
+                definition.ExtraFields.Add(new SettingsField
+                {
+                    Name = "cardigannCaptcha",
+                    Type = "cardigannCaptcha",
+                    Label = "CAPTCHA"
+                });
+            }
+        }
+
+        private void MapIndexerCategories(IndexerDefinition def, CardigannDefinition defFile)
         {
             if (defFile.Caps.Categories != null)
             {
@@ -177,8 +191,7 @@ namespace NzbDrone.Core.Indexers
                     continue;
                 }
 
-                var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name || v.Name != typeof(Torznab.Torznab).Name));
+                var definitions = provider.DefaultDefinitions;
 
                 foreach (IndexerDefinition definition in definitions)
                 {
@@ -201,18 +214,6 @@ namespace NzbDrone.Core.Indexers
             definition.SupportsRss = provider.SupportsRss;
             definition.SupportsSearch = provider.SupportsSearch;
             definition.SupportsRedirect = provider.SupportsRedirect;
-
-            //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
-            if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
-            {
-                definition.IndexerUrls = provider.IndexerUrls;
-                definition.LegacyUrls = provider.LegacyUrls;
-                definition.Privacy = provider.Privacy;
-                definition.Description = provider.Description;
-                definition.Encoding = provider.Encoding;
-                definition.Language = provider.Language;
-                definition.Capabilities = provider.Capabilities;
-            }
         }
 
         public List<IIndexer> Enabled(bool filterBlockedIndexers = true)
@@ -294,6 +295,8 @@ namespace NzbDrone.Core.Indexers
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
+            MapBaseDefinition(definition);
+
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
             {
                 MapCardigannDefinition(definition);
@@ -313,6 +316,8 @@ namespace NzbDrone.Core.Indexers
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
+
+            MapBaseDefinition(definition);
 
             if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
             {

@@ -3,6 +3,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Test.IndexerTests
@@ -20,8 +21,8 @@ namespace NzbDrone.Core.Test.IndexerTests
         public int _supportedPageSize;
         public override int PageSize => _supportedPageSize;
 
-        public TestIndexer(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
+        public TestIndexer(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, nzbValidationService, logger)
         {
         }
 

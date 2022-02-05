@@ -18,7 +18,8 @@ namespace NzbDrone.Core.IndexerVersions
 {
     public interface IIndexerDefinitionUpdateService
     {
-        List<CardigannMetaDefinition> All();
+        List<IndexerMetaDefinition> All();
+        List<IndexerMetaDefinition> AllForImplementation(string implementation);
         CardigannDefinition GetCachedDefinition(string fileKey);
         List<string> GetBlocklist();
     }
@@ -77,9 +78,9 @@ namespace NzbDrone.Core.IndexerVersions
             _logger = logger;
         }
 
-        public List<CardigannMetaDefinition> All()
+        public List<IndexerMetaDefinition> All()
         {
-            var indexerList = new List<CardigannMetaDefinition>();
+            var indexerList = new List<IndexerMetaDefinition>();
 
             try
             {
@@ -87,7 +88,7 @@ namespace NzbDrone.Core.IndexerVersions
                 try
                 {
                     var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
-                    var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
+                    var response = _httpClient.Get<List<IndexerMetaDefinition>>(request);
                     indexerList = response.Resource.Where(i => !_defintionBlocklist.Contains(i.File)).ToList();
                 }
                 catch
@@ -110,6 +111,11 @@ namespace NzbDrone.Core.IndexerVersions
             return indexerList;
         }
 
+        public List<IndexerMetaDefinition> AllForImplementation(string implementation)
+        {
+            return All().Where(d => d.Implementation == implementation).ToList();
+        }
+
         public CardigannDefinition GetCachedDefinition(string fileKey)
         {
             if (string.IsNullOrEmpty(fileKey))
@@ -127,7 +133,7 @@ namespace NzbDrone.Core.IndexerVersions
             return _defintionBlocklist;
         }
 
-        private List<CardigannMetaDefinition> ReadDefinitionsFromDisk(List<CardigannMetaDefinition> defs, string path, SearchOption options = SearchOption.TopDirectoryOnly)
+        private List<IndexerMetaDefinition> ReadDefinitionsFromDisk(List<IndexerMetaDefinition> defs, string path, SearchOption options = SearchOption.TopDirectoryOnly)
         {
             var indexerList = defs;
 
@@ -144,7 +150,7 @@ namespace NzbDrone.Core.IndexerVersions
                     try
                     {
                         var definitionString = File.ReadAllText(file.FullName);
-                        var definition = _deserializer.Deserialize<CardigannMetaDefinition>(definitionString);
+                        var definition = _deserializer.Deserialize<IndexerMetaDefinition>(definitionString);
 
                         definition.File = Path.GetFileNameWithoutExtension(file.Name);
 
@@ -242,6 +248,11 @@ namespace NzbDrone.Core.IndexerVersions
                 definition.Login.Method = "form";
             }
 
+            if (definition.Search == null)
+            {
+                definition.Search = new SearchBlock();
+            }
+
             if (definition.Search.Paths == null)
             {
                 definition.Search.Paths = new List<SearchPathBlock>();
@@ -283,7 +294,7 @@ namespace NzbDrone.Core.IndexerVersions
             var startupFolder = _appFolderInfo.AppDataFolder;
 
             var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
-            var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
+            var response = _httpClient.Get<List<IndexerMetaDefinition>>(request);
 
             var currentDefs = _versionService.All().ToDictionary(x => x.DefinitionId, x => x.Sha);
 

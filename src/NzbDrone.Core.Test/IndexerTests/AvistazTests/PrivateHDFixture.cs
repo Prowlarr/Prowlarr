@@ -17,7 +17,7 @@ using NzbDrone.Core.Test.Framework;
 namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
 {
     [TestFixture]
-    public class PrivateHDFixture : CoreTest<PrivateHD>
+    public class PrivateHDFixture : CoreTest<Avistaz>
     {
         [SetUp]
         public void Setup()

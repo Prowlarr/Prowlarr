@@ -16,6 +16,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -28,15 +29,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static readonly Regex TorrentIdRegex = new Regex(@"tor/download.php\?tid=(?<id>\d+)$");
 
         public override string Name => "MyAnonamouse";
-
-        public override string[] IndexerUrls => new string[] { "https://www.myanonamouse.net/" };
-        public override string Description => "MyAnonaMouse (MAM) is a large ebook and audiobook tracker.";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public MyAnonamouse(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public MyAnonamouse(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -94,114 +90,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         protected override IDictionary<string, string> GetCookies()
         {
             return CookieUtil.CookieHeaderToDictionary("mam_id=" + Settings.MamId);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
-            };
-
-            caps.Categories.AddCategoryMapping("13", NewznabStandardCategory.AudioAudiobook, "AudioBooks");
-            caps.Categories.AddCategoryMapping("14", NewznabStandardCategory.BooksEBook, "E-Books");
-            caps.Categories.AddCategoryMapping("15", NewznabStandardCategory.AudioAudiobook, "Musicology");
-            caps.Categories.AddCategoryMapping("16", NewznabStandardCategory.AudioAudiobook, "Radio");
-            caps.Categories.AddCategoryMapping("39", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Action/Adventure");
-            caps.Categories.AddCategoryMapping("49", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Art");
-            caps.Categories.AddCategoryMapping("50", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Biographical");
-            caps.Categories.AddCategoryMapping("83", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Business");
-            caps.Categories.AddCategoryMapping("51", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Computer/Internet");
-            caps.Categories.AddCategoryMapping("97", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Crafts");
-            caps.Categories.AddCategoryMapping("40", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Crime/Thriller");
-            caps.Categories.AddCategoryMapping("41", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Fantasy");
-            caps.Categories.AddCategoryMapping("106", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Food");
-            caps.Categories.AddCategoryMapping("42", NewznabStandardCategory.AudioAudiobook, "Audiobooks - General Fiction");
-            caps.Categories.AddCategoryMapping("52", NewznabStandardCategory.AudioAudiobook, "Audiobooks - General Non-Fic");
-            caps.Categories.AddCategoryMapping("98", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Historical Fiction");
-            caps.Categories.AddCategoryMapping("54", NewznabStandardCategory.AudioAudiobook, "Audiobooks - History");
-            caps.Categories.AddCategoryMapping("55", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Home/Garden");
-            caps.Categories.AddCategoryMapping("43", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Horror");
-            caps.Categories.AddCategoryMapping("99", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Humor");
-            caps.Categories.AddCategoryMapping("84", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Instructional");
-            caps.Categories.AddCategoryMapping("44", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Juvenile");
-            caps.Categories.AddCategoryMapping("56", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Language");
-            caps.Categories.AddCategoryMapping("45", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Literary Classics");
-            caps.Categories.AddCategoryMapping("57", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Math/Science/Tech");
-            caps.Categories.AddCategoryMapping("85", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Medical");
-            caps.Categories.AddCategoryMapping("87", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Mystery");
-            caps.Categories.AddCategoryMapping("119", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Nature");
-            caps.Categories.AddCategoryMapping("88", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Philosophy");
-            caps.Categories.AddCategoryMapping("58", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Pol/Soc/Relig");
-            caps.Categories.AddCategoryMapping("59", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Recreation");
-            caps.Categories.AddCategoryMapping("46", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Romance");
-            caps.Categories.AddCategoryMapping("47", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Science Fiction");
-            caps.Categories.AddCategoryMapping("53", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Self-Help");
-            caps.Categories.AddCategoryMapping("89", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Travel/Adventure");
-            caps.Categories.AddCategoryMapping("100", NewznabStandardCategory.AudioAudiobook, "Audiobooks - True Crime");
-            caps.Categories.AddCategoryMapping("108", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Urban Fantasy");
-            caps.Categories.AddCategoryMapping("48", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Western");
-            caps.Categories.AddCategoryMapping("111", NewznabStandardCategory.AudioAudiobook, "Audiobooks - Young Adult");
-            caps.Categories.AddCategoryMapping("60", NewznabStandardCategory.BooksEBook, "Ebooks - Action/Adventure");
-            caps.Categories.AddCategoryMapping("71", NewznabStandardCategory.BooksEBook, "Ebooks - Art");
-            caps.Categories.AddCategoryMapping("72", NewznabStandardCategory.BooksEBook, "Ebooks - Biographical");
-            caps.Categories.AddCategoryMapping("90", NewznabStandardCategory.BooksEBook, "Ebooks - Business");
-            caps.Categories.AddCategoryMapping("61", NewznabStandardCategory.BooksComics, "Ebooks - Comics/Graphic novels");
-            caps.Categories.AddCategoryMapping("73", NewznabStandardCategory.BooksEBook, "Ebooks - Computer/Internet");
-            caps.Categories.AddCategoryMapping("101", NewznabStandardCategory.BooksEBook, "Ebooks - Crafts");
-            caps.Categories.AddCategoryMapping("62", NewznabStandardCategory.BooksEBook, "Ebooks - Crime/Thriller");
-            caps.Categories.AddCategoryMapping("63", NewznabStandardCategory.BooksEBook, "Ebooks - Fantasy");
-            caps.Categories.AddCategoryMapping("107", NewznabStandardCategory.BooksEBook, "Ebooks - Food");
-            caps.Categories.AddCategoryMapping("64", NewznabStandardCategory.BooksEBook, "Ebooks - General Fiction");
-            caps.Categories.AddCategoryMapping("74", NewznabStandardCategory.BooksEBook, "Ebooks - General Non-Fiction");
-            caps.Categories.AddCategoryMapping("102", NewznabStandardCategory.BooksEBook, "Ebooks - Historical Fiction");
-            caps.Categories.AddCategoryMapping("76", NewznabStandardCategory.BooksEBook, "Ebooks - History");
-            caps.Categories.AddCategoryMapping("77", NewznabStandardCategory.BooksEBook, "Ebooks - Home/Garden");
-            caps.Categories.AddCategoryMapping("65", NewznabStandardCategory.BooksEBook, "Ebooks - Horror");
-            caps.Categories.AddCategoryMapping("103", NewznabStandardCategory.BooksEBook, "Ebooks - Humor");
-            caps.Categories.AddCategoryMapping("115", NewznabStandardCategory.BooksEBook, "Ebooks - Illusion/Magic");
-            caps.Categories.AddCategoryMapping("91", NewznabStandardCategory.BooksEBook, "Ebooks - Instructional");
-            caps.Categories.AddCategoryMapping("66", NewznabStandardCategory.BooksEBook, "Ebooks - Juvenile");
-            caps.Categories.AddCategoryMapping("78", NewznabStandardCategory.BooksEBook, "Ebooks - Language");
-            caps.Categories.AddCategoryMapping("67", NewznabStandardCategory.BooksEBook, "Ebooks - Literary Classics");
-            caps.Categories.AddCategoryMapping("79", NewznabStandardCategory.BooksMags, "Ebooks - Magazines/Newspapers");
-            caps.Categories.AddCategoryMapping("80", NewznabStandardCategory.BooksTechnical, "Ebooks - Math/Science/Tech");
-            caps.Categories.AddCategoryMapping("92", NewznabStandardCategory.BooksEBook, "Ebooks - Medical");
-            caps.Categories.AddCategoryMapping("118", NewznabStandardCategory.BooksEBook, "Ebooks - Mixed Collections");
-            caps.Categories.AddCategoryMapping("94", NewznabStandardCategory.BooksEBook, "Ebooks - Mystery");
-            caps.Categories.AddCategoryMapping("120", NewznabStandardCategory.BooksEBook, "Ebooks - Nature");
-            caps.Categories.AddCategoryMapping("95", NewznabStandardCategory.BooksEBook, "Ebooks - Philosophy");
-            caps.Categories.AddCategoryMapping("81", NewznabStandardCategory.BooksEBook, "Ebooks - Pol/Soc/Relig");
-            caps.Categories.AddCategoryMapping("82", NewznabStandardCategory.BooksEBook, "Ebooks - Recreation");
-            caps.Categories.AddCategoryMapping("68", NewznabStandardCategory.BooksEBook, "Ebooks - Romance");
-            caps.Categories.AddCategoryMapping("69", NewznabStandardCategory.BooksEBook, "Ebooks - Science Fiction");
-            caps.Categories.AddCategoryMapping("75", NewznabStandardCategory.BooksEBook, "Ebooks - Self-Help");
-            caps.Categories.AddCategoryMapping("96", NewznabStandardCategory.BooksEBook, "Ebooks - Travel/Adventure");
-            caps.Categories.AddCategoryMapping("104", NewznabStandardCategory.BooksEBook, "Ebooks - True Crime");
-            caps.Categories.AddCategoryMapping("109", NewznabStandardCategory.BooksEBook, "Ebooks - Urban Fantasy");
-            caps.Categories.AddCategoryMapping("70", NewznabStandardCategory.BooksEBook, "Ebooks - Western");
-            caps.Categories.AddCategoryMapping("112", NewznabStandardCategory.BooksEBook, "Ebooks - Young Adult");
-            caps.Categories.AddCategoryMapping("19", NewznabStandardCategory.AudioAudiobook, "Guitar/Bass Tabs");
-            caps.Categories.AddCategoryMapping("20", NewznabStandardCategory.AudioAudiobook, "Individual Sheet");
-            caps.Categories.AddCategoryMapping("24", NewznabStandardCategory.AudioAudiobook, "Individual Sheet MP3");
-            caps.Categories.AddCategoryMapping("126", NewznabStandardCategory.AudioAudiobook, "Instructional Book with Video");
-            caps.Categories.AddCategoryMapping("22", NewznabStandardCategory.AudioAudiobook, "Instructional Media - Music");
-            caps.Categories.AddCategoryMapping("113", NewznabStandardCategory.AudioAudiobook, "Lick Library - LTP/Jam With");
-            caps.Categories.AddCategoryMapping("114", NewznabStandardCategory.AudioAudiobook, "Lick Library - Techniques/QL");
-            caps.Categories.AddCategoryMapping("17", NewznabStandardCategory.AudioAudiobook, "Music - Complete Editions");
-            caps.Categories.AddCategoryMapping("26", NewznabStandardCategory.AudioAudiobook, "Music Book");
-            caps.Categories.AddCategoryMapping("27", NewznabStandardCategory.AudioAudiobook, "Music Book MP3");
-            caps.Categories.AddCategoryMapping("30", NewznabStandardCategory.AudioAudiobook, "Sheet Collection");
-            caps.Categories.AddCategoryMapping("31", NewznabStandardCategory.AudioAudiobook, "Sheet Collection MP3");
-            caps.Categories.AddCategoryMapping("127", NewznabStandardCategory.AudioAudiobook, "Radio -  Comedy");
-            caps.Categories.AddCategoryMapping("130", NewznabStandardCategory.AudioAudiobook, "Radio - Drama");
-            caps.Categories.AddCategoryMapping("128", NewznabStandardCategory.AudioAudiobook, "Radio - Factual/Documentary");
-            caps.Categories.AddCategoryMapping("132", NewznabStandardCategory.AudioAudiobook, "Radio - Reading");
-
-            return caps;
         }
     }
 

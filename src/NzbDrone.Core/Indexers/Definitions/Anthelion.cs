@@ -13,6 +13,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -22,17 +23,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Anthelion : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Anthelion";
-        public override string[] IndexerUrls => new string[] { "https://anthelion.me/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "A movies tracker";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Anthelion(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Anthelion(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -100,28 +95,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.Movies, "Film/Feature");
-            caps.Categories.AddCategoryMapping("2", NewznabStandardCategory.Movies, "Film/Short");
-            caps.Categories.AddCategoryMapping("3", NewznabStandardCategory.TV, "TV/Miniseries");
-            caps.Categories.AddCategoryMapping("4", NewznabStandardCategory.Other, "Other");
-
-            return caps;
         }
     }
 

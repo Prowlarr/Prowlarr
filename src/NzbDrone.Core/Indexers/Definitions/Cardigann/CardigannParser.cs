@@ -565,8 +565,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var traktIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
                     var traktIDMatch = traktIDRegEx.Match(value);
                     var traktID = traktIDMatch.Groups[1].Value;
-                    release.TvRageId = (int)ParseUtil.CoerceLong(traktID);
-                    value = release.TvRageId.ToString();
+                    release.TraktId = (int)ParseUtil.CoerceLong(traktID);
+                    value = release.TraktId.ToString();
                     break;
                 case "tvdbid":
                     var tvdbIdRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);

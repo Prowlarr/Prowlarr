@@ -182,18 +182,23 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<TorrentInfo>();
-
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            var indexerHttpResponse = indexerResponse.HttpResponse;
+            if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerHttpResponse.StatusCode} code from API request");
             }
 
-            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            if (!indexerHttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerHttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
             }
 
-            var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerResponse.HttpResponse);
+            if (indexerResponse.Content.ContainsIgnoreCase("Invalid API Key"))
+            {
+                throw new IndexerAuthException("API Key invalid or not authorized");
+            }
+
+            var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerHttpResponse);
 
             foreach (var row in jsonResponse.Resource.Results)
             {

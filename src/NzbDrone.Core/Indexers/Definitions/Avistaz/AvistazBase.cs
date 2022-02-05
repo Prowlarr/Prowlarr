@@ -89,6 +89,22 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             {
                 await GetToken();
             }
+            catch (HttpException ex)
+            {
+                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    _logger.Warn(ex, "Unauthorized request to indexer");
+
+                    var jsonResponse = new HttpResponse<AvistazErrorResponse>(ex.Response);
+                    return new ValidationFailure(string.Empty, jsonResponse.Resource?.Message ?? "Unauthorized request to indexer");
+                }
+                else
+                {
+                    _logger.Warn(ex, "Unable to connect to indexer");
+
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+                }
+            }
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Unable to connect to indexer");

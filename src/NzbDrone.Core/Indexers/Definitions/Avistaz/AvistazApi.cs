@@ -46,6 +46,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public List<AvistazRelease> Data { get; set; }
     }
 
+    public class AvistazErrorResponse
+    {
+        public string Message { get; set; }
+    }
+
     public class AvistazIdInfo
     {
         public string Tmdb { get; set; }

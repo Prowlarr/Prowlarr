@@ -204,7 +204,7 @@ namespace NzbDrone.Core.IndexerVersions
             var dbDefs = _versionService.All();
 
             //Check to ensure it's in versioned defs before we go to web
-            if (dbDefs.Count > 0 && dbDefs.Any(x => x.File == fileKey))
+            if (dbDefs.Count > 0 && !dbDefs.Any(x => x.File == fileKey))
             {
                 throw new ArgumentNullException(nameof(fileKey));
             }

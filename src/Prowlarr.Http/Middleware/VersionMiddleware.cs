@@ -6,7 +6,7 @@ namespace Prowlarr.Http.Middleware
 {
     public class VersionMiddleware
     {
-        private const string VERSIONHEADER = "X-ApplicationVersion";
+        private const string VERSIONHEADER = "X-Application-Version";
 
         private readonly RequestDelegate _next;
         private readonly string _version;

@@ -1106,7 +1106,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     requestbuilder.SetHeaders(headers ?? new Dictionary<string, string>());
                 }
 
-                var request = new CardigannRequest(requestbuilder.SetEncoding(_encoding).Build(), variables, searchPath);
+                var request = new CardigannRequest(requestbuilder.SetEncoding(_encoding).Build(), variables, searchPath, searchPath.Response.Attribute ?? search.Rows.Attribute);
 
                 yield return request;
             }

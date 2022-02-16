@@ -91,8 +91,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 foreach (var row in rowsObj.Value<JArray>())
                 {
-                    var selObj = request.SearchPath.Response.Attribute != null ? row.SelectToken(request.SearchPath.Response.Attribute).Value<JToken>() : row;
-                    var mulRows = request.SearchPath.Response.Multiple == true ? selObj.Values<JObject>() : new List<JObject> { selObj.Value<JObject>() };
+                    var selObj = request.Attributes != null ? row.SelectToken(request.Attributes).Value<JToken>() : row;
+                    var mulRows = request.SearchPath.Response.Multiple ? selObj.Values<JObject>() : new List<JObject> { selObj.Value<JObject>() };
 
                     foreach (var mulRow in mulRows)
                     {

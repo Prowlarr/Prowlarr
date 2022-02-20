@@ -48,14 +48,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "Anime Series");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio, "Anime Musik/OST");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "Anime Spiele");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.XXX, "Hentai");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.PCGames, "Spiele Linux");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.XXX, "Anime Hentai");
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.PCGames, "Software");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.Other, "Sonstiges");
             caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.Movies, "Filme");
             caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TV, "Serien");
             caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.PCGames, "Spiele");
             caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.Audio, "Musik");
             caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.BooksComics, "Mangas");
+            caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.Movies, "Cartoon Filme");
+            caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.TV, "Cartoon Serie");
+            caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.XXX, "H-Manga / Doujinshi");
 
             return caps;
         }

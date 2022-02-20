@@ -29,6 +29,7 @@ namespace Prowlarr.Http.Authentication
                 .AddBasic(AuthenticationType.Basic.ToString())
                 .AddCookie(AuthenticationType.Forms.ToString(), options =>
                 {
+                    options.Cookie.Name = "ProwlarrAuth";
                     options.AccessDeniedPath = "/login?loginFailed=true";
                     options.LoginPath = "/login";
                     options.ExpireTimeSpan = TimeSpan.FromDays(7);

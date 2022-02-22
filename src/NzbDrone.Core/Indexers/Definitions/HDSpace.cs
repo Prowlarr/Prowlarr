@@ -171,7 +171,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             else
             {
                 queryCollection.Add("options", "0");
-                queryCollection.Add("search", term);
+                queryCollection.Add("search", term.Replace(".", " "));
             }
 
             searchUrl += queryCollection.GetQueryString();

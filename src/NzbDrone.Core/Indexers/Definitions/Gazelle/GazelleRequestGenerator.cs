@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                parameters += string.Format("&searchstr={0}", searchString);
+                parameters += string.Format("&searchstr={0}", searchString.Replace(".", " "));
             }
 
             if (categories != null)

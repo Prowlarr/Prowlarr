@@ -148,7 +148,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "order_way", "desc" },
                 { "action", "basic" },
                 { "searchsubmit", "1" },
-                { "searchstr", imdbId.IsNotNullOrWhiteSpace() ? imdbId : term }
+                { "searchstr", imdbId.IsNotNullOrWhiteSpace() ? imdbId : term.Replace(".", " ") }
             };
 
             var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);

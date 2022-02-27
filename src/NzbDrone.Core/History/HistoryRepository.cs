@@ -100,7 +100,7 @@ namespace NzbDrone.Core.History
 
         public int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes)
         {
-            var builder = new SqlBuilder()
+            var builder = new SqlBuilder(_database.DatabaseType)
                 .SelectCount()
                 .Where<History>(x => x.IndexerId == indexerId)
                 .Where<History>(x => x.Date >= date)

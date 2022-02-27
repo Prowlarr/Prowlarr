@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Datastore
             _updateSql = GetUpdateSql(_properties);
         }
 
-        protected virtual SqlBuilder Builder() => new SqlBuilder();
+        protected virtual SqlBuilder Builder() => new SqlBuilder(_database.DatabaseType);
 
         protected virtual List<TModel> Query(SqlBuilder builder) => _database.Query<TModel>(builder).ToList();
 

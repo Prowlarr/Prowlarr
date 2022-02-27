@@ -42,21 +42,21 @@ namespace NzbDrone.Core.Datastore
 
         public static SqlBuilder Where<TModel>(this SqlBuilder builder, Expression<Func<TModel, bool>> filter)
         {
-            var wb = new WhereBuilder(filter, true, builder.Sequence);
+            var wb = GetWhereBuilder(builder.DatabaseType, filter, true, builder.Sequence);
 
             return builder.Where(wb.ToString(), wb.Parameters);
         }
 
         public static SqlBuilder OrWhere<TModel>(this SqlBuilder builder, Expression<Func<TModel, bool>> filter)
         {
-            var wb = new WhereBuilder(filter, true, builder.Sequence);
+            var wb = GetWhereBuilder(builder.DatabaseType, filter, true, builder.Sequence);
 
             return builder.OrWhere(wb.ToString(), wb.Parameters);
         }
 
         public static SqlBuilder Join<TLeft, TRight>(this SqlBuilder builder, Expression<Func<TLeft, TRight, bool>> filter)
         {
-            var wb = new WhereBuilder(filter, false, builder.Sequence);
+            var wb = GetWhereBuilder(builder.DatabaseType, filter, false, builder.Sequence);
 
             var rightTable = TableMapping.Mapper.TableNameMapping(typeof(TRight));
 
@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Datastore
 
         public static SqlBuilder LeftJoin<TLeft, TRight>(this SqlBuilder builder, Expression<Func<TLeft, TRight, bool>> filter)
         {
-            var wb = new WhereBuilder(filter, false, builder.Sequence);
+            var wb = GetWhereBuilder(builder.DatabaseType, filter, false, builder.Sequence);
 
             var rightTable = TableMapping.Mapper.TableNameMapping(typeof(TRight));
 
@@ -136,6 +136,18 @@ namespace NzbDrone.Core.Datastore
             sb.AppendLine();
 
             return sb.ToString();
+        }
+
+        private static WhereBuilder GetWhereBuilder(DatabaseType databaseType, Expression filter, bool requireConcrete, int seq)
+        {
+            if (databaseType == DatabaseType.PostgreSQL)
+            {
+                return new WhereBuilderPostgres(filter, requireConcrete, seq);
+            }
+            else
+            {
+                return new WhereBuilderSqlite(filter, requireConcrete, seq);
+            }
         }
 
         private static Dictionary<string, object> ToDictionary(this DynamicParameters dynamicParams)

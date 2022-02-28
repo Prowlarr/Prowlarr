@@ -100,11 +100,13 @@ namespace NzbDrone.Core.History
 
         public int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes)
         {
+            var intEvents = eventTypes.Select(t => (int)t).ToList();
+
             var builder = new SqlBuilder(_database.DatabaseType)
                 .SelectCount()
                 .Where<History>(x => x.IndexerId == indexerId)
                 .Where<History>(x => x.Date >= date)
-                .Where<History>(x => eventTypes.Contains(x.EventType));
+                .Where<History>(x => intEvents.Contains((int)x.EventType));
 
             var sql = builder.AddPageCountTemplate(typeof(History));
 

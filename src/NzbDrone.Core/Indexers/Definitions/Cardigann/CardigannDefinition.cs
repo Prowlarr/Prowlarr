@@ -151,6 +151,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public int After { get; set; }
         public SelectorBlock Dateheaders { get; set; }
         public SelectorBlock Count { get; set; }
+        public bool Multiple { get; set; } = false;
     }
 
     public class SearchPathBlock : RequestBlock
@@ -200,8 +201,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
     public class ResponseBlock
     {
         public string Type { get; set; }
-        public string Attribute { get; set; }
-        public bool Multiple { get; set; }
         public string NoResultsMessage { get; set; }
     }
 }

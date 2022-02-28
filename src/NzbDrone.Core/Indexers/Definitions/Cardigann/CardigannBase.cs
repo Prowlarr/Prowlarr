@@ -48,6 +48,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected static readonly Regex _LogicFunctionRegex = new Regex(
             $@"\b({string.Join("|", _SupportedLogicFunctions.Select(Regex.Escape))})(?:\s+(\(?\.[^\)\s]+\)?|""[^""]+"")){{2,}}");
 
+        // Matches CSS selectors for the JSON parser
+        protected static readonly Regex _jsonSelectorRegex = new Regex(@"\:(?<filter>.+?)\((?<key>.+?)\)(?=:|\z)", RegexOptions.Compiled);
+
         public CardigannSettings Settings { get; set;  }
 
         public CardigannBase(IConfigService configService,
@@ -234,13 +237,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (selector.Selector != null)
             {
-                var selector_Selector = ApplyGoTemplateText(selector.Selector.TrimStart('.'), variables);
-                var selection = parentObj.SelectToken(selector_Selector);
+                var selectorSelector = ApplyGoTemplateText(selector.Selector.TrimStart('.'), variables);
+                selectorSelector = JsonParseFieldSelector(parentObj, selectorSelector);
+
+                JToken selection = null;
+                if (selectorSelector != null)
+                {
+                    selection = parentObj.SelectToken(selectorSelector);
+                }
+
                 if (selection == null)
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selector_Selector, parentObj.ToString()));
+                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selectorSelector, parentObj.ToString()));
                     }
 
                     return null;
@@ -850,6 +860,90 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             return settingsBaseUrl;
+        }
+
+        protected JArray JsonParseRowsSelector(JToken parsedJson, string rowSelector)
+        {
+            var selector = rowSelector.Split(':')[0];
+            var rowsObj = parsedJson.SelectToken(selector).Value<JArray>();
+            return new JArray(rowsObj.Where(t =>
+                                                JsonParseFieldSelector(t.Value<JObject>(), rowSelector.Remove(0, selector.Length)) != null));
+        }
+
+        private string JsonParseFieldSelector(JToken parsedJson, string rowSelector)
+        {
+            var selector = rowSelector.Split(':')[0];
+            JToken parsedObject;
+            if (string.IsNullOrWhiteSpace(selector))
+            {
+                parsedObject = parsedJson;
+            }
+            else if (parsedJson.SelectToken(selector) != null)
+            {
+                parsedObject = parsedJson.SelectToken(selector);
+            }
+            else
+            {
+                return null;
+            }
+
+            foreach (Match match in _jsonSelectorRegex.Matches(rowSelector))
+            {
+                var filter = match.Result("${filter}");
+                var key = match.Result("${key}");
+                Match innerMatch;
+                switch (filter)
+                {
+                    case "has":
+                        innerMatch = _jsonSelectorRegex.Match(key);
+                        if (innerMatch.Success)
+                        {
+                            if (JsonParseFieldSelector(parsedObject, key) == null)
+                            {
+                                return null;
+                            }
+                        }
+                        else
+                        {
+                            if (parsedObject.SelectToken(key) == null)
+                            {
+                                return null;
+                            }
+                        }
+
+                        break;
+                    case "not":
+                        innerMatch = _jsonSelectorRegex.Match(key);
+                        if (innerMatch.Success)
+                        {
+                            if (JsonParseFieldSelector(parsedObject, key) != null)
+                            {
+                                return null;
+                            }
+                        }
+                        else
+                        {
+                            if (parsedObject.SelectToken(key) != null)
+                            {
+                                return null;
+                            }
+                        }
+
+                        break;
+                    case "contains":
+                        if (!parsedObject.ToString().Contains(key))
+                        {
+                            return null;
+                        }
+
+                        break;
+                    default:
+                        _logger.Error(string.Format("CardigannIndexer ({0}): Unsupported selector: {1}", _definition.Id, rowSelector));
+                        continue;
+                }
+            }
+
+            return selector;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new string[] { "https://pornolab.net/" };
         private string LoginUrl => Settings.BaseUrl + "forum/login.php";
         public override string Description => "PornoLab is a Semi-Private Russian site for Adult content";
-        public override string Language => "ru-ru";
+        public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;

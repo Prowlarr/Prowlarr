@@ -21,6 +21,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class DanishBytes : TorrentIndexerBase<DanishBytesSettings>
     {
+        [Obsolete("Moved to YML")]
         public override string Name => "DanishBytes";
         public override string[] IndexerUrls => new string[] { "https://danishbytes.club/", "https://danishbytes2.org/" };
         public override string Description => "DanishBytes is a Private Danish Tracker";

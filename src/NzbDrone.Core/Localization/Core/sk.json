@@ -34,7 +34,6 @@
     "BranchUpdateMechanism": "Vetva používaná externým mechanizmom aktualizácie",
     "DeleteApplicationMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteBackupMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
-    "DeleteIndexerMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteIndexerProxyMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteNotificationMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteTagMessageText": "Naozaj chcete zmazať značku formátu {0} ?",

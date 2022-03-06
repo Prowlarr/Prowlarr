@@ -50,7 +50,6 @@
     "BranchUpdate": "Gren som skal brukes til å oppdatere Radarr",
     "DeleteApplicationMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteDownloadClientMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
-    "DeleteIndexerMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteIndexerProxyMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteNotificationMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "DeleteTagMessageText": "Er du sikker på at du vil slette formattaggen {0}?"

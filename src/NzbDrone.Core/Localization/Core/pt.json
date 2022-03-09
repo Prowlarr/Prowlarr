@@ -1,6 +1,6 @@
 {
     "Peers": "Elementos",
-    "AppDataLocationHealthCheckMessage": "Não será possível atualizar para evitar a exclusão de AppData",
+    "AppDataLocationHealthCheckMessage": "Não será possível atualizar para evitar a exclusão da pasta AppData durante a atualização",
     "Warn": "Avisar",
     "View": "Ver",
     "Updates": "Atualizações",
@@ -393,5 +393,7 @@
     "OnGrab": "Ao capturar",
     "OnHealthIssue": "Ao ter problemas no estado de funcionamento",
     "TestAllIndexers": "Testar todos os indexadores",
-    "UserAgentProvidedByTheAppThatCalledTheAPI": "Par Utilizador-Agente fornecido pela aplicação que chamou a API"
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "Par Utilizador-Agente fornecido pela aplicação que chamou a API",
+    "OnApplicationUpdate": "Quando a aplicação atualizar",
+    "OnApplicationUpdateHelpText": "Quando a aplicação atualizar"
 }

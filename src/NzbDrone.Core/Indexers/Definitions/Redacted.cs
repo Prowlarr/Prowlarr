@@ -73,8 +73,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.PC, "Applications");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.BooksEBook, "E-Books");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.MoviesOther, "E-Learning Videos");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVOther, "Comedy");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Other, "E-Learning Videos");
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Other, "Comedy");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksComics, "Comics");
 
             return caps;

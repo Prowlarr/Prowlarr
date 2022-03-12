@@ -15,7 +15,7 @@
 	<key>CFBundleIconFile</key>
 	<string>prowlarr.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.osx.prowlarr.video</string>
+	<string>com.osx.prowlarr.com</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

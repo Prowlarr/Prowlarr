@@ -36,6 +36,10 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                     throw new IndexerException(indexerResponse, "Indexer API call returned NotFound, the Indexer API may have changed.");
                 case HttpStatusCode.ServiceUnavailable:
                     throw new RequestLimitReachedException(indexerResponse, "Cannot do more than 150 API requests per hour.");
+                case HttpStatusCode.GatewayTimeout:
+                    throw new IndexerException(indexerResponse, "Query Failed - Request returned Gateway Timed Out [504]");
+                case HttpStatusCode.BadGateway:
+                    throw new IndexerException(indexerResponse, "Query Failed - Server is unavailable [502]");
                 default:
                     if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
                     {

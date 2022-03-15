@@ -116,6 +116,12 @@ namespace NzbDrone.Core.Applications.Lidarr
                     return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Lidarr cannot connect to Prowlarr");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
+                {
+                    _logger.Error(ex, "Lidarr returned redirect and is invalid");
+                    return new ValidationFailure("BaseUrl", "Lidarr url is invalid, Prowlarr cannot connect to Lidarr - are you missing a url base?");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
                 return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }

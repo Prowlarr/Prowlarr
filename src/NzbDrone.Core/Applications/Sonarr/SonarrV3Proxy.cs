@@ -116,6 +116,18 @@ namespace NzbDrone.Core.Applications.Sonarr
                     return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Sonarr cannot connect to Prowlarr");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
+                {
+                    _logger.Error(ex, "Sonarr returned redirect and is invalid");
+                    return new ValidationFailure("BaseUrl", "Sonarr url is invalid, Prowlarr cannot connect to Sonarr - are you missing a url base?");
+                }
+
+                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.Error(ex, "Sonarr not found");
+                    return new ValidationFailure("BaseUrl", "Sonarr url is invalid, Prowlarr cannot connect to Sonarr. Is Sonarr running and accessible? Sonarr v2 is not supported.");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
                 return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }

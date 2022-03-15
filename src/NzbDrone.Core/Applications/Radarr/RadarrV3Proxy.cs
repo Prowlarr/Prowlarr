@@ -116,6 +116,12 @@ namespace NzbDrone.Core.Applications.Radarr
                     return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Radarr cannot connect to Prowlarr");
                 }
 
+                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
+                {
+                    _logger.Error(ex, "Radarr returned redirect and is invalid");
+                    return new ValidationFailure("BaseUrl", "Radarr url is invalid, Prowlarr cannot connect to Radarr - are you missing a url base?");
+                }
+
                 _logger.Error(ex, "Unable to send test message");
                 return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }

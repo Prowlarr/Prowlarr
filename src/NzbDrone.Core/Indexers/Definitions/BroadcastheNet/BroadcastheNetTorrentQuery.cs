@@ -30,6 +30,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public string Tvrage { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Age { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Series { get; internal set; }
 
         public BroadcastheNetTorrentQuery Clone()
         {

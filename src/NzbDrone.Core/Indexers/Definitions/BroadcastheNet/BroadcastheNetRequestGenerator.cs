@@ -25,10 +25,15 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             PageSize = 100;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset)
+        private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset, bool textSearch)
         {
-            var builder = new JsonRpcRequestBuilder(Settings.BaseUrl)
-                .Call("getTorrents", Settings.ApiKey, parameters, results, offset);
+            var builder = new JsonRpcRequestBuilder(Settings.BaseUrl).Call("getTorrents", Settings.ApiKey, parameters, results, offset);
+
+            if (textSearch)
+            {
+                builder = new JsonRpcRequestBuilder(Settings.BaseUrl).Call("getTorrents", Settings.ApiKey, parameters.Search.ToString(), results, offset);
+            }
+
             builder.SuppressHttpError = true;
 
             yield return new IndexerRequest(builder.Build());
@@ -60,6 +65,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault();
 
+            var textSearch = false;
+
             if (searchCriteria.TvdbId > 0)
             {
                 parameters.Tvdb = string.Format("{0}", searchCriteria.TvdbId);
@@ -71,29 +78,35 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             }
 
             // If only the season/episode is searched for then change format to match expected format
-            if (searchCriteria.Season > 0 && searchCriteria.Episode.IsNullOrWhiteSpace())
+            if (searchCriteria.Season > 0)
             {
-                // Season Only
-                parameters.Name = string.Format("Season {0}%", searchCriteria.Season.Value);
-                parameters.Category = "Season";
+                if (searchCriteria.Episode.IsNullOrWhiteSpace())
+                {
+                    // Season Only
+                    parameters.Series = searchCriteria.SearchTerm.Trim().Replace(" ", "+");
+                    parameters.Name = string.Format("S{0:00}", searchCriteria.Season.Value);
+                }
+                else if (Regex.IsMatch(searchCriteria.EpisodeSearchString, "(\\d{4}\\.\\d{2}\\.\\d{2})"))
+                {
+                    // Daily Episode
+                    parameters.Name = searchCriteria.EpisodeSearchString;
+                    parameters.Category = "Episode";
+                }
+                else if (int.Parse(searchCriteria.Episode) > 0)
+                {
+                    // Standard (S/E) Episode
+                    parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
+                    parameters.Category = "Episode";
+                }
             }
-            else if (searchCriteria.Season > 0 && Regex.IsMatch(searchCriteria.EpisodeSearchString, "(\\d{4}\\.\\d{2}\\.\\d{2})"))
+            else
             {
-                // Daily Episode
-                parameters.Name = searchCriteria.EpisodeSearchString;
-                parameters.Category = "Episode";
-            }
-            else if    (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
-            {
-                // Standard (S/E) Episode
-                parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
-                parameters.Category = "Episode";
+                // Neither a season only search nor daily nor standard, fall back to query
+                parameters.Search = searchString.Replace(" ", "+");
+                textSearch = true;
             }
 
-            // Neither a season only search nor daily nor standard, fall back to query
-            parameters.Search = searchString.Replace(" ", "%");
-
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
+            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset, textSearch));
 
             return pageableRequests;
         }
@@ -117,11 +130,11 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 btnResults = (int)Capabilities.LimitsDefault;
             }
 
-            parameters.Search = searchString.Replace(" ", "%");
+            parameters.Search = searchString.Replace(" ", "+");
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault();
 
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
+            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset, true));
 
             return pageableRequests;
         }

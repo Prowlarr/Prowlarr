@@ -25,14 +25,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             PageSize = 100;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset, bool textSearch)
+        private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset)
         {
             var builder = new JsonRpcRequestBuilder(Settings.BaseUrl).Call("getTorrents", Settings.ApiKey, parameters, results, offset);
-
-            if (textSearch)
-            {
-                builder = new JsonRpcRequestBuilder(Settings.BaseUrl).Call("getTorrents", Settings.ApiKey, parameters.Search.ToString(), results, offset);
-            }
 
             builder.SuppressHttpError = true;
 
@@ -65,8 +60,6 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault();
 
-            var textSearch = false;
-
             if (searchCriteria.TvdbId > 0)
             {
                 parameters.Tvdb = string.Format("{0}", searchCriteria.TvdbId);
@@ -83,8 +76,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 if (searchCriteria.Episode.IsNullOrWhiteSpace())
                 {
                     // Season Only
-                    parameters.Series = searchCriteria.SearchTerm.Trim().Replace(" ", "+");
-                    parameters.Name = string.Format("S{0:00}", searchCriteria.Season.Value);
+                    parameters.Search = searchString.Trim() + string.Format(" S{0:00}", searchCriteria.Season.Value);
+                    parameters.Category = "Season";
                 }
                 else if (Regex.IsMatch(searchCriteria.EpisodeSearchString, "(\\d{4}\\.\\d{2}\\.\\d{2})"))
                 {
@@ -92,21 +85,14 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                     parameters.Name = searchCriteria.EpisodeSearchString;
                     parameters.Category = "Episode";
                 }
-                else if (int.Parse(searchCriteria.Episode) > 0)
-                {
-                    // Standard (S/E) Episode
-                    parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
-                    parameters.Category = "Episode";
-                }
             }
             else
             {
                 // Neither a season only search nor daily nor standard, fall back to query
-                parameters.Search = searchString.Replace(" ", "+");
-                textSearch = true;
+                parameters.Search = searchString.Replace(" ", "%");
             }
 
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset, textSearch));
+            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
 
             return pageableRequests;
         }
@@ -134,7 +120,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault();
 
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset, true));
+            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
 
             return pageableRequests;
         }

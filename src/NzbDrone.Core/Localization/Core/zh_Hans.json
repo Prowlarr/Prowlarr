@@ -3,5 +3,7 @@
     "AddDownloadClient": "添加下载客户端",
     "Add": "添加",
     "About": "关于",
-    "Analytics": "分析"
+    "Analytics": "分析",
+    "AddIndexer": "添加索引器",
+    "ApiKey": "API密钥"
 }

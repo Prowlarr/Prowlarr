@@ -421,5 +421,7 @@
     "UnableToLoadApplicationList": "Impossible de charger la liste des applications",
     "Website": "Site internet",
     "AudioSearch": "Recherche de musique",
-    "BookSearch": "Recherche de livres"
+    "BookSearch": "Recherche de livres",
+    "OnApplicationUpdate": "Lors de la mise à jour de l'app",
+    "OnApplicationUpdateHelpText": "Lors de la mise à jour de l'app"
 }

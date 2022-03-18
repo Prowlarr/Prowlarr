@@ -403,5 +403,13 @@
     "HistoryCleanupDaysHelpText": "设置为0关闭自动清理",
     "OnGrab": "抓取中",
     "OnHealthIssue": "健康度异常",
-    "TestAllIndexers": "测试全部搜刮器"
+    "TestAllIndexers": "测试全部搜刮器",
+    "AudioSearch": "音频搜索",
+    "BookSearch": "图书搜索",
+    "Categories": "分类",
+    "Database": "数据库",
+    "HistoryCleanup": "清理历史记录",
+    "IndexerAlreadySetup": "至少有一个索引器已经设置完毕",
+    "IndexerInfo": "索引器信息",
+    "IndexerNoDefCheckMessage": "索引器没有定义，将无法工作: {0}. 请删除或重新添加到Prowlarr"
 }

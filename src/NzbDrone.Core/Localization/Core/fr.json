@@ -216,7 +216,7 @@
     "ProxyBypassFilterHelpText": "Utiliser ',' comme séparateur et '*.' comme caractère générique pour les sous-domaines",
     "Uptime": "Durée de fonctionnent",
     "UpdateScriptPathHelpText": "Chemin vers un script personnalisé qui prend un package de mise à jour extraite et gère le reste du processus de mise à jour",
-    "UpdateMechanismHelpText": "Utiliser l'outil de mise à jour intégré de Prowlarr ou un script",
+    "UpdateMechanismHelpText": "Utiliser le programme de mise à jour intégré de Prowlarr ou un script",
     "UpdateAutomaticallyHelpText": "Télécharger et installer automatiquement les mises à jour. Vous pourrez toujours installer à partir de System : Updates",
     "UnableToLoadUISettings": "Impossible de charger les paramètres de l'interface utilisateur",
     "UnableToLoadTags": "Impossible de charger les balises",
@@ -374,7 +374,7 @@
     "UnableToLoadAppProfiles": "Impossible de charger les profils d'application",
     "Add": "Ajouter",
     "SyncLevelFull": "Synchronisation complète : gardera cette application entièrement synchronisée. Les modifications apportées dans Prowlarr sont ensuite synchronisées avec cette application. Toute modification effectuée à distance sera annulée par Prowlarr lors de la prochaine synchronisation.",
-    "SyncLevelAddRemove": "Ajouter et supprimer uniquement : lorsqu'il est ajouté ou supprimé de Prowlarr, il mettra à jour cette application distante.",
+    "SyncLevelAddRemove": "Ajouter et supprimer uniquement : lorsque les indexeurs sont ajoutés ou supprimés de Prowlarr, ils mettront à jour cette application à distance.",
     "SyncLevel": "Niveau de synchronisation",
     "FullSync": "Synchronisation complète",
     "AddRemoveOnly": "Ajouter et supprimer uniquement",
@@ -406,7 +406,7 @@
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent fourni par l'application qui a appelé l'API",
     "Database": "Base de données",
     "HistoryCleanup": "Nettoyage de l'historique",
-    "IndexerAlreadySetup": "Au moins une instance de l'indexeur est déjà configuré",
+    "IndexerAlreadySetup": "Au moins une instance de l'indexeur est déjà configurée",
     "IndexerInfo": "Info de l'indexeur",
     "Private": "Privé",
     "Proxies": "Proxies",
@@ -423,5 +423,8 @@
     "AudioSearch": "Recherche de musique",
     "BookSearch": "Recherche de livres",
     "OnApplicationUpdate": "Lors de la mise à jour de l'app",
-    "OnApplicationUpdateHelpText": "Lors de la mise à jour de l'app"
+    "OnApplicationUpdateHelpText": "Lors de la mise à jour de l'app",
+    "IndexerNoDefCheckMessage": "Les indexeurs ne sont pas définis et ne fonctionneront pas :Merci de les retirer et (ou) les ajouter à nouveau à Prowlarr",
+    "MovieSearch": "Recherche de films",
+    "TvSearch": "Recherche de séries TV"
 }

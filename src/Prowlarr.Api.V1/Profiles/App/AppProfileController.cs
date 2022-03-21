@@ -30,9 +30,10 @@ namespace Prowlarr.Api.V1.Profiles.App
 
         [RestDeleteById]
         [Produces("application/json")]
-        public void DeleteProfile(int id)
+        public object DeleteProfile(int id)
         {
             _profileService.Delete(id);
+            return new { };
         }
 
         [RestPutById]

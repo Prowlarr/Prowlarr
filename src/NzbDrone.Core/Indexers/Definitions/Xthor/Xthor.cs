@@ -8,6 +8,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.Xthor
 {
+    [Obsolete("Moved to YML for Cardigann v5")]
     public class Xthor : TorrentIndexerBase<XthorSettings>
     {
         public override string Name => "Xthor";

@@ -399,7 +399,7 @@
     "IndexerSettingsSummary": "配置全局索引器设置，包括代理。",
     "HistoryCleanupDaysHelpTextWarning": "回收站中的文件在超出选择的天数后会被自动清理",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "由调用API的应用程序提供的User-Agent",
-    "Filters": "过滤",
+    "Filters": "过滤器",
     "HistoryCleanupDaysHelpText": "设置为0关闭自动清理",
     "OnGrab": "抓取中",
     "OnHealthIssue": "健康度异常",
@@ -411,5 +411,17 @@
     "HistoryCleanup": "清理历史记录",
     "IndexerAlreadySetup": "至少有一个索引器已经设置完毕",
     "IndexerInfo": "索引器信息",
-    "IndexerNoDefCheckMessage": "索引器没有定义，将无法工作: {0}. 请删除或重新添加到Prowlarr"
+    "IndexerNoDefCheckMessage": "索引器没有定义，将无法工作: {0}. 请删除或重新添加到Prowlarr",
+    "MovieSearch": "搜索电影",
+    "OnApplicationUpdate": "应用更新中",
+    "OnApplicationUpdateHelpText": "应用更新中，请耐心等待",
+    "Private": "私有",
+    "Public": "公开",
+    "QueryOptions": "查询选项",
+    "QueryResults": "查询结果",
+    "MassEditor": "批量编辑器",
+    "Proxies": "代理",
+    "SearchType": "搜索类型",
+    "TvSearch": "搜索剧集",
+    "UnableToLoadApplicationList": "123"
 }

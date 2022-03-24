@@ -113,7 +113,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             FlareSolverrRequest req;
 
             var url = request.Url.ToString();
-            var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36";
             var maxTimeout = Settings.RequestTimeout * 1000;
 
             if (request.Method == HttpMethod.Get)
@@ -123,7 +122,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     Cmd = "request.get",
                     Url = url,
                     MaxTimeout = maxTimeout,
-                    UserAgent = userAgent
                 };
             }
             else if (request.Method == HttpMethod.Post)
@@ -146,7 +144,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                             ContentLength = null
                         },
                         MaxTimeout = maxTimeout,
-                        UserAgent = userAgent
                     };
                 }
                 else if (contentTypeType.Contains("multipart/form-data"))

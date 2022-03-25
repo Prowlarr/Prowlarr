@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Profiles
 
         public void Delete(int id)
         {
-            if (_indexerFactory.All().Any(c => c.AppProfileId == id))
+            if (_indexerFactory.All().Any(c => c.AppProfileId == id) || All().Count == 1)
             {
                 throw new ProfileInUseException(id);
             }

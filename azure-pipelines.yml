@@ -15,6 +15,7 @@ variables:
   sentryUrl: 'https://sentry.servarr.com'
   dotnetVersion: '6.0.201'
   innoVersion: '6.2.0'
+  nodeVersion: '16.x'
   yarnCacheFolder: $(Pipeline.Workspace)/.yarn
 
 trigger:
@@ -156,7 +157,7 @@ stages:
       - task: NodeTool@0
         displayName: Set Node.js version
         inputs:
-          versionSpec: '12.x'
+          versionSpec: $(nodeVersion)
       - checkout: self
         submodules: true
         fetchDepth: 1
@@ -803,7 +804,7 @@ stages:
       - task: NodeTool@0
         displayName: Set Node.js version
         inputs:
-          versionSpec: '12.x'
+          versionSpec: $(nodeVersion)
       - checkout: self
         submodules: true
         fetchDepth: 1

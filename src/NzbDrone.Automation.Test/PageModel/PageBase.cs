@@ -1,16 +1,15 @@
 using System;
 using System.Threading;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 
 namespace NzbDrone.Automation.Test.PageModel
 {
     public class PageBase
     {
-        private readonly RemoteWebDriver _driver;
+        private readonly WebDriver _driver;
 
-        public PageBase(RemoteWebDriver driver)
+        public PageBase(WebDriver driver)
         {
             _driver = driver;
             driver.Manage().Window.Maximize();

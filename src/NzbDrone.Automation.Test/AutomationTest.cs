@@ -20,7 +20,7 @@ namespace NzbDrone.Automation.Test
     public abstract class AutomationTest
     {
         private NzbDroneRunner _runner;
-        protected RemoteWebDriver driver;
+        protected WebDriver driver;
 
         public AutomationTest()
         {

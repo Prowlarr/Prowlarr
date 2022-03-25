@@ -190,7 +190,7 @@ class IndexerIndexRow extends Component {
                   key={name}
                   className={styles[column.name]}
                 >
-                  {appProfile.name}
+                  {appProfile?.name || ''}
                 </VirtualTableRowCell>
               );
             }

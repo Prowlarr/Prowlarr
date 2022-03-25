@@ -22,7 +22,7 @@ using Prowlarr.Http.REST;
 namespace Prowlarr.Api.V1.Search
 {
     [V1ApiController]
-    public class SearchController : RestController<SearchResource>
+    public class SearchController : RestController<ReleaseResource>
     {
         private readonly ISearchForNzb _nzbSearhService;
         private readonly IDownloadService _downloadService;
@@ -46,13 +46,13 @@ namespace Prowlarr.Api.V1.Search
             _remoteReleaseCache = cacheManager.GetCache<ReleaseInfo>(GetType(), "remoteReleases");
         }
 
-        public override SearchResource GetResourceById(int id)
+        public override ReleaseResource GetResourceById(int id)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
-        public ActionResult<SearchResource> GrabRelease(SearchResource release)
+        public ActionResult<ReleaseResource> GrabRelease(ReleaseResource release)
         {
             ValidateResource(release);
 
@@ -76,7 +76,7 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpPost("bulk")]
-        public ActionResult<SearchResource> GrabReleases(List<SearchResource> releases)
+        public ActionResult<ReleaseResource> GrabReleases(List<ReleaseResource> releases)
         {
             var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
             var host = Request.GetHostName();
@@ -108,35 +108,30 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpGet]
-        public Task<List<SearchResource>> GetAll(string query, [FromQuery] List<int> indexerIds, [FromQuery] List<int> categories, [FromQuery] string type = "search")
+        public Task<List<ReleaseResource>> GetAll([FromQuery] SearchResource payload)
         {
-            if (indexerIds.Any())
-            {
-                return GetSearchReleases(query, type, indexerIds, categories);
-            }
-            else
-            {
-                return GetSearchReleases(query, type, null, categories);
-            }
+            return GetSearchReleases(payload);
         }
 
-        private async Task<List<SearchResource>> GetSearchReleases(string query, string type, List<int> indexerIds, List<int> categories)
+        private async Task<List<ReleaseResource>> GetSearchReleases([FromQuery] SearchResource payload)
         {
             try
             {
                 var request = new NewznabRequest
                 {
-                    q = query,
-                    t = type,
+                    q = payload.Query,
+                    t = payload.Type,
                     source = "Prowlarr",
-                    cat = string.Join(",", categories),
+                    cat = string.Join(",", payload.Categories),
                     server = Request.GetServerUrl(),
-                    host = Request.GetHostName()
+                    host = Request.GetHostName(),
+                    limit = payload.Limit,
+                    offset = payload.Offset
                 };
 
                 request.QueryToParams();
 
-                var result = await _nzbSearhService.Search(request, indexerIds, true);
+                var result = await _nzbSearhService.Search(request, payload.IndexerIds, true);
                 var decisions = result.Releases;
 
                 return MapDecisions(decisions, Request.GetServerUrl());
@@ -150,12 +145,12 @@ namespace Prowlarr.Api.V1.Search
                 _logger.Error(ex, "Search failed: " + ex.Message);
             }
 
-            return new List<SearchResource>();
+            return new List<ReleaseResource>();
         }
 
-        protected virtual List<SearchResource> MapDecisions(IEnumerable<ReleaseInfo> releases, string serverUrl)
+        protected virtual List<ReleaseResource> MapDecisions(IEnumerable<ReleaseInfo> releases, string serverUrl)
         {
-            var result = new List<SearchResource>();
+            var result = new List<ReleaseResource>();
 
             foreach (var downloadDecision in releases)
             {
@@ -173,7 +168,7 @@ namespace Prowlarr.Api.V1.Search
             return result;
         }
 
-        private string GetCacheKey(SearchResource resource)
+        private string GetCacheKey(ReleaseResource resource)
         {
             return string.Concat(resource.IndexerId, "_", resource.Guid);
         }

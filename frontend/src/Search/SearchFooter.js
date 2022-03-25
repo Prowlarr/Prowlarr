@@ -37,7 +37,10 @@ class SearchFooter extends Component {
       searchingReleases: false,
       searchQuery: defaultSearchQuery || '',
       searchIndexerIds: defaultIndexerIds,
-      searchCategories: defaultCategories
+      searchCategories: defaultCategories,
+      searchLimit: 100,
+      searchOffset: 0,
+      newSearch: true
     };
   }
 
@@ -115,11 +118,28 @@ class SearchFooter extends Component {
   };
 
   onSearchPress = () => {
-    this.props.onSearchPress(this.state.searchQuery, this.state.searchIndexerIds, this.state.searchCategories, this.state.searchType);
+
+    const {
+      searchLimit,
+      searchOffset,
+      searchQuery,
+      searchIndexerIds,
+      searchCategories,
+      searchType
+    } = this.state;
+
+    this.props.onSearchPress(searchQuery, searchIndexerIds, searchCategories, searchType, searchLimit, searchOffset);
+
+    this.setState({ searchOffset: searchOffset + 100, newSearch: false });
   };
 
   onSearchInputChange = ({ value }) => {
-    this.setState({ searchQuery: value });
+    this.setState({ searchQuery: value, newSearch: true, searchOffset: 0 });
+  };
+
+  onInputChange = ({ name, value }) => {
+    this.props.onInputChange({ name, value });
+    this.setState({ newSearch: true, searchOffset: 0 });
   };
 
   //
@@ -141,6 +161,7 @@ class SearchFooter extends Component {
       searchQuery,
       searchIndexerIds,
       searchCategories,
+      newSearch,
       isQueryParameterModalOpen,
       queryModalOptions,
       searchType
@@ -206,7 +227,7 @@ class SearchFooter extends Component {
             name='searchIndexerIds'
             value={searchIndexerIds}
             isDisabled={isFetching}
-            onChange={onInputChange}
+            onChange={this.onInputChange}
           />
         </div>
 
@@ -220,7 +241,7 @@ class SearchFooter extends Component {
             name='searchCategories'
             value={searchCategories}
             isDisabled={isFetching}
-            onChange={onInputChange}
+            onChange={this.onInputChange}
           />
         </div>
 
@@ -253,7 +274,7 @@ class SearchFooter extends Component {
                 isDisabled={isFetching || !hasIndexers}
                 onPress={this.onSearchPress}
               >
-                {translate('Search')}
+                {newSearch ? translate('Search') : translate('More')}
               </SpinnerButton>
             </div>
           </div>

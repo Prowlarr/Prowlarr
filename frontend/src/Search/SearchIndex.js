@@ -196,8 +196,8 @@ class SearchIndex extends Component {
     this.setState({ jumpToCharacter });
   };
 
-  onSearchPress = (query, indexerIds, categories, type) => {
-    this.props.onSearchPress({ query, indexerIds, categories, type });
+  onSearchPress = (query, indexerIds, categories, type, limit, offset) => {
+    this.props.onSearchPress({ query, indexerIds, categories, type, limit, offset });
   };
 
   onBulkGrabPress = () => {

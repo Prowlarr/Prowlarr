@@ -17,7 +17,7 @@
     "ForMoreInformationOnTheIndividualDownloadClients": "Para saber mais sobre cada cliente de download, clique nos botões de informações.",
     "IndexerFlags": "Sinalizadores do indexador",
     "IndexerHealthCheckNoIndexers": "Não há indexadores habilitados, o Prowlarr não retornará resultados para a pesquisa",
-    "IndexerPriorityHelpText": "Prioridade do indexador de 1 (mais alta) a 50 (mais baixa). Padrão: 25.",
+    "IndexerPriorityHelpText": "Prioridade do Indexador de 1 (Mais Alta) a 50 (Mais Baixa). Padrão: 25.",
     "IndexersSelectedInterp": "{0} indexador(es) selecionado(s)",
     "LastWriteTime": "Hora da última gravação",
     "LaunchBrowserHelpText": " Abrir o navegador Web e navegar até a página inicial do Prowlarr ao iniciar o aplicativo.",

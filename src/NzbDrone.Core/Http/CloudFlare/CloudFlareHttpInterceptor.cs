@@ -63,9 +63,23 @@ namespace NzbDrone.Core.Http.CloudFlare
 
         private bool IsCloudflareProtected(HttpResponse response)
         {
-            // check response headers for cloudflare
-            return response.Headers.Any(i =>
-                i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower()));
+            // check response headers for CloudFlare
+            if (response.Headers.Any(i =>
+                i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower())))
+            {
+                return true;
+            }
+
+            // detect Custom CloudFlare/DDOS Guard
+            if (response.Headers.Any(i =>
+                i.Key != null && i.Key.ToLower() == "Accept-Encoding,User-Agent") &&
+                response.Headers.ContentType.ToString() == "" &&
+                response.Content.ToLower().Contains("ddos"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

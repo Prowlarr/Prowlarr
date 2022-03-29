@@ -10,15 +10,5 @@ namespace Prowlarr.Api.V1.Indexers
             : base(indexerFactory, "indexer", resourceMapper)
         {
         }
-
-        protected override void Validate(IndexerDefinition definition, bool includeWarnings)
-        {
-            if (!definition.Enable)
-            {
-                return;
-            }
-
-            base.Validate(definition, includeWarnings);
-        }
     }
 }

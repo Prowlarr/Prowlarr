@@ -77,7 +77,7 @@ function IndexerInfoModalContent(props) {
               <DescriptionListItem
                 descriptionClassName={styles.description}
                 title={translate('SearchTypes')}
-                data={capabilities.search.length === 0 ? translate('NotSupported') : capabilities.search[0]}
+                data={capabilities.searchParams.length === 0 ? translate('NotSupported') : capabilities.search[0]}
               />
               <DescriptionListItem
                 descriptionClassName={styles.description}

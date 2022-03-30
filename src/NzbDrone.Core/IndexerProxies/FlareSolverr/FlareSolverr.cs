@@ -70,7 +70,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             InjectCookies(newRequest, result);
 
-            //Request again with User-Agent and Cookies from Flaresolvrr
+            //Request again with User-Agent and Cookies from Flaresolverr
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;
@@ -82,9 +82,25 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
                 response.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
-                // check response headers
-                return response.Headers.Any(i =>
-                    i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower()));
+                {
+                    // check response headers for CloudFlare
+                    if (response.Headers.Any(i =>
+                        i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower())))
+                    {
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+
+            // detect Custom CloudFlare/DDOS Guard - HTTP will likely return 200 so we do this outside of checking the code
+            if (response.Headers.Any(i =>
+                        i.Key != null && i.Key.ToLower() == "Accept-Encoding,User-Agent") &&
+                        response.Headers.ContentType.ToString() == "" &&
+                        response.Content.ToLower().Contains("ddos"))
+            {
+                return true;
             }
 
             return false;

@@ -82,22 +82,22 @@ function IndexerInfoModalContent(props) {
               <DescriptionListItem
                 descriptionClassName={styles.description}
                 title={translate('TVSearchTypes')}
-                data={capabilities.tv.length === 0 ? translate('NotSupported') : capabilities.tv.join(', ')}
+                data={capabilities.tvSearchParams.length === 0 ? translate('NotSupported') : capabilities.tvSearchParams.join(', ')}
               />
               <DescriptionListItem
                 descriptionClassName={styles.description}
                 title={translate('MovieSearchTypes')}
-                data={capabilities.movie.length === 0 ? translate('NotSupported') : capabilities.movie.join(', ')}
+                data={capabilities.movieSearchParams.length === 0 ? translate('NotSupported') : capabilities.movieSearchParams.join(', ')}
               />
               <DescriptionListItem
                 descriptionClassName={styles.description}
                 title={translate('BookSearchTypes')}
-                data={capabilities.book.length === 0 ? translate('NotSupported') : capabilities.book.join(', ')}
+                data={capabilities.bookSearchParams.length === 0 ? translate('NotSupported') : capabilities.bookSearchParams.join(', ')}
               />
               <DescriptionListItem
                 descriptionClassName={styles.description}
                 title={translate('MusicSearchTypes')}
-                data={capabilities.music.length === 0 ? translate('NotSupported') : capabilities.music.join(', ')}
+                data={capabilities.musicSearchParams.length === 0 ? translate('NotSupported') : capabilities.musicSearchParams.join(', ')}
               />
             </DescriptionList>
           </div>

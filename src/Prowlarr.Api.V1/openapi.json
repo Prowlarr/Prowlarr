@@ -2675,6 +2675,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "[-.a-zA-Z0-9]+?\\.txt",
               "type": "string"
             }
           }
@@ -3510,17 +3511,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             }
@@ -3537,17 +3538,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchResource"
+                "$ref": "#/components/schemas/ReleaseResource"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchResource"
+                "$ref": "#/components/schemas/ReleaseResource"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchResource"
+                "$ref": "#/components/schemas/ReleaseResource"
               }
             }
           }
@@ -3558,17 +3559,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             }
@@ -3581,14 +3582,21 @@
         ],
         "parameters": [
           {
-            "name": "query",
+            "name": "Query",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "indexerIds",
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IndexerIds",
             "in": "query",
             "schema": {
               "type": "array",
@@ -3599,7 +3607,7 @@
             }
           },
           {
-            "name": "categories",
+            "name": "Categories",
             "in": "query",
             "schema": {
               "type": "array",
@@ -3610,11 +3618,19 @@
             }
           },
           {
-            "name": "type",
+            "name": "Limit",
             "in": "query",
             "schema": {
-              "type": "string",
-              "default": "search"
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -3626,7 +3642,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/SearchResource"
+                    "$ref": "#/components/schemas/ReleaseResource"
                   }
                 }
               },
@@ -3634,7 +3650,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/SearchResource"
+                    "$ref": "#/components/schemas/ReleaseResource"
                   }
                 }
               },
@@ -3642,7 +3658,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/SearchResource"
+                    "$ref": "#/components/schemas/ReleaseResource"
                   }
                 }
               }
@@ -3662,7 +3678,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             },
@@ -3670,7 +3686,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             },
@@ -3678,7 +3694,7 @@
               "schema": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             }
@@ -3690,17 +3706,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResource"
+                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             }
@@ -3719,6 +3735,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "^(?!api/).*",
               "type": "string"
             }
           }
@@ -3763,6 +3780,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "^(?!api/).*",
               "type": "string"
             }
           }
@@ -4383,6 +4401,7 @@
             "in": "path",
             "required": true,
             "schema": {
+              "pattern": "[-.a-zA-Z0-9]+?\\.txt",
               "type": "string"
             }
           }
@@ -4397,6 +4416,29 @@
   },
   "components": {
     "schemas": {
+      "AppProfileResource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "enableRss": {
+            "type": "boolean"
+          },
+          "enableInteractiveSearch": {
+            "type": "boolean"
+          },
+          "enableAutomaticSearch": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ApplicationResource": {
         "type": "object",
         "properties": {
@@ -4475,29 +4517,6 @@
           "replace"
         ],
         "type": "string"
-      },
-      "AppProfileResource": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "enableRss": {
-            "type": "boolean"
-          },
-          "enableInteractiveSearch": {
-            "type": "boolean"
-          },
-          "enableAutomaticSearch": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
       },
       "AuthenticationType": {
         "enum": [
@@ -4982,7 +5001,8 @@
           "data": {
             "type": "object",
             "additionalProperties": {
-              "type": "string"
+              "type": "string",
+              "nullable": true
             },
             "nullable": true
           }
@@ -5184,28 +5204,34 @@
           },
           "scheme": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "host": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "port": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "path": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "query": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "fragment": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -5844,7 +5870,7 @@
         ],
         "type": "string"
       },
-      "SearchResource": {
+      "ReleaseResource": {
         "type": "object",
         "properties": {
           "id": {
@@ -6099,23 +6125,28 @@
           },
           "days": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "hours": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "milliseconds": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "minutes": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "seconds": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "totalDays": {
             "type": "number",
@@ -6292,19 +6323,23 @@
         "properties": {
           "major": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "minor": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "build": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "revision": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "majorRevision": {
             "type": "integer",

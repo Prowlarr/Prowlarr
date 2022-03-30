@@ -18,7 +18,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 {
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
-        private static readonly HashSet<string> CloudflareServerNames = new HashSet<string> { "cloudflare", "cloudflare-nginx" };
+        private static readonly HashSet<string> CloudflareServerNames = new HashSet<string> { "cloudflare", "cloudflare-nginx", "ddos-guard" };
         private readonly ICached<string> _cache;
 
         public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService, ICacheManager cacheManager)
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             InjectCookies(newRequest, result);
 
-            //Request again with User-Agent and Cookies from Flaresolvrr
+            //Request again with User-Agent and Cookies from Flaresolverr
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;
@@ -78,13 +78,24 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         private static bool IsCloudflareProtected(HttpResponse response)
         {
-            // check status code
+            if (!response.Headers.Any(i => i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower())))
+            {
+                return false;
+            }
+
+            // detect CloudFlare and DDoS-GUARD
             if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
                 response.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
-                // check response headers
-                return response.Headers.Any(i =>
-                    i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower()));
+                return true; // Defected CloudFlare and DDoS-GUARD
+            }
+
+            // detect Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands
+            if (response.Headers.Vary.ToString() == "Accept-Encoding,User-Agent" &&
+                response.Headers.ContentEncoding.ToString() == "" &&
+                response.Content.ToLower().Contains("ddos"))
+            {
+                return true;
             }
 
             return false;

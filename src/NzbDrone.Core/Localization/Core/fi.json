@@ -426,5 +426,13 @@
     "Website": "Verkkosivusto",
     "IndexerNoDefCheckMessage": "Tietolähteillä ei ole määritystä, eivätkä ne toimi: {0}. Poista ja/tai lisää Prowlarriin uudelleen",
     "Private": "Yksityinen",
-    "QueryResults": "Kyselyn tulokset"
+    "QueryResults": "Kyselyn tulokset",
+    "Application": "Sovellukset",
+    "GrabReleases": "Sieppaa julkaisu",
+    "Link": "Linkit",
+    "SearchTypes": "Mitä etsitään",
+    "UnableToLoadIndexers": "Tietolähteiden lataus epäonnistui.",
+    "Yes": "Joo",
+    "MappedDrivesRunningAsService": "Yhdistetyt verkkoasemat eivät ole käytettävissä, kun niitä käytetään Windows-palveluna. Katso lisätietoja UKK: sta",
+    "No": "Ei"
 }

@@ -26,6 +26,8 @@ namespace Prowlarr.Api.V1.Commands
         private readonly Debouncer _debouncer;
         private readonly Dictionary<int, CommandResource> _pendingUpdates;
 
+        private readonly CommandPriorityComparer _commandPriorityComparer = new CommandPriorityComparer();
+
         public CommandController(IManageCommandQueue commandQueueManager,
                              IBroadcastSignalRMessage signalRBroadcaster,
                              KnownTypes knownTypes)
@@ -73,7 +75,10 @@ namespace Prowlarr.Api.V1.Commands
         [Produces("application/json")]
         public List<CommandResource> GetStartedCommands()
         {
-            return _commandQueueManager.All().ToResource();
+            return _commandQueueManager.All()
+                .OrderBy(c => c.Status, _commandPriorityComparer)
+                .ThenByDescending(c => c.Priority)
+                .ToResource();
         }
 
         [RestDeleteById]

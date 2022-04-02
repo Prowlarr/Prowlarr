@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Applications.Whisparr
                     return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Whisparr cannot connect to Prowlarr");
                 }
 
-               if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
+                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
                 {
                     _logger.Error(ex, "Whisparr returned redirect and is invalid");
                     return new ValidationFailure("BaseUrl", "Whisparr url is invalid, Prowlarr cannot connect to Whisparr - are you missing a url base?");

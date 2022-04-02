@@ -25,7 +25,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"Req: [POST] https://www3.yggtorrent.nz/user/login: id=mySecret&pass=mySecret&ci_csrf_token=2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"https://torrentseeds.org/api/torrents/filter?api_token=2b51db35e1912ffc138825a12b9933d2&name=&sortField=created_at&sortDirection=desc&perPage=100&page=1")]
 
-        //Indexer Responses
+        // Indexer and Download Client Responses
 
         // avistaz response
         [TestCase(@"""download"":""https:\/\/avistaz.to\/rss\/download\/2b51db35e1910123321025a12b9933d2\/tb51db35e1910123321025a12b9933d2.torrent"",")]
@@ -45,6 +45,10 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // NzbGet
         [TestCase(@"{ ""Name"" : ""ControlUsername"", ""Value"" : ""mySecret"" }, { ""Name"" : ""ControlPassword"", ""Value"" : ""mySecret"" }, ")]
         [TestCase(@"{ ""Name"" : ""Server1.Username"", ""Value"" : ""mySecret"" }, { ""Name"" : ""Server1.Password"", ""Value"" : ""mySecret"" }, ")]
+
+        // MTV
+        [TestCase(@"<link rel=""alternate"" type=""application/rss+xml"" href=""/feeds.php?feed=torrents_notify_2b51db35e1910123321025a12b9933d2&amp;user=(removed)&amp;auth=(removed)&amp;passkey=(removed)&amp;authkey=(removed) title=""MoreThanTV - P.T.N."" />")]
+        [TestCase(@"href=""/torrents.php?action=download&amp;id=(removed)&amp;authkey=(removed)&amp;torrent_pass=2b51db35e1910123321025a12b9933d2"" title=""Download Torrent""")]
 
         // Sabnzbd
         [TestCase(@"http://127.0.0.1:1234/api/call?vv=1&apikey=mySecret")]

@@ -150,14 +150,14 @@ public class MoreThanTVRequestGenerator : IIndexerRequestGenerator
                 qc.Add("filter_cat[2]", "1"); // SD Movies
                 break;
             case TvSearchCriteria:
-                qc.Add("filter_cat[3]", "1"); // HD EPISODE
+                qc.Add("filter_cat[3]", "1"); // HD Episode
                 qc.Add("filter_cat[4]", "1"); // SD Episode
                 qc.Add("filter_cat[5]", "1"); // HD Season
                 qc.Add("filter_cat[6]", "1"); // SD Season
                 break;
         }
 
-        return $"{Settings.BaseUrl}torrents.php?{qc.GetQueryString()}";
+        return $"{Settings.BaseUrl}torrents/browse?{qc.GetQueryString()}";
     }
 
     private string GetSearchString(string input)
@@ -188,28 +188,25 @@ public class MoreThanTVParser : IParseIndexerResponse
             foreach (var torrent in torrents)
             {
                 // Parse required data
-                var torrentGroup = torrent.QuerySelectorAll("table a[href^=\"/torrents.php?action=download\"]");
-                foreach (var downloadAnchor in torrentGroup)
+                var downloadAnchor = torrent.QuerySelector("span a[href^=\"/torrents.php?action=download\"]");
+                var title = downloadAnchor.ParentElement.ParentElement.ParentElement.QuerySelector("a[class=\"overlay_torrent\"]").TextContent.Trim();
+                title = CleanUpTitle(title);
+
+                var category = torrent.QuerySelector(".cats_col div").GetAttribute("title");
+
+                // default to Other
+                var indexerCategory = NewznabStandardCategory.Other;
+
+                if (movies.Any(category.Contains))
                 {
-                    var title = downloadAnchor.ParentElement.ParentElement.ParentElement.TextContent.Trim();
-                    title = CleanUpTitle(title);
-
-                    var category = torrent.QuerySelector(".cats_col div").GetAttribute("title");
-
-                    // default to Other
-                    var indexerCategory = NewznabStandardCategory.Other;
-
-                    if (movies.Any(category.Contains))
-                    {
-                        indexerCategory = NewznabStandardCategory.Movies;
-                    }
-                    else if (tv.Any(category.Contains))
-                    {
-                        indexerCategory = NewznabStandardCategory.TV;
-                    }
-
-                    releases.Add(GetReleaseInfo(torrent, downloadAnchor, title, indexerCategory));
+                    indexerCategory = NewznabStandardCategory.Movies;
                 }
+                else if (tv.Any(category.Contains))
+                {
+                    indexerCategory = NewznabStandardCategory.TV;
+                }
+
+                releases.Add(GetReleaseInfo(torrent, downloadAnchor, title, indexerCategory));
             }
 
             return releases;
@@ -231,7 +228,7 @@ public class MoreThanTVParser : IParseIndexerResponse
     private ReleaseInfo GetReleaseInfo(IElement row, IElement downloadAnchor, string title, IndexerCategory category)
     {
             // count from bottom
-            const int FILES_COL = 8;
+            const int FILES_COL = 7;
             /*const int COMMENTS_COL = 7;*/
             const int DATE_COL = 6;
             const int FILESIZE_COL = 5;

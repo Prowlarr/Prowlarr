@@ -12,7 +12,7 @@ using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Applications.Whisparr
 {
-    public class Radarr : ApplicationBase<WhisparrSettings>
+    public class Whisparr : ApplicationBase<WhisparrSettings>
     {
         public override string Name => "Whisparr";
 
@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Applications.Whisparr
         private readonly ICached<List<WhisparrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
 
-        public Radarr(ICacheManager cacheManager, IWhisparrV3Proxy whisparrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Whisparr(ICacheManager cacheManager, IWhisparrV3Proxy whisparrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
             : base(appIndexerMapService, logger)
         {
             _schemaCache = cacheManager.GetCache<List<WhisparrIndexer>>(GetType());

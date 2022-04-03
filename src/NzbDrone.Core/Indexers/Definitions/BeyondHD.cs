@@ -218,7 +218,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Grabs = row.Grabs,
                     Seeders = row.Seeders,
                     ImdbId = ParseUtil.GetImdbID(row.ImdbId).GetValueOrDefault(),
-                    TmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.TmdbId.Split("/")[1]),
+                    TmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : (int)ParseUtil.CoerceLong(row.TmdbId.Split("/")[1]),
                     Peers = row.Leechers + row.Seeders,
                     DownloadVolumeFactor = row.Freeleech || row.Limited ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
                     UploadVolumeFactor = 1,

@@ -4,10 +4,13 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -21,6 +24,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class MyAnonamouse : TorrentIndexerBase<MyAnonamouseSettings>
     {
+        private static readonly Regex TorrentIdRegex = new Regex(@"tor/download.php\?tid=(?<id>\d+)$");
+
         public override string Name => "MyAnonamouse";
 
         public override string[] IndexerUrls => new string[] { "https://www.myanonamouse.net/" };
@@ -42,6 +47,47 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new MyAnonamouseParser(Settings, Capabilities.Categories);
+        }
+
+        public override async Task<byte[]> Download(Uri link)
+        {
+            if (Settings.Freeleech)
+            {
+                _logger.Debug($"Attempting to use freeleech token for {link.AbsoluteUri}");
+
+                var idMatch = TorrentIdRegex.Match(link.AbsoluteUri);
+                if (idMatch.Success)
+                {
+                    var id = int.Parse(idMatch.Groups["id"].Value);
+                    var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+                    var freeleechUrl = Settings.BaseUrl + $"json/bonusBuy.php/{timestamp}";
+
+                    var freeleechRequest = new HttpRequestBuilder(freeleechUrl)
+                        .AddQueryParam("spendtype", "personalFL")
+                        .AddQueryParam("torrentid", id)
+                        .AddQueryParam("timestamp", timestamp.ToString())
+                        .Build();
+
+                    var indexerReq = new IndexerRequest(freeleechRequest);
+                    var response = await FetchIndexerResponse(indexerReq).ConfigureAwait(false);
+                    var resource = Json.Deserialize<MyAnonamouseFreeleechResponse>(response.Content);
+
+                    if (resource.Success)
+                    {
+                        _logger.Debug($"Successfully to used freeleech token for torrentid ${id}");
+                    }
+                    else
+                    {
+                        _logger.Debug($"Failed to use freeleech token: ${resource.Error}");
+                    }
+                }
+                else
+                {
+                    _logger.Debug($"Could not get torrent id from link ${link.AbsoluteUri}, skipping freeleech");
+                }
+            }
+
+            return await base.Download(link).ConfigureAwait(false);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -400,7 +446,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]
         public bool ExcludeVip { get; set; }
 
-        [FieldDefinition(4)]
+        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Freeleech", HelpText = "Use freeleech token for download")]
+        public bool Freeleech { get; set; }
+
+        [FieldDefinition(5)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
         public NzbDroneValidationResult Validate()
@@ -437,5 +486,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public string Error { get; set; }
         public List<MyAnonamouseTorrent> Data { get; set; }
+    }
+
+    public class MyAnonamouseFreeleechResponse
+    {
+        public bool Success { get; set; }
+        public string Error { get; set; }
     }
 }

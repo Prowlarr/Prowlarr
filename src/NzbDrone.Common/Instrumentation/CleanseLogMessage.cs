@@ -51,7 +51,7 @@ namespace NzbDrone.Common.Instrumentation
                 new Regex(@"(?<=\?|&)(X-Plex-Client-Identifier|X-Plex-Token)=(?<secret>[^&=]+?)(?= |&|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 // Indexer Responses
-                new Regex(@"avistaz\.[a-z]{2,3}\\\/rss\\\/download\\\/(?<secret>[^&=]+?)\\\/(?<secret>[^&=]+?)\.torrent", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"(?:avistaz|exoticaz|cinemaz|privatehd)\.[a-z]{2,3}\\\/rss\\\/download\\\/(?<secret>[^&=]+?)\\\/(?<secret>[^&=]+?)\.torrent", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@",""info_hash"":""(?<secret>[^&=]+?)"",", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@",""pass[- _]?key"":""(?<secret>[^&=]+?)"",", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@",""rss[- _]?key"":""(?<secret>[^&=]+?)"",", RegexOptions.Compiled | RegexOptions.IgnoreCase),

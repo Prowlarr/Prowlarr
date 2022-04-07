@@ -40,14 +40,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                        }
             };
 
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.XXXx264);
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.XXXPack);
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.XXXPack);
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.XXXPack);
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.XXXDVD);
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXXx264);
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.XXXImageSet);
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.XXXImageSet);
+            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.XXXx264, "Video Clip");
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.XXXPack, "Video Pack");
+            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.XXXPack, "Siterip Pack");
+            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.XXXPack, "Pornstar Pack");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.XXXDVD, "DVD");
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXXx264, "BluRay");
+            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.XXXImageSet, "Photo Pack");
+            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.XXXImageSet, "Books & Magazines");
 
             return caps;
         }

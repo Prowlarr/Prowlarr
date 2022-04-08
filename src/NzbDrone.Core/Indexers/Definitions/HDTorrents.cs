@@ -151,9 +151,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var searchUrl = Settings.BaseUrl + "torrents.php?" + string.Join(string.Empty, Capabilities.Categories.MapTorznabCapsToTrackers(categories).Select(cat => $"category[]={cat}&"));
 
+            var search = new[] { imdbId, term };
+
             var queryCollection = new NameValueCollection
             {
-                { "search", imdbId ?? term },
+                { "search", string.Join(" ", search.Where(s => !string.IsNullOrEmpty(s))) },
                 { "active", "0" },
                 { "options", "0" }
             };
@@ -188,7 +190,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }

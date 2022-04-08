@@ -403,5 +403,12 @@
     "OnHealthIssue": "Bij Gezondheidsprobleem",
     "Filters": "Filter",
     "TestAllIndexers": "Test Alle Indexeerders",
-    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent geleverd door de app die de API heeft aangeroepen"
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent geleverd door de app die de API heeft aangeroepen",
+    "Application": "Applicaties",
+    "Link": "Koppelingen",
+    "MappedDrivesRunningAsService": "Toegewezen netwerkstation is niet beschikbaar wanneer Radarr wordt uitgevoerd als een Windows Service. Bekijk de Veelgestelde Vragen voor meer informatie",
+    "No": "Nee",
+    "UnableToLoadIndexers": "Indexeerders kunnen niet worden geladen",
+    "GrabReleases": "Uitgave Ophalen",
+    "Yes": "Ja"
 }

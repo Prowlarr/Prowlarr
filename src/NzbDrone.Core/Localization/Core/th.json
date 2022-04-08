@@ -323,5 +323,13 @@
     "HistoryCleanupDaysHelpText": "ตั้งค่าเป็น 0 เพื่อปิดใช้งานการล้างข้อมูลอัตโนมัติ",
     "OnGrab": "บน Grab",
     "OnHealthIssue": "เกี่ยวกับปัญหาสุขภาพ",
-    "TestAllIndexers": "ทดสอบดัชนีทั้งหมด"
+    "TestAllIndexers": "ทดสอบดัชนีทั้งหมด",
+    "ConnectionLostMessage": "Whisparr สูญเสียการเชื่อมต่อกับแบ็กเอนด์และจะต้องโหลดใหม่เพื่อกู้คืนฟังก์ชันการทำงาน",
+    "GrabReleases": "คว้ารีลีส",
+    "NetCore": ".NET Core",
+    "MappedDrivesRunningAsService": "ไดรฟ์เครือข่ายที่แมปไม่พร้อมใช้งานเมื่อเรียกใช้เป็นบริการ Windows โปรดดูคำถามที่พบบ่อยสำหรับข้อมูลเพิ่มเติม",
+    "No": "ไม่",
+    "Link": "ลิงค์",
+    "UnableToLoadIndexers": "ไม่สามารถโหลด Indexers",
+    "Yes": "ใช่"
 }

@@ -395,5 +395,14 @@
     "TestAllIndexers": "Testar todos os indexadores",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "Par Utilizador-Agente fornecido pela aplicação que chamou a API",
     "OnApplicationUpdate": "Quando a aplicação atualizar",
-    "OnApplicationUpdateHelpText": "Quando a aplicação atualizar"
+    "OnApplicationUpdateHelpText": "Quando a aplicação atualizar",
+    "Database": "base de dados",
+    "HistoryCleanupDaysHelpTextWarning": "Ficheiros na reciclagem serão eliminados automaticamente após o número de dias selecionado",
+    "Application": "Aplicações",
+    "Link": "Ligações",
+    "MappedDrivesRunningAsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Veja as Perguntas mais frequentes para obter mais informações",
+    "No": "Não",
+    "UnableToLoadIndexers": "Não foi possível carregar os indexadores",
+    "Yes": "Sim",
+    "GrabReleases": "Capturar versão"
 }

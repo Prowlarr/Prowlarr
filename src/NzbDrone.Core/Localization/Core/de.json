@@ -426,5 +426,14 @@
     "SemiPrivate": "Halbprivat",
     "UnableToLoadApplicationList": "Anwendungsliste kann nicht geladen werden",
     "UnableToLoadIndexerProxies": "Indexer-Proxies können nicht geladen werden",
-    "Website": "Webseite"
+    "Website": "Webseite",
+    "Application": "Anwendungen",
+    "GrabReleases": "Release erfassen",
+    "Link": "Links",
+    "MappedDrivesRunningAsService": "Zugeordnete Netzlaufwerke sind nicht verfügbar, wenn Radarr als Windows-Dienst ausgeführt wird. Bitte lesen Sie die FAQ für weitere Informationen",
+    "No": "Nein",
+    "SearchTypes": "Suchtyp",
+    "TVSearchTypes": "Suchtyp",
+    "UnableToLoadIndexers": "Indexer konnten nicht geladen werden",
+    "Yes": "Ja"
 }

@@ -402,5 +402,12 @@
     "HistoryCleanupDaysHelpTextWarning": "Filer i papperskorgen som är äldre än det valda antalet dagar rensas automatiskt",
     "OnGrab": "Vid hämtning",
     "OnHealthIssue": "På hälsofrågan",
-    "TestAllIndexers": "Testa samtliga indexerare"
+    "TestAllIndexers": "Testa samtliga indexerare",
+    "GrabReleases": "Hämta utgåva",
+    "UnableToLoadIndexers": "Det går inte att ladda indexerare",
+    "Yes": "Ja",
+    "Application": "Applikationer",
+    "Link": "Länkar",
+    "MappedDrivesRunningAsService": "Mappade nätverksenheter är inte tillgängliga när de körs som en Windows-tjänst. Se FAQ för mer information",
+    "No": "Nej"
 }

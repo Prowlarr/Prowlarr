@@ -349,5 +349,11 @@
     "OnGrab": "Quando viene prelevato",
     "OnHealthIssue": "Quando c'è un problema",
     "TestAllIndexers": "Testa tutti gli indexer",
-    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent esposto dalla app che ha chiamato la API"
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent esposto dalla app che ha chiamato la API",
+    "GrabReleases": "Preleva Release",
+    "Link": "Collegamenti",
+    "MappedDrivesRunningAsService": "I drive di rete mappati non sono disponibili eseguendo come servizio di Windows. Vedere le FAQ per maggiori informazioni",
+    "No": "No",
+    "UnableToLoadIndexers": "Non riesco a caricare l'indexer",
+    "Yes": "Si"
 }

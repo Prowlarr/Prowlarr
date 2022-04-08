@@ -323,5 +323,13 @@
     "OnHealthIssue": "Về vấn đề sức khỏe",
     "Filters": "Bộ lọc",
     "OnGrab": "Trên Grab",
-    "TestAllIndexers": "Kiểm tra tất cả các chỉ mục"
+    "TestAllIndexers": "Kiểm tra tất cả các chỉ mục",
+    "ConnectionLostMessage": "Whisparr đã mất kết nối với phần phụ trợ và sẽ cần được tải lại để khôi phục chức năng.",
+    "GrabReleases": "Lấy bản phát hành",
+    "Link": "Liên kết",
+    "No": "Không",
+    "MappedDrivesRunningAsService": "Các ổ đĩa mạng được ánh xạ không khả dụng khi chạy dưới dạng Dịch vụ Windows. Vui lòng xem Câu hỏi thường gặp để biết thêm thông tin",
+    "UnableToLoadIndexers": "Không thể tải Trình chỉ mục",
+    "Yes": "Đúng",
+    "NetCore": ".NET Core"
 }

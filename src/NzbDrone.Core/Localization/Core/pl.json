@@ -323,5 +323,13 @@
     "HistoryCleanupDaysHelpText": "Ustaw na 0, aby wyłączyć automatyczne czyszczenie",
     "OnGrab": "Na Grab",
     "OnHealthIssue": "W kwestii zdrowia",
-    "TestAllIndexers": "Przetestuj wszystkie indeksatory"
+    "TestAllIndexers": "Przetestuj wszystkie indeksatory",
+    "ConnectionLostMessage": "Whisparr utracił połączenie z zapleczem i będzie musiał zostać ponownie załadowany, aby przywrócić funkcjonalność.",
+    "GrabReleases": "Grab Release",
+    "No": "Nie",
+    "NetCore": ".NET Core",
+    "UnableToLoadIndexers": "Nie można załadować indeksatorów",
+    "Link": "Spinki do mankietów",
+    "MappedDrivesRunningAsService": "Zmapowane dyski sieciowe nie są dostępne, gdy działają jako usługa systemu Windows. Więcej informacji można znaleźć w FAQ",
+    "Yes": "tak"
 }

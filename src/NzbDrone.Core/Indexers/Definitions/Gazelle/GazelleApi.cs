@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace NzbDrone.Core.Indexers.Gazelle
 {
@@ -59,6 +60,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public int TotalSeeders { get; set; }
         public int TotalSnatched { get; set; }
         public long MaxSize { get; set; }
+        [JsonConverter(typeof(GazelleTimestampConverter))]
         public long GroupTime { get; set; }
         public List<GazelleTorrent> Torrents { get; set; }
         public bool IsFreeLeech { get; set; }

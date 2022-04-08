@@ -326,5 +326,13 @@
     "Filters": "Filtre",
     "OnGrab": "Yakalandığında",
     "OnHealthIssue": "Sağlık Sorunu Hakkında",
-    "TestAllIndexers": "Tüm Dizinleyicileri Test Et"
+    "TestAllIndexers": "Tüm Dizinleyicileri Test Et",
+    "ConnectionLostMessage": "Whisparr arka uçla olan bağlantısını kaybetti ve işlevselliği geri yüklemek için yeniden yüklenmesi gerekecek.",
+    "GrabReleases": "Bırakma",
+    "No": "Hayır",
+    "NetCore": ".NET Çekirdeği",
+    "UnableToLoadIndexers": "Dizinleyiciler yüklenemiyor",
+    "Yes": "Evet",
+    "Link": "Bağlantılar",
+    "MappedDrivesRunningAsService": "Eşlenen ağ sürücüleri, bir Windows Hizmeti olarak çalışırken kullanılamaz. Daha fazla bilgi için lütfen SSS bölümüne bakın"
 }

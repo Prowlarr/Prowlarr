@@ -328,5 +328,12 @@
     "HistoryCleanupDaysHelpTextWarning": "Fișierele din coșul de reciclare mai vechi de numărul de zile selectat vor fi curățate automat",
     "OnGrab": "Pe Grab",
     "OnHealthIssue": "Cu privire la problema sănătății",
-    "TestAllIndexers": "Testați toți indexatorii"
+    "TestAllIndexers": "Testați toți indexatorii",
+    "Link": "Link-uri",
+    "NetCore": ".NET Core",
+    "UnableToLoadIndexers": "Imposibil de încărcat indexatori",
+    "GrabReleases": "Grab Release",
+    "MappedDrivesRunningAsService": "Unitățile de rețea mapate nu sunt disponibile atunci când rulează ca serviciu Windows. Vă rugăm să consultați FAQ pentru mai multe informații",
+    "No": "Nu",
+    "Yes": "da"
 }

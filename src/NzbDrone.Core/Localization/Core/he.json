@@ -323,5 +323,13 @@
     "HistoryCleanupDaysHelpTextWarning": "קבצים בסל המיחזור ישנים יותר ממספר הימים שנבחר ינוקו באופן אוטומטי",
     "OnGrab": "על לתפוס",
     "OnHealthIssue": "בנושא הבריאות",
-    "TestAllIndexers": "בדוק את כל האינדקסים"
+    "TestAllIndexers": "בדוק את כל האינדקסים",
+    "ConnectionLostMessage": "Whisparr איבד את החיבור ל- backend ויהיה צורך לטעון אותו מחדש כדי לשחזר את הפונקציונליות.",
+    "GrabReleases": "שחרור תפוס",
+    "Link": "קישורים",
+    "NetCore": ".NET Core",
+    "No": "לא",
+    "UnableToLoadIndexers": "לא ניתן לטעון אינדקסים",
+    "Yes": "כן",
+    "MappedDrivesRunningAsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף"
 }

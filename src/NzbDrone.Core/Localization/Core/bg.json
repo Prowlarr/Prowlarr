@@ -323,5 +323,13 @@
     "HistoryCleanupDaysHelpTextWarning": "Файловете в кошчето, по-стари от избрания брой дни, ще се почистват автоматично",
     "OnGrab": "На Граб",
     "OnHealthIssue": "По здравен въпрос",
-    "TestAllIndexers": "Тествайте всички индексатори"
+    "TestAllIndexers": "Тествайте всички индексатори",
+    "NetCore": ".NET Core",
+    "GrabReleases": "Grab Release",
+    "Link": "Връзки",
+    "No": "Не",
+    "UnableToLoadIndexers": "Индексаторите не могат да се заредят",
+    "Yes": "Да",
+    "ConnectionLostMessage": "Whisparr е загубил връзката си с бекенда и ще трябва да се презареди, за да възстанови функционалността.",
+    "MappedDrivesRunningAsService": "Картографираните мрежови устройства не са налични, когато се изпълняват като услуга на Windows. Моля, вижте често задаваните въпроси за повече информация"
 }

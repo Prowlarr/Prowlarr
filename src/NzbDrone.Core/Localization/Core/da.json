@@ -327,5 +327,12 @@
     "HistoryCleanupDaysHelpTextWarning": "Filer i papirkurven, der er ældre end det valgte antal dage, renses automatisk",
     "OnGrab": "On Grab",
     "OnHealthIssue": "Om sundhedsspørgsmål",
-    "TestAllIndexers": "Test alle indeksører"
+    "TestAllIndexers": "Test alle indeksører",
+    "GrabReleases": "Grab Release",
+    "Link": "Links",
+    "MappedDrivesRunningAsService": "Kortlagte netværksdrev er ikke tilgængelige, når de kører som en Windows-tjeneste. Se FAQ for mere information",
+    "No": "Ingen",
+    "NetCore": ".NET Core",
+    "UnableToLoadIndexers": "Kan ikke indlæse indeksatorer",
+    "Yes": "Ja"
 }

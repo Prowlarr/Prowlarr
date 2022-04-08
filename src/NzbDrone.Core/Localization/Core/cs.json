@@ -325,5 +325,11 @@
     "MaintenanceRelease": "Údržbové vydání: opravy chyb a další vylepšení. Další podrobnosti najdete v GitHub Commit History",
     "OnGrab": "Chyť",
     "OnHealthIssue": "K otázce zdraví",
-    "TestAllIndexers": "Vyzkoušejte všechny indexery"
+    "TestAllIndexers": "Vyzkoušejte všechny indexery",
+    "Link": "Odkazy",
+    "MappedDrivesRunningAsService": "Mapované síťové jednotky nejsou k dispozici, když běží jako služba Windows. Další informace najdete v častých dotazech",
+    "No": "Ne",
+    "UnableToLoadIndexers": "Nelze načíst indexery",
+    "Yes": "Ano",
+    "GrabReleases": "Uchopte uvolnění"
 }

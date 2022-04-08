@@ -323,5 +323,13 @@
     "HistoryCleanupDaysHelpText": "自動クリーンアップを無効にするには、0に設定します",
     "OnGrab": "グラブで",
     "TestAllIndexers": "すべてのインデクサーをテストする",
-    "MaintenanceRelease": "メンテナンスリリース：バグ修正およびその他の改善。詳細については、Githubのコミット履歴を参照してください"
+    "MaintenanceRelease": "メンテナンスリリース：バグ修正およびその他の改善。詳細については、Githubのコミット履歴を参照してください",
+    "NetCore": ".NET Core",
+    "GrabReleases": "グラブリリース",
+    "Link": "リンク",
+    "MappedDrivesRunningAsService": "マップされたネットワークドライブは、Windowsサービスとして実行している場合は使用できません。詳細については、FAQを参照してください",
+    "No": "番号",
+    "UnableToLoadIndexers": "インデクサーを読み込めません",
+    "Yes": "はい",
+    "ConnectionLostMessage": "Whisparrはバックエンドへの接続を失ったため、機能を復元するには再ロードする必要があります。"
 }

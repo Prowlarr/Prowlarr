@@ -324,5 +324,12 @@
     "HistoryCleanupDaysHelpTextWarning": "سيتم تنظيف الملفات الموجودة في سلة المحذوفات الأقدم من عدد الأيام المحدد تلقائيًا",
     "OnGrab": "عند الاستيلاء",
     "OnHealthIssue": "في قضية الصحة",
-    "TestAllIndexers": "اختبار كافة المفهرسات"
+    "TestAllIndexers": "اختبار كافة المفهرسات",
+    "ConnectionLostMessage": "فقد Whisparr اتصاله بالواجهة الخلفية وسيحتاج إلى إعادة تحميله لاستعادة الوظائف.",
+    "Link": "الروابط",
+    "MappedDrivesRunningAsService": "لا تتوفر محركات أقراص الشبكة المعينة عند التشغيل كخدمة Windows. يرجى الاطلاع على التعليمات لمزيد من المعلومات",
+    "UnableToLoadIndexers": "تعذر تحميل المفهرسات",
+    "Yes": "نعم",
+    "GrabReleases": "انتزاع الإصدار",
+    "No": "لا"
 }

@@ -328,5 +328,12 @@
     "OnApplicationUpdate": "О обновлении приложения",
     "TestAllIndexers": "Тестировать все индексаторы",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent, представленный приложением, который вызывает API",
-    "NotificationTriggersHelpText": "Выберите, какие события должны вызвать это уведомление"
+    "NotificationTriggersHelpText": "Выберите, какие события должны вызвать это уведомление",
+    "NetCore": ".NET",
+    "GrabReleases": "Захватить релиз",
+    "UnableToLoadIndexers": "Не удалось загрузить индексаторы",
+    "Link": "Ссылки",
+    "MappedDrivesRunningAsService": "Подключённые сетевые диски недоступны, если программа запущена как сервис. Обратитесь в FAQ за дополнительной информацией",
+    "No": "Нет",
+    "Yes": "Да"
 }

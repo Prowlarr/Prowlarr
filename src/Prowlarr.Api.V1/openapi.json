@@ -4559,6 +4559,14 @@
         ],
         "type": "string"
       },
+      "BookSearchParam": {
+        "enum": [
+          "q",
+          "title",
+          "author"
+        ],
+        "type": "string"
+      },
       "CertificateValidationType": {
         "enum": [
           "enabled",
@@ -5259,6 +5267,44 @@
               "$ref": "#/components/schemas/IndexerCategory"
             },
             "nullable": true
+          },
+          "supportsRawSearch": {
+            "type": "boolean"
+          },
+          "searchParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchParam"
+            },
+            "nullable": true
+          },
+          "tvSearchParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TvSearchParam"
+            },
+            "nullable": true
+          },
+          "movieSearchParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovieSearchParam"
+            },
+            "nullable": true
+          },
+          "musicSearchParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MusicSearchParam"
+            },
+            "nullable": true
+          },
+          "bookSearchParams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookSearchParam"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -5748,6 +5794,29 @@
         },
         "additionalProperties": false
       },
+      "MovieSearchParam": {
+        "enum": [
+          "q",
+          "imdbId",
+          "tmdbId",
+          "imdbTitle",
+          "imdbYear",
+          "traktId",
+          "genre"
+        ],
+        "type": "string"
+      },
+      "MusicSearchParam": {
+        "enum": [
+          "q",
+          "album",
+          "artist",
+          "label",
+          "year",
+          "genre"
+        ],
+        "type": "string"
+      },
       "NotificationResource": {
         "type": "object",
         "properties": {
@@ -5992,6 +6061,12 @@
         },
         "additionalProperties": false
       },
+      "SearchParam": {
+        "enum": [
+          "q"
+        ],
+        "type": "string"
+      },
       "SelectOption": {
         "type": "object",
         "properties": {
@@ -6175,6 +6250,20 @@
           }
         },
         "additionalProperties": false
+      },
+      "TvSearchParam": {
+        "enum": [
+          "q",
+          "season",
+          "ep",
+          "imdbId",
+          "tvdbId",
+          "rId",
+          "tvMazeId",
+          "traktId",
+          "tmdbId"
+        ],
+        "type": "string"
       },
       "UiConfigResource": {
         "type": "object",

@@ -90,12 +90,6 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("LogIndexerResponse", value); }
         }
 
-        public string DownloadClientWorkingFolders
-        {
-            get { return GetValue("DownloadClientWorkingFolders", "_UNPACK_|_FAILED_"); }
-            set { SetValue("DownloadClientWorkingFolders", value); }
-        }
-
         public int FirstDayOfWeek
         {
             get { return GetValueInt("FirstDayOfWeek", (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek); }
@@ -143,13 +137,6 @@ namespace NzbDrone.Core.Configuration
             get { return GetValueBoolean("EnableColorImpairedMode", false); }
 
             set { SetValue("EnableColorImpairedMode", value); }
-        }
-
-        public int MovieInfoLanguage
-        {
-            get { return GetValueInt("MovieInfoLanguage", (int)Language.English); }
-
-            set { SetValue("MovieInfoLanguage", value); }
         }
 
         public int UILanguage

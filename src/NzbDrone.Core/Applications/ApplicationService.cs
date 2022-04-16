@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Applications
                                       IHandleAsync<ProviderDeletedEvent<IIndexer>>,
                                       IHandleAsync<ProviderAddedEvent<IApplication>>,
                                       IHandleAsync<ProviderUpdatedEvent<IIndexer>>,
+                                      IHandleAsync<ProviderUpdatedEvent<IApplication>>,
                                       IHandleAsync<ProviderBulkUpdatedEvent<IIndexer>>,
                                       IHandleAsync<ApiKeyChangedEvent>,
                                       IExecute<ApplicationIndexerSyncCommand>
@@ -37,6 +38,19 @@ namespace NzbDrone.Core.Applications
         }
 
         public void HandleAsync(ProviderAddedEvent<IApplication> message)
+        {
+            var appDefinition = (ApplicationDefinition)message.Definition;
+
+            if (appDefinition.Enable)
+            {
+                var app = _applicationsFactory.GetInstance(appDefinition);
+                var indexers = _indexerFactory.Enabled().Select(i => (IndexerDefinition)i.Definition).ToList();
+
+                SyncIndexers(new List<IApplication> { app }, indexers);
+            }
+        }
+
+        public void HandleAsync(ProviderUpdatedEvent<IApplication> message)
         {
             var appDefinition = (ApplicationDefinition)message.Definition;
 

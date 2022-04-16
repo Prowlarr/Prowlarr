@@ -256,7 +256,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     return null;
                 }
 
-                value = selection.Value<string>();
+                if (selection.Type is JTokenType.Array)
+                {
+                    // turn this json array into a comma delimited string
+                    var valueArray = selection.Value<JArray>();
+                    value = string.Join(",", valueArray);
+                }
+                else
+                {
+                    value = selection.Value<string>();
+                }
             }
 
             if (selector.Case != null)

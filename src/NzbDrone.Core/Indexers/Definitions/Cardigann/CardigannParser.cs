@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case HttpStatusCode.Unauthorized:
                         throw new IndexerAuthException(indexerResponse.HttpResponse.Content.ToString());
                     default:
-                        throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                        throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponseStatus} code from API request");
                 }
             }
 

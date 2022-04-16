@@ -124,7 +124,17 @@ namespace NzbDrone.Core.Applications.Lidarr
 
                 if (!lidarrIndexer.Equals(remoteIndexer))
                 {
-                    _lidarrV1Proxy.UpdateIndexer(lidarrIndexer, Settings);
+                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    {
+                        // Update the indexer if it still has categories that match
+                        _lidarrV1Proxy.UpdateIndexer(lidarrIndexer, Settings);
+                    }
+                    else
+                    {
+                        // Else remove it, it no longer should be used
+                        _lidarrV1Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
+                        _appIndexerMapService.Delete(indexerMapping.Id);
+                    }
                 }
             }
             else

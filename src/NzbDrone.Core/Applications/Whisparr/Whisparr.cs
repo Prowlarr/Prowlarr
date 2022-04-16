@@ -114,7 +114,7 @@ namespace NzbDrone.Core.Applications.Whisparr
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 
-            var radarrIndexer = BuildWhisparrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
+            var whisparrIndexer = BuildWhisparrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
 
             var remoteIndexer = _whisparrV3Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
 
@@ -122,9 +122,19 @@ namespace NzbDrone.Core.Applications.Whisparr
             {
                 _logger.Debug("Remote indexer found, syncing with current settings");
 
-                if (!radarrIndexer.Equals(remoteIndexer))
+                if (!whisparrIndexer.Equals(remoteIndexer))
                 {
-                    _whisparrV3Proxy.UpdateIndexer(radarrIndexer, Settings);
+                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    {
+                        // Update the indexer if it still has categories that match
+                        _whisparrV3Proxy.UpdateIndexer(whisparrIndexer, Settings);
+                    }
+                    else
+                    {
+                        // Else remove it, it no longer should be used
+                        _whisparrV3Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
+                        _appIndexerMapService.Delete(indexerMapping.Id);
+                    }
                 }
             }
             else
@@ -134,8 +144,8 @@ namespace NzbDrone.Core.Applications.Whisparr
                 if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} to Whisparr", indexer.Name);
-                    radarrIndexer.Id = 0;
-                    var newRemoteIndexer = _whisparrV3Proxy.AddIndexer(radarrIndexer, Settings);
+                    whisparrIndexer.Id = 0;
+                    var newRemoteIndexer = _whisparrV3Proxy.AddIndexer(whisparrIndexer, Settings);
                     _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
                 }
                 else

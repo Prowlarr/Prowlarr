@@ -124,7 +124,17 @@ namespace NzbDrone.Core.Applications.Radarr
 
                 if (!radarrIndexer.Equals(remoteIndexer))
                 {
-                    _radarrV3Proxy.UpdateIndexer(radarrIndexer, Settings);
+                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    {
+                        // Update the indexer if it still has categories that match
+                        _radarrV3Proxy.UpdateIndexer(radarrIndexer, Settings);
+                    }
+                    else
+                    {
+                        // Else remove it, it no longer should be used
+                        _radarrV3Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
+                        _appIndexerMapService.Delete(indexerMapping.Id);
+                    }
                 }
             }
             else

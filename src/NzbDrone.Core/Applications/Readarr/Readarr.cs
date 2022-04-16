@@ -124,7 +124,17 @@ namespace NzbDrone.Core.Applications.Readarr
 
                 if (!readarrIndexer.Equals(remoteIndexer))
                 {
-                    _readarrV1Proxy.UpdateIndexer(readarrIndexer, Settings);
+                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    {
+                        // Update the indexer if it still has categories that match
+                        _readarrV1Proxy.UpdateIndexer(readarrIndexer, Settings);
+                    }
+                    else
+                    {
+                        // Else remove it, it no longer should be used
+                        _readarrV1Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
+                        _appIndexerMapService.Delete(indexerMapping.Id);
+                    }
                 }
             }
             else

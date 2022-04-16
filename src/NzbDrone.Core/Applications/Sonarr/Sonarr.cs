@@ -124,7 +124,17 @@ namespace NzbDrone.Core.Applications.Sonarr
 
                 if (!sonarrIndexer.Equals(remoteIndexer))
                 {
-                    _sonarrV3Proxy.UpdateIndexer(sonarrIndexer, Settings);
+                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
+                    {
+                        // Update the indexer if it still has categories that match
+                        _sonarrV3Proxy.UpdateIndexer(sonarrIndexer, Settings);
+                    }
+                    else
+                    {
+                        // Else remove it, it no longer should be used
+                        _sonarrV3Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
+                        _appIndexerMapService.Delete(indexerMapping.Id);
+                    }
                 }
             }
             else

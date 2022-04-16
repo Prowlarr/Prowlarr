@@ -205,6 +205,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var details = row.InfoUrl;
                 var link = row.DownloadLink;
 
+                // BHD can return crazy values for tmdb
+                var tmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.TmdbId.Split("/")[1], out var tmdbResult) ? tmdbResult : 0;
+                var imdbId = ParseUtil.GetImdbID(row.ImdbId).GetValueOrDefault();
+
                 var release = new TorrentInfo
                 {
                     Title = row.Name,
@@ -217,8 +221,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Size = row.Size,
                     Grabs = row.Grabs,
                     Seeders = row.Seeders,
-                    ImdbId = ParseUtil.GetImdbID(row.ImdbId).GetValueOrDefault(),
-                    TmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : (int)ParseUtil.CoerceLong(row.TmdbId.Split("/")[1]),
+                    ImdbId = imdbId,
+                    TmdbId = tmdbId,
                     Peers = row.Leechers + row.Seeders,
                     DownloadVolumeFactor = row.Freeleech || row.Limited ? 0 : row.Promo75 ? 0.25 : row.Promo50 ? 0.5 : row.Promo25 ? 0.75 : 1,
                     UploadVolumeFactor = 1,

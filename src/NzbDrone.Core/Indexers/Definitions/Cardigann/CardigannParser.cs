@@ -49,21 +49,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     CookiesUpdater(null, null);
                     throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
                 }
-
-                // Catch common http exceptions before parsing
-                switch (indexerResponseStatus)
-                {
-                    case HttpStatusCode.BadRequest:
-                    case HttpStatusCode.Forbidden:
-                    case HttpStatusCode.BadGateway:
-                    case HttpStatusCode.ServiceUnavailable:
-                    case HttpStatusCode.GatewayTimeout:
-                        throw new HttpException(indexerResponse.HttpResponse);
-                    case HttpStatusCode.Unauthorized:
-                        throw new IndexerAuthException(indexerResponse.HttpResponse.Content.ToString());
-                    default:
-                        throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponseStatus} code from API request");
-                }
             }
 
             var results = indexerResponse.Content;

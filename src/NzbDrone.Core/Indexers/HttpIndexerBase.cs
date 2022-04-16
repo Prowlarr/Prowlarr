@@ -398,11 +398,21 @@ namespace NzbDrone.Core.Indexers
             // Throw common http errors here before we try to parse
             if (response.HasHttpError)
             {
-                _logger.Warn("HTTP Error - {0}", response);
-
-                if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                 _logger.Warn("HTTP Error - {0}", response);
+                 switch (response.StatusCode)
                 {
-                    throw new TooManyRequestsException(request.HttpRequest, response);
+                    case HttpStatusCode.BadRequest:
+                    case HttpStatusCode.Forbidden:
+                    case HttpStatusCode.BadGateway:
+                    case HttpStatusCode.ServiceUnavailable:
+                    case HttpStatusCode.GatewayTimeout:
+                        throw new HttpException(response);
+                    case HttpStatusCode.TooManyRequests:
+                        throw new TooManyRequestsException(request.HttpRequest, response);
+                    case HttpStatusCode.Unauthorized:
+                        throw new IndexerAuthException(response.Content.ToString());
+                    default:
+                        throw new HttpException(response);
                 }
             }
 

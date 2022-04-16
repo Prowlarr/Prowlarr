@@ -4544,6 +4544,10 @@
           "type": {
             "$ref": "#/components/schemas/BackupType"
           },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
           "time": {
             "type": "string",
             "format": "date-time"
@@ -4792,10 +4796,6 @@
           "id": {
             "type": "integer",
             "format": "int32"
-          },
-          "downloadClientWorkingFolders": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6297,10 +6297,6 @@
           },
           "enableColorImpairedMode": {
             "type": "boolean"
-          },
-          "movieInfoLanguage": {
-            "type": "integer",
-            "format": "int32"
           },
           "uiLanguage": {
             "type": "integer",

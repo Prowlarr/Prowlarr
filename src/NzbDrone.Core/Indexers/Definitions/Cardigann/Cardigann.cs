@@ -188,8 +188,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
             catch (HttpException ex)
             {
-                var response = ex.Response;
-                var responseStatus = response.StatusCode;
+                var responseStatus = ex.Response.StatusCode;
                 if (responseStatus == HttpStatusCode.NotFound)
                 {
                     _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", link.AbsoluteUri);

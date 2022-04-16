@@ -48,8 +48,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (HttpException ex)
             {
-                var indexerResponse = ex.Response;
-                var indexerResponseStatus = indexerResponse.StatusCode;
+                var indexerResponseStatus = ex.Response.StatusCode;
                 if (indexerResponseStatus == HttpStatusCode.NotFound)
                 {
                     _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", link.AbsoluteUri);

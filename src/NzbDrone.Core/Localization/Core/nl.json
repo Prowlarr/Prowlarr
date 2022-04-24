@@ -50,7 +50,7 @@
     "Logging": "Logbeheer",
     "LogFiles": "Logbestanden",
     "Language": "Taal",
-    "ShowAdvanced": "Toon Gevorderd",
+    "ShowAdvanced": "Toon Geavanceerd",
     "UpdateCheckUINotWritableMessage": "Kan de update niet installeren omdat de UI map '{0}' niet schrijfbaar is voor de gebruiker '{1}'.",
     "UpdateCheckStartupTranslocationMessage": "Kan de update niet installeren omdat de map '{0}' zich in een 'App Translocation' map bevindt.",
     "UpdateCheckStartupNotWritableMessage": "Kan de update niet installeren omdat de map '{0}' niet schrijfbaar is voor de gebruiker '{1}'.",
@@ -401,7 +401,7 @@
     "HistoryCleanupDaysHelpTextWarning": "Bestanden in de prullenbak ouder dan het geselecteerde aantal dagen zullen automatisch opgeschoond worden",
     "OnGrab": "Bij Ophalen",
     "OnHealthIssue": "Bij Gezondheidsprobleem",
-    "Filters": "Filter",
+    "Filters": "Filters",
     "TestAllIndexers": "Test Alle Indexeerders",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent geleverd door de app die de API heeft aangeroepen",
     "Application": "Applicaties",
@@ -410,5 +410,8 @@
     "No": "Nee",
     "UnableToLoadIndexers": "Indexeerders kunnen niet worden geladen",
     "GrabReleases": "Uitgave Ophalen",
-    "Yes": "Ja"
+    "Yes": "Ja",
+    "OnApplicationUpdateHelpText": "Bij applicatie update",
+    "Database": "Databasis",
+    "OnApplicationUpdate": "Bij applicatie update"
 }

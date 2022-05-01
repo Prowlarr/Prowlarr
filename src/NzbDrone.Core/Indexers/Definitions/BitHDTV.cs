@@ -12,6 +12,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -21,7 +22,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class BitHDTV : TorrentIndexerBase<BitHDTVSettings>
+    public class BitHDTV : TorrentIndexerBase<CookieTorrentBaseSettings>
     {
         public override string Name => "BitHDTV";
         public override string[] IndexerUrls => new string[] { "https://www.bit-hdtv.com/" };
@@ -89,7 +90,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BitHDTVRequestGenerator : IIndexerRequestGenerator
     {
-        public BitHDTVSettings Settings { get; set; }
+        public CookieTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public BitHDTVRequestGenerator()
@@ -179,10 +180,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BitHDTVParser : IParseIndexerResponse
     {
-        private readonly BitHDTVSettings _settings;
+        private readonly CookieTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public BitHDTVParser(BitHDTVSettings settings, IndexerCapabilitiesCategories categories)
+        public BitHDTVParser(CookieTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -266,37 +267,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class BitHDTVSettingsValidator : AbstractValidator<BitHDTVSettings>
-    {
-        public BitHDTVSettingsValidator()
-        {
-            RuleFor(c => c.Cookie).NotEmpty();
-        }
-    }
-
-    public class BitHDTVSettings : IIndexerSettings
-    {
-        private static readonly BitHDTVSettingsValidator Validator = new BitHDTVSettingsValidator();
-
-        public BitHDTVSettings()
-        {
-            Cookie = "";
-        }
-
-        [FieldDefinition(1, Label = "Base Url", HelpText = "Select which baseurl Prowlarr will use for requests to the site", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Login cookie from website")]
-        public string Cookie { get; set; }
-
-        [FieldDefinition(3)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

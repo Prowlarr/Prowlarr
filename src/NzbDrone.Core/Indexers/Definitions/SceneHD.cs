@@ -12,6 +12,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -240,7 +241,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class SceneHDSettings : IIndexerSettings
+    public class SceneHDSettings : NoAuthTorrentBaseSettings
     {
         private static readonly SceneHDSettingsValidator Validator = new SceneHDSettingsValidator();
 
@@ -249,16 +250,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Passkey = "";
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "Passkey", Advanced = false, HelpText = "Site Passkey")]
         public string Passkey { get; set; }
 
-        [FieldDefinition(3)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

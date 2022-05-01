@@ -13,6 +13,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -387,7 +388,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class PreToMeSettings : IIndexerSettings
+    public class PreToMeSettings : NoAuthTorrentBaseSettings
     {
         private static readonly PreToMeSettingsValidator Validator = new PreToMeSettingsValidator();
 
@@ -398,9 +399,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "Pin", HelpText = "Site Pin", Privacy = PrivacyLevel.Password)]
         public string Pin { get; set; }
 
@@ -410,10 +408,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

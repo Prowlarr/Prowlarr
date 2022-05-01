@@ -13,6 +13,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -21,7 +22,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class HDSpace : TorrentIndexerBase<HDSpaceSettings>
+    public class HDSpace : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "HD-Space";
         public override string[] IndexerUrls => new string[] { "https://hd-space.org/" };
@@ -146,7 +147,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class HDSpaceRequestGenerator : IIndexerRequestGenerator
     {
-        public HDSpaceSettings Settings { get; set; }
+        public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public HDSpaceRequestGenerator()
@@ -228,10 +229,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class HDSpaceParser : IParseIndexerResponse
     {
-        private readonly HDSpaceSettings _settings;
+        private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public HDSpaceParser(HDSpaceSettings settings, IndexerCapabilitiesCategories categories)
+        public HDSpaceParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -312,42 +313,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class HDSpaceSettingsValidator : AbstractValidator<HDSpaceSettings>
-    {
-        public HDSpaceSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class HDSpaceSettings : IIndexerSettings
-    {
-        private static readonly HDSpaceSettingsValidator Validator = new HDSpaceSettingsValidator();
-
-        public HDSpaceSettings()
-        {
-            Username = "";
-            Password = "";
-        }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Password { get; set; }
-
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

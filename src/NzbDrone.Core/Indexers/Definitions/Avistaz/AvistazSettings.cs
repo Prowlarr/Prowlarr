@@ -1,5 +1,6 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
@@ -14,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         }
     }
 
-    public class AvistazSettings : IIndexerSettings
+    public class AvistazSettings : NoAuthTorrentBaseSettings
     {
         private static readonly AvistazSettingsValidator Validator = new AvistazSettingsValidator();
 
@@ -25,9 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public string Token { get; set; }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
@@ -37,10 +35,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]
         public string Pid { get; set; }
 
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

@@ -10,6 +10,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -18,7 +19,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class Shizaproject : TorrentIndexerBase<ShizaprojectSettings>
+    public class Shizaproject : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "ShizaProject";
         public override string[] IndexerUrls => new string[] { "https://shiza-project.com/" };
@@ -69,7 +70,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ShizaprojectRequestGenerator : IIndexerRequestGenerator
     {
-        public ShizaprojectSettings Settings { get; set; }
+        public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public ShizaprojectRequestGenerator()
@@ -172,10 +173,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ShizaprojectParser : IParseIndexerResponse
     {
-        private readonly ShizaprojectSettings _settings;
+        private readonly NoAuthTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public ShizaprojectParser(ShizaprojectSettings settings, IndexerCapabilitiesCategories categories)
+        public ShizaprojectParser(NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -264,29 +265,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class ShizaprojectSettingsValidator : AbstractValidator<ShizaprojectSettings>
-    {
-        public ShizaprojectSettingsValidator()
-        {
-        }
-    }
-
-    public class ShizaprojectSettings : IIndexerSettings
-    {
-        private static readonly ShizaprojectSettingsValidator Validator = new ShizaprojectSettingsValidator();
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 
     public class ShizaprojectReleasesResponse

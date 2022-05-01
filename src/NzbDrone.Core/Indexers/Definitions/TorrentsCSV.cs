@@ -9,6 +9,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -17,7 +18,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class TorrentsCSV : TorrentIndexerBase<TorrentsCSVSettings>
+    public class TorrentsCSV : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "TorrentsCSV";
         public override string[] IndexerUrls => new[] { "https://torrents-csv.ml/" };
@@ -66,7 +67,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentsCSVRequestGenerator : IIndexerRequestGenerator
     {
-        public TorrentsCSVSettings Settings { get; set; }
+        public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public TorrentsCSVRequestGenerator()
@@ -137,9 +138,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentsCSVParser : IParseIndexerResponse
     {
-        private readonly TorrentsCSVSettings _settings;
+        private readonly NoAuthTorrentBaseSettings _settings;
 
-        public TorrentsCSVParser(TorrentsCSVSettings settings)
+        public TorrentsCSVParser(NoAuthTorrentBaseSettings settings)
         {
             _settings = settings;
         }
@@ -192,25 +193,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class TorrentsCSVSettingsValidator : AbstractValidator<TorrentsCSVSettings>
-    {
-    }
-
-    public class TorrentsCSVSettings : IIndexerSettings
-    {
-        private static readonly TorrentsCSVSettingsValidator Validator = new TorrentsCSVSettingsValidator();
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

@@ -14,6 +14,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -412,33 +413,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class BakaBTSettingsValidator : AbstractValidator<BakaBTSettings>
+    public class BakaBTSettings : UserPassTorrentBaseSettings
     {
-        public BakaBTSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class BakaBTSettings : IIndexerSettings
-    {
-        private static readonly BakaBTSettingsValidator Validator = new BakaBTSettingsValidator();
-
         public BakaBTSettings()
         {
-            Username = "";
-            Password = "";
         }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Password { get; set; }
 
         [FieldDefinition(4, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
         public bool AddRomajiTitle { get; set; }
@@ -448,13 +427,5 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(6, Label = "Adult Content", Type = FieldType.Checkbox, HelpText = "Allow Adult Content (Must be enabled in BakaBT settings)")]
         public bool AdultContent { get; set; }
-
-        [FieldDefinition(7)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

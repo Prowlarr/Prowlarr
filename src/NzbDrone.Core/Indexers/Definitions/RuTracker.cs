@@ -14,6 +14,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -1728,44 +1729,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class RuTrackerSettingsValidator : AbstractValidator<RuTrackerSettings>
+    public class RuTrackerSettings : UserPassTorrentBaseSettings
     {
-        public RuTrackerSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class RuTrackerSettings : IIndexerSettings
-    {
-        private static readonly RuTrackerSettingsValidator Validator = new RuTrackerSettingsValidator();
-
         public RuTrackerSettings()
         {
-            Username = "";
-            Password = "";
             RussianLetters = false;
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", Advanced = false, HelpText = "Site Username")]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password, HelpText = "Site Password")]
-        public string Password { get; set; }
-
         [FieldDefinition(4, Label = "Strip Russian letters", Type = FieldType.Checkbox, SelectOptionsProviderAction = "stripRussian", HelpText = "Removes russian letters")]
         public bool RussianLetters { get; set; }
-
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

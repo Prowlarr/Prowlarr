@@ -10,6 +10,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -392,39 +393,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class GazelleGamesSettingsValidator : AbstractValidator<GazelleGamesSettings>
+    public class GazelleGamesSettings : CookieTorrentBaseSettings
     {
-        public GazelleGamesSettingsValidator()
-        {
-            RuleFor(c => c.Cookie).NotEmpty();
-        }
-    }
-
-    public class GazelleGamesSettings : IIndexerSettings
-    {
-        private static readonly GazelleGamesSettingsValidator Validator = new GazelleGamesSettingsValidator();
-
         public GazelleGamesSettings()
         {
-            Cookie = "";
             SearchGroupNames = false;
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Login cookie from website")]
-        public string Cookie { get; set; }
-
         [FieldDefinition(3, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
         public bool SearchGroupNames { get; set; }
-
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

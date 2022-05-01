@@ -16,6 +16,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -406,7 +407,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class SpeedAppSettings : IIndexerSettings
+    public class SpeedAppSettings : NoAuthTorrentBaseSettings
     {
         private static readonly SpeedAppSettingsValidator Validator = new ();
 
@@ -415,9 +416,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             Email = "";
             Password = "";
         }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(2, Label = "Email", HelpText = "Site Email", Privacy = PrivacyLevel.UserName)]
         public string Email { get; set; }
@@ -428,10 +426,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "API Key", Hidden = HiddenType.Hidden)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

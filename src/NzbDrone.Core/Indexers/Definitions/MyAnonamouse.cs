@@ -14,6 +14,7 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -434,7 +435,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class MyAnonamouseSettings : IIndexerSettings
+    public class MyAnonamouseSettings : NoAuthTorrentBaseSettings
     {
         private static readonly MyAnonamouseSettingsValidator Validator = new MyAnonamouseSettingsValidator();
 
@@ -442,9 +443,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             MamId = "";
         }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(2, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
         public string MamId { get; set; }
@@ -455,10 +453,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Freeleech", HelpText = "Use freeleech token for download")]
         public bool Freeleech { get; set; }
 
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

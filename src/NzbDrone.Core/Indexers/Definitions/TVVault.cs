@@ -15,6 +15,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -24,7 +25,7 @@ using NzbDrone.Core.Validation;
 namespace NzbDrone.Core.Indexers.Definitions
 {
     [Obsolete("Remove per Site Request Prowlarr Issue 573")]
-    public class TVVault : TorrentIndexerBase<TVVaultSettings>
+    public class TVVault : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "TVVault";
         public override string[] IndexerUrls => new[] { "https://tv-vault.me/" };
@@ -136,7 +137,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TVVaultRequestGenerator : IIndexerRequestGenerator
     {
-        public TVVaultSettings Settings { get; set; }
+        public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public string BaseUrl { get; set; }
 
@@ -230,10 +231,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TVVaultParser : IParseIndexerResponse
     {
-        private readonly TVVaultSettings _settings;
+        private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public TVVaultParser(TVVaultSettings settings, IndexerCapabilitiesCategories categories)
+        public TVVaultParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -303,42 +304,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class TVVaultSettingsValidator : AbstractValidator<TVVaultSettings>
-    {
-        public TVVaultSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class TVVaultSettings : IIndexerSettings
-    {
-        private static readonly TVVaultSettingsValidator Validator = new TVVaultSettingsValidator();
-
-        public TVVaultSettings()
-        {
-            Username = "";
-            Password = "";
-        }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Password { get; set; }
-
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

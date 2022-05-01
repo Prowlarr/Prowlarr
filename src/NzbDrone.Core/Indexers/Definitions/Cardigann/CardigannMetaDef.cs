@@ -4,6 +4,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
 {
     public class CardigannMetaDefinition
     {
+        public CardigannMetaDefinition()
+        {
+            Legacylinks = new List<string>();
+        }
+
         public string Id { get; set; }
         public string File { get; set; }
         public string Name { get; set; }

@@ -29,6 +29,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
     // Cardigann yaml classes
     public class CardigannDefinition
     {
+        public CardigannDefinition()
+        {
+            Legacylinks = new List<string>();
+        }
+
         public string Id { get; set; }
         public List<SettingsField> Settings { get; set; }
         public string Name { get; set; }

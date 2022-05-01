@@ -446,7 +446,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Profile -> Security)")]
+        [FieldDefinition(2, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
         public string MamId { get; set; }
 
         [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]

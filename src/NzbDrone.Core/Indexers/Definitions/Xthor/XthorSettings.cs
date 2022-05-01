@@ -1,9 +1,10 @@
-﻿using NzbDrone.Core.Annotations;
+using NzbDrone.Core.Annotations;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Xthor
 {
-    public class XthorSettings : IIndexerSettings
+    public class XthorSettings : NoAuthTorrentBaseSettings
     {
         private static readonly XthorSettingsValidator Validator = new XthorSettingsValidator();
 
@@ -21,9 +22,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
             ByPassPageForTmDbid = true;
             MaxPages = 1;
         }
-
-        [FieldDefinition(1, Label = "Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(2, Label = "Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password, HelpText = "Site Passkey")]
         public string Passkey { get; set; }
@@ -55,11 +53,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         [FieldDefinition(11, Label = "How many pages do you want to follow?", Type = FieldType.Select, SelectOptions = typeof(XthorPagesNumber), HelpText = "(not recommended) you can increase max pages to follow when making a request. But be aware that this API is very buggy on tracker side, most of time, results of next pages are same as the first page. Even if we deduplicate rows, you will loose performance for the same results.", Advanced = true)]
         public int MaxPages { get; set; }
 
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
-
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
     }
 }

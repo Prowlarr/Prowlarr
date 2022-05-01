@@ -13,6 +13,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -22,7 +23,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class Anthelion : TorrentIndexerBase<AnthelionSettings>
+    public class Anthelion : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Anthelion";
         public override string[] IndexerUrls => new string[] { "https://anthelion.me/" };
@@ -130,7 +131,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnthelionRequestGenerator : IIndexerRequestGenerator
     {
-        public AnthelionSettings Settings { get; set; }
+        public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public AnthelionRequestGenerator()
@@ -212,10 +213,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnthelionParser : IParseIndexerResponse
     {
-        private readonly AnthelionSettings _settings;
+        private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public AnthelionParser(AnthelionSettings settings, IndexerCapabilitiesCategories categories)
+        public AnthelionParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -296,42 +297,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class AnthelionSettingsValidator : AbstractValidator<AnthelionSettings>
-    {
-        public AnthelionSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class AnthelionSettings : IIndexerSettings
-    {
-        private static readonly AnthelionSettingsValidator Validator = new AnthelionSettingsValidator();
-
-        public AnthelionSettings()
-        {
-            Username = "";
-            Password = "";
-        }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Password { get; set; }
-
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

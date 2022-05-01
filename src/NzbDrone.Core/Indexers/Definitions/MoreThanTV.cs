@@ -14,6 +14,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -22,7 +23,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
-public class MoreThanTV : TorrentIndexerBase<MoreThanTVSettings>
+public class MoreThanTV : TorrentIndexerBase<CookieTorrentBaseSettings>
 {
     public override string Name => "MoreThanTV";
     public override string[] IndexerUrls => new[] { "https://www.morethantv.me/" };
@@ -74,12 +75,12 @@ public class MoreThanTV : TorrentIndexerBase<MoreThanTVSettings>
 
 public class MoreThanTVRequestGenerator : IIndexerRequestGenerator
 {
-    private MoreThanTVSettings Settings { get; }
+    private CookieTorrentBaseSettings Settings { get; }
     private IndexerCapabilities Capabilities { get; }
 
     private NameValueCollection BrowserHeaders { get; }
 
-    public MoreThanTVRequestGenerator(MoreThanTVSettings settings, IndexerCapabilities capabilities)
+    public MoreThanTVRequestGenerator(CookieTorrentBaseSettings settings, IndexerCapabilities capabilities)
     {
         Settings = settings;
         Capabilities = capabilities;
@@ -170,7 +171,7 @@ public class MoreThanTVRequestGenerator : IIndexerRequestGenerator
 
 public class MoreThanTVParser : IParseIndexerResponse
 {
-    public MoreThanTVSettings Settings { get; init; }
+    public CookieTorrentBaseSettings Settings { get; init; }
 
     public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
     {
@@ -303,36 +304,4 @@ public class MoreThanTVParser : IParseIndexerResponse
     }
 
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-}
-
-public class MoreThanTVSettingsValidator : AbstractValidator<MoreThanTVSettings>
-{
-    public MoreThanTVSettingsValidator()
-    {
-        RuleFor(c => c.Cookie).NotEmpty();
-    }
-}
-
-public class MoreThanTVSettings : IIndexerSettings
-{
-    private static readonly MoreThanTVSettingsValidator Validator = new ();
-
-    public MoreThanTVSettings()
-    {
-        Cookie = "";
-    }
-
-    [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-    public string BaseUrl { get; set; }
-
-    [FieldDefinition(2, Label = "Cookie", HelpText = "Enter the cookies for the site, just copy everything after 'cookie:' from the request headers to the site", HelpLink = "https://wiki.servarr.com/prowlarr/faq#finding-cookies")]
-    public string Cookie { get; set; }
-
-    [FieldDefinition(3)]
-    public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-    public NzbDroneValidationResult Validate()
-    {
-        return new NzbDroneValidationResult(Validator.Validate(this));
-    }
 }

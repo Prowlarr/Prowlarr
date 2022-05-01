@@ -16,6 +16,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -393,43 +394,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class NorBitsSettingsValidator : AbstractValidator<NorBitsSettings>
+    public class NorBitsSettings : UserPassTorrentBaseSettings
     {
-        public NorBitsSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class NorBitsSettings : IIndexerSettings
-    {
-        private static readonly NorBitsSettingsValidator Validator = new NorBitsSettingsValidator();
-
         public NorBitsSettings()
         {
-            Username = "";
-            Password = "";
         }
-
-        [FieldDefinition(1, Label = "Base Url", HelpText = "Select which baseurl Prowlarr will use for requests to the site", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Password { get; set; }
 
         [FieldDefinition(4, Label = "Use Full Search", HelpText = "Use Full Search from Site", Type = FieldType.Checkbox)]
         public bool UseFullSearch { get; set; }
-
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

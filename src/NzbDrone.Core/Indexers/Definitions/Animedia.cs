@@ -10,6 +10,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -18,7 +19,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class Animedia : TorrentIndexerBase<AnimediaSettings>
+    public class Animedia : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "Animedia";
         public override string[] IndexerUrls => new string[] { "https://tt.animedia.tv/" };
@@ -67,7 +68,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimediaRequestGenerator : IIndexerRequestGenerator
     {
-        public AnimediaSettings Settings { get; set; }
+        public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public AnimediaRequestGenerator()
@@ -144,7 +145,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimediaParser : IParseIndexerResponse
     {
-        private readonly AnimediaSettings _settings;
+        private readonly NoAuthTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
         private static readonly Regex EpisodesInfoQueryRegex = new Regex(@"сери[ия] (\d+)(?:-(\d+))? из.*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ResolutionInfoQueryRegex = new Regex(@"качество (\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -156,7 +157,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IIndexerHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
 
-        public AnimediaParser(AnimediaSettings settings, IndexerCapabilitiesCategories categories)
+        public AnimediaParser(NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -323,28 +324,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class AnimediaSettingsValidator : AbstractValidator<AnimediaSettings>
-    {
-        public AnimediaSettingsValidator()
-        {
-        }
-    }
-
-    public class AnimediaSettings : IIndexerSettings
-    {
-        private static readonly AnimediaSettingsValidator Validator = new AnimediaSettingsValidator();
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

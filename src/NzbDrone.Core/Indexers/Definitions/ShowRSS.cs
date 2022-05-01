@@ -8,6 +8,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
@@ -16,7 +17,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class ShowRSS : TorrentIndexerBase<ShowRSSSettings>
+    public class ShowRSS : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "ShowRSS";
         public override string[] IndexerUrls => new string[] { "https://showrss.info/" };
@@ -62,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ShowRSSRequestGenerator : IIndexerRequestGenerator
     {
-        public ShowRSSSettings Settings { get; set; }
+        public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public ShowRSSRequestGenerator()
@@ -123,10 +124,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ShowRSSParser : IParseIndexerResponse
     {
-        private readonly ShowRSSSettings _settings;
+        private readonly NoAuthTorrentBaseSettings _settings;
         private string BrowseUrl => _settings.BaseUrl + "browse/";
 
-        public ShowRSSParser(ShowRSSSettings settings)
+        public ShowRSSParser(NoAuthTorrentBaseSettings settings)
         {
             _settings = settings;
         }
@@ -178,25 +179,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class ShowRSSSettingsValidator : AbstractValidator<ShowRSSSettings>
-    {
-    }
-
-    public class ShowRSSSettings : IIndexerSettings
-    {
-        private static readonly ShowRSSSettingsValidator Validator = new ShowRSSSettingsValidator();
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

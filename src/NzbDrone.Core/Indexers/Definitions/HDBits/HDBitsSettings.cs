@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.HDBits
@@ -13,7 +14,7 @@ namespace NzbDrone.Core.Indexers.HDBits
         }
     }
 
-    public class HDBitsSettings : IIndexerSettings
+    public class HDBitsSettings : NoAuthTorrentBaseSettings
     {
         private static readonly HDBitsSettingsValidator Validator = new HDBitsSettingsValidator();
 
@@ -22,9 +23,6 @@ namespace NzbDrone.Core.Indexers.HDBits
             Codecs = System.Array.Empty<int>();
             Mediums = System.Array.Empty<int>();
         }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
@@ -38,10 +36,7 @@ namespace NzbDrone.Core.Indexers.HDBits
         [FieldDefinition(5, Label = "Mediums", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsMedium), Advanced = true, HelpText = "Options: BluRay, Encode, Capture, Remux, WebDL. If unspecified, all options are used.")]
         public IEnumerable<int> Mediums { get; set; }
 
-        [FieldDefinition(6)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

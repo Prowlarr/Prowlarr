@@ -13,6 +13,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Gazelle;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
@@ -338,7 +339,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RedactedSettings : IIndexerSettings
+    public class RedactedSettings : NoAuthTorrentBaseSettings
     {
         private static readonly RedactedSettingsValidator Validator = new RedactedSettingsValidator();
 
@@ -349,21 +350,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings)", Privacy = PrivacyLevel.ApiKey)]
         public string Apikey { get; set; }
 
         [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
         public bool UseFreeleechToken { get; set; }
 
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
         public string Passkey { get; set; }
 
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

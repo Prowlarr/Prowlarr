@@ -11,6 +11,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -277,38 +278,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class SceneTimeSettingsValidator : AbstractValidator<SceneTimeSettings>
+    public class SceneTimeSettings : CookieTorrentBaseSettings
     {
-        public SceneTimeSettingsValidator()
-        {
-            RuleFor(c => c.Cookie).NotEmpty();
-        }
-    }
-
-    public class SceneTimeSettings : IIndexerSettings
-    {
-        private static readonly SceneTimeSettingsValidator Validator = new SceneTimeSettingsValidator();
-
         public SceneTimeSettings()
         {
-            Cookie = "";
         }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Login cookie from website")]
-        public string Cookie { get; set; }
 
         [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
-
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

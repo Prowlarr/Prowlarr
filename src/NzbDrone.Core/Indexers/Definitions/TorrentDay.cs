@@ -8,6 +8,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -16,7 +17,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class TorrentDay : TorrentIndexerBase<TorrentDaySettings>
+    public class TorrentDay : TorrentIndexerBase<CookieTorrentBaseSettings>
     {
         public override string Name => "TorrentDay";
 
@@ -134,7 +135,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentDayRequestGenerator : IIndexerRequestGenerator
     {
-        public TorrentDaySettings Settings { get; set; }
+        public CookieTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public TorrentDayRequestGenerator()
@@ -218,10 +219,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentDayParser : IParseIndexerResponse
     {
-        private readonly TorrentDaySettings _settings;
+        private readonly CookieTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public TorrentDayParser(TorrentDaySettings settings, IndexerCapabilitiesCategories categories)
+        public TorrentDayParser(CookieTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -273,37 +274,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class TorrentDaySettingsValidator : AbstractValidator<TorrentDaySettings>
-    {
-        public TorrentDaySettingsValidator()
-        {
-            RuleFor(c => c.Cookie).NotEmpty();
-        }
-    }
-
-    public class TorrentDaySettings : IIndexerSettings
-    {
-        private static readonly TorrentDaySettingsValidator Validator = new TorrentDaySettingsValidator();
-
-        public TorrentDaySettings()
-        {
-            Cookie = "";
-        }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie")]
-        public string Cookie { get; set; }
-
-        [FieldDefinition(3)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

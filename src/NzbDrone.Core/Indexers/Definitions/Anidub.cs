@@ -14,6 +14,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -22,7 +23,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class Anidub : TorrentIndexerBase<AnidubSettings>
+    public class Anidub : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Anidub";
         public override string[] IndexerUrls => new string[] { "https://tr.anidub.com/" };
@@ -142,7 +143,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnidubRequestGenerator : IIndexerRequestGenerator
     {
-        public AnidubSettings Settings { get; set; }
+        public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         public AnidubRequestGenerator()
@@ -252,7 +253,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnidubParser : IParseIndexerResponse
     {
-        private readonly AnidubSettings _settings;
+        private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
         public IIndexerHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
@@ -277,7 +278,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "/anons_ongoing", "12" }
             };
 
-        public AnidubParser(AnidubSettings settings, IndexerCapabilitiesCategories categories)
+        public AnidubParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -509,42 +510,5 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class AnidubSettingsValidator : AbstractValidator<AnidubSettings>
-    {
-        public AnidubSettingsValidator()
-        {
-            RuleFor(c => c.Username).NotEmpty();
-            RuleFor(c => c.Password).NotEmpty();
-        }
-    }
-
-    public class AnidubSettings : IIndexerSettings
-    {
-        private static readonly AnidubSettingsValidator Validator = new AnidubSettingsValidator();
-
-        public AnidubSettings()
-        {
-            Username = "";
-            Password = "";
-        }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
-        public string Username { get; set; }
-
-        [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Password { get; set; }
-
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

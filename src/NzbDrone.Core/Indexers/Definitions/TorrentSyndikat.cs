@@ -10,6 +10,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -330,7 +331,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class TorrentSyndikatSettings : IIndexerSettings
+    public class TorrentSyndikatSettings : NoAuthTorrentBaseSettings
     {
         private static readonly TorrentSyndikatSettingsValidator Validator = new TorrentSyndikatSettingsValidator();
 
@@ -339,9 +340,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             ApiKey = "";
             ReleaseTypes = new List<int>();
         }
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey, HelpText = "Site API Key")]
         public string ApiKey { get; set; }
@@ -352,10 +350,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Release Types", Type = FieldType.Select, SelectOptions = typeof(TorrentSyndikatReleaseTypes))]
         public IEnumerable<int> ReleaseTypes { get; set; }
 
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

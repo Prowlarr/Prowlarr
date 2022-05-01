@@ -11,6 +11,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -19,7 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class SubsPlease : TorrentIndexerBase<SubsPleaseSettings>
+    public class SubsPlease : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "SubsPlease";
         public override string[] IndexerUrls => new[]
@@ -67,7 +68,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseRequestGenerator : IIndexerRequestGenerator
     {
-        public SubsPleaseSettings Settings { get; set; }
+        public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
         private IEnumerable<IndexerRequest> GetSearchRequests(string term)
@@ -159,10 +160,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseParser : IParseIndexerResponse
     {
-        private readonly SubsPleaseSettings _settings;
+        private readonly NoAuthTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public SubsPleaseParser(SubsPleaseSettings settings, IndexerCapabilitiesCategories categories)
+        public SubsPleaseParser(NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -235,26 +236,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-    }
-
-    public class SubsPleaseSettingsValidator : AbstractValidator<SubsPleaseSettings>
-    {
-    }
-
-    public class SubsPleaseSettings : IIndexerSettings
-    {
-        private static readonly SubsPleaseSettingsValidator Validator = new SubsPleaseSettingsValidator();
-
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 
     public class SubPleaseRelease

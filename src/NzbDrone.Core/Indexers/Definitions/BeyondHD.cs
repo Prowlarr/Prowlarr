@@ -13,6 +13,7 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -249,7 +250,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class BeyondHDSettings : IIndexerSettings
+    public class BeyondHDSettings : NoAuthTorrentBaseSettings
     {
         private static readonly BeyondHDSettingsValidator Validator = new BeyondHDSettingsValidator();
 
@@ -257,19 +258,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from the Site (Found in My Security => RSS Key)", Privacy = PrivacyLevel.ApiKey)]
         public string RssKey { get; set; }
 
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

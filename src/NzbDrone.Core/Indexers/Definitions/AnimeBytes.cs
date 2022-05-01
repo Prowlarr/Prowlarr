@@ -15,6 +15,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -474,7 +475,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class AnimeBytesSettings : IIndexerSettings
+    public class AnimeBytesSettings : NoAuthTorrentBaseSettings
     {
         private static readonly AnimeBytesSettingsValidator Validator = new AnimeBytesSettingsValidator();
 
@@ -485,9 +486,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             EnableSonarrCompatibility = true;
         }
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passkey { get; set; }
 
@@ -497,10 +495,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox,  HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
         public bool EnableSonarrCompatibility { get; set; }
 
-        [FieldDefinition(5)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

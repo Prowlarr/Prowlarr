@@ -112,7 +112,7 @@ function EditIndexerModalContent(props) {
               </FormGroup>
 
               <FormGroup>
-                <FormLabel>{translate('AppProfile')}</FormLabel>
+                <FormLabel>{translate('SyncProfile')}</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.APP_PROFILE_SELECT}

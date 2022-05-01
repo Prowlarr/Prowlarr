@@ -88,7 +88,8 @@ namespace NzbDrone.Core.Profiles
                 Name = name,
                 EnableAutomaticSearch = true,
                 EnableInteractiveSearch = true,
-                EnableRss = true
+                EnableRss = true,
+                MinimumSeeders = 1
             };
 
             return qualityProfile;

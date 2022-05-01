@@ -4,7 +4,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class CookieTorrentBaseSettings : IIndexerSettings
+    public class CookieTorrentBaseSettings : ITorrentIndexerSettings
     {
         public class CookieBaseSettingsValidator : AbstractValidator<CookieTorrentBaseSettings>
         {
@@ -29,6 +29,9 @@ namespace NzbDrone.Core.Indexers.Settings
 
         [FieldDefinition(3)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
+        [FieldDefinition(4)]
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

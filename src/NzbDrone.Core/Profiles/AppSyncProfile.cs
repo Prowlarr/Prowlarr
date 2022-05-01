@@ -8,5 +8,6 @@ namespace NzbDrone.Core.Profiles
         public bool EnableRss { get; set; }
         public bool EnableAutomaticSearch { get; set; }
         public bool EnableInteractiveSearch { get; set; }
+        public int MinimumSeeders { get; set; }
     }
 }

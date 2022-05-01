@@ -15,6 +15,7 @@ namespace Prowlarr.Api.V1.Indexers
     public class IndexerResource : ProviderResource<IndexerResource>
     {
         public string[] IndexerUrls { get; set; }
+        public string[] LegacyUrls { get; set; }
         public string DefinitionName { get; set; }
         public string Description { get; set; }
         public string Language { get; set; }
@@ -81,6 +82,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported-indexers#{0}", infoLinkName.ToLower().Replace(' ', '-'));
             resource.AppProfileId = definition.AppProfileId;
             resource.IndexerUrls = definition.IndexerUrls;
+            resource.LegacyUrls = definition.LegacyUrls;
             resource.Description = definition.Description;
             resource.Language = definition.Language;
             resource.Encoding = definition.Encoding?.EncodingName ?? null;

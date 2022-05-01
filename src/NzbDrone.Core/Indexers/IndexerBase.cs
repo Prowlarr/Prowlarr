@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract string Name { get; }
         public abstract string[] IndexerUrls { get; }
+        public abstract string[] LegacyUrls { get; }
         public abstract string Description { get; }
         public abstract Encoding Encoding { get; }
         public abstract string Language { get; }
@@ -147,9 +148,17 @@ namespace NzbDrone.Core.Indexers
 
         protected TSettings GetDefaultBaseUrl(TSettings settings)
         {
-            if (settings.BaseUrl.IsNullOrWhiteSpace() && IndexerUrls.First().IsNotNullOrWhiteSpace())
+            var defaultLink = IndexerUrls.FirstOrDefault();
+
+            if (settings.BaseUrl.IsNullOrWhiteSpace() && defaultLink.IsNotNullOrWhiteSpace())
             {
-                settings.BaseUrl = IndexerUrls.First();
+                settings.BaseUrl = defaultLink;
+            }
+
+            if (settings.BaseUrl.IsNotNullOrWhiteSpace() && LegacyUrls.Contains(settings.BaseUrl))
+            {
+                _logger.Debug(string.Format("Changing legacy site link from {0} to {1}", settings.BaseUrl, defaultLink));
+                settings.BaseUrl = defaultLink;
             }
 
             return settings;

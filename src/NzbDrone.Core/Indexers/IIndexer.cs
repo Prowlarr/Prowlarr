@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Indexers
         IndexerCapabilities Capabilities { get; }
 
         string[] IndexerUrls { get; }
+        string[] LegacyUrls { get; }
         string Description { get; }
         Encoding Encoding { get; }
         string Language { get; }

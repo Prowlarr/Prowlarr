@@ -126,6 +126,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Description = definition.Description,
                 Implementation = GetType().Name,
                 IndexerUrls = definition.Links.ToArray(),
+                LegacyUrls = definition.Legacylinks.ToArray(),
                 Settings = new CardigannSettings { DefinitionFile = definition.File },
                 Protocol = DownloadProtocol.Torrent,
                 Privacy = definition.Type switch

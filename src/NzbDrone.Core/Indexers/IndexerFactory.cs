@@ -110,6 +110,7 @@ namespace NzbDrone.Core.Indexers
             }
 
             definition.IndexerUrls = defFile.Links.ToArray();
+            definition.LegacyUrls = defFile.Legacylinks.ToArray();
             definition.Description = defFile.Description;
             definition.Language = defFile.Language;
             definition.Encoding = Encoding.GetEncoding(defFile.Encoding);
@@ -205,6 +206,7 @@ namespace NzbDrone.Core.Indexers
             if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
             {
                 definition.IndexerUrls = provider.IndexerUrls;
+                definition.LegacyUrls = provider.LegacyUrls;
                 definition.Privacy = provider.Privacy;
                 definition.Description = provider.Description;
                 definition.Encoding = provider.Encoding;

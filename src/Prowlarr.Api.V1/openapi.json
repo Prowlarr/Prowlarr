@@ -5510,6 +5510,13 @@
             },
             "nullable": true
           },
+          "legacyUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "definitionName": {
             "type": "string",
             "nullable": true

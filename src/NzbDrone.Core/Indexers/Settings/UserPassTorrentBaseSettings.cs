@@ -4,7 +4,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class UserPassTorrentBaseSettings : IIndexerSettings
+    public class UserPassTorrentBaseSettings : ITorrentIndexerSettings
     {
         public class UserPassBaseSettingsValidator : AbstractValidator<UserPassTorrentBaseSettings>
         {
@@ -34,6 +34,9 @@ namespace NzbDrone.Core.Indexers.Settings
 
         [FieldDefinition(4)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
+        [FieldDefinition(5)]
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public NzbDroneValidationResult Validate()
         {

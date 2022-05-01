@@ -133,7 +133,7 @@ class IndexerEditorFooter extends Component {
 
         <div className={styles.inputContainer}>
           <IndexerEditorFooterLabel
-            label={translate('AppProfile')}
+            label={translate('SyncProfile')}
             isSaving={isSaving && appProfileId !== NO_CHANGE}
           />
 

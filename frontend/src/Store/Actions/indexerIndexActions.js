@@ -76,7 +76,7 @@ export const defaultState = {
     },
     {
       name: 'appProfileId',
-      label: translate('AppProfile'),
+      label: translate('SyncProfile'),
       isSortable: true,
       isVisible: true
     },
@@ -152,7 +152,7 @@ export const defaultState = {
     },
     {
       name: 'appProfileId',
-      label: translate('AppProfile'),
+      label: translate('SyncProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.APP_PROFILE
     },

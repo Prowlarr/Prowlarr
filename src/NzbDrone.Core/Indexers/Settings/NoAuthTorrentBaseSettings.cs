@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Indexers.Settings
     {
     }
 
-    public class NoAuthTorrentBaseSettings : IIndexerSettings
+    public class NoAuthTorrentBaseSettings : ITorrentIndexerSettings
     {
         private static readonly NoAuthSettingsValidator Validator = new NoAuthSettingsValidator();
 
@@ -17,6 +17,9 @@ namespace NzbDrone.Core.Indexers.Settings
 
         [FieldDefinition(2)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
+        [FieldDefinition(3)]
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public virtual NzbDroneValidationResult Validate()
         {

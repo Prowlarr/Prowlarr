@@ -53,7 +53,7 @@ function IndexerIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          {translate('AppProfile')}
+          {translate('SyncProfile')}
         </SortMenuItem>
 
         <SortMenuItem

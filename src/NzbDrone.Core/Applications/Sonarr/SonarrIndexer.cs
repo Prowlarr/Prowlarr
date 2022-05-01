@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -32,6 +33,18 @@ namespace NzbDrone.Core.Applications.Sonarr
             var cats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "categories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "categories").Value);
             var animeCats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "animeCategories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "animeCategories").Value);
 
+            var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
+            var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
+            var minimumSeedersCompare = minimumSeeders == otherMinimumSeeders;
+
+            var seedTime = Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value);
+            var otherSeedTime = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value);
+            var seedTimeCompare = seedTime == otherSeedTime;
+
+            var seedRatio = Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
+            var otherSeedRatio = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
+            var seedRatioCompare = seedRatio == otherSeedRatio;
+
             return other.EnableRss == EnableRss &&
                 other.EnableAutomaticSearch == EnableAutomaticSearch &&
                 other.EnableInteractiveSearch == EnableInteractiveSearch &&
@@ -39,7 +52,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKey && apiPath && baseUrl && cats && animeCats;
+                apiKey && apiPath && baseUrl && cats && animeCats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare;
         }
     }
 }

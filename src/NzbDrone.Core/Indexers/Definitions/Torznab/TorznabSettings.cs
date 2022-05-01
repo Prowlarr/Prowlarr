@@ -2,6 +2,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Validation;
 
@@ -36,13 +37,16 @@ namespace NzbDrone.Core.Indexers.Torznab
         }
     }
 
-    public class TorznabSettings : NewznabSettings
+    public class TorznabSettings : NewznabSettings, ITorrentIndexerSettings
     {
         private static readonly TorznabSettingsValidator Validator = new TorznabSettingsValidator();
 
         public TorznabSettings()
         {
         }
+
+        [FieldDefinition(3)]
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public override NzbDroneValidationResult Validate()
         {

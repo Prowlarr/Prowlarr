@@ -52,7 +52,7 @@ class AppProfiles extends Component {
     } = this.props;
 
     return (
-      <FieldSet legend={translate('AppProfiles')}>
+      <FieldSet legend={translate('SyncProfiles')}>
         <PageSectionContent
           errorMessage={translate('UnableToLoadAppProfiles')}
           {...otherProps}c={true}

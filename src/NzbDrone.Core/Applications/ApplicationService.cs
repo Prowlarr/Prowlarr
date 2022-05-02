@@ -9,6 +9,7 @@ using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Applications
@@ -69,7 +70,10 @@ namespace NzbDrone.Core.Applications
 
             foreach (var app in enabledApps)
             {
-                ExecuteAction(a => a.AddIndexer((IndexerDefinition)message.Definition), app);
+                if (ShouldHandleIndexer(app.Definition, message.Definition))
+                {
+                    ExecuteAction(a => a.AddIndexer((IndexerDefinition)message.Definition), app);
+                }
             }
         }
 
@@ -157,14 +161,14 @@ namespace NzbDrone.Core.Applications
 
                     if (indexerMappings.Any(x => x.IndexerId == definition.Id))
                     {
-                        if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync)
+                        if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync && ShouldHandleIndexer(app.Definition, indexer))
                         {
                             ExecuteAction(a => a.UpdateIndexer(definition), app);
                         }
                     }
                     else
                     {
-                        if (indexer.Enable)
+                        if (indexer.Enable && ShouldHandleIndexer(app.Definition, indexer))
                         {
                             ExecuteAction(a => a.AddIndexer(definition), app);
                         }
@@ -185,6 +189,24 @@ namespace NzbDrone.Core.Applications
                     }
                 }
             }
+        }
+
+        private bool ShouldHandleIndexer(ProviderDefinition app, ProviderDefinition indexer)
+        {
+            if (app.Tags.Empty())
+            {
+                _logger.Debug("No tags set for this application.");
+                return true;
+            }
+
+            if (app.Tags.Intersect(indexer.Tags).Any())
+            {
+                _logger.Debug("Application and indexer have one or more intersecting tags.");
+                return true;
+            }
+
+            _logger.Debug("{0} does not have any intersecting tags with {1}. Indexer will not be synced", app.Name, indexer.Name);
+            return false;
         }
 
         private void ExecuteAction(Action<IApplication> applicationAction, IApplication application)

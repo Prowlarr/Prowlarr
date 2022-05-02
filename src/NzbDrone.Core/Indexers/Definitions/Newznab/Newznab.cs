@@ -57,6 +57,11 @@ namespace NzbDrone.Core.Indexers.Newznab
             return new string[] { Settings.BaseUrl };
         }
 
+        protected override NewznabSettings GetDefaultBaseUrl(NewznabSettings settings)
+        {
+            return settings;
+        }
+
         public IndexerCapabilities GetCapabilitiesFromSettings()
         {
             var caps = new IndexerCapabilities();

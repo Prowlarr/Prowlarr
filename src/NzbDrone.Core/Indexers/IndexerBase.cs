@@ -146,7 +146,7 @@ namespace NzbDrone.Core.Indexers
             return result.DistinctBy(v => v.Guid).ToList();
         }
 
-        protected TSettings GetDefaultBaseUrl(TSettings settings)
+        protected virtual TSettings GetDefaultBaseUrl(TSettings settings)
         {
             var defaultLink = IndexerUrls.FirstOrDefault();
 
@@ -154,8 +154,7 @@ namespace NzbDrone.Core.Indexers
             {
                 settings.BaseUrl = defaultLink;
             }
-
-            if (settings.BaseUrl.IsNotNullOrWhiteSpace() && LegacyUrls.Contains(settings.BaseUrl))
+            else if (settings.BaseUrl.IsNotNullOrWhiteSpace() && LegacyUrls.Contains(settings.BaseUrl))
             {
                 _logger.Debug(string.Format("Changing legacy site link from {0} to {1}", settings.BaseUrl, defaultLink));
                 settings.BaseUrl = defaultLink;

@@ -21,6 +21,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("BB down and removed Jackett 6080a41b365d217917582030aab9361bfff3cfa0")]
     public class BB : TorrentIndexerBase<BBSettings>
     {
         public override string Name => "BB";

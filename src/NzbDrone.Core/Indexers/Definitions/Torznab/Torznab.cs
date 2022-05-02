@@ -56,6 +56,11 @@ namespace NzbDrone.Core.Indexers.Torznab
             return new string[] { Settings.BaseUrl };
         }
 
+        protected override TorznabSettings GetDefaultBaseUrl(TorznabSettings settings)
+        {
+            return settings;
+        }
+
         public IndexerCapabilities GetCapabilitiesFromSettings()
         {
             var caps = new IndexerCapabilities();

@@ -17,7 +17,8 @@ namespace NzbDrone.Core.Parser
                                                                new IsoLanguage("nl", "", "nld", "Dutch", Language.Dutch),
                                                                new IsoLanguage("ja", "", "jpn", "Japanese", Language.Japanese),
                                                                new IsoLanguage("is", "", "isl", "Icelandic", Language.Icelandic),
-                                                               new IsoLanguage("zh", "", "zho", "Chinese", Language.Chinese),
+                                                               new IsoLanguage("zh", "cn", "zho", "Chinese (Simplified)", Language.Chinese),
+                                                               new IsoLanguage("zh", "tw", "zho", "Chinese (Traditional)", Language.ChineseTW),
                                                                new IsoLanguage("ru", "", "rus", "Russian", Language.Russian),
                                                                new IsoLanguage("pl", "", "pol", "Polish", Language.Polish),
                                                                new IsoLanguage("vi", "", "vie", "Vietnamese", Language.Vietnamese),
@@ -35,7 +36,12 @@ namespace NzbDrone.Core.Parser
                                                                new IsoLanguage("hi", "", "hin", "Hindi", Language.Hindi),
                                                                new IsoLanguage("th", "", "tha", "Thai", Language.Thai),
                                                                new IsoLanguage("bg", "", "bul", "Bulgarian", Language.Bulgarian),
-                                                               new IsoLanguage("ro", "", "ron", "Romanian", Language.Romanian)
+                                                               new IsoLanguage("ro", "", "ron", "Romanian", Language.Romanian),
+                                                               new IsoLanguage("pt", "br", "", "Portuguese (Brazil)", Language.PortugueseBR),
+                                                               new IsoLanguage("ar", "", "ara", "Arabic", Language.Arabic),
+                                                               new IsoLanguage("uk", "", "ukr", "Ukrainian", Language.Ukrainian),
+                                                               new IsoLanguage("fa", "", "fas", "Persian", Language.Persian),
+                                                               new IsoLanguage("be", "", "ben", "Bengali", Language.Bengali)
                                                            };
 
         public static IsoLanguage Find(string isoCode)

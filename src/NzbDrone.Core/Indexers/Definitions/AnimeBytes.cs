@@ -228,10 +228,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                         if (syn.StringArray != null)
                         {
                             synonyms.AddRange(syn.StringArray);
+                            if (syn.StringArray.Count >= 3)
+                            {
+                                synonyms.AddRange(syn.StringArray[2].Split(',').Select(t => t.Trim()));
+                            }
                         }
                         else
                         {
                             synonyms.AddRange(syn.StringMap.Values);
+                            if (syn.StringMap.ContainsKey("2"))
+                            {
+                                synonyms.AddRange(syn.StringMap["2"].Split(',').Select(t => t.Trim()));
+                            }
                         }
                     }
 

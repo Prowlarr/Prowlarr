@@ -227,15 +227,33 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         if (syn.StringArray != null)
                         {
-                            synonyms.AddRange(syn.StringArray);
-                            if (syn.StringArray.Count >= 3)
+                            if (syn.StringArray.Count >= 1)
+                            {
+                                synonyms.Add(syn.StringArray[0]);
+                            }
+
+                            if (syn.StringArray.Count >= 2)
+                            {
+                                synonyms.Add(syn.StringArray[1]);
+                            }
+
+                            if (syn.StringArray.Count == 3)
                             {
                                 synonyms.AddRange(syn.StringArray[2].Split(',').Select(t => t.Trim()));
                             }
                         }
                         else
                         {
-                            synonyms.AddRange(syn.StringMap.Values);
+                            if (syn.StringMap.ContainsKey("0"))
+                            {
+                                synonyms.Add(syn.StringMap["0"]);
+                            }
+
+                            if (syn.StringMap.ContainsKey("1"))
+                            {
+                                synonyms.Add(syn.StringMap["1"]);
+                            }
+
                             if (syn.StringMap.ContainsKey("2"))
                             {
                                 synonyms.AddRange(syn.StringMap["2"].Split(',').Select(t => t.Trim()));
@@ -502,7 +520,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox,  HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
+        [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
         public bool EnableSonarrCompatibility { get; set; }
 
         [FieldDefinition(5)]

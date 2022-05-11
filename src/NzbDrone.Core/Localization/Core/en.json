@@ -196,7 +196,7 @@
   "IndexersSelectedInterp": "{0} Indexer(s) Selected",
   "IndexerStatusCheckAllClientMessage": "All indexers are unavailable due to failures",
   "IndexerStatusCheckSingleClientMessage": "Indexers unavailable due to failures: {0}",
-  "IndexerTagsHelpText": "Use tags to specify Indexer Proxies or just to organize your indexers.",
+  "IndexerTagsHelpText": "Use tags to specify Indexer Proxies, which apps the indexer is synced to, or just to organize your indexers.",
   "IndexerVipCheckExpiredClientMessage": "Indexer VIP benefits have expired: {0}",
   "IndexerVipCheckExpiringClientMessage": "Indexer VIP benefits expiring soon: {0}",
   "Info": "Info",

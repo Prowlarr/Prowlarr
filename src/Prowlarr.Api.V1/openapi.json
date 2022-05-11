@@ -4435,6 +4435,10 @@
           },
           "enableAutomaticSearch": {
             "type": "boolean"
+          },
+          "minimumSeeders": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

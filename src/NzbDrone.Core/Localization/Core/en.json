@@ -200,6 +200,8 @@
   "IndexerVipCheckExpiredClientMessage": "Indexer VIP benefits have expired: {0}",
   "IndexerVipCheckExpiringClientMessage": "Indexer VIP benefits expiring soon: {0}",
   "Info": "Info",
+  "InstanceName": "Instance Name",
+  "InstanceNameHelpText": "Instance name in tab and for Syslog app name",
   "InteractiveSearch": "Interactive Search",
   "Interval": "Interval",
   "KeyboardShortcuts": "Keyboard Shortcuts",

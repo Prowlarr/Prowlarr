@@ -17,8 +17,6 @@
     "AddIndexer": "添加索引器",
     "AddedToDownloadClient": "发布已添加档案到客户端",
     "Added": "已添加",
-    "AddAppProfile": "添加应用同步档案",
-    "AppProfile": "程序档案",
     "Actions": "操作",
     "About": "关于",
     "MoreInfo": "更多信息",
@@ -103,7 +101,6 @@
     "EnableAutomaticSearch": "启用自动搜索",
     "Enable": "启用",
     "EditIndexer": "编辑搜刮器",
-    "EditAppProfile": "编辑应用配置",
     "Edit": "编辑",
     "DownloadClientStatusCheckSingleClientMessage": "所有下载客户端都不可用： {0}",
     "DownloadClientStatusCheckAllClientMessage": "所有下载客户端都不可用",
@@ -178,7 +175,6 @@
     "AreYouSureYouWantToResetYourAPIKey": "你确认希望重置API密钥吗？",
     "Apps": "应用程序",
     "AppProfileSelectHelpText": "应用程序配置用于控制应用程序同步设置 RSS、自动搜索和交互式搜索设置",
-    "AppProfiles": "应用配置文件",
     "AppProfileInUse": "正在使用的应用程序配置文件",
     "AppProfileDeleteConfirm": "您确认您想删除吗？",
     "ApplyTagsHelpTexts4": "替换：用输入的标签替换标签（不输入标签将清除所有标签）",
@@ -444,5 +440,11 @@
     "Yes": "是",
     "Application": "程序",
     "SearchTypes": "搜索类型",
-    "UnableToLoadIndexers": "无法加载搜刮器"
+    "UnableToLoadIndexers": "无法加载搜刮器",
+    "AddSyncProfile": "添加同步配置文件",
+    "SyncProfiles": "同步配置文件",
+    "EditSyncProfile": "编辑同步配置文件",
+    "SyncProfile": "同步配置文件",
+    "MinimumSeeders": "最少播种量",
+    "MinimumSeedersHelpText": "用于索引器抓取的应用程序所需的最小播种量"
 }

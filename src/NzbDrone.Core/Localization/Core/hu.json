@@ -333,10 +333,6 @@
     "AddedToDownloadClient": "Kiadás hozzáadva a klienshez",
     "EnableRssHelpText": "RSS Engedélyezése az Indexerekhez",
     "EnableRss": "RSS Engedélyezése",
-    "EditAppProfile": "App profil szerkesztése",
-    "AppProfiles": "App profilok",
-    "AddAppProfile": "Szinkronizálási profil hozzáadása",
-    "AppProfile": "App Profil",
     "Wiki": "Wiki",
     "RSS": "RSS",
     "RedirectHelpText": "Átirányítja a bejövő letöltési kérelmet az indexelő számára, és közvetlenül adja át a fájlt ahelyett, hogy a kérést a Prowlarr-en keresztül proxyba tenné",
@@ -386,7 +382,7 @@
     "IndexerProxies": "Indexer Proxy(k)",
     "IndexerProxyStatusCheckAllClientMessage": "Az összes Proxy elérhetetlen, hiba miatt",
     "IndexerProxyStatusCheckSingleClientMessage": "Proxyk elérhetetlenek az alábbi hibák miatt: {0}",
-    "IndexerTagsHelpText": "A címkék segítségével megadhatja az indexelő proxykat, vagy egyszerűen rendezheti az indexelőket.",
+    "IndexerTagsHelpText": "Címkék segítségével megadhatod az indexer proxykat amelyekkel az indexer szinkronizálva van, vagy egyszerűen az indexelők rendszerezéséhez.",
     "UnableToLoadIndexerProxies": "Nem lehet betölteni az Indexer Proxyt",
     "AddIndexerProxy": "Indexer Proxy hozzáadása",
     "IndexerSettingsSummary": "Konfigurálja a különböző globális indexer beállításokat, beleértve a proxykat is.",
@@ -444,5 +440,11 @@
     "NotSupported": "Nem támogatott",
     "RawSearchSupported": "Nyers keresés támogatott",
     "SearchCapabilities": "Keresési lehetőségek",
-    "TVSearchTypes": "TV-Sorozat keresési típusok"
+    "TVSearchTypes": "TV-Sorozat keresési típusok",
+    "MinimumSeeders": "Minimális Seederek Száma",
+    "SyncProfile": "Szinkronizálási profil",
+    "SyncProfiles": "Szinkronizálási profilok",
+    "AddSyncProfile": "Szinkronizálási profil hozzáadása",
+    "EditSyncProfile": "Szinkronizálási profil szerkesztése",
+    "MinimumSeedersHelpText": "Az Alkalmazás által megkövetelt minimális Seeder az indexer számára"
 }

@@ -337,10 +337,15 @@
     "No": "Нет",
     "Yes": "Да",
     "AddRemoveOnly": "Добавить и Удалить Только",
-    "AddAppProfile": "Добавить профиль синхронизации приложения",
     "AddNewIndexer": "Добавить Новый Индексатор",
     "AddToDownloadClient": "Добавить выпуск в Загрузочный клиент",
     "AddedToDownloadClient": "Выпуск добавлен в клиент",
     "AddDownloadClientToProwlarr": "Добавление клиента загрузки позволяет Prowlarr отправлять выпуски прямо из пользовательского интерфейса, выполняя поиск вручную.",
-    "AddIndexerProxy": "Добавить индексатор прокси"
+    "AddIndexerProxy": "Добавить индексатор прокси",
+    "Connect": "Оповещения",
+    "Notification": "Оповещения",
+    "Encoding": "Кодирование",
+    "Applications": "Приложения",
+    "Application": "Приложения",
+    "Notifications": "Оповещения"
 }

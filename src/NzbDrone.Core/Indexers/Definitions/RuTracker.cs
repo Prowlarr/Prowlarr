@@ -117,6 +117,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                                    }
             };
 
+            caps.SupportsRawSearch = true;
+
             caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.Movies, "Наше кино");
             caps.Categories.AddCategoryMapping(941, NewznabStandardCategory.Movies, "|- Кино СССР");
             caps.Categories.AddCategoryMapping(1666, NewznabStandardCategory.Movies, "|- Детские отечественные фильмы");

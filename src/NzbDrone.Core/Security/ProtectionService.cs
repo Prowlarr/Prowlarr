@@ -15,16 +15,16 @@ namespace NzbDrone.Core.Security
 
     public class ProtectionService : IProtectionService
     {
-        private readonly IConfigFileProvider _configService;
+        private readonly IConfigService _configService;
 
-        public ProtectionService(IConfigFileProvider configService)
+        public ProtectionService(IConfigService configService)
         {
             _configService = configService;
         }
 
         public string Protect(string text)
         {
-            var key = Encoding.UTF8.GetBytes(_configService.ApiKey);
+            var key = Encoding.UTF8.GetBytes(_configService.DownloadProtectionKey);
 
             using (var aesAlg = Aes.Create())
             {
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Security
 
                 Buffer.BlockCopy(fullCipher, 0, iv, 0, iv.Length);
                 Buffer.BlockCopy(fullCipher, iv.Length, cipher, 0, fullCipher.Length - iv.Length);
-                var key = Encoding.UTF8.GetBytes(_configService.ApiKey);
+                var key = Encoding.UTF8.GetBytes(_configService.DownloadProtectionKey);
 
                 using (var aesAlg = Aes.Create())
                 {

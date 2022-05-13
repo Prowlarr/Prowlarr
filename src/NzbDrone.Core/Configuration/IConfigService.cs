@@ -33,6 +33,9 @@ namespace NzbDrone.Core.Configuration
         string RijndaelSalt { get; }
         string HmacSalt { get; }
 
+        //Link Protection
+        string DownloadProtectionKey { get; }
+
         //Proxy
         bool ProxyEnabled { get; }
         ProxyType ProxyType { get; }

@@ -156,6 +156,8 @@ namespace NzbDrone.Core.Configuration
 
         public string HmacSalt => GetValue("HmacSalt", Guid.NewGuid().ToString(), true);
 
+        public string DownloadProtectionKey => GetValue("DownloadProtectionKey", Guid.NewGuid().ToString().Replace("-", ""), true);
+
         public bool ProxyEnabled => GetValueBoolean("ProxyEnabled", false);
 
         public ProxyType ProxyType => GetValueEnum<ProxyType>("ProxyType", ProxyType.Http);

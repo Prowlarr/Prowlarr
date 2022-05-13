@@ -323,10 +323,6 @@
     "Yesterday": "Ontem",
     "EnableRssHelpText": "Habilitar feed RSS para o indexador",
     "EnableRss": "Habilitar RSS",
-    "EditAppProfile": "Editar perfil do aplicativo",
-    "AppProfiles": "Perfis de aplicativo",
-    "AddAppProfile": "Adicionar perfil de sincronização do aplicativo",
-    "AppProfile": "Perfil do aplicativo",
     "Wiki": "Wiki",
     "RSS": "RSS",
     "RedirectHelpText": "Redirecionar a solicitação de download de entrada para o indexador e passar diretamente para a obtenção, em vez de por proxy usando o Prowlarr",
@@ -388,7 +384,7 @@
     "IndexerSettingsSummary": "Defina várias configurações globais do Indexador, incluindo Proxies.",
     "IndexerProxyStatusCheckAllClientMessage": "Todos os proxies estão indisponíveis devido a falhas",
     "IndexerProxyStatusCheckSingleClientMessage": "Proxies indisponíveis devido a falhas: {0}",
-    "IndexerTagsHelpText": "Use etiquetas para especificar proxies de indexador ou apenas para organizar seus indexadores.",
+    "IndexerTagsHelpText": "Usar etiquetas para especificar proxies do indexador, com quais aplicativos o indexador é sincronizado ou apenas para organizar seus indexadores.",
     "Notifications": "Notificações",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Não foi possível adicionar um novo proxy indexador, tente novamente.",
     "UnableToLoadIndexerProxies": "Incapaz de carregar proxies indexadores",
@@ -444,5 +440,11 @@
     "GrabReleases": "Capturar Versão",
     "Link": "Link",
     "MappedDrivesRunningAsService": "As unidades de rede mapeadas não estão disponíveis quando executadas como um serviço do Windows. Consulte as Perguntas frequentes para saber mais",
-    "No": "Não"
+    "No": "Não",
+    "EditSyncProfile": "Editar Perfil de Sincronização",
+    "SyncProfile": "Perfil de Sincronização",
+    "SyncProfiles": "Perfis de Sincronização",
+    "AddSyncProfile": "Adicionar Perfil de Sincronização",
+    "MinimumSeeders": "Mínimo de Seeders",
+    "MinimumSeedersHelpText": "Mínimo de seeders requeridos pelo Aplicativo para o indexador baixar"
 }

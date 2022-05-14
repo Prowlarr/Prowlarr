@@ -9,13 +9,12 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using NLog;
+using Npgsql;
 using NzbDrone.Common.Composition.Extensions;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Exceptions;
@@ -105,6 +104,7 @@ namespace NzbDrone.Host
             GC.Collect();
             GC.WaitForPendingFinalizers();
             SQLiteConnection.ClearAllPools();
+            NpgsqlConnection.ClearAllPools();
         }
 
         public static IHostBuilder CreateConsoleHostBuilder(string[] args, StartupContext context)

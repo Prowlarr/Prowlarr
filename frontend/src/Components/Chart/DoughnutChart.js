@@ -29,7 +29,7 @@ class DoughnutChart extends Component {
         datasets: [{
           label: this.props.title,
           data: this.props.data.map((d) => d.value),
-          backgroundColor: colors.chartColors
+          backgroundColor: colors.chartColorsDiversified
         }]
       }
     });

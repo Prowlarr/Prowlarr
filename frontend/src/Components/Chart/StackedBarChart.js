@@ -41,7 +41,7 @@ class StackedBarChart extends Component {
           return {
             label: d.label,
             data: d.data,
-            backgroundColor: colors.chartColors[index]
+            backgroundColor: colors.chartColorsDiversified[index]
           };
         })
       }
@@ -54,7 +54,7 @@ class StackedBarChart extends Component {
       return {
         label: d.label,
         data: d.data,
-        backgroundColor: colors.chartColors[index]
+        backgroundColor: colors.chartColorsDiversified[index]
       };
     });
     this.myChart.update();

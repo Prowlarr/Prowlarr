@@ -5127,6 +5127,10 @@
             "type": "string",
             "nullable": true
           },
+          "instanceName": {
+            "type": "string",
+            "nullable": true
+          },
           "updateAutomatically": {
             "type": "boolean"
           },

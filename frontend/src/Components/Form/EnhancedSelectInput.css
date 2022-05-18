@@ -78,7 +78,7 @@
 
   border: 1px solid var(--inputBorderColor);
   border-radius: 4px;
-  background-color: var(--white);
+  background-color: var(--inputBackgroundColor);
 }
 
 .loading {

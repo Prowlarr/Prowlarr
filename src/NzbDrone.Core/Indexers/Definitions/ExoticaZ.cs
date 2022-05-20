@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Avistaz;
 using NzbDrone.Core.Messaging.Events;
@@ -30,15 +30,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
         }
 
+        public override IParseIndexerResponse GetParser()
+        {
+            return new ExoticaZParser(Capabilities.Categories);
+        }
+
         protected override IndexerCapabilities SetCapabilities()
         {
-            var caps = new IndexerCapabilities
-            {
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       }
-            };
+            var caps = new IndexerCapabilities();
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.XXXx264, "Video Clip");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.XXXPack, "Video Pack");
@@ -50,6 +49,23 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.XXXImageSet, "Books & Magazines");
 
             return caps;
+        }
+    }
+
+    public class ExoticaZParser : AvistazParser
+    {
+        private readonly IndexerCapabilitiesCategories _categories;
+
+        public ExoticaZParser(IndexerCapabilitiesCategories categories)
+        {
+            _categories = categories;
+        }
+
+        protected override List<IndexerCategory> ParseCategories(AvistazRelease row)
+        {
+            var cat = row.Category;
+
+            return _categories.MapTrackerCatToNewznab(cat).ToList();
         }
     }
 }

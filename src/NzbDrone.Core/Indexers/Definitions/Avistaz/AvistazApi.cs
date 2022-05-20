@@ -8,6 +8,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     {
         public string Url { get; set; }
         public string Download { get; set; }
+        public string Category { get; set; }
 
         [JsonProperty(PropertyName = "movie_tv")]
         public AvistazIdInfo MovieTvinfo { get; set; }

@@ -17,6 +17,7 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -182,7 +183,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                             Files = result.FileCount,
                             Grabs = result.Snatches,
-                            PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
+                            PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
                         };
 
                         var category = result.Category;

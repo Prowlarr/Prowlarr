@@ -16,6 +16,7 @@ using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -276,7 +277,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
-                        PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
+                        PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
                         Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
                         Files = result.FileCount,
                         Grabs = result.Snatches,

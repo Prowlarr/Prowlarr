@@ -5,6 +5,7 @@ using System.Net;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Gazelle
@@ -120,7 +121,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         Files = result.FileCount,
                         Grabs = result.Snatches,
-                        PublishDate = DateTimeOffset.FromUnixTimeSeconds(result.GroupTime).UtcDateTime,
+                        PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime((string)result.GroupTime),
                         PosterUrl = posterUrl,
                         DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
                         UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1

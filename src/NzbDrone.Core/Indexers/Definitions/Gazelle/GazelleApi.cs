@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public int TotalSeeders { get; set; }
         public int TotalSnatched { get; set; }
         public long MaxSize { get; set; }
-        public long GroupTime { get; set; }
+        public string GroupTime { get; set; }
         public List<GazelleTorrent> Torrents { get; set; }
         public bool IsFreeLeech { get; set; }
         public bool IsNeutralLeech { get; set; }

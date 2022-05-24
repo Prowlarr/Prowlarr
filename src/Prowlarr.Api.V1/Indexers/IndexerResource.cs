@@ -104,14 +104,14 @@ namespace Prowlarr.Api.V1.Indexers
             return resource;
         }
 
-        public override IndexerDefinition ToModel(IndexerResource resource)
+        public override IndexerDefinition ToModel(IndexerResource resource, IndexerDefinition existingDefinition)
         {
             if (resource == null)
             {
                 return null;
             }
 
-            var definition = base.ToModel(resource);
+            var definition = base.ToModel(resource, existingDefinition);
 
             if (resource.Implementation == nameof(Cardigann))
             {

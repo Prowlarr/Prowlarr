@@ -43,14 +43,14 @@ namespace Prowlarr.Api.V1.Notifications
             return resource;
         }
 
-        public override NotificationDefinition ToModel(NotificationResource resource)
+        public override NotificationDefinition ToModel(NotificationResource resource, NotificationDefinition existingDefinition)
         {
             if (resource == null)
             {
                 return default(NotificationDefinition);
             }
 
-            var definition = base.ToModel(resource);
+            var definition = base.ToModel(resource, existingDefinition);
 
             definition.OnGrab = resource.OnGrab;
             definition.SupportsOnGrab = resource.SupportsOnGrab;

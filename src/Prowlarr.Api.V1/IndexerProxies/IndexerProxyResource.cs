@@ -25,14 +25,14 @@ namespace Prowlarr.Api.V1.IndexerProxies
             return resource;
         }
 
-        public override IndexerProxyDefinition ToModel(IndexerProxyResource resource)
+        public override IndexerProxyDefinition ToModel(IndexerProxyResource resource, IndexerProxyDefinition existingDefinition)
         {
             if (resource == null)
             {
                 return default(IndexerProxyDefinition);
             }
 
-            var definition = base.ToModel(resource);
+            var definition = base.ToModel(resource, existingDefinition);
 
             return definition;
         }

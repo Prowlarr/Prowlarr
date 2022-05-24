@@ -33,14 +33,14 @@ namespace Prowlarr.Api.V1.DownloadClient
             return resource;
         }
 
-        public override DownloadClientDefinition ToModel(DownloadClientResource resource)
+        public override DownloadClientDefinition ToModel(DownloadClientResource resource, DownloadClientDefinition existingDefinition)
         {
             if (resource == null)
             {
                 return null;
             }
 
-            var definition = base.ToModel(resource);
+            var definition = base.ToModel(resource, existingDefinition);
 
             definition.Enable = resource.Enable;
             definition.Protocol = resource.Protocol;

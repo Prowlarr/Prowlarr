@@ -24,14 +24,14 @@ namespace Prowlarr.Api.V1.Applications
             return resource;
         }
 
-        public override ApplicationDefinition ToModel(ApplicationResource resource)
+        public override ApplicationDefinition ToModel(ApplicationResource resource, ApplicationDefinition existingDefinition)
         {
             if (resource == null)
             {
                 return default;
             }
 
-            var definition = base.ToModel(resource);
+            var definition = base.ToModel(resource, existingDefinition);
 
             definition.SyncLevel = resource.SyncLevel;
 

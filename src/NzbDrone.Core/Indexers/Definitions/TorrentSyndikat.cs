@@ -145,12 +145,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 queryCollection.Add("tvdbId", string.Format("{0}", tvdbId));
             }
-            else if (!string.IsNullOrWhiteSpace(searchString))
+            else
             {
-                // Suffix the first occurence of `s01` surrounded by whitespace with *
-                // That way we also search for single episodes in a whole season search
-                var regex = new Regex(@"(^|\s)(s\d{2})(\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                queryCollection.Add("searchstring", regex.Replace(searchString.Trim(), @"$1$2*$3"));
+                if (!string.IsNullOrWhiteSpace(searchString))
+                {
+                    // Suffix the first occurence of `s01` surrounded by whitespace with *
+                    // That way we also search for single episodes in a whole season search
+                    var regex = new Regex(@"(^|\s)(s\d{2})(\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                    queryCollection.Add("searchstring", regex.Replace(searchString.Trim(), @"$1$2*$3"));
+                }
             }
 
             var cats = string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(categories));

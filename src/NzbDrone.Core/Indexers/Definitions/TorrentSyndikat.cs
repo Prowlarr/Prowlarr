@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                                    {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId
                                    },
                 MovieSearchParams = new List<MovieSearchParam>
                                    {
@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int? tvdbId =  null)
         {
             var searchString = term;
             var queryCollection = new NameValueCollection { { "apikey", Settings.ApiKey } };
@@ -140,6 +140,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (imdbId != null)
             {
                 queryCollection.Add("imdbId", imdbId);
+            }
+            else if (tvdbId != null)
+            {
+                queryCollection.Add("tvdbId", string.Format("{0}", tvdbId));
             }
             else if (!string.IsNullOrWhiteSpace(searchString))
             {
@@ -184,7 +188,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.TvdbId != null ? null : string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId, searchCriteria.TvdbId));
 
             return pageableRequests;
         }

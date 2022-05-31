@@ -355,7 +355,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IEnumerable<int> ReleaseTypes { get; set; }
 
         [FieldDefinition(5, Label = "Prefer TVDBId", Type = FieldType.Checkbox,  HelpText = "Only Search TVDBId and ignore Season/Episode parameters")]
-        public bool PreferTvDbId { get; set; }
+        public bool PreferTVDBId { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

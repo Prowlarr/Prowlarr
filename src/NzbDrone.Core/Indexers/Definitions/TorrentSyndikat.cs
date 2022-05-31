@@ -141,19 +141,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 queryCollection.Add("imdbId", imdbId);
             }
-            else if (tvdbId != null)
+            else if (tvdbId != null && (Settings.PreferTvDbId || string.IsNullOrWhiteSpace(searchString)))
             {
                 queryCollection.Add("tvdbId", string.Format("{0}", tvdbId));
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(searchString) && (tvdbId == null || !Settings.PreferTvDbId))
             {
-                if (!string.IsNullOrWhiteSpace(searchString))
-                {
-                    // Suffix the first occurence of `s01` surrounded by whitespace with *
-                    // That way we also search for single episodes in a whole season search
-                    var regex = new Regex(@"(^|\s)(s\d{2})(\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                    queryCollection.Add("searchstring", regex.Replace(searchString.Trim(), @"$1$2*$3"));
-                }
+                // Suffix the first occurence of `s01` surrounded by whitespace with *
+                // That way we also search for single episodes in a whole season search
+                var regex = new Regex(@"(^|\s)(s\d{2})(\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                queryCollection.Add("searchstring", regex.Replace(searchString.Trim(), @"$1$2*$3"));
             }
 
             var cats = string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(categories));
@@ -191,7 +188,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria.TvdbId != null ? null : string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId, searchCriteria.TvdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.ImdbId, searchCriteria.TvdbId));
 
             return pageableRequests;
         }
@@ -356,6 +353,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(4, Label = "Release Types", Type = FieldType.Select, SelectOptions = typeof(TorrentSyndikatReleaseTypes))]
         public IEnumerable<int> ReleaseTypes { get; set; }
+
+        [FieldDefinition(5, Label = "Prefer TvDbIds", Type = FieldType.Checkbox,  HelpText = "When TvDbId is set the searchstring gets omitted")]
+        public bool PreferTvDbId { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

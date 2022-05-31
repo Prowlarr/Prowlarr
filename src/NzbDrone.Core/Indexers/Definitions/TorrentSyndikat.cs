@@ -354,7 +354,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Release Types", Type = FieldType.Select, SelectOptions = typeof(TorrentSyndikatReleaseTypes))]
         public IEnumerable<int> ReleaseTypes { get; set; }
 
-        [FieldDefinition(5, Label = "Prefer TvDbIds", Type = FieldType.Checkbox,  HelpText = "When TvDbId is set the searchstring gets omitted")]
+        [FieldDefinition(5, Label = "Prefer TVDBId", Type = FieldType.Checkbox,  HelpText = "Only Search TVDBId and ignore Season/Episode parameters")]
         public bool PreferTvDbId { get; set; }
 
         public override NzbDroneValidationResult Validate()

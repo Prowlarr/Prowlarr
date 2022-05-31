@@ -4210,44 +4210,6 @@
       }
     },
     "/api/v1/config/ui/{id}": {
-      "get": {
-        "tags": [
-          "UiConfig"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              }
-            }
-          }
-        }
-      },
       "put": {
         "tags": [
           "UiConfig"
@@ -4286,6 +4248,44 @@
             "description": "Success",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UiConfigResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "UiConfig"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UiConfigResource"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UiConfigResource"
+                }
+              },
+              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UiConfigResource"
                 }
@@ -6316,6 +6316,10 @@
           "uiLanguage": {
             "type": "integer",
             "format": "int32"
+          },
+          "theme": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

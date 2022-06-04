@@ -1,26 +1,29 @@
+using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class UserPassTorrentBaseSettings : ITorrentIndexerSettings
+    public class UserPassCaptchaTorrentBaseSettings : ITorrentIndexerSettings
     {
-        public class UserPassBaseSettingsValidator : AbstractValidator<UserPassTorrentBaseSettings>
+        public class UserPassCaptchaBaseSettingsValidator : AbstractValidator<UserPassCaptchaTorrentBaseSettings>
         {
-            public UserPassBaseSettingsValidator()
+            public UserPassCaptchaBaseSettingsValidator()
             {
                 RuleFor(c => c.Username).NotEmpty();
                 RuleFor(c => c.Password).NotEmpty();
             }
         }
 
-        private static readonly UserPassBaseSettingsValidator Validator = new UserPassBaseSettingsValidator();
+        private static readonly UserPassCaptchaBaseSettingsValidator Validator = new UserPassCaptchaBaseSettingsValidator();
 
-        public UserPassTorrentBaseSettings()
+        public UserPassCaptchaTorrentBaseSettings()
         {
             Username = "";
             Password = "";
+            Captcha  = "";
+            ExtraFieldData = new Dictionary<string, object>();
         }
 
         [FieldDefinition(1, Label = "Base Url", HelpText = "Select which baseurl Prowlarr will use for requests to the site", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls")]
@@ -32,11 +35,16 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+        [FieldDefinition(4, Label = "Captcha", HelpText = "Site Captcha", Privacy = PrivacyLevel.Normal, Type = FieldType.Captcha)]
+        public string Captcha { get; set; }
 
         [FieldDefinition(5)]
+        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+
+        [FieldDefinition(6)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
+
+        public Dictionary<string, object> ExtraFieldData { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

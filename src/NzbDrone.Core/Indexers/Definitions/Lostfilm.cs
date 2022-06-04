@@ -56,10 +56,30 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new LostfilmParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger };
         }
 
-        // protected override async Task DoLogin()
-        // {
-        //     UpdateCookies(null, null);
+        protected override async Task DoLogin()
+        {
+            UpdateCookies(null, null);
+            var loginPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl + "login"));
 
+            // UpdateCookies(loginPage.Cookies);
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(loginPage.Content);
+            var qCaptchaImg = document.QuerySelector("img#captcha_pictcha");
+            if (qCaptchaImg != null)
+            {
+                var captchaUrl = Settings.BaseUrl + qCaptchaImg.GetAttribute("src");
+                var captchaImage = await ExecuteAuth(new HttpRequest(captchaUrl));
+                Settings.ExtraFieldData["CAPTCHA"] = captchaImage.Content;
+            }
+
+            // else
+            // {
+                // configData.CaptchaImage.Value = new byte[0];
+            // }
+            // configData.CaptchaCookie.Value = loginPage.Cookies;
+        }
+
+        //     UpdateCookies(null, null);
         //     var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "index.php")
         //     {
         //         LogResponseContent = true,

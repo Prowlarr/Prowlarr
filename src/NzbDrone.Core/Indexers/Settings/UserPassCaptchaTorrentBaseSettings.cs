@@ -4,9 +4,9 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class UserPassCaptchaTorrentBaseSettings : ITorrentIndexerSettings
+    public class UserPassTorrentBaseSettings : ITorrentIndexerSettings
     {
-        public class UserPassBaseSettingsValidator : AbstractValidator<UserPassCaptchaTorrentBaseSettings>
+        public class UserPassBaseSettingsValidator : AbstractValidator<UserPassTorrentBaseSettings>
         {
             public UserPassBaseSettingsValidator()
             {
@@ -17,11 +17,10 @@ namespace NzbDrone.Core.Indexers.Settings
 
         private static readonly UserPassBaseSettingsValidator Validator = new UserPassBaseSettingsValidator();
 
-        public UserPassCaptchaTorrentBaseSettings()
+        public UserPassTorrentBaseSettings()
         {
             Username = "";
             Password = "";
-            Captcha  = "";
         }
 
         [FieldDefinition(1, Label = "Base Url", HelpText = "Select which baseurl Prowlarr will use for requests to the site", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls")]
@@ -33,13 +32,10 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "Captcha", HelpText = "Site Captcha", Privacy = PrivacyLevel.Normal, Type = FieldType.Captcha)]
-        public string Captcha { get; set; }
-
-        [FieldDefinition(5)]
+        [FieldDefinition(4)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
-        [FieldDefinition(6)]
+        [FieldDefinition(5)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public NzbDroneValidationResult Validate()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -60,23 +61,78 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             UpdateCookies(null, null);
             var loginPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl + "login"));
+            UpdateCookies(loginPage.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
 
-            // UpdateCookies(loginPage.Cookies);
-            var parser = new HtmlParser();
-            var document = parser.ParseDocument(loginPage.Content);
-            var qCaptchaImg = document.QuerySelector("img#captcha_pictcha");
-            if (qCaptchaImg != null)
-            {
-                var captchaUrl = Settings.BaseUrl + qCaptchaImg.GetAttribute("src");
-                var captchaImage = await ExecuteAuth(new HttpRequest(captchaUrl));
-                Settings.ExtraFieldData["CAPTCHA"] = captchaImage.Content;
-            }
-
+            // TODO: Finish captcha
+            // var parser = new HtmlParser();
+            // var document = parser.ParseDocument(loginPage.Content);
+            // var qCaptchaImg = document.QuerySelector("img#captcha_pictcha");
+            // if (qCaptchaImg != null)
+            // {
+            //     var captchaUrl = Settings.BaseUrl + qCaptchaImg.GetAttribute("src");
+            //     var captchaImage = await ExecuteAuth(new HttpRequest(captchaUrl));
+            //     Settings.ExtraFieldData["CAPTCHA"] = captchaImage.Content;
+            // }
             // else
             // {
                 // configData.CaptchaImage.Value = new byte[0];
             // }
-            // configData.CaptchaCookie.Value = loginPage.Cookies;
+            if (!Settings.Username.Contains("@"))
+            {
+                throw new IndexerAuthException("Username must be an e-mail address");
+            }
+
+            var data = new Dictionary<string, string>
+            {
+                { "act", "users" },
+                { "type", "login" },
+                { "mail", Settings.Username },
+                { "pass", Settings.Password },
+                { "rem", "1" }
+            };
+
+            if (!string.IsNullOrWhiteSpace(Settings.Captcha))
+            {
+                data.Add("need_captcha", "1");
+                data.Add("captcha", Settings.Captcha);
+            }
+
+            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "ajaxik.php")
+            {
+                LogResponseContent = true,
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
+            };
+            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+            requestBuilder.SetCookies(loginPage.GetCookies());
+            requestBuilder.SetHeader("Content-Type", "application/x-www-form-urlencoded");
+            foreach (var item in data)
+            {
+                requestBuilder.AddFormParameter(item.Key, item.Value);
+            }
+
+            var authLoginRequest = requestBuilder.Build();
+            var response = await ExecuteAuth(authLoginRequest);
+
+            if (response.Content != null && response.Content.Contains("\"success\":true"))
+            {
+                UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+            }
+            else
+            {
+                var errorMessage = response.Content;
+                if (errorMessage.Contains("\"error\":2"))
+                {
+                    errorMessage = "Captcha is incorrect";
+                }
+
+                if (errorMessage.Contains("\"error\":3"))
+                {
+                    errorMessage = "E-mail or password is incorrect";
+                }
+
+                throw new IndexerAuthException(errorMessage);
+            }
         }
 
         //     UpdateCookies(null, null);
@@ -115,16 +171,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         //         throw new IndexerAuthException("Anidub authentication failed. Error: " + errorMessage);
         //     }
         // }
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            if (httpResponse.Content.Contains("href=\"/my\""))
+            {
+                return false;
+            }
 
-        // protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
-        // {
-        //     if (httpResponse.Content.Contains("index.php?action=logout"))
-        //     {
-        //         return false;
-        //     }
+            return true;
+        }
 
-        //     return true;
-        // }
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities

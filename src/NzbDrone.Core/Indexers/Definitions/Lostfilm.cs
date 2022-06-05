@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new LostfilmParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger, Definition = Definition };
+            return new LostfilmParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger, Definition = Definition, Indexer = this };
         }
 
         protected override async Task DoLogin()
@@ -184,19 +184,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new Exception("Lostfilm search not implemented");
             }
 
-            // else
-            // {
-            //     var queryCollection = new NameValueCollection
-            //     {
-            //         // Remove season and episode info from search term cause it breaks search
-            //         { "keywords", Regex.Replace(term, @"(?:[SsEe]?\d{1,4}){1,2}$", "").TrimEnd() },
-            //         { "limit", "20" },
-            //         { "orderby_sort", "entry_date|desc" }
-            //     };
-
-            //     requestUrl = string.Format("{0}/ajax/search_result/P0?{1}", Settings.BaseUrl.TrimEnd('/'), queryCollection.GetQueryString());
-            // }
-            // TODO: Implement searching
             var request = new IndexerRequest(requestUrl, HttpAccept.Html);
             yield return request;
         }
@@ -252,6 +239,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static readonly Regex ParseReleaseDetailsRegex = new Regex("Видео:\\ (?<quality>.+).\\ Размер:\\ (?<size>.+).\\ Перевод", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public IIndexerHttpClient HttpClient { get; set; }
         public ProviderDefinition Definition { get; set; }
+        public Lostfilm Indexer { get; set; }
         public Logger Logger { get; set; }
 
         public LostfilmParser(UserPassCaptchaTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
@@ -404,7 +392,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var url = _settings.BaseUrl + "v_search.php" + "?" + queryCollection.GetQueryString();
 
             // Get redirection page with generated link on it. This link can't be constructed manually as it contains Hash field and hashing algo is unknown.
-            var req = new IndexerRequest(url, HttpAccept.Html);
+            var requestBuilder = new HttpRequestBuilder(url)
+            {
+                AllowAutoRedirect = true,
+            };
+            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+            requestBuilder.SetCookies(Indexer.Cookies);
+            var req = new IndexerRequest(requestBuilder.Build());
             var results = new IndexerResponse(req, HttpClient.ExecuteProxied(req.HttpRequest, Definition));
 
             if (results.Content == null)

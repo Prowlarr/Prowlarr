@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Validation.Paths
             _appFolderInfo = appFolderInfo;
         }
 
-        protected override string GetDefaultMessageTemplate() => "Path cannot be an ancestor of the start up folder";
+        protected override string GetDefaultMessageTemplate() => "Path cannot be {relationship} the start up folder";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
@@ -22,7 +22,24 @@ namespace NzbDrone.Core.Validation.Paths
                 return true;
             }
 
-            return !_appFolderInfo.StartUpFolder.IsParentPath(context.PropertyValue.ToString());
+            var startupFolder = _appFolderInfo.StartUpFolder;
+            var folder = context.PropertyValue.ToString();
+
+            if (startupFolder.PathEquals(folder))
+            {
+                context.MessageFormatter.AppendArgument("relationship", "set to");
+
+                return false;
+            }
+
+            if (startupFolder.IsParentPath(folder))
+            {
+                context.MessageFormatter.AppendArgument("relationship", "child of");
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

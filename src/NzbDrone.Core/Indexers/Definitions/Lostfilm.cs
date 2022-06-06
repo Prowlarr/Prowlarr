@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using FluentValidation;
+using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
@@ -51,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new LostfilmRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new LostfilmRequestGenerator() { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient, Logger = _logger, Definition = Definition, Indexer = this };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -166,33 +168,173 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassCaptchaTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
+        public ProviderDefinition Definition { get; set; }
+        public Lostfilm Indexer { get; set; }
+        public Logger Logger { get; set; }
 
         public LostfilmRequestGenerator()
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        private IList<string> GetSearchPageURLs(string term, int? season, string episode)
         {
-            var requestUrl = string.Empty;
+            var urls = new List<string>();
+            /*
+            Torznab query for some series could contains sanitized title. E.g. "Star Wars: The Clone Wars" will become "Star Wars The Clone Wars".
+            Search API on LostFilm.tv doesn't return anything on such search query so the query should be "morphed" even for "tvsearch" queries.
+            Also the queries to Specials is a union of Series and Episode titles. E.g.: "Breaking Bad - El Camino: A Breaking Bad Movie".
+            The algorythm works in the following way:
+                1. Search with the full SearchTerm. Just for example, let's search for episode by it's name
+                    - {Star Wars The Clone Wars To Catch a Jedi}
+                2. [loop] If none were found, repeat search with SearchTerm reduced by 1 word from the end. Fail search if no words left and no results were obtained
+                    - {Star Wars The Clone Wars To Catch a} Jedi
+                    - {Star Wars The Clone Wars To Catch} a Jedi
+                    - ...
+                    - {Star Wars} The Clone Wars To Catch a Jedi
+                3. When we got few results, try to filter them with the words excluded before
+                    - [Star Wars: The Clone Wars, Star Wars Rebels, Star Wars: Forces of Destiny]
+                        .filterBy(The Clone Wars To Catch a Jedi)
+                4. [loop] Reduce filterTerm by 1 word from the end. Fail search if no words left and no results were obtained
+                        .filterBy(The Clone Wars To Catch a) / Jedi
+                        .filterBy(The Clone Wars To Catch) / a Jedi
+                        ...
+                        .filterBy(The Clone Wars) / To Catch a Jedi
+                5. [loop] Now we know that series we're looking for is called "Star Wars The Clone Wars". Fetch series detail page for it and try to apply remaining words as episode filter, reducing filter by 1 word each time we get no results:
+                    - .episodes().filteredBy(To Catch a Jedi)
+                    - .episodes().filteredBy(To Catch a) / Jedi
+                    - ...
+                    - .episodes() / To Catch a Jedi
+            Test queries:
+                - "Star Wars The Clone Wars To Catch a Jedi"    -> S05E19
+                - "Breaking Bad El Camino A Breaking Bad Movie" -> Special
+                - "The Magicians (2015)"                        -> Year should be ignored
+            */
+
+            // Search query words. Consists of Series keywords that will be used for series search request, and Episode keywords that will be used for episode filtering.
+            var keywords = new List<string>(term.Split(' '));
+
+            // Keywords count related to Series Search.
+            var searchKeywords = keywords.Count;
+
+            // Keywords count related to Series Filter.
+            var serieFilterKeywords = 0;
+
+            // Overall (keywords.count - searchKeywords - serieFilterKeywords) are related to episode filter
+            do
+            {
+                var searchString = string.Join(" ", keywords.Take(searchKeywords));
+                var data = new Dictionary<string, string>
+                {
+                    { "act", "common" },
+                    { "type", "search" },
+                    { "val", searchString }
+                };
+
+                var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "ajaxik.php");
+                foreach (var item in data)
+                {
+                    requestBuilder.AddFormParameter(item.Key, item.Value);
+                }
+
+                requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
+                requestBuilder.SetCookies(Indexer.Cookies);
+                var req = new IndexerRequest(requestBuilder.Build());
+                var response = new IndexerResponse(req, HttpClient.ExecuteProxied(req.HttpRequest, Definition));
+
+                if (response.Content == null)
+                {
+                    continue;
+                }
+
+                var json = JToken.Parse(response.Content);
+                if (json == null || json.Type == JTokenType.Array)
+                {
+                    continue; // Search loop
+                }
+
+                // Protect from {"data":false,"result":"ok"}
+                var jsonData = json["data"];
+                if (jsonData.Type != JTokenType.Object)
+                {
+                    continue; // Search loop
+                }
+
+                var jsonSeries = jsonData["series"];
+                if (jsonSeries == null || !jsonSeries.HasValues)
+                {
+                    continue; // Search loop
+                }
+
+                var series = jsonSeries.ToList();
+
+                // Filter found series
+                if (series.Count() > 1)
+                {
+                    serieFilterKeywords = keywords.Count - searchKeywords;
+
+                    do
+                    {
+                        var serieFilter = string.Join(" ", keywords.GetRange(searchKeywords, serieFilterKeywords));
+                        var filteredSeries = series.Where(s => s["title_orig"].Value<string>().Contains(serieFilter)).ToList();
+
+                        if (filteredSeries.Count() > 0)
+                        {
+                            series = filteredSeries;
+                            break; // Serie Filter loop
+                        }
+                    }
+                    while (--serieFilterKeywords > 0);
+                }
+
+                foreach (var serie in series)
+                {
+                    var link = serie["link"].ToString();
+                    var season_url = (season == null) || (season == 0) ? "/seasons" : "/season_" + season.ToString();
+                    var url = Settings.BaseUrl + link.TrimStart('/') + season_url;
+
+                    if (!string.IsNullOrEmpty(episode))
+                    {
+                        // Fetch single episode releases
+                        // TODO: Add a togglable Quick Path via v_search.php in Indexer Settings
+                        url += "/episode_" + episode;
+                    }
+
+                    urls.Add(url);
+                }
+            }
+            while (--searchKeywords > 0);
+
+            return urls;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int? season, string episode)
+        {
+            var requestUrls = new List<string>();
 
             if (string.IsNullOrWhiteSpace(term))
             {
-                requestUrl = Settings.BaseUrl + "new";
+                requestUrls.Add(Settings.BaseUrl + "new");
             }
             else
             {
-                throw new Exception("Lostfilm search not implemented");
+                requestUrls.AddRange(GetSearchPageURLs(term, season, episode));
             }
 
-            var request = new IndexerRequest(requestUrl, HttpAccept.Html);
-            yield return request;
+            var requests = new List<IndexerRequest>();
+            foreach (var url in requestUrls)
+            {
+                requests.Add(new IndexerRequest(url, HttpAccept.Html));
+            }
+
+            yield return requests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, null, ""));
 
             return pageableRequests;
         }
@@ -201,7 +343,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.Season, searchCriteria.Episode));
 
             return pageableRequests;
         }
@@ -210,7 +352,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, null, ""));
 
             return pageableRequests;
         }
@@ -461,7 +603,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return releases;
         }
 
-        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        private IList<ReleaseInfo> ParseNewResponse(IndexerResponse indexerResponse)
         {
             var releases = new List<ReleaseInfo>();
 
@@ -491,6 +633,24 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return releases.ToArray();
+        }
+
+        private IList<ReleaseInfo> ParseSearchResponse(IndexerResponse indexerResponse)
+        {
+            var releases = new List<ReleaseInfo>();
+            return releases.ToArray();
+        }
+
+        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        {
+            if (indexerResponse.Request.Url.Path == "/new")
+            {
+                return ParseNewResponse(indexerResponse);
+            }
+            else
+            {
+                return ParseSearchResponse(indexerResponse);
+            }
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

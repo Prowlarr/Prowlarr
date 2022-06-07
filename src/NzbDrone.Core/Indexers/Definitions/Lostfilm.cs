@@ -61,6 +61,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new LostfilmParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger, Definition = Definition, Indexer = this };
         }
 
+        public IDictionary<string, string> GetCookiesPublic()
+        {
+            return GetCookies();
+        }
+
         protected override async Task DoLogin()
         {
             UpdateCookies(null, null);
@@ -220,8 +225,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             // Keywords count related to Series Filter.
             var serieFilterKeywords = 0;
 
-            Logger.Info(searchKeywords);
-
             // Overall (keywords.count - searchKeywords - serieFilterKeywords) are related to episode filter
             do
             {
@@ -233,8 +236,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     { "val", searchString }
                 };
 
-                Logger.Info(data);
-
                 var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "ajaxik.php")
                 {
                     Method = HttpMethod.Post
@@ -245,7 +246,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-                requestBuilder.SetCookies(Indexer.Cookies);
+                requestBuilder.SetCookies(Indexer.GetCookiesPublic());
                 var req = new IndexerRequest(requestBuilder.Build());
                 var response = new IndexerResponse(req, HttpClient.ExecuteProxied(req.HttpRequest, Definition));
 
@@ -328,6 +329,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 requestUrls.AddRange(GetSearchPageURLs(term, season, episode));
             }
 
+            Logger.Info(requestUrls.Count());
             foreach (var url in requestUrls)
             {
                 yield return new IndexerRequest(url, HttpAccept.Html);
@@ -541,7 +543,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 AllowAutoRedirect = true,
             };
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-            requestBuilder.SetCookies(Indexer.Cookies);
+            requestBuilder.SetCookies(Indexer.GetCookiesPublic());
             var req = new IndexerRequest(requestBuilder.Build());
             var results = new IndexerResponse(req, HttpClient.ExecuteProxied(req.HttpRequest, Definition));
 

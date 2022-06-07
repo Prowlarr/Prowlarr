@@ -220,6 +220,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             // Keywords count related to Series Filter.
             var serieFilterKeywords = 0;
 
+            Logger.Info(searchKeywords);
+
             // Overall (keywords.count - searchKeywords - serieFilterKeywords) are related to episode filter
             do
             {
@@ -231,7 +233,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     { "val", searchString }
                 };
 
-                var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "ajaxik.php");
+                Logger.Info(data);
+
+                var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "ajaxik.php")
+                {
+                    Method = HttpMethod.Post
+                };
                 foreach (var item in data)
                 {
                     requestBuilder.AddFormParameter(item.Key, item.Value);
@@ -321,13 +328,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 requestUrls.AddRange(GetSearchPageURLs(term, season, episode));
             }
 
-            var requests = new List<IndexerRequest>();
             foreach (var url in requestUrls)
             {
-                requests.Add(new IndexerRequest(url, HttpAccept.Html));
+                yield return new IndexerRequest(url, HttpAccept.Html);
             }
-
-            yield return requests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -335,7 +339,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             var pageableRequests = new IndexerPageableRequestChain();
 
             pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, null, ""));
-
             return pageableRequests;
         }
 
@@ -344,7 +347,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             var pageableRequests = new IndexerPageableRequestChain();
 
             pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.Season, searchCriteria.Episode));
-
             return pageableRequests;
         }
 

@@ -329,7 +329,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 requestUrls.AddRange(GetSearchPageURLs(term, season, episode));
             }
 
-            Logger.Info(requestUrls.Count());
             foreach (var url in requestUrls)
             {
                 yield return new IndexerRequest(url, HttpAccept.Html);
@@ -651,10 +650,18 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 return ParseNewResponse(indexerResponse);
             }
-            else
+
+            if (indexerResponse.Request.Url.Path.Contains("/episode_"))
             {
-                return ParseSearchResponse(indexerResponse);
+                return ParseNewResponse(indexerResponse);
             }
+
+            if (indexerResponse.Request.Url.Path == "/new")
+            {
+                return ParseNewResponse(indexerResponse);
+            }
+
+            return new List<ReleaseInfo>().ToArray();
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

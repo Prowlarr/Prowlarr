@@ -588,8 +588,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             return FollowTrackerRedirection(redirectionUrl, details);
         }
 
-        private IList<TorrentInfo> ParseRelease(IndexerResponse indexerResponse)
+        private IList<ReleaseInfo> ParseEpisodeResponse(IndexerResponse indexerResponse)
         {
+            Logger.Debug("ParsingEpisodeResponse: " + indexerResponse.Request.Url.ToString());
             var releases = new List<TorrentInfo>();
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(indexerResponse.Content);
@@ -625,12 +626,37 @@ namespace NzbDrone.Core.Indexers.Definitions
                     releases.AddRange(episodeReleases);
             }
 
-            return releases;
+            return releases.ToArray();
         }
 
-        private IList<ReleaseInfo> ParseNewResponse(IndexerResponse indexerResponse)
+        private IList<ReleaseInfo> ParseSeasonResponse(IndexerResponse indexerResponse)
         {
-            var releases = new List<ReleaseInfo>();
+            Logger.Debug("ParsingSeasonResponse: " + indexerResponse.Request.Url.ToString());
+            var releases = new List<TorrentInfo>();
+            var parser = new HtmlParser();
+            var document = parser.ParseDocument(indexerResponse.Content);
+            var seasons = document.QuerySelectorAll("div.serie-block");
+            var rowSelector = "table.movie-parts-list > tbody > tr";
+
+            foreach (var season in seasons)
+            {
+                // Could ne null if serie-block is for Extras
+                var seasonButton = season.QuerySelector("div.movie-details-block > div.external-btn");
+
+                var lastEpisode = season.QuerySelector(rowSelector);
+                var dateColumn = lastEpisode.QuerySelector("td.delta");
+                var date = DateFromEpisodeColumn(dateColumn);
+
+                var urlDetails = new TrackerUrlDetails(seasonButton);
+                var seasonReleases = FetchTrackerReleases(urlDetails);
+
+                foreach (var release in seasonReleases)
+                {
+                    release.InfoUrl = indexerResponse.Request.Url.ToString();
+                    release.PublishDate = date;
+                }
+            }
+
             return releases.ToArray();
         }
 
@@ -638,15 +664,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             if (indexerResponse.Request.Url.Path.Contains("/episode_"))
             {
-                return ParseNewResponse(indexerResponse);
+                return ParseEpisodeResponse(indexerResponse);
             }
 
-            if (indexerResponse.Request.Url.Path == "/new")
-            {
-                return ParseNewResponse(indexerResponse);
-            }
-
-            return new List<ReleaseInfo>().ToArray();
+            return ParseSeasonResponse(indexerResponse);
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
@@ -665,14 +686,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             return (start != -1 && end != -1) ? s.Substring(start + startString.Length, end - start - startString.Length) : null;
         }
 
-        // private DateTime DateFromEpisodeColumn(AngleSharp.Dom.IElement dateColumn)
-        // {
-        //     var dateString = dateColumn.QuerySelector("span.small-text")?.TextContent;
+        private DateTime DateFromEpisodeColumn(AngleSharp.Dom.IElement dateColumn)
+        {
+            var dateString = dateColumn.QuerySelector("span.small-text")?.TextContent;
 
-        //     // 'Eng: 23.05.2017' -> '23.05.2017' OR '23.05.2017' -> '23.05.2017'
-        //     dateString = string.IsNullOrEmpty(dateString) ? dateColumn.QuerySelector("span")?.TextContent : dateString.Substring(dateString.IndexOf(":") + 2);
-        //     var date = DateTime.Parse(dateString, new CultureInfo("RU-ru")); // dd.mm.yyyy
-        //     return date;
-        // }
+            // 'Eng: 23.05.2017' -> '23.05.2017' OR '23.05.2017' -> '23.05.2017'
+            dateString = string.IsNullOrEmpty(dateString) ? dateColumn.QuerySelector("span")?.TextContent : dateString.Substring(dateString.IndexOf(":") + 2);
+            var date = DateTime.Parse(dateString, new CultureInfo("RU-ru")); // dd.mm.yyyy
+            return date;
+        }
     }
 }

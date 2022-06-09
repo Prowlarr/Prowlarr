@@ -182,8 +182,29 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        private IList<string> GetSearchPageURLs(string term, int? season, string episode)
+        private IList<string> GetNewReleaseURLs()
         {
+            Logger.Debug("GetNewReleaseURLs");
+            var urls = new List<string>();
+
+            var req = new IndexerRequest(Settings.BaseUrl + "new", HttpAccept.Html);
+            var response = new IndexerResponse(req, HttpClient.ExecuteProxied(req.HttpRequest, Definition));
+
+            var parser = new HtmlParser();
+            var dom = parser.ParseDocument(response.Content);
+            var rows = dom.QuerySelectorAll("div.row");
+            foreach (var r in rows)
+            {
+                var path = r.QuerySelector("a").GetAttribute("href");
+                urls.Add(Settings.BaseUrl + path.TrimStart('/'));
+            }
+
+            return urls;
+        }
+
+        private IList<string> GetSearchReleaseURLs(string term, int? season, string episode)
+        {
+            Logger.Debug("GetSearchReleaseURLs");
             var urls = new List<string>();
             /*
             Torznab query for some series could contains sanitized title. E.g. "Star Wars: The Clone Wars" will become "Star Wars The Clone Wars".
@@ -247,8 +268,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
                 requestBuilder.SetCookies(Indexer.GetCookiesPublic());
-                var req = new IndexerRequest(requestBuilder.Build());
-                var response = new IndexerResponse(req, HttpClient.ExecuteProxied(req.HttpRequest, Definition));
+                var request = new IndexerRequest(requestBuilder.Build());
+                var response = new IndexerResponse(request, HttpClient.ExecuteProxied(request.HttpRequest, Definition));
 
                 if (response.Content == null)
                 {
@@ -322,13 +343,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (string.IsNullOrWhiteSpace(term))
             {
-                requestUrls.Add(Settings.BaseUrl + "new");
+                requestUrls.AddRange(GetNewReleaseURLs());
             }
             else
             {
-                requestUrls.AddRange(GetSearchPageURLs(term, season, episode));
+                requestUrls.AddRange(GetSearchReleaseURLs(term, season, episode));
             }
 
+            Logger.Debug("GetPagedRequests: " + requestUrls.Count.ToString());
             foreach (var url in requestUrls)
             {
                 yield return new IndexerRequest(url, HttpAccept.Html);
@@ -609,48 +631,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         private IList<ReleaseInfo> ParseNewResponse(IndexerResponse indexerResponse)
         {
             var releases = new List<ReleaseInfo>();
-
-            var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
-            var rows = dom.QuerySelectorAll("div.row");
-            foreach (var r in rows)
-            {
-                var link = r.QuerySelector("a").GetAttribute("href");
-                var releaseRequest = new IndexerRequest(_settings.BaseUrl + link.TrimStart('/'), HttpAccept.Html);
-                var releaseResponse = new IndexerResponse(releaseRequest, HttpClient.ExecuteProxied(releaseRequest.HttpRequest, Definition));
-
-                // Throw common http errors here before we try to parse
-                if (releaseResponse.HttpResponse.HasHttpError)
-                {
-                    if ((int)releaseResponse.HttpResponse.StatusCode == 429)
-                    {
-                        throw new TooManyRequestsException(releaseRequest.HttpRequest, releaseResponse.HttpResponse);
-                    }
-                    else
-                    {
-                        throw new IndexerException(releaseResponse, "Http error code: " + releaseResponse.HttpResponse.StatusCode);
-                    }
-                }
-
-                releases.AddRange(ParseRelease(releaseResponse));
-            }
-
-            return releases.ToArray();
-        }
-
-        private IList<ReleaseInfo> ParseSearchResponse(IndexerResponse indexerResponse)
-        {
-            var releases = new List<ReleaseInfo>();
             return releases.ToArray();
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            if (indexerResponse.Request.Url.Path == "/new")
-            {
-                return ParseNewResponse(indexerResponse);
-            }
-
             if (indexerResponse.Request.Url.Path.Contains("/episode_"))
             {
                 return ParseNewResponse(indexerResponse);

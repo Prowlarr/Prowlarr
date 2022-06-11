@@ -975,7 +975,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var search = _definition.Search;
 
-            var mappedCategories = MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
+            var mappedCategories = _categories.MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
             if (mappedCategories.Count == 0)
             {
                 mappedCategories = _defaultCategories;

@@ -451,7 +451,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.Description;
                     break;
                 case "category":
-                    var cats = MapTrackerCatToNewznab(value);
+                    var cats = _categories.MapTrackerCatToNewznab(value);
                     if (cats.Any())
                     {
                         if (release.Categories == null || fieldModifiers.Contains("noappend"))
@@ -467,7 +467,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.Categories.ToString();
                     break;
                 case "categorydesc":
-                    var catsDesc = MapTrackerCatDescToNewznab(value);
+                    var catsDesc = _categories.MapTrackerCatDescToNewznab(value);
                     if (catsDesc.Any())
                     {
                         if (release.Categories == null || fieldModifiers.Contains("noappend"))

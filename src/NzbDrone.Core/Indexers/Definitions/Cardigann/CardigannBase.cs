@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         protected virtual string SiteLink { get; private set; }
 
-        protected readonly List<CategoryMapping> _categoryMapping = new List<CategoryMapping>();
+        protected readonly IndexerCapabilitiesCategories _categories = new IndexerCapabilitiesCategories();
         protected readonly List<string> _defaultCategories = new List<string>();
 
         protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "rageid", "tmdbid", "tvdbid", "poster", "banner", "description" };
@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         continue;
                     }
 
-                    AddCategoryMapping(category.Key, cat);
+                    _categories.AddCategoryMapping(category.Key, cat);
                 }
             }
 
@@ -95,7 +95,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         }
                     }
 
-                    AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
+                    _categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
 
                     if (categorymapping.Default)
                     {
@@ -103,30 +103,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
                 }
             }
-        }
-
-        public void AddCategoryMapping(string trackerCategory, IndexerCategory torznabCategory, string trackerCategoryDesc = null)
-        {
-            _categoryMapping.Add(new CategoryMapping(trackerCategory, trackerCategoryDesc, torznabCategory.Id));
-
-            if (trackerCategoryDesc == null)
-            {
-                return;
-            }
-
-            // create custom cats (1:1 categories) if trackerCategoryDesc is defined
-            // - if trackerCategory is "integer" we use that number to generate custom category id
-            // - if trackerCategory is "string" we compute a hash to generate fixed integer id for the custom category
-            //   the hash is not perfect but it should work in most cases. we can't use sequential numbers because
-            //   categories are updated frequently and the id must be fixed to work in 3rd party apps
-            if (!int.TryParse(trackerCategory, out var trackerCategoryInt))
-            {
-                var hashed = SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(trackerCategory));
-                trackerCategoryInt = BitConverter.ToUInt16(hashed, 0); // id between 0 and 65535 < 100000
-            }
-
-            var customCat = new IndexerCategory(trackerCategoryInt + 100000, trackerCategoryDesc);
-            _categoryMapping.Add(new CategoryMapping(trackerCategory, trackerCategoryDesc, customCat.Id));
         }
 
         protected IElement QuerySelector(IElement element, string selector)
@@ -360,54 +336,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             return variables;
-        }
-
-        protected ICollection<IndexerCategory> MapTrackerCatToNewznab(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return new List<IndexerCategory>();
-            }
-
-            var cats = _categoryMapping
-                       .Where(m =>
-                           !string.IsNullOrWhiteSpace(m.TrackerCategory) &&
-                           string.Equals(m.TrackerCategory, input, StringComparison.InvariantCultureIgnoreCase))
-                       .Select(c => NewznabStandardCategory.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
-                       .ToList();
-            return cats;
-        }
-
-        public List<string> MapTorznabCapsToTrackers(int[] searchCategories, bool mapChildrenCatsToParent = false)
-        {
-            if (searchCategories == null)
-            {
-                return new List<string>();
-            }
-
-            var results = new List<string>();
-
-            results.AddRange(_categoryMapping
-                             .Where(c => searchCategories.Contains(c.NewzNabCategory))
-                             .Select(mapping => mapping.TrackerCategory).Distinct().ToList());
-
-            return results;
-        }
-
-        public ICollection<IndexerCategory> MapTrackerCatDescToNewznab(string trackerCategoryDesc)
-        {
-            if (string.IsNullOrWhiteSpace(trackerCategoryDesc))
-            {
-                return new List<IndexerCategory>();
-            }
-
-            var cats = _categoryMapping
-                .Where(m =>
-                    !string.IsNullOrWhiteSpace(m.TrackerCategoryDesc) &&
-                    string.Equals(m.TrackerCategoryDesc, trackerCategoryDesc, StringComparison.InvariantCultureIgnoreCase))
-                .Select(c => NewznabStandardCategory.AllCats.FirstOrDefault(n => n.Id == c.NewzNabCategory) ?? new IndexerCategory { Id = c.NewzNabCategory })
-                .ToList();
-            return cats;
         }
 
         protected delegate string TemplateTextModifier(string str);

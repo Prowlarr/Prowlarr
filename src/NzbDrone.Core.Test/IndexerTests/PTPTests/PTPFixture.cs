@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
             var torrents = (await Subject.Fetch(new MovieSearchCriteria())).Releases;
 
             torrents.Should().HaveCount(293);
-            torrents.First().Should().BeOfType<PassThePopcornInfo>();
+            torrents.First().Should().BeOfType<TorrentInfo>();
 
             var first = torrents.First() as TorrentInfo;
 

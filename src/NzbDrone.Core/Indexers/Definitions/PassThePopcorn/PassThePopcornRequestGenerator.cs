@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
@@ -37,9 +39,21 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
+            var queryParams = new NameValueCollection
+            {
+                { "action", "advanced" },
+                { "json", "noredirect" },
+                { "searchstr", searchParameters }
+            };
+
+            if (Settings.FreeleechOnly)
+            {
+                queryParams.Add("freetorrent", "1");
+            }
+
             var request =
                 new IndexerRequest(
-                    $"{Settings.BaseUrl.Trim().TrimEnd('/')}/torrents.php?action=advanced&json=noredirect&searchstr={searchParameters}",
+                    $"{Settings.BaseUrl.Trim().TrimEnd('/')}/torrents.php?{queryParams.GetQueryString()}",
                     HttpAccept.Json);
 
             request.HttpRequest.Headers["ApiUser"] = Settings.APIUser;

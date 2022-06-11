@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                     // Only add approved torrents
                     try
                     {
-                        torrentInfos.Add(new PassThePopcornInfo()
+                        torrentInfos.Add(new TorrentInfo()
                         {
                             Guid = string.Format("PassThePopcorn-{0}", id),
                             Title = title,
@@ -104,9 +104,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.UploadTime.ToUniversalTime(),
-                            Golden = torrent.GoldenPopcorn,
-                            Scene = torrent.Scene,
-                            Approved = torrent.Checked,
                             ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
                             IndexerFlags = flags,
                             MinimumRatio = 1,

@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var cat = row.Category;
 
-            return _categories.MapTrackerCatToNewznab(cat).ToList();
+            return cat.SelectMany(c => _categories.MapTrackerCatToNewznab(c.Key)).ToList();
         }
     }
 }

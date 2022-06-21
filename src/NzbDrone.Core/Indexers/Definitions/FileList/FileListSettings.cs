@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Indexers.FileList
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        [FieldDefinition(3, Label = "Passkey", HelpText = "Site Passkey (This is the alphanumeric string in the tracker url shown in your download client)", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passkey { get; set; }
 
         public override NzbDroneValidationResult Validate()

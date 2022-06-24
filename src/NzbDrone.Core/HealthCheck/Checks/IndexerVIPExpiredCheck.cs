@@ -11,11 +11,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
     [CheckOn(typeof(ProviderAddedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
-    public class IndexerVIPCheck : HealthCheckBase
+    public class IndexerVIPExpiredCheck : HealthCheckBase
     {
         private readonly IIndexerFactory _indexerFactory;
 
-        public IndexerVIPCheck(IIndexerFactory indexerFactory, ILocalizationService localizationService)
+        public IndexerVIPExpiredCheck(IIndexerFactory indexerFactory, ILocalizationService localizationService)
             : base(localizationService)
         {
             _indexerFactory = indexerFactory;
@@ -24,7 +24,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
         public override HealthCheck Check()
         {
             var indexers = _indexerFactory.AllProviders(false);
-            var expiringProviders = new List<IIndexer>();
+            var expiredProviders = new List<IIndexer>();
 
             foreach (var provider in indexers)
             {
@@ -43,19 +43,19 @@ namespace NzbDrone.Core.HealthCheck.Checks
                     continue;
                 }
 
-                if (DateTime.Parse(expiration).Between(DateTime.Now, DateTime.Now.AddDays(7)))
+                if (DateTime.Parse(expiration).Before(DateTime.Now))
                 {
-                    expiringProviders.Add(provider);
+                    expiredProviders.Add(provider);
                 }
             }
 
-            if (!expiringProviders.Empty())
+            if (!expiredProviders.Empty())
             {
                 return new HealthCheck(GetType(),
-                HealthCheckResult.Warning,
-                string.Format(_localizationService.GetLocalizedString("IndexerVipCheckExpiringClientMessage"),
-                    string.Join(", ", expiringProviders.Select(v => v.Definition.Name))),
-                "#indexer-vip-expiring");
+                HealthCheckResult.Error,
+                string.Format(_localizationService.GetLocalizedString("IndexerVipCheckExpiredClientMessage"),
+                    string.Join(", ", expiredProviders.Select(v => v.Definition.Name))),
+                "#indexer-vip-expired");
             }
 
             return new HealthCheck(GetType());

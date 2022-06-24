@@ -74,7 +74,7 @@ class PageHeader extends Component {
           <IconButton
             className={styles.donate}
             name={icons.HEART}
-            to="https://opencollective.com/prowlarr"
+            to="https://prowlarr.com/donate"
             size={14}
           />
           <IconButton

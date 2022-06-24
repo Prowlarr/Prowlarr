@@ -1000,7 +1000,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             variables[".Query.Keywords"] = string.Join(" ", keywordTokens);
-            variables[".Keywords"] = ApplyFilters((string)variables[".Query.Keywords"], search.Keywordsfilters);
+            variables[".Keywords"] = ApplyFilters((string)variables[".Query.Keywords"], search.Keywordsfilters, variables);
 
             // TODO: prepare queries first and then send them parallel
             var searchPaths = search.Paths;

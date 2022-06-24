@@ -168,10 +168,11 @@ module.exports = {
   //
   // Popover
 
-  popoverTitleBackgroundColor: '#f7f7f7',
-  popoverTitleBorderColor: '#ebebeb',
+  popoverTitleBackgroundColor: '#424242',
+  popoverTitleBorderColor: '#2a2a2a',
+  popoverBodyBackgroundColor: '#2a2a2a',
   popoverShadowColor: 'rgba(0, 0, 0, 0.2)',
-  popoverArrowBorderColor: '#fff',
+  popoverArrowBorderColor: '#2a2a2a',
 
   popoverTitleBackgroundInverseColor: '#595959',
   popoverTitleBorderInverseColor: '#707070',

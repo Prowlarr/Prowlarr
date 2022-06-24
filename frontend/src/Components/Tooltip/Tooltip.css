@@ -7,7 +7,7 @@
   position: relative;
 
   &.default {
-    background-color: var(--white);
+    background-color: var(--popoverBodyBackgroundColor);
     box-shadow: 0 5px 10px var(--popoverShadowColor);
   }
 

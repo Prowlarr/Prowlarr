@@ -201,6 +201,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerHttpResponse);
 
+            if (jsonResponse.Resource.StatusCode == 0)
+            {
+                throw new IndexerException(indexerResponse, $"Indexer Error: {jsonResponse.Resource.StatusMessage}");
+            }
+
             foreach (var row in jsonResponse.Resource.Results)
             {
                 var details = row.InfoUrl;
@@ -272,6 +277,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDResponse
     {
+        [JsonProperty(PropertyName = "status_code")]
+        public int StatusCode { get; set; }
+
+        [JsonProperty(PropertyName = "status_message")]
+        public string StatusMessage { get; set; }
         public List<BeyondHDTorrent> Results { get; set; }
     }
 

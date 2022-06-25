@@ -1150,15 +1150,15 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@microsoft/signalr@6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.3.tgz#9904efd48cd488e3c1c80930ff9fbb3c9f55895d"
-  integrity sha512-wWGVC2xi8OxNjyir8iQWuyxWHy3Dkakk2Q3VreCE7pDzFAgZ4pId6abJlRPMVIQxkUvUGc8knMW5l3sv2bJ/yw==
+"@microsoft/signalr@6.0.6":
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.6.tgz#6ba53623a64df64a80126694db4e37146647d3fe"
+  integrity sha512-3dTLtgwEXUeE9R/3NZQslh1B2WbppeHVXdnpvSZc7Yz+tP5Yiw3KCVUHwKUVnYmd9/2v3DaI/pvCdihrss49zA==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^1.0.7"
     fetch-cookie "^0.11.0"
-    node-fetch "^2.6.1"
+    node-fetch "^2.6.7"
     ws "^7.4.5"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
@@ -4774,7 +4774,7 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-node-fetch@^2.6.1:
+node-fetch@^2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==

@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="NLog.Targets.Syslog" Version="6.0.3" />
     <PackageReference Include="Npgsql" Version="5.0.11" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
     <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />
@@ -20,7 +20,7 @@
     <PackageReference Include="TinyTwitter" Version="1.1.2" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.1.1" />
     <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.115.5-18" />
-    <PackageReference Include="System.Text.Json" Version="6.0.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.5" />
     <PackageReference Include="MonoTorrent" Version="2.0.5" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
     <PackageReference Include="AngleSharp" Version="0.17.1" />

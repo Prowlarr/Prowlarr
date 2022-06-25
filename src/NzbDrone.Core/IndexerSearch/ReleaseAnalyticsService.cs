@@ -18,11 +18,12 @@ namespace NzbDrone.Core.IndexerSearch
         private readonly IAnalyticsService _analyticsService;
         private readonly Logger _logger;
 
-        public ReleaseAnalyticsService(IHttpClient httpClient, IProwlarrCloudRequestBuilder requestBuilder, IAnalyticsService analyticsService)
+        public ReleaseAnalyticsService(IHttpClient httpClient, IProwlarrCloudRequestBuilder requestBuilder, IAnalyticsService analyticsService, Logger logger)
         {
             _analyticsService = analyticsService;
             _requestBuilder = requestBuilder.Releases;
             _httpClient = httpClient;
+            _logger = logger;
         }
 
         public void HandleAsync(IndexerQueryEvent message)
@@ -43,8 +44,15 @@ namespace NzbDrone.Core.IndexerSearch
                     PublishDate = x.PublishDate
                 });
 
-                request.SetContent(body.ToJson());
-                _httpClient.Post(request);
+                try
+                {
+                    request.SetContent(body.ToJson());
+                    _httpClient.Post(request);
+                }
+                catch
+                {
+                    _logger.Trace("Analytics push failed");
+                }
             }
         }
     }

@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected readonly IndexerCapabilitiesCategories _categories = new IndexerCapabilitiesCategories();
         protected readonly List<string> _defaultCategories = new List<string>();
 
-        protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "rageid", "tmdbid", "tvdbid", "poster", "banner", "description" };
+        protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "rageid", "tmdbid", "tvdbid", "poster", "banner", "description", "doubanid" };
 
         protected static readonly string[] _SupportedLogicFunctions =
         {
@@ -531,6 +531,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var variable = rangeRegexMatches.Groups[1].Value;
                 var prefix = rangeRegexMatches.Groups[2].Value;
                 var postfix = rangeRegexMatches.Groups[3].Value;
+                var hasArrayIndex = prefix.Contains("[*]");
+                var arrayIndex = -1;
+
+                if (hasArrayIndex)
+                {
+                    prefix = prefix.Replace("[*]", "[-1]");
+                }
 
                 foreach (var value in (ICollection<string>)variables[variable])
                 {
@@ -538,6 +545,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     if (modifier != null)
                     {
                         newvalue = modifier(newvalue);
+                    }
+
+                    if (hasArrayIndex)
+                    {
+                        prefix = prefix.Replace("[" + arrayIndex.ToString() + "]", "[" + (arrayIndex + 1).ToString() + "]");
+                        arrayIndex++;
                     }
 
                     expanded += prefix + newvalue + postfix;

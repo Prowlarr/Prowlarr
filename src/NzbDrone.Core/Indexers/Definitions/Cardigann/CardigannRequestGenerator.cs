@@ -91,6 +91,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
             variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
             variables[".Query.TVDBID"] = searchCriteria.TvdbId?.ToString() ?? null;
+            variables[".Query.TMDBID"] = searchCriteria.TmdbId?.ToString() ?? null;
             variables[".Query.TVRageID"] = searchCriteria.RId?.ToString() ?? null;
             variables[".Query.TVMazeID"] = searchCriteria.TvMazeId?.ToString() ?? null;
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;

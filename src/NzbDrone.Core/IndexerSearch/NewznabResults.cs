@@ -98,6 +98,7 @@ namespace NzbDrone.Core.IndexerSearch
                             GetNabElement("imdb", r.ImdbId.ToString("D7"), protocol),
                             GetNabElement("tmdbid", r.TmdbId, protocol),
                             GetNabElement("traktid", r.TraktId, protocol),
+                            GetNabElement("doubanid", r.DoubanId, protocol),
                             GetNabElement("seeders", t.Seeders, protocol),
                             GetNabElement("files", r.Files, protocol),
                             GetNabElement("grabs", r.Grabs, protocol),

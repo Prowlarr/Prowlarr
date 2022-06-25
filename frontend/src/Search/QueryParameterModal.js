@@ -24,6 +24,7 @@ const searchOptions = [
 const seriesTokens = [
   { token: '{ImdbId:tt1234567}', example: 'tt12345' },
   { token: '{TvdbId:12345}', example: '12345' },
+  { token: '{TmdbId:12345}', example: '12345' },
   { token: '{TvMazeId:12345}', example: '54321' },
   { token: '{Season:00}', example: '01' },
   { token: '{Episode:00}', example: '01' }

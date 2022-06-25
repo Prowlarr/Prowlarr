@@ -96,7 +96,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             releaseInfo = base.ProcessItem(item, releaseInfo);
             releaseInfo.ImdbId = GetIntAttribute(item, "imdb");
-            releaseInfo.TmdbId = GetIntAttribute(item, "tmdb");
+            releaseInfo.TmdbId = GetIntAttribute(item, "tmdbid");
             releaseInfo.TvdbId = GetIntAttribute(item, "tvdbid");
             releaseInfo.TvRageId = GetIntAttribute(item, "rageid");
             releaseInfo.Grabs = GetIntAttribute(item, "grabs");

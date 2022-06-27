@@ -338,9 +338,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return variables;
         }
 
-        protected delegate string TemplateTextModifier(string str);
+        public delegate string TemplateTextModifier(string str);
 
-        protected string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)
+        public string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)
         {
             if (variables == null)
             {
@@ -520,7 +520,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             // handle range expression
-            var rangeRegex = new Regex(@"{{\s*range\s*(.+?)\s*}}(.*?){{\.}}(.*?){{end}}");
+            var rangeRegex = new Regex(@"{{\s*range\s*(((?<index>\$.+?),)((\s*(?<element>.+?)\s*(:=)\s*)))?(?<variable>.+?)\s*}}(?<prefix>.*?){{\.}}(?<postfix>.*?){{end}}");
             var rangeRegexMatches = rangeRegex.Match(template);
 
             while (rangeRegexMatches.Success)
@@ -528,16 +528,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var expanded = string.Empty;
 
                 var all = rangeRegexMatches.Groups[0].Value;
-                var variable = rangeRegexMatches.Groups[1].Value;
-                var prefix = rangeRegexMatches.Groups[2].Value;
-                var postfix = rangeRegexMatches.Groups[3].Value;
-                var hasArrayIndex = prefix.Contains("[*]");
-                var arrayIndex = -1;
+                var index = rangeRegexMatches.Groups["index"].Value;
+                var variable = rangeRegexMatches.Groups["variable"].Value;
+                var prefix = rangeRegexMatches.Groups["prefix"].Value;
+                var postfix = rangeRegexMatches.Groups["postfix"].Value;
 
-                if (hasArrayIndex)
-                {
-                    prefix = prefix.Replace("[*]", "[-1]");
-                }
+                var arrayIndex = 0;
+                var indexReplace = "{{" + index + "}}";
 
                 foreach (var value in (ICollection<string>)variables[variable])
                 {
@@ -547,13 +544,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         newvalue = modifier(newvalue);
                     }
 
-                    if (hasArrayIndex)
-                    {
-                        prefix = prefix.Replace("[" + arrayIndex.ToString() + "]", "[" + (arrayIndex + 1).ToString() + "]");
-                        arrayIndex++;
-                    }
+                    var indexValue = arrayIndex++;
 
-                    expanded += prefix + newvalue + postfix;
+                    if (index.IsNotNullOrWhiteSpace())
+                    {
+                        expanded += prefix.Replace(indexReplace, indexValue.ToString()) + newvalue + postfix.Replace(indexReplace, indexValue.ToString());
+                    }
+                    else
+                    {
+                        expanded += prefix + newvalue + postfix;
+                    }
                 }
 
                 template = template.Replace(all, expanded);

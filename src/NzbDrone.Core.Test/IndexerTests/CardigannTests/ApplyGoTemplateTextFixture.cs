@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
@@ -50,6 +47,41 @@ namespace NzbDrone.Core.Test.IndexerTests.CardigannTests
         [TestCase("{{ range $i, $e := .Categories}}&categories[{{$i}}]={{.}}{{end}}", "&categories[0]=tv&categories[1]=movies")]
         [TestCase("{{ range $index, $element := .Categories}}&categories[{{$index}}]={{.}}+postIndex[{{$index}}]{{end}}", "&categories[0]=tv+postIndex[0]&categories[1]=movies+postIndex[1]")]
         public void should_handle_range_statements(string template, string expected)
+        {
+            var result = Subject.ApplyGoTemplateText(template, _variables);
+
+            result.Should().Be(expected);
+        }
+
+        [TestCase("{{ re_replace .Query.Keywords \"[^a-zA-Z0-9]+\" \"%\" }}", "abc%def")]
+        public void should_handle_re_replace_statements(string template, string expected)
+        {
+            _variables[".Query.Keywords"] = string.Join(" ", new List<string> { "abc", "def" });
+
+            var result = Subject.ApplyGoTemplateText(template, _variables);
+
+            result.Should().Be(expected);
+        }
+
+        [TestCase("{{ join .Categories \", \" }}", "tv, movies")]
+        public void should_handle_join_statements(string template, string expected)
+        {
+            var result = Subject.ApplyGoTemplateText(template, _variables);
+
+            result.Should().Be(expected);
+        }
+
+        [TestCase("{{ .Today.Year }}", "2022")]
+        public void should_handle_variables_statements(string template, string expected)
+        {
+            var result = Subject.ApplyGoTemplateText(template, _variables);
+
+            result.Should().Be(expected);
+        }
+
+        [TestCase("{{if .False }}0{{else}}1{{end}}", "1")]
+        [TestCase("{{if .True }}0{{else}}1{{end}}", "0")]
+        public void should_handle_if_statements(string template, string expected)
         {
             var result = Subject.ApplyGoTemplateText(template, _variables);
 

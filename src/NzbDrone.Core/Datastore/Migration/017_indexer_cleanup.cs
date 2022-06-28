@@ -24,7 +24,6 @@ namespace NzbDrone.Core.Datastore.Migration
             Delete.FromTable("Indexers").Row(new { Implementation = "ThePirateBay" });
             Delete.FromTable("Indexers").Row(new { Implementation = "TorrentLeech" });
             Delete.FromTable("Indexers").Row(new { Implementation = "TorrentSeeds" });
-            Delete.FromTable("Indexers").Row(new { Implementation = "TorrentParadiseMI" });
             Delete.FromTable("Indexers").Row(new { Implementation = "YTS" });
 
             //Change settings to shared classes

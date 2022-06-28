@@ -136,6 +136,7 @@ namespace NzbDrone.Core.History
             {
                 history.Data.Add("ImdbId", ((TvSearchCriteria)message.Query).FullImdbId ?? string.Empty);
                 history.Data.Add("TvdbId", ((TvSearchCriteria)message.Query).TvdbId?.ToString() ?? string.Empty);
+                history.Data.Add("TmdbId", ((TvSearchCriteria)message.Query).TmdbId?.ToString() ?? string.Empty);
                 history.Data.Add("TraktId", ((TvSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
                 history.Data.Add("RId", ((TvSearchCriteria)message.Query).RId?.ToString() ?? string.Empty);
                 history.Data.Add("TvMazeId", ((TvSearchCriteria)message.Query).TvMazeId?.ToString() ?? string.Empty);

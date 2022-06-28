@@ -60,7 +60,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (request.SearchPath.Response != null && request.SearchPath.Response.Type.Equals("json"))
             {
-                if (request.SearchPath.Response != null && request.SearchPath.Response.NoResultsMessage != null && (request.SearchPath.Response.NoResultsMessage.Equals(results) || (request.SearchPath.Response.NoResultsMessage == string.Empty && results == string.Empty)))
+                if (request.SearchPath.Response != null &&
+                    request.SearchPath.Response.NoResultsMessage != null &&
+                    ((request.SearchPath.Response.NoResultsMessage != string.Empty && results.Contains(request.SearchPath.Response.NoResultsMessage)) || (request.SearchPath.Response.NoResultsMessage == string.Empty && results == string.Empty)))
                 {
                     return releases;
                 }
@@ -574,6 +576,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var tvdbId = tvdbIdMatch.Groups[1].Value;
                     release.TvdbId = (int)ParseUtil.CoerceLong(tvdbId);
                     value = release.TvdbId.ToString();
+                    break;
+                case "doubanid":
+                    var doubanIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var doubanIDMatch = doubanIDRegEx.Match(value);
+                    var doubanID = doubanIDMatch.Groups[1].Value;
+                    release.DoubanId = (int)ParseUtil.CoerceLong(doubanID);
+                    value = release.DoubanId.ToString();
                     break;
                 case "poster":
                     if (!string.IsNullOrWhiteSpace(value))

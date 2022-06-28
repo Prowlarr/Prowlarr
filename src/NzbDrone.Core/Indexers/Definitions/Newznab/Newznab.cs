@@ -187,7 +187,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
 
                 if (capabilities.TvSearchParams != null &&
-                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
+                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.TmdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
                     new[] { TvSearchParam.Season, TvSearchParam.Ep }.All(v => capabilities.TvSearchParams.Contains(v)))
                 {
                     return null;

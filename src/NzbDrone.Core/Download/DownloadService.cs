@@ -114,6 +114,7 @@ namespace NzbDrone.Core.Download
 
         public async Task<byte[]> DownloadReport(string link, int indexerId, string source, string host, string title)
         {
+            _logger.Trace("Attempting download of {0}", link);
             var url = new Uri(link);
 
             // Limit grabs to 2 per second.

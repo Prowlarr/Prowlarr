@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void SingleOrDefault_should_return_null_on_empty_db()
         {
             Mocker.Resolve<IDatabase>()
-                .OpenConnection().Query<IndexerDefinition>("SELECT * FROM Indexers")
+                .OpenConnection().Query<IndexerDefinition>("SELECT * FROM \"Indexers\"")
                 .SingleOrDefault()
                 .Should()
                 .BeNull();

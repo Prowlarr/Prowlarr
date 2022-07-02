@@ -313,7 +313,20 @@ namespace NzbDrone.Core.Datastore
 
             _sb.Append(" = ANY (");
 
-            Visit(list);
+            // hardcode the integer list if it exists to bypass parameter limit
+            if (item.Type == typeof(int) && TryGetRightValue(list, out var value))
+            {
+                var items = (IEnumerable<int>)value;
+                _sb.Append("('{");
+                _sb.Append(string.Join(", ", items));
+                _sb.Append("}')");
+
+                _gotConcreteValue = true;
+            }
+            else
+            {
+                Visit(list);
+            }
 
             _sb.Append("))");
         }
@@ -324,7 +337,7 @@ namespace NzbDrone.Core.Datastore
 
             Visit(body.Object);
 
-            _sb.Append(" LIKE '%' || ");
+            _sb.Append(" ILIKE '%' || ");
 
             Visit(body.Arguments[0]);
 
@@ -337,7 +350,7 @@ namespace NzbDrone.Core.Datastore
 
             Visit(body.Object);
 
-            _sb.Append(" LIKE ");
+            _sb.Append(" ILIKE ");
 
             Visit(body.Arguments[0]);
 
@@ -350,7 +363,7 @@ namespace NzbDrone.Core.Datastore
 
             Visit(body.Object);
 
-            _sb.Append(" LIKE '%' || ");
+            _sb.Append(" ILIKE '%' || ");
 
             Visit(body.Arguments[0]);
 

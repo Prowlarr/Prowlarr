@@ -167,14 +167,12 @@ namespace NzbDrone.Core.Datastore
                 }
             }
 
-            if (_database.DatabaseType == DatabaseType.SQLite)
-            {
-                return $"INSERT INTO {_table} ({sbColumnList.ToString()}) VALUES ({sbParameterList.ToString()}); SELECT last_insert_rowid() id";
-            }
-            else
+            if (_database.DatabaseType == DatabaseType.PostgreSQL)
             {
                 return $"INSERT INTO \"{_table}\" ({sbColumnList.ToString()}) VALUES ({sbParameterList.ToString()}) RETURNING \"Id\"";
             }
+
+            return $"INSERT INTO {_table} ({sbColumnList.ToString()}) VALUES ({sbParameterList.ToString()}); SELECT last_insert_rowid() id";
         }
 
         private TModel Insert(IDbConnection connection, IDbTransaction transaction, TModel model)

@@ -9,8 +9,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
+using FluentMigrator.Runner.Processors.Postgres;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using NLog;
@@ -23,6 +26,8 @@ using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore.Extensions;
+using NzbDrone.Host;
+using PostgresOptions = NzbDrone.Core.Datastore.PostgresOptions;
 
 namespace NzbDrone.Host
 {
@@ -52,6 +57,7 @@ namespace NzbDrone.Host
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
                 var appMode = GetApplicationMode(startupContext);
+                var config = GetConfiguration(startupContext);
 
                 switch (appMode)
                 {
@@ -80,12 +86,22 @@ namespace NzbDrone.Host
                     // Utility mode
                     default:
                     {
-                        new Container(rules => rules.WithNzbDroneRules())
-                            .AutoAddServices(ASSEMBLIES)
-                            .AddNzbDroneLogger()
-                            .AddStartupContext(startupContext)
-                            .Resolve<UtilityModeRouter>()
-                            .Route(appMode);
+                        new HostBuilder()
+                            .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
+                            .ConfigureContainer<IContainer>(c =>
+                            {
+                                c.AutoAddServices(Bootstrap.ASSEMBLIES)
+                                    .AddNzbDroneLogger()
+                                    .AddDatabase()
+                                    .AddStartupContext(startupContext)
+                                    .Resolve<UtilityModeRouter>()
+                                    .Route(appMode);
+                            })
+                            .ConfigureServices(services =>
+                            {
+                                services.Configure<PostgresOptions>(config.GetSection("Prowlarr:Postgres"));
+                            }).Build();
+
                         break;
                     }
                 }
@@ -134,6 +150,10 @@ namespace NzbDrone.Host
                         .AddNzbDroneLogger()
                         .AddDatabase()
                         .AddStartupContext(context);
+                })
+                .ConfigureServices(services =>
+                {
+                    services.Configure<PostgresOptions>(config.GetSection("Prowlarr:Postgres"));
                 })
                 .ConfigureWebHost(builder =>
                 {
@@ -205,6 +225,7 @@ namespace NzbDrone.Host
             return new ConfigurationBuilder()
                 .AddXmlFile(appFolder.GetConfigPath(), optional: true, reloadOnChange: false)
                 .AddInMemoryCollection(new List<KeyValuePair<string, string>> { new ("dataProtectionFolder", appFolder.GetDataProtectionPath()) })
+                .AddEnvironmentVariables()
                 .Build();
         }
 

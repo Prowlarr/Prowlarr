@@ -146,16 +146,24 @@ namespace NzbDrone.Core.Update
             _logger.Info("Preparing client");
             _diskTransferService.TransferFolder(_appFolderInfo.GetUpdateClientFolder(), updateSandboxFolder, TransferMode.Move);
 
+            var updateClientExePath = _appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime);
+
+            if (!_diskProvider.FileExists(updateClientExePath))
+            {
+                _logger.Warn("Update client {0} does not exist, aborting update.", updateClientExePath);
+                return false;
+            }
+
             // Set executable flag on update app
             if (OsInfo.IsOsx || (OsInfo.IsLinux && PlatformInfo.IsNetCore))
             {
-                _diskProvider.SetPermissions(_appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime), "0755");
+                _diskProvider.SetFilePermissions(updateClientExePath, "755", null);
             }
 
-            _logger.Info("Starting update client {0}", _appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime));
+            _logger.Info("Starting update client {0}", updateClientExePath);
             _logger.ProgressInfo("Prowlarr will restart shortly.");
 
-            _processProvider.Start(_appFolderInfo.GetUpdateClientExePath(updatePackage.Runtime), GetUpdaterArgs(updateSandboxFolder));
+            _processProvider.Start(updateClientExePath, GetUpdaterArgs(updateSandboxFolder));
 
             return true;
         }
@@ -298,14 +306,6 @@ namespace NzbDrone.Core.Update
             // Check if we have to do an application update on startup
             try
             {
-                // Don't do a prestartup update check unless BuiltIn update is enabled
-                if (_configFileProvider.UpdateAutomatically ||
-                    _configFileProvider.UpdateMechanism != UpdateMechanism.BuiltIn ||
-                    _deploymentInfoProvider.IsExternalUpdateMechanism)
-                {
-                    return;
-                }
-
                 var updateMarker = Path.Combine(_appFolderInfo.AppDataFolder, "update_required");
                 if (!_diskProvider.FileExists(updateMarker))
                 {
@@ -313,6 +313,15 @@ namespace NzbDrone.Core.Update
                 }
 
                 _logger.Debug("Post-install update check requested");
+
+                // Don't do a prestartup update check unless BuiltIn update is enabled
+                if (!_configFileProvider.UpdateAutomatically ||
+                    _configFileProvider.UpdateMechanism != UpdateMechanism.BuiltIn ||
+                    _deploymentInfoProvider.IsExternalUpdateMechanism)
+                {
+                    _logger.Debug("Built-in updater disabled, skipping post-install update check");
+                    return;
+                }
 
                 var latestAvailable = _checkUpdateService.AvailableUpdate();
                 if (latestAvailable == null)

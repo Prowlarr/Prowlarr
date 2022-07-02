@@ -61,15 +61,41 @@ namespace NzbDrone.Mono.Disk
         {
         }
 
-        public override void SetPermissions(string path, string mask)
+        public override void SetFilePermissions(string path, string mask, string group)
+        {
+            var permissions = NativeConvert.FromOctalPermissionString(mask);
+
+            SetPermissions(path, mask, group, permissions);
+        }
+
+        public override void SetPermissions(string path, string mask, string group)
+        {
+            var permissions = NativeConvert.FromOctalPermissionString(mask);
+
+            if (File.Exists(path))
+            {
+                permissions = GetFilePermissions(permissions);
+            }
+
+            SetPermissions(path, mask, group, permissions);
+        }
+
+        protected void SetPermissions(string path, string mask, string group, FilePermissions permissions)
         {
             _logger.Debug("Setting permissions: {0} on {1}", mask, path);
 
-            var permissions = NativeConvert.FromOctalPermissionString(mask);
-
-            if (Directory.Exists(path))
+            // Preserve non-access permissions
+            if (Syscall.stat(path, out var curStat) < 0)
             {
-                permissions = GetFolderPermissions(permissions);
+                var error = Stdlib.GetLastError();
+
+                throw new LinuxPermissionsException("Error getting current permissions: " + error);
+            }
+
+            // Preserve existing non-access permissions unless mask is 4 digits
+            if (mask.Length < 4)
+            {
+                permissions |= curStat.st_mode & ~FilePermissions.ACCESSPERMS;
             }
 
             if (Syscall.chmod(path, permissions) < 0)
@@ -78,33 +104,39 @@ namespace NzbDrone.Mono.Disk
 
                 throw new LinuxPermissionsException("Error setting permissions: " + error);
             }
+
+            var groupId = GetGroupId(group);
+
+            if (Syscall.chown(path, unchecked((uint)-1), groupId) < 0)
+            {
+                var error = Stdlib.GetLastError();
+
+                throw new LinuxPermissionsException("Error setting group: " + error);
+            }
         }
 
-        private static FilePermissions GetFolderPermissions(FilePermissions permissions)
+        private static FilePermissions GetFilePermissions(FilePermissions permissions)
         {
-            permissions |= (FilePermissions)((int)(permissions & (FilePermissions.S_IRUSR | FilePermissions.S_IRGRP | FilePermissions.S_IROTH)) >> 2);
+            permissions &= ~(FilePermissions.S_IXUSR | FilePermissions.S_IXGRP | FilePermissions.S_IXOTH);
 
             return permissions;
         }
 
-        public override bool IsValidFilePermissionMask(string mask)
+        public override bool IsValidFolderPermissionMask(string mask)
         {
             try
             {
                 var permissions = NativeConvert.FromOctalPermissionString(mask);
 
-                if ((permissions & (FilePermissions.S_ISUID | FilePermissions.S_ISGID | FilePermissions.S_ISVTX)) != 0)
+                if ((permissions & ~FilePermissions.ACCESSPERMS) != 0)
                 {
+                    // Only allow access permissions
                     return false;
                 }
 
-                if ((permissions & (FilePermissions.S_IXUSR | FilePermissions.S_IXGRP | FilePermissions.S_IXOTH)) != 0)
+                if ((permissions & FilePermissions.S_IRWXU) != FilePermissions.S_IRWXU)
                 {
-                    return false;
-                }
-
-                if ((permissions & (FilePermissions.S_IRUSR | FilePermissions.S_IWUSR)) != (FilePermissions.S_IRUSR | FilePermissions.S_IWUSR))
-                {
+                    // We expect at least full owner permissions (700)
                     return false;
                 }
 
@@ -281,9 +313,7 @@ namespace NzbDrone.Mono.Disk
             // Catch the exception and attempt to handle these edgecases
 
             // Mono 6.x till 6.10 doesn't properly try use rename first.
-            if (move &&
-                ((PlatformInfo.Platform == PlatformType.Mono && PlatformInfo.GetVersion() < new Version(6, 10)) ||
-                 (PlatformInfo.Platform == PlatformType.NetCore)))
+            if (move && (PlatformInfo.Platform == PlatformType.NetCore))
             {
                 if (Syscall.lstat(source, out var sourcestat) == 0 &&
                     Syscall.lstat(destination, out var deststat) != 0 &&
@@ -311,32 +341,7 @@ namespace NzbDrone.Mono.Disk
                 var dstInfo = new FileInfo(destination);
                 var exists = dstInfo.Exists && srcInfo.Exists;
 
-                if (PlatformInfo.Platform == PlatformType.Mono && PlatformInfo.GetVersion() >= new Version(6, 6) &&
-                    exists && dstInfo.Length == 0 && srcInfo.Length != 0)
-                {
-                    // mono >=6.6 bug: zero length file since chmod happens at the start
-                    _logger.Debug("{3} failed to {2} file likely due to known {3} bug, attempting to {2} directly. '{0}' -> '{1}'", source, destination, move ? "move" : "copy", PlatformInfo.PlatformName);
-
-                    try
-                    {
-                        _logger.Trace("Copying content from {0} to {1} ({2} bytes)", source, destination, srcInfo.Length);
-                        using (var srcStream = new FileStream(source, FileMode.Open, FileAccess.Read))
-                        using (var dstStream = new FileStream(destination, FileMode.Create, FileAccess.Write))
-                        {
-                            srcStream.CopyTo(dstStream);
-                        }
-                    }
-                    catch
-                    {
-                        // If it fails again then bail
-                        throw;
-                    }
-                }
-                else if (((PlatformInfo.Platform == PlatformType.Mono &&
-                           PlatformInfo.GetVersion() >= new Version(6, 0) &&
-                           PlatformInfo.GetVersion() < new Version(6, 6)) ||
-                          PlatformInfo.Platform == PlatformType.NetCore) &&
-                         exists && dstInfo.Length == srcInfo.Length)
+                if (PlatformInfo.Platform == PlatformType.NetCore && exists && dstInfo.Length == srcInfo.Length)
                 {
                     // mono 6.0, mono 6.4 and netcore 3.1 bug: full length file since utime and chmod happens at the end
                     _logger.Debug("{3} failed to {2} file likely due to known {3} bug, attempting to {2} directly. '{0}' -> '{1}'", source, destination, move ? "move" : "copy", PlatformInfo.PlatformName);

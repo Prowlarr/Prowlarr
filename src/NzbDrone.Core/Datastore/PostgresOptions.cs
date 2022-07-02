@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+
 namespace NzbDrone.Core.Datastore
 {
     public class PostgresOptions
@@ -8,5 +10,17 @@ namespace NzbDrone.Core.Datastore
         public string Password { get; set; }
         public string MainDb { get; set; }
         public string LogDb { get; set; }
+
+        public static PostgresOptions GetOptions()
+        {
+            var config = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .Build();
+
+            var postgresOptions = new PostgresOptions();
+            config.GetSection("Prowlarr:Postgres").Bind(postgresOptions);
+
+            return postgresOptions;
+        }
     }
 }

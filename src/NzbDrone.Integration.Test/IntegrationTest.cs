@@ -6,8 +6,10 @@ using Npgsql;
 using NUnit.Framework;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
+using NzbDrone.Core.Datastore.Migration.Framework;
 using NzbDrone.Core.Indexers.FileList;
 using NzbDrone.Test.Common;
+using NzbDrone.Test.Common.Datastore;
 using Prowlarr.Http.ClientSchema;
 
 namespace NzbDrone.Integration.Test
@@ -33,17 +35,10 @@ namespace NzbDrone.Integration.Test
         {
             Port = Interlocked.Increment(ref StaticPort);
 
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables("Prowlarr__")
-                .Build();
+            PostgresOptions = PostgresDatabase.GetTestOptions();
 
-            config.GetSection("Postgres").Bind(PostgresOptions);
-
-            if (PostgresOptions.Host != null)
+            if (PostgresOptions?.Host != null)
             {
-                var uid = TestBase.GetUID();
-                PostgresOptions.MainDb = uid + "_main";
-                PostgresOptions.LogDb = uid + "_log";
                 CreatePostgresDb(PostgresOptions);
             }
 
@@ -76,57 +71,22 @@ namespace NzbDrone.Integration.Test
         protected override void StopTestTarget()
         {
             _runner.Kill();
-            if (PostgresOptions.Host != null)
+            if (PostgresOptions?.Host != null)
             {
                 DropPostgresDb(PostgresOptions);
             }
         }
 
-        private void CreatePostgresDb(PostgresOptions options)
+        private static void CreatePostgresDb(PostgresOptions options)
         {
-            var connectionString = GetConnectionString(options);
-            CreateDatabase(connectionString, options.User, options.MainDb);
-            CreateDatabase(connectionString, options.User, options.LogDb);
+            PostgresDatabase.Create(options, MigrationType.Main);
+            PostgresDatabase.Create(options, MigrationType.Log);
         }
 
-        private void CreateDatabase(string connectionString, string user, string db)
+        private static void DropPostgresDb(PostgresOptions options)
         {
-            using var conn = new NpgsqlConnection(connectionString);
-            conn.Open();
-
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = $"CREATE DATABASE \"{db}\" WITH OWNER = {user} ENCODING = 'UTF8' CONNECTION LIMIT = -1;";
-            cmd.ExecuteNonQuery();
-        }
-
-        private void DropPostgresDb(PostgresOptions options)
-        {
-            var connectionString = GetConnectionString(options);
-            DropDatabase(connectionString, options.MainDb);
-            DropDatabase(connectionString, options.LogDb);
-        }
-
-        private void DropDatabase(string connectionString, string db)
-        {
-            using var conn = new NpgsqlConnection(connectionString);
-            conn.Open();
-
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = $"DROP DATABASE \"{db}\";";
-            cmd.ExecuteNonQuery();
-        }
-
-        private string GetConnectionString(PostgresOptions options)
-        {
-            var builder = new NpgsqlConnectionStringBuilder()
-            {
-                Host = options.Host,
-                Port = options.Port,
-                Username = options.User,
-                Password = options.Password
-            };
-
-            return builder.ConnectionString;
+            PostgresDatabase.Drop(options, MigrationType.Main);
+            PostgresDatabase.Drop(options, MigrationType.Log);
         }
     }
 }

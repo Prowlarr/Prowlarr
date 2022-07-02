@@ -8,14 +8,9 @@ using NzbDrone.Test.Common;
 namespace NzbDrone.Mono.Test.DiskProviderTests
 {
     [TestFixture]
-    [Platform("Mono")]
+    [Platform(Exclude = "Win")]
     public class SymbolicLinkResolverFixture : TestBase<SymbolicLinkResolver>
     {
-        public SymbolicLinkResolverFixture()
-        {
-            MonoOnly();
-        }
-
         [Test]
         public void should_follow_nested_symlinks()
         {

@@ -57,6 +57,12 @@ namespace NzbDrone.App.Test
         }
 
         [Test]
+        public void should_be_able_to_resolve_downloadclients()
+        {
+            _container.GetRequiredService<IEnumerable<IDownloadClient>>().Should().NotBeEmpty();
+        }
+
+        [Test]
         public void container_should_inject_itself()
         {
             var factory = _container.GetRequiredService<IServiceFactory>();

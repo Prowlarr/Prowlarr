@@ -28,7 +28,7 @@ namespace NzbDrone.Test.Common
         public PostgresOptions PostgresOptions { get; private set; }
         public int Port { get; private set; }
 
-        public NzbDroneRunner(Logger logger, PostgresOptions postgresOptions, int port = 7878)
+        public NzbDroneRunner(Logger logger, PostgresOptions postgresOptions, int port = 9696)
         {
             _processProvider = new ProcessProvider(logger);
             _restClient = new RestClient($"http://localhost:{port}/api/v1");

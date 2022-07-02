@@ -34,28 +34,4 @@ namespace NzbDrone.Core.Indexers.FileList
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
     }
-
-    public enum FileListCategories
-    {
-        [FieldOption]
-        Movie_SD = 1,
-        [FieldOption]
-        Movie_DVD = 2,
-        [FieldOption]
-        Movie_DVDRO = 3,
-        [FieldOption]
-        Movie_HD = 4,
-        [FieldOption]
-        Movie_HDRO = 19,
-        [FieldOption]
-        Movie_BluRay = 20,
-        [FieldOption]
-        Movie_BluRay4K = 26,
-        [FieldOption]
-        Movie_3D = 25,
-        [FieldOption]
-        Movie_4K = 6,
-        [FieldOption]
-        Xxx = 7
-    }
 }

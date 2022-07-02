@@ -4,8 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="ImpromptuInterface" Version="7.0.1" />
-    <PackageReference Include="NLog" Version="4.7.14" />
+	  <PackageReference Include="ImpromptuInterface" Version="7.0.1" />
+    <PackageReference Include="NLog" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Core\Prowlarr.Core.csproj" />

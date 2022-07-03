@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(4)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
-        public NzbDroneValidationResult Validate()
+        public virtual NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

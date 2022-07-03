@@ -28,11 +28,11 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // Indexer and Download Client Responses
 
         // avistaz response
-        [TestCase(@"""download"":""https:\/\/avistaz.to\/rss\/download\/2b51db35e1910123321025a12b9933d2\/tb51db35e1910123321025a12b9933d2.torrent"",")]
+        [TestCase(@"""download"":""https://avistaz.to/rss/download/2b51db35e1910123321025a12b9933d2/tb51db35e1910123321025a12b9933d2.torrent"",")]
         [TestCase(@",""info_hash"":""2b51db35e1910123321025a12b9933d2"",")]
 
         // animebytes response
-        [TestCase(@"""Link"":""https:\/\/animebytes.tv\/torrent\/994064\/download\/tb51db35e1910123321025a12b9933d2"",")]
+        [TestCase(@"""Link"":""https://animebytes.tv/torrent/994064/download/tb51db35e1910123321025a12b9933d2"",")]
 
         // danish bytes response
         [TestCase(@",""rsskey"":""2b51db35e1910123321025a12b9933d2"",")]
@@ -86,7 +86,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // BroadcastheNet
         [TestCase(@"method: ""getTorrents"", ""params"": [ ""mySecret"",")]
         [TestCase(@"getTorrents(""mySecret"", [asdfasdf], 100, 0)")]
-        [TestCase(@"""DownloadURL"":""https:\/\/broadcasthe.net\/torrents.php?action=download&id=123&authkey=mySecret&torrent_pass=mySecret""")]
+        [TestCase(@"""DownloadURL"":""https://broadcasthe.net/torrents.php?action=download&id=123&authkey=mySecret&torrent_pass=mySecret""")]
 
         // Webhooks - Notifiarr
         [TestCase(@"https://xxx.yyy/api/v1/notification/prowlarr/9pr04sg6-0123-3210-imav-eql2tyu8xyui")]

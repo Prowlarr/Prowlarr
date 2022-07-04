@@ -12,6 +12,7 @@ using DryIoc.Microsoft.DependencyInjection;
 using FluentMigrator.Runner.Processors.Postgres;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -154,6 +155,11 @@ namespace NzbDrone.Host
                 .ConfigureServices(services =>
                 {
                     services.Configure<PostgresOptions>(config.GetSection("Prowlarr:Postgres"));
+                    services.Configure<FormOptions>(x =>
+                    {
+                        //Double the default multipart body length from 128 MB to 256 MB
+                        x.MultipartBodyLengthLimit = 268435456;
+                    });
                 })
                 .ConfigureWebHost(builder =>
                 {

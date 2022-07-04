@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -14,7 +13,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -200,7 +198,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
-            request.HttpRequest.Headers.UserAgent = Settings.UserAgent;
+            if (Settings.UserAgent.IsNotNullOrWhiteSpace())
+            {
+                request.HttpRequest.Headers.UserAgent = Settings.UserAgent;
+            }
 
             yield return request;
         }
@@ -351,32 +352,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class IPTorrentsSettingsValidator : AbstractValidator<IPTorrentsSettings>
-    {
-        public IPTorrentsSettingsValidator()
-        {
-            RuleFor(c => c.UserAgent).NotEmpty();
-            RuleFor(c => c.Cookie).NotEmpty();
-        }
-    }
-
     public class IPTorrentsSettings : CookieTorrentBaseSettings
     {
         public IPTorrentsSettings()
         {
         }
 
-        private static readonly IPTorrentsSettingsValidator Validator = new IPTorrentsSettingsValidator();
-
         [FieldDefinition(2, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
         public string UserAgent { get; set; }
 
         [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
-
-        public override NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
     }
 }

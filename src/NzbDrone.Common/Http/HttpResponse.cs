@@ -64,10 +64,11 @@ namespace NzbDrone.Common.Http
         public bool HasHttpError => (int)StatusCode >= 400;
 
         public bool HasHttpRedirect => StatusCode == HttpStatusCode.Moved ||
-                                       StatusCode == HttpStatusCode.MovedPermanently ||
-                                       StatusCode == HttpStatusCode.RedirectMethod ||
-                                       StatusCode == HttpStatusCode.TemporaryRedirect ||
                                        StatusCode == HttpStatusCode.Found ||
+                                       StatusCode == HttpStatusCode.SeeOther ||
+                                       StatusCode == HttpStatusCode.TemporaryRedirect ||
+                                       StatusCode == HttpStatusCode.MultipleChoices ||
+                                       StatusCode == HttpStatusCode.PermanentRedirect ||
                                        Headers.ContainsKey("Refresh");
 
         public string RedirectUrl
@@ -117,7 +118,7 @@ namespace NzbDrone.Common.Http
 
         public override string ToString()
         {
-            var result = string.Format("Res: [{0}] {1}: {2}.{3}", Request.Method, Request.Url, (int)StatusCode, StatusCode);
+            var result = string.Format("Res: [{0}] {1}: {2}.{3} ({4} bytes)", Request.Method, Request.Url, (int)StatusCode, StatusCode, ResponseData?.Length ?? 0);
 
             if (HasHttpError && Headers.ContentType.IsNotNullOrWhiteSpace() && !Headers.ContentType.Equals("text/html", StringComparison.InvariantCultureIgnoreCase))
             {

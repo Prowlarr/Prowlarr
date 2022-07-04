@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             var request = requestBuilder.Build();
 
-            request.AddBasicAuthentication(Settings.Username, Settings.Password);
+            request.Credentials = new BasicNetworkCredential(Settings.Username, Settings.Password);
 
             try
             {

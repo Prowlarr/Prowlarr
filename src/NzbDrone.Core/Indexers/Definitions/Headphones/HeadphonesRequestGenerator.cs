@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             }
 
             var request = new IndexerRequest(string.Format("{0}&{1}", baseUrl, parameters.GetQueryString()), HttpAccept.Rss);
-            request.HttpRequest.AddBasicAuthentication(Settings.Username, Settings.Password);
+            request.HttpRequest.Credentials = new BasicNetworkCredential(Settings.Username, Settings.Password);
 
             yield return request;
         }

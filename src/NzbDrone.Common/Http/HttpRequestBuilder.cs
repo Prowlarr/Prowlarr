@@ -21,12 +21,13 @@ namespace NzbDrone.Common.Http
         public Dictionary<string, string> Segments { get; private set; }
         public HttpHeader Headers { get; private set; }
         public bool SuppressHttpError { get; set; }
+        public bool LogHttpError { get; set; }
         public bool UseSimplifiedUserAgent { get; set; }
         public bool AllowAutoRedirect { get; set; }
         public bool ConnectionKeepAlive { get; set; }
         public TimeSpan RateLimit { get; set; }
         public bool LogResponseContent { get; set; }
-        public NetworkCredential NetworkCredential { get; set; }
+        public ICredentials NetworkCredential { get; set; }
         public Dictionary<string, string> Cookies { get; private set; }
         public bool StoreRequestCookie { get; set; }
         public bool StoreResponseCookie { get; set; }
@@ -46,6 +47,7 @@ namespace NzbDrone.Common.Http
             Headers = new HttpHeader();
             Cookies = new Dictionary<string, string>();
             FormData = new List<HttpFormData>();
+            LogHttpError = true;
         }
 
         public HttpRequestBuilder(bool useHttps, string host, int port, string urlBase = null)
@@ -106,6 +108,7 @@ namespace NzbDrone.Common.Http
             request.Method = Method;
             request.Encoding = Encoding;
             request.SuppressHttpError = SuppressHttpError;
+            request.LogHttpError = LogHttpError;
             request.UseSimplifiedUserAgent = UseSimplifiedUserAgent;
             request.AllowAutoRedirect = AllowAutoRedirect;
             request.StoreRequestCookie = StoreRequestCookie;
@@ -113,13 +116,7 @@ namespace NzbDrone.Common.Http
             request.ConnectionKeepAlive = ConnectionKeepAlive;
             request.RateLimit = RateLimit;
             request.LogResponseContent = LogResponseContent;
-
-            if (NetworkCredential != null)
-            {
-                var authInfo = NetworkCredential.UserName + ":" + NetworkCredential.Password;
-                authInfo = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(authInfo));
-                request.Headers.Set("Authorization", "Basic " + authInfo);
-            }
+            request.Credentials = NetworkCredential;
 
             foreach (var header in Headers)
             {

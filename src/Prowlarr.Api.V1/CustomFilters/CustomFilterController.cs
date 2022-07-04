@@ -47,9 +47,11 @@ namespace Prowlarr.Api.V1.CustomFilters
         }
 
         [RestDeleteById]
-        public void DeleteCustomResource(int id)
+        public object DeleteCustomResource(int id)
         {
             _customFilterService.Delete(id);
+
+            return new { };
         }
     }
 }

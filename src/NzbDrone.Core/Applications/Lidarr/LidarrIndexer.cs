@@ -28,9 +28,12 @@ namespace NzbDrone.Core.Applications.Lidarr
             }
 
             var baseUrl = (string)Fields.FirstOrDefault(x => x.Name == "baseUrl").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value;
-            var apiPath = (string)Fields.FirstOrDefault(x => x.Name == "apiPath").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var apiKey = (string)Fields.FirstOrDefault(x => x.Name == "apiKey").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiKey").Value;
             var cats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "categories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "categories").Value);
+
+            var apiPath = Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
+            var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
+            var apiPathCompare = apiPath == otherApiPath;
 
             var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
@@ -55,7 +58,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKey && apiPath && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && discographySeedTimeCompare;
+                apiKey && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && discographySeedTimeCompare;
         }
     }
 }

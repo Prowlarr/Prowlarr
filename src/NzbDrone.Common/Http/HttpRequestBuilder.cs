@@ -209,7 +209,7 @@ namespace NzbDrone.Common.Http
                         }
                         else
                         {
-                            summary.AppendFormat("\r\n{0}={1}", formData.Name, Encoding.UTF8.GetString(formData.ContentData));
+                            summary.AppendFormat("\r\n{0}={1}", formData.Name, Encoding.GetString(formData.ContentData));
                         }
                     }
 
@@ -229,9 +229,9 @@ namespace NzbDrone.Common.Http
             }
             else
             {
-                var parameters = FormData.Select(v => string.Format("{0}={1}", v.Name, Uri.EscapeDataString(Encoding.UTF8.GetString(v.ContentData))));
+                var parameters = FormData.Select(v => string.Format("{0}={1}", v.Name, Uri.EscapeDataString(Encoding.GetString(v.ContentData))));
                 var urlencoded = string.Join("&", parameters);
-                var body = Encoding.UTF8.GetBytes(urlencoded);
+                var body = Encoding.GetBytes(urlencoded);
 
                 request.Headers.ContentType = "application/x-www-form-urlencoded";
                 request.SetContent(body);
@@ -403,7 +403,7 @@ namespace NzbDrone.Common.Http
             FormData.Add(new HttpFormData
             {
                 Name = key,
-                ContentData = Encoding.UTF8.GetBytes(Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture))
+                ContentData = Encoding.GetBytes(Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture))
             });
 
             return this;

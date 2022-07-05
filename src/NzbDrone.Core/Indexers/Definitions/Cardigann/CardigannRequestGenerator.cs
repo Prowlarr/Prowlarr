@@ -343,6 +343,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         Encoding = _encoding
                     };
 
+                    requestBuilder.SetCookies(Cookies);
+
                     requestBuilder.Headers.Add("Referer", loginUrl);
 
                     var simpleCaptchaResult = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);

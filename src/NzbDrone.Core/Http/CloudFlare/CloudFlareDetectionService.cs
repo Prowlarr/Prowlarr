@@ -32,8 +32,8 @@ namespace NzbDrone.Core.Http.CloudFlare
             }
 
             // detect Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands
-            if (response.Headers.Vary.ToString() == "Accept-Encoding,User-Agent" &&
-                response.Headers.ContentEncoding.ToString() == "" &&
+            if (response.Headers.Vary == "Accept-Encoding,User-Agent" &&
+                response.Headers.ContentEncoding == "" &&
                 response.Content.ToLower().Contains("ddos"))
             {
                 return true;

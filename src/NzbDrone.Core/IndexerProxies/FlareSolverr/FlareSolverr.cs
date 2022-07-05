@@ -19,7 +19,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 {
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
-        private static readonly HashSet<string> CloudflareServerNames = new HashSet<string> { "cloudflare", "cloudflare-nginx", "ddos-guard" };
         private readonly ICached<string> _cache;
 
         public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService, ICacheManager cacheManager)

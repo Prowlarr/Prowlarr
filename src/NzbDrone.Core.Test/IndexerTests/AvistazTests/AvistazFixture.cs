@@ -60,6 +60,10 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
             torrentInfo.ImdbId.Should().Be(15569106);
             torrentInfo.TmdbId.Should().Be(135144);
             torrentInfo.TvdbId.Should().Be(410548);
+            torrentInfo.Languages.Should().HaveCount(1);
+            torrentInfo.Languages.First().Should().Be("Japanese");
+            torrentInfo.Subs.Should().HaveCount(27);
+            torrentInfo.Subs.First().Should().Be("Arabic");
         }
     }
 }

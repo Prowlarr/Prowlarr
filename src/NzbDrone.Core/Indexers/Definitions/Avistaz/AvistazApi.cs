@@ -40,6 +40,14 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [JsonProperty(PropertyName = "video_quality")]
         public string VideoQuality { get; set; }
         public string Type { get; set; }
+        public List<AvistazLanguage> Audio { get; set; }
+        public List<AvistazLanguage> Subtitle { get; set; }
+    }
+
+    public class AvistazLanguage
+    {
+        public int Id { get; set; }
+        public string Language { get; set; }
     }
 
     public class AvistazResponse

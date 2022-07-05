@@ -66,6 +66,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     UploadVolumeFactor = row.UploadMultiply,
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800, // 48 hours
+                    Languages = row.Audio?.Select(x => x.Language).ToList() ?? new List<string>(),
+                    Subs = row.Subtitle?.Select(x => x.Language).ToList() ?? new List<string>()
                 };
 
                 if (row.MovieTvinfo != null)

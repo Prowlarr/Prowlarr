@@ -13,6 +13,8 @@ namespace NzbDrone.Core.Parser.Model
         {
             IndexerFlags = new List<IndexerFlag>();
             Categories = new List<IndexerCategory>();
+            Languages = new List<string>();
+            Subs = new List<string>();
         }
 
         public string Guid { get; set; }
@@ -49,8 +51,8 @@ namespace NzbDrone.Core.Parser.Model
         public string Codec { get; set; }
         public string Resolution { get; set; }
         public ICollection<string> Genres { get; set; }
-        public ICollection<Language> Languages { get; set; }
-        public ICollection<Language> Subs { get; set; }
+        public ICollection<string> Languages { get; set; }
+        public ICollection<string> Subs { get; set; }
         public ICollection<IndexerCategory> Categories { get; set; }
         public ICollection<IndexerFlag> IndexerFlags { get; set; }
 

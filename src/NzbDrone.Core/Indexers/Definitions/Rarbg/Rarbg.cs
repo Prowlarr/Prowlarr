@@ -101,29 +101,12 @@ namespace NzbDrone.Core.Indexers.Rarbg
             {
                 Settings.Validate().Filter("BaseUrl").ThrowOnError();
 
-                try
-                {
-                    var request = new HttpRequestBuilder(Settings.BaseUrl.Trim('/'))
+                var request = new HttpRequestBuilder(Settings.BaseUrl.Trim('/'))
                            .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}")
                            .Accept(HttpAccept.Json)
                            .Build();
 
-                    _httpClient.Get(request);
-                }
-                catch (CloudFlareCaptchaException ex)
-                {
-                    return new
-                    {
-                        captchaRequest = new
-                        {
-                            host = ex.CaptchaRequest.Host,
-                            ray = ex.CaptchaRequest.Ray,
-                            siteKey = ex.CaptchaRequest.SiteKey,
-                            secretToken = ex.CaptchaRequest.SecretToken,
-                            responseUrl = ex.CaptchaRequest.ResponseUrl.FullUri,
-                        }
-                    };
-                }
+                _httpClient.Get(request);
 
                 return new
                 {

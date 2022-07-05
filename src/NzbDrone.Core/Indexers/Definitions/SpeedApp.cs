@@ -154,7 +154,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     throw new ReleaseUnavailableException("Downloading torrent failed", ex);
                 }
 
-                if ((int)ex.Response.StatusCode == 429)
+                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
                 }

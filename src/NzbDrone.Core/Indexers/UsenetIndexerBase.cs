@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Indexers
                     throw new ReleaseUnavailableException("Downloading nzb failed", ex);
                 }
 
-                if ((int)ex.Response.StatusCode == 429)
+                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
                 }

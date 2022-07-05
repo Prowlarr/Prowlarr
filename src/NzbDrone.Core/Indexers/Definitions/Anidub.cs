@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -493,7 +494,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Throw common http errors here before we try to parse
                 if (releaseResponse.HttpResponse.HasHttpError)
                 {
-                    if ((int)releaseResponse.HttpResponse.StatusCode == 429)
+                    if (releaseResponse.HttpResponse.StatusCode == HttpStatusCode.TooManyRequests)
                     {
                         throw new TooManyRequestsException(releaseRequest.HttpRequest, releaseResponse.HttpResponse);
                     }

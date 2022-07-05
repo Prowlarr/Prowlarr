@@ -118,7 +118,7 @@ namespace NzbDrone.Common.Http
                     _logger.Warn("HTTP Error - {0}", response);
                 }
 
-                if ((int)response.StatusCode == 429)
+                if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     throw new TooManyRequestsException(request, response);
                 }

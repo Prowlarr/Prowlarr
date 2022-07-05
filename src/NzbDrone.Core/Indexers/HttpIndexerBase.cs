@@ -232,7 +232,7 @@ namespace NzbDrone.Core.Indexers
                     _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                 }
 
-                _logger.Warn("API Request Limit reached for {0}", this);
+                _logger.Warn("Request Limit reached for {0}", this);
             }
             catch (HttpException ex)
             {
@@ -251,19 +251,12 @@ namespace NzbDrone.Core.Indexers
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn("Invalid Credentials for {0} {1}", this, url);
             }
-            catch (CloudFlareCaptchaException ex)
+            catch (CloudFlareProtectionException ex)
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 ex.WithData("FeedUrl", url);
-                if (ex.IsExpired)
-                {
-                    _logger.Error(ex, "Expired CAPTCHA token for {0}, please refresh in indexer settings.", this);
-                }
-                else
-                {
-                    _logger.Error(ex, "CAPTCHA token required for {0}, check indexer settings.", this);
-                }
+                _logger.Error(ex, "Cloudflare protection detected for {0}, Flaresolverr may be required.", this);
             }
             catch (IndexerException ex)
             {
@@ -399,10 +392,15 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn("HTTP Error - {0}", response);
 
-                if ((int)response.StatusCode == 429)
+                if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     throw new TooManyRequestsException(request.HttpRequest, response);
                 }
+            }
+
+            if (CloudFlareDetectionService.IsCloudflareProtected(response))
+            {
+                throw new CloudFlareProtectionException(response);
             }
 
             UpdateCookies(Cookies, DateTime.Now + TimeSpan.FromDays(30));
@@ -471,16 +469,9 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn("Request limit reached: " + ex.Message);
             }
-            catch (CloudFlareCaptchaException ex)
+            catch (CloudFlareProtectionException ex)
             {
-                if (ex.IsExpired)
-                {
-                    return new ValidationFailure("CaptchaToken", "CloudFlare CAPTCHA token expired, please Refresh.");
-                }
-                else
-                {
-                    return new ValidationFailure("CaptchaToken", "Site protected by CloudFlare CAPTCHA. Valid CAPTCHA token required.");
-                }
+                return new ValidationFailure(string.Empty, ex.Message);
             }
             catch (UnsupportedFeedException ex)
             {

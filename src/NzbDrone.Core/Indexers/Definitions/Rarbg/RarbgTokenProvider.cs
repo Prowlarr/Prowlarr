@@ -36,12 +36,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
                         .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}")
                         .Accept(HttpAccept.Json);
 
-                    if (settings.CaptchaToken.IsNotNullOrWhiteSpace())
-                    {
-                        requestBuilder.UseSimplifiedUserAgent = true;
-                        requestBuilder.SetCookie("cf_clearance", settings.CaptchaToken);
-                    }
-
                     var response = _httpClient.Get<JObject>(requestBuilder.Build());
 
                     return response.Resource["token"].ToString();

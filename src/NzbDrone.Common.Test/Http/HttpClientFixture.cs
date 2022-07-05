@@ -67,7 +67,7 @@ namespace NzbDrone.Common.Test.Http
 
                 res = _httpClient.GetAsync($"https://{site}/status/429").GetAwaiter().GetResult();
 
-                if (res == null || res.StatusCode != (HttpStatusCode)429)
+                if (res == null || res.StatusCode != HttpStatusCode.TooManyRequests)
                 {
                     return false;
                 }

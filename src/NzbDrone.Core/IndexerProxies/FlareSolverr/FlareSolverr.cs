@@ -11,6 +11,7 @@ using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.Validation;
 
@@ -45,7 +46,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         public override HttpResponse PostResponse(HttpResponse response)
         {
-            if (!IsCloudflareProtected(response))
+            if (!CloudFlareDetectionService.IsCloudflareProtected(response))
             {
                 _logger.Debug("CF Protection not detected, returning original response");
                 return response;
@@ -53,14 +54,12 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             var flaresolverrResponse = _httpClient.Execute(GenerateFlareSolverrRequest(response.Request));
 
-            FlareSolverrResponse result = null;
-
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
                 throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
             }
 
-            result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
+            var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
 
             var newRequest = response.Request;
 
@@ -74,31 +73,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;
-        }
-
-        private static bool IsCloudflareProtected(HttpResponse response)
-        {
-            if (!response.Headers.Any(i => i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower())))
-            {
-                return false;
-            }
-
-            // detect CloudFlare and DDoS-GUARD
-            if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
-                response.StatusCode.Equals(HttpStatusCode.Forbidden))
-            {
-                return true; // Defected CloudFlare and DDoS-GUARD
-            }
-
-            // detect Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands
-            if (response.Headers.Vary.ToString() == "Accept-Encoding,User-Agent" &&
-                response.Headers.ContentEncoding.ToString() == "" &&
-                response.Content.ToLower().Contains("ddos"))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private void InjectCookies(HttpRequest request, FlareSolverrResponse flareSolverrResponse)

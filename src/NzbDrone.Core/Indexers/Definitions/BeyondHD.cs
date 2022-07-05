@@ -111,7 +111,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var request = new HttpRequest(searchUrl, HttpAccept.Json);
 
-            request.Headers.Add("Content-type", "application/json");
+            request.Headers.ContentType = "application/json";
             request.Method = HttpMethod.Post;
             request.SetContent(body.ToJson());
 

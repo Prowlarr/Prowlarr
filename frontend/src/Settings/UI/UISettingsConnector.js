@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { clearPendingChanges } from 'Store/Actions/baseActions';
+import { fetchLocalizationOptions } from 'Store/Actions/localizationActions';
 import { fetchUISettings, saveUISettings, setUISettingsValue } from 'Store/Actions/settingsActions';
 import createSettingsSectionSelector from 'Store/Selectors/createSettingsSectionSelector';
 import UISettings from './UISettings';
@@ -11,18 +12,19 @@ const SECTION = 'ui';
 
 function createLanguagesSelector() {
   return createSelector(
-    (state) => state.settings.languages,
-    (languages) => {
-      const items = languages.items;
-      const filterItems = ['Any', 'Unknown'];
+    (state) => state.localization,
+    (localization) => {
+      console.log(localization);
+
+      const items = localization.items;
 
       if (!items) {
         return [];
       }
 
-      const newItems = items.filter((lang) => !filterItems.includes(lang.name)).map((item) => {
+      const newItems = items.filter((lang) => !items.includes(lang.name)).map((item) => {
         return {
-          key: item.id,
+          key: item.value,
           value: item.name
         };
       });
@@ -51,6 +53,7 @@ const mapDispatchToProps = {
   setUISettingsValue,
   saveUISettings,
   fetchUISettings,
+  fetchLocalizationOptions,
   clearPendingChanges
 };
 
@@ -61,6 +64,7 @@ class UISettingsConnector extends Component {
 
   componentDidMount() {
     this.props.fetchUISettings();
+    this.props.fetchLocalizationOptions();
   }
 
   componentWillUnmount() {
@@ -96,6 +100,7 @@ UISettingsConnector.propTypes = {
   setUISettingsValue: PropTypes.func.isRequired,
   saveUISettings: PropTypes.func.isRequired,
   fetchUISettings: PropTypes.func.isRequired,
+  fetchLocalizationOptions: PropTypes.func.isRequired,
   clearPendingChanges: PropTypes.func.isRequired
 };
 

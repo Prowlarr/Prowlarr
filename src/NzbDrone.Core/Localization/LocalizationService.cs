@@ -9,7 +9,6 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Languages;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 
@@ -20,6 +19,7 @@ namespace NzbDrone.Core.Localization
         Dictionary<string, string> GetLocalizationDictionary();
         string GetLocalizedString(string phrase);
         string GetLocalizedString(string phrase, string language);
+        IEnumerable<LocalizationOption> GetLocalizationOptions();
     }
 
     public class LocalizationService : ILocalizationService, IHandleAsync<ConfigSavedEvent>
@@ -45,14 +45,14 @@ namespace NzbDrone.Core.Localization
 
         public Dictionary<string, string> GetLocalizationDictionary()
         {
-            var language = GetSetLanguageFileName();
+            var language = _configService.UILanguage;
 
             return GetLocalizationDictionary(language);
         }
 
         public string GetLocalizedString(string phrase)
         {
-            var language = GetSetLanguageFileName();
+            var language = _configService.UILanguage;
 
             return GetLocalizedString(phrase, language);
         }
@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Localization
 
             if (language.IsNullOrWhiteSpace())
             {
-                language = GetSetLanguageFileName();
+                language = _configService.UILanguage;
             }
 
             if (language == null)
@@ -84,17 +84,44 @@ namespace NzbDrone.Core.Localization
             return phrase;
         }
 
-        private string GetSetLanguageFileName()
+        public IEnumerable<LocalizationOption> GetLocalizationOptions()
         {
-            var isoLanguage = IsoLanguages.Get((Language)_configService.UILanguage);
-            var language = isoLanguage.TwoLetterCode;
-
-            if (isoLanguage.CountryCode.IsNotNullOrWhiteSpace())
-            {
-                language = string.Format("{0}_{1}", language, isoLanguage.CountryCode);
-            }
-
-            return language;
+            yield return new LocalizationOption("العربية", "ar");
+            yield return new LocalizationOption("Български", "bg");
+            yield return new LocalizationOption("বাংলা (বাংলাদেশ)", "bn");
+            yield return new LocalizationOption("Català", "ca");
+            yield return new LocalizationOption("Čeština", "cs");
+            yield return new LocalizationOption("Dansk", "da");
+            yield return new LocalizationOption("Deutsch", "de");
+            yield return new LocalizationOption("English", "en");
+            yield return new LocalizationOption("Ελληνικά", "el");
+            yield return new LocalizationOption("Español", "es");
+            yield return new LocalizationOption("فارسی", "fa");
+            yield return new LocalizationOption("Suomi", "fi");
+            yield return new LocalizationOption("Français", "fr");
+            yield return new LocalizationOption("עִבְרִית", "he");
+            yield return new LocalizationOption("हिन्दी", "hi");
+            yield return new LocalizationOption("Magyar", "hu");
+            yield return new LocalizationOption("Íslenska", "is");
+            yield return new LocalizationOption("Italiano", "it");
+            yield return new LocalizationOption("日本語", "ja");
+            yield return new LocalizationOption("한국어", "ko");
+            yield return new LocalizationOption("Lietuvių", "lt");
+            yield return new LocalizationOption("Norsk bokmål", "nb_NO");
+            yield return new LocalizationOption("Nederlands", "nl");
+            yield return new LocalizationOption("Polski", "pl");
+            yield return new LocalizationOption("Português", "pt");
+            yield return new LocalizationOption("Português (Brasil)", "pt_BR");
+            yield return new LocalizationOption("Românește", "ro");
+            yield return new LocalizationOption("Русский", "ru");
+            yield return new LocalizationOption("Slovenčina", "sk");
+            yield return new LocalizationOption("Svenska", "sv");
+            yield return new LocalizationOption("ภาษาไทย", "th");
+            yield return new LocalizationOption("Türkçe", "tr");
+            yield return new LocalizationOption("Українська", "uk");
+            yield return new LocalizationOption("Tiếng Việt", "vi");
+            yield return new LocalizationOption("汉语 (简化字)", "zh_CN");
+            yield return new LocalizationOption("漢語 (繁体字)", "zh_TW");
         }
 
         private Dictionary<string, string> GetLocalizationDictionary(string language)

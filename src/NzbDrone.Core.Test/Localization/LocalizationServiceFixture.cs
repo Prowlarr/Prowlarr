@@ -3,7 +3,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Languages;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.Test.Framework;
 using NzbDrone.Test.Common;
@@ -16,7 +15,7 @@ namespace NzbDrone.Core.Test.Localization
         [SetUp]
         public void Setup()
         {
-            Mocker.GetMock<IConfigService>().Setup(m => m.UILanguage).Returns((int)Language.English);
+            Mocker.GetMock<IConfigService>().Setup(m => m.UILanguage).Returns("en");
 
             Mocker.GetMock<IAppFolderInfo>().Setup(m => m.StartUpFolder).Returns(TestContext.CurrentContext.TestDirectory);
         }

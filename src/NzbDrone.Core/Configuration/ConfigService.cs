@@ -6,7 +6,6 @@ using NLog;
 using NzbDrone.Common.EnsureThat;
 using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Configuration.Events;
-using NzbDrone.Core.Languages;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Security;
 
@@ -139,9 +138,9 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("EnableColorImpairedMode", value); }
         }
 
-        public int UILanguage
+        public string UILanguage
         {
-            get { return GetValueInt("UILanguage", (int)Language.English); }
+            get { return GetValue("UILanguage", "en"); }
 
             set { SetValue("UILanguage", value); }
         }

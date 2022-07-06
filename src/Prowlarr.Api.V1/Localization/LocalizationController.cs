@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Serializer;
@@ -25,6 +26,13 @@ namespace Prowlarr.Api.V1.Localization
         public IActionResult GetLocalizationDictionary()
         {
             return Json(_localizationService.GetLocalizationDictionary().ToResource(), _serializerSettings);
+        }
+
+        [HttpGet("Options")]
+        [Produces("application/json")]
+        public ActionResult<IEnumerable<LocalizationOption>> GetLocalizationOptions()
+        {
+            return Ok(_localizationService.GetLocalizationOptions());
         }
     }
 }

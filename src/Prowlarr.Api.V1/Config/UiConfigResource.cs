@@ -16,7 +16,7 @@ namespace Prowlarr.Api.V1.Config
         public bool ShowRelativeDates { get; set; }
 
         public bool EnableColorImpairedMode { get; set; }
-        public int UILanguage { get; set; }
+        public string UILanguage { get; set; }
         public string Theme { get; set; }
     }
 

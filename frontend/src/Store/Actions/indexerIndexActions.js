@@ -36,7 +36,7 @@ export const defaultState = {
   columns: [
     {
       name: 'select',
-      columnLabel: 'Select',
+      columnLabel: translate('Select'),
       isSortable: false,
       isVisible: true,
       isModifiable: false,
@@ -51,7 +51,7 @@ export const defaultState = {
     },
     {
       name: 'sortName',
-      label: 'Indexer Name',
+      label: translate('IndexerName'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
@@ -88,7 +88,7 @@ export const defaultState = {
     },
     {
       name: 'capabilities',
-      label: 'Categories',
+      label: translate('Categories'),
       isSortable: false,
       isVisible: true
     },

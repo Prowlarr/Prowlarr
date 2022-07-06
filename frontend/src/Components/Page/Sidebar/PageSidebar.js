@@ -20,9 +20,9 @@ const SIDEBAR_WIDTH = parseInt(dimensions.sidebarWidth);
 const links = [
   {
     iconName: icons.MOVIE_CONTINUING,
-    title: 'Indexers',
+    title: translate('Indexers'),
     to: '/',
-    alias: '/movies',
+    alias: '/indexers',
     children: [
       {
         title: translate('Stats'),
@@ -33,13 +33,13 @@ const links = [
 
   {
     iconName: icons.SEARCH,
-    title: 'Search',
+    title: translate('Search'),
     to: '/search'
   },
 
   {
     iconName: icons.ACTIVITY,
-    title: 'History',
+    title: translate('History'),
     to: '/history'
   },
 

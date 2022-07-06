@@ -36,31 +36,31 @@ export const defaultState = {
     },
     {
       name: 'indexer',
-      label: 'Indexer',
+      label: translate('Indexer'),
       isSortable: false,
       isVisible: true
     },
     {
       name: 'query',
-      label: 'Query',
+      label: translate('Query'),
       isSortable: false,
       isVisible: true
     },
     {
       name: 'parameters',
-      label: 'Parameters',
+      label: translate('Parameters'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'grabTitle',
-      label: 'Grab Title',
+      label: translate('Grab Title'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'categories',
-      label: 'Categories',
+      label: translate('Categories'),
       isSortable: false,
       isVisible: true
     },
@@ -72,13 +72,13 @@ export const defaultState = {
     },
     {
       name: 'source',
-      label: 'Source',
+      label: translate('Source'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'elapsedTime',
-      label: 'Elapsed Time',
+      label: translate('Elapsed Time'),
       isSortable: false,
       isVisible: true
     },

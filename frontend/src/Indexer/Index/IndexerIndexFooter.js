@@ -35,21 +35,21 @@ class IndexerIndexFooter extends PureComponent {
           <div className={styles.legendItem}>
             <div className={styles.enabled} />
             <div>
-              Enabled
+              {translate('Enabled')}
             </div>
           </div>
 
           <div className={styles.legendItem}>
             <div className={styles.redirected} />
             <div>
-              Enabled, Redirected
+              {translate('EnabledRedirected')}
             </div>
           </div>
 
           <div className={styles.legendItem}>
             <div className={styles.disabled} />
             <div>
-              Disabled
+              {translate('Disabled')}
             </div>
           </div>
 
@@ -60,7 +60,7 @@ class IndexerIndexFooter extends PureComponent {
             )}
             />
             <div>
-              Error
+              {translate('Error')}
             </div>
           </div>
         </div>

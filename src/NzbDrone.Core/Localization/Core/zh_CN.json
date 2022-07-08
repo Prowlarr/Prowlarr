@@ -446,5 +446,7 @@
     "EditSyncProfile": "编辑同步配置文件",
     "SyncProfile": "同步配置文件",
     "MinimumSeeders": "最少播种量",
-    "MinimumSeedersHelpText": "用于索引器抓取的应用程序所需的最小播种量"
+    "MinimumSeedersHelpText": "用于索引器抓取的应用程序所需的最小播种量",
+    "InstanceName": "中文",
+    "InstanceNameHelpText": "选项卡及日志应用名称"
 }

@@ -446,5 +446,8 @@
     "SyncProfiles": "Profili Sincronizzazione",
     "AddSyncProfile": "Aggiungi Profilo di Sincronizzazione",
     "EditSyncProfile": "Modifica Profilo di Sincronizzazione",
-    "MinimumSeeders": "Seeder Minimi"
+    "MinimumSeeders": "Seeder Minimi",
+    "InstanceName": "Nome Istanza",
+    "InstanceNameHelpText": "Nome dell'istanza nella scheda e per il nome dell'applicazione Syslog",
+    "ThemeHelpText": "Cambia il tema dell'interfaccia di Prowlarr, ispirato da {0}"
 }

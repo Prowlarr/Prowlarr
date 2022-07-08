@@ -331,5 +331,12 @@
     "UnableToLoadIndexers": "Nie można załadować indeksatorów",
     "Link": "Spinki do mankietów",
     "MappedDrivesRunningAsService": "Zmapowane dyski sieciowe nie są dostępne, gdy działają jako usługa systemu Windows. Więcej informacji można znaleźć w FAQ",
-    "Yes": "tak"
+    "Yes": "tak",
+    "InstanceName": "Nazwa instancji",
+    "InstanceNameHelpText": "Nazwa instancji w zakładce i dla nazwy aplikacji Syslog",
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent podawany przez aplikację wywołującą API",
+    "OnApplicationUpdate": "Przy aktualizacji aplikacji",
+    "OnApplicationUpdateHelpText": "Przy aktualizacji aplikacji",
+    "Database": "Baza danych",
+    "NotificationTriggersHelpText": "Wybierz zdarzenia, które mają uruchamiać to powiadomienie"
 }

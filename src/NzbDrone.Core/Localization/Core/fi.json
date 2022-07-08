@@ -446,5 +446,19 @@
     "SyncProfile": "Synkronointiprofiili",
     "SyncProfiles": "Synkronointiprofiilit",
     "AddSyncProfile": "Lisää synkronointiprofiili",
-    "EditSyncProfile": "Muokkaa synkronointiprofiilia"
+    "EditSyncProfile": "Muokkaa synkronointiprofiilia",
+    "InstanceName": "Instanssin nimi",
+    "InstanceNameHelpText": "Instanssin nimi välilehdellä ja järjestelmälokissa",
+    "ThemeHelpText": "Vaihda Prowlarin käyttöliittymän teemaa, jota on inspiroinut {0}",
+    "Duration": "Kesto",
+    "ElapsedTime": "Kulunut aika",
+    "EnabledRedirected": "Kulunut, uudelleenohjattu",
+    "Ended": "Päättynyt",
+    "GrabTitle": "Sieppaa nimike",
+    "LastExecution": "Edellinen suoritus",
+    "LastDuration": "Edellinen kesto",
+    "NextExecution": "Seuraava suoritus",
+    "Parameters": "Parametrit",
+    "Queued": "Jonossa",
+    "Started": "Alkoi"
 }

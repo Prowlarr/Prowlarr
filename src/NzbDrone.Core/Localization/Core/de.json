@@ -431,5 +431,7 @@
     "SearchTypes": "Suchtyp",
     "TVSearchTypes": "Suchtyp",
     "UnableToLoadIndexers": "Indexer konnten nicht geladen werden",
-    "Yes": "Ja"
+    "Yes": "Ja",
+    "InstanceName": "Instanzname",
+    "InstanceNameHelpText": "Instanzname im Browser-Tab und für Syslog-Anwendungsname"
 }

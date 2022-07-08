@@ -400,5 +400,6 @@
     "No": "Não",
     "UnableToLoadIndexers": "Não foi possível carregar os indexadores",
     "Yes": "Sim",
-    "GrabReleases": "Capturar versão"
+    "GrabReleases": "Capturar versão",
+    "InstanceName": "Nome da Instancia"
 }

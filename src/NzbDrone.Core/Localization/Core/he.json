@@ -331,5 +331,11 @@
     "No": "לא",
     "UnableToLoadIndexers": "לא ניתן לטעון אינדקסים",
     "Yes": "כן",
-    "MappedDrivesRunningAsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף"
+    "MappedDrivesRunningAsService": "כונני רשת ממופים אינם זמינים כאשר הם פועלים כשירות Windows. אנא עיין בשאלות הנפוצות למידע נוסף",
+    "InstanceName": "שם מופע",
+    "InstanceNameHelpText": "שם מופע בטאב ובשביל שם אפליקציית סיסלוג",
+    "NotificationTriggersHelpText": "בחר איזה אירועים יפעילו את ההתראה הזאת",
+    "OnApplicationUpdate": "כשהאפליקציה מעדכנת גרסא",
+    "OnApplicationUpdateHelpText": "כשהאפליקציה מעדכנת גרסא",
+    "Database": "מסד נתונים"
 }

@@ -446,5 +446,7 @@
     "SyncProfiles": "Szinkronizálási profilok",
     "AddSyncProfile": "Szinkronizálási profil hozzáadása",
     "EditSyncProfile": "Szinkronizálási profil szerkesztése",
-    "MinimumSeedersHelpText": "Az Alkalmazás által megkövetelt minimális Seeder az indexer számára"
+    "MinimumSeedersHelpText": "Az Alkalmazás által megkövetelt minimális Seeder az indexer számára",
+    "InstanceName": "Példány Neve",
+    "InstanceNameHelpText": "Példánynév a böngésző lapon és a syslog alkalmazás neve"
 }

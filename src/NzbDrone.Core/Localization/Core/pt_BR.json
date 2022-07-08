@@ -446,5 +446,19 @@
     "SyncProfiles": "Perfis de Sincronização",
     "AddSyncProfile": "Adicionar Perfil de Sincronização",
     "MinimumSeeders": "Mínimo de Seeders",
-    "MinimumSeedersHelpText": "Mínimo de seeders requeridos pelo Aplicativo para o indexador baixar"
+    "MinimumSeedersHelpText": "Mínimo de seeders requeridos pelo Aplicativo para o indexador baixar",
+    "ThemeHelpText": "Altere o tema da IU do Prowlarr, inspirado em {0}",
+    "InstanceName": "Nome da instância",
+    "InstanceNameHelpText": "Nome da instância na guia e para o nome do aplicativo Syslog",
+    "Duration": "Duração",
+    "ElapsedTime": "Tempo Decorrido",
+    "EnabledRedirected": "Habilitado, Redirecionado",
+    "Ended": "Terminado",
+    "LastExecution": "Última Execução",
+    "Parameters": "Parâmetros",
+    "Queued": "Enfileirado",
+    "GrabTitle": "Obter Título",
+    "LastDuration": "Última Duração",
+    "NextExecution": "Próxima Execução",
+    "Started": "Iniciado"
 }

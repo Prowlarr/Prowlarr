@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Specialized;
-using System.Net;
 using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Configuration;
 
 namespace NzbDrone.Core.Notifications.Notifiarr
 {
@@ -15,27 +16,21 @@ namespace NzbDrone.Core.Notifications.Notifiarr
 
     public class NotifiarrProxy : INotifiarrProxy
     {
-        private const string URL = "https://notifiarr.com/notifier.php";
+        private const string URL = "https://notifiarr.com";
         private readonly IHttpClient _httpClient;
+        private readonly IConfigFileProvider _configFileProvider;
         private readonly Logger _logger;
 
-        public NotifiarrProxy(IHttpClient httpClient, Logger logger)
+        public NotifiarrProxy(IHttpClient httpClient, IConfigFileProvider configFileProvider, Logger logger)
         {
             _httpClient = httpClient;
+            _configFileProvider = configFileProvider;
             _logger = logger;
         }
 
         public void SendNotification(StringDictionary message, NotifiarrSettings settings)
         {
-            try
-            {
                 ProcessNotification(message, settings);
-            }
-            catch (NotifiarrException ex)
-            {
-                _logger.Error(ex, "Unable to send notification");
-                throw new NotifiarrException("Unable to send notification");
-            }
         }
 
         public ValidationFailure Test(NotifiarrSettings settings)
@@ -48,21 +43,14 @@ namespace NzbDrone.Core.Notifications.Notifiarr
                 SendNotification(variables, settings);
                 return null;
             }
-            catch (HttpException ex)
+            catch (NotifiarrException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    _logger.Error(ex, "API key is invalid: " + ex.Message);
-                    return new ValidationFailure("APIKey", "API key is invalid");
-                }
-
-                _logger.Error(ex, "Unable to send test message: " + ex.Message);
-                return new ValidationFailure("APIKey", "Unable to send test notification");
+                return new ValidationFailure("APIKey", ex.Message);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to send test notification: " + ex.Message);
-                return new ValidationFailure("", "Unable to send test notification");
+                _logger.Error(ex, ex.Message);
+                return new ValidationFailure("", "Unable to send test notification. Check the log for more details.");
             }
         }
 
@@ -70,8 +58,10 @@ namespace NzbDrone.Core.Notifications.Notifiarr
         {
             try
             {
-                var requestBuilder = new HttpRequestBuilder(URL).Post();
-                requestBuilder.AddFormParameter("api", settings.APIKey).Build();
+                var instanceName = _configFileProvider.InstanceName;
+                var requestBuilder = new HttpRequestBuilder(URL + "/api/v1/notification/prowlarr").Post();
+                requestBuilder.AddFormParameter("instanceName", instanceName).Build();
+                requestBuilder.SetHeader("X-API-Key", settings.APIKey);
 
                 foreach (string key in message.Keys)
                 {
@@ -84,13 +74,31 @@ namespace NzbDrone.Core.Notifications.Notifiarr
             }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+                var responseCode = ex.Response.StatusCode;
+                switch ((int)responseCode)
                 {
-                    _logger.Error(ex, "API key is invalid");
-                    throw;
+                    case 401:
+                        _logger.Error("Unauthorized", "HTTP 401 - API key is invalid");
+                        throw new NotifiarrException("API key is invalid");
+                    case 400:
+                        _logger.Error("Invalid Request", "HTTP 400 - Unable to send notification. Ensure Prowlarr Integration is enabled & assigned a channel on Notifiarr");
+                        throw new NotifiarrException("Unable to send notification. Ensure Prowlarr Integration is enabled & assigned a channel on Notifiarr");
+                    case 502:
+                    case 503:
+                    case 504:
+                        _logger.Error("Service Unavailable", "Unable to send notification. Service Unavailable");
+                        throw new NotifiarrException("Unable to send notification. Service Unavailable", ex);
+                    case 520:
+                    case 521:
+                    case 522:
+                    case 523:
+                    case 524:
+                        _logger.Error(ex, "Cloudflare Related HTTP Error - Unable to send notification");
+                        throw new NotifiarrException("Cloudflare Related HTTP Error - Unable to send notification", ex);
+                    default:
+                        _logger.Error(ex, "Unknown HTTP Error - Unable to send notification");
+                        throw new NotifiarrException("Unknown HTTP Error - Unable to send notification", ex);
                 }
-
-                throw new NotifiarrException("Unable to send notification", ex);
             }
         }
     }

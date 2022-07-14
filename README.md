@@ -27,7 +27,7 @@ Prowlarr is an indexer manager/proxy built on the popular \*arr .net/reactjs bas
 
 ## Support
 
-Note: Prowlarr is currently early in life, thus bugs should be expected
+Note: Prowlarr is currently in beta and still in development, and thus bugs should be expected
 
 [![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/prowlarr)
 

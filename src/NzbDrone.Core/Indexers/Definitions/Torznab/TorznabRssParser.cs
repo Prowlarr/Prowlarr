@@ -61,6 +61,12 @@ namespace NzbDrone.Core.Indexers.Torznab
                     torrentInfo.ImdbId = int.Parse(GetImdbId(item).Substring(2));
                 }
 
+                var downloadFactor = TryGetFloatTorznabAttribute(item, "downloadvolumefactor", 1);
+                var uploadFactor = TryGetFloatTorznabAttribute(item, "uploadvolumefactor", 1);
+
+                torrentInfo.DownloadVolumeFactor = downloadFactor;
+                torrentInfo.UploadVolumeFactor = uploadFactor;
+
                 torrentInfo.IndexerFlags = GetFlags(item);
                 torrentInfo.PosterUrl = GetPosterUrl(item);
             }

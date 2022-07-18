@@ -2523,50 +2523,22 @@
         }
       }
     },
-    "/api/v1/language/{id}": {
+    "/api/v1/localization": {
       "get": {
         "tags": [
-          "Language"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
+          "Localization"
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LanguageResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LanguageResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LanguageResource"
-                }
-              }
-            }
+            "description": "Success"
           }
         }
       }
     },
-    "/api/v1/language": {
+    "/api/v1/localization/options": {
       "get": {
         "tags": [
-          "Language"
+          "Localization"
         ],
         "responses": {
           "200": {
@@ -2576,23 +2548,11 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/LanguageResource"
+                    "$ref": "#/components/schemas/LocalizationOption"
                   }
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/v1/localization": {
-      "get": {
-        "tags": [
-          "Localization"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
           }
         }
       }
@@ -5687,21 +5647,16 @@
         },
         "additionalProperties": false
       },
-      "LanguageResource": {
+      "LocalizationOption": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "name": {
             "type": "string",
             "nullable": true
           },
-          "nameLower": {
+          "value": {
             "type": "string",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6314,8 +6269,8 @@
             "type": "boolean"
           },
           "uiLanguage": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "nullable": true
           },
           "theme": {
             "type": "string",

@@ -565,6 +565,7 @@ stages:
           -e POSTGRES_PASSWORD=prowlarr \
           -e POSTGRES_USER=prowlarr \
           -p 5432:5432/tcp \
+          -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
           postgres:14
         displayName: Start postgres
       - bash: |
@@ -710,6 +711,7 @@ stages:
             -e POSTGRES_PASSWORD=prowlarr \
             -e POSTGRES_USER=prowlarr \
             -p 5432:5432/tcp \
+            -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
             postgres:14
           displayName: Start postgres
         - bash: |

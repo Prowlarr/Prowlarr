@@ -49,7 +49,7 @@
     "SaveChanges": "Sauvegarder les modifications",
     "RestoreBackup": "Restaurer la sauvegarde",
     "ReleaseBranchCheckOfficialBranchMessage": "La branche {0} n'est pas une branche de version Prowlarr valide, vous ne recevrez pas de mises à jour",
-    "Refresh": "Rafraîchir",
+    "Refresh": "Actualiser",
     "Queue": "File d'attente",
     "PtpOldSettingsCheckMessage": "Les indexeurs PassThePopcorn suivants ont des paramètres obsolètes et doivent être mis à jour : {0}",
     "ProxyCheckResolveIpMessage": "Impossible de résoudre l'adresse IP de l'hôte proxy configuré {0}",

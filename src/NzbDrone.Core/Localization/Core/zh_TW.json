@@ -1,4 +1,15 @@
 {
     "About": "關於",
-    "Add": "添加"
+    "Add": "新增",
+    "Added": "以新增",
+    "Actions": "執行",
+    "Age": "年齡",
+    "AddIndexer": "新增索引",
+    "AddNewIndexer": "新增新索引",
+    "AddDownloadClient": "新增下載器",
+    "Analytics": "分析",
+    "AddIndexerProxy": "新增索引器代理",
+    "AddingTag": "新增標籤",
+    "All": "全部",
+    "AddRemoveOnly": "僅限新增或移除"
 }

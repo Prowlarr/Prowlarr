@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
@@ -108,6 +108,8 @@ public class GreatPosterWallParser : GazelleParser
             {
                 var infoUrl = GetInfoUrl(result.GroupId.ToString(), torrent.TorrentId);
 
+                var time = DateTime.SpecifyKind(torrent.Time, DateTimeKind.Unspecified);
+
                 var release = new GazelleInfo
                 {
                     MinimumRatio = 1,
@@ -117,7 +119,7 @@ public class GreatPosterWallParser : GazelleParser
                     Guid = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
                     DownloadUrl = GetDownloadUrl(torrent.TorrentId),
-                    PublishDate = torrent.Time.ToUniversalTime(),
+                    PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).LocalDateTime, // Time is Chinese Time, add 8 hours difference from UTC and then convert back to local time
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
                     Size = torrent.Size,
                     Seeders = torrent.Seeders,

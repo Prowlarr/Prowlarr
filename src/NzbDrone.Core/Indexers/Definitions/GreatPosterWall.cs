@@ -118,7 +118,7 @@ public class GreatPosterWallParser : GazelleParser
                     InfoUrl = infoUrl,
                     Guid = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
-                    DownloadUrl = GetDownloadUrl(torrent.TorrentId),
+                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken),
                     PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).LocalDateTime, // Time is Chinese Time, add 8 hours difference from UTC and then convert back to local time
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
                     Size = torrent.Size,
@@ -163,6 +163,17 @@ public class GreatPosterWallParser : GazelleParser
         }
 
         return torrentInfos;
+    }
+
+    protected string GetDownloadUrl(int torrentId, bool canUseToken)
+    {
+        var url = new HttpUri(_settings.BaseUrl)
+            .CombinePath("/torrents.php")
+            .AddQueryParam("action", "download")
+            .AddQueryParam("usetoken", _settings.UseFreeleechToken && canUseToken ? "1" : "0")
+            .AddQueryParam("id", torrentId);
+
+        return url.FullUri;
     }
 }
 

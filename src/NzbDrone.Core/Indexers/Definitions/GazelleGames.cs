@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
-using AngleSharp.Html.Parser;
+using System.Threading.Tasks;
 using FluentValidation;
+using FluentValidation.Results;
+using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -38,27 +39,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new GazelleGamesRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new GazelleGamesRequestGenerator() { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient };
         }
 
         public override IParseIndexerResponse GetParser()
         {
             return new GazelleGamesParser(Settings, Capabilities.Categories);
-        }
-
-        protected override IDictionary<string, string> GetCookies()
-        {
-            return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
-        }
-
-        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
-        {
-            if (httpResponse.HasHttpRedirect && httpResponse.RedirectUrl.EndsWith("login.php"))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -67,17 +53,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
             };
 
+            // Apple
             caps.Categories.AddCategoryMapping("Mac", NewznabStandardCategory.ConsoleOther, "Mac");
             caps.Categories.AddCategoryMapping("iOS", NewznabStandardCategory.PCMobileiOS, "iOS");
             caps.Categories.AddCategoryMapping("Apple Bandai Pippin", NewznabStandardCategory.ConsoleOther, "Apple Bandai Pippin");
 
+            // Google
             caps.Categories.AddCategoryMapping("Android", NewznabStandardCategory.PCMobileAndroid, "Android");
 
+            // Microsoft
             caps.Categories.AddCategoryMapping("DOS", NewznabStandardCategory.PCGames, "DOS");
             caps.Categories.AddCategoryMapping("Windows", NewznabStandardCategory.PCGames, "Windows");
             caps.Categories.AddCategoryMapping("Xbox", NewznabStandardCategory.ConsoleXBox, "Xbox");
             caps.Categories.AddCategoryMapping("Xbox 360", NewznabStandardCategory.ConsoleXBox360, "Xbox 360");
 
+            // Nintendo
             caps.Categories.AddCategoryMapping("Game Boy", NewznabStandardCategory.ConsoleOther, "Game Boy");
             caps.Categories.AddCategoryMapping("Game Boy Advance", NewznabStandardCategory.ConsoleOther, "Game Boy Advance");
             caps.Categories.AddCategoryMapping("Game Boy Color", NewznabStandardCategory.ConsoleOther, "Game Boy Color");
@@ -93,6 +83,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("Wii", NewznabStandardCategory.ConsoleWii, "Wii");
             caps.Categories.AddCategoryMapping("Wii U", NewznabStandardCategory.ConsoleWiiU, "Wii U");
 
+            // Sony
             caps.Categories.AddCategoryMapping("PlayStation 1", NewznabStandardCategory.ConsoleOther, "PlayStation 1");
             caps.Categories.AddCategoryMapping("PlayStation 2", NewznabStandardCategory.ConsoleOther, "PlayStation 2");
             caps.Categories.AddCategoryMapping("PlayStation 3", NewznabStandardCategory.ConsolePS3, "PlayStation 3");
@@ -100,6 +91,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("PlayStation Portable", NewznabStandardCategory.ConsolePSP, "PlayStation Portable");
             caps.Categories.AddCategoryMapping("PlayStation Vita", NewznabStandardCategory.ConsolePSVita, "PlayStation Vita");
 
+            // Sega
             caps.Categories.AddCategoryMapping("Dreamcast", NewznabStandardCategory.ConsoleOther, "Dreamcast");
             caps.Categories.AddCategoryMapping("Game Gear", NewznabStandardCategory.ConsoleOther, "Game Gear");
             caps.Categories.AddCategoryMapping("Master System", NewznabStandardCategory.ConsoleOther, "Master System");
@@ -108,6 +100,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("Saturn", NewznabStandardCategory.ConsoleOther, "Saturn");
             caps.Categories.AddCategoryMapping("SG-1000", NewznabStandardCategory.ConsoleOther, "SG-1000");
 
+            // Atari
             caps.Categories.AddCategoryMapping("Atari 2600", NewznabStandardCategory.ConsoleOther, "Atari 2600");
             caps.Categories.AddCategoryMapping("Atari 5200", NewznabStandardCategory.ConsoleOther, "Atari 5200");
             caps.Categories.AddCategoryMapping("Atari 7800", NewznabStandardCategory.ConsoleOther, "Atari 7800");
@@ -115,24 +108,31 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("Atari Lynx", NewznabStandardCategory.ConsoleOther, "Atari Lynx");
             caps.Categories.AddCategoryMapping("Atari ST", NewznabStandardCategory.ConsoleOther, "Atari ST");
 
+            // Amstrad
             caps.Categories.AddCategoryMapping("Amstrad CPC", NewznabStandardCategory.ConsoleOther, "Amstrad CPC");
 
+            // Sinclair
             caps.Categories.AddCategoryMapping("ZX Spectrum", NewznabStandardCategory.ConsoleOther, "ZX Spectrum");
 
+            // Spectravideo
             caps.Categories.AddCategoryMapping("MSX", NewznabStandardCategory.ConsoleOther, "MSX");
             caps.Categories.AddCategoryMapping("MSX 2", NewznabStandardCategory.ConsoleOther, "MSX 2");
 
+            // Tiger
             caps.Categories.AddCategoryMapping("Game.com", NewznabStandardCategory.ConsoleOther, "Game.com");
             caps.Categories.AddCategoryMapping("Gizmondo", NewznabStandardCategory.ConsoleOther, "Gizmondo");
 
+            // VTech
             caps.Categories.AddCategoryMapping("V.Smile", NewznabStandardCategory.ConsoleOther, "V.Smile");
             caps.Categories.AddCategoryMapping("CreatiVision", NewznabStandardCategory.ConsoleOther, "CreatiVision");
 
+            // Tabletop Games
             caps.Categories.AddCategoryMapping("Board Game", NewznabStandardCategory.ConsoleOther, "Board Game");
             caps.Categories.AddCategoryMapping("Card Game", NewznabStandardCategory.ConsoleOther, "Card Game");
             caps.Categories.AddCategoryMapping("Miniature Wargames", NewznabStandardCategory.ConsoleOther, "Miniature Wargames");
             caps.Categories.AddCategoryMapping("Pen and Paper RPG", NewznabStandardCategory.ConsoleOther, "Pen and Paper RPG");
 
+            // Other
             caps.Categories.AddCategoryMapping("3DO", NewznabStandardCategory.ConsoleOther, "3DO");
             caps.Categories.AddCategoryMapping("Bandai WonderSwan", NewznabStandardCategory.ConsoleOther, "Bandai WonderSwan");
             caps.Categories.AddCategoryMapping("Bandai WonderSwan Color", NewznabStandardCategory.ConsoleOther, "Bandai WonderSwan Color");
@@ -178,11 +178,18 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("Watara Supervision", NewznabStandardCategory.ConsoleOther, "Watara Supervision");
             caps.Categories.AddCategoryMapping("Retro - Other", NewznabStandardCategory.ConsoleOther, "Retro - Other");
 
+            // special categories (real categories/not platforms)
             caps.Categories.AddCategoryMapping("OST", NewznabStandardCategory.AudioOther, "OST");
             caps.Categories.AddCategoryMapping("Applications", NewznabStandardCategory.PC0day, "Applications");
             caps.Categories.AddCategoryMapping("E-Books", NewznabStandardCategory.BooksEBook, "E-Books");
 
             return caps;
+        }
+
+        protected override async Task Test(List<ValidationFailure> failures)
+        {
+            ((GazelleGamesRequestGenerator)GetRequestGenerator()).FetchPasskey();
+            await base.Test(failures);
         }
     }
 
@@ -190,47 +197,17 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public GazelleGamesSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
+        public IIndexerHttpClient HttpClient { get; set; }
 
         public GazelleGamesRequestGenerator()
         {
-        }
-
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
-        {
-            var searchUrl = string.Format("{0}/torrents.php", Settings.BaseUrl.TrimEnd('/'));
-
-            var searchString = term;
-
-            var searchType = Settings.SearchGroupNames ? "groupname" : "searchstr";
-
-            var queryCollection = new NameValueCollection
-            {
-                { searchType, searchString },
-                { "order_by", "time" },
-                { "order_way", "desc" },
-                { "action", "basic" },
-                { "searchsubmit", "1" }
-            };
-
-            var i = 0;
-
-            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
-            {
-                queryCollection.Add($"artistcheck[{i++}]", cat);
-            }
-
-            searchUrl += "?" + queryCollection.GetQueryString();
-
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-
-            yield return request;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetRequest(GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories)));
 
             return pageableRequests;
         }
@@ -239,7 +216,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetRequest(GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories)));
 
             return pageableRequests;
         }
@@ -248,7 +225,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
+            pageableRequests.Add(GetRequest(GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories)));
 
             return pageableRequests;
         }
@@ -257,7 +234,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetRequest(GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories)));
 
             return pageableRequests;
         }
@@ -266,9 +243,65 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetRequest(GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories)));
 
             return pageableRequests;
+        }
+
+        public void FetchPasskey()
+        {
+            // GET on index for the passkey
+            var request = RequestBuilder().Resource("api.php?request=quick_user").Build();
+            var indexResponse = HttpClient.Execute(request);
+            var index = Json.Deserialize<GazelleGamesUserResponse>(indexResponse.Content);
+            if (index == null ||
+                string.IsNullOrWhiteSpace(index.Status) ||
+                index.Status != "success" ||
+                string.IsNullOrWhiteSpace(index.Response.PassKey))
+            {
+                throw new Exception("Failed to authenticate with GazelleGames.");
+            }
+
+            // Set passkey on settings so it can be used to generate the download URL
+            Settings.Passkey = index.Response.PassKey;
+        }
+
+        private IEnumerable<IndexerRequest> GetRequest(string parameters)
+        {
+            var req = RequestBuilder()
+                .Resource($"api.php?{parameters}")
+                .Build();
+
+            yield return new IndexerRequest(req);
+        }
+
+        private HttpRequestBuilder RequestBuilder()
+        {
+            return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
+                .Accept(HttpAccept.Json)
+                .SetHeader("X-API-Key", Settings.Apikey);
+        }
+
+        private string GetBasicSearchParameters(string searchTerm, int[] categories)
+        {
+            var parameters = "request=search&search_type=torrents&empty_groups=filled&order_by=time&order_way=desc";
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchType = Settings.SearchGroupNames ? "groupname" : "searchstr";
+
+                parameters += string.Format("&{1}={0}", searchTerm.Replace(".", " "), searchType);
+            }
+
+            if (categories != null)
+            {
+                foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
+                {
+                    parameters += string.Format("&artistcheck[]={0}", cat);
+                }
+            }
+
+            return parameters;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -290,117 +323,183 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var torrentInfos = new List<ReleaseInfo>();
 
-            var rowsSelector = ".torrent_table > tbody > tr";
-
-            var searchResultParser = new HtmlParser();
-            var searchResultDocument = searchResultParser.ParseDocument(indexerResponse.Content);
-            var rows = searchResultDocument.QuerySelectorAll(rowsSelector);
-
-            var stickyGroup = false;
-            string categoryStr;
-            ICollection<IndexerCategory> groupCategory = null;
-            string groupTitle = null;
-
-            foreach (var row in rows)
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                if (row.ClassList.Contains("torrent"))
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+            }
+
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            {
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            }
+
+            var jsonResponse = new HttpResponse<GazelleGamesResponse>(indexerResponse.HttpResponse);
+            if (jsonResponse.Resource.Status != "success" ||
+                string.IsNullOrWhiteSpace(jsonResponse.Resource.Status) ||
+                jsonResponse.Resource.Response == null)
+            {
+                return torrentInfos;
+            }
+
+            foreach (var result in jsonResponse.Resource.Response)
+            {
+                Dictionary<string, GazelleGamesTorrent> torrents;
+
+                try
                 {
-                    // garbage rows
+                    torrents = ((JObject)result.Value.Torrents).ToObject<Dictionary<string, GazelleGamesTorrent>>();
+                }
+                catch
+                {
                     continue;
                 }
-                else if (row.ClassList.Contains("group"))
+
+                if (result.Value.Torrents != null)
                 {
-                    stickyGroup = row.ClassList.Contains("sticky");
-                    var dispalyname = row.QuerySelector("#displayname");
-                    var qCat = row.QuerySelector("td.cats_col > div");
-                    categoryStr = qCat.GetAttribute("title");
-                    var qArtistLink = dispalyname.QuerySelector("#groupplatform > a");
-                    if (qArtistLink != null)
+                    var categories = result.Value.Artists.Select(a => a.Name);
+
+                    foreach (var torrent in torrents)
                     {
-                        categoryStr = ParseUtil.GetArgumentFromQueryString(qArtistLink.GetAttribute("href"), "artistname");
+                        var id = int.Parse(torrent.Key);
+
+                        var infoUrl = GetInfoUrl(result.Key, id);
+
+                        var release = new TorrentInfo()
+                        {
+                            Guid = infoUrl,
+                            Title = torrent.Value.ReleaseTitle,
+                            Files = torrent.Value.FileCount,
+                            Grabs = torrent.Value.Snatched,
+                            Size = long.Parse(torrent.Value.Size),
+                            DownloadUrl = GetDownloadUrl(id),
+                            InfoUrl = infoUrl,
+                            Seeders = torrent.Value.Seeders,
+                            Categories = _categories.MapTrackerCatDescToNewznab(categories.FirstOrDefault()),
+                            Peers = torrent.Value.Leechers + torrent.Value.Seeders,
+                            PublishDate = torrent.Value.Time.ToUniversalTime(),
+                            DownloadVolumeFactor = torrent.Value.FreeTorrent == GazelleGamesFreeTorrent.FreeLeech || torrent.Value.FreeTorrent == GazelleGamesFreeTorrent.Neutral || torrent.Value.LowSeedFL ? 0 : 1,
+                            UploadVolumeFactor = torrent.Value.FreeTorrent == GazelleGamesFreeTorrent.Neutral ? 0 : 1
+                        };
+
+                        torrentInfos.Add(release);
                     }
-
-                    groupCategory = _categories.MapTrackerCatToNewznab(categoryStr);
-
-                    var qDetailsLink = dispalyname.QuerySelector("#groupname > a");
-                    groupTitle = qDetailsLink.TextContent;
-                }
-                else if (row.ClassList.Contains("group_torrent"))
-                {
-                    if (row.QuerySelector("td.edition_info") != null)
-                    {
-                        continue;
-                    }
-
-                    var sizeString = row.QuerySelector("td:nth-child(4)").TextContent;
-                    if (string.IsNullOrEmpty(sizeString))
-                    {
-                        continue;
-                    }
-
-                    var qDetailsLink = row.QuerySelector("a[href^=\"torrents.php?id=\"]");
-                    var title = qDetailsLink.TextContent.Replace(", Freeleech!", "").Replace(", Neutral Leech!", "");
-
-                    //if (stickyGroup && (query.ImdbID == null || !NewznabStandardCategory.MovieSearchImdbAvailable) && !query.MatchQueryStringAND(title)) // AND match for sticky releases
-                    //{
-                    //    continue;
-                    //}
-                    var qDescription = qDetailsLink.QuerySelector("span.torrent_info_tags");
-                    var qDLLink = row.QuerySelector("a[href^=\"torrents.php?action=download\"]");
-                    var qTime = row.QuerySelector("span.time");
-                    var qGrabs = row.QuerySelector("td:nth-child(5)");
-                    var qSeeders = row.QuerySelector("td:nth-child(6)");
-                    var qLeechers = row.QuerySelector("td:nth-child(7)");
-                    var qFreeLeech = row.QuerySelector("strong.freeleech_label");
-                    var qNeutralLeech = row.QuerySelector("strong.neutralleech_label");
-                    var time = qTime.GetAttribute("title");
-                    var link = _settings.BaseUrl + qDLLink.GetAttribute("href");
-                    var seeders = ParseUtil.CoerceInt(qSeeders.TextContent);
-                    var publishDate = DateTime.SpecifyKind(
-                        DateTime.ParseExact(time, "MMM dd yyyy, HH:mm", CultureInfo.InvariantCulture),
-                        DateTimeKind.Unspecified).ToLocalTime();
-                    var details = _settings.BaseUrl + qDetailsLink.GetAttribute("href");
-                    var grabs = ParseUtil.CoerceInt(qGrabs.TextContent);
-                    var leechers = ParseUtil.CoerceInt(qLeechers.TextContent);
-                    var size = ParseUtil.GetBytes(sizeString);
-
-                    var release = new TorrentInfo
-                    {
-                        MinimumRatio = 1,
-                        MinimumSeedTime = 288000, //80 hours
-                        Categories = groupCategory,
-                        PublishDate = publishDate,
-                        Size = size,
-                        InfoUrl = details,
-                        DownloadUrl = link,
-                        Guid = link,
-                        Grabs = grabs,
-                        Seeders = seeders,
-                        Peers = leechers + seeders,
-                        Title = title,
-                        Description = qDescription?.TextContent,
-                        UploadVolumeFactor = qNeutralLeech is null ? 1 : 0,
-                        DownloadVolumeFactor = qFreeLeech != null || qNeutralLeech != null ? 0 : 1
-                    };
-
-                    torrentInfos.Add(release);
                 }
             }
 
-            return torrentInfos.ToArray();
+            // order by date
+            return
+                torrentInfos
+                    .OrderByDescending(o => o.PublishDate)
+                    .ToArray();
+        }
+
+        private string GetDownloadUrl(int torrentId)
+        {
+            // AuthKey is required but not checked, just pass in a dummy variable
+            // to avoid having to track authkey, which is randomly cycled
+            var url = new HttpUri(_settings.BaseUrl)
+                .CombinePath("/torrents.php")
+                .AddQueryParam("action", "download")
+                .AddQueryParam("id", torrentId)
+                .AddQueryParam("authkey", "prowlarr")
+                .AddQueryParam("torrent_pass", _settings.Passkey);
+
+            return url.FullUri;
+        }
+
+        private string GetInfoUrl(string groupId, int torrentId)
+        {
+            var url = new HttpUri(_settings.BaseUrl)
+                .CombinePath("/torrents.php")
+                .AddQueryParam("id", groupId)
+                .AddQueryParam("torrentid", torrentId);
+
+            return url.FullUri;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class GazelleGamesSettings : CookieTorrentBaseSettings
+    public class GazelleGamesSettingsValidator : AbstractValidator<GazelleGamesSettings>
     {
+        public GazelleGamesSettingsValidator()
+        {
+            RuleFor(c => c.Apikey).NotEmpty();
+        }
+    }
+
+    public class GazelleGamesSettings : NoAuthTorrentBaseSettings
+    {
+        private static readonly GazelleGamesSettingsValidator Validator = new GazelleGamesSettingsValidator();
+
         public GazelleGamesSettings()
         {
-            SearchGroupNames = false;
+            Apikey = "";
+            Passkey = "";
         }
+
+        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings), Must have User Permissions", Privacy = PrivacyLevel.ApiKey)]
+        public string Apikey { get; set; }
 
         [FieldDefinition(3, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
         public bool SearchGroupNames { get; set; }
+
+        public string Passkey { get; set; }
+
+        public override NzbDroneValidationResult Validate()
+        {
+            return new NzbDroneValidationResult(Validator.Validate(this));
+        }
+    }
+
+    public class GazelleGamesResponse
+    {
+        public string Status { get; set; }
+        public Dictionary<string, GazelleGamesGroup> Response { get; set; }
+    }
+
+    public class GazelleGamesGroup
+    {
+        public List<GazelleGamesArtist> Artists { get; set; }
+        public object Torrents { get; set; }
+    }
+
+    public class GazelleGamesArtist
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class GazelleGamesTorrent
+    {
+        public string Size { get; set; }
+        public int? Snatched { get; set; }
+        public int Seeders { get; set; }
+        public int Leechers { get; set; }
+        public string ReleaseTitle { get; set; }
+        public DateTime Time { get; set; }
+        public int FileCount { get; set; }
+        public GazelleGamesFreeTorrent FreeTorrent { get; set; }
+        public bool PersonalFL { get; set; }
+        public bool LowSeedFL { get; set; }
+    }
+
+    public class GazelleGamesUserResponse
+    {
+        public string Status { get; set; }
+        public GazelleGamesUser Response { get; set; }
+    }
+
+    public class GazelleGamesUser
+    {
+        public string PassKey { get; set; }
+    }
+
+    public enum GazelleGamesFreeTorrent
+    {
+        Normal,
+        FreeLeech,
+        Neutral,
+        Either
     }
 }

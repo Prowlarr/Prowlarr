@@ -107,6 +107,8 @@ namespace NzbDrone.Core.IndexerSearch
                             GetNabElement("booktitle", RemoveInvalidXMLChars(r.BookTitle), protocol),
                             GetNabElement("artist", RemoveInvalidXMLChars(r.Artist), protocol),
                             GetNabElement("album", RemoveInvalidXMLChars(r.Album), protocol),
+                            GetNabElement("label", RemoveInvalidXMLChars(r.Label), protocol),
+                            GetNabElement("track", RemoveInvalidXMLChars(r.Track), protocol),
                             GetNabElement("infohash", RemoveInvalidXMLChars(t.InfoHash), protocol),
                             GetNabElement("minimumratio", t.MinimumRatio, protocol),
                             GetNabElement("minimumseedtime", t.MinimumSeedTime, protocol),

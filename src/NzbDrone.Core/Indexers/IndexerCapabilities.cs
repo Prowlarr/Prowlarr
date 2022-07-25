@@ -15,7 +15,8 @@ namespace NzbDrone.Core.Indexers
         RId,
         TvMazeId,
         TraktId,
-        TmdbId
+        TmdbId,
+        DoubanId
     }
 
     public enum MovieSearchParam
@@ -26,7 +27,8 @@ namespace NzbDrone.Core.Indexers
         ImdbTitle,
         ImdbYear,
         TraktId,
-        Genre
+        Genre,
+        DoubanId
     }
 
     public enum MusicSearchParam
@@ -36,7 +38,8 @@ namespace NzbDrone.Core.Indexers
         Artist,
         Label,
         Year,
-        Genre
+        Genre,
+        Track
     }
 
     public enum SearchParam
@@ -71,6 +74,7 @@ namespace NzbDrone.Core.Indexers
         public bool TvSearchTvMazeAvailable => TvSearchParams.Contains(TvSearchParam.TvMazeId);
         public bool TvSearchTraktAvailable => TvSearchParams.Contains(TvSearchParam.TraktId);
         public bool TvSearchTmdbAvailable => TvSearchParams.Contains(TvSearchParam.TmdbId);
+        public bool TvSearchDoubanAvailable => TvSearchParams.Contains(TvSearchParam.DoubanId);
 
         public List<MovieSearchParam> MovieSearchParams;
         public bool MovieSearchAvailable => MovieSearchParams.Count > 0;
@@ -78,12 +82,14 @@ namespace NzbDrone.Core.Indexers
         public bool MovieSearchTmdbAvailable => MovieSearchParams.Contains(MovieSearchParam.TmdbId);
         public bool MovieSearchTraktAvailable => MovieSearchParams.Contains(MovieSearchParam.TraktId);
         public bool MovieSearchGenreAvailable => MovieSearchParams.Contains(MovieSearchParam.Genre);
+        public bool MovieSearchDoubanAvailable => MovieSearchParams.Contains(MovieSearchParam.DoubanId);
 
         public List<MusicSearchParam> MusicSearchParams;
         public bool MusicSearchAvailable => MusicSearchParams.Count > 0;
         public bool MusicSearchAlbumAvailable => MusicSearchParams.Contains(MusicSearchParam.Album);
         public bool MusicSearchArtistAvailable => MusicSearchParams.Contains(MusicSearchParam.Artist);
         public bool MusicSearchLabelAvailable => MusicSearchParams.Contains(MusicSearchParam.Label);
+        public bool MusicSearchTrackAvailable => MusicSearchParams.Contains(MusicSearchParam.Track);
         public bool MusicSearchYearAvailable => MusicSearchParams.Contains(MusicSearchParam.Year);
         public bool MusicSearchGenreAvailable => MusicSearchParams.Contains(MusicSearchParam.Genre);
 
@@ -302,6 +308,11 @@ namespace NzbDrone.Core.Indexers
                 parameters.Add("tmdbid");
             }
 
+            if (TvSearchDoubanAvailable)
+            {
+                parameters.Add("doubanid");
+            }
+
             return string.Join(",", parameters);
         }
 
@@ -335,6 +346,11 @@ namespace NzbDrone.Core.Indexers
                 parameters.Add("genre");
             }
 
+            if (MovieSearchDoubanAvailable)
+            {
+                parameters.Add("doubanid");
+            }
+
             return string.Join(",", parameters);
         }
 
@@ -354,6 +370,11 @@ namespace NzbDrone.Core.Indexers
             if (MusicSearchLabelAvailable)
             {
                 parameters.Add("label");
+            }
+
+            if (MusicSearchTrackAvailable)
+            {
+                parameters.Add("track");
             }
 
             if (MusicSearchYearAvailable)

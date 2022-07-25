@@ -40,6 +40,8 @@ namespace NzbDrone.Core.Parser.Model
         public string BookTitle { get; set; }
         public string Artist { get; set; }
         public string Album { get; set; }
+        public string Label { get; set; }
+        public string Track { get; set; }
         public DateTime PublishDate { get; set; }
 
         public string PosterUrl { get; set; }

@@ -59,6 +59,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.ImdbId = request.imdbid;
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
+            searchSpec.DoubanId = request.doubanid;
             searchSpec.Year = request.year;
             searchSpec.Genre = request.genre;
 
@@ -73,6 +74,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Album = request.album;
             searchSpec.Label = request.label;
             searchSpec.Genre = request.genre;
+            searchSpec.Track = request.track;
             searchSpec.Year = request.year;
 
             return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
@@ -88,6 +90,7 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.ImdbId = request.imdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.TmdbId = request.tmdbid;
+            searchSpec.DoubanId = request.doubanid;
             searchSpec.RId = request.rid;
             searchSpec.TvMazeId = request.tvmazeid;
 

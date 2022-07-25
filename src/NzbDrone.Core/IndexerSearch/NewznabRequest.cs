@@ -4,9 +4,9 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public class NewznabRequest
     {
-        private static readonly Regex TvRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex MovieRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex MusicRegex = new Regex(@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:label\:)(?<label>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TvRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MovieRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MusicRegex = new Regex(@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:track\:)(?<track>[^{]+)|(?:label\:)(?<label>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex BookRegex = new Regex(@"\{((?:author\:)(?<author>[^{]+)|(?:title\:)(?<title>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string t { get; set; }
@@ -21,6 +21,7 @@ namespace NzbDrone.Core.IndexerSearch
         public int? tvmazeid { get; set; }
         public int? traktid { get; set; }
         public int? tvdbid { get; set; }
+        public int? doubanid { get; set; }
         public int? season { get; set; }
         public string ep { get; set; }
         public string album { get; set; }
@@ -47,6 +48,16 @@ namespace NzbDrone.Core.IndexerSearch
                     if (match.Groups["tvdbid"].Success)
                     {
                         tvdbid = int.TryParse(match.Groups["tvdbid"].Value, out var tvdb) ? tvdb : null;
+                    }
+
+                    if (match.Groups["tmdbid"].Success)
+                    {
+                        tmdbid = int.TryParse(match.Groups["tmdbid"].Value, out var tmdb) ? tmdb : null;
+                    }
+
+                    if (match.Groups["doubanid"].Success)
+                    {
+                        doubanid = int.TryParse(match.Groups["doubanid"].Value, out var tmdb) ? tmdb : null;
                     }
 
                     if (match.Groups["season"].Success)
@@ -79,6 +90,11 @@ namespace NzbDrone.Core.IndexerSearch
                         tmdbid = int.TryParse(match.Groups["tmdbid"].Value, out var tmdb) ? tmdb : null;
                     }
 
+                    if (match.Groups["doubanid"].Success)
+                    {
+                        doubanid = int.TryParse(match.Groups["doubanid"].Value, out var tmdb) ? tmdb : null;
+                    }
+
                     if (match.Groups["imdbid"].Success)
                     {
                         imdbid = match.Groups["imdbid"].Value;
@@ -102,6 +118,11 @@ namespace NzbDrone.Core.IndexerSearch
                     if (match.Groups["album"].Success)
                     {
                         album = match.Groups["album"].Value;
+                    }
+
+                    if (match.Groups["track"].Success)
+                    {
+                        track = match.Groups["track"].Value;
                     }
 
                     if (match.Groups["label"].Success)

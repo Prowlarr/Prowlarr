@@ -2754,6 +2754,14 @@
             }
           },
           {
+            "name": "doubanid",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "season",
             "in": "query",
             "schema": {
@@ -2961,6 +2969,14 @@
           },
           {
             "name": "tvdbid",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "doubanid",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -5772,7 +5788,8 @@
           "imdbTitle",
           "imdbYear",
           "traktId",
-          "genre"
+          "genre",
+          "doubanId"
         ],
         "type": "string"
       },
@@ -5783,7 +5800,8 @@
           "artist",
           "label",
           "year",
-          "genre"
+          "genre",
+          "track"
         ],
         "type": "string"
       },
@@ -6231,7 +6249,8 @@
           "rId",
           "tvMazeId",
           "traktId",
-          "tmdbId"
+          "tmdbId",
+          "doubanId"
         ],
         "type": "string"
       },

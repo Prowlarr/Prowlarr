@@ -2834,6 +2834,13 @@
             }
           },
           {
+            "name": "publisher",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "configured",
             "in": "query",
             "schema": {
@@ -3050,6 +3057,13 @@
           },
           {
             "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "publisher",
             "in": "query",
             "schema": {
               "type": "string"
@@ -4547,7 +4561,10 @@
         "enum": [
           "q",
           "title",
-          "author"
+          "author",
+          "publisher",
+          "genre",
+          "year"
         ],
         "type": "string"
       },
@@ -5789,7 +5806,8 @@
           "imdbYear",
           "traktId",
           "genre",
-          "doubanId"
+          "doubanId",
+          "year"
         ],
         "type": "string"
       },
@@ -6250,7 +6268,9 @@
           "tvMazeId",
           "traktId",
           "tmdbId",
-          "doubanId"
+          "doubanId",
+          "genre",
+          "year"
         ],
         "type": "string"
       },

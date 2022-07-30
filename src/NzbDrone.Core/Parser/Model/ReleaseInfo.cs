@@ -38,6 +38,7 @@ namespace NzbDrone.Core.Parser.Model
         public int Year { get; set; }
         public string Author { get; set; }
         public string BookTitle { get; set; }
+        public string Publisher { get; set; }
         public string Artist { get; set; }
         public string Album { get; set; }
         public string Label { get; set; }

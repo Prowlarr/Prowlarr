@@ -607,11 +607,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 case "booktitle":
                     release.BookTitle = value;
                     break;
+                case "publisher":
+                    release.Publisher = value;
+                    break;
                 case "artist":
                     release.Artist = value;
                     break;
                 case "album":
                     release.Album = value;
+                    break;
+                case "label":
+                    release.Label = value;
+                    break;
+                case "track":
+                    release.Track = value;
                     break;
                 default:
                     break;

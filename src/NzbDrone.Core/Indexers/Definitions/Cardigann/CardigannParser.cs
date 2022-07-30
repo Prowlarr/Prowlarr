@@ -279,7 +279,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             }
 
                             var filters = search.Rows.Filters;
-                            var skipRelease = ParseRowFilters(filters, release, variables, row);
+                            var skipRelease = ParseRowFilters(filters, release, variables, row.ToHtmlPretty());
 
                             if (skipRelease)
                             {

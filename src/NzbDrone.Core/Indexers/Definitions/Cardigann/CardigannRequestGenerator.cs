@@ -49,10 +49,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             variables[".Query.Movie"] = null;
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
+            variables[".Query.Genre"] = searchCriteria.Genre;
             variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
             variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
             variables[".Query.TMDBID"] = searchCriteria.TmdbId?.ToString() ?? null;
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
+            variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -70,7 +72,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Album"] = searchCriteria.Album;
             variables[".Query.Artist"] = searchCriteria.Artist;
             variables[".Query.Label"] = searchCriteria.Label;
-            variables[".Query.Track"] = null;
+            variables[".Query.Genre"] = searchCriteria.Genre;
+            variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
+            variables[".Query.Track"] = searchCriteria.Track;
 
             pageableRequests.Add(GetRequest(variables));
 
@@ -88,6 +92,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Series"] = null;
             variables[".Query.Ep"] = searchCriteria.Episode;
             variables[".Query.Season"] = searchCriteria.Season?.ToString() ?? null;
+            variables[".Query.Genre"] = searchCriteria.Genre;
+            variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.IMDBID"] = searchCriteria.FullImdbId;
             variables[".Query.IMDBIDShort"] = searchCriteria.ImdbId;
             variables[".Query.TVDBID"] = searchCriteria.TvdbId?.ToString() ?? null;
@@ -95,6 +101,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TVRageID"] = searchCriteria.RId?.ToString() ?? null;
             variables[".Query.TVMazeID"] = searchCriteria.TvMazeId?.ToString() ?? null;
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
+            variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
             pageableRequests.Add(GetRequest(variables));
@@ -112,6 +119,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             variables[".Query.Author"] = searchCriteria.Author;
             variables[".Query.Title"] = searchCriteria.Title;
+            variables[".Query.Genre"] = searchCriteria.Genre;
+            variables[".Query.Publisher"] = searchCriteria.Publisher;
+            variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
             pageableRequests.Add(GetRequest(variables));
 

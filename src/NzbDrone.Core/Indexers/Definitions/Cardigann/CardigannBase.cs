@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected readonly IndexerCapabilitiesCategories _categories = new IndexerCapabilitiesCategories();
         protected readonly List<string> _defaultCategories = new List<string>();
 
-        protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "rageid", "tmdbid", "tvdbid", "poster", "banner", "description", "doubanid" };
+        protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "tmdbid", "rageid", "tvdbid", "tvmazeid", "traktid", "doubanid", "poster", "banner", "description" };
 
         protected static readonly string[] _SupportedLogicFunctions =
         {

@@ -16,7 +16,9 @@ namespace NzbDrone.Core.Indexers
         TvMazeId,
         TraktId,
         TmdbId,
-        DoubanId
+        DoubanId,
+        Genre,
+        Year
     }
 
     public enum MovieSearchParam
@@ -28,7 +30,8 @@ namespace NzbDrone.Core.Indexers
         ImdbYear,
         TraktId,
         Genre,
-        DoubanId
+        DoubanId,
+        Year
     }
 
     public enum MusicSearchParam
@@ -51,7 +54,10 @@ namespace NzbDrone.Core.Indexers
     {
         Q,
         Title,
-        Author
+        Author,
+        Publisher,
+        Genre,
+        Year
     }
 
     public class IndexerCapabilities
@@ -75,6 +81,8 @@ namespace NzbDrone.Core.Indexers
         public bool TvSearchTraktAvailable => TvSearchParams.Contains(TvSearchParam.TraktId);
         public bool TvSearchTmdbAvailable => TvSearchParams.Contains(TvSearchParam.TmdbId);
         public bool TvSearchDoubanAvailable => TvSearchParams.Contains(TvSearchParam.DoubanId);
+        public bool TvSearchGenreAvailable => TvSearchParams.Contains(TvSearchParam.Genre);
+        public bool TvSearchYearAvailable => TvSearchParams.Contains(TvSearchParam.Year);
 
         public List<MovieSearchParam> MovieSearchParams;
         public bool MovieSearchAvailable => MovieSearchParams.Count > 0;
@@ -82,6 +90,7 @@ namespace NzbDrone.Core.Indexers
         public bool MovieSearchTmdbAvailable => MovieSearchParams.Contains(MovieSearchParam.TmdbId);
         public bool MovieSearchTraktAvailable => MovieSearchParams.Contains(MovieSearchParam.TraktId);
         public bool MovieSearchGenreAvailable => MovieSearchParams.Contains(MovieSearchParam.Genre);
+        public bool MovieSearchYearAvailable => MovieSearchParams.Contains(MovieSearchParam.Year);
         public bool MovieSearchDoubanAvailable => MovieSearchParams.Contains(MovieSearchParam.DoubanId);
 
         public List<MusicSearchParam> MusicSearchParams;
@@ -97,6 +106,9 @@ namespace NzbDrone.Core.Indexers
         public bool BookSearchAvailable => BookSearchParams.Count > 0;
         public bool BookSearchTitleAvailable => BookSearchParams.Contains(BookSearchParam.Title);
         public bool BookSearchAuthorAvailable => BookSearchParams.Contains(BookSearchParam.Author);
+        public bool BookSearchPublisherAvailable => BookSearchParams.Contains(BookSearchParam.Publisher);
+        public bool BookSearchYearAvailable => BookSearchParams.Contains(BookSearchParam.Year);
+        public bool BookSearchGenreAvailable => BookSearchParams.Contains(BookSearchParam.Genre);
 
         public readonly IndexerCapabilitiesCategories Categories;
         public List<IndexerFlag> Flags;
@@ -313,6 +325,16 @@ namespace NzbDrone.Core.Indexers
                 parameters.Add("doubanid");
             }
 
+            if (TvSearchGenreAvailable)
+            {
+                parameters.Add("genre");
+            }
+
+            if (TvSearchYearAvailable)
+            {
+                parameters.Add("year");
+            }
+
             return string.Join(",", parameters);
         }
 
@@ -349,6 +371,11 @@ namespace NzbDrone.Core.Indexers
             if (MovieSearchDoubanAvailable)
             {
                 parameters.Add("doubanid");
+            }
+
+            if (MovieSearchYearAvailable)
+            {
+                parameters.Add("year");
             }
 
             return string.Join(",", parameters);
@@ -401,6 +428,21 @@ namespace NzbDrone.Core.Indexers
             if (BookSearchAuthorAvailable)
             {
                 parameters.Add("author");
+            }
+
+            if (BookSearchPublisherAvailable)
+            {
+                parameters.Add("publisher");
+            }
+
+            if (BookSearchGenreAvailable)
+            {
+                parameters.Add("genre");
+            }
+
+            if (BookSearchYearAvailable)
+            {
+                parameters.Add("year");
             }
 
             return string.Join(",", parameters);

@@ -7,7 +7,7 @@ namespace NzbDrone.Core.IndexerSearch
         private static readonly Regex TvRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex MovieRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex MusicRegex = new Regex(@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:track\:)(?<track>[^{]+)|(?:label\:)(?<label>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex BookRegex = new Regex(@"\{((?:author\:)(?<author>[^{]+)|(?:title\:)(?<title>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex BookRegex = new Regex(@"\{((?:author\:)(?<author>[^{]+)|(?:publisher\:)(?<publisher>[^{]+)|(?:title\:)(?<title>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string t { get; set; }
         public string q { get; set; }
@@ -32,6 +32,7 @@ namespace NzbDrone.Core.IndexerSearch
         public string genre { get; set; }
         public string author { get; set; }
         public string title { get; set; }
+        public string publisher { get; set; }
         public string configured { get; set; }
         public string source { get; set; }
         public string host { get; set; }
@@ -148,6 +149,11 @@ namespace NzbDrone.Core.IndexerSearch
                     if (match.Groups["title"].Success)
                     {
                         title = match.Groups["title"].Value;
+                    }
+
+                    if (match.Groups["publisher"].Success)
+                    {
+                        publisher = match.Groups["publisher"].Value;
                     }
 
                     q = q.Replace(match.Value, "").Trim();

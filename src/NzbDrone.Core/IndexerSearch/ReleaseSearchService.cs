@@ -93,6 +93,8 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.DoubanId = request.doubanid;
             searchSpec.RId = request.rid;
             searchSpec.TvMazeId = request.tvmazeid;
+            searchSpec.Year = request.year;
+            searchSpec.Genre = request.genre;
 
             return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }
@@ -103,6 +105,9 @@ namespace NzbDrone.Core.IndexerSearch
 
             searchSpec.Author = request.author;
             searchSpec.Title = request.title;
+            searchSpec.Publisher = request.publisher;
+            searchSpec.Year = request.year;
+            searchSpec.Genre = request.genre;
 
             return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
         }

@@ -595,7 +595,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     break;
                 case "genre":
                     release.Genres = release.Genres.Union(value.Split(',')).ToList();
-                    value = release.Genres.ToString();
+                    value = string.Join(",", release.Genres);
                     break;
                 case "year":
                     release.Year = ParseUtil.CoerceInt(value);

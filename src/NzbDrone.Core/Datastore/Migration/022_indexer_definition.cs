@@ -8,7 +8,7 @@ using NzbDrone.Core.Datastore.Migration.Framework;
 
 namespace NzbDrone.Core.Datastore.Migration
 {
-    [Migration(19)]
+    [Migration(22)]
     public class indexer_definition : NzbDroneMigrationBase
     {
         protected override void MainDbUpgrade()

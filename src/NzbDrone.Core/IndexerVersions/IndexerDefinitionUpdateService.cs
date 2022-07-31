@@ -28,7 +28,7 @@ namespace NzbDrone.Core.IndexerVersions
     {
         /* Update Service will fall back if version # does not exist for an indexer per Ta */
 
-        private const string DEFINITION_BRANCH = "master";
+        private const string DEFINITION_BRANCH = "newznab-xml-to-yml-scriptupdates";
         private const int DEFINITION_VERSION = 8;
 
         //Used when moving yml to C#

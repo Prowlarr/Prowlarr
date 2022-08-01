@@ -594,8 +594,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.PosterUrl;
                     break;
                 case "genre":
-                    release.Genres = release.Genres.Union(value.Split(',')).ToList();
-                    value = string.Join(",", release.Genres);
+                    char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']' };
+                    release.Genres = release.Genres.Union(value.Split(delimiters, System.StringSplitOptions.RemoveEmptyEntries)).ToList();
+                    value = string.Join(", ", release.Genres);
                     break;
                 case "year":
                     release.Year = ParseUtil.CoerceInt(value);
@@ -652,6 +653,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         case "strdump":
                             // for debugging
                             _logger.Debug(string.Format("CardigannIndexer ({0}): row strdump: {1}", _definition.Id, row.ToString()));
+                            break;
+                        case "validate":
+                            char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']' };
+                            var args = (string)filter.Args;
+                            var argsList = args.ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+                            var validList = argsList.ToList();
+                            var validIntersect = validList.Intersect(row.ToString().ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries)).ToList();
+                            row = string.Join(", ", validIntersect);
                             break;
                         default:
                             _logger.Error(string.Format("CardigannIndexer ({0}): Unsupported rows filter: {1}", _definition.Id, filter.Name));

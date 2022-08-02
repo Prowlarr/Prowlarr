@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
@@ -100,10 +100,6 @@ public class GreatPosterWallParser : GazelleParser
 
         foreach (var result in jsonResponse.Resource.Response.Results)
         {
-            var groupName = WebUtility.HtmlDecode(result.GroupName);
-            var groupSubName = WebUtility.HtmlDecode(result.GroupSubName);
-            var groupYear = result.GroupYear;
-
             foreach (var torrent in result.Torrents)
             {
                 var infoUrl = GetInfoUrl(result.GroupId.ToString(), torrent.TorrentId);
@@ -114,7 +110,7 @@ public class GreatPosterWallParser : GazelleParser
                 {
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800,
-                    Title = "", // TODO: wait for GPW to either add fileList to browse api response or build name without release group yourself for now
+                    Title = torrent.FileName,
                     InfoUrl = infoUrl,
                     Guid = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
@@ -349,4 +345,10 @@ public class GreatPosterWallTorrent
 
         [JsonProperty("subtitles")]
         public string Subtitles { get; set; }
+
+        [JsonProperty("fileName")]
+        public string FileName { get; set; }
+
+        [JsonProperty("releaseGroup")]
+        public string ReleaseGroup { get; set; }
 }

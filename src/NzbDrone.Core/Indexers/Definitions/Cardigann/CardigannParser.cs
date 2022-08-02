@@ -594,7 +594,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.PosterUrl;
                     break;
                 case "genre":
-                    char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']' };
+                    char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
                     release.Genres = release.Genres.Union(value.Split(delimiters, System.StringSplitOptions.RemoveEmptyEntries)).ToList();
                     value = string.Join(", ", release.Genres);
                     break;
@@ -655,7 +655,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             _logger.Debug(string.Format("CardigannIndexer ({0}): row strdump: {1}", _definition.Id, row.ToString()));
                             break;
                         case "validate":
-                            char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']' };
+                            char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
                             var args = (string)filter.Args;
                             var argsList = args.ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                             var validList = argsList.ToList();

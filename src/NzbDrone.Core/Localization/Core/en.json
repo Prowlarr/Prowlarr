@@ -34,6 +34,8 @@
   "ApplicationLongTermStatusCheckSingleClientMessage": "Applications unavailable due to failures for more than 6 hours: {0}",
   "ApplicationStatusCheckAllClientMessage": "All applications are unavailable due to failures",
   "ApplicationStatusCheckSingleClientMessage": "Applications unavailable due to failures: {0}",
+  "ApplicationURL": "Application URL",
+  "ApplicationUrlHelpText": "This application's external URL including http(s)://, port and URL base",
   "Applications": "Applications",
   "Apply": "Apply",
   "ApplyTags": "Apply Tags",

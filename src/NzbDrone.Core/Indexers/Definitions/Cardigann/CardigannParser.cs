@@ -145,14 +145,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                                 throw new CardigannException(string.Format("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value ?? "<null>", ex.Message));
                             }
+                        }
 
-                            var filters = search.Rows.Filters;
-                            var skipRelease = ParseRowFilters(filters, release, variables, row);
+                        var filters = search.Rows.Filters;
+                        var skipRelease = ParseRowFilters(filters, release, variables, row);
 
-                            if (skipRelease)
-                            {
-                                continue;
-                            }
+                        if (skipRelease)
+                        {
+                            continue;
                         }
 
                         releases.Add(release);

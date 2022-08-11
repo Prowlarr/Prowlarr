@@ -54,7 +54,7 @@ export const defaultState = {
     },
     {
       name: 'grabTitle',
-      label: translate('Grab Title'),
+      label: translate('GrabTitle'),
       isSortable: false,
       isVisible: false
     },

@@ -50,7 +50,7 @@ export const defaultState = {
       name: 'parameters',
       label: translate('Parameters'),
       isSortable: false,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'grabTitle',

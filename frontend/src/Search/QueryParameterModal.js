@@ -25,26 +25,38 @@ const seriesTokens = [
   { token: '{ImdbId:tt1234567}', example: 'tt12345' },
   { token: '{TvdbId:12345}', example: '12345' },
   { token: '{TmdbId:12345}', example: '12345' },
-  { token: '{TvMazeId:12345}', example: '54321' },
+  { token: '{TvMazeId:12345}', example: '12345' },
+  { token: '{TraktId:12345}', example: '12345' },
+  { token: '{DoubanId:12345}', example: '12345' },
   { token: '{Season:00}', example: '01' },
-  { token: '{Episode:00}', example: '01' }
+  { token: '{Episode:00}', example: '01' },
+  { token: '{Genre:Some Genre}', example: 'Action' },
+  { token: '{Year:2010}', example: '2010' }
 ];
 
 const movieTokens = [
   { token: '{ImdbId:tt1234567}', example: 'tt12345' },
   { token: '{TmdbId:12345}', example: '12345' },
-  { token: '{Year:2000}', example: '2005' }
+  { token: '{TraktId:12345}', example: '12345' },
+  { token: '{DoubanId:12345}', example: '12345' },
+  { token: '{Year:2000}', example: '2005' },
+  { token: '{Genre:Some Genre}', example: 'Action' }
 ];
 
 const audioTokens = [
   { token: '{Artist:Some Body}', example: 'Nirvana' },
   { token: '{Album:Some Album}', example: 'Nevermind' },
-  { token: '{Label:Some Label}', example: 'Geffen' }
+  { token: '{Label:Some Label}', example: 'Geffen' },
+  { token: '{Genre:Some Genre}', example: 'Action' },
+  { token: '{Year:2010}', example: '2010' }
 ];
 
 const bookTokens = [
   { token: '{Author:Some Author}', example: 'J. R. R. Tolkien' },
-  { token: '{Title:Some Book}', example: 'Lord of the Rings' }
+  { token: '{Title:Some Book}', example: 'Lord of the Rings' },
+  { token: '{Genre:Some Genre}', example: 'Action' },
+  { token: '{Year:2010}', example: '2010' },
+  { token: '{Publisher:Some Publisher}', example: 'Dover' }
 ];
 
 class QueryParameterModal extends Component {

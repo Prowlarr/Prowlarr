@@ -234,6 +234,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                         webRequest.Headers.TransferEncoding.ParseAdd(header.Value);
                         break;
                     case "User-Agent":
+                        webRequest.Headers.UserAgent.Clear();
                         webRequest.Headers.UserAgent.ParseAdd(header.Value);
                         break;
                     case "Proxy-Connection":

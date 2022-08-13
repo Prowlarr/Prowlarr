@@ -403,7 +403,7 @@ namespace NzbDrone.Core.Indexers
                 throw new CloudFlareProtectionException(response);
             }
 
-            UpdateCookies(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(request.HttpRequest.Cookies, DateTime.Now + TimeSpan.FromDays(30));
 
             return new IndexerResponse(request, response);
         }

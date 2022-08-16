@@ -9,7 +9,7 @@ variables:
   testsFolder: './_tests'
   yarnCacheFolder: $(Pipeline.Workspace)/.yarn
   nugetCacheFolder: $(Pipeline.Workspace)/.nuget/packages
-  majorVersion: '0.4.4'
+  majorVersion: '0.4.5'
   minorVersion: $[counter('minorVersion', 1)]
   prowlarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(prowlarrVersion)'
@@ -541,7 +541,7 @@ stages:
         Prowlarr__Postgres__Password: 'prowlarr'
 
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
 
       timeoutInMinutes: 10
         
@@ -675,7 +675,7 @@ stages:
         Prowlarr__Postgres__Password: 'prowlarr'
 
       pool:
-        vmImage: 'ubuntu-18.04'
+        vmImage: ${{ variables.linuxImage }}
 
       steps:
         - task: UseDotNet@2

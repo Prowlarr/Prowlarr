@@ -2,5 +2,6 @@
 - [Lidarr](https://lidarr.audio/donate), [Prowlarr](https://prowlarr.com/donate), [Radarr](https://radarr.video/donate), [Readarr](https://readarr.com/donate) now accept direct bitcoin donations
 - Radarr Postgres Database Support in `nightly` and `develop`
 - Prowlarr Postgres Database Support in `nightly` and `develop`
+- Readarr Postgres Database Support in `nightly`
 - [Lidarr Postgres Database Support in development (Draft PR#2625)](https://github.com/Lidarr/Lidarr/pull/2625)
 - \*Arrs Wiki Contributions welcomed and strongly encouraged, simply auth with GitHub on the wiki and update the page

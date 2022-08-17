@@ -347,5 +347,9 @@
     "Encoding": "Кодирование",
     "Applications": "Приложения",
     "Application": "Приложения",
-    "Notifications": "Оповещения"
+    "Notifications": "Оповещения",
+    "InstanceName": "Имя экземпляра",
+    "InstanceNameHelpText": "Имя экземпляра на вкладке и для имени приложения системного журнала",
+    "Started": "Запущено",
+    "Database": "База данных"
 }

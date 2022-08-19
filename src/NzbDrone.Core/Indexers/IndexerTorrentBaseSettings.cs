@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers
         [FieldDefinition(1, Type = FieldType.Textbox, Label = "Seed Ratio", HelpText = "The ratio a torrent should reach before stopping, empty is app's default", Advanced = true)]
         public double? SeedRatio { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Number, Label = "Seed Time", HelpText = "The time a torrent should be seeded before stopping, empty is app's default", Advanced = true)]
+        [FieldDefinition(2, Type = FieldType.Number, Label = "Seed Time", HelpText = "The time a torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
         public int? SeedTime { get; set; }
     }
 }

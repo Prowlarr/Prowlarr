@@ -134,9 +134,9 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             }
             else if (request.Method == HttpMethod.Post)
             {
-                var contentTypeType = request.Headers.ContentType;
+                var contentTypeType = request.Headers.ContentType.ToLower() ?? "<null>";
 
-                if (contentTypeType == "application/x-www-form-urlencoded")
+                if (contentTypeType.Contains("application/x-www-form-urlencoded"))
                 {
                     var contentTypeValue = request.Headers.ContentType.ToString();
                     var postData = request.GetContent();
@@ -155,7 +155,8 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                         UserAgent = userAgent
                     };
                 }
-                else if (contentTypeType.Contains("multipart/form-data"))
+                else if (contentTypeType.Contains("multipart/form-data")
+                         || contentTypeType.Contains("text/html"))
                 {
                     //TODO Implement - check if we just need to pass the content-type with the relevant headers
                     throw new FlareSolverrException("Unimplemented POST Content-Type: " + request.Headers.ContentType);
@@ -177,9 +178,10 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             newRequest.Headers.ContentType = "application/json";
             newRequest.Method = HttpMethod.Post;
+            newRequest.LogResponseContent = true;
             newRequest.SetContent(req.ToJson());
 
-            _logger.Debug("Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);
+            _logger.Debug("Cloudflare Detected, Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);
 
             return newRequest;
         }

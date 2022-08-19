@@ -152,6 +152,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Offset"] = searchCriteria.Offset?.ToString() ?? null;
             variables[".Query.Extended"] = null;
             variables[".Query.APIKey"] = null;
+            variables[".Query.Genre"] = null;
 
             //Movie
             variables[".Query.Movie"] = null;
@@ -168,6 +169,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TVRageID"] = null;
             variables[".Query.TVMazeID"] = null;
             variables[".Query.TraktID"] = null;
+            variables[".Query.DoubanID"] = null;
             variables[".Query.Episode"] = null;
 
             //Music
@@ -179,6 +181,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             //Book
             variables[".Query.Author"] = null;
             variables[".Query.Title"] = null;
+            variables[".Query.Publisher"] = null;
 
             return variables;
         }

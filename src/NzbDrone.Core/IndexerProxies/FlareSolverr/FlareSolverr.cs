@@ -29,6 +29,8 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         public override string Name => "FlareSolverr";
 
+        public List<IIndexerProxy> Proxies { get; set; }
+
         public override HttpRequest PreRequest(HttpRequest request)
         {
             //Try original request first, ignore errors, detect CF in post response
@@ -74,6 +76,26 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             return finalResponse;
         }
 
+        private void InjectProxy(FlareSolverrRequest req)
+        {
+            if (Proxies != null && Proxies.Count > 0)
+            {
+                foreach (var proxy in Proxies)
+                {
+                    var request = new HttpRequest(string.Empty);
+                    proxy.PreRequest(request);
+                    if (request.Proxy is not null and WebProxy)
+                    {
+                        req.Proxy = new FlareSolverrRequestProxy()
+                        {
+                            Url = (request.Proxy as WebProxy).Address.ToString()
+                        };
+                        break;
+                    }
+                }
+            }
+        }
+
         private void InjectCookies(HttpRequest request, FlareSolverrResponse flareSolverrResponse)
         {
             var rCookies = flareSolverrResponse.Solution.Cookies;
@@ -112,9 +134,9 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             }
             else if (request.Method == HttpMethod.Post)
             {
-                var contentTypeType = request.Headers.ContentType.ToLower() ?? "<null>";
+                var contentTypeType = request.Headers.ContentType;
 
-                if (contentTypeType.Contains("application/x-www-form-urlencoded"))
+                if (contentTypeType == "application/x-www-form-urlencoded")
                 {
                     var contentTypeValue = request.Headers.ContentType.ToString();
                     var postData = request.GetContent();
@@ -133,8 +155,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                         UserAgent = userAgent
                     };
                 }
-                else if (contentTypeType.Contains("multipart/form-data")
-                         || contentTypeType.Contains("text/html"))
+                else if (contentTypeType.Contains("multipart/form-data"))
                 {
                     //TODO Implement - check if we just need to pass the content-type with the relevant headers
                     throw new FlareSolverrException("Unimplemented POST Content-Type: " + request.Headers.ContentType);
@@ -149,15 +170,16 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                 throw new FlareSolverrException("Unsupported HttpMethod: " + request.Method);
             }
 
+            InjectProxy(req);
+
             var apiUrl = string.Format("{0}/v1", Settings.Host.TrimEnd('/'));
             var newRequest = new HttpRequest(apiUrl, HttpAccept.Json);
 
             newRequest.Headers.ContentType = "application/json";
             newRequest.Method = HttpMethod.Post;
-            newRequest.LogResponseContent = true;
             newRequest.SetContent(req.ToJson());
 
-            _logger.Debug("Cloudflare Detected, Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);
+            _logger.Debug("Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);
 
             return newRequest;
         }
@@ -197,6 +219,12 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public string Url { get; set; }
             public string UserAgent { get; set; }
             public Cookie[] Cookies { get; set; }
+            public FlareSolverrRequestProxy Proxy { get; set; }
+        }
+
+        public class FlareSolverrRequestProxy
+        {
+            public string Url { get; set; }
         }
 
         public class FlareSolverrRequestGet : FlareSolverrRequest

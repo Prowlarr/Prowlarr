@@ -8,6 +8,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Dispatchers;
 using NzbDrone.Common.TPL;
 using NzbDrone.Core.IndexerProxies;
+using NzbDrone.Core.IndexerProxies.FlareSolverr;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -68,6 +69,12 @@ namespace NzbDrone.Core.Indexers
                     selectedProxy = proxy;
                     break;
                 }
+            }
+
+            // if first is FlareSolverr inject other proxy
+            if (selectedProxy is not null and FlareSolverr)
+            {
+                (selectedProxy as FlareSolverr).Proxies = proxies.FindAll(proxy => proxy != selectedProxy && definition.Tags.Intersect(proxy.Definition.Tags).Any());
             }
 
             return selectedProxy;

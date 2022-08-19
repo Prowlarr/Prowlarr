@@ -99,7 +99,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 AddRequestHeaders(requestMessage, request.Headers);
             }
 
-            var httpClient = GetClient(request.Url);
+            var httpClient = GetClient(request);
 
             var sw = new Stopwatch();
 
@@ -154,16 +154,32 @@ namespace NzbDrone.Common.Http.Dispatchers
             }
         }
 
-        protected virtual System.Net.Http.HttpClient GetClient(HttpUri uri)
+        protected virtual System.Net.Http.HttpClient GetClient(HttpRequest request)
         {
-            var proxySettings = _proxySettingsProvider.GetProxySettings(uri);
+            if (request.Proxy is not null and WebProxy)
+            {
+                var proxy = request.Proxy as WebProxy;
 
-            var key = proxySettings?.Key ?? NO_PROXY_KEY;
+                var key = proxy.Address.ToString();
 
-            return _httpClientCache.Get(key, () => CreateHttpClient(proxySettings));
+                return _httpClientCache.Get(key, () => CreateHttpClient(proxy));
+            }
+            else
+            {
+                var proxySettings = _proxySettingsProvider.GetProxySettings(request.Url);
+
+                var key = proxySettings?.Key ?? NO_PROXY_KEY;
+
+                return _httpClientCache.Get(key, () => CreateHttpClient(proxySettings));
+            }
         }
 
         protected virtual System.Net.Http.HttpClient CreateHttpClient(HttpProxySettings proxySettings)
+        {
+            return CreateHttpClient(proxySettings != null ? _createManagedWebProxy.GetWebProxy(proxySettings) : null);
+        }
+
+        protected virtual System.Net.Http.HttpClient CreateHttpClient(IWebProxy proxy)
         {
             var handler = new SocketsHttpHandler()
             {
@@ -180,9 +196,9 @@ namespace NzbDrone.Common.Http.Dispatchers
                 }
             };
 
-            if (proxySettings != null)
+            if (proxy != null)
             {
-                handler.Proxy = _createManagedWebProxy.GetWebProxy(proxySettings);
+                handler.Proxy = proxy;
             }
 
             var client = new System.Net.Http.HttpClient(handler)

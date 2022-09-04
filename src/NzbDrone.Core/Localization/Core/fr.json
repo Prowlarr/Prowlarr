@@ -358,7 +358,7 @@
     "Description": "Description",
     "Donations": "Dons",
     "Enabled": "Activé",
-    "Grabs": "Saisie",
+    "Grabs": "Complétés",
     "Id": "Id",
     "Presets": "Préconfigurations",
     "Privacy": "Vie privée",
@@ -440,5 +440,9 @@
     "MovieSearchTypes": "Types de recherches de films",
     "MusicSearchTypes": "Type de recherche de musiques",
     "NotSupported": "Non supporté",
-    "SearchCapabilities": "Capacités de recherche"
+    "SearchCapabilities": "Capacités de recherche",
+    "Duration": "Durée",
+    "LastDuration": "Dernière durée",
+    "InstanceName": "Nom de l'instance",
+    "InstanceNameHelpText": "Nom de l'instance dans l'onglet du navigateur et pour le nom d'application dans Syslog"
 }

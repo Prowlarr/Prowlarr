@@ -404,7 +404,7 @@
     "HistoryCleanupDaysHelpText": "Defina como 0 para desabilitar a limpeza automática",
     "OnApplicationUpdate": "Ao Atualizar o Aplicativo",
     "OnApplicationUpdateHelpText": "Ao Atualizar o Aplicativo",
-    "OnGrab": "Ao Baixar",
+    "OnGrab": "Em Espera",
     "OnHealthIssue": "Ao ter problema de integridade",
     "TestAllIndexers": "Testar todos os indexadores",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent fornecido pelo aplicativo que chamou a API",

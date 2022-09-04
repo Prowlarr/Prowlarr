@@ -336,8 +336,8 @@
     "OnHealthIssue": "En Problema de Salud",
     "TestAllIndexers": "Comprobar Todos los Indexers",
     "NotificationTriggersHelpText": "Seleccione qué eventos deben activar esta notificación",
-    "OnApplicationUpdate": "Al actualizar la aplicación",
-    "OnApplicationUpdateHelpText": "Al actualizar la aplicación",
+    "OnApplicationUpdate": "Al Actualizar La Aplicación",
+    "OnApplicationUpdateHelpText": "Al Actualizar La Aplicación",
     "AddRemoveOnly": "Sólo añadir y eliminar",
     "AddedToDownloadClient": "Descarga añadida al cliente",
     "AddNewIndexer": "Añadir nuevo indexador",
@@ -361,5 +361,8 @@
     "Notifications": "Notificaciones",
     "UnableToLoadIndexers": "No se pueden cargar los indexers",
     "Yes": "si",
-    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent proporcionado por la aplicación llamó a la API"
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent proporcionado por la aplicación llamó a la API",
+    "InstanceName": "Nombre de Instancia",
+    "InstanceNameHelpText": "Nombre de instancia en pestaña y para nombre de aplicación en Syslog",
+    "Database": "Base de Datos"
 }

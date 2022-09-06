@@ -4,6 +4,7 @@ using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Localization;
 
 namespace NzbDrone.Core.IndexerProxies.Socks4
@@ -25,14 +26,13 @@ namespace NzbDrone.Core.IndexerProxies.Socks4
                 return null;
             }
 
-            if (Settings.Username.IsNotNullOrWhiteSpace() && Settings.Password.IsNotNullOrWhiteSpace())
-            {
-                request.Proxy = new WebProxy(uri, false, null, new NetworkCredential(Settings.Username, Settings.Password));
-            }
-            else
-            {
-                request.Proxy = new WebProxy(uri);
-            }
+            request.ProxySettings = new HttpProxySettings(ProxyType.Socks4,
+                                Settings.Host,
+                                Settings.Port,
+                                null,
+                                false,
+                                Settings.Username,
+                                Settings.Password);
 
             _logger.Debug("Applying Socks4 Proxy {0} to request {1}", Name, request.Url);
 

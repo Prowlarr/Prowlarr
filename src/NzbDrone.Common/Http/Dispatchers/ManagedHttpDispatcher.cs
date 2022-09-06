@@ -99,7 +99,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 AddRequestHeaders(requestMessage, request.Headers);
             }
 
-            var httpClient = GetClient(request.Url);
+            var httpClient = GetClient(request.Url, request.ProxySettings);
 
             var sw = new Stopwatch();
 
@@ -154,9 +154,9 @@ namespace NzbDrone.Common.Http.Dispatchers
             }
         }
 
-        protected virtual System.Net.Http.HttpClient GetClient(HttpUri uri)
+        protected virtual System.Net.Http.HttpClient GetClient(HttpUri uri, HttpProxySettings requestProxy)
         {
-            var proxySettings = _proxySettingsProvider.GetProxySettings(uri);
+            var proxySettings = requestProxy ?? _proxySettingsProvider.GetProxySettings(uri);
 
             var key = proxySettings?.Key ?? NO_PROXY_KEY;
 

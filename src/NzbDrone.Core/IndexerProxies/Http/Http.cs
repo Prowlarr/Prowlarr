@@ -3,7 +3,9 @@ using NLog;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Localization;
+using NzbDrone.Core.Notifications.Prowl;
 
 namespace NzbDrone.Core.IndexerProxies.Http
 {
@@ -18,14 +20,13 @@ namespace NzbDrone.Core.IndexerProxies.Http
 
         public override HttpRequest PreRequest(HttpRequest request)
         {
-            if (Settings.Username.IsNotNullOrWhiteSpace() && Settings.Password.IsNotNullOrWhiteSpace())
-            {
-                request.Proxy = new WebProxy(Settings.Host + ":" + Settings.Port, false, null, new NetworkCredential(Settings.Username, Settings.Password));
-            }
-            else
-            {
-                request.Proxy = new WebProxy(Settings.Host + ":" + Settings.Port, false, null);
-            }
+            request.ProxySettings = new HttpProxySettings(ProxyType.Http,
+                                Settings.Host,
+                                Settings.Port,
+                                null,
+                                false,
+                                Settings.Username,
+                                Settings.Password);
 
             _logger.Debug("Applying HTTP(S) Proxy {0} to request {1}", Name, request.Url);
 

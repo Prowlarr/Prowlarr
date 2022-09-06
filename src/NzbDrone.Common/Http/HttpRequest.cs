@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http.Proxy;
 
 namespace NzbDrone.Common.Http
 {
@@ -37,7 +38,7 @@ namespace NzbDrone.Common.Http
         public HttpMethod Method { get; set; }
         public HttpHeader Headers { get; set; }
         public Encoding Encoding { get; set; }
-        public IWebProxy Proxy { get; set; }
+        public HttpProxySettings ProxySettings { get; set; }
         public byte[] ContentData { get; set; }
         public string ContentSummary { get; set; }
         public ICredentials Credentials { get; set; }

@@ -89,13 +89,13 @@ namespace NzbDrone.Common.Http
 
                     if (match.Success)
                     {
-                        return (Request.Url += new HttpUri(match.Groups[2].Value)).FullUri;
+                        return (Request.Url + new HttpUri(match.Groups[2].Value)).FullUri;
                     }
 
                     return string.Empty;
                 }
 
-                return (Request.Url += new HttpUri(newUrl)).FullUri;
+                return (Request.Url + new HttpUri(newUrl)).FullUri;
             }
         }
 

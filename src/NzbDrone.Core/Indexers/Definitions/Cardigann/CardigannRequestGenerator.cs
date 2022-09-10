@@ -952,7 +952,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     var errormessage = "Got redirected to another domain. Try changing the indexer URL to " + domainHint + ".";
 
-                    throw new CardigannException(errormessage);
+                    _logger.Warn(errormessage);
                 }
 
                 return true;

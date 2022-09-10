@@ -190,6 +190,12 @@ public class MoreThanTVParser : IParseIndexerResponse
             {
                 // Parse required data
                 var downloadAnchor = torrent.QuerySelector("span a[href^=\"/torrents.php?action=download\"]");
+
+                if (downloadAnchor == null)
+                {
+                    continue;
+                }
+
                 var title = downloadAnchor.ParentElement.ParentElement.ParentElement.QuerySelector("a[class=\"overlay_torrent\"]").TextContent.Trim();
                 title = CleanUpTitle(title);
 

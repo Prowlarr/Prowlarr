@@ -17,6 +17,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -28,18 +29,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class TVVault : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "TVVault";
-        public override string[] IndexerUrls => new[] { "https://tv-vault.me/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "TV-Vault is a very unique tracker dedicated for old TV shows, TV movies and documentaries.";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
 
-        public TVVault(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public TVVault(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -106,32 +101,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                },
-                MovieSearchParams = new List<MovieSearchParam>
-                {
-                    MovieSearchParam.Q, MovieSearchParam.ImdbId
-                },
-                Flags = new List<IndexerFlag>
-                {
-                    IndexerFlag.FreeLeech
-                }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Movies);
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TVHD);
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVSD);
-
-            return caps;
         }
     }
 

@@ -15,6 +15,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -25,17 +26,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class PreToMe : TorrentIndexerBase<PreToMeSettings>
     {
         public override string Name => "PreToMe";
-        public override string[] IndexerUrls => new string[] { "https://pretome.info/" };
-        public override string Description => "PreToMe is a ratioless 0Day/General tracker.";
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public PreToMe(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public PreToMe(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -95,90 +90,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
-                                   },
-                MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
-                BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping("cat[]=22", NewznabStandardCategory.PC, "Applications");
-            caps.Categories.AddCategoryMapping("cat[]=22&tags=Windows", NewznabStandardCategory.PC0day, "Applications/Windows");
-            caps.Categories.AddCategoryMapping("cat[]=22&tags=MAC", NewznabStandardCategory.PCMac, "Applications/MAC");
-            caps.Categories.AddCategoryMapping("cat[]=22&tags=Linux", NewznabStandardCategory.PC, "Applications/Linux");
-
-            caps.Categories.AddCategoryMapping("cat[]=27", NewznabStandardCategory.BooksEBook, "Ebooks");
-
-            caps.Categories.AddCategoryMapping("cat[]=4", NewznabStandardCategory.Console, "Games");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=PC", NewznabStandardCategory.PCGames, "Games/PC");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=RIP", NewznabStandardCategory.PCGames, "Games/RIP");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=ISO", NewznabStandardCategory.PCGames, "Games/ISO");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=XBOX360", NewznabStandardCategory.ConsoleXBox360, "Games/XBOX360");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=PS3", NewznabStandardCategory.ConsolePS3, "Games/PS3");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=Wii", NewznabStandardCategory.ConsoleWii, "Games/Wii");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=PSP", NewznabStandardCategory.ConsolePSP, "Games/PSP");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=GAMES-NSW", NewznabStandardCategory.ConsoleOther, "Games/NSW");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=NDS", NewznabStandardCategory.ConsoleNDS, "Games/NDS");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=Xbox", NewznabStandardCategory.ConsoleXBox, "Games/Xbox");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=NSW", NewznabStandardCategory.ConsoleOther, "Games/NSW");
-            caps.Categories.AddCategoryMapping("cat[]=4&tags=PS2", NewznabStandardCategory.ConsoleOther, "Games/PS2");
-
-            caps.Categories.AddCategoryMapping("cat[]=31", NewznabStandardCategory.Other, "Miscellaneous");
-            caps.Categories.AddCategoryMapping("cat[]=31&tags=Ebook", NewznabStandardCategory.BooksEBook, "Miscellaneous/Ebook");
-            caps.Categories.AddCategoryMapping("cat[]=31&tags=RARFiX", NewznabStandardCategory.Other, "Miscellaneous/RARFiX");
-
-            caps.Categories.AddCategoryMapping("cat[]=19", NewznabStandardCategory.Movies, "Movies");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=x264", NewznabStandardCategory.Movies, "Movies/x264");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=720p", NewznabStandardCategory.MoviesHD, "Movies/720p");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=XviD", NewznabStandardCategory.MoviesSD, "Movies/XviD");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=BluRay", NewznabStandardCategory.MoviesHD, "Movies/BluRay");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=DVDRiP", NewznabStandardCategory.MoviesSD, "Movies/DVDRiP");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=1080p", NewznabStandardCategory.MoviesHD, "Movies/1080p");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=DVD", NewznabStandardCategory.MoviesSD, "Movies/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=DVDR", NewznabStandardCategory.MoviesSD, "Movies/DVDR");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=WMV", NewznabStandardCategory.Movies, "Movies/WMV");
-            caps.Categories.AddCategoryMapping("cat[]=19&tags=CAM", NewznabStandardCategory.Movies, "Movies/CAM");
-
-            caps.Categories.AddCategoryMapping("cat[]=6", NewznabStandardCategory.Audio, "Music");
-            caps.Categories.AddCategoryMapping("cat[]=6&tags=MP3", NewznabStandardCategory.AudioMP3, "Music/MP3");
-            caps.Categories.AddCategoryMapping("cat[]=6&tags=V2", NewznabStandardCategory.AudioMP3, "Music/V2");
-            caps.Categories.AddCategoryMapping("cat[]=6&tags=FLAC", NewznabStandardCategory.AudioLossless, "Music/FLAC");
-            caps.Categories.AddCategoryMapping("cat[]=6&tags=320kbps", NewznabStandardCategory.AudioMP3, "Music/320kbps");
-
-            caps.Categories.AddCategoryMapping("cat[]=7", NewznabStandardCategory.TV, "TV");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=x264", NewznabStandardCategory.TVHD, "TV/x264");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=720p", NewznabStandardCategory.TVHD, "TV/720p");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=HDTV", NewznabStandardCategory.TVHD, "TV/HDTV");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=XviD", NewznabStandardCategory.TVSD, "TV/XviD");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=BluRay", NewznabStandardCategory.TVHD, "TV/BluRay");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=DVDRiP", NewznabStandardCategory.TVSD, "TV/DVDRiP");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=DVD", NewznabStandardCategory.TVSD, "TV/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=Documentary", NewznabStandardCategory.TVDocumentary, "TV/Documentary");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=PDTV", NewznabStandardCategory.TVSD, "TV/PDTV");
-            caps.Categories.AddCategoryMapping("cat[]=7&tags=HD-DVD", NewznabStandardCategory.TVSD, "TV/HD-DVD");
-
-            caps.Categories.AddCategoryMapping("cat[]=51", NewznabStandardCategory.XXX, "XXX");
-            caps.Categories.AddCategoryMapping("cat[]=51&tags=XviD", NewznabStandardCategory.XXXXviD, "XXX/XviD");
-            caps.Categories.AddCategoryMapping("cat[]=51&tags=DVDRiP", NewznabStandardCategory.XXXDVD, "XXX/DVDRiP");
-
-            return caps;
         }
     }
 

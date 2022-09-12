@@ -6,28 +6,31 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
-    public abstract class AvistazBase : TorrentIndexerBase<AvistazSettings>
+    public class Avistaz : TorrentIndexerBase<AvistazSettings>
     {
+        public override string Name => "Avistaz";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override string[] IndexerUrls => new string[] { "" };
         protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
+        public override string Description => "";
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
+
         private IIndexerRepository _indexerRepository;
 
-        public AvistazBase(IIndexerRepository indexerRepository,
+        public Avistaz(IIndexerRepository indexerRepository,
                        IIndexerHttpClient httpClient,
                        IEventAggregator eventAggregator,
                        IIndexerStatusService indexerStatusService,
+                       IIndexerDefinitionUpdateService definitionService,
                        IConfigService configService,
                        Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
             _indexerRepository = indexerRepository;
         }

@@ -8,6 +8,7 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -17,6 +18,7 @@ namespace NzbDrone.Core.Indexers
         where TSettings : IIndexerSettings, new()
     {
         protected readonly IIndexerStatusService _indexerStatusService;
+        protected readonly IIndexerDefinitionUpdateService _definitionService;
         protected readonly IConfigService _configService;
         protected readonly Logger _logger;
 
@@ -37,9 +39,10 @@ namespace NzbDrone.Core.Indexers
         public abstract bool SupportsRedirect { get; }
         public abstract IndexerCapabilities Capabilities { get; protected set; }
 
-        public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public IndexerBase(IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
         {
             _indexerStatusService = indexerStatusService;
+            _definitionService = definitionService;
             _configService = configService;
             _logger = logger;
         }
@@ -64,16 +67,36 @@ namespace NzbDrone.Core.Indexers
         {
             get
             {
-                var config = (IProviderConfig)new TSettings();
-
-                yield return new IndexerDefinition
+                foreach (var def in _definitionService.AllForImplementation(GetType().Name.ToLower()))
                 {
-                    Name = GetType().Name,
-                    Enable = config.Validate().IsValid && SupportsRss,
-                    Implementation = GetType().Name,
-                    Settings = config
-                };
+                    yield return GetDefinition(def);
+                }
             }
+        }
+
+        private IndexerDefinition GetDefinition(IndexerMetaDefinition definition)
+        {
+            var config = (IProviderConfig)new TSettings();
+
+            return new IndexerDefinition
+            {
+                Enable = config.Validate().IsValid && SupportsRss,
+                Name = definition.Name,
+                Language = definition.Language,
+                Implementation = GetType().Name,
+                DefinitionFile = definition.File,
+                Settings = config,
+                Privacy = definition.Type switch
+                {
+                    "private" => IndexerPrivacy.Private,
+                    "public" => IndexerPrivacy.Public,
+                    _ => IndexerPrivacy.SemiPrivate
+                },
+                SupportsRss = SupportsRss,
+                SupportsSearch = SupportsSearch,
+                SupportsRedirect = SupportsRedirect,
+                Capabilities = new IndexerCapabilities()
+            };
         }
 
         public virtual ProviderDefinition Definition { get; set; }

@@ -15,6 +15,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -26,16 +27,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ImmortalSeed : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "ImmortalSeed";
-
-        public override string[] IndexerUrls => new string[] { "https://immortalseed.me/" };
-        public override string Description => "ImmortalSeed (iS) is a Private Torrent Tracker for MOVIES / TV / GENERAL";
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public ImmortalSeed(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public ImmortalSeed(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -89,74 +85,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
-                BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
-            };
-
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Other, "Nuked");
-            caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.TVAnime, "Anime");
-            caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.PC, "Apps");
-            caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
-            caps.Categories.AddCategoryMapping(31, NewznabStandardCategory.TV, "Childrens/Cartoons");
-            caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.TVDocumentary, "Documentary - HD");
-            caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.BooksComics, "Comics");
-            caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.PCGames, "Games");
-            caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.ConsoleXBox, "Games Xbox");
-            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.PCGames, "Games-PC Rips");
-            caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.ConsolePS4, "Games-PSx");
-            caps.Categories.AddCategoryMapping(49, NewznabStandardCategory.PCMobileOther, "Mobile");
-            caps.Categories.AddCategoryMapping(59, NewznabStandardCategory.MoviesUHD, "Movies-4k");
-            caps.Categories.AddCategoryMapping(60, NewznabStandardCategory.MoviesForeign, "Non-English 4k Movies");
-            caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.MoviesHD, "Movies HD");
-            caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.MoviesForeign, "Movies HD Non-English");
-            caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.MoviesSD, "TS/CAM/PPV");
-            caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.MoviesForeign, "Movies Low Def Non-English");
-            caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.MoviesSD, "Movies-SD");
-            caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.MoviesForeign, "Movies SD Non-English");
-            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.AudioOther, "Music");
-            caps.Categories.AddCategoryMapping(37, NewznabStandardCategory.AudioLossless, "FLAC");
-            caps.Categories.AddCategoryMapping(36, NewznabStandardCategory.AudioMP3, "MP3");
-            caps.Categories.AddCategoryMapping(39, NewznabStandardCategory.AudioOther, "Music Other");
-            caps.Categories.AddCategoryMapping(38, NewznabStandardCategory.AudioVideo, "Music Video");
-            caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.Other, "Other");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.TVSport, "Sports Tv");
-            caps.Categories.AddCategoryMapping(44, NewznabStandardCategory.TVSport, "Sports Fitness-Instructional");
-            caps.Categories.AddCategoryMapping(58, NewznabStandardCategory.TVSport, "Olympics");
-            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.TVSD, "TV - 480p");
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.TVHD, "TV - High Definition");
-            caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.TVSD, "TV - Standard Definition - x264");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TVSD, "TV - Standard Definition - XviD");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVHD, "TV Season Packs - HD");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TVSD, "TV Season Packs - SD");
-            caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.BooksEBook, "Ebooks");
-            caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.PCGames, "Games-PC ISO");
-            caps.Categories.AddCategoryMapping(46, NewznabStandardCategory.BooksMags, "Magazines");
-            caps.Categories.AddCategoryMapping(50, NewznabStandardCategory.PCMobileiOS, "IOS");
-            caps.Categories.AddCategoryMapping(51, NewznabStandardCategory.PCMobileAndroid, "Android");
-            caps.Categories.AddCategoryMapping(52, NewznabStandardCategory.PC0day, "Windows");
-            caps.Categories.AddCategoryMapping(53, NewznabStandardCategory.TVDocumentary, "Documentary - SD");
-
-            return caps;
         }
     }
 

@@ -16,6 +16,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -26,22 +27,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SpeedCD : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "SpeedCD";
-        public override string[] IndexerUrls => new string[]
-        {
-            "https://speed.cd/",
-            "https://speed.click/",
-            "https://speeders.me/"
-        };
-
-        public override string Description => "Your home now!";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SpeedCD(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public SpeedCD(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -119,64 +108,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
-                                   },
-                MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
-                BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesOther, "Movies/XviD");
-            caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.Movies, "Movies/Packs");
-            caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.Movies, "Movies/Kids");
-            caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.MoviesHD, "Movies/HD");
-            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Movies, "Movies/DiVERSiTY");
-            caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.MoviesBluRay, "Movies/B-Ray");
-            caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Movies3D, "Movies/3D");
-            caps.Categories.AddCategoryMapping(40, NewznabStandardCategory.MoviesDVD, "Movies/DVD-R");
-            caps.Categories.AddCategoryMapping(56, NewznabStandardCategory.Movies, "Movies/Anime");
-            caps.Categories.AddCategoryMapping(50, NewznabStandardCategory.TVSport, "TV/Sports");
-            caps.Categories.AddCategoryMapping(52, NewznabStandardCategory.TVHD, "TV/B-Ray");
-            caps.Categories.AddCategoryMapping(53, NewznabStandardCategory.TVSD, "TV/DVD-R");
-            caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.TV, "TV/Packs");
-            caps.Categories.AddCategoryMapping(55, NewznabStandardCategory.TV, "TV/Kids");
-            caps.Categories.AddCategoryMapping(57, NewznabStandardCategory.TV, "TV/DiVERSiTY");
-            caps.Categories.AddCategoryMapping(49, NewznabStandardCategory.TVHD, "TV/HD");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/Episodes");
-            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.TVAnime, "TV/Anime");
-            caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.PCISO, "Games/PC ISO");
-            caps.Categories.AddCategoryMapping(39, NewznabStandardCategory.ConsoleWii, "Games/Wii");
-            caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.ConsolePS3, "Games/PS3");
-            caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.Console, "Games/Nintendo");
-            caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.ConsoleXBox360, "Games/XboX360");
-            caps.Categories.AddCategoryMapping(46, NewznabStandardCategory.PCMobileOther, "Mobile");
-            caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.PC0day, "Apps/0DAY");
-            caps.Categories.AddCategoryMapping(51, NewznabStandardCategory.PCMac, "Mac");
-            caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.Books, "Educational");
-            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.Books, "Books-Mags");
-            caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.Audio, "Music/Audio");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio, "Music/Flac");
-            caps.Categories.AddCategoryMapping(44, NewznabStandardCategory.Audio, "Music/Pack");
-            caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.AudioVideo, "Music/Video");
-
-            return caps;
         }
     }
 

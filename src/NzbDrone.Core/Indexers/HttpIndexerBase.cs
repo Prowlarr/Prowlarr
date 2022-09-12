@@ -13,6 +13,7 @@ using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 
@@ -34,6 +35,9 @@ namespace NzbDrone.Core.Indexers
         public override Encoding Encoding => Encoding.UTF8;
         public override string Language => "en-US";
         public override string[] LegacyUrls => new string[] { };
+        public override string Description => "";
+        public override string[] IndexerUrls => new string[] { };
+        public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
 
         public override bool FollowRedirect => false;
         public override IndexerCapabilities Capabilities { get; protected set; }
@@ -43,8 +47,8 @@ namespace NzbDrone.Core.Indexers
         public abstract IIndexerRequestGenerator GetRequestGenerator();
         public abstract IParseIndexerResponse GetParser();
 
-        public HttpIndexerBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(indexerStatusService, configService, logger)
+        public HttpIndexerBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(indexerStatusService, definitionService, configService, logger)
         {
             _httpClient = httpClient;
             _eventAggregator = eventAggregator;

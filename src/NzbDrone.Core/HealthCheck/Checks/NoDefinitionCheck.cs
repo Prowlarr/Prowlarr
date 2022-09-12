@@ -26,7 +26,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
             var currentDefs = _indexerDefinitionUpdateService.All();
 
             var noDefIndexers = _indexerFactory.AllProviders(false)
-                    .Where(i => i.Definition.Implementation == "Cardigann" && !currentDefs.Any(d => d.File == ((CardigannSettings)i.Definition.Settings).DefinitionFile)).ToList();
+                    .Where(i => i.Definition.Implementation == "Cardigann" && !currentDefs.Any(d => d.File == ((IndexerDefinition)i.Definition).DefinitionFile)).ToList();
 
             if (noDefIndexers.Count == 0)
             {

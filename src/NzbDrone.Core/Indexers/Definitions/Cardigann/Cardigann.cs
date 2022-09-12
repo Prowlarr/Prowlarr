@@ -19,15 +19,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
 {
     public class Cardigann : TorrentIndexerBase<CardigannSettings>
     {
-        private readonly IIndexerDefinitionUpdateService _definitionService;
         private readonly ICached<CardigannRequestGenerator> _generatorCache;
 
         public override string Name => "Cardigann";
-        public override string[] IndexerUrls => new string[] { "" };
-        public override string Description => "";
-
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
         // thinking its a partial page and insteaad all search_path requests are run for each indexer
@@ -35,9 +30,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
+            var generator = _generatorCache.Get(((IndexerDefinition)Definition).DefinitionFile, () =>
                 new CardigannRequestGenerator(_configService,
-                    _definitionService.GetCachedDefinition(Settings.DefinitionFile),
+                    _definitionService.GetCachedDefinition(((IndexerDefinition)Definition).DefinitionFile),
                     _logger)
                 {
                     HttpClient = _httpClient,
@@ -57,7 +52,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public override IParseIndexerResponse GetParser()
         {
             return new CardigannParser(_configService,
-                _definitionService.GetCachedDefinition(Settings.DefinitionFile),
+                _definitionService.GetCachedDefinition(((IndexerDefinition)Definition).DefinitionFile),
                 _logger)
             {
                 Settings = Settings
@@ -74,17 +69,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return base.GetCookies();
         }
 
-        public override IEnumerable<ProviderDefinition> DefaultDefinitions
-        {
-            get
-            {
-                foreach (var def in _definitionService.All())
-                {
-                    yield return GetDefinition(def);
-                }
-            }
-        }
-
         public Cardigann(IIndexerDefinitionUpdateService definitionService,
                          IIndexerHttpClient httpClient,
                          IEventAggregator eventAggregator,
@@ -92,13 +76,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                          IConfigService configService,
                          ICacheManager cacheManager,
                          Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
-            _definitionService = definitionService;
             _generatorCache = cacheManager.GetRollingCache<CardigannRequestGenerator>(GetType(), "CardigannGeneratorCache", TimeSpan.FromMinutes(5));
         }
 
-        private IndexerDefinition GetDefinition(CardigannMetaDefinition definition)
+        private IndexerDefinition GetDefinition(IndexerMetaDefinition definition)
         {
             var defaultSettings = new List<SettingsField>
             {
@@ -127,7 +110,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Implementation = GetType().Name,
                 IndexerUrls = definition.Links.ToArray(),
                 LegacyUrls = definition.Legacylinks.ToArray(),
-                Settings = new CardigannSettings { DefinitionFile = definition.File },
+                DefinitionFile = definition.File,
+                Settings = new CardigannSettings(),
                 Protocol = DownloadProtocol.Torrent,
                 Privacy = definition.Type switch
                 {

@@ -14,6 +14,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -24,16 +25,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class HDTorrents : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "HD-Torrents";
-
-        public override string[] IndexerUrls => new string[] { "https://hdts.ru/", "https://hd-torrents.org/" };
-        public override string Description => "HD-Torrents is a private torrent website with HD torrents and strict rules on their content.";
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public HDTorrents(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public HDTorrents(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -82,60 +78,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       }
-            };
-
-            caps.Categories.AddCategoryMapping("70", NewznabStandardCategory.MoviesUHD, "Movie/UHD/Blu-Ray");
-            caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.MoviesHD, "Movie/Blu-Ray");
-            caps.Categories.AddCategoryMapping("71", NewznabStandardCategory.MoviesUHD, "Movie/UHD/Remux");
-            caps.Categories.AddCategoryMapping("2", NewznabStandardCategory.MoviesHD, "Movie/Remux");
-            caps.Categories.AddCategoryMapping("5", NewznabStandardCategory.MoviesHD, "Movie/1080p/i");
-            caps.Categories.AddCategoryMapping("3", NewznabStandardCategory.MoviesHD, "Movie/720p");
-            caps.Categories.AddCategoryMapping("64", NewznabStandardCategory.MoviesUHD, "Movie/2160p");
-            caps.Categories.AddCategoryMapping("63", NewznabStandardCategory.Audio, "Movie/Audio Track");
-
-            // TV Show
-            caps.Categories.AddCategoryMapping("72", NewznabStandardCategory.TVUHD, "TV Show/UHD/Blu-ray");
-            caps.Categories.AddCategoryMapping("59", NewznabStandardCategory.TVHD, "TV Show/Blu-ray");
-            caps.Categories.AddCategoryMapping("73", NewznabStandardCategory.TVUHD, "TV Show/UHD/Remux");
-            caps.Categories.AddCategoryMapping("60", NewznabStandardCategory.TVHD, "TV Show/Remux");
-            caps.Categories.AddCategoryMapping("30", NewznabStandardCategory.TVHD, "TV Show/1080p/i");
-            caps.Categories.AddCategoryMapping("38", NewznabStandardCategory.TVHD, "TV Show/720p");
-            caps.Categories.AddCategoryMapping("65", NewznabStandardCategory.TVUHD, "TV Show/2160p");
-
-            // Music
-            caps.Categories.AddCategoryMapping("44", NewznabStandardCategory.Audio, "Music/Album");
-            caps.Categories.AddCategoryMapping("61", NewznabStandardCategory.AudioVideo, "Music/Blu-Ray");
-            caps.Categories.AddCategoryMapping("62", NewznabStandardCategory.AudioVideo, "Music/Remux");
-            caps.Categories.AddCategoryMapping("57", NewznabStandardCategory.AudioVideo, "Music/1080p/i");
-            caps.Categories.AddCategoryMapping("45", NewznabStandardCategory.AudioVideo, "Music/720p");
-            caps.Categories.AddCategoryMapping("66", NewznabStandardCategory.AudioVideo, "Music/2160p");
-
-            // XXX
-            caps.Categories.AddCategoryMapping("58", NewznabStandardCategory.XXX, "XXX/Blu-ray");
-            caps.Categories.AddCategoryMapping("74", NewznabStandardCategory.XXX, "XXX/UHD/Blu-ray");
-            caps.Categories.AddCategoryMapping("48", NewznabStandardCategory.XXX, "XXX/1080p/i");
-            caps.Categories.AddCategoryMapping("47", NewznabStandardCategory.XXX, "XXX/720p");
-            caps.Categories.AddCategoryMapping("67", NewznabStandardCategory.XXX, "XXX/2160p");
-
-            return caps;
         }
     }
 

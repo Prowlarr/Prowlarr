@@ -14,6 +14,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -24,17 +25,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Nebulance : TorrentIndexerBase<NebulanceSettings>
     {
         public override string Name => "Nebulance";
-        public override string[] IndexerUrls => new string[] { "https://nebulance.io/" };
         private string LoginUrl => Settings.BaseUrl + "login.php";
-        public override string Description => "Nebulance (NBL) is a ratioless Private Torrent Tracker for TV";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Nebulance(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Nebulance(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -86,23 +81,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD);
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TVHD);
-
-            return caps;
         }
     }
 

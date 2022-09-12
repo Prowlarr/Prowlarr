@@ -11,6 +11,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -21,17 +22,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class TorrentsCSV : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "TorrentsCSV";
-        public override string[] IndexerUrls => new[] { "https://torrents-csv.ml/" };
-        public override string Language => "en-US";
-        public override string Description => "Torrents.csv is a self-hostable open source torrent search engine and database";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRss => false;
 
-        public TorrentsCSV(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public TorrentsCSV(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -43,25 +39,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new TorrentsCSVParser(Settings);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Other);
-
-            return caps;
         }
     }
 

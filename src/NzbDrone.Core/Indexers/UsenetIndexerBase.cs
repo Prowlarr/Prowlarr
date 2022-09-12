@@ -6,6 +6,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers
@@ -15,8 +16,14 @@ namespace NzbDrone.Core.Indexers
     {
         private readonly IValidateNzbs _nzbValidationService;
 
-        protected UsenetIndexerBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        protected UsenetIndexerBase(IIndexerHttpClient httpClient,
+                                    IEventAggregator eventAggregator,
+                                    IIndexerStatusService indexerStatusService,
+                                    IIndexerDefinitionUpdateService definitionService,
+                                    IConfigService configService,
+                                    IValidateNzbs nzbValidationService,
+                                    Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
             _nzbValidationService = nzbValidationService;
         }

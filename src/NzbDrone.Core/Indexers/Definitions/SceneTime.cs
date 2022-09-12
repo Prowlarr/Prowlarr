@@ -13,6 +13,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -23,16 +24,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SceneTime : TorrentIndexerBase<SceneTimeSettings>
     {
         public override string Name => "SceneTime";
-        public override string[] IndexerUrls => new[] { "https://www.scenetime.com/" };
-        public override string Description => "Always on time";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SceneTime(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public SceneTime(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -49,61 +44,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         protected override IDictionary<string, string> GetCookies()
         {
             return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
-                MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
-                BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.XXX, "Movies Adult");
-            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Movies, "Movie Packs");
-            caps.Categories.AddCategoryMapping(57, NewznabStandardCategory.MoviesSD, "Movies SD");
-            caps.Categories.AddCategoryMapping(59, NewznabStandardCategory.MoviesHD, "Movies HD");
-            caps.Categories.AddCategoryMapping(64, NewznabStandardCategory.Movies3D, "Movies 3D");
-            caps.Categories.AddCategoryMapping(82, NewznabStandardCategory.MoviesOther, "Movies CAM-TS");
-            caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.MoviesUHD, "Movies UHD");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVUHD, "TV UHD");
-            caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.TV, "TV Packs");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TVHD, "TV HD");
-            caps.Categories.AddCategoryMapping(77, NewznabStandardCategory.TVSD, "TV SD");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.PCGames, "Games PC ISO");
-            caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.ConsoleXBox, "Games XBOX");
-            caps.Categories.AddCategoryMapping(51, NewznabStandardCategory.ConsoleWii, "Games Wii");
-            caps.Categories.AddCategoryMapping(55, NewznabStandardCategory.ConsoleNDS, "Games Nintendo DS");
-            caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.ConsolePS4, "Games/PS");
-            caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.ConsoleOther, "Games Dreamcast");
-            caps.Categories.AddCategoryMapping(52, NewznabStandardCategory.PCMac, "Mac/Linux");
-            caps.Categories.AddCategoryMapping(53, NewznabStandardCategory.PC0day, "Apps");
-            caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.PCMobileOther, "Mobile Apps");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.Books, "Books and Magazines");
-            caps.Categories.AddCategoryMapping(65, NewznabStandardCategory.BooksComics, "Books Comic");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.Audio, "Music");
-            caps.Categories.AddCategoryMapping(116, NewznabStandardCategory.Audio, "Music Pack");
-
-            caps.Flags = new List<IndexerFlag>
-            {
-                IndexerFlag.FreeLeech
-            };
-
-            return caps;
         }
     }
 

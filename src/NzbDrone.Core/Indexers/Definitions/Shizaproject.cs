@@ -12,6 +12,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -22,16 +23,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Shizaproject : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "ShizaProject";
-        public override string[] IndexerUrls => new string[] { "https://shiza-project.com/" };
-        public override string Description => "Shizaproject is russian anime voiceover group and eponymous anime tracker.";
-        public override string Language => "ru-RU";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Shizaproject(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Shizaproject(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -43,28 +38,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new ShizaprojectParser(Settings, Capabilities.Categories);
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
-            };
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "TV");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "TV_SPECIAL");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TVAnime, "ONA");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVAnime, "OVA");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "MOVIE");
-            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Movies, "SHORT_MOVIE");
-            return caps;
         }
     }
 

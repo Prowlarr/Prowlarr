@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Indexers
         public string[] IndexerUrls { get; set; }
         public string[] LegacyUrls { get; set; }
         public string Description { get; set; }
+        public string DefinitionFile { get; set; }
         public Encoding Encoding { get; set; }
         public string Language { get; set; }
         public DownloadProtocol Protocol { get; set; }

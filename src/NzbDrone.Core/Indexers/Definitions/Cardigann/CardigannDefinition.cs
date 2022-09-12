@@ -37,6 +37,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public string Id { get; set; }
         public List<SettingsField> Settings { get; set; }
         public string Name { get; set; }
+        public string Implementation { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
         public string Language { get; set; }

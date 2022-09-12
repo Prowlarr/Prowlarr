@@ -19,6 +19,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -29,20 +30,14 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ZonaQ : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "ZonaQ";
-        public override string[] IndexerUrls => new string[] { "https://www.zonaq.pw/" };
         private string Login1Url => Settings.BaseUrl + "index.php";
         private string Login2Url => Settings.BaseUrl + "paDentro.php";
         private string Login3Url => Settings.BaseUrl + "retorno/include/puerta_8_ajax.php";
         private string Login4Url => Settings.BaseUrl + "retorno/index.php";
-        public override string Description => "ZonaQ is a SPANISH Private Torrent Tracker for MOVIES / TV";
-        public override string Language => "es-ES";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public ZonaQ(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public ZonaQ(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -153,83 +148,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return false;
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
-            };
-
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=1", NewznabStandardCategory.MoviesDVD, "Películas/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=2", NewznabStandardCategory.MoviesDVD, "Películas/BDVD + Autorías");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=3", NewznabStandardCategory.MoviesBluRay, "Películas/BD");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=4", NewznabStandardCategory.MoviesUHD, "Películas/BD 4K");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=5", NewznabStandardCategory.Movies3D, "Películas/BD 3D");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=6", NewznabStandardCategory.MoviesBluRay, "Películas/BD Remux");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=7", NewznabStandardCategory.MoviesHD, "Películas/MKV");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=8", NewznabStandardCategory.MoviesUHD, "Películas/MKV 4K");
-            caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=9", NewznabStandardCategory.MoviesUHD, "Películas/BD Remux 4K");
-
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=1", NewznabStandardCategory.MoviesDVD, "Animación/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=2", NewznabStandardCategory.MoviesDVD, "Animación/BDVD + Autorías");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=3", NewznabStandardCategory.MoviesBluRay, "Animación/BD");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=4", NewznabStandardCategory.MoviesUHD, "Animación/BD 4K");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=5", NewznabStandardCategory.Movies3D, "Animación/BD 3D");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=6", NewznabStandardCategory.MoviesBluRay, "Animación/BD Remux");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=7", NewznabStandardCategory.MoviesHD, "Animación/MKV");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=8", NewznabStandardCategory.MoviesUHD, "Animación/MKV 4K");
-            caps.Categories.AddCategoryMapping("cat[]=2&subcat[]=9", NewznabStandardCategory.MoviesUHD, "Animación/BD Remux 4K");
-
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=1", NewznabStandardCategory.AudioVideo, "Música/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=2", NewznabStandardCategory.AudioVideo, "Música/BDVD + Autorías");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=3", NewznabStandardCategory.AudioVideo, "Música/BD");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=4", NewznabStandardCategory.AudioVideo, "Música/BD 4K");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=5", NewznabStandardCategory.AudioVideo, "Música/BD 3D");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=6", NewznabStandardCategory.AudioVideo, "Música/BD Remux");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=7", NewznabStandardCategory.AudioVideo, "Música/MKV");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=8", NewznabStandardCategory.AudioVideo, "Música/MKV 4K");
-            caps.Categories.AddCategoryMapping("cat[]=3&subcat[]=9", NewznabStandardCategory.AudioVideo, "Música/BD Remux 4K");
-
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=1", NewznabStandardCategory.TVSD, "Series/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=2", NewznabStandardCategory.TVSD, "Series/BDVD + Autorías");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=3", NewznabStandardCategory.TVHD, "Series/BD");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=4", NewznabStandardCategory.TVUHD, "Series/BD 4K");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=5", NewznabStandardCategory.TVOther, "Series/BD 3D");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=6", NewznabStandardCategory.TVHD, "Series/BD Remux");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=7", NewznabStandardCategory.TVHD, "Series/MKV");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=8", NewznabStandardCategory.TVUHD, "Series/MKV 4K");
-            caps.Categories.AddCategoryMapping("cat[]=4&subcat[]=9", NewznabStandardCategory.TVUHD, "Series/BD Remux 4K");
-
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=1", NewznabStandardCategory.TVDocumentary, "Docus/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=2", NewznabStandardCategory.TVDocumentary, "Docus/BDVD + Autorías");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=3", NewznabStandardCategory.TVDocumentary, "Docus/BD");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=4", NewznabStandardCategory.TVDocumentary, "Docus/BD 4K");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=5", NewznabStandardCategory.TVDocumentary, "Docus/BD 3D");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=6", NewznabStandardCategory.TVDocumentary, "Docus/BD Remux");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=7", NewznabStandardCategory.TVDocumentary, "Docus/MKV");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=8", NewznabStandardCategory.TVDocumentary, "Docus/MKV 4K");
-            caps.Categories.AddCategoryMapping("cat[]=5&subcat[]=9", NewznabStandardCategory.TVDocumentary, "Docus/BD Remux 4K");
-
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=1", NewznabStandardCategory.OtherMisc, "Deportes y Otros/DVD");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=2", NewznabStandardCategory.OtherMisc, "Deportes y Otros/BDVD + Autorías");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=3", NewznabStandardCategory.OtherMisc, "Deportes y Otros/BD");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=4", NewznabStandardCategory.OtherMisc, "Deportes y Otros/BD 4K");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=5", NewznabStandardCategory.OtherMisc, "Deportes y Otros/BD 3D");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=6", NewznabStandardCategory.OtherMisc, "Deportes y Otros/BD Remux");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=7", NewznabStandardCategory.OtherMisc, "Deportes y Otros/MKV");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=8", NewznabStandardCategory.OtherMisc, "Deportes y Otros/MKV 4K");
-            caps.Categories.AddCategoryMapping("cat[]=6&subcat[]=9", NewznabStandardCategory.OtherMisc, "Deportes y Otros/BD Remux 4K");
-
-            return caps;
         }
     }
 

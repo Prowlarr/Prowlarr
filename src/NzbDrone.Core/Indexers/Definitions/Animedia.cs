@@ -13,6 +13,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -23,16 +24,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Animedia : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "Animedia";
-        public override string[] IndexerUrls => new string[] { "https://tt.animedia.tv/" };
-        public override string Description => "Animedia is russian anime voiceover group and eponymous anime tracker.";
-        public override string Language => "ru-RU";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public Animedia(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Animedia(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IIndexerDefinitionUpdateService definitionService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, definitionService, configService, logger)
         {
         }
 
@@ -44,26 +39,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new AnimediaParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger };
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
-                MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
-            };
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "TV Anime");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "OVA/ONA/Special");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TV, "Dorama");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.Movies, "Movies");
-            return caps;
         }
     }
 

@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         // hook to adjust the search category
-        protected virtual List<KeyValuePair<string, string>> GetBasicSearchParameters(int[] categories)
+        protected virtual List<KeyValuePair<string, string>> GetBasicSearchParameters(int[] categories, string genre)
         {
             var categoryMapping = Capabilities.Categories.MapTorznabCapsToTrackers(categories).Distinct().ToList();
             var qc = new List<KeyValuePair<string, string>> // NameValueCollection don't support cat[]=19&cat[]=6
@@ -37,6 +37,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             if (Settings.FreeleechOnly)
             {
                 qc.Add("discount[]", "1");
+            }
+
+            if (genre.IsNotNullOrWhiteSpace())
+            {
+                qc.Add("tags", genre);
             }
 
             // resolution filter to improve the search
@@ -76,7 +81,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var parameters = GetBasicSearchParameters(searchCriteria.Categories);
+            var parameters = GetBasicSearchParameters(searchCriteria.Categories, searchCriteria.Genre);
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
@@ -98,7 +103,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var parameters = GetBasicSearchParameters(searchCriteria.Categories);
+            var parameters = GetBasicSearchParameters(searchCriteria.Categories, null);
 
             parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
 
@@ -109,7 +114,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var parameters = GetBasicSearchParameters(searchCriteria.Categories);
+            var parameters = GetBasicSearchParameters(searchCriteria.Categories, searchCriteria.Genre);
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
@@ -141,7 +146,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var parameters = GetBasicSearchParameters(searchCriteria.Categories);
+            var parameters = GetBasicSearchParameters(searchCriteria.Categories, null);
 
             parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
 

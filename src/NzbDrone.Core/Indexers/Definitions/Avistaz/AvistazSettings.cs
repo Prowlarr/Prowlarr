@@ -22,6 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public AvistazSettings()
         {
             Token = "";
+            FreeleechOnly = false;
         }
 
         public string Token { get; set; }
@@ -34,6 +35,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]
         public string Pid { get; set; }
+
+        [FieldDefinition(5, Label = "Freeleech Only", HelpText = "Search freeleech only")]
+        public bool FreeleechOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

@@ -34,6 +34,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 { "type", categoryMapping.Any() ? categoryMapping.First() : "0" }
             };
 
+            if (Settings.FreeleechOnly)
+            {
+                qc.Add("discount[]", "1");
+            }
+
             // resolution filter to improve the search
             if (!categories.Contains(NewznabStandardCategory.Movies.Id) && !categories.Contains(NewznabStandardCategory.TV.Id) &&
                 !categories.Contains(NewznabStandardCategory.Audio.Id))

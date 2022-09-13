@@ -160,6 +160,18 @@ namespace NzbDrone.Core.IndexerSearch
                     .ToList();
             }
 
+            if (criteriaBase.Categories != null && criteriaBase.Categories.Length > 0)
+            {
+                //Only query supported indexers
+                indexers = indexers.Where(i => i.Capabilities.Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
+
+                if (indexers.Count == 0)
+                {
+                    _logger.Debug("All provided categories are unsupported by selected indexers: {0}", string.Join(", ", criteriaBase.Categories));
+                    return new List<ReleaseInfo>();
+                }
+            }
+
             _logger.ProgressInfo("Searching indexer(s): [{0}] for {1}", string.Join(", ", indexers.Select(i => i.Definition.Name).ToList()), criteriaBase.ToString());
 
             var tasks = indexers.Select(x => DispatchIndexer(searchAction, x, criteriaBase));

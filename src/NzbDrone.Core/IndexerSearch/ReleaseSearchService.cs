@@ -163,7 +163,7 @@ namespace NzbDrone.Core.IndexerSearch
             if (criteriaBase.Categories != null && criteriaBase.Categories.Length > 0)
             {
                 //Only query supported indexers
-                indexers = indexers.Where(i => i.Capabilities.Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
+                indexers = indexers.Where(i => ((IndexerDefinition)i.Definition).Capabilities.Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
 
                 if (indexers.Count == 0)
                 {

@@ -281,6 +281,7 @@ namespace NzbDrone.Core.IndexerVersions
         private void UpdateLocalDefinitions()
         {
             var startupFolder = _appFolderInfo.AppDataFolder;
+            var definitionFolder = Path.Combine(startupFolder, "Definitions");
 
             var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
             var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
@@ -291,6 +292,9 @@ namespace NzbDrone.Core.IndexerVersions
             {
                 EnsureDefinitionsFolder();
 
+                var directoryInfo = new DirectoryInfo(definitionFolder);
+                var files = directoryInfo.GetFiles($"*.yml", SearchOption.TopDirectoryOnly);
+
                 foreach (var def in response.Resource)
                 {
                     try
@@ -299,9 +303,15 @@ namespace NzbDrone.Core.IndexerVersions
 
                         if (currentDefs.TryGetValue(def.Id, out var defSha) && defSha == def.Sha)
                         {
-                            _logger.Trace("Indexer already up to date: {0}", def.File);
-
-                            continue;
+                            if (!files.Any(x => x.Name == def.File))
+                            {
+                                _logger.Trace("Indexer up to date, but local definition file not found: {0}", def.File);
+                            }
+                            else
+                            {
+                                _logger.Trace("Indexer already up to date: {0}", def.File);
+                                continue;
+                            }
                         }
 
                         _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{def.File}", saveFile);

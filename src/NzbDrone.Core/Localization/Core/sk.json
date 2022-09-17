@@ -44,5 +44,17 @@
     "AuthenticationMethodHelpText": "Vyžadovať používateľské meno a heslo pre prístup k Radarru",
     "BackupFolderHelpText": "Relatívne cesty budú v priečinku AppData Radarru",
     "BranchUpdate": "Vetva, ktorá sa má použiť k aktualizácií Radarru",
-    "DeleteDownloadClientMessageText": "Naozaj chcete zmazať značku formátu {0} ?"
+    "DeleteDownloadClientMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
+    "ChangeHasNotBeenSavedYet": "Zmena ešte nebola uložená",
+    "Clear": "Vymazať",
+    "Close": "Zatvoriť",
+    "CertificateValidation": "Overenie certifikátu",
+    "CloneProfile": "Klonovať profil",
+    "BindAddress": "Viazať adresu",
+    "CancelPendingTask": "Naozaj chcete zrušiť túto prebiehajúcu úlohu?",
+    "ClientPriority": "Priorita klienta",
+    "CloseCurrentModal": "Zatvoriť aktuálne okno",
+    "Columns": "Stĺpce",
+    "Component": "Komponent",
+    "ConnectionLost": "Spojenie prerušené"
 }

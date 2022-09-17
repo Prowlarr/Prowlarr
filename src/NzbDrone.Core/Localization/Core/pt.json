@@ -153,7 +153,7 @@
     "NetCore": ".NET",
     "Mode": "Modo",
     "Mechanism": "Mecanismo",
-    "Logs": "Logs",
+    "Logs": "Registos",
     "LogLevel": "Nível de log",
     "Interval": "Intervalo",
     "IndexerFlags": "Sinalizadores do indexador",
@@ -392,7 +392,7 @@
     "UserAgentProvidedByTheAppThatCalledTheAPI": "Par Utilizador-Agente fornecido pela aplicação que chamou a API",
     "OnApplicationUpdate": "Quando a aplicação atualizar",
     "OnApplicationUpdateHelpText": "Quando a aplicação atualizar",
-    "Database": "base de dados",
+    "Database": "Base de dados",
     "HistoryCleanupDaysHelpTextWarning": "Ficheiros na reciclagem serão eliminados automaticamente após o número de dias selecionado",
     "Application": "Aplicações",
     "Link": "Ligações",
@@ -401,5 +401,6 @@
     "UnableToLoadIndexers": "Não foi possível carregar os indexadores",
     "Yes": "Sim",
     "GrabReleases": "Capturar versão",
-    "InstanceName": "Nome da Instancia"
+    "InstanceName": "Nome da Instancia",
+    "InstanceNameHelpText": "Nome da instância na aba e nome da aplicação para Syslog"
 }

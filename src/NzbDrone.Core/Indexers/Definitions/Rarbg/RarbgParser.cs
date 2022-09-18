@@ -40,9 +40,10 @@ namespace NzbDrone.Core.Indexers.Rarbg
             if (jsonResponse.Resource.error_code.HasValue)
             {
                 if (jsonResponse.Resource.error_code == 20 || jsonResponse.Resource.error_code == 8
-                    || jsonResponse.Resource.error_code == 9 || jsonResponse.Resource.error_code == 10)
+                    || jsonResponse.Resource.error_code == 9 || jsonResponse.Resource.error_code == 10
+                    || jsonResponse.Resource.error_code == 5)
                 {
-                    // No results or imdbid not found
+                    // No results, rate limit, or imdbid not found
                     return results;
                 }
 

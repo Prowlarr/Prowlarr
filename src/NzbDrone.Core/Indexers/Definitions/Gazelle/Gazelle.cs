@@ -80,6 +80,30 @@ namespace NzbDrone.Core.Indexers.Gazelle
             _logger.Debug("Gazelle authentication succeeded.");
         }
 
+        public override async Task<byte[]> Download(Uri link)
+        {
+            var response = await base.Download(link);
+
+            if (response.Length >= 1
+                && response[0] != 'd' // simple test for torrent vs HTML content
+                && link.Query.Contains("usetoken=1"))
+            {
+                var html = Encoding.GetString(response);
+                if (html.Contains("You do not have any freeleech tokens left.")
+                    || html.Contains("You do not have enough freeleech tokens")
+                    || html.Contains("This torrent is too large.")
+                    || html.Contains("You cannot use tokens here"))
+                {
+                    // download again with usetoken=0
+                    var requestLinkNew = link.ToString().Replace("usetoken=1", "usetoken=0");
+
+                    response = await base.Download(new Uri(requestLinkNew));
+                }
+            }
+
+            return response;
+        }
+
         protected override bool CheckIfLoginNeeded(HttpResponse response)
         {
             if (response.HasHttpRedirect || (response.Content != null && response.Content.Contains("\"bad credentials\"")))

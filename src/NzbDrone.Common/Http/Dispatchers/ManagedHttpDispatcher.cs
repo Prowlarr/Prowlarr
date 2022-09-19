@@ -174,6 +174,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 PreAuthenticate = true,
                 MaxConnectionsPerServer = 12,
                 ConnectCallback = onConnect,
+                PooledConnectionLifetime = TimeSpan.FromMinutes(10),
                 SslOptions = new SslClientAuthenticationOptions
                 {
                     RemoteCertificateValidationCallback = _certificateValidationService.ShouldByPassValidationError

@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
             {
                 requestBuilder.AddQueryParam("search_themoviedb", tmdbId);
             }
-            else if (tvdbId.HasValue && tmdbId > 0)
+            else if (tvdbId.HasValue && tvdbId > 0)
             {
                 requestBuilder.AddQueryParam("search_tvdb", tvdbId);
             }

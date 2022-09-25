@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]
         public string Pid { get; set; }
 
-        [FieldDefinition(5, Label = "Freeleech Only", HelpText = "Search freeleech only")]
+        [FieldDefinition(5, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only")]
         public bool FreeleechOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()

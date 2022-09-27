@@ -945,6 +945,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public bool CheckIfLoginIsNeeded(HttpResponse response)
         {
+            if (_definition.Login == null || _definition.Login.Test == null)
+            {
+                return false;
+            }
+
             if (response.HasHttpRedirect)
             {
                 var domainHint = GetRedirectDomainHint(response);
@@ -956,11 +961,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 return true;
-            }
-
-            if (_definition.Login == null || _definition.Login.Test == null)
-            {
-                return false;
             }
 
             if (response.HasHttpError)
@@ -1123,6 +1123,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 var request = new CardigannRequest(requestbuilder.SetEncoding(_encoding).Build(), variables, searchPath);
+
+                request.HttpRequest.AllowAutoRedirect = searchPath.Followredirect;
 
                 yield return request;
             }

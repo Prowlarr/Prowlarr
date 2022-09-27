@@ -355,8 +355,6 @@ namespace NzbDrone.Core.Indexers
                 request.HttpRequest.LogResponseContent = true;
             }
 
-            request.HttpRequest.AllowAutoRedirect = FollowRedirect;
-
             var originalUrl = request.Url;
 
             Cookies = GetCookies();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using DryIoc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -268,7 +269,10 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Add("offset", searchCriteria.Offset.ToString());
             }
 
-            yield return new IndexerRequest(string.Format("{0}&{1}", baseUrl, parameters.GetQueryString()), HttpAccept.Rss);
+            var request = new IndexerRequest(string.Format("{0}&{1}", baseUrl, parameters.GetQueryString()), HttpAccept.Rss);
+            request.HttpRequest.AllowAutoRedirect = true;
+
+            yield return request;
         }
 
         private static string NewsnabifyTitle(string title)

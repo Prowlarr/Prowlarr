@@ -950,9 +950,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return false;
             }
 
+            bool extraLoginCheck = _definition.Settings.Exists(x => x.Name == "extra_login_check");
+
             if (response.HasHttpRedirect)
             {
                 var domainHint = GetRedirectDomainHint(response);
+                var uri = new HttpUri(response.RedirectUrl);
+                var redirectPath = uri.Path.Trim('/');
+
                 if (domainHint != null)
                 {
                     var errormessage = "Got redirected to another domain. Try changing the indexer URL to " + domainHint + ".";
@@ -960,7 +965,24 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     _logger.Warn(errormessage);
                 }
 
-                return true;
+                if (!extraLoginCheck)
+                {
+                    return true;
+                }
+
+                //Special case, redirected to different domain(no user-agent case?)
+                if (domainHint != null)
+                {
+                    return true;
+                }
+
+                //Normal case, redirected to login path
+                if (redirectPath == _definition.Login.Test.Path)
+                {
+                    return true;
+                }
+
+                return false;
             }
 
             if (response.HasHttpError)
@@ -977,7 +999,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 if (_definition.Login.Test.Selector != null)
                 {
                     var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
-                    if (selection.Length == 0)
+                    if (extraLoginCheck && selection.Any())
+                    {
+                        return true;
+                    }
+
+                    if (!extraLoginCheck && !selection.Any())
                     {
                         return true;
                     }

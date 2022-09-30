@@ -48,6 +48,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
                 }
 
+                bool searchRedirPass = _definition.Settings.Exists(x => x.Name == "search_redir_pass");
+
+                //Return an empty release for avoiding searching error when we are not redirected to login page.
+                if (indexerResponse.HttpResponse.HasHttpRedirect && searchRedirPass)
+                {
+                    return releases;
+                }
+
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 

@@ -341,7 +341,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return torrentInfos;
             }
 
-            foreach (var result in jsonResponse.Resource.Response)
+            Dictionary<string, GazelleGamesGroup> response;
+
+            try
+            {
+                response = ((JObject)jsonResponse.Resource.Response).ToObject<Dictionary<string, GazelleGamesGroup>>();
+            }
+            catch
+            {
+                return torrentInfos;
+            }
+
+            foreach (var result in response)
             {
                 Dictionary<string, GazelleGamesTorrent> torrents;
 
@@ -455,7 +466,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class GazelleGamesResponse
     {
         public string Status { get; set; }
-        public Dictionary<string, GazelleGamesGroup> Response { get; set; }
+        public object Response { get; set; }
     }
 
     public class GazelleGamesGroup

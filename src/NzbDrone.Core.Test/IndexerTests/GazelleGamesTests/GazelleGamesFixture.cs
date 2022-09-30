@@ -12,6 +12,7 @@ using NzbDrone.Core.Indexers.Definitions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
+using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
 {
@@ -63,6 +64,20 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
             torrentInfo.Subs.Should().HaveCount(0);
             torrentInfo.DownloadVolumeFactor.Should().Be(1);
             torrentInfo.UploadVolumeFactor.Should().Be(1);
+        }
+
+        [Test]
+        public async Task should_not_error_if_empty_response()
+        {
+            var recentFeed = ReadAllText(@"Files/Indexers/GazelleGames/recentfeed-empty.json");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new int[] { 2000 } })).Releases;
+
+            releases.Should().HaveCount(0);
         }
     }
 }

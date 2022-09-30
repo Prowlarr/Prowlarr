@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -281,49 +282,30 @@ namespace NzbDrone.Core.IndexerVersions
         private void UpdateLocalDefinitions()
         {
             var startupFolder = _appFolderInfo.AppDataFolder;
-            var definitionFolder = Path.Combine(startupFolder, "Definitions");
-
-            var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
-            var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
-
-            var currentDefs = _versionService.All().ToDictionary(x => x.DefinitionId, x => x.Sha);
 
             try
             {
                 EnsureDefinitionsFolder();
 
-                var directoryInfo = new DirectoryInfo(definitionFolder);
-                var files = directoryInfo.GetFiles($"*.yml", SearchOption.TopDirectoryOnly).Select(f => Path.GetFileNameWithoutExtension(f.Name));
+                var definitionsFolder = Path.Combine(startupFolder, "Definitions");
+                var saveFile = Path.Combine(definitionsFolder, $"indexers.zip");
 
-                foreach (var def in response.Resource)
+                _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/package.zip", saveFile);
+
+                using (ZipArchive archive = ZipFile.OpenRead(saveFile))
                 {
-                    try
-                    {
-                        var saveFile = Path.Combine(definitionFolder, $"{def.File}.yml");
-
-                        if (currentDefs.TryGetValue(def.Id, out var defSha) && defSha == def.Sha && files.Any(x => x == def.File))
-                        {
-                            _logger.Trace("Indexer already up to date: {0}", def.File);
-
-                            continue;
-                        }
-
-                        _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{def.File}", saveFile);
-
-                        _versionService.Upsert(new IndexerDefinitionVersion { Sha = def.Sha, DefinitionId = def.Id, File = def.File, LastUpdated = DateTime.UtcNow });
-
-                        _cache.Remove(def.File);
-                        _logger.Debug("Updated definition: {0}", def.File);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error("Definition download failed: {0}, {1}", def.File, ex.Message);
-                    }
+                    archive.ExtractToDirectory(definitionsFolder, true);
                 }
+
+                _diskProvider.DeleteFile(saveFile);
+
+                _cache.Clear();
+
+                _logger.Debug("Updated indexer definitions");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Definition download failed, error creating definitions folder in {0}", startupFolder);
+                _logger.Error(ex, "Definition update failed");
             }
         }
     }

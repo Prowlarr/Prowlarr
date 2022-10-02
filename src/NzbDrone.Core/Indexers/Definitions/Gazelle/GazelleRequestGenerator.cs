@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        protected IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
             var filter = "";
             if (searchParameters == null)
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             yield return request;
         }
 
-        private string GetBasicSearchParameters(string searchTerm, int[] categories)
+        protected string GetBasicSearchParameters(string searchTerm, int[] categories)
         {
             var searchString = GetSearchTerm(searchTerm);
 

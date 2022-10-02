@@ -8,6 +8,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Gazelle;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -61,6 +62,20 @@ public class GreatPosterWall : Gazelle.Gazelle
 public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 {
     protected override bool ImdbInTags => false;
+
+    public new IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    {
+        var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+
+        if (searchCriteria.ImdbId != null)
+        {
+            parameters += string.Format("&searchstr={0}", searchCriteria.FullImdbId);
+        }
+
+        var pageableRequests = new IndexerPageableRequestChain();
+        pageableRequests.Add(GetRequest(parameters));
+        return pageableRequests;
+    }
 }
 
 public class GreatPosterWallParser : GazelleParser

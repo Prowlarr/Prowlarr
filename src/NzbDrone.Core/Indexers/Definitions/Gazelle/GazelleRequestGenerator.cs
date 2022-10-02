@@ -32,14 +32,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         protected IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
-            var filter = "";
-            if (searchParameters == null)
-            {
-            }
-
             var request =
                 new IndexerRequest(
-                    $"{APIUrl}?{searchParameters}{filter}",
+                    $"{APIUrl}?{searchParameters}",
                     HttpAccept.Json);
 
             yield return request;

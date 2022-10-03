@@ -11,5 +11,6 @@
     "AddIndexerProxy": "新增索引器代理",
     "AddingTag": "新增標籤",
     "All": "全部",
-    "AddRemoveOnly": "僅限新增或移除"
+    "AddRemoveOnly": "僅限新增或移除",
+    "AcceptConfirmationModal": "接受確認模式"
 }

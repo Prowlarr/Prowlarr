@@ -402,5 +402,7 @@
     "Yes": "Sim",
     "GrabReleases": "Capturar versão",
     "InstanceName": "Nome da Instancia",
-    "InstanceNameHelpText": "Nome da instância na aba e nome da aplicação para Syslog"
+    "InstanceNameHelpText": "Nome da instância na aba e nome da aplicação para Syslog",
+    "UnableToLoadIndexerProxies": "Incapaz de ler o indexador de proxies",
+    "UnableToLoadApplicationList": "Não foi possível carregar a lista de aplicações"
 }

@@ -64,7 +64,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return parameters;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
 

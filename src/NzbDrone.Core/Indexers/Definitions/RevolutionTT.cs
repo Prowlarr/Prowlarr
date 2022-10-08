@@ -194,6 +194,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
+            request.HttpRequest.AllowAutoRedirect = false;
+
             yield return request;
         }
 

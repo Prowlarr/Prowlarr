@@ -37,6 +37,8 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     $"{APIUrl}?{searchParameters}",
                     HttpAccept.Json);
 
+            request.HttpRequest.AllowAutoRedirect = false;
+
             yield return request;
         }
 

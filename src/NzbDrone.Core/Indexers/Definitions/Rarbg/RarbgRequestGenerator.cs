@@ -69,42 +69,36 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId);
-            return GetRequestChain(request, 2);
+            var pageableRequests = new IndexerPageableRequestChain();
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId));
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
-            return GetRequestChain(request, 2);
+            var pageableRequests = new IndexerPageableRequestChain();
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var request = GetRequest(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId, tvdbId: searchCriteria.TvdbId);
-            return GetRequestChain(request, 2);
+            var pageableRequests = new IndexerPageableRequestChain();
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId, tvdbId: searchCriteria.TvdbId));
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
-            return GetRequestChain(request, 2);
+            var pageableRequests = new IndexerPageableRequestChain();
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var request = GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
-            return GetRequestChain(request, 2);
-        }
-
-        private IndexerPageableRequestChain GetRequestChain(IEnumerable<IndexerRequest> requests, int retry)
-        {
             var pageableRequests = new IndexerPageableRequestChain();
-
-            for (int i = 0; i < retry; i++)
-            {
-                pageableRequests.AddTier(requests);
-            }
+            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }

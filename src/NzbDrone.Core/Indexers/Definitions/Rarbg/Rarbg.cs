@@ -1,6 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
@@ -8,7 +13,9 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
@@ -93,6 +100,57 @@ namespace NzbDrone.Core.Indexers.Rarbg
             caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.MoviesHD, "Movies/x265/1080");
 
             return caps;
+        }
+
+        protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
+        {
+            var response = await FetchIndexerResponse(request);
+
+            // try and recover from token or rate limit errors
+            var jsonResponse = new HttpResponse<RarbgResponse>(response.HttpResponse);
+
+            if (jsonResponse.Resource.error_code.HasValue)
+            {
+                if (jsonResponse.Resource.error_code == 4 || jsonResponse.Resource.error_code == 2)
+                {
+                    _logger.Debug("Invalid or expired token, refreshing token from Rarbg");
+                    _tokenProvider.ExpireToken(Settings);
+                    var newToken = _tokenProvider.GetToken(Settings);
+
+                    var qs = HttpUtility.ParseQueryString(request.HttpRequest.Url.Query);
+                    qs.Set("token", newToken);
+
+                    request.HttpRequest.Url = request.Url.SetQuery(qs.GetQueryString());
+                    response = await FetchIndexerResponse(request);
+                }
+                else if (jsonResponse.Resource.error_code == 5 || jsonResponse.Resource.rate_limit.HasValue)
+                {
+                    _logger.Debug("Rarbg rate limit hit, retying request");
+                    response = await FetchIndexerResponse(request);
+                }
+            }
+
+            try
+            {
+                var releases = parser.ParseResponse(response).ToList();
+
+                if (releases.Count == 0)
+                {
+                    _logger.Trace(response.Content);
+                }
+
+                return new IndexerQueryResult
+                {
+                    Releases = releases,
+                    Response = response.HttpResponse
+                };
+            }
+            catch (Exception ex)
+            {
+                ex.WithData(response.HttpResponse, 128 * 1024);
+                _logger.Trace("Unexpected Response content ({0} bytes): {1}", response.HttpResponse.ResponseData.Length, response.HttpResponse.Content);
+                throw;
+            }
         }
 
         public override object RequestAction(string action, IDictionary<string, string> query)

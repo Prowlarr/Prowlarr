@@ -63,7 +63,7 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 {
     protected override bool ImdbInTags => false;
 
-    public new IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public override IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
         var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
 

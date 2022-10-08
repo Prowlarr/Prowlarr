@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
             {
                 requestBuilder.AddQueryParam("search_themoviedb", tmdbId);
             }
-            else if (tvdbId.HasValue && tmdbId > 0)
+            else if (tvdbId.HasValue && tvdbId > 0)
             {
                 requestBuilder.AddQueryParam("search_tvdb", tvdbId);
             }
@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
             }
 
             requestBuilder.AddQueryParam("limit", "100");
-            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings, Settings.BaseUrl));
+            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings));
             requestBuilder.AddQueryParam("format", "json_extended");
             requestBuilder.AddQueryParam("app_id", BuildInfo.AppName);
 

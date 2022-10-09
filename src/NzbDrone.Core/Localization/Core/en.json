@@ -23,6 +23,8 @@
   "AppDataDirectory": "AppData directory",
   "AppDataLocationHealthCheckMessage": "Updating will not be possible to prevent deleting AppData on Update",
   "Application": "Application",
+  "ApplicationLongTermStatusCheckAllClientMessage": "All applications are unavailable due to failures for more than 6 hours",
+  "ApplicationLongTermStatusCheckSingleClientMessage": "Applications unavailable due to failures for more than 6 hours: {0}",
   "Applications": "Applications",
   "ApplicationStatusCheckAllClientMessage": "All applications are unavailable due to failures",
   "ApplicationStatusCheckSingleClientMessage": "Applications unavailable due to failures: {0}",

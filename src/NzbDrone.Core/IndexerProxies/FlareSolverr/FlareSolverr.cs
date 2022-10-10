@@ -105,7 +105,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             // Use Proxy if no credentials are set (creds not supported as of FS 2.2.9)
             var proxySettings = _proxySettingsProvider.GetProxySettings();
-            var proxyUrl = proxySettings.Username.IsNullOrWhiteSpace() && proxySettings.Password.IsNullOrWhiteSpace() ? GetProxyUri(proxySettings) : null;
+            var proxyUrl = proxySettings != null && proxySettings.Username.IsNullOrWhiteSpace() && proxySettings.Password.IsNullOrWhiteSpace() ? GetProxyUri(proxySettings) : null;
 
             if (request.Method == HttpMethod.Get)
             {
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     UserAgent = userAgent,
                     Proxy = new FlareSolverrProxy
                     {
-                        Url = proxyUrl.AbsoluteUri
+                        Url = proxyUrl?.AbsoluteUri
                     }
                 };
             }

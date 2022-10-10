@@ -144,7 +144,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                         UserAgent = userAgent,
                         Proxy = new FlareSolverrProxy
                         {
-                            Url = proxyUrl.AbsoluteUri
+                            Url = proxyUrl?.AbsoluteUri
                         }
                     };
                 }

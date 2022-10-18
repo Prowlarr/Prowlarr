@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "RetroFlix";
 
         public override string[] IndexerUrls => new string[] { "https://retroflix.club/" };
-        public override string[] LegacyUrls => new string[] { "http://retroflix.net/" };
+        public override string[] LegacyUrls => new string[] { "https://retroflix.net/" };
 
         public override string Description => "Private Torrent Tracker for Classic Movies / TV / General Releases";
 

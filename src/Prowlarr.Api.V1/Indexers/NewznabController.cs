@@ -131,7 +131,7 @@ namespace NzbDrone.Api.V1.Indexers
             //TODO Optimize this so it's not called here and in NzbSearchService (for manual search)
             if (_indexerLimitService.AtQueryLimit(indexerDef))
             {
-                return Content(CreateErrorXML(500, $"Request limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit})"), "application/rss+xml");
+                return Content(CreateErrorXML(429, $"Request limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit})"), "application/rss+xml");
             }
 
             switch (requestType)
@@ -171,7 +171,7 @@ namespace NzbDrone.Api.V1.Indexers
 
             if (_indexerLimitService.AtDownloadLimit(indexerDef))
             {
-                throw new BadRequestException("Grab limit reached");
+                return Content(CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.DownloadLimit})"), "application/rss+xml");
             }
 
             if (link.IsNullOrWhiteSpace() || file.IsNullOrWhiteSpace())

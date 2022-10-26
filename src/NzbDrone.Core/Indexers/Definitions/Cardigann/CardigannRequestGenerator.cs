@@ -945,7 +945,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public bool CheckIfLoginIsNeeded(HttpResponse response)
         {
-            if (_definition.Login == null || _definition.Login.Test == null)
+            if (_definition.Login == null)
             {
                 return false;
             }

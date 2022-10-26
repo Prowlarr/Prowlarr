@@ -945,7 +945,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public bool CheckIfLoginIsNeeded(HttpResponse response)
         {
-            if (_definition.Login == null || _definition.Login.Test == null)
+            if (_definition.Login == null)
             {
                 return false;
             }
@@ -969,18 +969,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             // Only run html test selector on html responses
-            if (response.Headers.ContentType?.Contains("text/html") ?? true)
+            if (_definition.Login.Test.Selector != null && (response.Headers.ContentType?.Contains("text/html") ?? true))
             {
                 var parser = new HtmlParser();
                 var document = parser.ParseDocument(response.Content);
 
-                if (_definition.Login.Test.Selector != null)
+                var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
+                if (selection.Length == 0)
                 {
-                    var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
-                    if (selection.Length == 0)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 

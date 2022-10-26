@@ -171,7 +171,7 @@ namespace NzbDrone.Api.V1.Indexers
 
             if (_indexerLimitService.AtDownloadLimit(indexerDef))
             {
-                return Content(CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.DownloadLimit})"), "application/rss+xml");
+                return Content(CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit})"), "application/rss+xml");
             }
 
             if (link.IsNullOrWhiteSpace() || file.IsNullOrWhiteSpace())

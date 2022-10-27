@@ -29,6 +29,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 return torrentInfos.ToArray();
             }
 
+            if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.TooManyRequests)
+            {
+                throw new RequestLimitReachedException(indexerResponse, "API Request Limit Reached");
+            }
+
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");

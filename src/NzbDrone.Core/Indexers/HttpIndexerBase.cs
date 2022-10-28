@@ -210,7 +210,7 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
-                    webException.Message.Contains("timed out"))
+                    webException.Message.Contains("timed out") || webException.Message.Contains("504"))
                 {
                     _logger.Warn("{0} server is currently unavailable. {1} {2}", this, url, webException.Message);
                 }
@@ -223,16 +223,14 @@ namespace NzbDrone.Core.Indexers
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
 
+                var retryTime = TimeSpan.FromHours(1);
                 if (ex.RetryAfter != TimeSpan.Zero)
                 {
-                    _indexerStatusService.RecordFailure(Definition.Id, ex.RetryAfter);
-                }
-                else
-                {
-                    _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
+                    retryTime = ex.RetryAfter;
                 }
 
-                _logger.Warn("Request Limit reached for {0}", this);
+                _indexerStatusService.RecordFailure(Definition.Id, retryTime);
+                _logger.Warn("Request Limit reached for {0}. Disabled for {1}", this, retryTime);
             }
             catch (HttpException ex)
             {
@@ -243,7 +241,8 @@ namespace NzbDrone.Core.Indexers
             catch (RequestLimitReachedException ex)
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response.HttpResponse });
-                _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
+                var retryTime = TimeSpan.FromHours(1);
+                _indexerStatusService.RecordFailure(Definition.Id, retryTime);
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
             catch (IndexerAuthException)

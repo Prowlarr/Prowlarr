@@ -321,9 +321,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         if (episode != null)
                         {
-                            releaseInfo = episode is > 0 and < 10
+                            var episodeString = episode is > 0 and < 10
                                 ? "0" + episode
                                 : episode.ToString();
+                            releaseInfo = $" - {episodeString}";
                         }
                         else
                         {

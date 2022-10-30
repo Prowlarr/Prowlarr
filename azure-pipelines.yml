@@ -445,7 +445,7 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
-        condition: ne(variables['poolName'], 'FreeBSD')
+        condition: ne(variables['poolName'], 'FreeBSD 12')
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
         inputs:

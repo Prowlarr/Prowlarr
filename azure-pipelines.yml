@@ -429,11 +429,11 @@ stages:
             testName: 'linux-x64'
             poolName: 'Azure Pipelines'
             imageName: ${{ variables.linuxImage }}
-          # FreebsdCore:
-          #   osName: 'Linux'
-          #   testName: 'freebsd-x64'
-          #   poolName: 'FreeBSD'
-          #   imageName:
+          FreebsdCore:
+            osName: 'Linux'
+            testName: 'freebsd-x64'
+            poolName: 'FreeBSD 12'
+            imageName:
 
       pool:
         name: $(poolName)
@@ -724,51 +724,51 @@ stages:
             failTaskOnFailedTests: true
           displayName: Publish Test Results
 
-    # - job: Integration_FreeBSD
-    #   displayName: Integration Native FreeBSD
-    #   dependsOn: Prepare
-    #   condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
-    #   workspace:
-    #     clean: all
-    #   variables:
-    #     pattern: 'Prowlarr.*.freebsd-core-x64.tar.gz'
-    #   pool:
-    #     name: 'FreeBSD'
+    - job: Integration_FreeBSD
+      displayName: Integration Native FreeBSD
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      workspace:
+        clean: all
+      variables:
+        pattern: 'Prowlarr.*.freebsd-core-x64.tar.gz'
+      pool:
+        name: 'FreeBSD 12'
 
-    #   steps:
-    #   - checkout: none
-    #   - task: DownloadPipelineArtifact@2
-    #     displayName: Download Test Artifact
-    #     inputs:
-    #       buildType: 'current'
-    #       artifactName: 'freebsd-x64-tests'
-    #       targetPath: $(testsFolder)
-    #   - task: DownloadPipelineArtifact@2
-    #     displayName: Download Build Artifact
-    #     inputs:
-    #       buildType: 'current'
-    #       artifactName: Packages
-    #       itemPattern: '/$(pattern)'
-    #       targetPath: $(Build.ArtifactStagingDirectory)
-    #   - bash: |
-    #       mkdir -p ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
-    #       tar xf ${BUILD_ARTIFACTSTAGINGDIRECTORY}/$(pattern) -C ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
-    #     displayName: Extract Package
-    #   - bash: |
-    #       mkdir -p ./bin/
-    #       cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
-    #     displayName: Move Package Contents
-    #   - bash: |
-    #       chmod a+x ${TESTSFOLDER}/test.sh
-    #       ${TESTSFOLDER}/test.sh Linux Integration Test
-    #     displayName: Run Integration Tests
-    #   - task: PublishTestResults@2
-    #     inputs:
-    #       testResultsFormat: 'NUnit'
-    #       testResultsFiles: '**/TestResult.xml'
-    #       testRunTitle: 'FreeBSD Integration Tests'
-    #       failTaskOnFailedTests: true
-    #     displayName: Publish Test Results
+      steps:
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: 'freebsd-x64-tests'
+          targetPath: $(testsFolder)
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Build Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: Packages
+          itemPattern: '/$(pattern)'
+          targetPath: $(Build.ArtifactStagingDirectory)
+      - bash: |
+          mkdir -p ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+          tar xf ${BUILD_ARTIFACTSTAGINGDIRECTORY}/$(pattern) -C ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin
+        displayName: Extract Package
+      - bash: |
+          mkdir -p ./bin/
+          cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+        displayName: Move Package Contents
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ${TESTSFOLDER}/test.sh Linux Integration Test
+        displayName: Run Integration Tests
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'FreeBSD Integration Tests'
+          failTaskOnFailedTests: true
+        displayName: Publish Test Results
 
     - job: Integration_Docker
       displayName: Integration Docker

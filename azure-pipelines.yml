@@ -21,6 +21,7 @@ variables:
   windowsImage: 'windows-2022'
   linuxImage: 'ubuntu-20.04'
   macImage: 'macOS-11'
+  bsdPool: 'FreeBSD 12'
 
 trigger:
   branches:
@@ -432,7 +433,7 @@ stages:
           FreebsdCore:
             osName: 'Linux'
             testName: 'freebsd-x64'
-            poolName: 'FreeBSD 12'
+            poolName: ${{ variables.bsdPool }}
             imageName:
 
       pool:
@@ -445,7 +446,7 @@ stages:
         displayName: 'Install .net core'
         inputs:
           version: $(dotnetVersion)
-        condition: ne(variables['poolName'], 'FreeBSD 12')
+        condition: ne(variables['poolName'], variables['bsdPool'])
       - task: DownloadPipelineArtifact@2
         displayName: Download Test Artifact
         inputs:
@@ -733,7 +734,7 @@ stages:
       variables:
         pattern: 'Prowlarr.*.freebsd-core-x64.tar.gz'
       pool:
-        name: 'FreeBSD 12'
+        name: ${{ variables.bsdPool }}
 
       steps:
       - checkout: none

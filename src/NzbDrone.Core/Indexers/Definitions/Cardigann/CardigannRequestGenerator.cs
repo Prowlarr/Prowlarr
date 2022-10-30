@@ -969,7 +969,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             // Only run html test selector on html responses
-            if (_definition.Login.Test.Selector != null && (response.Headers.ContentType?.Contains("text/html") ?? true))
+            if (_definition.Login.Test?.Selector != null && (response.Headers.ContentType?.Contains("text/html") ?? true))
             {
                 var parser = new HtmlParser();
                 var document = parser.ParseDocument(response.Content);

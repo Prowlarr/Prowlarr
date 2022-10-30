@@ -449,6 +449,37 @@ namespace NzbDrone.Core.Indexers.Definitions
                         //  Additional 5 hours per GB
                         minimumSeedTime += (int)((size / 1000000000) * 18000);
 
+                        if (_settings.UseFilenameForSingleEpisodes && torrent.FileCount == 1)
+                        {
+                            var fileName = torrent.Files.First().FileName;
+
+                            var guid = new Uri(details + "&nh=" + StringUtil.Hash(fileName));
+
+                            var release = new TorrentInfo
+                            {
+                                MinimumRatio = 1,
+                                MinimumSeedTime = minimumSeedTime,
+                                Title = fileName,
+                                InfoUrl = details.AbsoluteUri,
+                                Guid = guid.AbsoluteUri,
+                                DownloadUrl = link.AbsoluteUri,
+                                PublishDate = publishDate,
+                                Categories = category,
+                                Description = description,
+                                Size = size,
+                                Seeders = seeders,
+                                Peers = peers,
+                                Grabs = snatched,
+                                Files = fileCount,
+                                DownloadVolumeFactor = rawDownMultiplier,
+                                UploadVolumeFactor = rawUpMultiplier,
+                            };
+
+                            torrentInfos.Add(release);
+
+                            continue;
+                        }
+
                         foreach (var title in synonyms)
                         {
                             var releaseTitle = groupName == "Movie" ?
@@ -510,6 +541,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             Passkey = "";
             Username = "";
             EnableSonarrCompatibility = true;
+            UseFilenameForSingleEpisodes = false;
         }
 
         [FieldDefinition(2, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
@@ -520,6 +552,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
         public bool EnableSonarrCompatibility { get; set; }
+
+        [FieldDefinition(5, Label = "Use Filenames for Single Episodes", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr replace AnimeBytes release names with the actual filename, this currently only works for single episode releases")]
+        public bool UseFilenameForSingleEpisodes { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
@@ -678,8 +713,20 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonProperty("FileCount")]
         public int FileCount { get; set; }
 
+        [JsonProperty("FileList")]
+        public List<File> Files  { get; set; }
+
         [JsonProperty("UploadTime")]
         public DateTimeOffset UploadTime { get; set; }
+    }
+
+    public class File
+    {
+        [JsonProperty("filename")]
+        public string FileName { get; set; }
+
+        [JsonProperty("size")]
+        public string FileSize { get; set; }
     }
 
     public class EditionData

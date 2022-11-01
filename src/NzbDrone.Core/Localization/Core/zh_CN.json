@@ -282,7 +282,7 @@
     "RemovedFromTaskQueue": "从任务队列中移除",
     "RemoveFilter": "移除过滤条件",
     "RemovingTag": "移除标签",
-    "RestartRequiredHelpTextWarning": "重启生效",
+    "RestartRequiredHelpTextWarning": "需要重新启动才能生效",
     "RestoreBackup": "恢复备份",
     "Result": "结果",
     "Retention": "保留",
@@ -460,5 +460,7 @@
     "Parameters": "参数",
     "Queued": "队列中",
     "Started": "已开始",
-    "LastDuration": "上一次用时"
+    "LastDuration": "上一次用时",
+    "ApplicationLongTermStatusCheckAllClientMessage": "由于故障超过6小时，所有程序都不可用",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "由于故障超过6小时而无法使用的程序：{0}"
 }

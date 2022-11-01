@@ -460,5 +460,7 @@
     "Parameters": "Paraméterek",
     "Queued": "Sorba helyezve",
     "Started": "Elkezdődött",
-    "NextExecution": "Következő végrehajtás"
+    "NextExecution": "Következő végrehajtás",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Az alkamazások elérhetetlenek több mint 6 órája az alábbi hiba miatt: {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Az összes alkalmazás elérhetetlen több mint 6 órája meghibásodás miatt"
 }

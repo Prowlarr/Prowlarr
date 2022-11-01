@@ -460,5 +460,7 @@
     "GrabTitle": "Obter Título",
     "LastDuration": "Última Duração",
     "NextExecution": "Próxima Execução",
-    "Started": "Iniciado"
+    "Started": "Iniciado",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Todos os aplicativos estão indisponíveis devido a falhas por mais de 6 horas",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Aplicativos indisponíveis devido a falhas por mais de 6 horas: {0}"
 }

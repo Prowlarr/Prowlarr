@@ -30,22 +30,19 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        protected IEnumerable<IndexerRequest> GetRequest(string searchParameters)
         {
-            var filter = "";
-            if (searchParameters == null)
-            {
-            }
-
             var request =
                 new IndexerRequest(
-                    $"{APIUrl}?{searchParameters}{filter}",
+                    $"{APIUrl}?{searchParameters}",
                     HttpAccept.Json);
+
+            request.HttpRequest.AllowAutoRedirect = false;
 
             yield return request;
         }
 
-        private string GetBasicSearchParameters(string searchTerm, int[] categories)
+        protected string GetBasicSearchParameters(string searchTerm, int[] categories)
         {
             var searchString = GetSearchTerm(searchTerm);
 
@@ -67,7 +64,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
             return parameters;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
 

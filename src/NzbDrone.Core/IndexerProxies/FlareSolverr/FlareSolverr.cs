@@ -10,6 +10,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Cloud;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Localization;
@@ -20,10 +21,12 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
         private readonly ICached<string> _cache;
+        private readonly IHttpProxySettingsProvider _proxySettingsProvider;
 
-        public FlareSolverr(IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService, ICacheManager cacheManager)
+        public FlareSolverr(IHttpProxySettingsProvider proxySettingsProvider, IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService, ICacheManager cacheManager)
             : base(cloudRequestBuilder, httpClient, logger, localizationService)
         {
+            _proxySettingsProvider = proxySettingsProvider;
             _cache = cacheManager.GetCache<string>(typeof(string), "UserAgent");
         }
 
@@ -100,6 +103,10 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36";
             var maxTimeout = Settings.RequestTimeout * 1000;
 
+            // Use Proxy if no credentials are set (creds not supported as of FS 2.2.9)
+            var proxySettings = _proxySettingsProvider.GetProxySettings();
+            var proxyUrl = proxySettings != null && proxySettings.Username.IsNullOrWhiteSpace() && proxySettings.Password.IsNullOrWhiteSpace() ? GetProxyUri(proxySettings) : null;
+
             if (request.Method == HttpMethod.Get)
             {
                 req = new FlareSolverrRequestGet
@@ -107,7 +114,11 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     Cmd = "request.get",
                     Url = url,
                     MaxTimeout = maxTimeout,
-                    UserAgent = userAgent
+                    UserAgent = userAgent,
+                    Proxy = new FlareSolverrProxy
+                    {
+                        Url = proxyUrl?.AbsoluteUri
+                    }
                 };
             }
             else if (request.Method == HttpMethod.Post)
@@ -130,7 +141,11 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                             ContentLength = null
                         },
                         MaxTimeout = maxTimeout,
-                        UserAgent = userAgent
+                        UserAgent = userAgent,
+                        Proxy = new FlareSolverrProxy
+                        {
+                            Url = proxyUrl?.AbsoluteUri
+                        }
                     };
                 }
                 else if (contentTypeType.Contains("multipart/form-data")
@@ -191,38 +206,59 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             return new ValidationResult(failures);
         }
 
-        public class FlareSolverrRequest
+        private Uri GetProxyUri(HttpProxySettings proxySettings)
+        {
+            switch (proxySettings.Type)
+            {
+                case ProxyType.Http:
+                    return new Uri("http://" + proxySettings.Host + ":" + proxySettings.Port);
+                case ProxyType.Socks4:
+                    return new Uri("socks4://" + proxySettings.Host + ":" + proxySettings.Port);
+                case ProxyType.Socks5:
+                    return new Uri("socks5://" + proxySettings.Host + ":" + proxySettings.Port);
+                default:
+                    return null;
+            }
+        }
+
+        private class FlareSolverrRequest
         {
             public string Cmd { get; set; }
             public string Url { get; set; }
             public string UserAgent { get; set; }
             public Cookie[] Cookies { get; set; }
+            public FlareSolverrProxy Proxy { get; set; }
         }
 
-        public class FlareSolverrRequestGet : FlareSolverrRequest
+        private class FlareSolverrRequestGet : FlareSolverrRequest
         {
             public string Headers { get; set; }
             public int MaxTimeout { get; set; }
         }
 
-        public class FlareSolverrRequestPost : FlareSolverrRequest
+        private class FlareSolverrRequestPost : FlareSolverrRequest
         {
             public string PostData { get; set; }
             public int MaxTimeout { get; set; }
         }
 
-        public class FlareSolverrRequestPostUrlEncoded : FlareSolverrRequestPost
+        private class FlareSolverrRequestPostUrlEncoded : FlareSolverrRequestPost
         {
             public HeadersPost Headers { get; set; }
         }
 
-        public class HeadersPost
+        private class FlareSolverrProxy
+        {
+            public string Url { get; set; }
+        }
+
+        private class HeadersPost
         {
             public string ContentType { get; set; }
             public string ContentLength { get; set; }
         }
 
-        public class FlareSolverrResponse
+        private class FlareSolverrResponse
         {
             public string Status { get; set; }
             public string Message { get; set; }
@@ -232,7 +268,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public Solution Solution { get; set; }
         }
 
-        public class Solution
+        private class Solution
         {
             public string Url { get; set; }
             public string Status { get; set; }
@@ -242,7 +278,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public string UserAgent { get; set; }
         }
 
-        public class Cookie
+        private class Cookie
         {
             public string Name { get; set; }
             public string Value { get; set; }
@@ -259,7 +295,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public System.Net.Cookie ToCookieObj() => new System.Net.Cookie(Name, Value);
         }
 
-        public class Headers
+        private class Headers
         {
             public string Status { get; set; }
             public string Date { get; set; }

@@ -999,7 +999,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
                 if (selection.Length == 0)
                 {
-                    var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
                     if (extraLoginCheck && selection.Any())
                     {
                         return true;

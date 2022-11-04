@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                         .ContainsIgnoreCase("login.php"))
                 {
                     CookiesUpdater(null, null);
-                    throw new IndexerAuthException("We are being redirected to the PTP login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
+                    throw new IndexerAuthException("We are being redirected to the PTP login page. Most likely your session expired or was killed. Recheck your cookie or credentials and try testing the indexer.");
                 }
 
                 if (indexerHttpResponse.StatusCode == HttpStatusCode.Forbidden)

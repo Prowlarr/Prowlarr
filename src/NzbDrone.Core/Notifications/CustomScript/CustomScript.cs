@@ -6,6 +6,7 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Processes;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -14,12 +15,20 @@ namespace NzbDrone.Core.Notifications.CustomScript
 {
     public class CustomScript : NotificationBase<CustomScriptSettings>
     {
+        private readonly IConfigFileProvider _configFileProvider;
+        private readonly IConfigService _configService;
         private readonly IDiskProvider _diskProvider;
         private readonly IProcessProvider _processProvider;
         private readonly Logger _logger;
 
-        public CustomScript(IDiskProvider diskProvider, IProcessProvider processProvider, Logger logger)
+        public CustomScript(IConfigFileProvider configFileProvider,
+            IConfigService configService,
+            IDiskProvider diskProvider,
+            IProcessProvider processProvider,
+            Logger logger)
         {
+            _configFileProvider = configFileProvider;
+            _configService = configService;
             _diskProvider = diskProvider;
             _processProvider = processProvider;
             _logger = logger;
@@ -36,6 +45,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Prowlarr_EventType", "HealthIssue");
+            environmentVariables.Add("Prowlarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Prowlarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Prowlarr_Health_Issue_Level", Enum.GetName(typeof(HealthCheckResult), healthCheck.Type));
             environmentVariables.Add("Prowlarr_Health_Issue_Message", healthCheck.Message);
             environmentVariables.Add("Prowlarr_Health_Issue_Type", healthCheck.Source.Name);
@@ -49,6 +60,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
             var environmentVariables = new StringDictionary();
 
             environmentVariables.Add("Prowlarr_EventType", "ApplicationUpdate");
+            environmentVariables.Add("Prowlarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Prowlarr_ApplicationUrl", _configService.ApplicationUrl);
             environmentVariables.Add("Prowlarr_Update_Message", updateMessage.Message);
             environmentVariables.Add("Prowlarr_Update_NewVersion", updateMessage.NewVersion.ToString());
             environmentVariables.Add("Prowlarr_Update_PreviousVersion", updateMessage.PreviousVersion.ToString());
@@ -79,6 +92,8 @@ namespace NzbDrone.Core.Notifications.CustomScript
                 {
                     var environmentVariables = new StringDictionary();
                     environmentVariables.Add("Prowlarr_EventType", "Test");
+                    environmentVariables.Add("Prowlarr_InstanceName", _configFileProvider.InstanceName);
+                    environmentVariables.Add("Prowlarr_ApplicationUrl", _configService.ApplicationUrl);
 
                     var processOutput = ExecuteScript(environmentVariables);
 

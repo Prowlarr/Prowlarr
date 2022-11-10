@@ -28,9 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public abstract class SpeedAppBase : TorrentIndexerBase<SpeedAppSettings>
     {
-        private string ApiUrl => $"{Settings.BaseUrl}/api";
-
-        private string LoginUrl => $"{ApiUrl}/login";
+        private string LoginUrl => Settings.BaseUrl + "api/login";
 
         public override Encoding Encoding => Encoding.UTF8;
 
@@ -262,7 +260,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            var searchUrl = Settings.BaseUrl + "/api/torrent?" + qc.GetQueryString(duplicateKeysIfMulti: true);
+            var searchUrl = Settings.BaseUrl + "api/torrent?" + qc.GetQueryString(duplicateKeysIfMulti: true);
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 

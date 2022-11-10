@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "SpeedApp.io";
 
-        public override string[] IndexerUrls => new string[] { "https://speedapp.io" };
+        public override string[] IndexerUrls => new string[] { "https://speedapp.io/" };
 
         public override string Description => "SpeedApp is a ROMANIAN Private Torrent Tracker for MOVIES / TV / GENERAL";
 

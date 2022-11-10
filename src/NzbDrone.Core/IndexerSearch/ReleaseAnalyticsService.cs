@@ -37,7 +37,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         public void HandleAsync(IndexerQueryEvent message)
         {
-            if (message.QueryResult?.Releases != null)
+            if (_analyticsService.IsEnabled && message.QueryResult?.Releases != null)
             {
                 lock (_pendingUpdates)
                 {

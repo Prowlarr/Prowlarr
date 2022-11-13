@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Notifications.Webhook;
 using NzbDrone.Core.Validation;
 
@@ -10,7 +11,8 @@ namespace NzbDrone.Core.Notifications.Notifiarr
     {
         private readonly INotifiarrProxy _proxy;
 
-        public Notifiarr(INotifiarrProxy proxy)
+        public Notifiarr(INotifiarrProxy proxy, IConfigFileProvider configFileProvider)
+            : base(configFileProvider)
         {
             _proxy = proxy;
         }

@@ -16,12 +16,10 @@ namespace NzbDrone.Core.Notifications.Notifiarr
     {
         private const string URL = "https://notifiarr.com";
         private readonly IHttpClient _httpClient;
-        private readonly IConfigFileProvider _configFileProvider;
 
-        public NotifiarrProxy(IHttpClient httpClient, IConfigFileProvider configFileProvider)
+        public NotifiarrProxy(IHttpClient httpClient)
         {
             _httpClient = httpClient;
-            _configFileProvider = configFileProvider;
         }
 
         public void SendNotification(WebhookPayload payload, NotifiarrSettings settings)
@@ -42,8 +40,6 @@ namespace NzbDrone.Core.Notifications.Notifiarr
 
                 request.Headers.ContentType = "application/json";
                 request.SetContent(payload.ToJson());
-
-                var instanceName = _configFileProvider.InstanceName;
 
                 _httpClient.Post(request);
             }

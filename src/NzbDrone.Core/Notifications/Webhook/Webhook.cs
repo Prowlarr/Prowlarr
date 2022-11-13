@@ -5,7 +5,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Notifications.Webhook
 {
-    public class Webhook : NotificationBase<WebhookSettings>
+    public class Webhook : WebhookBase<WebhookSettings>
     {
         private readonly IWebhookProxy _proxy;
 
@@ -18,29 +18,12 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            var payload = new WebhookHealthPayload
-            {
-                EventType = WebhookEventType.Health,
-                Level = healthCheck.Type,
-                Message = healthCheck.Message,
-                Type = healthCheck.Source.Name,
-                WikiUrl = healthCheck.WikiUrl?.ToString()
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildHealthPayload(healthCheck), Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            var payload = new WebhookApplicationUpdatePayload
-            {
-                EventType = WebhookEventType.ApplicationUpdate,
-                Message = updateMessage.Message,
-                PreviousVersion = updateMessage.PreviousVersion.ToString(),
-                NewVersion = updateMessage.NewVersion.ToString()
-            };
-
-            _proxy.SendWebhook(payload, Settings);
+            _proxy.SendWebhook(BuildApplicationUploadPayload(updateMessage), Settings);
         }
 
         public override string Name => "Webhook";
@@ -58,12 +41,7 @@ namespace NzbDrone.Core.Notifications.Webhook
         {
             try
             {
-                var payload = new WebhookHealthPayload
-                {
-                    EventType = WebhookEventType.Test
-                };
-
-                _proxy.SendWebhook(payload, Settings);
+                _proxy.SendWebhook(BuildTestPayload(), Settings);
             }
             catch (WebhookException ex)
             {

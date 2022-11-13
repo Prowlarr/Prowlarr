@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Notifications.Webhook;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Notifications.Notifiarr
 {
-    public class Notifiarr : NotificationBase<NotifiarrSettings>
+    public class Notifiarr : WebhookBase<NotifiarrSettings>
     {
         private readonly INotifiarrProxy _proxy;
 
@@ -18,36 +19,35 @@ namespace NzbDrone.Core.Notifications.Notifiarr
         public override string Name => "Notifiarr";
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            var variables = new StringDictionary();
-
-            variables.Add("Prowlarr_EventType", "HealthIssue");
-            variables.Add("Prowlarr_Health_Issue_Level", healthCheck.Type.ToString() ?? string.Empty);
-            variables.Add("Prowlarr_Health_Issue_Message", healthCheck.Message);
-            variables.Add("Prowlarr_Health_Issue_Type", healthCheck.Source.Name);
-            variables.Add("Prowlarr_Health_Issue_Wiki", healthCheck.WikiUrl.ToString() ?? string.Empty);
-
-            _proxy.SendNotification(variables, Settings);
+            _proxy.SendNotification(BuildHealthPayload(healthCheck), Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            var variables = new StringDictionary();
-
-            variables.Add("Prowlarr_EventType", "ApplicationUpdate");
-            variables.Add("Prowlarr_Update_Message", updateMessage.Message);
-            variables.Add("Prowlarr_Update_NewVersion", updateMessage.NewVersion.ToString());
-            variables.Add("Prowlarr_Update_PreviousVersion", updateMessage.PreviousVersion.ToString());
-
-            _proxy.SendNotification(variables, Settings);
+            _proxy.SendNotification(BuildApplicationUploadPayload(updateMessage), Settings);
         }
 
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();
 
-            failures.AddIfNotNull(_proxy.Test(Settings));
+            failures.AddIfNotNull(SendWebhookTest());
 
             return new ValidationResult(failures);
+        }
+
+        private ValidationFailure SendWebhookTest()
+        {
+            try
+            {
+                _proxy.SendNotification(BuildTestPayload(), Settings);
+            }
+            catch (NotifiarrException ex)
+            {
+                return new NzbDroneValidationFailure("APIKey", ex.Message);
+            }
+
+            return null;
         }
     }
 }

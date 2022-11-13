@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public string AuthKey;
         public string PassKey;
 
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use Freeleech Token")]
+        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
         public bool UseFreeleechToken { get; set; }
     }
 }

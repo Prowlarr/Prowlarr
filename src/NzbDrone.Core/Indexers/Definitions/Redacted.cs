@@ -27,8 +27,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Redacted";
         public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
         public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -82,10 +80,26 @@ namespace NzbDrone.Core.Indexers.Definitions
             return caps;
         }
 
-        protected override async Task Test(List<ValidationFailure> failures)
+        public override async Task<byte[]> Download(Uri link)
         {
-            ((RedactedRequestGenerator)GetRequestGenerator()).FetchPasskey();
-            await base.Test(failures);
+            var request = new HttpRequestBuilder(link.AbsoluteUri)
+                .SetHeader("Authorization", Settings.Apikey)
+                .Build();
+
+            var downloadBytes = Array.Empty<byte>();
+
+            try
+            {
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                downloadBytes = response.ResponseData;
+            }
+            catch (Exception)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Error("Download failed");
+            }
+
+            return downloadBytes;
         }
     }
 
@@ -136,24 +150,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
-        }
-
-        public void FetchPasskey()
-        {
-            // GET on index for the passkey
-            var request = RequestBuilder().Resource("ajax.php?action=index").Build();
-            var indexResponse = HttpClient.Execute(request);
-            var index = Json.Deserialize<GazelleAuthResponse>(indexResponse.Content);
-            if (index == null ||
-                string.IsNullOrWhiteSpace(index.Status) ||
-                index.Status != "success" ||
-                string.IsNullOrWhiteSpace(index.Response.Passkey))
-            {
-                throw new Exception("Failed to authenticate with Redacted.");
-            }
-
-            // Set passkey on settings so it can be used to generate the download URL
-            Settings.Passkey = index.Response.Passkey;
         }
 
         private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
@@ -311,11 +307,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             // AuthKey is required but not checked, just pass in a dummy variable
             // to avoid having to track authkey, which is randomly cycled
             var url = new HttpUri(_settings.BaseUrl)
-                .CombinePath("/torrents.php")
+                .CombinePath("/ajax.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
-                .AddQueryParam("authkey", "prowlarr")
-                .AddQueryParam("torrent_pass", _settings.Passkey)
                 .AddQueryParam("usetoken", (_settings.UseFreeleechToken && canUseToken) ? 1 : 0);
 
             return url.FullUri;
@@ -347,7 +341,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public RedactedSettings()
         {
             Apikey = "";
-            Passkey = "";
             UseFreeleechToken = false;
         }
 
@@ -356,8 +349,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
         public bool UseFreeleechToken { get; set; }
-
-        public string Passkey { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

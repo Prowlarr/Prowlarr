@@ -17,6 +17,11 @@ namespace NzbDrone.Core.Notifications.Apprise
             _proxy = proxy;
         }
 
+        public override void OnGrab(GrabMessage message)
+        {
+            _proxy.SendNotification(Settings, RELEASE_GRABBED_TITLE_BRANDED, $"{message.Message}");
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(Settings, HEALTH_ISSUE_TITLE_BRANDED, $"{healthCheck.Message}");

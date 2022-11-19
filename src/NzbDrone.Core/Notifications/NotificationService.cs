@@ -1,7 +1,12 @@
 using System;
+using System.Drawing.Drawing2D;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.HealthCheck;
+using NzbDrone.Core.Indexers.Events;
+using NzbDrone.Core.Indexers.PassThePopcorn;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Update.History.Events;
 
 namespace NzbDrone.Core.Notifications
@@ -9,7 +14,8 @@ namespace NzbDrone.Core.Notifications
     public class NotificationService
         : IHandle<HealthCheckFailedEvent>,
           IHandleAsync<HealthCheckCompleteEvent>,
-          IHandle<UpdateInstalledEvent>
+          IHandle<UpdateInstalledEvent>,
+          IHandle<IndexerDownloadEvent>
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly Logger _logger;
@@ -33,6 +39,43 @@ namespace NzbDrone.Core.Notifications
             }
 
             return false;
+        }
+
+        private bool ShouldHandleOnGrab(GrabMessage message, bool includeManual)
+        {
+            if (message.GrabTrigger == GrabTrigger.Api)
+            {
+                return true;
+            }
+
+            if (message.GrabTrigger == GrabTrigger.Manual && includeManual)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private string GetMessage(ReleaseInfo release, GrabTrigger grabTrigger, string source, string downloadClient)
+        {
+            var message = string.Format("{0} grabbed by {1} from {2}",
+                                    release.Title,
+                                    source,
+                                    release.Indexer);
+
+            if (grabTrigger == GrabTrigger.Manual)
+            {
+                message = string.Format("{0} manually grabbed in Prowlarr from {1}",
+                                    release.Title,
+                                    release.Indexer);
+            }
+
+            if (downloadClient.IsNotNullOrWhiteSpace())
+            {
+                message += $" and sent to {downloadClient}";
+            }
+
+            return message;
         }
 
         public void Handle(HealthCheckFailedEvent message)
@@ -96,6 +139,38 @@ namespace NzbDrone.Core.Notifications
                 catch (Exception ex)
                 {
                     _logger.Warn(ex, "Unable to process notification queue for " + notification.Definition.Name);
+                }
+            }
+        }
+
+        public void Handle(IndexerDownloadEvent message)
+        {
+            var grabMessage = new GrabMessage
+            {
+                Release = message.Release,
+                Source = message.Source,
+                Host = message.Host,
+                Successful = message.Successful,
+                DownloadClientName = message.DownloadClientName,
+                DownloadClientType = message.DownloadClient,
+                DownloadId = message.DownloadId,
+                Redirect = message.Redirect,
+                GrabTrigger = message.GrabTrigger,
+                Message = GetMessage(message.Release, message.GrabTrigger, message.Source, message.DownloadClientName)
+            };
+
+            foreach (var notification in _notificationFactory.OnGrabEnabled())
+            {
+                try
+                {
+                    if (ShouldHandleOnGrab(grabMessage, ((NotificationDefinition)notification.Definition).IncludeManualGrabs))
+                    {
+                        notification.OnGrab(grabMessage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
                 }
             }
         }

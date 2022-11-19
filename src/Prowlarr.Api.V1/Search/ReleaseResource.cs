@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Routing.Constraints;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.REST;
@@ -36,6 +37,21 @@ namespace Prowlarr.Api.V1.Search
         public int? Seeders { get; set; }
         public int? Leechers { get; set; }
         public DownloadProtocol Protocol { get; set; }
+
+        public string FileName
+        {
+            get
+            {
+                var extension = "torrent";
+
+                if (Protocol == DownloadProtocol.Usenet)
+                {
+                    extension = "nzb";
+                }
+
+                return $"{Title}.{extension}";
+            }
+        }
     }
 
     public static class ReleaseResourceMapper

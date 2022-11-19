@@ -6,10 +6,13 @@ namespace NzbDrone.Core.Notifications
     {
         public bool OnHealthIssue { get; set; }
         public bool OnApplicationUpdate { get; set; }
+        public bool OnGrab { get; set; }
+        public bool SupportsOnGrab { get; set; }
+        public bool IncludeManualGrabs { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
         public bool IncludeHealthWarnings { get; set; }
         public bool SupportsOnApplicationUpdate { get; set; }
 
-        public override bool Enable => OnHealthIssue || OnApplicationUpdate;
+        public override bool Enable => OnHealthIssue || OnApplicationUpdate || OnGrab;
     }
 }

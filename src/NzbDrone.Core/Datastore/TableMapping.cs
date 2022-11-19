@@ -66,6 +66,7 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
                   .Ignore(x => x.ImplementationName)
+                  .Ignore(i => i.SupportsOnGrab)
                   .Ignore(i => i.SupportsOnHealthIssue)
                   .Ignore(i => i.SupportsOnApplicationUpdate);
 

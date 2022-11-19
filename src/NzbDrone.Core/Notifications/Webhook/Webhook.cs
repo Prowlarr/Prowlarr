@@ -18,6 +18,11 @@ namespace NzbDrone.Core.Notifications.Webhook
 
         public override string Link => "https://wiki.servarr.com/prowlarr/settings#connect";
 
+        public override void OnGrab(GrabMessage grabMessage)
+        {
+            _proxy.SendWebhook(BuildGrabPayload(grabMessage), Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendWebhook(BuildHealthPayload(healthCheck), Settings);

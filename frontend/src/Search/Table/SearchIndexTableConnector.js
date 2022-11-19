@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { grabRelease, setReleasesSort } from 'Store/Actions/releaseActions';
+import { grabRelease, saveRelease, setReleasesSort } from 'Store/Actions/releaseActions';
 import createUISettingsSelector from 'Store/Selectors/createUISettingsSelector';
 import SearchIndexTable from './SearchIndexTable';
 
@@ -25,6 +25,9 @@ function createMapDispatchToProps(dispatch, props) {
     },
     onGrabPress(payload) {
       dispatch(grabRelease(payload));
+    },
+    onSavePress(payload) {
+      dispatch(saveRelease(payload));
     }
   };
 }

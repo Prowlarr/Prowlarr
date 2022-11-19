@@ -59,7 +59,7 @@ namespace Prowlarr.Api.V1.Search
             var releaseInfo = _remoteReleaseCache.Find(GetCacheKey(release));
 
             var indexerDef = _indexerFactory.Get(release.IndexerId);
-            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var source = Request.GetSource();
             var host = Request.GetHostName();
 
             try
@@ -78,7 +78,7 @@ namespace Prowlarr.Api.V1.Search
         [HttpPost("bulk")]
         public ActionResult<ReleaseResource> GrabReleases(List<ReleaseResource> releases)
         {
-            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var source = Request.GetSource();
             var host = Request.GetHostName();
 
             var groupedReleases = releases.GroupBy(r => r.IndexerId);

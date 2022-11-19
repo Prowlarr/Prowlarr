@@ -20,7 +20,6 @@ namespace NzbDrone.Core.Notifications.Discord
         {
             //Set Default Fields
             GrabFields = new List<int> { 0, 1, 2, 3, 5, 6, 7, 8, 9 };
-            ImportFields = new List<int> { 0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12 };
         }
 
         private static readonly DiscordSettingsValidator Validator = new DiscordSettingsValidator();
@@ -39,9 +38,6 @@ namespace NzbDrone.Core.Notifications.Discord
 
         [FieldDefinition(4, Label = "On Grab Fields", Advanced = true, SelectOptions = typeof(DiscordGrabFieldType), HelpText = "Change the fields that are passed in for this 'on grab' notification", Type = FieldType.TagSelect)]
         public IEnumerable<int> GrabFields { get; set; }
-
-        [FieldDefinition(5, Label = "On Import Fields", Advanced = true, SelectOptions = typeof(DiscordImportFieldType), HelpText = "Change the fields that are passed for this 'on import' notification", Type = FieldType.TagSelect)]
-        public IEnumerable<int> ImportFields { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

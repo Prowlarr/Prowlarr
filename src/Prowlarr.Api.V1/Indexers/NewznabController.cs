@@ -55,7 +55,7 @@ namespace NzbDrone.Api.V1.Indexers
         public async Task<IActionResult> GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
         {
             var requestType = request.t;
-            request.source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            request.source = Request.GetSource();
             request.server = Request.GetServerUrl();
             request.host = Request.GetHostName();
 
@@ -232,7 +232,7 @@ namespace NzbDrone.Api.V1.Indexers
 
             file = WebUtility.UrlDecode(file);
 
-            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var source = Request.GetSource();
             var host = Request.GetHostName();
 
             var unprotectedlLink = _downloadMappingService.ConvertToNormalLink(link);

@@ -19,6 +19,65 @@ namespace NzbDrone.Core.Notifications.Discord
         public override string Name => "Discord";
         public override string Link => "https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks";
 
+        public override void OnGrab(GrabMessage message)
+        {
+            var embed = new Embed
+                        {
+                            Author = new DiscordAuthor
+                            {
+                                Name = Settings.Author.IsNullOrWhiteSpace() ? Environment.MachineName : Settings.Author,
+                                IconUrl = "https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/256.png"
+                            },
+                            Title = RELEASE_GRABBED_TITLE,
+                            Description = message.Message,
+                            Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                            Color = message.Successful ? (int)DiscordColors.Success : (int)DiscordColors.Danger,
+                            Fields = new List<DiscordField>()
+                        };
+
+            foreach (var field in Settings.GrabFields)
+            {
+                var discordField = new DiscordField();
+
+                switch ((DiscordGrabFieldType)field)
+                {
+                    case DiscordGrabFieldType.Release:
+                        discordField.Name = "Release";
+                        discordField.Value = string.Format("```{0}```", message.Release.Title);
+                        break;
+                    case DiscordGrabFieldType.Indexer:
+                        discordField.Name = "Indexer";
+                        discordField.Value = message.Release.Indexer ?? string.Empty;
+                        break;
+                    case DiscordGrabFieldType.DownloadClient:
+                        discordField.Name = "Download Client";
+                        discordField.Value = message.DownloadClientName ?? string.Empty;
+                        break;
+                    case DiscordGrabFieldType.GrabTrigger:
+                        discordField.Name = "Grab Trigger";
+                        discordField.Value = message.GrabTrigger.ToString() ?? string.Empty;
+                        break;
+                    case DiscordGrabFieldType.Source:
+                        discordField.Name = "Source";
+                        discordField.Value = message.Source ?? string.Empty;
+                        break;
+                    case DiscordGrabFieldType.Host:
+                        discordField.Name = "Host";
+                        discordField.Value = message.Host ?? string.Empty;
+                        break;
+                }
+
+                if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())
+                {
+                    embed.Fields.Add(discordField);
+                }
+            }
+
+            var payload = CreatePayload(null, new List<Embed> { embed });
+
+            _proxy.SendPayload(payload, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             var attachments = new List<Embed>

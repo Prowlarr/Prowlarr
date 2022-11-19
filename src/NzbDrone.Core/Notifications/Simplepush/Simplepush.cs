@@ -16,6 +16,11 @@ namespace NzbDrone.Core.Notifications.Simplepush
         public override string Name => "Simplepush";
         public override string Link => "https://simplepush.io/";
 
+        public override void OnGrab(GrabMessage message)
+        {
+            _proxy.SendNotification(RELEASE_GRABBED_TITLE, message.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);

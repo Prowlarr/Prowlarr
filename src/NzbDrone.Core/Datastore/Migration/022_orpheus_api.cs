@@ -1,8 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
+using Dapper;
 using FluentMigrator;
 using Newtonsoft.Json.Linq;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Datastore.Migration.Framework;
+using static NzbDrone.Core.Datastore.Migration.redacted_api;
 
 namespace NzbDrone.Core.Datastore.Migration
 {
@@ -20,6 +24,8 @@ namespace NzbDrone.Core.Datastore.Migration
             {
                 cmd.Transaction = tran;
                 cmd.CommandText = "SELECT \"Id\", \"Settings\" FROM \"Indexers\" WHERE \"Implementation\" = 'Orpheus'";
+
+                var updatedIndexers = new List<Indexer008>();
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -45,18 +51,20 @@ namespace NzbDrone.Core.Datastore.Migration
 
                             // write new json back to db, switch to new ConfigContract, and disable the indexer
                             settings = jsonObject.ToJson();
-                            using (var updateCmd = conn.CreateCommand())
+
+                            updatedIndexers.Add(new Indexer008
                             {
-                                updateCmd.Transaction = tran;
-                                updateCmd.CommandText = "UPDATE \"Indexers\" SET \"Settings\" = ?, \"ConfigContract\" = ?, \"Enable\" = 0 WHERE \"Id\" = ?";
-                                updateCmd.AddParameter(settings);
-                                updateCmd.AddParameter("OrpheusSettings");
-                                updateCmd.AddParameter(id);
-                                updateCmd.ExecuteNonQuery();
-                            }
+                                Id = id,
+                                Settings = settings,
+                                ConfigContract = "OrpheusSettings",
+                                Enable = false
+                            });
                         }
                     }
                 }
+
+                var updateSql = "UPDATE \"Indexers\" SET \"Settings\" = @Settings, \"ConfigContract\" = @ConfigContract, \"Enable\" = @Enable WHERE \"Id\" = @Id";
+                conn.Execute(updateSql, updatedIndexers, transaction: tran);
             }
         }
     }

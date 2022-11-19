@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 using FluentMigrator;
 using Newtonsoft.Json.Linq;
@@ -20,6 +21,8 @@ namespace NzbDrone.Core.Datastore.Migration
             {
                 cmd.Transaction = tran;
                 cmd.CommandText = "SELECT \"Id\", \"Settings\" FROM \"Indexers\" WHERE \"Implementation\" = 'Redacted'";
+
+                var updatedIndexers = new List<Indexer008>();
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -45,19 +48,26 @@ namespace NzbDrone.Core.Datastore.Migration
 
                             // write new json back to db, switch to new ConfigContract, and disable the indexer
                             settings = jsonObject.ToJson();
-                            using (var updateCmd = conn.CreateCommand())
+
+                            updatedIndexers.Add(new Indexer008
                             {
-                                updateCmd.Transaction = tran;
-                                updateCmd.CommandText = "UPDATE \"Indexers\" SET \"Settings\" = ?, \"ConfigContract\" = ?, \"Enable\" = 0 WHERE \"Id\" = ?";
-                                updateCmd.AddParameter(settings);
-                                updateCmd.AddParameter("RedactedSettings");
-                                updateCmd.AddParameter(id);
-                                updateCmd.ExecuteNonQuery();
-                            }
+                                Id = id,
+                                Settings = settings,
+                                ConfigContract = "RedactedSettings",
+                                Enable = false
+                            });
                         }
                     }
                 }
             }
+        }
+
+        public class Indexer008
+        {
+            public int Id { get; set; }
+            public string Settings { get; set; }
+            public string ConfigContract { get; set; }
+            public bool Enable { get; set; }
         }
     }
 }

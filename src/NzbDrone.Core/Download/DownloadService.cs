@@ -62,6 +62,15 @@ namespace NzbDrone.Core.Download
             // remoteMovie.SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(remoteMovie);
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(release.IndexerId));
 
+            var grabEvent = new IndexerDownloadEvent(release, true, source, host, release.Title, release.DownloadUrl)
+            {
+                DownloadClient = downloadClient.Name,
+                DownloadClientId = downloadClient.Definition.Id,
+                DownloadClientName = downloadClient.Definition.Name,
+                Redirect = redirect,
+                GrabTrigger = source == "Prowlarr" ? GrabTrigger.Manual : GrabTrigger.Api
+            };
+
             string downloadClientId;
             try
             {
@@ -72,13 +81,15 @@ namespace NzbDrone.Core.Download
             catch (ReleaseUnavailableException)
             {
                 _logger.Trace("Release {0} no longer available on indexer.", release);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, source, host, release.Title, release.DownloadUrl, redirect));
+                grabEvent.Successful = false;
+                _eventAggregator.PublishEvent(grabEvent);
                 throw;
             }
             catch (DownloadClientRejectedReleaseException)
             {
                 _logger.Trace("Release {0} rejected by download client, possible duplicate.", release);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, source, host, release.Title, release.DownloadUrl, redirect));
+                grabEvent.Successful = false;
+                _eventAggregator.PublishEvent(grabEvent);
                 throw;
             }
             catch (ReleaseDownloadException ex)
@@ -92,14 +103,21 @@ namespace NzbDrone.Core.Download
                     _indexerStatusService.RecordFailure(release.IndexerId);
                 }
 
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, false, source, host, release.Title, release.DownloadUrl, redirect));
+                grabEvent.Successful = false;
+
+                _eventAggregator.PublishEvent(grabEvent);
 
                 throw;
             }
 
             _logger.ProgressInfo("Report sent to {0}. {1}", downloadClient.Definition.Name, downloadTitle);
 
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(release.IndexerId, true, source, host, release.Title, release.DownloadUrl, redirect));
+            if (!string.IsNullOrWhiteSpace(downloadClientId))
+            {
+                grabEvent.DownloadId = downloadClientId;
+            }
+
+            _eventAggregator.PublishEvent(grabEvent);
         }
 
         public async Task<byte[]> DownloadReport(string link, int indexerId, string source, string host, string title)
@@ -117,16 +135,30 @@ namespace NzbDrone.Core.Download
             var success = false;
             var downloadedBytes = Array.Empty<byte>();
 
+            var release = new ReleaseInfo
+            {
+                Title = title,
+                DownloadUrl = link,
+                IndexerId = indexerId,
+                Indexer = indexer.Definition.Name,
+                DownloadProtocol = indexer.Protocol
+            };
+
+            var grabEvent = new IndexerDownloadEvent(release, success, source, host, release.Title, release.DownloadUrl)
+            {
+                GrabTrigger = source == "Prowlarr" ? GrabTrigger.Manual : GrabTrigger.Api
+            };
+
             try
             {
                 downloadedBytes = await indexer.Download(url);
                 _indexerStatusService.RecordSuccess(indexerId);
-                success = true;
+                grabEvent.Successful = true;
             }
             catch (ReleaseUnavailableException)
             {
                 _logger.Trace("Release {0} no longer available on indexer.", link);
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title, url.AbsoluteUri));
+                _eventAggregator.PublishEvent(grabEvent);
                 throw;
             }
             catch (ReleaseDownloadException ex)
@@ -140,19 +172,36 @@ namespace NzbDrone.Core.Download
                     _indexerStatusService.RecordFailure(indexerId);
                 }
 
-                _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title, url.AbsoluteUri));
+                _eventAggregator.PublishEvent(grabEvent);
                 throw;
             }
 
             _logger.Trace("Downloaded {0} bytes from {1}", downloadedBytes.Length, link);
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title, url.AbsoluteUri));
+            _eventAggregator.PublishEvent(grabEvent);
 
             return downloadedBytes;
         }
 
         public void RecordRedirect(string link, int indexerId, string source, string host, string title)
         {
-            _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, true, source, host, title, link, true));
+            var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(indexerId));
+
+            var release = new ReleaseInfo
+            {
+                Title = title,
+                DownloadUrl = link,
+                IndexerId = indexerId,
+                Indexer = indexer.Definition.Name,
+                DownloadProtocol = indexer.Protocol
+            };
+
+            var grabEvent = new IndexerDownloadEvent(release, true, source, host, release.Title, release.DownloadUrl)
+            {
+                Redirect = true,
+                GrabTrigger = source == "Prowlarr" ? GrabTrigger.Manual : GrabTrigger.Api
+            };
+
+            _eventAggregator.PublishEvent(grabEvent);
         }
     }
 }

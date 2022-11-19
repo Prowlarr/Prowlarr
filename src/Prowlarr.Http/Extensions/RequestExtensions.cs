@@ -4,9 +4,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Exceptions;
 
 namespace Prowlarr.Http.Extensions
 {
@@ -127,6 +125,16 @@ namespace Prowlarr.Http.Extensions
             }
 
             return remoteIP.ToString();
+        }
+
+        public static string GetSource(this HttpRequest request)
+        {
+            if (request.Headers.TryGetValue("X-Prowlarr-Client", out var source))
+            {
+                return "Prowlarr";
+            }
+
+            return NzbDrone.Common.Http.UserAgentParser.ParseSource(request.Headers["User-Agent"]);
         }
 
         public static string GetHostName(this HttpRequest request)

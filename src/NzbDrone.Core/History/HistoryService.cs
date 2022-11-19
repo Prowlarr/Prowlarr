@@ -185,7 +185,7 @@ namespace NzbDrone.Core.History
             var history = new History
             {
                 Date = DateTime.UtcNow,
-                IndexerId = message.IndexerId,
+                IndexerId = message.Release.IndexerId,
                 EventType = HistoryEventType.ReleaseGrabbed,
                 Successful = message.Successful
             };

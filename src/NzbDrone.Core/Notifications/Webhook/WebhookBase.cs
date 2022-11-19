@@ -14,6 +14,22 @@ namespace NzbDrone.Core.Notifications.Webhook
             _configFileProvider = configFileProvider;
         }
 
+        public WebhookGrabPayload BuildGrabPayload(GrabMessage message)
+        {
+            return new WebhookGrabPayload
+            {
+                EventType = WebhookEventType.Grab,
+                InstanceName = _configFileProvider.InstanceName,
+                Release = new WebhookRelease(message.Release),
+                Trigger = message.GrabTrigger,
+                Source = message.Source,
+                Host = message.Host,
+                DownloadClient = message.DownloadClientName,
+                DownloadClientType = message.DownloadClientType,
+                DownloadId = message.DownloadId
+            };
+        }
+
         protected WebhookHealthPayload BuildHealthPayload(HealthCheck.HealthCheck healthCheck)
         {
             return new WebhookHealthPayload

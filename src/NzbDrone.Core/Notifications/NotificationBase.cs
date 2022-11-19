@@ -8,9 +8,11 @@ namespace NzbDrone.Core.Notifications
     public abstract class NotificationBase<TSettings> : INotification
         where TSettings : IProviderConfig, new()
     {
+        protected const string RELEASE_GRABBED_TITLE = "Release Grabbed";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
         protected const string APPLICATION_UPDATE_TITLE = "Application Updated";
 
+        protected const string RELEASE_GRABBED_TITLE_BRANDED = "Prowlarr - " + RELEASE_GRABBED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Prowlarr - " + HEALTH_ISSUE_TITLE;
         protected const string APPLICATION_UPDATE_TITLE_BRANDED = "Prowlarr - " + APPLICATION_UPDATE_TITLE;
 
@@ -27,6 +29,10 @@ namespace NzbDrone.Core.Notifications
 
         public abstract string Link { get; }
 
+        public virtual void OnGrab(GrabMessage grabMessage)
+        {
+        }
+
         public virtual void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
         }
@@ -39,6 +45,7 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
         public bool SupportsOnApplicationUpdate => HasConcreteImplementation("OnApplicationUpdate");
 

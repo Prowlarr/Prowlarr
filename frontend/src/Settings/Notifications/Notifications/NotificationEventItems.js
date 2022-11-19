@@ -15,8 +15,11 @@ function NotificationEventItems(props) {
   } = props;
 
   const {
+    onGrab,
     onHealthIssue,
     onApplicationUpdate,
+    supportsOnGrab,
+    includeManualGrabs,
     supportsOnHealthIssue,
     includeHealthWarnings,
     supportsOnApplicationUpdate
@@ -31,6 +34,31 @@ function NotificationEventItems(props) {
           link="https://wiki.servarr.com/prowlarr/settings#connections"
         />
         <div className={styles.events}>
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onGrab"
+              helpText={translate('OnGrabHelpText')}
+              isDisabled={!supportsOnGrab.value}
+              {...onGrab}
+              onChange={onInputChange}
+            />
+          </div>
+
+          {
+            onGrab.value &&
+              <div>
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="includeManualGrabs"
+                  helpText={translate('IncludeManualGrabsHelpText')}
+                  isDisabled={!supportsOnGrab.value}
+                  {...includeManualGrabs}
+                  onChange={onInputChange}
+                />
+              </div>
+          }
+
           <div>
             <FormInputGroup
               type={inputTypes.CHECK}

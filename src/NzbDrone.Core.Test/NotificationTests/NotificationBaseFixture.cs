@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using FluentValidation.Results;
 using NUnit.Framework;
@@ -56,6 +55,11 @@ namespace NzbDrone.Core.Test.NotificationTests
             {
                 TestLogger.Info("OnApplicationUpdate was called");
             }
+
+            public override void OnGrab(GrabMessage message)
+            {
+                TestLogger.Info("OnGrab was called");
+            }
         }
 
         private class TestNotificationWithNoEvents : NotificationBase<TestSetting>
@@ -76,6 +80,7 @@ namespace NzbDrone.Core.Test.NotificationTests
 
             notification.SupportsOnHealthIssue.Should().BeTrue();
             notification.SupportsOnApplicationUpdate.Should().BeTrue();
+            notification.SupportsOnGrab.Should().BeTrue();
         }
 
         [Test]
@@ -85,6 +90,7 @@ namespace NzbDrone.Core.Test.NotificationTests
 
             notification.SupportsOnHealthIssue.Should().BeFalse();
             notification.SupportsOnApplicationUpdate.Should().BeFalse();
+            notification.SupportsOnGrab.Should().BeFalse();
         }
     }
 }

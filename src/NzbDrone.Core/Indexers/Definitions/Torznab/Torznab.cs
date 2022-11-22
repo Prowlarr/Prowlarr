@@ -89,7 +89,6 @@ namespace NzbDrone.Core.Indexers.Torznab
             get
             {
                 yield return GetDefinition("AnimeTosho", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("HD4Free.xyz", GetSettings("http://hd4free.xyz"));
                 yield return GetDefinition("Generic Torznab", GetSettings(""));
             }
         }

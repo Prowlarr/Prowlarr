@@ -337,5 +337,13 @@
     "NotificationTriggersHelpText": "בחר איזה אירועים יפעילו את ההתראה הזאת",
     "OnApplicationUpdate": "כשהאפליקציה מעדכנת גרסא",
     "OnApplicationUpdateHelpText": "כשהאפליקציה מעדכנת גרסא",
-    "Database": "מסד נתונים"
+    "Database": "מסד נתונים",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "אינדקסים לא זמינים עקב כשלים במשך יותר משש שעות: {0}",
+    "Duration": "אורך",
+    "Queued": "בתור",
+    "ApplicationLongTermStatusCheckAllClientMessage": "כל האינדקסים אינם זמינים עקב כשלים במשך יותר מ -6 שעות",
+    "Ended": "הסתיים",
+    "LastDuration": "lastDuration",
+    "LastExecution": "ביצוע אחרון",
+    "NextExecution": "הביצוע הבא"
 }

@@ -449,5 +449,13 @@
     "MinimumSeeders": "Seeder Minimi",
     "InstanceName": "Nome Istanza",
     "InstanceNameHelpText": "Nome dell'istanza nella scheda e per il nome dell'applicazione Syslog",
-    "ThemeHelpText": "Cambia il tema dell'interfaccia di Prowlarr, ispirato da {0}"
+    "ThemeHelpText": "Cambia il tema dell'interfaccia di Prowlarr, ispirato da {0}",
+    "LastDuration": "Ultima Durata",
+    "LastExecution": "Ultima esecuzione",
+    "Queued": "Messo in coda",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Nessun Indicizzatore è disponibile da più di 6 ore a causa di errori",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Alcuni Indicizzatori non sono disponibili da più di 6 ore a causa di errori: {0}",
+    "Duration": "Durata",
+    "Ended": "Finito",
+    "NextExecution": "Prossima esecuzione"
 }

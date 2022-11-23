@@ -334,5 +334,12 @@
     "MappedDrivesRunningAsService": "Οι αντιστοιχισμένες μονάδες δίσκου δικτύου δεν είναι διαθέσιμες κατά την εκτέλεση ως υπηρεσία Windows. Ανατρέξτε στις Συχνές Ερωτήσεις για περισσότερες πληροφορίες",
     "No": "Οχι",
     "UnableToLoadIndexers": "Δεν είναι δυνατή η φόρτωση του ευρετηρίου",
-    "Yes": "Ναί"
+    "Yes": "Ναί",
+    "Ended": "Έληξε",
+    "LastDuration": "τελευταία Διάρκεια",
+    "LastExecution": "Τελευταία εκτέλεση",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Όλοι οι δείκτες δεν είναι διαθέσιμοι λόγω αστοχιών για περισσότερο από 6 ώρες",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Τα ευρετήρια δεν είναι διαθέσιμα λόγω αστοχιών για περισσότερο από 6 ώρες: {0}",
+    "NextExecution": "Επόμενη εκτέλεση",
+    "Queued": "Σε ουρά"
 }

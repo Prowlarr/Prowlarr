@@ -331,5 +331,12 @@
     "No": "ไม่",
     "Link": "ลิงค์",
     "UnableToLoadIndexers": "ไม่สามารถโหลด Indexers",
-    "Yes": "ใช่"
+    "Yes": "ใช่",
+    "ApplicationLongTermStatusCheckAllClientMessage": "ตัวจัดทำดัชนีทั้งหมดไม่สามารถใช้งานได้เนื่องจากความล้มเหลวเป็นเวลานานกว่า 6 ชั่วโมง",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "ดัชนีไม่พร้อมใช้งานเนื่องจากความล้มเหลวเป็นเวลานานกว่า 6 ชั่วโมง: {0}",
+    "Ended": "สิ้นสุดแล้ว",
+    "LastDuration": "lastDuration",
+    "LastExecution": "การดำเนินการล่าสุด",
+    "NextExecution": "การดำเนินการถัดไป",
+    "Queued": "อยู่ในคิว"
 }

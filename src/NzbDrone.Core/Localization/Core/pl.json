@@ -338,5 +338,17 @@
     "OnApplicationUpdate": "Przy aktualizacji aplikacji",
     "OnApplicationUpdateHelpText": "Przy aktualizacji aplikacji",
     "Database": "Baza danych",
-    "NotificationTriggersHelpText": "Wybierz zdarzenia, które mają uruchamiać to powiadomienie"
+    "NotificationTriggersHelpText": "Wybierz zdarzenia, które mają uruchamiać to powiadomienie",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indeksatory niedostępne z powodu błędów przez ponad 6 godzin: {0}",
+    "Duration": "Czas trwania",
+    "Ended": "Zakończone",
+    "LastDuration": "Ostatni czas trwania",
+    "LastExecution": "Ostatnia egzekucja",
+    "NextExecution": "Następne wykonanie",
+    "Queued": "W kolejce",
+    "Started": "Rozpoczęto",
+    "Encoding": "Kodowanie",
+    "Application": "Aplikacje",
+    "Applications": "Aplikacje",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Wszystkie indeksatory są niedostępne z powodu awarii przez ponad 6 godzin"
 }

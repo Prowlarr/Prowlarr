@@ -331,5 +331,12 @@
     "UnableToLoadIndexers": "Индексаторите не могат да се заредят",
     "Yes": "Да",
     "ConnectionLostMessage": "Whisparr е загубил връзката си с бекенда и ще трябва да се презареди, за да възстанови функционалността.",
-    "MappedDrivesRunningAsService": "Картографираните мрежови устройства не са налични, когато се изпълняват като услуга на Windows. Моля, вижте често задаваните въпроси за повече информация"
+    "MappedDrivesRunningAsService": "Картографираните мрежови устройства не са налични, когато се изпълняват като услуга на Windows. Моля, вижте често задаваните въпроси за повече информация",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Индексатори не са налични поради неуспехи за повече от 6 часа: {0}",
+    "Ended": "Приключи",
+    "LastExecution": "Последно изпълнение",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Всички индексатори са недостъпни поради грешки за повече от 6 часа",
+    "LastDuration": "lastDuration",
+    "NextExecution": "Следващо изпълнение",
+    "Queued": "На опашка"
 }

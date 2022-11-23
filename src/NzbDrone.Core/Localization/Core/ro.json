@@ -376,5 +376,13 @@
     "FullSync": "Sincronizare completă",
     "IndexerObsoleteCheckMessage": "Indexatorii sunt învechiți sau nu au fost actualizați: {0}. Vă rugăm să-i ștergeți și (sau) să-i adăugați din nou în Prowlarr",
     "IndexerProxies": "Proxiuri indexatoare",
-    "IndexerVipCheckExpiringClientMessage": "Beneficiile VIP pentru indexator expiră în curând: {0}"
+    "IndexerVipCheckExpiringClientMessage": "Beneficiile VIP pentru indexator expiră în curând: {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Toți indexatorii nu sunt disponibili din cauza unor eșecuri de mai mult de 6 ore",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexatori indisponibili din cauza unor eșecuri de mai mult de 6 ore: {0}",
+    "LastDuration": "lastDuration",
+    "LastExecution": "Ultima executare",
+    "Queued": "În așteptare",
+    "Application": "Aplicații",
+    "Applications": "Aplicații",
+    "NextExecution": "Următoarea execuție"
 }

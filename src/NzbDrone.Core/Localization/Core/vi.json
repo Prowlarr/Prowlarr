@@ -331,5 +331,12 @@
     "MappedDrivesRunningAsService": "Các ổ đĩa mạng được ánh xạ không khả dụng khi chạy dưới dạng Dịch vụ Windows. Vui lòng xem Câu hỏi thường gặp để biết thêm thông tin",
     "UnableToLoadIndexers": "Không thể tải Trình chỉ mục",
     "Yes": "Đúng",
-    "NetCore": ".NET Core"
+    "NetCore": ".NET Core",
+    "Ended": "Đã kết thúc",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Tất cả các trình lập chỉ mục không khả dụng do lỗi trong hơn 6 giờ",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Trình lập chỉ mục không khả dụng do lỗi trong hơn 6 giờ: {0}",
+    "LastDuration": "lastDuration",
+    "LastExecution": "Lần thực hiện cuối cùng",
+    "NextExecution": "Thực hiện tiếp theo",
+    "Queued": "Đã xếp hàng"
 }

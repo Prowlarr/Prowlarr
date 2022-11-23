@@ -334,5 +334,12 @@
     "No": "Ingen",
     "NetCore": ".NET Core",
     "UnableToLoadIndexers": "Kan ikke indlæse indeksatorer",
-    "Yes": "Ja"
+    "Yes": "Ja",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indeksatorer er ikke tilgængelige på grund af fejl i mere end 6 timer: {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Alle indeksatorer er ikke tilgængelige på grund af fejl i mere end 6 timer",
+    "Ended": "Afsluttet",
+    "LastDuration": "lastDuration",
+    "LastExecution": "Sidste henrettelse",
+    "NextExecution": "Næste udførelse",
+    "Queued": "I kø"
 }

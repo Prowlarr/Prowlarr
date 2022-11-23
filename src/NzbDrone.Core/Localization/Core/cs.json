@@ -17,7 +17,7 @@
     "Settings": "Nastavení",
     "StartTypingOrSelectAPathBelow": "Začněte psát nebo vyberte cestu níže",
     "Usenet": "Usenet",
-    "AddDownloadClient": "Přidat staženého klienta",
+    "AddDownloadClient": "Přidat klienta pro stahování",
     "Backups": "Zálohy",
     "CancelPendingTask": "Opravdu chcete zrušit tento nevyřízený úkol?",
     "MovieIndexScrollBottom": "Rejstřík filmů: Posun dolů",
@@ -116,7 +116,7 @@
     "System": "Systém",
     "Enabled": "Povoleno",
     "IgnoredAddresses": "Ignorované adresy",
-    "AcceptConfirmationModal": "Přijměte potvrzení Modal",
+    "AcceptConfirmationModal": "Přijměte potvrzovací modální okno",
     "Actions": "Akce",
     "Added": "Přidané",
     "AddIndexer": "Přidat indexátor",
@@ -331,5 +331,12 @@
     "No": "Ne",
     "UnableToLoadIndexers": "Nelze načíst indexery",
     "Yes": "Ano",
-    "GrabReleases": "Uchopte uvolnění"
+    "GrabReleases": "Uchopte uvolnění",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexery nedostupné z důvodu selhání po dobu delší než 6 hodin: {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Všechny indexery nejsou k dispozici z důvodu selhání po dobu delší než 6 hodin",
+    "Ended": "Skončil",
+    "LastDuration": "lastDuration",
+    "LastExecution": "Poslední poprava",
+    "NextExecution": "Další spuštění",
+    "Queued": "Ve frontě"
 }

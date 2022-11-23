@@ -460,5 +460,7 @@
     "NextExecution": "Seuraava suoritus",
     "Parameters": "Parametrit",
     "Queued": "Jonossa",
-    "Started": "Alkoi"
+    "Started": "Alkoi",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Mikään tietolähde ei ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi.",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Tietolähteet eivät ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi: {0}"
 }

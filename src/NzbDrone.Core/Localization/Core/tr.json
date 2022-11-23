@@ -334,5 +334,12 @@
     "UnableToLoadIndexers": "Dizinleyiciler yüklenemiyor",
     "Yes": "Evet",
     "Link": "Bağlantılar",
-    "MappedDrivesRunningAsService": "Eşlenen ağ sürücüleri, bir Windows Hizmeti olarak çalışırken kullanılamaz. Daha fazla bilgi için lütfen SSS bölümüne bakın"
+    "MappedDrivesRunningAsService": "Eşlenen ağ sürücüleri, bir Windows Hizmeti olarak çalışırken kullanılamaz. Daha fazla bilgi için lütfen SSS bölümüne bakın",
+    "Ended": "Bitti",
+    "LastDuration": "lastDuration",
+    "LastExecution": "Son Yürütme",
+    "NextExecution": "Sonraki Yürütme",
+    "Queued": "Sıraya alındı",
+    "ApplicationLongTermStatusCheckAllClientMessage": "6 saatten uzun süren arızalar nedeniyle tüm dizinleyiciler kullanılamıyor",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "6 saatten uzun süredir yaşanan arızalar nedeniyle dizinleyiciler kullanılamıyor: {0}"
 }

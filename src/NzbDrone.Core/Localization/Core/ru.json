@@ -351,5 +351,13 @@
     "InstanceName": "Имя экземпляра",
     "InstanceNameHelpText": "Имя экземпляра на вкладке и для имени приложения системного журнала",
     "Started": "Запущено",
-    "Database": "База данных"
+    "Database": "База данных",
+    "Duration": "Длительность",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Все индексаторы недоступны из-за ошибок за последние 6 часов: {0}",
+    "Ended": "Закончился",
+    "LastExecution": "Последнее выполнение",
+    "NextExecution": "Следующее выполнение",
+    "Queued": "В очереди",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Все индексаторы недоступны из-за ошибок за последние 6 часов",
+    "LastDuration": "Последняя длительность"
 }

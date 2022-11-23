@@ -317,7 +317,7 @@
     "IndexerRss": "Indexer RSS",
     "IndexerQuery": "Indexer Anfrage",
     "IndexerHealthCheckNoIndexers": "Keine Indexer aktiviert, Prowlarr wird keine Suchergebnisse zurückgeben",
-    "IndexerAuth": "Indexer Auth",
+    "IndexerAuth": "Indexer Authentifizierung",
     "EnableIndexer": "Indexer aktivieren",
     "IndexerObsoleteCheckMessage": "Indexer sind nicht mehr verfügbar oder wurden aktualiiert: {0}. Bitte enfernen und (oder) neu zu Prowlarr hinzufügen",
     "DevelopmentSettings": "Entwicklungseinstellungen",
@@ -445,7 +445,7 @@
     "LastDuration": "Letzte Dauer",
     "LastExecution": "Letzte Ausführung",
     "MinimumSeeders": "Mindest-Seeder",
-    "MinimumSeedersHelpText": "Mindest-Seeder sind benötigt von der App für den Indexer um zu holen",
+    "MinimumSeedersHelpText": "Minimale Anzahl an Seedern die von der Anwendung benötigt werden um den Indexer zu holen",
     "NextExecution": "Nächste Ausführung",
     "Parameters": "Parameter",
     "Queued": "In der Warteschlange",
@@ -460,5 +460,7 @@
     "AddSyncProfile": "Synchronisationsprofil hinzufügen",
     "BookSearchTypes": "Buch-Suchtypen",
     "IndexerDetails": "Indexer-Details",
-    "IndexerName": "Indexer-Name"
+    "IndexerName": "Indexer-Name",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Alle Anwendungen sind nicht verfügbar, da es zu Störungen für mehr als 6 Stunden kam",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Anwendungen nicht verfügbar, da es zu Störungen für mehr als 6 Stunden kam: {0}"
 }

@@ -331,5 +331,12 @@
     "No": "Nei",
     "UnableToLoadIndexers": "Ekki er hægt að hlaða Indexers",
     "Yes": "Já",
-    "ConnectionLostMessage": "Whisparr hefur misst tenginguna við bakendann og þarf að endurhlaða hann til að endurheimta virkni."
+    "ConnectionLostMessage": "Whisparr hefur misst tenginguna við bakendann og þarf að endurhlaða hann til að endurheimta virkni.",
+    "LastExecution": "Síðasta aftaka",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Allir verðtryggingaraðilar eru ekki tiltækir vegna bilana í meira en 6 klukkustundir",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Vísitölufólk er ekki tiltækt vegna bilana í meira en 6 klukkustundir: {0}",
+    "LastDuration": "lastDuration",
+    "Queued": "Í biðröð",
+    "Ended": "Lauk",
+    "NextExecution": "Næsta framkvæmd"
 }

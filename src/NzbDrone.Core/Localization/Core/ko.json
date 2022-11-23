@@ -331,5 +331,12 @@
     "UnableToLoadIndexers": "인덱서를로드 할 수 없습니다.",
     "UpdateCheckStartupNotWritableMessage": "'{1}'사용자가 '{0}'시작 폴더에 쓸 수 없기 때문에 업데이트를 설치할 수 없습니다.",
     "Yes": "예",
-    "GrabReleases": "그랩 릴리스"
+    "GrabReleases": "그랩 릴리스",
+    "NextExecution": "다음 실행",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "6 시간 이상 오류로 인해 인덱서를 사용할 수 없음 : {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "6 시간 이상 오류로 인해 모든 인덱서를 사용할 수 없습니다.",
+    "Ended": "종료",
+    "LastDuration": "lastDuration",
+    "LastExecution": "마지막 실행",
+    "Queued": "대기 중"
 }

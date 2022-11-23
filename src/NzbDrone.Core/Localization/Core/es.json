@@ -364,5 +364,14 @@
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent proporcionado por la aplicación llamó a la API",
     "InstanceName": "Nombre de Instancia",
     "InstanceNameHelpText": "Nombre de instancia en pestaña y para nombre de aplicación en Syslog",
-    "Database": "Base de Datos"
+    "Database": "Base de Datos",
+    "Duration": "Duración",
+    "LastDuration": "Duración",
+    "LastExecution": "Última ejecución",
+    "Queued": "En Cola",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Ningún indexer está disponible por errores durando más de 6 horas",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexers no disponible por errores durando más de 6 horas: {0}",
+    "Ended": "Terminó",
+    "NextExecution": "Siguiente ejecución",
+    "Started": "Iniciado"
 }

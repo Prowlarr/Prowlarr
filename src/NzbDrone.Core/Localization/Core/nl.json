@@ -409,5 +409,13 @@
     "Yes": "Ja",
     "OnApplicationUpdateHelpText": "Bij applicatie update",
     "Database": "Databasis",
-    "OnApplicationUpdate": "Bij applicatie update"
+    "OnApplicationUpdate": "Bij applicatie update",
+    "Duration": "Duur",
+    "Ended": "Beëindigd",
+    "NextExecution": "Volgende uitvoering",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Alle indexeerders zijn niet beschikbaar vanwege storingen gedurende meer dan 6 uur",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexeerders zijn niet beschikbaar vanwege storingen gedurende meer dan 6 uur: {0}",
+    "LastDuration": "Laatste Looptijd",
+    "LastExecution": "Laatste Uitvoering",
+    "Queued": "Afwachtend"
 }

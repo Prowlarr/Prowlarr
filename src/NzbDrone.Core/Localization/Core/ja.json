@@ -331,5 +331,12 @@
     "No": "番号",
     "UnableToLoadIndexers": "インデクサーを読み込めません",
     "Yes": "はい",
-    "ConnectionLostMessage": "Whisparrはバックエンドへの接続を失ったため、機能を復元するには再ロードする必要があります。"
+    "ConnectionLostMessage": "Whisparrはバックエンドへの接続を失ったため、機能を復元するには再ロードする必要があります。",
+    "LastDuration": "lastDuration",
+    "LastExecution": "最後の実行",
+    "ApplicationLongTermStatusCheckAllClientMessage": "6時間以上の障害のため、すべてのインデクサーが使用できなくなります",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "6時間以上の障害のため、インデクサーを使用できません：{0}",
+    "Ended": "終了しました",
+    "NextExecution": "次の実行",
+    "Queued": "キューに入れられました"
 }

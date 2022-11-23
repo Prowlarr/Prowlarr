@@ -405,5 +405,13 @@
     "Application": "Applikationer",
     "Link": "Länkar",
     "MappedDrivesRunningAsService": "Mappade nätverksenheter är inte tillgängliga när de körs som en Windows-tjänst. Se FAQ för mer information",
-    "No": "Nej"
+    "No": "Nej",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Alla indexerare är inte tillgängliga på grund av fel i mer än 6 timmar",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexatorer är inte tillgängliga på grund av misslyckanden i mer än sex timmar: {0}",
+    "Duration": "Tid",
+    "Ended": "Avslutad",
+    "LastDuration": "lastDuration",
+    "LastExecution": "Senaste avrättningen",
+    "NextExecution": "Nästa utförande",
+    "Queued": "Köad"
 }

@@ -331,5 +331,12 @@
     "Link": "लिंक",
     "MappedDrivesRunningAsService": "विंडोज सर्विस के रूप में चलने पर मैप्ड नेटवर्क ड्राइव उपलब्ध नहीं हैं। अधिक जानकारी के लिए कृपया FAQ देखें",
     "No": "नहीं",
-    "UnableToLoadIndexers": "अनुक्रमणिका लोड करने में असमर्थ"
+    "UnableToLoadIndexers": "अनुक्रमणिका लोड करने में असमर्थ",
+    "ApplicationLongTermStatusCheckAllClientMessage": "6 घंटे से अधिक समय तक विफलताओं के कारण सभी सूचकांक अनुपलब्ध हैं",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "6 घंटे से अधिक समय तक विफलताओं के कारण सूचकांक उपलब्ध नहीं: {0}",
+    "Ended": "समाप्त",
+    "NextExecution": "अगला निष्पादन",
+    "LastDuration": "lastDuration",
+    "LastExecution": "अंतिम निष्पादन",
+    "Queued": "कतारबद्ध"
 }

@@ -331,5 +331,12 @@
     "UnableToLoadIndexers": "تعذر تحميل المفهرسات",
     "Yes": "نعم",
     "GrabReleases": "انتزاع الإصدار",
-    "No": "لا"
+    "No": "لا",
+    "Ended": "انتهى",
+    "LastDuration": "المدة الماضية",
+    "ApplicationLongTermStatusCheckAllClientMessage": "جميع المفهرسات غير متوفرة بسبب الفشل لأكثر من 6 ساعات",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "المفهرسات غير متاحة بسبب الإخفاقات لأكثر من 6 ساعات: {0}",
+    "LastExecution": "آخر تنفيذ",
+    "NextExecution": "التنفيذ القادم",
+    "Queued": "في قائمة الانتظار"
 }

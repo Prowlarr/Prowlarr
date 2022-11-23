@@ -444,5 +444,12 @@
     "Duration": "Durée",
     "LastDuration": "Dernière durée",
     "InstanceName": "Nom de l'instance",
-    "InstanceNameHelpText": "Nom de l'instance dans l'onglet du navigateur et pour le nom d'application dans Syslog"
+    "InstanceNameHelpText": "Nom de l'instance dans l'onglet du navigateur et pour le nom d'application dans Syslog",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexeurs indisponibles en raison de pannes pendant plus de 6 heures : {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Tous les indexeurs sont indisponibles en raison d'échecs de plus de 6 heures",
+    "Ended": "Terminé",
+    "LastExecution": "Dernière exécution",
+    "NextExecution": "Prochaine exécution",
+    "Queued": "En file d'attente",
+    "Started": "Démarré"
 }

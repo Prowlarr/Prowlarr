@@ -404,5 +404,16 @@
     "InstanceName": "Nome da Instancia",
     "InstanceNameHelpText": "Nome da instância na aba e nome da aplicação para Syslog",
     "UnableToLoadIndexerProxies": "Incapaz de ler o indexador de proxies",
-    "UnableToLoadApplicationList": "Não foi possível carregar a lista de aplicações"
+    "UnableToLoadApplicationList": "Não foi possível carregar a lista de aplicações",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Todos os indexadores estão indisponíveis devido a erros á mais de 6 horas",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexadores indisponíveis devido a erros à mais de 6 horas: {0}",
+    "Duration": "Duração",
+    "Ended": "Terminado",
+    "LastDuration": "Última Duração",
+    "LastExecution": "Execução mais recente",
+    "Notification": "Notificações",
+    "Notifications": "Notificações",
+    "Started": "Começado",
+    "NextExecution": "Próxima execução",
+    "Queued": "Em fila"
 }

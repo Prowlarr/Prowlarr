@@ -23,19 +23,31 @@ namespace NzbDrone.Core.Indexers.Rarbg
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var results = new List<ReleaseInfo>();
+            var retryTime = TimeSpan.FromMinutes(1);
+            var responseCode = (int)indexerResponse.HttpResponse.StatusCode;
 
-            switch (indexerResponse.HttpResponse.StatusCode)
+            switch (responseCode)
             {
-                default:
-                    if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
-                    {
-                        throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
-                    }
-
+                case (int)HttpStatusCode.TooManyRequests:
+                    retryTime = TimeSpan.FromMinutes(2);
+                    throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, retryTime);
+                case 520:
+                    retryTime = TimeSpan.FromMinutes(3);
+                    throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, retryTime);
+                case (int)HttpStatusCode.OK:
+                    retryTime = TimeSpan.FromMinutes(5);
                     break;
+                default:
+                    throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", responseCode);
             }
 
             var jsonResponse = new HttpResponse<RarbgResponse>(indexerResponse.HttpResponse);
+
+            // Handle 200 Rate Limiting
+            if (jsonResponse.Resource.rate_limit == 1)
+            {
+                throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, retryTime);
+            }
 
             if (jsonResponse.Resource.error_code.HasValue)
             {

@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(2);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
 
         public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -106,7 +106,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
         {
             var response = await FetchIndexerResponse(request);
 
-            // try and recover from token or rate limit errors
+            // try and recover from token errors
+            // Response of 200 and rate_limt of 1 requires a 5 minute backoff. Handle in Response Parsing & do not page further if rate_limit is populated.
             var jsonResponse = new HttpResponse<RarbgResponse>(response.HttpResponse);
 
             if (jsonResponse.Resource.error_code.HasValue)
@@ -123,9 +124,9 @@ namespace NzbDrone.Core.Indexers.Rarbg
                     request.HttpRequest.Url = request.Url.SetQuery(qs.GetQueryString());
                     response = await FetchIndexerResponse(request);
                 }
-                else if (jsonResponse.Resource.error_code == 5 || jsonResponse.Resource.rate_limit.HasValue)
+                else if (jsonResponse.Resource.error_code == 5)
                 {
-                    _logger.Debug("Rarbg rate limit hit, retying request");
+                    _logger.Debug("Rarbg temp rate limit hit, retying request");
                     response = await FetchIndexerResponse(request);
                 }
             }

@@ -19,6 +19,8 @@ namespace NzbDrone.Core.Applications.Sonarr
         void RemoveIndexer(int indexerId, SonarrSettings settings);
         SonarrIndexer UpdateIndexer(SonarrIndexer indexer, SonarrSettings settings);
         ValidationFailure TestConnection(SonarrIndexer indexer, SonarrSettings settings);
+        List<SonarrTag> GetTagsFromApplication(SonarrSettings settings);
+        SonarrTag CreateTag(SonarrSettings settings, string label);
     }
 
     public class SonarrV3Proxy : ISonarrV3Proxy
@@ -138,6 +140,19 @@ namespace NzbDrone.Core.Applications.Sonarr
             }
 
             return null;
+        }
+
+        public List<SonarrTag> GetTagsFromApplication(SonarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v3/tag/detail", HttpMethod.Get);
+            return Execute<List<SonarrTag>>(request);
+        }
+
+        public SonarrTag CreateTag(SonarrSettings settings, string label)
+        {
+            var request = BuildRequest(settings, $"/api/v3/tag", HttpMethod.Post);
+            request.SetContent(new SonarrTag { Label = label }.ToJson());
+            return Execute<SonarrTag>(request);
         }
 
         private HttpRequest BuildRequest(SonarrSettings settings, string resource, HttpMethod method)

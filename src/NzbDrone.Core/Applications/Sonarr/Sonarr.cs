@@ -9,6 +9,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Tags;
 
 namespace NzbDrone.Core.Applications.Sonarr
 {
@@ -19,13 +20,21 @@ namespace NzbDrone.Core.Applications.Sonarr
         private readonly ICached<List<SonarrIndexer>> _schemaCache;
         private readonly ISonarrV3Proxy _sonarrV3Proxy;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly ITagService _tagService;
 
-        public Sonarr(ICacheManager cacheManager, ISonarrV3Proxy sonarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Sonarr(
+                ICacheManager cacheManager,
+                ISonarrV3Proxy sonarrV3Proxy,
+                IConfigFileProvider configFileProvider,
+                IAppIndexerMapService appIndexerMapService,
+                Logger logger,
+                ITagService tagService)
             : base(appIndexerMapService, logger)
         {
             _schemaCache = cacheManager.GetCache<List<SonarrIndexer>>(GetType());
             _sonarrV3Proxy = sonarrV3Proxy;
             _configFileProvider = configFileProvider;
+            _tagService = tagService;
         }
 
         public override ValidationResult Test()
@@ -176,6 +185,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
                 Fields = schema.Fields,
+                Tags = GetAndCreateSonarrTagIdsForIndexer(indexer.Tags)
             };
 
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
@@ -193,6 +203,30 @@ namespace NzbDrone.Core.Applications.Sonarr
             }
 
             return sonarrIndexer;
+        }
+
+        private HashSet<int> GetAndCreateSonarrTagIdsForIndexer(HashSet<int> indexerProwlarrTagIds)
+        {
+            // Get Sonarr Tag IDs
+            // TODO: Use a cache to avoid spamming API
+            var applicationTags = _sonarrV3Proxy.GetTagsFromApplication(Settings);
+
+            // Resolve Prowlarr indexer tags to labels
+            var indexerTagLabels = _tagService.GetTags(indexerProwlarrTagIds).Select(t => t.Label);
+
+            // Determine tags from indexer which are present in sonarr and those that need creating
+            var existingSonarrIndexerTags = applicationTags.Where(at => indexerTagLabels.Contains(at.Label)).ToList();
+            var missingTagLabels = indexerTagLabels.Except(existingSonarrIndexerTags.Select(pt => pt.Label));
+
+            // Create required new tags. If the tag already exists, it will be returned in the response so no worries about concurrency.
+            foreach (var tag in missingTagLabels)
+            {
+                var newTag = _sonarrV3Proxy.CreateTag(Settings, tag);
+                existingSonarrIndexerTags.Add(newTag);
+            }
+
+            // Convert to int list for the indexer request
+            return existingSonarrIndexerTags.Select(pt => pt.Id).ToHashSet();
         }
     }
 }

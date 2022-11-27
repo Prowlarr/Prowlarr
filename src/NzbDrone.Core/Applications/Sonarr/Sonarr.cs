@@ -185,7 +185,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
                 Fields = schema.Fields,
-                Tags = GetAndCreateSonarrTagIdsForIndexer(indexer.Tags)
+                Tags = Settings.SyncIndexerTags ? GetAndCreateSonarrTagIdsForIndexer(indexer.Tags) : new HashSet<int>()
             };
 
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";

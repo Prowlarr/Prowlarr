@@ -205,14 +205,14 @@ namespace NzbDrone.Core.Applications.Sonarr
             return sonarrIndexer;
         }
 
-        private HashSet<int> GetAndCreateSonarrTagIdsForIndexer(HashSet<int> indexerProwlarrTagIds)
+        private HashSet<int> GetAndCreateSonarrTagIdsForIndexer(IndexerDefinition indexer)
         {
             // Get Sonarr Tag IDs
             // TODO: Use a cache to avoid spamming API
             var applicationTags = _sonarrV3Proxy.GetTagsFromApplication(Settings);
 
             // Resolve Prowlarr indexer tags to labels
-            var indexerTagLabels = _tagService.GetTags(indexerProwlarrTagIds).Select(t => t.Label);
+            var indexerTagLabels = _tagService.GetTags(indexer.Tags).Select(t => t.Label);
 
             // Determine tags from indexer which are present in sonarr and those that need creating
             var existingSonarrIndexerTags = applicationTags.Where(at => indexerTagLabels.Contains(at.Label)).ToList();
@@ -221,6 +221,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             // Create required new tags. If the tag already exists, it will be returned in the response so no worries about concurrency.
             foreach (var tag in missingTagLabels)
             {
+                _logger.Info("Tag '{0}' doesn't seem to exist in {1} so will be created.", tag, indexer.Name);
                 var newTag = _sonarrV3Proxy.CreateTag(Settings, tag);
                 existingSonarrIndexerTags.Add(newTag);
             }

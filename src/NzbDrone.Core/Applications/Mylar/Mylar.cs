@@ -75,6 +75,8 @@ namespace NzbDrone.Core.Applications.Mylar
                 var remoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
             }
+
+            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
         }
 
         public override void RemoveIndexer(int indexerId)

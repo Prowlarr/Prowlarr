@@ -91,6 +91,8 @@ namespace NzbDrone.Core.Applications.Readarr
                 var remoteIndexer = _readarrV1Proxy.AddIndexer(readarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
             }
+
+            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
         }
 
         public override void RemoveIndexer(int indexerId)

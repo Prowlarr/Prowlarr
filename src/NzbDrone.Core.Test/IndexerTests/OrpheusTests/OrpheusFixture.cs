@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
             torrentInfo.InfoUrl.Should().Be("https://orpheus.network/torrents.php?id=466&torrentid=1902448");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-08-07 21:07:39").ToUniversalTime());
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-08-08 2:07:39"));
             torrentInfo.Size.Should().Be(68296866);
             torrentInfo.InfoHash.Should().Be(null);
             torrentInfo.MagnetUrl.Should().Be(null);

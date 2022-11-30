@@ -281,7 +281,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
-                        PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime((string)result.GroupTime),
+                        PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime(result.GroupTime),
                         Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
                         Files = result.FileCount,
                         Grabs = result.Snatches,

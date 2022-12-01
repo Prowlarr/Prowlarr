@@ -62,7 +62,7 @@ namespace Prowlarr.Http.REST
             }
 
             var attributes = descriptor.MethodInfo.CustomAttributes;
-            if (attributes.Any(x => VALIDATE_ID_ATTRIBUTES.Contains(x.GetType())) && !skipValidate)
+            if (attributes.Any(x => VALIDATE_ID_ATTRIBUTES.Contains(x.AttributeType)) && !skipValidate)
             {
                 if (context.ActionArguments.TryGetValue("id", out var idObj))
                 {

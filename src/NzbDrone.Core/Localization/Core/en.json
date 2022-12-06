@@ -404,7 +404,7 @@
   "TestAllApps": "Test All Apps",
   "TestAllClients": "Test All Clients",
   "TestAllIndexers": "Test All Indexers",
-  "ThemeHelpText": "Change Prowlarr UI theme, inspired by {0}",
+  "ThemeHelpText": "Change Application UI Theme, 'Auto' Theme will use your OS Theme to set Light or Dark mode. Inspired by {0}",
   "Time": "Time",
   "Title": "Title",
   "Today": "Today",

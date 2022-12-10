@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers;
 
@@ -8,6 +9,8 @@ namespace Prowlarr.Api.V1.DownloadClient
         public bool Enable { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public int Priority { get; set; }
+        public List<DownloadClientCategory> Categories { get; set; }
+        public bool SupportsCategories { get; set; }
     }
 
     public class DownloadClientResourceMapper : ProviderResourceMapper<DownloadClientResource, DownloadClientDefinition>
@@ -24,6 +27,8 @@ namespace Prowlarr.Api.V1.DownloadClient
             resource.Enable = definition.Enable;
             resource.Protocol = definition.Protocol;
             resource.Priority = definition.Priority;
+            resource.Categories = definition.Categories;
+            resource.SupportsCategories = definition.SupportsCategories;
 
             return resource;
         }
@@ -40,6 +45,7 @@ namespace Prowlarr.Api.V1.DownloadClient
             definition.Enable = resource.Enable;
             definition.Protocol = resource.Protocol;
             definition.Priority = resource.Priority;
+            definition.Categories = resource.Categories;
 
             return definition;
         }

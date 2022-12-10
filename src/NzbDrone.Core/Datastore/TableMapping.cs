@@ -60,7 +60,8 @@ namespace NzbDrone.Core.Datastore
 
             Mapper.Entity<DownloadClientDefinition>("DownloadClients").RegisterModel()
                   .Ignore(x => x.ImplementationName)
-                  .Ignore(i => i.Protocol)
+                  .Ignore(d => d.SupportsCategories)
+                  .Ignore(d => d.Protocol)
                   .Ignore(d => d.Tags);
 
             Mapper.Entity<NotificationDefinition>("Notifications").RegisterModel()
@@ -115,6 +116,7 @@ namespace NzbDrone.Core.Datastore
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<string>>());
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<ReleaseInfo>());
             SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<HashSet<int>>());
+            SqlMapper.AddTypeHandler(new EmbeddedDocumentConverter<List<DownloadClientCategory>>());
             SqlMapper.AddTypeHandler(new OsPathConverter());
             SqlMapper.RemoveTypeMap(typeof(Guid));
             SqlMapper.RemoveTypeMap(typeof(Guid?));

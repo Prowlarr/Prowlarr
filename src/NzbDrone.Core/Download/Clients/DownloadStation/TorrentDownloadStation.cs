@@ -44,6 +44,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
         }
 
         public override string Name => "Download Station";
+        public override bool SupportsCategories => false;
 
         public override ProviderMessage Message => new ProviderMessage("Prowlarr is unable to connect to Download Station if 2-Factor Authentication is enabled on your DSM account", ProviderMessageType.Warning);
 
@@ -198,7 +199,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                 if (downloadDir != null)
                 {
                     var sharedFolder = downloadDir.Split('\\', '/')[0];
-                    var fieldName = Settings.TvDirectory.IsNotNullOrWhiteSpace() ? nameof(Settings.TvDirectory) : nameof(Settings.TvCategory);
+                    var fieldName = Settings.TvDirectory.IsNotNullOrWhiteSpace() ? nameof(Settings.TvDirectory) : nameof(Settings.Category);
 
                     var folderInfo = _fileStationProxy.GetInfoFileOrDirectory($"/{downloadDir}", Settings);
 
@@ -311,11 +312,11 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             {
                 return Settings.TvDirectory.TrimStart('/');
             }
-            else if (Settings.TvCategory.IsNotNullOrWhiteSpace())
+            else if (Settings.Category.IsNotNullOrWhiteSpace())
             {
                 var destDir = GetDefaultDir();
 
-                return $"{destDir.TrimEnd('/')}/{Settings.TvCategory}";
+                return $"{destDir.TrimEnd('/')}/{Settings.Category}";
             }
 
             return null;

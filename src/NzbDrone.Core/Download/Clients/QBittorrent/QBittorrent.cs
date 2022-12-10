@@ -52,8 +52,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             //var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
             var itemToTop = Settings.Priority == (int)QBittorrentPriority.First;
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            Proxy.AddTorrentFromUrl(magnetLink, null, Settings);
+            Proxy.AddTorrentFromUrl(magnetLink, null, Settings, category);
 
             if (itemToTop || forceStart)
             {
@@ -100,8 +101,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             //var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
             var itemToTop = Settings.Priority == (int)QBittorrentPriority.First;
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            Proxy.AddTorrentFromFile(filename, fileContent, null, Settings);
+            Proxy.AddTorrentFromFile(filename, fileContent, null, Settings, category);
 
             if (itemToTop || forceStart)
             {
@@ -167,6 +169,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
         }
 
         public override string Name => "qBittorrent";
+        public override bool SupportsCategories => true;
 
         protected override void Test(List<ValidationFailure> failures)
         {
@@ -197,22 +200,13 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 else if (version < Version.Parse("1.6"))
                 {
                     // API version 6 introduced support for labels
-                    if (Settings.Category.IsNotNullOrWhiteSpace())
+                    if (Settings.Category.IsNotNullOrWhiteSpace() || Categories.Count > 0)
                     {
                         return new NzbDroneValidationFailure("Category", "Category is not supported")
                         {
                             DetailedDescription = "Labels are not supported until qBittorrent version 3.3.0. Please upgrade or try again with an empty Category."
                         };
                     }
-                }
-                else if (Settings.Category.IsNullOrWhiteSpace())
-                {
-                    // warn if labels are supported, but category is not provided
-                    return new NzbDroneValidationFailure("Category", "Category is recommended")
-                    {
-                        IsWarning = true,
-                        DetailedDescription = "Prowlarr will not attempt to import completed downloads without a category."
-                    };
                 }
             }
             catch (DownloadClientAuthenticationException ex)
@@ -251,7 +245,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
         private ValidationFailure TestCategory()
         {
-            if (Settings.Category.IsNullOrWhiteSpace())
+            if (Settings.Category.IsNullOrWhiteSpace() && Categories.Count == 0)
             {
                 return null;
             }
@@ -264,6 +258,23 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             }
 
             Dictionary<string, QBittorrentLabel> labels = Proxy.GetLabels(Settings);
+
+            foreach (var category in Categories)
+            {
+                if (category.ClientCategory.IsNotNullOrWhiteSpace() && !labels.ContainsKey(category.ClientCategory))
+                {
+                    Proxy.AddLabel(category.ClientCategory, Settings);
+                    labels = Proxy.GetLabels(Settings);
+
+                    if (!labels.ContainsKey(category.ClientCategory))
+                    {
+                        return new NzbDroneValidationFailure(string.Empty, "Configuration of label failed")
+                        {
+                            DetailedDescription = "Prowlarr was unable to add the label to qBittorrent."
+                        };
+                    }
+                }
+            }
 
             if (Settings.Category.IsNotNullOrWhiteSpace() && !labels.ContainsKey(Settings.Category))
             {

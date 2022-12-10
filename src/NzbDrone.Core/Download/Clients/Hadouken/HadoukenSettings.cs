@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
         [FieldDefinition(5, Label = "Password", Type = FieldType.Password, Privacy = PrivacyLevel.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(6, Label = "Category", Type = FieldType.Textbox)]
+        [FieldDefinition(6, Label = "Default Category", Type = FieldType.Textbox, HelpText = "Default fallback category if no mapped category exists for a release.")]
         public string Category { get; set; }
 
         public NzbDroneValidationResult Validate()

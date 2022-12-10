@@ -31,7 +31,7 @@ function createMapStateToProps() {
       });
 
       return {
-        value,
+        value: value || [],
         values
       };
     }

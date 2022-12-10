@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
+using Org.BouncyCastle.Crypto.Tls;
 
 namespace NzbDrone.Core.Download
 {
@@ -50,6 +53,9 @@ namespace NzbDrone.Core.Download
             return GetType().Name;
         }
 
+        protected List<DownloadClientCategory> Categories => ((DownloadClientDefinition)Definition).Categories;
+        public abstract bool SupportsCategories { get; }
+
         public abstract DownloadProtocol Protocol
         {
             get;
@@ -57,12 +63,54 @@ namespace NzbDrone.Core.Download
 
         public abstract Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer);
 
+        protected string GetCategoryForRelease(ReleaseInfo release)
+        {
+            var categories = ((DownloadClientDefinition)Definition).Categories;
+            if (categories.Count == 0)
+            {
+                return null;
+            }
+
+            // Check for direct mapping
+            var category = categories.FirstOrDefault(x => x.Categories.Intersect(release.Categories.Select(c => c.Id)).Any())?.ClientCategory;
+
+            // Check for parent mapping
+            if (category == null)
+            {
+                foreach (var cat in categories)
+                {
+                    var mappedCat = NewznabStandardCategory.AllCats.Where(x => cat.Categories.Contains(x.Id));
+                    var subCats = mappedCat.SelectMany(x => x.SubCategories);
+
+                    if (subCats.Intersect(release.Categories).Any())
+                    {
+                        category = cat.ClientCategory;
+                        break;
+                    }
+                }
+            }
+
+            return category;
+        }
+
+        protected virtual void ValidateCategories(List<ValidationFailure> failures)
+        {
+            foreach (var category in ((DownloadClientDefinition)Definition).Categories)
+            {
+                if (category.ClientCategory.IsNullOrWhiteSpace())
+                {
+                    failures.AddIfNotNull(new ValidationFailure(string.Empty, "Category can not be empty"));
+                }
+            }
+        }
+
         public ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();
 
             try
             {
+                ValidateCategories(failures);
                 Test(failures);
             }
             catch (Exception ex)
@@ -96,6 +144,18 @@ namespace NzbDrone.Core.Download
             }
 
             return null;
+        }
+
+        private bool HasConcreteImplementation(string methodName)
+        {
+            var method = GetType().GetMethod(methodName);
+
+            if (method == null)
+            {
+                throw new MissingMethodException(GetType().Name, Name);
+            }
+
+            return !method.DeclaringType.IsAbstract;
         }
     }
 }

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { saveDownloadClient, setDownloadClientFieldValue, setDownloadClientValue, testDownloadClient } from 'Store/Actions/settingsActions';
+import { deleteDownloadClientCategory, fetchDownloadClientCategories, saveDownloadClient, setDownloadClientFieldValue, setDownloadClientValue, testDownloadClient } from 'Store/Actions/settingsActions';
 import createProviderSettingsSelector from 'Store/Selectors/createProviderSettingsSelector';
 import EditDownloadClientModalContent from './EditDownloadClientModalContent';
 
@@ -10,10 +10,12 @@ function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
     createProviderSettingsSelector('downloadClients'),
-    (advancedSettings, downloadClient) => {
+    (state) => state.settings.downloadClientCategories,
+    (advancedSettings, downloadClient, categories) => {
       return {
         advancedSettings,
-        ...downloadClient
+        ...downloadClient,
+        categories: categories.items
       };
     }
   );
@@ -23,13 +25,23 @@ const mapDispatchToProps = {
   setDownloadClientValue,
   setDownloadClientFieldValue,
   saveDownloadClient,
-  testDownloadClient
+  testDownloadClient,
+  fetchDownloadClientCategories,
+  deleteDownloadClientCategory
 };
 
 class EditDownloadClientModalContentConnector extends Component {
 
   //
   // Lifecycle
+
+  componentDidMount() {
+    const {
+      id,
+      tagsFromId
+    } = this.props;
+    this.props.fetchDownloadClientCategories({ id: tagsFromId || id });
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.isSaving && !this.props.isSaving && !this.props.saveError) {
@@ -56,6 +68,10 @@ class EditDownloadClientModalContentConnector extends Component {
     this.props.testDownloadClient({ id: this.props.id });
   };
 
+  onConfirmDeleteCategory = (id) => {
+    this.props.deleteDownloadClientCategory({ id });
+  };
+
   //
   // Render
 
@@ -67,6 +83,7 @@ class EditDownloadClientModalContentConnector extends Component {
         onTestPress={this.onTestPress}
         onInputChange={this.onInputChange}
         onFieldChange={this.onFieldChange}
+        onConfirmDeleteCategory={this.onConfirmDeleteCategory}
       />
     );
   }
@@ -74,10 +91,13 @@ class EditDownloadClientModalContentConnector extends Component {
 
 EditDownloadClientModalContentConnector.propTypes = {
   id: PropTypes.number,
+  tagsFromId: PropTypes.number,
   isFetching: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   item: PropTypes.object.isRequired,
+  fetchDownloadClientCategories: PropTypes.func.isRequired,
+  deleteDownloadClientCategory: PropTypes.func.isRequired,
   setDownloadClientValue: PropTypes.func.isRequired,
   setDownloadClientFieldValue: PropTypes.func.isRequired,
   saveDownloadClient: PropTypes.func.isRequired,

@@ -58,5 +58,6 @@ namespace NzbDrone.Core.Download.Clients.Vuze
         }
 
         public override string Name => "Vuze";
+        public override bool SupportsCategories => false;
     }
 }

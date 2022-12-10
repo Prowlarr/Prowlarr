@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using NLog;
@@ -13,8 +13,8 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
         HadoukenSystemInfo GetSystemInfo(HadoukenSettings settings);
         HadoukenTorrent[] GetTorrents(HadoukenSettings settings);
         IReadOnlyDictionary<string, object> GetConfig(HadoukenSettings settings);
-        string AddTorrentFile(HadoukenSettings settings, byte[] fileContent);
-        void AddTorrentUri(HadoukenSettings settings, string torrentUrl);
+        string AddTorrentFile(HadoukenSettings settings, byte[] fileContent, string label);
+        void AddTorrentUri(HadoukenSettings settings, string torrentUrl, string label);
         void RemoveTorrent(HadoukenSettings settings, string downloadId);
         void RemoveTorrentAndData(HadoukenSettings settings, string downloadId);
     }
@@ -47,14 +47,14 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
             return ProcessRequest<IReadOnlyDictionary<string, object>>(settings, "webui.getSettings");
         }
 
-        public string AddTorrentFile(HadoukenSettings settings, byte[] fileContent)
+        public string AddTorrentFile(HadoukenSettings settings, byte[] fileContent, string label)
         {
-            return ProcessRequest<string>(settings, "webui.addTorrent", "file", Convert.ToBase64String(fileContent), new { label = settings.Category });
+            return ProcessRequest<string>(settings, "webui.addTorrent", "file", Convert.ToBase64String(fileContent), new { label });
         }
 
-        public void AddTorrentUri(HadoukenSettings settings, string torrentUrl)
+        public void AddTorrentUri(HadoukenSettings settings, string torrentUrl, string label)
         {
-            ProcessRequest<string>(settings, "webui.addTorrent", "url", torrentUrl, new { label = settings.Category });
+            ProcessRequest<string>(settings, "webui.addTorrent", "url", torrentUrl, new { label });
         }
 
         public void RemoveTorrent(HadoukenSettings settings, string downloadId)

@@ -9,6 +9,7 @@ import createSetProviderFieldValueReducer from 'Store/Actions/Creators/Reducers/
 import createSetSettingValueReducer from 'Store/Actions/Creators/Reducers/createSetSettingValueReducer';
 import { createThunk } from 'Store/thunks';
 import selectProviderSchema from 'Utilities/State/selectProviderSchema';
+import { set } from '../baseActions';
 
 //
 // Variables
@@ -90,10 +91,34 @@ export default {
     [FETCH_DOWNLOAD_CLIENTS]: createFetchHandler(section, '/downloadclient'),
     [FETCH_DOWNLOAD_CLIENT_SCHEMA]: createFetchSchemaHandler(section, '/downloadclient/schema'),
 
-    [SAVE_DOWNLOAD_CLIENT]: createSaveProviderHandler(section, '/downloadclient'),
+    [SAVE_DOWNLOAD_CLIENT]: (getState, payload, dispatch) => {
+      // move the format tags in as a pending change
+      const state = getState();
+      const pendingChanges = state.settings.downloadClients.pendingChanges;
+      pendingChanges.categories = state.settings.downloadClientCategories.items;
+      dispatch(set({
+        section,
+        pendingChanges
+      }));
+
+      createSaveProviderHandler(section, '/downloadclient')(getState, payload, dispatch);
+    },
+
     [CANCEL_SAVE_DOWNLOAD_CLIENT]: createCancelSaveProviderHandler(section),
     [DELETE_DOWNLOAD_CLIENT]: createRemoveItemHandler(section, '/downloadclient'),
-    [TEST_DOWNLOAD_CLIENT]: createTestProviderHandler(section, '/downloadclient'),
+
+    [TEST_DOWNLOAD_CLIENT]: (getState, payload, dispatch) => {
+      const state = getState();
+      const pendingChanges = state.settings.downloadClients.pendingChanges;
+      pendingChanges.categories = state.settings.downloadClientCategories.items;
+      dispatch(set({
+        section,
+        pendingChanges
+      }));
+
+      createTestProviderHandler(section, '/downloadclient')(getState, payload, dispatch);
+    },
+
     [CANCEL_TEST_DOWNLOAD_CLIENT]: createCancelTestProviderHandler(section),
     [TEST_ALL_DOWNLOAD_CLIENTS]: createTestAllProvidersHandler(section, '/downloadclient')
   },

@@ -45,6 +45,7 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
         }
 
         public override string Name => "Usenet Blackhole";
+        public override bool SupportsCategories => false;
 
         protected override void Test(List<ValidationFailure> failures)
         {

@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
 
         protected override string AddFromNzbFile(ReleaseInfo release, string filename, byte[] fileContent)
         {
-            var category = Settings.Category;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
             var priority = Settings.Priority;
 
             var response = _proxy.DownloadNzb(fileContent, filename, category, priority, Settings);
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
 
         protected override string AddFromLink(ReleaseInfo release)
         {
-            var category = Settings.Category;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
             var priority = Settings.Priority;
 
             var response = _proxy.DownloadNzbByUrl(release.DownloadUrl, category, priority, Settings);
@@ -62,6 +62,7 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
         }
 
         public override string Name => "SABnzbd";
+        public override bool SupportsCategories => true;
 
         protected IEnumerable<SabnzbdCategory> GetCategories(SabnzbdConfig config)
         {
@@ -260,29 +261,27 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
         private ValidationFailure TestCategory()
         {
             var config = _proxy.GetConfig(Settings);
-            var category = GetCategories(config).FirstOrDefault((SabnzbdCategory v) => v.Name == Settings.Category);
+            var categories = GetCategories(config);
 
-            if (category != null)
+            foreach (var category in Categories)
             {
-                if (category.Dir.EndsWith("*"))
+                if (!category.ClientCategory.IsNullOrWhiteSpace() && !categories.Any(v => v.Name == category.ClientCategory))
                 {
-                    return new NzbDroneValidationFailure("Category", "Enable Job folders")
+                    return new NzbDroneValidationFailure(string.Empty, "Category does not exist")
                     {
-                        InfoLink = _proxy.GetBaseUrl(Settings, "config/categories/"),
-                        DetailedDescription = "Prowlarr prefers each download to have a separate folder. With * appended to the Folder/Path SABnzbd will not create these job folders. Go to SABnzbd to fix it."
+                        InfoLink = _proxy.GetBaseUrl(Settings),
+                        DetailedDescription = "A mapped category you entered doesn't exist in Sabnzbd. Go to Sabnzbd to create it."
                     };
                 }
             }
-            else
+
+            if (!Settings.Category.IsNullOrWhiteSpace() && !categories.Any(v => v.Name == Settings.Category))
             {
-                if (!Settings.Category.IsNullOrWhiteSpace())
+                return new NzbDroneValidationFailure("Category", "Category does not exist")
                 {
-                    return new NzbDroneValidationFailure("Category", "Category does not exist")
-                    {
-                        InfoLink = _proxy.GetBaseUrl(Settings, "config/categories/"),
-                        DetailedDescription = "The category you entered doesn't exist in SABnzbd. Go to SABnzbd to create it."
-                    };
-                }
+                    InfoLink = _proxy.GetBaseUrl(Settings),
+                    DetailedDescription = "The category you entered doesn't exist in Sabnzbd. Go to Sabnzbd to create it."
+                };
             }
 
             if (config.Misc.enable_tv_sorting && ContainsCategory(config.Misc.tv_categories, Settings.Category))

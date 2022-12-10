@@ -29,8 +29,9 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
         protected override string AddFromNzbFile(ReleaseInfo release, string filename, byte[] fileContents)
         {
             var priority = Settings.Priority;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            var response = _proxy.DownloadNzb(fileContents, filename, priority, Settings);
+            var response = _proxy.DownloadNzb(fileContents, filename, priority, Settings, category);
 
             if (response == null)
             {
@@ -41,6 +42,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
         }
 
         public override string Name => "NZBVortex";
+        public override bool SupportsCategories => true;
 
         protected List<NzbVortexGroup> GetGroups()
         {
@@ -111,17 +113,25 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
 
         private ValidationFailure TestCategory()
         {
-            var group = GetGroups().FirstOrDefault(c => c.GroupName == Settings.Category);
+            var groups = GetGroups();
 
-            if (group == null)
+            foreach (var category in Categories)
             {
-                if (Settings.Category.IsNotNullOrWhiteSpace())
+                if (!category.ClientCategory.IsNullOrWhiteSpace() && !groups.Any(v => v.GroupName == category.ClientCategory))
                 {
-                    return new NzbDroneValidationFailure("Category", "Group does not exist")
+                    return new NzbDroneValidationFailure(string.Empty, "Group does not exist")
                     {
-                        DetailedDescription = "The Group you entered doesn't exist in NzbVortex. Go to NzbVortex to create it."
+                        DetailedDescription = "A mapped category you entered doesn't exist in NzbVortex. Go to NzbVortex to create it."
                     };
                 }
+            }
+
+            if (!Settings.Category.IsNullOrWhiteSpace() && !groups.Any(v => v.GroupName == Settings.Category))
+            {
+                return new NzbDroneValidationFailure("Category", "Category does not exist")
+                {
+                    DetailedDescription = "The category you entered doesn't exist in NzbVortex. Go to NzbVortex to create it."
+                };
             }
 
             return null;

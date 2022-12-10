@@ -119,14 +119,14 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             return response;
         }
 
-        public void AddTorrentFromUrl(string torrentUrl, TorrentSeedConfiguration seedConfiguration, QBittorrentSettings settings)
+        public void AddTorrentFromUrl(string torrentUrl, TorrentSeedConfiguration seedConfiguration, QBittorrentSettings settings, string category)
         {
             var request = BuildRequest(settings).Resource("/api/v2/torrents/add")
                                                 .Post()
                                                 .AddFormParameter("urls", torrentUrl);
-            if (settings.Category.IsNotNullOrWhiteSpace())
+            if (category.IsNotNullOrWhiteSpace())
             {
-                request.AddFormParameter("category", settings.Category);
+                request.AddFormParameter("category", category);
             }
 
             // Note: ForceStart is handled by separate api call
@@ -153,15 +153,15 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             }
         }
 
-        public void AddTorrentFromFile(string fileName, byte[] fileContent, TorrentSeedConfiguration seedConfiguration, QBittorrentSettings settings)
+        public void AddTorrentFromFile(string fileName, byte[] fileContent, TorrentSeedConfiguration seedConfiguration, QBittorrentSettings settings, string category)
         {
             var request = BuildRequest(settings).Resource("/api/v2/torrents/add")
                                                 .Post()
                                                 .AddFormUpload("torrents", fileName, fileContent);
 
-            if (settings.Category.IsNotNullOrWhiteSpace())
+            if (category.IsNotNullOrWhiteSpace())
             {
-                request.AddFormParameter("category", settings.Category);
+                request.AddFormParameter("category", category);
             }
 
             // Note: ForceStart is handled by separate api call

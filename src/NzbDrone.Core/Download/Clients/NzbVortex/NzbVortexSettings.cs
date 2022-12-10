@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
         [FieldDefinition(3, Label = "API Key", Type = FieldType.Textbox, Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(4, Label = "Group", Type = FieldType.Textbox, HelpText = "Adding a category specific to Prowlarr avoids conflicts with unrelated downloads, but it's optional")]
+        [FieldDefinition(4, Label = "Default Category", Type = FieldType.Textbox, HelpText = "Default fallback category if no mapped category exists for a release. Adding a category specific to Prowlarr avoids conflicts with unrelated downloads, but it's optional")]
         public string Category { get; set; }
 
         [FieldDefinition(5, Label = "Priority", Type = FieldType.Select, SelectOptions = typeof(NzbVortexPriority), HelpText = "Priority to use when grabbing items")]

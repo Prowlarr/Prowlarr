@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     InfoUrl = details,
                     Guid = details,
                     Categories = cats,
-                    PublishDate = row.CreatedAt,
+                    PublishDate = DateTime.Parse(row.CreatedAt + "-05:00").ToUniversalTime(), // Avistaz does not specify a timezone & returns server time
                     Size = row.FileSize,
                     Files = row.FileCount,
                     Grabs = row.Completed,

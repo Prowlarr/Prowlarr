@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         }
     }
 
-    public class TorznabSettings : NewznabSettings, ITorrentIndexerSettings
+    public class TorznabSettings : GenericNewznabSettings, ITorrentIndexerSettings
     {
         private static readonly TorznabSettingsValidator Validator = new TorznabSettingsValidator();
 

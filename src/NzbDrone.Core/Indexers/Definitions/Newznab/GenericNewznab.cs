@@ -7,28 +7,29 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers.Newznab;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Torznab
+namespace NzbDrone.Core.Indexers.Newznab
 {
-    public class Torznab : TorrentIndexerBase<TorznabSettings>
+    public class GenericNewznab : UsenetIndexerBase<GenericNewznabSettings>
     {
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
-        public override string Name => "Torznab";
+        public override string Name => "Generic Newznab";
         public override string[] IndexerUrls => GetBaseUrlFromSettings();
-        public override string Description => "A Newznab-like api for torrents.";
+        public override string Description => "Newznab is an API search specification for Usenet";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
         public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
+
+        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
@@ -41,7 +42,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorznabRssParser(Settings);
+            return new GenericNewznabRssParser(Settings.Categories);
         }
 
         public string[] GetBaseUrlFromSettings()
@@ -56,7 +57,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             return new string[] { Settings.BaseUrl };
         }
 
-        protected override TorznabSettings GetDefaultBaseUrl(TorznabSettings settings)
+        protected override GenericNewznabSettings GetDefaultBaseUrl(GenericNewznabSettings settings)
         {
             return settings;
         }
@@ -88,18 +89,17 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             get
             {
-                yield return GetDefinition("AnimeTosho", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("Generic Torznab", GetSettings(""));
+                yield return GetDefinition("Generic Newznab", GetSettings(""));
             }
         }
 
-        public Torznab(INewznabCapabilitiesProvider capabilitiesProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public GenericNewznab(INewznabCapabilitiesProvider capabilitiesProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, TorznabSettings settings)
+        private IndexerDefinition GetDefinition(string name, GenericNewznabSettings settings)
         {
             return new IndexerDefinition
             {
@@ -108,6 +108,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 Implementation = GetType().Name,
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,
+                Privacy = IndexerPrivacy.Private,
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
@@ -115,9 +116,9 @@ namespace NzbDrone.Core.Indexers.Torznab
             };
         }
 
-        private TorznabSettings GetSettings(string url, string apiPath = null)
+        private GenericNewznabSettings GetSettings(string url, string apiPath = null)
         {
-            var settings = new TorznabSettings { BaseUrl = url };
+            var settings = new GenericNewznabSettings { BaseUrl = url };
 
             if (apiPath.IsNotNullOrWhiteSpace())
             {
@@ -163,7 +164,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 }
 
                 if (capabilities.TvSearchParams != null &&
-                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
+                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.TmdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
                     new[] { TvSearchParam.Season, TvSearchParam.Ep }.All(v => capabilities.TvSearchParams.Contains(v)))
                 {
                     return null;

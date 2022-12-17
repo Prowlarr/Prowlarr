@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using NzbDrone.Core.Indexers.Cardigann;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.IndexerVersions
 {
-    public class CardigannMetaDefinition
+    public class IndexerMetaDefinition
     {
-        public CardigannMetaDefinition()
+        public IndexerMetaDefinition()
         {
             Legacylinks = new List<string>();
         }
@@ -13,6 +14,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public string File { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Implementation { get; set; }
         public string Type { get; set; }
         public string Language { get; set; }
         public string Encoding { get; set; }

@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             get
             {
-                foreach (var def in _definitionService.All())
+                foreach (var def in _definitionService.AllForImplementation(GetType().Name))
                 {
                     yield return GetDefinition(def);
                 }
@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             _generatorCache = cacheManager.GetRollingCache<CardigannRequestGenerator>(GetType(), "CardigannGeneratorCache", TimeSpan.FromMinutes(5));
         }
 
-        private IndexerDefinition GetDefinition(CardigannMetaDefinition definition)
+        private IndexerDefinition GetDefinition(IndexerMetaDefinition definition)
         {
             var defaultSettings = new List<SettingsField>
             {

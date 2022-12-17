@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 {
     public interface INewznabCapabilitiesProvider
     {
-        IndexerCapabilities GetCapabilities(NewznabSettings settings, ProviderDefinition definition);
+        IndexerCapabilities GetCapabilities(GenericNewznabSettings settings, ProviderDefinition definition);
     }
 
     public class NewznabCapabilitiesProvider : INewznabCapabilitiesProvider
@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             _logger = logger;
         }
 
-        public IndexerCapabilities GetCapabilities(NewznabSettings indexerSettings, ProviderDefinition definition)
+        public IndexerCapabilities GetCapabilities(GenericNewznabSettings indexerSettings, ProviderDefinition definition)
         {
             var key = indexerSettings.ToJson();
             var capabilities = _capabilitiesCache.Get(key, () => FetchCapabilities(indexerSettings, definition), TimeSpan.FromDays(7));
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             return capabilities;
         }
 
-        private IndexerCapabilities FetchCapabilities(NewznabSettings indexerSettings, ProviderDefinition definition)
+        private IndexerCapabilities FetchCapabilities(GenericNewznabSettings indexerSettings, ProviderDefinition definition)
         {
             var capabilities = new IndexerCapabilities();
 
@@ -96,7 +96,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 throw new XmlException("Invalid XML").WithData(response);
             }
 
-            NewznabRssParser.CheckError(xDoc, new IndexerResponse(new IndexerRequest(response.Request), response));
+            GenericNewznabRssParser.CheckError(xDoc, new IndexerResponse(new IndexerRequest(response.Request), response));
 
             var xmlRoot = xDoc.Element("caps");
 

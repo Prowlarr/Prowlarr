@@ -15,14 +15,14 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
     [TestFixture]
     public class NewznabCapabilitiesProviderFixture : CoreTest<NewznabCapabilitiesProvider>
     {
-        private NewznabSettings _settings;
+        private GenericNewznabSettings _settings;
         private IndexerDefinition _definition;
         private string _caps;
 
         [SetUp]
         public void SetUp()
         {
-            _settings = new NewznabSettings()
+            _settings = new GenericNewznabSettings()
             {
                 BaseUrl = "http://indxer.local"
             };

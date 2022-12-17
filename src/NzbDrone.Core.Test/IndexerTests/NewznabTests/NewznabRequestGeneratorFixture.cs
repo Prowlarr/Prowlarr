@@ -10,7 +10,7 @@ using NzbDrone.Core.Test.Framework;
 
 namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 {
-    public class NewznabRequestGeneratorFixture : CoreTest<NewznabRequestGenerator>
+    public class NewznabRequestGeneratorFixture : CoreTest<GenericNewznabRequestGenerator>
     {
         private MovieSearchCriteria _movieSearchCriteria;
         private TvSearchCriteria _tvSearchCriteria;
@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [SetUp]
         public void SetUp()
         {
-            Subject.Settings = new NewznabSettings()
+            Subject.Settings = new GenericNewznabSettings()
             {
                 BaseUrl = "http://127.0.0.1:1234/",
                 ApiKey = "abcd",
@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities = new IndexerCapabilities();
 
             Mocker.GetMock<INewznabCapabilitiesProvider>()
-                .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
+                .Setup(v => v.GetCapabilities(It.IsAny<GenericNewznabSettings>(), It.IsAny<IndexerDefinition>()))
                 .Returns(_capabilities);
         }
 

@@ -5,29 +5,31 @@ using System.Linq;
 using DryIoc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
-    public class NewznabRequestGenerator : IIndexerRequestGenerator
+    public class GenericNewznabRequestGenerator : IIndexerRequestGenerator
     {
+        private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
         public int MaxPages { get; set; }
         public int PageSize { get; set; }
-        public NewznabSettings Settings { get; set; }
-        public CardigannDefinition Definition { get; set; }
+        public GenericNewznabSettings Settings { get; set; }
+        public ProviderDefinition Definition { get; set; }
 
-        public NewznabRequestGenerator()
+        public GenericNewznabRequestGenerator(INewznabCapabilitiesProvider capabilitiesProvider)
         {
+            _capabilitiesProvider = capabilitiesProvider;
+
             MaxPages = 30;
             PageSize = 100;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var capabilities = GetCapabilities();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -65,14 +67,15 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
 
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var capabilities = GetCapabilities();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -105,14 +108,15 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
 
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var capabilities = GetCapabilities();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -170,14 +174,15 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
 
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var capabilities = GetCapabilities();
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
@@ -210,15 +215,15 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria,
+                parameters));
 
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var capabilities = GetCapabilities();
-
+            var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
             var pageableRequests = new IndexerPageableRequestChain();
 
             var parameters = new NameValueCollection();
@@ -228,15 +233,15 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, IndexerCapabilities capabilities, NameValueCollection parameters)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
-            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", ResolveSiteLink().TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
-            var categories = capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
+            var categories = searchCriteria.Categories;
 
             if (categories != null && categories.Any())
             {
@@ -279,34 +284,6 @@ namespace NzbDrone.Core.Indexers.Newznab
         private static string NewznabifySeasonNumber(int seasonNumber)
         {
             return seasonNumber == 0 ? "00" : seasonNumber.ToString();
-        }
-
-        protected string ResolveSiteLink()
-        {
-            var settingsBaseUrl = Settings?.BaseUrl;
-            var defaultLink = Definition.Links.First();
-
-            if (settingsBaseUrl == null)
-            {
-                return defaultLink;
-            }
-
-            if (Definition?.Legacylinks?.Contains(settingsBaseUrl) ?? false)
-            {
-                return defaultLink;
-            }
-
-            return settingsBaseUrl;
-        }
-
-        private IndexerCapabilities GetCapabilities()
-        {
-            var capabilities = new IndexerCapabilities();
-
-            capabilities.ParseYmlSearchModes(Definition.Caps.Modes);
-            capabilities.MapYmlCategories(Definition);
-
-            return capabilities;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

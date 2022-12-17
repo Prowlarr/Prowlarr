@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using DryIoc.ImTools;
+using NzbDrone.Core.Indexers.Cardigann;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -127,7 +129,7 @@ namespace NzbDrone.Core.Indexers
             LimitsMax = 100;
         }
 
-        public void ParseCardigannSearchModes(Dictionary<string, List<string>> modes)
+        public void ParseYmlSearchModes(Dictionary<string, List<string>> modes)
         {
             if (modes == null || !modes.Any())
             {
@@ -165,6 +167,48 @@ namespace NzbDrone.Core.Indexers
                         break;
                     default:
                         throw new Exception($"Unsupported search mode: {entry.Key}");
+                }
+            }
+        }
+
+        public void MapYmlCategories(CardigannDefinition defFile)
+        {
+            if (defFile.Caps.Categories != null)
+            {
+                foreach (var category in defFile.Caps.Categories)
+                {
+                    var cat = NewznabStandardCategory.GetCatByName(category.Value);
+
+                    if (cat == null)
+                    {
+                        continue;
+                    }
+
+                    Categories.AddCategoryMapping(category.Key, cat);
+                }
+            }
+
+            if (defFile.Caps.Categorymappings != null)
+            {
+                foreach (var categorymapping in defFile.Caps.Categorymappings)
+                {
+                    IndexerCategory torznabCat = null;
+
+                    if (categorymapping.cat != null)
+                    {
+                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
+                        if (torznabCat == null)
+                        {
+                            continue;
+                        }
+                    }
+
+                    Categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
+
+                    //if (categorymapping.Default)
+                    //{
+                    //    DefaultCategories.Add(categorymapping.id);
+                    //}
                 }
             }
         }

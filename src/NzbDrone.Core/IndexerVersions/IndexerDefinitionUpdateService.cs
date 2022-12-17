@@ -19,7 +19,8 @@ namespace NzbDrone.Core.IndexerVersions
 {
     public interface IIndexerDefinitionUpdateService
     {
-        List<CardigannMetaDefinition> All();
+        List<IndexerMetaDefinition> All();
+        List<IndexerMetaDefinition> AllForImplementation(string implementation);
         CardigannDefinition GetCachedDefinition(string fileKey);
         List<string> GetBlocklist();
     }
@@ -28,8 +29,8 @@ namespace NzbDrone.Core.IndexerVersions
     {
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
 
-        private const string DEFINITION_BRANCH = "master";
-        private const int DEFINITION_VERSION = 7;
+        private const string DEFINITION_BRANCH = "newznab-yml";
+        private const int DEFINITION_VERSION = 8;
 
         //Used when moving yml to C#
         private readonly List<string> _defintionBlocklist = new List<string>()
@@ -78,9 +79,9 @@ namespace NzbDrone.Core.IndexerVersions
             _logger = logger;
         }
 
-        public List<CardigannMetaDefinition> All()
+        public List<IndexerMetaDefinition> All()
         {
-            var indexerList = new List<CardigannMetaDefinition>();
+            var indexerList = new List<IndexerMetaDefinition>();
 
             try
             {
@@ -88,7 +89,7 @@ namespace NzbDrone.Core.IndexerVersions
                 try
                 {
                     var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
-                    var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
+                    var response = _httpClient.Get<List<IndexerMetaDefinition>>(request);
                     indexerList = response.Resource.Where(i => !_defintionBlocklist.Contains(i.File)).ToList();
                 }
                 catch
@@ -111,6 +112,11 @@ namespace NzbDrone.Core.IndexerVersions
             return indexerList;
         }
 
+        public List<IndexerMetaDefinition> AllForImplementation(string implementation)
+        {
+            return All().Where(d => d.Implementation == implementation.ToLower()).ToList();
+        }
+
         public CardigannDefinition GetCachedDefinition(string fileKey)
         {
             if (string.IsNullOrEmpty(fileKey))
@@ -128,7 +134,7 @@ namespace NzbDrone.Core.IndexerVersions
             return _defintionBlocklist;
         }
 
-        private List<CardigannMetaDefinition> ReadDefinitionsFromDisk(List<CardigannMetaDefinition> defs, string path, SearchOption options = SearchOption.TopDirectoryOnly)
+        private List<IndexerMetaDefinition> ReadDefinitionsFromDisk(List<IndexerMetaDefinition> defs, string path, SearchOption options = SearchOption.TopDirectoryOnly)
         {
             var indexerList = defs;
 
@@ -145,7 +151,7 @@ namespace NzbDrone.Core.IndexerVersions
                     try
                     {
                         var definitionString = File.ReadAllText(file.FullName);
-                        var definition = _deserializer.Deserialize<CardigannMetaDefinition>(definitionString);
+                        var definition = _deserializer.Deserialize<IndexerMetaDefinition>(definitionString);
 
                         definition.File = Path.GetFileNameWithoutExtension(file.Name);
 
@@ -241,6 +247,11 @@ namespace NzbDrone.Core.IndexerVersions
             if (definition.Login != null && definition.Login.Method == null)
             {
                 definition.Login.Method = "form";
+            }
+
+            if (definition.Search == null)
+            {
+                definition.Search = new SearchBlock();
             }
 
             if (definition.Search.Paths == null)

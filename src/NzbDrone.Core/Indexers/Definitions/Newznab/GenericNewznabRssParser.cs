@@ -8,17 +8,17 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
-    public class NewznabRssParser : RssParser
+    public class GenericNewznabRssParser : RssParser
     {
         public const string ns = "{http://www.newznab.com/DTD/2010/feeds/attributes/}";
 
-        private readonly NewznabSettings _settings;
+        private readonly List<IndexerCategory> _categories;
 
-        public NewznabRssParser(NewznabSettings settings)
+        public GenericNewznabRssParser(List<IndexerCategory> categories)
         {
             PreferredEnclosureMimeTypes = UsenetEnclosureMimeTypes;
             UseEnclosureUrl = true;
-            _settings = settings;
+            _categories = categories;
         }
 
         public static void CheckError(XDocument xdoc, IndexerResponse indexerResponse)
@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 if (int.TryParse(cat, out var intCategory))
                 {
-                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
+                    var indexerCat = _categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
 
                     if (indexerCat != null)
                     {

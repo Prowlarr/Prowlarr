@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         }
     }
 
-    public class CardigannSettings : NoAuthTorrentBaseSettings
+    public class CardigannSettings : NoAuthTorrentBaseSettings, IYmlIndexerSettings
     {
         private static readonly CardigannSettingsValidator Validator = new CardigannSettingsValidator();
 

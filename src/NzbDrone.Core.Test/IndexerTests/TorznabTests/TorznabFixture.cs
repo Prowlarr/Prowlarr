@@ -35,7 +35,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
 
             _caps = new IndexerCapabilities();
             Mocker.GetMock<INewznabCapabilitiesProvider>()
-                .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
+                .Setup(v => v.GetCapabilities(It.IsAny<GenericNewznabSettings>(), It.IsAny<IndexerDefinition>()))
                 .Returns(_caps);
         }
 

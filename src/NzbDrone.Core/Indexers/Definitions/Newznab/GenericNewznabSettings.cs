@@ -4,18 +4,40 @@ using System.Text.RegularExpressions;
 using FluentValidation;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
-    public class NewznabSettingsValidator : AbstractValidator<NewznabSettings>
+    public class GenericNewznabSettingsValidator : AbstractValidator<GenericNewznabSettings>
     {
+        private static readonly string[] ApiKeyWhiteList =
+        {
+            "nzbs.org",
+            "nzb.su",
+            "dognzb.cr",
+            "nzbplanet.net",
+            "nzbid.org",
+            "nzbndx.com",
+            "nzbindex.in"
+        };
+
+        private static bool ShouldHaveApiKey(GenericNewznabSettings settings)
+        {
+            if (settings.BaseUrl == null)
+            {
+                return false;
+            }
+
+            return ApiKeyWhiteList.Any(c => settings.BaseUrl.ToLowerInvariant().Contains(c));
+        }
+
         private static readonly Regex AdditionalParametersRegex = new Regex(@"(&.+?\=.+?)+", RegexOptions.Compiled);
 
-        public NewznabSettingsValidator()
+        public GenericNewznabSettingsValidator()
         {
+            RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.ApiPath).ValidUrlBase("/api");
+            RuleFor(c => c.ApiKey).NotEmpty().When(ShouldHaveApiKey);
             RuleFor(c => c.AdditionalParameters).Matches(AdditionalParametersRegex)
                                                 .When(c => !c.AdditionalParameters.IsNullOrWhiteSpace());
 
@@ -29,17 +51,17 @@ namespace NzbDrone.Core.Indexers.Newznab
         }
     }
 
-    public class NewznabSettings : IYmlIndexerSettings
+    public class GenericNewznabSettings : IIndexerSettings
     {
-        private static readonly NewznabSettingsValidator Validator = new NewznabSettingsValidator();
+        private static readonly GenericNewznabSettingsValidator Validator = new GenericNewznabSettingsValidator();
 
-        public NewznabSettings()
+        public GenericNewznabSettings()
         {
             ApiPath = "/api";
             VipExpiration = "";
         }
 
-        [FieldDefinition(0, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        [FieldDefinition(0, Label = "URL")]
         public string BaseUrl { get; set; }
 
         [FieldDefinition(1, Label = "API Path", HelpText = "Path to the api, usually /api", Advanced = true)]
@@ -53,9 +75,6 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         [FieldDefinition(6, Label = "VIP Expiration", HelpText = "Enter date (yyyy-mm-dd) for VIP Expiration or blank, Prowlarr will notify 1 week from expiration of VIP")]
         public string VipExpiration { get; set; }
-
-        [FieldDefinition(0, Hidden = HiddenType.Hidden)]
-        public string DefinitionFile { get; set; }
 
         [FieldDefinition(7)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();

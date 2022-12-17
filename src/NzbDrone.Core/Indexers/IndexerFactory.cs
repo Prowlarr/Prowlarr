@@ -7,6 +7,7 @@ using NLog;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Indexers.Cardigann;
 using NzbDrone.Core.Indexers.Newznab;
+using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
@@ -50,11 +51,11 @@ namespace NzbDrone.Core.Indexers
 
             foreach (var definition in definitions)
             {
-                if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+                if (definition.Settings.GetType().GetInterface(nameof(IYmlIndexerSettings)) != null)
                 {
                     try
                     {
-                        MapCardigannDefinition(definition);
+                        MapYmlDefinition(definition);
                     }
                     catch
                     {
@@ -73,11 +74,11 @@ namespace NzbDrone.Core.Indexers
         {
             var definition = base.Get(id);
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            if (definition.Settings.GetType().GetInterface(nameof(IYmlIndexerSettings)) != null)
             {
                 try
                 {
-                    MapCardigannDefinition(definition);
+                    MapYmlDefinition(definition);
                 }
                 catch
                 {
@@ -93,9 +94,9 @@ namespace NzbDrone.Core.Indexers
             return base.Active().Where(c => c.Enable).ToList();
         }
 
-        private void MapCardigannDefinition(IndexerDefinition definition)
+        private void MapYmlDefinition(IndexerDefinition definition)
         {
-            var settings = (CardigannSettings)definition.Settings;
+            var settings = (IYmlIndexerSettings)definition.Settings;
             var defFile = _definitionService.GetCachedDefinition(settings.DefinitionFile);
             definition.ExtraFields = defFile.Settings;
 
@@ -121,51 +122,9 @@ namespace NzbDrone.Core.Indexers
                 _ => IndexerPrivacy.SemiPrivate
             };
             definition.Capabilities = new IndexerCapabilities();
-            definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
+            definition.Capabilities.ParseYmlSearchModes(defFile.Caps.Modes);
             definition.Capabilities.SupportsRawSearch = defFile.Caps.Allowrawsearch;
-            MapCardigannCategories(definition, defFile);
-        }
-
-        private void MapCardigannCategories(IndexerDefinition def, CardigannDefinition defFile)
-        {
-            if (defFile.Caps.Categories != null)
-            {
-                foreach (var category in defFile.Caps.Categories)
-                {
-                    var cat = NewznabStandardCategory.GetCatByName(category.Value);
-
-                    if (cat == null)
-                    {
-                        continue;
-                    }
-
-                    def.Capabilities.Categories.AddCategoryMapping(category.Key, cat);
-                }
-            }
-
-            if (defFile.Caps.Categorymappings != null)
-            {
-                foreach (var categorymapping in defFile.Caps.Categorymappings)
-                {
-                    IndexerCategory torznabCat = null;
-
-                    if (categorymapping.cat != null)
-                    {
-                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
-                        if (torznabCat == null)
-                        {
-                            continue;
-                        }
-                    }
-
-                    def.Capabilities.Categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
-
-                    //if (categorymapping.Default)
-                    //{
-                    //    DefaultCategories.Add(categorymapping.id);
-                    //}
-                }
-            }
+            definition.Capabilities.MapYmlCategories(defFile);
         }
 
         public override IEnumerable<IndexerDefinition> GetDefaultDefinitions()
@@ -178,7 +137,7 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name || v.Name != typeof(Torznab.Torznab).Name));
+                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name || v.Name != typeof(Newznab.GenericNewznab).Name || v.Name != typeof(Torznab.Torznab).Name));
 
                 foreach (IndexerDefinition definition in definitions)
                 {
@@ -203,7 +162,7 @@ namespace NzbDrone.Core.Indexers
             definition.SupportsRedirect = provider.SupportsRedirect;
 
             //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
-            if (definition.Implementation != typeof(Cardigann.Cardigann).Name)
+            if (definition.Settings.GetType().GetInterface(nameof(IYmlIndexerSettings)) == null)
             {
                 definition.IndexerUrls = provider.IndexerUrls;
                 definition.LegacyUrls = provider.LegacyUrls;
@@ -288,15 +247,15 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
+            if (definition.Implementation == typeof(Newznab.GenericNewznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
             {
-                var settings = (NewznabSettings)definition.Settings;
+                var settings = (GenericNewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            if (definition.Settings.GetType().GetInterface(nameof(IYmlIndexerSettings)) != null)
             {
-                MapCardigannDefinition(definition);
+                MapYmlDefinition(definition);
             }
 
             return base.Create(definition);
@@ -310,13 +269,13 @@ namespace NzbDrone.Core.Indexers
 
             if (definition.Enable && (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name))
             {
-                var settings = (NewznabSettings)definition.Settings;
+                var settings = (GenericNewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            if (definition.Settings.GetType().GetInterface(nameof(IYmlIndexerSettings)) != null)
             {
-                MapCardigannDefinition(definition);
+                MapYmlDefinition(definition);
             }
 
             base.Update(definition);

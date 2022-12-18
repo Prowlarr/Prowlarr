@@ -113,8 +113,6 @@ export default {
 
       const saveData = getProviderState({ id, ...otherPayload }, getState, section, false);
 
-      console.log(saveData);
-
       // we have to set id since not actually posting to server yet
       if (!saveData.id) {
         saveData.id = getNextId(getState().settings.downloadClientCategories.items);

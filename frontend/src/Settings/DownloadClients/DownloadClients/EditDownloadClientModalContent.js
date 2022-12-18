@@ -81,8 +81,6 @@ class EditDownloadClientModalContent extends Component {
       message
     } = item;
 
-    console.log(supportsCategories);
-
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>

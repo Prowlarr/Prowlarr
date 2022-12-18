@@ -14,8 +14,6 @@ function createLanguagesSelector() {
   return createSelector(
     (state) => state.localization,
     (localization) => {
-      console.log(localization);
-
       const items = localization.items;
 
       if (!items) {

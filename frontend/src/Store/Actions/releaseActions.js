@@ -310,8 +310,6 @@ export const actionHandlers = handleThunks({
       isGrabbing: true
     }));
 
-    console.log(payload);
-
     const promise = createAjaxRequest({
       url: '/search/bulk',
       method: 'POST',

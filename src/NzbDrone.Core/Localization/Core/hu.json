@@ -54,7 +54,7 @@
     "BranchUpdateMechanism": "A külső frissítési mechanizmus által használt ágazat",
     "BranchUpdate": "Ágazattípus a Prowlarr frissítéseihez",
     "Branch": "Ágazat",
-    "BindAddressHelpText": "Érvényes IP-cím, localhost, vagy „*” minden interfészhez",
+    "BindAddressHelpText": "Érvényes IP-cím, localhost vagy '*' minden interfészhez",
     "BindAddress": "Kapcsolási Cím",
     "BeforeUpdate": "Alkalmazásfrissítés előtt",
     "Backups": "Biztonsági Mentés",

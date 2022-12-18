@@ -141,7 +141,7 @@
     "BackupRetentionHelpText": "Automatische Backups, die älter als die Aufbewahrungsfrist sind, werden automatisch gelöscht",
     "Backups": "Backups",
     "BindAddress": "Adresse binden",
-    "BindAddressHelpText": "Gültige IP-Adresse, \"localhost\" oder \"*\" für alle Netzwerke",
+    "BindAddressHelpText": "Gültige IP Adresse oder \"*\" für alle Netzwerke",
     "Branch": "Git-Branch",
     "BypassProxyForLocalAddresses": "Proxy für lokale Adressen umgehen",
     "CertificateValidation": "Zertifikat Validierung",

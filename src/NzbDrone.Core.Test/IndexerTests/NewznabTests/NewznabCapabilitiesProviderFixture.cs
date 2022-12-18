@@ -85,6 +85,19 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         }
 
         [Test]
+        public void should_map_by_name_when_available()
+        {
+            GivenCapsResponse(_caps);
+
+            var caps = Subject.GetCapabilities(_settings, _definition);
+
+            var bookCats = caps.Categories.MapTrackerCatToNewznab("5999");
+
+            bookCats.Count.Should().Be(2);
+            bookCats.First().Id.Should().Be(5050);
+        }
+
+        [Test]
         public void should_use_default_pagesize_if_missing()
         {
             GivenCapsResponse(_caps.Replace("<limits", "<abclimits"));

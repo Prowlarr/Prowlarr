@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Xml;
 using System.Xml.Linq;
@@ -221,27 +222,37 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 foreach (var xmlCategory in xmlCategories.Elements("category"))
                 {
-                    var cat = new IndexerCategory
+                    var parentName = xmlCategory.Attribute("name").Value;
+                    var parentId = int.Parse(xmlCategory.Attribute("id").Value);
+                    var mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == parentName.ToLower());
+
+                    if (mappedCat == null)
                     {
-                        Id = int.Parse(xmlCategory.Attribute("id").Value),
-                        Name = xmlCategory.Attribute("name").Value,
-                        Description = xmlCategory.Attribute("description") != null ? xmlCategory.Attribute("description").Value : string.Empty
-                    };
+                        mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == parentId);
+                    }
 
                     foreach (var xmlSubcat in xmlCategory.Elements("subcat"))
                     {
-                        var subCat = new IndexerCategory
-                        {
-                            Id = int.Parse(xmlSubcat.Attribute("id").Value),
-                            Name = xmlSubcat.Attribute("name").Value,
-                            Description = xmlSubcat.Attribute("description") != null ? xmlSubcat.Attribute("description").Value : string.Empty
-                        };
+                        var subName = xmlSubcat.Attribute("name").Value;
+                        var subId = int.Parse(xmlSubcat.Attribute("id").Value);
+                        var mappingName = $"{parentName}/{subName}";
+                        var mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == mappingName.ToLower());
 
-                        cat.SubCategories.Add(subCat);
-                        capabilities.Categories.AddCategoryMapping(subCat.Name, subCat);
+                        if (mappedSubCat == null)
+                        {
+                            mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == subId);
+                        }
+
+                        if (mappedSubCat != null)
+                        {
+                            capabilities.Categories.AddCategoryMapping(subId, mappedSubCat, mappingName);
+                        }
                     }
 
-                    capabilities.Categories.AddCategoryMapping(cat.Name, cat);
+                    if (mappedCat != null)
+                    {
+                        capabilities.Categories.AddCategoryMapping(parentId, mappedCat, parentName);
+                    }
                 }
             }
 

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Torznab
 {
@@ -13,10 +15,15 @@ namespace NzbDrone.Core.Indexers.Torznab
         public const string ns = "{http://torznab.com/schemas/2015/feed}";
 
         private readonly TorznabSettings _settings;
-        public TorznabRssParser(TorznabSettings settings)
+        private readonly ProviderDefinition _definition;
+        private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
+
+        public TorznabRssParser(TorznabSettings settings, ProviderDefinition definition, INewznabCapabilitiesProvider capabilitiesProvider)
         {
             UseEnclosureUrl = true;
             _settings = settings;
+            _definition = definition;
+            _capabilitiesProvider = capabilitiesProvider;
         }
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
@@ -157,19 +164,17 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         protected override ICollection<IndexerCategory> GetCategory(XElement item)
         {
+            var capabilities = _capabilitiesProvider.GetCapabilities(_settings, _definition);
             var cats = TryGetMultipleNewznabAttributes(item, "category");
             var results = new List<IndexerCategory>();
 
             foreach (var cat in cats)
             {
-                if (int.TryParse(cat, out var intCategory))
-                {
-                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
+                var indexerCat = capabilities.Categories.MapTrackerCatToNewznab(cat);
 
-                    if (indexerCat != null)
-                    {
-                        results.Add(indexerCat);
-                    }
+                if (indexerCat != null)
+                {
+                    results.AddRange(indexerCat);
                 }
             }
 

@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
@@ -13,12 +14,16 @@ namespace NzbDrone.Core.Indexers.Newznab
         public const string ns = "{http://www.newznab.com/DTD/2010/feeds/attributes/}";
 
         private readonly NewznabSettings _settings;
+        private readonly ProviderDefinition _definition;
+        private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
-        public NewznabRssParser(NewznabSettings settings)
+        public NewznabRssParser(NewznabSettings settings, ProviderDefinition definition, INewznabCapabilitiesProvider capabilitiesProvider)
         {
             PreferredEnclosureMimeTypes = UsenetEnclosureMimeTypes;
             UseEnclosureUrl = true;
             _settings = settings;
+            _definition = definition;
+            _capabilitiesProvider = capabilitiesProvider;
         }
 
         public static void CheckError(XDocument xdoc, IndexerResponse indexerResponse)
@@ -118,19 +123,17 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         protected override ICollection<IndexerCategory> GetCategory(XElement item)
         {
+            var capabilities = _capabilitiesProvider.GetCapabilities(_settings, _definition);
             var cats = TryGetMultipleNewznabAttributes(item, "category");
             var results = new List<IndexerCategory>();
 
             foreach (var cat in cats)
             {
-                if (int.TryParse(cat, out var intCategory))
-                {
-                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
+                var indexerCat = capabilities.Categories.MapTrackerCatToNewznab(cat);
 
-                    if (indexerCat != null)
-                    {
-                        results.Add(indexerCat);
-                    }
+                if (indexerCat != null)
+                {
+                    results.AddRange(indexerCat);
                 }
             }
 

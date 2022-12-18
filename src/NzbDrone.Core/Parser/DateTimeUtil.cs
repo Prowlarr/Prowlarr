@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Parser
             if (DateTimeRoutines.TryParseDateOrTime(
                 str, dtFormat, out DateTimeRoutines.ParsedDateTime dt))
             {
-                return dt.DateTime;
+                return dt.DateTime.ToUniversalTime();
             }
 
             throw new InvalidDateException($"FromFuzzyTime parsing failed for string {str}");

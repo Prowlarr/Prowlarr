@@ -29,6 +29,9 @@ namespace NzbDrone.Core.Indexers.FileList
         [FieldDefinition(3, Label = "Passkey", HelpText = "Site Passkey (This is the alphanumeric string in the tracker url shown in your download client)", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Passkey { get; set; }
 
+        [FieldDefinition(4, Label = "Freeleech Only", HelpText = "Search Freeleech torrents only", Type = FieldType.Checkbox)]
+        public bool FreeleechOnly { get; set; }
+
         public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

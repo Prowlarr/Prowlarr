@@ -109,6 +109,11 @@ namespace NzbDrone.Core.Indexers.FileList
 
             var baseUrl = string.Format("{0}/api.php?action={1}&category={2}&username={3}&passkey={4}{5}", Settings.BaseUrl.TrimEnd('/'), searchType, categoriesQuery, Settings.Username.Trim(), Settings.Passkey.Trim(), parameters);
 
+            if (Settings.FreeleechOnly)
+            {
+                baseUrl += "&freeleech=1";
+            }
+
             yield return new IndexerRequest(baseUrl, HttpAccept.Json);
         }
     }

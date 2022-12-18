@@ -15,10 +15,10 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(2)]
+        [FieldDefinition(10)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
-        [FieldDefinition(3)]
+        [FieldDefinition(11)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public virtual NzbDroneValidationResult Validate()

@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorznabRssParser(Settings);
+            return new TorznabRssParser(Settings, Definition, _capabilitiesProvider);
         }
 
         public string[] GetBaseUrlFromSettings()

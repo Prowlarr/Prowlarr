@@ -68,6 +68,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
+                capabilities,
                 parameters));
 
             return pageableRequests;
@@ -109,6 +110,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
+                capabilities,
                 parameters));
 
             return pageableRequests;
@@ -175,6 +177,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
+                capabilities,
                 parameters));
 
             return pageableRequests;
@@ -216,6 +219,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             pageableRequests.Add(GetPagedRequests(searchCriteria,
+                capabilities,
                 parameters));
 
             return pageableRequests;
@@ -233,15 +237,15 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, IndexerCapabilities capabilities, NameValueCollection parameters)
         {
             var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
-            var categories = searchCriteria.Categories;
+            var categories = capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
 
             if (categories != null && categories.Any())
             {

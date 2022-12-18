@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public override IParseIndexerResponse GetParser()
         {
-            return new NewznabRssParser(Settings);
+            return new NewznabRssParser(Settings, Definition, _capabilitiesProvider);
         }
 
         public string[] GetBaseUrlFromSettings()

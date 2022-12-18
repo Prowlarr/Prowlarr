@@ -18,6 +18,7 @@
       <subcat id="5030" name="SD"/>
       <subcat id="5060" name="Sport"/>
       <subcat id="5010" name="WEB-DL"/>
+      <subcat id="5999" name="Other"/>
     </category>
     <category id="7000" name="Other">
       <subcat id="7010" name="Misc"/>

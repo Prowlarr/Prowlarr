@@ -11,6 +11,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
     [CheckOn(typeof(ProviderAddedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
+    [CheckOn(typeof(ProviderBulkDeletedEvent<IIndexer>))]
     public class IndexerVIPCheck : HealthCheckBase
     {
         private readonly IIndexerFactory _indexerFactory;

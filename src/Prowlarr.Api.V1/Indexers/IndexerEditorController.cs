@@ -11,13 +11,13 @@ namespace Prowlarr.Api.V1.Indexers
     [V1ApiController("indexer/editor")]
     public class IndexerEditorController : Controller
     {
-        private readonly IIndexerFactory _indexerService;
+        private readonly IIndexerFactory _indexerFactory;
         private readonly IManageCommandQueue _commandQueueManager;
         private readonly IndexerResourceMapper _resourceMapper;
 
-        public IndexerEditorController(IIndexerFactory indexerService, IManageCommandQueue commandQueueManager, IndexerResourceMapper resourceMapper)
+        public IndexerEditorController(IIndexerFactory indexerFactory, IManageCommandQueue commandQueueManager, IndexerResourceMapper resourceMapper)
         {
-            _indexerService = indexerService;
+            _indexerFactory = indexerFactory;
             _commandQueueManager = commandQueueManager;
             _resourceMapper = resourceMapper;
         }
@@ -25,7 +25,7 @@ namespace Prowlarr.Api.V1.Indexers
         [HttpPut]
         public IActionResult SaveAll(IndexerEditorResource resource)
         {
-            var indexersToUpdate = _indexerService.AllProviders(false).Select(x => (IndexerDefinition)x.Definition).Where(d => resource.IndexerIds.Contains(d.Id));
+            var indexersToUpdate = _indexerFactory.AllProviders(false).Select(x => (IndexerDefinition)x.Definition).Where(d => resource.IndexerIds.Contains(d.Id));
 
             foreach (var indexer in indexersToUpdate)
             {
@@ -59,13 +59,13 @@ namespace Prowlarr.Api.V1.Indexers
                 }
             }
 
-            _indexerService.Update(indexersToUpdate);
+            _indexerFactory.Update(indexersToUpdate);
 
-            var indexers = _indexerService.All();
+            var indexers = _indexerFactory.All();
 
             foreach (var definition in indexers)
             {
-                _indexerService.SetProviderCharacteristics(definition);
+                _indexerFactory.SetProviderCharacteristics(definition);
             }
 
             return Accepted(_resourceMapper.ToResource(indexers));
@@ -74,7 +74,7 @@ namespace Prowlarr.Api.V1.Indexers
         [HttpDelete]
         public object DeleteIndexers([FromBody] IndexerEditorResource resource)
         {
-            _indexerService.DeleteIndexers(resource.IndexerIds);
+            _indexerFactory.Delete(resource.IndexerIds);
 
             return new { };
         }

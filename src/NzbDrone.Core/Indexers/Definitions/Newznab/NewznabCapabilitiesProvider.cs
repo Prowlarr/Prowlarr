@@ -224,28 +224,50 @@ namespace NzbDrone.Core.Indexers.Newznab
                 {
                     var parentName = xmlCategory.Attribute("name").Value;
                     var parentId = int.Parse(xmlCategory.Attribute("id").Value);
-                    var mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == parentName.ToLower());
+
+                    var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentName.ToLower().Contains(x.Name.ToLower()));
 
                     if (mappedCat == null)
                     {
-                        mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == parentId);
+                        // Try by parent id if name fails
+                        mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => x.Id == parentId);
+                    }
+
+                    if (mappedCat == null)
+                    {
+                        // Fallback to Other
+                        mappedCat = NewznabStandardCategory.Other;
                     }
 
                     foreach (var xmlSubcat in xmlCategory.Elements("subcat"))
                     {
                         var subName = xmlSubcat.Attribute("name").Value;
                         var subId = int.Parse(xmlSubcat.Attribute("id").Value);
-                        var mappingName = $"{parentName}/{subName}";
+
+                        var mappingName = $"{mappedCat.Name}/{subName}";
                         var mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == mappingName.ToLower());
 
                         if (mappedSubCat == null)
                         {
+                            // Try by child id if name fails
                             mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == subId);
+                        }
+
+                        if (mappedSubCat == null && mappedCat.Id != NewznabStandardCategory.Other.Id)
+                        {
+                            // Try by Parent/Other if parent is not other
+                            mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == $"{mappedCat.Name.ToLower()}/other");
+                        }
+
+                        if (mappedSubCat == null)
+                        {
+                            // Fallback to Misc Other
+                            mappedSubCat = NewznabStandardCategory.OtherMisc;
                         }
 
                         if (mappedSubCat != null)
                         {
-                            capabilities.Categories.AddCategoryMapping(subId, mappedSubCat, mappingName);
+                            capabilities.Categories.AddCategoryMapping(subId, mappedSubCat, $"{parentName}/{subName}");
                         }
                     }
 

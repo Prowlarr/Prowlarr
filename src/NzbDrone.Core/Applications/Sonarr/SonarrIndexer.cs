@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             var apiPath = Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
-            var apiPathCompare = apiPath == otherApiPath;
+            var apiPathCompare = apiPath.Equals(otherApiPath);
 
             var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);

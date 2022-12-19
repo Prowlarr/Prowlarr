@@ -272,6 +272,7 @@ class IndexerIndex extends Component {
       saveError,
       isDeleting,
       isTestingAll,
+      isSyncingIndexers,
       deleteError,
       onScroll,
       onSortSelect,
@@ -307,6 +308,15 @@ class IndexerIndex extends Component {
               iconName={icons.ADD}
               spinningName={icons.ADD}
               onPress={this.onAddIndexerPress}
+            />
+
+            <PageToolbarSeparator />
+
+            <PageToolbarButton
+              label={translate('SyncAppIndexers')}
+              iconName={icons.REFRESH}
+              isSpinning={isSyncingIndexers}
+              onPress={this.props.onAppIndexerSyncPress}
             />
 
             <PageToolbarButton
@@ -493,10 +503,12 @@ IndexerIndex.propTypes = {
   saveError: PropTypes.object,
   isDeleting: PropTypes.bool.isRequired,
   isTestingAll: PropTypes.bool.isRequired,
+  isSyncingIndexers: PropTypes.bool.isRequired,
   deleteError: PropTypes.object,
   onSortSelect: PropTypes.func.isRequired,
   onFilterSelect: PropTypes.func.isRequired,
   onTestAllPress: PropTypes.func.isRequired,
+  onAppIndexerSyncPress: PropTypes.func.isRequired,
   onScroll: PropTypes.func.isRequired,
   onSaveSelected: PropTypes.func.isRequired
 };

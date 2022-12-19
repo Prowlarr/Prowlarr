@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Applications.Radarr
         public string Implementation { get; set; }
         public string ConfigContract { get; set; }
         public string InfoLink { get; set; }
+        public int? DownloadClientId { get; set; }
         public HashSet<int> Tags { get; set; }
         public List<RadarrField> Fields { get; set; }
 

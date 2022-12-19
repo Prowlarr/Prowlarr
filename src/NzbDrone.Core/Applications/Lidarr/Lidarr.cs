@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Applications.Whisparr;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 
@@ -127,7 +126,11 @@ namespace NzbDrone.Core.Applications.Lidarr
                 {
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
+                        // Retain user fields not-affiliated with Prowlarr
                         lidarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !lidarrIndexer.Fields.Any(s => s.Name == f.Name)));
+
+                        // Retain user settings not-affiliated with Prowlarr
+                        lidarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
 
                         // Update the indexer if it still has categories that match
                         _lidarrV1Proxy.UpdateIndexer(lidarrIndexer, Settings);

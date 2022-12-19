@@ -126,9 +126,14 @@ namespace NzbDrone.Core.Applications.Sonarr
                 {
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
                     {
-                        // Update the indexer if it still has categories that match
+                        // Retain user fields not-affiliated with Prowlarr
                         sonarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !sonarrIndexer.Fields.Any(s => s.Name == f.Name)));
 
+                        // Retain user settings not-affiliated with Prowlarr
+                        sonarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
+                        sonarrIndexer.SeasonSearchMaximumSingleEpisodeAge = remoteIndexer.SeasonSearchMaximumSingleEpisodeAge;
+
+                        // Update the indexer if it still has categories that match
                         _sonarrV3Proxy.UpdateIndexer(sonarrIndexer, Settings);
                     }
                     else

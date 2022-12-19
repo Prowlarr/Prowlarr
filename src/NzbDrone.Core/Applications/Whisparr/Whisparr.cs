@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Core.Applications.Sonarr;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 

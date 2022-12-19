@@ -17,6 +17,8 @@ namespace NzbDrone.Core.Applications.Sonarr
         public string Implementation { get; set; }
         public string ConfigContract { get; set; }
         public string InfoLink { get; set; }
+        public int? DownloadClientId { get; set; }
+        public int? SeasonSearchMaximumSingleEpisodeAge { get; set; }
         public HashSet<int> Tags { get; set; }
         public List<SonarrField> Fields { get; set; }
 

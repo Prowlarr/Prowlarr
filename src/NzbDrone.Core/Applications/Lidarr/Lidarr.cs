@@ -197,7 +197,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
                 if (lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime") != null)
                 {
-                    lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
+                    lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.PackSeedTime ?? ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
                 }
             }
 

@@ -12,6 +12,8 @@ namespace NzbDrone.Core.Indexers.Settings
             {
                 RuleFor(c => c.Username).NotEmpty();
                 RuleFor(c => c.Password).NotEmpty();
+                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
             }
         }
 

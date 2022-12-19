@@ -29,6 +29,8 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public TorznabSettingsValidator()
         {
+            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+            RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
             RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.ApiPath).ValidUrlBase("/api");
             RuleFor(c => c.ApiKey).NotEmpty().When(ShouldHaveApiKey);

@@ -1,5 +1,7 @@
 using FluentValidation;
 using NzbDrone.Core.Annotations;
+using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -7,6 +9,9 @@ namespace NzbDrone.Core.Indexers
     {
         public IndexerCommonSettingsValidator()
         {
+            RuleFor(c => c.QueryLimit).GreaterThan(0).When(c => c.QueryLimit.HasValue).WithMessage("Should be greater than zero");
+
+            RuleFor(c => c.GrabLimit).GreaterThan(0).When(c => c.GrabLimit.HasValue).WithMessage("Should be greater than zero");
         }
     }
 

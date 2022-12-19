@@ -11,6 +11,8 @@ namespace NzbDrone.Core.Indexers.Settings
             public CookieBaseSettingsValidator()
             {
                 RuleFor(c => c.Cookie).NotEmpty();
+                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
             }
         }
 

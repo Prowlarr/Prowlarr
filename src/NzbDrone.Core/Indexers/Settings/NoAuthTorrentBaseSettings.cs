@@ -6,6 +6,11 @@ namespace NzbDrone.Core.Indexers.Settings
 {
     public class NoAuthSettingsValidator : AbstractValidator<NoAuthTorrentBaseSettings>
     {
+        public NoAuthSettingsValidator()
+        {
+            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+            RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
+        }
     }
 
     public class NoAuthTorrentBaseSettings : ITorrentIndexerSettings

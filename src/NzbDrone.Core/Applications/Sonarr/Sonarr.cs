@@ -127,6 +127,8 @@ namespace NzbDrone.Core.Applications.Sonarr
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
                     {
                         // Update the indexer if it still has categories that match
+                        sonarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !sonarrIndexer.Fields.Any(s => s.Name == f.Name)));
+
                         _sonarrV3Proxy.UpdateIndexer(sonarrIndexer, Settings);
                     }
                     else
@@ -159,6 +161,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
 
             var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
             var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
@@ -175,8 +178,10 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = schema.Fields,
+                Fields = new List<SonarrField>()
             };
+
+            sonarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";

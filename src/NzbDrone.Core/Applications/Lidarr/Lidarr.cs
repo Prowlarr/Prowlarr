@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Applications.Whisparr;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 
@@ -126,6 +127,8 @@ namespace NzbDrone.Core.Applications.Lidarr
                 {
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
+                        lidarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !lidarrIndexer.Fields.Any(s => s.Name == f.Name)));
+
                         // Update the indexer if it still has categories that match
                         _lidarrV1Proxy.UpdateIndexer(lidarrIndexer, Settings);
                     }
@@ -159,6 +162,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _lidarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
 
             var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
             var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
@@ -175,8 +179,10 @@ namespace NzbDrone.Core.Applications.Lidarr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = schema.Fields,
+                Fields = new List<LidarrField>()
             };
+
+            lidarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";

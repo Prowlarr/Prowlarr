@@ -227,6 +227,42 @@ class HistoryRow extends Component {
                   }
 
                   {
+                    data.label ?
+                      <HistoryRowParameter
+                        title='Label'
+                        value={data.label}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.track ?
+                      <HistoryRowParameter
+                        title='Track'
+                        value={data.track}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.year ?
+                      <HistoryRowParameter
+                        title='Year'
+                        value={data.year}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.genre ?
+                      <HistoryRowParameter
+                        title='Genre'
+                        value={data.genre}
+                      /> :
+                      null
+                  }
+
+                  {
                     data.author ?
                       <HistoryRowParameter
                         title='Author'
@@ -240,6 +276,15 @@ class HistoryRow extends Component {
                       <HistoryRowParameter
                         title='Book'
                         value={data.bookTitle}
+                      /> :
+                      null
+                  }
+
+                  {
+                    data.publisher ?
+                      <HistoryRowParameter
+                        title='Publisher'
+                        value={data.publisher}
                       /> :
                       null
                   }

@@ -4,10 +4,10 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public class NewznabRequest
     {
-        private static readonly Regex TvRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex MovieRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex MusicRegex = new Regex(@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:track\:)(?<track>[^{]+)|(?:label\:)(?<label>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex BookRegex = new Regex(@"\{((?:author\:)(?<author>[^{]+)|(?:publisher\:)(?<publisher>[^{]+)|(?:title\:)(?<title>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TvRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:rid\:)(?<rid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MovieRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:traktid\:)(?<traktid>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MusicRegex = new Regex(@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:track\:)(?<track>[^{]+)|(?:label\:)(?<label>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex BookRegex = new Regex(@"\{((?:author\:)(?<author>[^{]+)|(?:publisher\:)(?<publisher>[^{]+)|(?:title\:)(?<title>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string t { get; set; }
         public string q { get; set; }
@@ -61,6 +61,11 @@ namespace NzbDrone.Core.IndexerSearch
                         doubanid = int.TryParse(match.Groups["doubanid"].Value, out var tmdb) ? tmdb : null;
                     }
 
+                    if (match.Groups["rid"].Success)
+                    {
+                        rid = int.TryParse(match.Groups["rid"].Value, out var rId) ? rId : null;
+                    }
+
                     if (match.Groups["season"].Success)
                     {
                         season = int.TryParse(match.Groups["season"].Value, out var seasonParsed) ? seasonParsed : null;
@@ -71,9 +76,24 @@ namespace NzbDrone.Core.IndexerSearch
                         imdbid = match.Groups["imdbid"].Value;
                     }
 
+                    if (match.Groups["traktid"].Success)
+                    {
+                        traktid = int.TryParse(match.Groups["traktid"].Value, out var trackId) ? trackId : null;
+                    }
+
                     if (match.Groups["episode"].Success)
                     {
                         ep = match.Groups["episode"].Value;
+                    }
+
+                    if (match.Groups["year"].Success)
+                    {
+                        year = int.TryParse(match.Groups["year"].Value, out var parsedYear) ? parsedYear : null;
+                    }
+
+                    if (match.Groups["genre"].Success)
+                    {
+                        genre = match.Groups["genre"].Value;
                     }
 
                     q = q.Replace(match.Value, "");
@@ -93,12 +113,27 @@ namespace NzbDrone.Core.IndexerSearch
 
                     if (match.Groups["doubanid"].Success)
                     {
-                        doubanid = int.TryParse(match.Groups["doubanid"].Value, out var tmdb) ? tmdb : null;
+                        doubanid = int.TryParse(match.Groups["doubanid"].Value, out var doubanId) ? doubanId : null;
                     }
 
                     if (match.Groups["imdbid"].Success)
                     {
                         imdbid = match.Groups["imdbid"].Value;
+                    }
+
+                    if (match.Groups["traktid"].Success)
+                    {
+                        traktid = int.TryParse(match.Groups["traktid"].Value, out var trackId) ? trackId : null;
+                    }
+
+                    if (match.Groups["year"].Success)
+                    {
+                        year = int.TryParse(match.Groups["year"].Value, out var parsedYear) ? parsedYear : null;
+                    }
+
+                    if (match.Groups["genre"].Success)
+                    {
+                        genre = match.Groups["genre"].Value;
                     }
 
                     q = q.Replace(match.Value, "").Trim();
@@ -131,6 +166,16 @@ namespace NzbDrone.Core.IndexerSearch
                         label = match.Groups["label"].Value;
                     }
 
+                    if (match.Groups["year"].Success)
+                    {
+                        year = int.TryParse(match.Groups["year"].Value, out var parsedYear) ? parsedYear : null;
+                    }
+
+                    if (match.Groups["genre"].Success)
+                    {
+                        genre = match.Groups["genre"].Value;
+                    }
+
                     q = q.Replace(match.Value, "").Trim();
                 }
             }
@@ -154,6 +199,16 @@ namespace NzbDrone.Core.IndexerSearch
                     if (match.Groups["publisher"].Success)
                     {
                         publisher = match.Groups["publisher"].Value;
+                    }
+
+                    if (match.Groups["year"].Success)
+                    {
+                        year = int.TryParse(match.Groups["year"].Value, out var parsedYear) ? parsedYear : null;
+                    }
+
+                    if (match.Groups["genre"].Success)
+                    {
+                        genre = match.Groups["genre"].Value;
                     }
 
                     q = q.Replace(match.Value, "").Trim();

@@ -108,9 +108,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1111, NewznabStandardCategory.XXXPack, "Паки полных фильмов / Full Length Movies Packs");
             caps.Categories.AddCategoryMapping(508, NewznabStandardCategory.XXX, "Классические фильмы / Classic");
             caps.Categories.AddCategoryMapping(555, NewznabStandardCategory.XXX, "Фильмы с сюжетом / Feature & Vignettes");
-            caps.Categories.AddCategoryMapping(1673, NewznabStandardCategory.XXX, "Гонзо-фильмы 2011-2021 / Gonzo 2011-2021");
+            caps.Categories.AddCategoryMapping(1673, NewznabStandardCategory.XXX, "Гонзо-фильмы 2011-2023 / Gonzo 2011-2023");
             caps.Categories.AddCategoryMapping(1112, NewznabStandardCategory.XXX, "Фильмы без сюжета 1991-2010 / All Sex & Amateur 1991-2010");
-            caps.Categories.AddCategoryMapping(1718, NewznabStandardCategory.XXX, "Фильмы без сюжета 2011-2021 / All Sex & Amateur 2011-2021");
+            caps.Categories.AddCategoryMapping(1718, NewznabStandardCategory.XXX, "Фильмы без сюжета 2011-2023 / All Sex & Amateur 2011-2023");
             caps.Categories.AddCategoryMapping(553, NewznabStandardCategory.XXX, "Лесбо-фильмы / All Girl & Solo");
             caps.Categories.AddCategoryMapping(1143, NewznabStandardCategory.XXX, "Этнические фильмы / Ethnic-Themed");
             caps.Categories.AddCategoryMapping(1646, NewznabStandardCategory.XXX, "Видео для телефонов и КПК / Pocket РС & Phone Video");
@@ -125,8 +125,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1675, NewznabStandardCategory.XXXPack, "Паки русских порнороликов / Russian Clips Packs");
             caps.Categories.AddCategoryMapping(36, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 1991-2015 / Russian SiteRip's 1991-2015");
             caps.Categories.AddCategoryMapping(1830, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 1991-2015 (HD Video) / Russian SiteRip's 1991-2015 (HD Video)");
-            caps.Categories.AddCategoryMapping(1803, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 2016-2021 / Russian SiteRip's 2016-2021");
-            caps.Categories.AddCategoryMapping(1831, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 2016-2021 (HD Video) / Russian SiteRip's 2016-2021 (HD Video)");
+            caps.Categories.AddCategoryMapping(1803, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 2016-2023 / Russian SiteRip's 2016-2023");
+            caps.Categories.AddCategoryMapping(1831, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 2016-2023 (HD Video) / Russian SiteRip's 2016-2023 (HD Video)");
             caps.Categories.AddCategoryMapping(1741, NewznabStandardCategory.XXX, "Русские Порноролики Разное / Russian Clips (various)");
             caps.Categories.AddCategoryMapping(1676, NewznabStandardCategory.XXX, "Русское любительское видео / Russian Amateur Video");
 
@@ -145,6 +145,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1842, NewznabStandardCategory.XXX, "Сайтрипы 2020 (HD Video) / SiteRip's 2020 (HD Video)");
             caps.Categories.AddCategoryMapping(1846, NewznabStandardCategory.XXX, "Сайтрипы 2021 (HD Video) / SiteRip's 2021 (HD Video)");
             caps.Categories.AddCategoryMapping(1857, NewznabStandardCategory.XXX, "Сайтрипы 2022 (HD Video) / SiteRip's 2022 (HD Video)");
+            caps.Categories.AddCategoryMapping(1861, NewznabStandardCategory.XXX, "Сайтрипы 2023 (HD Video) / SiteRip's 2023 (HD Video)");
 
             caps.Categories.AddCategoryMapping(1451, NewznabStandardCategory.XXX, "Сайтрипы 1991-2010 / SiteRip's 1991-2010");
             caps.Categories.AddCategoryMapping(1788, NewznabStandardCategory.XXX, "Сайтрипы 2011-2012 / SiteRip's 2011-2012");
@@ -158,6 +159,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1843, NewznabStandardCategory.XXX, "Сайтрипы 2020 / SiteRip's 2020");
             caps.Categories.AddCategoryMapping(1847, NewznabStandardCategory.XXX, "Сайтрипы 2021 / SiteRip's 2021");
             caps.Categories.AddCategoryMapping(1856, NewznabStandardCategory.XXX, "Сайтрипы 2022 / SiteRip's 2022");
+            caps.Categories.AddCategoryMapping(1862, NewznabStandardCategory.XXX, "Сайтрипы 2023 / SiteRip's 2023");
 
             caps.Categories.AddCategoryMapping(1707, NewznabStandardCategory.XXX, "Сцены из фильмов / Movie Scenes");
             caps.Categories.AddCategoryMapping(284, NewznabStandardCategory.XXX, "Порноролики Разное / Clips (various)");
@@ -166,7 +168,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1801, NewznabStandardCategory.XXXPack, "Паки японских фильмов и сайтрипов / Full Length Japanese Movies Packs & SiteRip's Packs");
             caps.Categories.AddCategoryMapping(1719, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы (DVD и HD Video) / Japanese Movies & SiteRip's (DVD & HD Video)");
             caps.Categories.AddCategoryMapping(997, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы 1991-2014 / Japanese Movies & SiteRip's 1991-2014");
-            caps.Categories.AddCategoryMapping(1818, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы 2015-2019 / Japanese Movies & SiteRip's 2015-2019");
+            caps.Categories.AddCategoryMapping(1818, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы 2015-2023 / Japanese Movies & SiteRip's 2015-2023");
 
             caps.Categories.AddCategoryMapping(1671, NewznabStandardCategory.XXX, "Эротические студии (видео) / Erotic Video Library");
             caps.Categories.AddCategoryMapping(1726, NewznabStandardCategory.XXX, "Met-Art & MetModels");
@@ -205,6 +207,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1734, NewznabStandardCategory.XXX, "Фистинг и дилдо / Fisting & Dildo");
             caps.Categories.AddCategoryMapping(1791, NewznabStandardCategory.XXX, "Беременные / Pregnant");
             caps.Categories.AddCategoryMapping(509, NewznabStandardCategory.XXX, "Буккаке / Bukkake");
+            caps.Categories.AddCategoryMapping(1859, NewznabStandardCategory.XXX, "Гэнг-бэнг / GangBang");
             caps.Categories.AddCategoryMapping(1685, NewznabStandardCategory.XXX, "Мочеиспускание / Peeing");
             caps.Categories.AddCategoryMapping(1762, NewznabStandardCategory.XXX, "Фетиш / Fetish");
 

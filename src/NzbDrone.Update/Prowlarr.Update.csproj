@@ -4,9 +4,9 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DryIoc.dll" Version="5.2.2" />
+    <PackageReference Include="DryIoc.dll" Version="5.3.1" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.1.0" />
-    <PackageReference Include="NLog" Version="5.0.1" />
+    <PackageReference Include="NLog" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Prowlarr.Common.csproj" />

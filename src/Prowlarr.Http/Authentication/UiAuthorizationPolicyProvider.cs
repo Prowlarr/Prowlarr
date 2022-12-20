@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using NzbDrone.Core.Configuration;
 
-namespace NzbDrone.Http.Authentication
+namespace Prowlarr.Http.Authentication
 {
     public class UiAuthorizationPolicyProvider : IAuthorizationPolicyProvider
     {
@@ -29,7 +29,8 @@ namespace NzbDrone.Http.Authentication
             if (policyName.Equals(POLICY_NAME, StringComparison.OrdinalIgnoreCase))
             {
                 var policy = new AuthorizationPolicyBuilder(_config.AuthenticationMethod.ToString())
-                    .RequireAuthenticatedUser();
+                    .AddRequirements(new BypassableDenyAnonymousAuthorizationRequirement());
+
                 return Task.FromResult(policy.Build());
             }
 

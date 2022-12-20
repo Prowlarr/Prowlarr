@@ -22,7 +22,6 @@ using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Host.AccessControl;
-using NzbDrone.Http.Authentication;
 using NzbDrone.SignalR;
 using Prowlarr.Api.V1.System;
 using Prowlarr.Http;
@@ -172,6 +171,8 @@ namespace NzbDrone.Host
                 .PersistKeysToFileSystem(new DirectoryInfo(Configuration["dataProtectionFolder"]));
 
             services.AddSingleton<IAuthorizationPolicyProvider, UiAuthorizationPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, UiAuthorizationHandler>();
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("SignalR", policy =>

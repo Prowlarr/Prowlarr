@@ -119,7 +119,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             var release = new GazelleInfo()
                             {
                                 Guid = string.Format("SecretCinema-{0}", id),
-                                Title = WebUtility.HtmlDecode(title),
+                                Title = title,
                                 Container = torrent.Encoding,
                                 Files = torrent.FileCount,
                                 Grabs = torrent.Snatches,

@@ -2,24 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using FluentValidation;
-using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Gazelle;
-using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -113,7 +105,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                             // in SC movies, artist=director and GroupName=title
                             var artist = WebUtility.HtmlDecode(result.Artist);
-                            var album = WebUtility.HtmlDecode(result.GroupName);
                             var title = WebUtility.HtmlDecode(result.GroupName);
 
                             var release = new GazelleInfo()
@@ -131,6 +122,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                                 Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                                 PublishDate = torrent.Time.ToUniversalTime(),
                                 Scene = torrent.Scene,
+                                DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
+                                UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
                             };
 
                             var category = torrent.Category;
@@ -147,7 +140,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             {
                                 // Remove director from title
                                 // SC API returns no more useful information than this
-                                release.Title = $"{result.GroupName} ({result.GroupYear}) {torrent.Media}";
+                                release.Title = $"{title} ({result.GroupYear}) {torrent.Media}";
 
                                 // Replace media formats with standards
                                 release.Title = Regex.Replace(release.Title, "BDMV", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
@@ -156,7 +149,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             else
                             {
                                 // SC API currently doesn't return anything but title.
-                                release.Title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                                release.Title = $"{artist} - {title} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
                             }
 
                             if (torrent.HasCue)
@@ -184,6 +177,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Files = result.FileCount,
                             Grabs = result.Snatches,
                             PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
+                            DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
+                            UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
                         };
 
                         var category = result.Category;

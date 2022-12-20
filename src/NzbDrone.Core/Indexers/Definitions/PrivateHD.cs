@@ -40,10 +40,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 MovieSearchParams = new List<MovieSearchParam>
                        {
                            MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId, MovieSearchParam.Genre
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
                        }
             };
 
@@ -55,7 +51,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVUHD);
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVHD);
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD);
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio);
 
             return caps;
         }

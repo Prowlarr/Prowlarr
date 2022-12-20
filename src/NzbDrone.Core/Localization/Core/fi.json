@@ -462,5 +462,9 @@
     "Queued": "Jonossa",
     "Started": "Alkoi",
     "ApplicationLongTermStatusCheckAllClientMessage": "Sovellukset eivät ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi.",
-    "ApplicationLongTermStatusCheckSingleClientMessage": "Sovellukset eivät ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi: {0}"
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Sovellukset eivät ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi: {0}",
+    "AreYouSureYouWantToDeleteCategory": "Haluatko varmasti poistaa kartoitetun kategorian?",
+    "DeleteClientCategory": "Poista lataustyökalukategoria",
+    "DownloadClientCategory": "Lataustyökalukategoria",
+    "MappedCategories": "Kartoitetut kategoriat"
 }

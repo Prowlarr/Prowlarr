@@ -462,5 +462,9 @@
     "Started": "Elkezdődött",
     "NextExecution": "Következő végrehajtás",
     "ApplicationLongTermStatusCheckSingleClientMessage": "Az alkamazások elérhetetlenek több mint 6 órája az alábbi hiba miatt: {0}",
-    "ApplicationLongTermStatusCheckAllClientMessage": "Az összes alkalmazás elérhetetlen több mint 6 órája meghibásodás miatt"
+    "ApplicationLongTermStatusCheckAllClientMessage": "Az összes alkalmazás elérhetetlen több mint 6 órája meghibásodás miatt",
+    "AreYouSureYouWantToDeleteCategory": "Biztosan törölni szeretnéd a leképezett kategóriát?",
+    "DeleteClientCategory": "Letöltési kliens kategória törlése",
+    "MappedCategories": "Térképezett kategóriák",
+    "DownloadClientCategory": "Letöltési kliens kategória"
 }

@@ -12,6 +12,7 @@ import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
 import { authenticationMethodOptions, authenticationRequiredOptions, authenticationRequiredWarning } from 'Settings/General/SecuritySettings';
+import translate from 'Utilities/String/translate';
 import styles from './AuthenticationRequiredModalContent.css';
 
 function onModalClose() {
@@ -54,7 +55,7 @@ function AuthenticationRequiredModalContent(props) {
       onModalClose={onModalClose}
     >
       <ModalHeader>
-        Authentication Required
+        {translate('AuthenticationRequired')}
       </ModalHeader>
 
       <ModalBody>
@@ -69,13 +70,13 @@ function AuthenticationRequiredModalContent(props) {
           isPopulated && !error ?
             <div>
               <FormGroup>
-                <FormLabel>Authentication</FormLabel>
+                <FormLabel>{translate('Authentication')}</FormLabel>
 
                 <FormInputGroup
                   type={inputTypes.SELECT}
                   name="authenticationMethod"
                   values={authenticationMethodOptions}
-                  helpText="Require Username and Password to access Sonarr"
+                  helpText={translate('AuthenticationMethodHelpText')}
                   onChange={onInputChange}
                   {...authenticationMethod}
                 />
@@ -84,13 +85,13 @@ function AuthenticationRequiredModalContent(props) {
               {
                 authenticationEnabled ?
                   <FormGroup>
-                    <FormLabel>Authentication Required</FormLabel>
+                    <FormLabel>{translate('AuthenticationRequired')}</FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="authenticationRequired"
                       values={authenticationRequiredOptions}
-                      helpText="Change which requests authentication is required for. Do not change unless you understand the risks."
+                      helpText={translate('AuthenticationRequiredHelpText')}
                       onChange={onInputChange}
                       {...authenticationRequired}
                     />
@@ -101,7 +102,7 @@ function AuthenticationRequiredModalContent(props) {
               {
                 authenticationEnabled ?
                   <FormGroup>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>{translate('Username')}</FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.TEXT}
@@ -116,7 +117,7 @@ function AuthenticationRequiredModalContent(props) {
               {
                 authenticationEnabled ?
                   <FormGroup>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{translate('Password')}</FormLabel>
 
                     <FormInputGroup
                       type={inputTypes.PASSWORD}
@@ -143,7 +144,7 @@ function AuthenticationRequiredModalContent(props) {
           isDisabled={!authenticationEnabled}
           onPress={onSavePress}
         >
-          Save
+          {translate('Save')}
         </SpinnerButton>
       </ModalFooter>
     </ModalContent>

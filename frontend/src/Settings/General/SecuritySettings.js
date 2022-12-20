@@ -11,7 +11,7 @@ import ConfirmModal from 'Components/Modal/ConfirmModal';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 
-export const authenticationRequiredWarning = 'To prevent remote access without authentication, Sonarr now requires authentication to be enabled. You can optionally disable authentication from local addresses.';
+export const authenticationRequiredWarning = translate('AuthenticationRequiredWarning');
 
 export const authenticationMethodOptions = [
   { key: 'none', value: 'None', isDisabled: true },
@@ -104,13 +104,13 @@ class SecuritySettings extends Component {
         {
           authenticationEnabled ?
             <FormGroup>
-              <FormLabel>Authentication Required</FormLabel>
+              <FormLabel>{translate('AuthenticationRequired')}</FormLabel>
 
               <FormInputGroup
                 type={inputTypes.SELECT}
                 name="authenticationRequired"
                 values={authenticationRequiredOptions}
-                helpText="Change which requests authentication is required for. Do not change unless you understand the risks."
+                helpText={translate('AuthenticationRequiredHelpText')}
                 onChange={onInputChange}
                 {...authenticationRequired}
               />

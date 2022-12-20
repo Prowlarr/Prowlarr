@@ -25,7 +25,6 @@ namespace NzbDrone.Core.Test.UpdateTests
         }
 
         [Test]
-        [Ignore("TODO No Updates On Server")]
         public void finds_update_when_version_lower()
         {
             UseRealHttp();

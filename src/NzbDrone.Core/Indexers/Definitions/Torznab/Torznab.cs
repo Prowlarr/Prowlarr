@@ -88,8 +88,9 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             get
             {
-                yield return GetDefinition("AnimeTosho", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("Generic Torznab", GetSettings(""));
+                yield return GetDefinition("AnimeTosho", "", GetSettings("https://feed.animetosho.org"));
+                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", GetSettings("https://www.morethantv.me"));
+                yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", GetSettings(""));
             }
         }
 
@@ -99,12 +100,13 @@ namespace NzbDrone.Core.Indexers.Torznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, TorznabSettings settings)
+        private IndexerDefinition GetDefinition(string name, string description, TorznabSettings settings)
         {
             return new IndexerDefinition
             {
                 Enable = true,
                 Name = name,
+                Description = description,
                 Implementation = GetType().Name,
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,

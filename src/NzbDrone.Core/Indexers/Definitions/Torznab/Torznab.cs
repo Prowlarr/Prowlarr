@@ -89,7 +89,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             get
             {
                 yield return GetDefinition("AnimeTosho", "", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", GetSettings("https://www.morethantv.me"));
+                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"));
                 yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", GetSettings(""));
             }
         }

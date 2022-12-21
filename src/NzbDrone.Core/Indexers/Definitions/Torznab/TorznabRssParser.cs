@@ -165,8 +165,14 @@ namespace NzbDrone.Core.Indexers.Torznab
         protected override ICollection<IndexerCategory> GetCategory(XElement item)
         {
             var capabilities = _capabilitiesProvider.GetCapabilities(_settings, _definition);
-            var cats = TryGetMultipleNewznabAttributes(item, "category");
+            var cats = TryGetMultipleTorznabAttributes(item, "category");
             var results = new List<IndexerCategory>();
+
+            // Try to find <category> elements for some indexers that suck at following the rules.
+            if (results.Count == 0)
+            {
+                cats = item.Elements("category").Select(e => e.Value).ToList();
+            }
 
             foreach (var cat in cats)
             {
@@ -265,7 +271,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             return defaultValue;
         }
 
-        protected List<string> TryGetMultipleNewznabAttributes(XElement item, string key)
+        protected List<string> TryGetMultipleTorznabAttributes(XElement item, string key)
         {
             var attrElements = item.Elements(ns + "attr").Where(e => e.Attribute("name").Value.Equals(key, StringComparison.OrdinalIgnoreCase));
             var results = new List<string>();

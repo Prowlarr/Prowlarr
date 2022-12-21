@@ -127,6 +127,12 @@ namespace NzbDrone.Core.Indexers.Newznab
             var cats = TryGetMultipleNewznabAttributes(item, "category");
             var results = new List<IndexerCategory>();
 
+            // Try to find <category> elements for some indexers that suck at following the rules.
+            if (results.Count == 0)
+            {
+                cats = item.Elements("category").Select(e => e.Value).ToList();
+            }
+
             foreach (var cat in cats)
             {
                 var indexerCat = capabilities.Categories.MapTrackerCatToNewznab(cat);

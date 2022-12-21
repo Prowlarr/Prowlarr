@@ -34,6 +34,10 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             };
 
             _caps = new IndexerCapabilities();
+
+            _caps.Categories.AddCategoryMapping(2000, NewznabStandardCategory.Movies, "Movies");
+            _caps.Categories.AddCategoryMapping(2040, NewznabStandardCategory.MoviesHD, "Movies/HD");
+
             Mocker.GetMock<INewznabCapabilitiesProvider>()
                 .Setup(v => v.GetCapabilities(It.IsAny<NewznabSettings>(), It.IsAny<IndexerDefinition>()))
                 .Returns(_caps);
@@ -127,6 +131,38 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             releaseInfo.InfoHash.Should().Be("2d69a861bef5a9f2cdf791b7328e37b7953205e1");
             releaseInfo.Seeders.Should().BeNull();
             releaseInfo.Peers.Should().BeNull();
+        }
+
+        [Test]
+        public async Task should_parse_recent_feed_from_torznab_morethantv()
+        {
+            var recentFeed = ReadAllText(@"Files/Indexers/Torznab/torznab_morethantv.xml");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), recentFeed)));
+
+            var releases = (await Subject.Fetch(new MovieSearchCriteria())).Releases;
+
+            releases.Should().HaveCount(2);
+
+            releases.First().Should().BeOfType<TorrentInfo>();
+            var releaseInfo = releases.First() as TorrentInfo;
+
+            releaseInfo.Title.Should().Be("Out of the Past 1947 720p BluRay FLAC2.0 x264-CtrlHD.mkv");
+            releaseInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
+            releaseInfo.DownloadUrl.Should().Be("https://www.morethantv.me/torrents.php?action=download&id=(removed)&authkey=(removed)&torrent_pass=(removed)");
+            releaseInfo.InfoUrl.Should().Be("https://www.morethantv.me/torrents.php?id=(removed)&torrentid=836164");
+            releaseInfo.CommentUrl.Should().Be("https://www.morethantv.me/torrents.php?id=(removed)&torrentid=836164");
+            releaseInfo.Indexer.Should().Be(Subject.Definition.Name);
+            releaseInfo.PublishDate.Should().Be(DateTime.Parse("Tue, 20 Dec 2022 21:32:17 +0000").ToUniversalTime());
+            releaseInfo.Size.Should().Be(5412993028);
+            releaseInfo.TvdbId.Should().Be(0);
+            releaseInfo.TvRageId.Should().Be(0);
+            releaseInfo.InfoHash.Should().Be("(removed)");
+            releaseInfo.Seeders.Should().Be(3);
+            releaseInfo.Peers.Should().Be(3);
+            releaseInfo.Categories.Count().Should().Be(4);
         }
 
         [Test]

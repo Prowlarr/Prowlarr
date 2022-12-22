@@ -18,20 +18,20 @@ function createMapStateToProps() {
   return createSelector(
     createReleaseSelector(),
     (
-      movie
+      release
     ) => {
 
-      // If a movie is deleted this selector may fire before the parent
-      // selecors, which will result in an undefined movie, if that happens
+      // If a release is deleted this selector may fire before the parent
+      // selecors, which will result in an undefined release, if that happens
       // we want to return early here and again in the render function to avoid
-      // trying to show a movie that has no information available.
+      // trying to show a release that has no information available.
 
-      if (!movie) {
+      if (!release) {
         return {};
       }
 
       return {
-        ...movie
+        ...release
       };
     }
   );

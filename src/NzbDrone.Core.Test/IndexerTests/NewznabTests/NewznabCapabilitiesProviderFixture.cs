@@ -85,6 +85,19 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         }
 
         [Test]
+        public void should_find_sub_categories_as_main_categories()
+        {
+            GivenCapsResponse(ReadAllText("Files/Indexers/Torznab/torznab_animetosho_caps.xml"));
+
+            var caps = Subject.GetCapabilities(_settings, _definition);
+
+            var bookCats = caps.Categories.MapTrackerCatToNewznab("5070");
+
+            bookCats.Count.Should().Be(2);
+            bookCats.First().Id.Should().Be(5070);
+        }
+
+        [Test]
         public void should_map_by_name_when_available()
         {
             GivenCapsResponse(_caps);

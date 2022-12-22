@@ -223,9 +223,16 @@ namespace NzbDrone.Core.Indexers.Newznab
                 foreach (var xmlCategory in xmlCategories.Elements("category"))
                 {
                     var parentName = xmlCategory.Attribute("name").Value;
+                    var parentNameLower = parentName?.ToLowerInvariant();
                     var parentId = int.Parse(xmlCategory.Attribute("id").Value);
 
-                    var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentName.ToLower().Contains(x.Name.ToLower()));
+                    var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentNameLower.Contains(x.Name.ToLower()));
+
+                    if (mappedCat == null)
+                    {
+                        // Try to find name and Id in AllCats for sub cats that are mapped as parents
+                        mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == parentId && x.Name.ToLower().Contains(parentNameLower));
+                    }
 
                     if (mappedCat == null)
                     {

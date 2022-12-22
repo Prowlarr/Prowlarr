@@ -169,7 +169,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             var results = new List<IndexerCategory>();
 
             // Try to find <category> elements for some indexers that suck at following the rules.
-            if (results.Count == 0)
+            if (cats.Count == 0)
             {
                 cats = item.Elements("category").Select(e => e.Value).ToList();
             }

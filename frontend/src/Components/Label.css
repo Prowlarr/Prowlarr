@@ -108,5 +108,5 @@
 /** Outline **/
 
 .outline {
-  background-color: var(--white);
+  background-color: var(--cardBackgroundColor);
 }

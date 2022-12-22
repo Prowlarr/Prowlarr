@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -49,7 +50,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                                    {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
                                    }
             };
 
@@ -107,16 +108,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedTvSearchString.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + searchCriteria.SanitizedTvSearchString + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, @"[ -._]", "%").Trim() + "%";
             }
 
-            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.ImdbId, out var intImdb))
+            if (searchCriteria.TvMazeId.HasValue)
+            {
+                queryParams.Tvmaze = searchCriteria.TvMazeId.Value;
+
+                if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
+                {
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]", "%").Trim() + "%";
+                }
+            }
+            else if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.ImdbId, out var intImdb))
             {
                 queryParams.Imdb = intImdb;
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + searchCriteria.EpisodeSearchString + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]", "%").Trim() + "%";
                 }
             }
 
@@ -143,7 +153,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedSearchTerm.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + searchCriteria.SanitizedSearchTerm + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, @"[ -._]", "%").Trim() + "%";
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));

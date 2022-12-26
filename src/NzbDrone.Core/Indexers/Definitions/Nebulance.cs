@@ -49,9 +49,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
-                                   }
+                    {
+                        TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
+                    }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Seeders = ParseUtil.CoerceInt(row.Seed),
                     Peers = ParseUtil.CoerceInt(row.Seed) + ParseUtil.CoerceInt(row.Leech),
                     MinimumRatio = 0, // ratioless
-                    MinimumSeedTime = 86400, // 24 hours
+                    MinimumSeedTime = row.Category.ToLower() == "season" ? 432000 : 86400, // 120 hours for seasons and 24 hours for episodes
                     DownloadVolumeFactor = 0, // ratioless tracker
                     UploadVolumeFactor = 1
                 };
@@ -272,6 +272,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonProperty(PropertyName = "rls_name")]
         public string ReleaseTitle { get; set; }
         public string Title { get; set; }
+        [JsonProperty(PropertyName = "cat")]
+        public string Category { get; set; }
         public string Size { get; set; }
         public string Seed { get; set; }
         public string Leech { get; set; }

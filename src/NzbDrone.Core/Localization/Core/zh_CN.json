@@ -159,7 +159,7 @@
     "BranchUpdateMechanism": "外部更新机制使用的分支",
     "BranchUpdate": "更新Prowlarr的分支",
     "Branch": "分支",
-    "BindAddressHelpText": "有效的 IP4 地址或以'*'代表所有地址",
+    "BindAddressHelpText": "有效的 IP 地址，localhost，或以'*'代表所有地址",
     "BindAddress": "绑定地址",
     "BeforeUpdate": "更新前",
     "Backups": "备份",
@@ -462,5 +462,6 @@
     "Started": "已开始",
     "LastDuration": "上一次用时",
     "ApplicationLongTermStatusCheckAllClientMessage": "由于故障超过6小时，所有程序都不可用",
-    "ApplicationLongTermStatusCheckSingleClientMessage": "由于故障超过6小时而无法使用的程序：{0}"
+    "ApplicationLongTermStatusCheckSingleClientMessage": "由于故障超过6小时而无法使用的程序：{0}",
+    "AuthenticationRequired": "需要认证"
 }

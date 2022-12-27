@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Indexers.FileList
             {
                 TvSearchParams = new List<TvSearchParam>
                        {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                           TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep
                        },
                 MovieSearchParams = new List<MovieSearchParam>
                        {
@@ -55,6 +55,7 @@ namespace NzbDrone.Core.Indexers.FileList
                        },
                 Flags = new List<IndexerFlag>
                 {
+                    IndexerFlag.Internal,
                     IndexerFlag.FreeLeech
                 }
             };

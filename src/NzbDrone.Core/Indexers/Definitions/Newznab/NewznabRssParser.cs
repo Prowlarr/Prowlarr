@@ -100,12 +100,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             releaseInfo = base.ProcessItem(item, releaseInfo);
-            releaseInfo.ImdbId = GetIntAttribute(item, "imdb");
-            releaseInfo.TmdbId = GetIntAttribute(item, "tmdbid");
-            releaseInfo.TvdbId = GetIntAttribute(item, "tvdbid");
-            releaseInfo.TvRageId = GetIntAttribute(item, "rageid");
-            releaseInfo.Grabs = GetIntAttribute(item, "grabs");
-            releaseInfo.Files = GetIntAttribute(item, "files");
+            releaseInfo.ImdbId = GetIntAttribute(item, new[] { "imdb", "imdbid" });
+            releaseInfo.TmdbId = GetIntAttribute(item, new[] { "tmdbid", "tmdb" });
+            releaseInfo.TvdbId = GetIntAttribute(item, new[] { "tvdbid", "tvdb" });
+            releaseInfo.TvMazeId = GetIntAttribute(item, new[] { "tvmazeid", "tvmaze" });
+            releaseInfo.TraktId = GetIntAttribute(item, new[] { "traktid", "trakt" });
+            releaseInfo.TvRageId = GetIntAttribute(item, new[] { "rageid" });
+            releaseInfo.Grabs = GetIntAttribute(item, new[] { "grabs" });
+            releaseInfo.Files = GetIntAttribute(item, new[] { "files" });
             releaseInfo.PosterUrl = GetPosterUrl(item);
 
             return releaseInfo;
@@ -206,14 +208,17 @@ namespace NzbDrone.Core.Indexers.Newznab
             return url;
         }
 
-        protected virtual int GetIntAttribute(XElement item, string attribute)
+        protected virtual int GetIntAttribute(XElement item, string[] attributes)
         {
-            var idString = TryGetNewznabAttribute(item, attribute);
-            int idInt;
-
-            if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+            foreach (var attr in attributes)
             {
-                return idInt;
+                var idString = TryGetNewznabAttribute(item, attr);
+                int idInt;
+
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                {
+                    return idInt;
+                }
             }
 
             return 0;

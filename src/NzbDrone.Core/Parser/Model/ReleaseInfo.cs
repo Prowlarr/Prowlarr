@@ -34,6 +34,7 @@ namespace NzbDrone.Core.Parser.Model
         public int ImdbId { get; set; }
         public int TmdbId { get; set; }
         public int TraktId { get; set; }
+        public int TvMazeId { get; set; }
         public int DoubanId { get; set; }
         public int Year { get; set; }
         public string Author { get; set; }

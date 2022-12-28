@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
@@ -126,8 +128,29 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.Artist, searchCriteria.Album)));
+            if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("artistname", searchCriteria.Artist);
+            }
+
+            if (searchCriteria.Album.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("groupname", searchCriteria.Album);
+            }
+
+            if (searchCriteria.Label.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("recordlabel", searchCriteria.Label);
+            }
+
+            if (searchCriteria.Year.HasValue)
+            {
+                parameters.Add("year", searchCriteria.Year.ToString());
+            }
+
+            pageableRequests.Add(GetRequest(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -135,8 +158,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetRequest(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -154,16 +178,34 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetRequest(searchCriteria, parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        private IEnumerable<IndexerRequest> GetRequest(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
+            var term = searchCriteria.SanitizedSearchTerm.Trim();
+
+            parameters.Add("action", "browse");
+            parameters.Add("order_by", "time");
+            parameters.Add("order_way", "desc");
+            parameters.Add("searchstr", term);
+
+            var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+
+            if (queryCats.Count > 0)
+            {
+                foreach (var cat in queryCats)
+                {
+                    parameters.Add($"filter_cat[{cat}]", "1");
+                }
+            }
+
             var req = RequestBuilder()
-                .Resource($"ajax.php?action=browse&searchstr={searchParameters}")
+                .Resource($"ajax.php?{parameters.GetQueryString()}")
                 .Build();
 
             yield return new IndexerRequest(req);

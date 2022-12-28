@@ -74,8 +74,18 @@ namespace NzbDrone.Core.Indexers.Torznab
                 torrentInfo.DownloadVolumeFactor = downloadFactor;
                 torrentInfo.UploadVolumeFactor = uploadFactor;
 
+                torrentInfo.ImdbId = GetIntAttribute(item, new[] { "imdb", "imdbid" });
+                torrentInfo.TmdbId = GetIntAttribute(item, new[] { "tmdbid", "tmdb" });
+                torrentInfo.TvdbId = GetIntAttribute(item, new[] { "tvdbid", "tvdb" });
+                torrentInfo.TvMazeId = GetIntAttribute(item, new[] { "tvmazeid", "tvmaze" });
+                torrentInfo.TraktId = GetIntAttribute(item, new[] { "traktid", "trakt" });
+                torrentInfo.TvRageId = GetIntAttribute(item, new[] { "rageid" });
+                torrentInfo.Grabs = GetIntAttribute(item, new[] { "grabs" });
+                torrentInfo.Files = GetIntAttribute(item, new[] { "files" });
+
                 torrentInfo.IndexerFlags = GetFlags(item);
                 torrentInfo.PosterUrl = GetPosterUrl(item);
+                torrentInfo.InfoHash = GetInfoHash(item);
             }
 
             return torrentInfo;
@@ -286,6 +296,22 @@ namespace NzbDrone.Core.Indexers.Torznab
             }
 
             return results;
+        }
+
+        protected virtual int GetIntAttribute(XElement item, string[] attributes)
+        {
+            foreach (var attr in attributes)
+            {
+                var idString = TryGetTorznabAttribute(item, attr);
+                int idInt;
+
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                {
+                    return idInt;
+                }
+            }
+
+            return 0;
         }
     }
 }

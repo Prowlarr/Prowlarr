@@ -29,11 +29,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public abstract class SpeedAppBase : TorrentIndexerBase<SpeedAppSettings>
     {
         private string LoginUrl => Settings.BaseUrl + "api/login";
-
         public override Encoding Encoding => Encoding.UTF8;
-
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         private IIndexerRepository _indexerRepository;
@@ -304,7 +301,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
-                DownloadUrl = $"{_settings.BaseUrl}/api/torrent/{torrent.Id}/download",
+                DownloadUrl = $"{_settings.BaseUrl}api/torrent/{torrent.Id}/download",
                 PosterUrl = torrent.Poster,
                 InfoUrl = torrent.Url,
                 Grabs = torrent.TimesCompleted,

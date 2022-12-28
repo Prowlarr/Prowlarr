@@ -8,14 +8,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SpeedApp : SpeedAppBase
     {
         public override string Name => "SpeedApp.io";
-
         public override string[] IndexerUrls => new string[] { "https://speedapp.io/" };
         public override string[] LegacyUrls => new string[] { "https://speedapp.io" };
-
         public override string Description => "SpeedApp is a ROMANIAN Private Torrent Tracker for MOVIES / TV / GENERAL";
-
         public override string Language => "ro-RO";
-
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public SpeedApp(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, IIndexerRepository indexerRepository)
@@ -29,14 +25,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                 {
-                    TvSearchParam.Q,
-                    TvSearchParam.Season,
-                    TvSearchParam.Ep,
+                    TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep,
                 },
                 MovieSearchParams = new List<MovieSearchParam>
                 {
-                    MovieSearchParam.Q,
-                    MovieSearchParam.ImdbId,
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId,
                 },
                 MusicSearchParams = new List<MusicSearchParam>
                 {

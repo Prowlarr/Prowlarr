@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Private Torrent Tracker for Classic Movies / TV / General Releases";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.1);
+        protected override int MinimumSeedTime => 432000; // 120 hours
 
         public RetroFlix(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, IIndexerRepository indexerRepository)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger, indexerRepository)

@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                                    {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId
                                    },
                 MovieSearchParams = new List<MovieSearchParam>
                                    {
@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int? tvdbId =  null)
         {
             var searchString = term;
             var queryCollection = new NameValueCollection { { "apikey", Settings.ApiKey } };
@@ -141,7 +141,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 queryCollection.Add("imdbId", imdbId);
             }
-            else if (!string.IsNullOrWhiteSpace(searchString))
+            else if (tvdbId != null && (Settings.PreferTvDbId || string.IsNullOrWhiteSpace(searchString)))
+            {
+                queryCollection.Add("tvdbId", string.Format("{0}", tvdbId));
+            }
+            else if (!string.IsNullOrWhiteSpace(searchString) && (tvdbId == null || !Settings.PreferTvDbId))
             {
                 // Suffix the first occurence of `s01` surrounded by whitespace with *
                 // That way we also search for single episodes in a whole season search
@@ -184,7 +188,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.ImdbId, searchCriteria.TvdbId));
 
             return pageableRequests;
         }
@@ -349,6 +353,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(4, Label = "Release Types", Type = FieldType.Select, SelectOptions = typeof(TorrentSyndikatReleaseTypes))]
         public IEnumerable<int> ReleaseTypes { get; set; }
+
+        [FieldDefinition(5, Label = "Prefer TVDBId", Type = FieldType.Checkbox,  HelpText = "Only Search TVDBId and ignore Season/Episode parameters")]
+        public bool PreferTVDBId { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

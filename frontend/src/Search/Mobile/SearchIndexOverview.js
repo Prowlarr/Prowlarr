@@ -52,12 +52,17 @@ class SearchIndexOverview extends Component {
   //
   // Listeners
 
-  onEditSeriesPress = () => {
-    this.setState({ isEditSeriesModalOpen: true });
-  };
+  onGrabPress = () => {
+    const {
+      guid,
+      indexerId,
+      onGrabPress
+    } = this.props;
 
-  onEditSeriesModalClose = () => {
-    this.setState({ isEditSeriesModalOpen: false });
+    onGrabPress({
+      guid,
+      indexerId
+    });
   };
 
   //

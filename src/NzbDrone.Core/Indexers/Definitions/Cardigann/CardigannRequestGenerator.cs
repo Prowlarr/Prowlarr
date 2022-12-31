@@ -718,8 +718,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 if (!requestLinkStr.Contains("?"))
                 {
-                    // TODO Need Encoding here if we add it back
-                    requestLinkStr += "?" + queryCollection.GetQueryString(separator: request.Queryseparator).Substring(1);
+                    requestLinkStr += "?";
+                    requestLinkStr += queryCollection.GetQueryString(_encoding, separator: request.Queryseparator);
                 }
                 else
                 {

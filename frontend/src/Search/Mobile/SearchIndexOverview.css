@@ -35,9 +35,11 @@ $hoverScale: 1.05;
 }
 
 .title {
+  overflow: hidden;
   width: 85%;
   font-weight: 500;
   font-size: 14px;
+  overflow-wrap: break-word;
 }
 
 .actions {

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import TextTruncate from 'react-text-truncate';
 import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
+import Link from 'Components/Link/Link';
 import SpinnerIconButton from 'Components/Link/SpinnerIconButton';
 import { icons, kinds } from 'Helpers/Props';
 import CategoryLabel from 'Search/Table/CategoryLabel';
@@ -71,6 +72,7 @@ class SearchIndexOverview extends Component {
   render() {
     const {
       title,
+      infoUrl,
       protocol,
       downloadUrl,
       categories,
@@ -96,10 +98,16 @@ class SearchIndexOverview extends Component {
           <div className={styles.info} style={{ height: contentHeight }}>
             <div className={styles.titleRow}>
               <div className={styles.title}>
-                <TextTruncate
-                  line={2}
-                  text={title}
-                />
+                <Link
+                  to={infoUrl}
+                  title={title}
+                >
+                  <TextTruncate
+                    line={2}
+                    text={title}
+                  />
+                </Link>
+
               </div>
 
               <div className={styles.actions}>

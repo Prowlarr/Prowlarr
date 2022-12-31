@@ -716,15 +716,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (queryCollection.Count > 0)
             {
-                if (!requestLinkStr.Contains("?"))
+                if (!requestLinkStr.Contains('?'))
                 {
                     requestLinkStr += "?";
-                    requestLinkStr += queryCollection.GetQueryString(_encoding, separator: request.Queryseparator);
                 }
-                else
-                {
-                    requestLinkStr += queryCollection.GetQueryString(separator: request.Queryseparator);
-                }
+
+                requestLinkStr += queryCollection.GetQueryString(_encoding, separator: request.Queryseparator);
             }
 
             var httpRequest = new HttpRequestBuilder(requestLinkStr)

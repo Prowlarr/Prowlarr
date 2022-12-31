@@ -41,7 +41,7 @@ const mapDispatchToProps = {
   dispatchExecuteCommand: executeCommand
 };
 
-class MovieIndexItemConnector extends Component {
+class SearchIndexItemConnector extends Component {
 
   //
   // Render
@@ -66,9 +66,9 @@ class MovieIndexItemConnector extends Component {
   }
 }
 
-MovieIndexItemConnector.propTypes = {
+SearchIndexItemConnector.propTypes = {
   guid: PropTypes.string,
   component: PropTypes.elementType.isRequired
 };
 
-export default connect(createMapStateToProps, mapDispatchToProps)(MovieIndexItemConnector);
+export default connect(createMapStateToProps, mapDispatchToProps)(SearchIndexItemConnector);

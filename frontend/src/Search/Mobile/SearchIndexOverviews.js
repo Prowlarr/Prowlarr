@@ -49,7 +49,7 @@ class SearchIndexOverviews extends Component {
       this._grid &&
         (prevState.width !== width ||
             prevState.rowHeight !== rowHeight ||
-            hasDifferentItemsOrOrder(prevProps.items, items)
+            hasDifferentItemsOrOrder(prevProps.items, items, 'guid')
         )
     ) {
       // recomputeGridSize also forces Grid to discard its cache of rendered cells
@@ -93,7 +93,6 @@ class SearchIndexOverviews extends Component {
   cellRenderer = ({ key, rowIndex, style }) => {
     const {
       items,
-      sortKey,
       showRelativeDates,
       shortDateFormat,
       longDateFormat,
@@ -117,7 +116,6 @@ class SearchIndexOverviews extends Component {
         <SearchIndexItemConnector
           key={release.guid}
           component={SearchIndexOverview}
-          sortKey={sortKey}
           rowHeight={rowHeight}
           showRelativeDates={showRelativeDates}
           shortDateFormat={shortDateFormat}

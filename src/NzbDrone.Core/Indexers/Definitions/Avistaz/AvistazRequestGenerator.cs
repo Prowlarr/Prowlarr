@@ -73,7 +73,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var searchUrl = SearchUrl + "?" + searchParameters.GetQueryString();
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+            // TODO: Change to HttpAccept.Json after they fix the issue with missing headers
+            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
             request.HttpRequest.Headers.Add("Authorization", $"Bearer {Settings.Token}");
 
             yield return request;

@@ -71,12 +71,12 @@ namespace NzbDrone.Core.Test.IndexerTests.CardigannTests
             result.Should().Be(expected);
         }
 
-        [TestCase("{{ .Today.Year }}", "2022")]
-        public void should_handle_variables_statements(string template, string expected)
+        [TestCase("{{ .Today.Year }}")]
+        public void should_handle_variables_statements(string template)
         {
             var result = Subject.ApplyGoTemplateText(template, _variables);
 
-            result.Should().Be(expected);
+            result.Should().Be(DateTime.Now.Year.ToString());
         }
 
         [TestCase("{{if .False }}0{{else}}1{{end}}", "1")]

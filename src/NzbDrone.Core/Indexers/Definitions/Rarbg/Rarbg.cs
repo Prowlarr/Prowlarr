@@ -107,7 +107,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
             var response = await FetchIndexerResponse(request);
 
             // try and recover from token errors
-            // Response of 200 and rate_limt of 1 requires a 5 minute backoff. Handle in Response Parsing & do not page further if rate_limit is populated.
             var jsonResponse = new HttpResponse<RarbgResponse>(response.HttpResponse);
 
             if (jsonResponse.Resource.error_code.HasValue)
@@ -126,7 +125,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 }
                 else if (jsonResponse.Resource.error_code == 5)
                 {
-                    _logger.Debug("Rarbg temp rate limit hit, retying request");
+                    _logger.Debug("Rarbg temp rate limit hit, retrying request");
                     response = await FetchIndexerResponse(request);
                 }
             }

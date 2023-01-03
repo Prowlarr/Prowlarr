@@ -62,7 +62,7 @@ namespace NzbDrone.Core.Indexers.FileList
                     InfoUrl = GetInfoUrl(id),
                     Seeders = result.Seeders,
                     Peers = result.Leechers + result.Seeders,
-                    PublishDate = result.UploadDate,
+                    PublishDate = DateTime.Parse(result.UploadDate + " +0200"),
                     ImdbId = imdbId,
                     IndexerFlags = flags,
                     Files = (int)result.Files,

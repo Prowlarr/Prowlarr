@@ -427,9 +427,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class MyAnonamouseSettingsValidator : AbstractValidator<MyAnonamouseSettings>
+    public class MyAnonamouseSettingsValidator : NoAuthSettingsValidator<MyAnonamouseSettings>
     {
         public MyAnonamouseSettingsValidator()
+        : base()
         {
             RuleFor(c => c.MamId).NotEmpty();
         }
@@ -437,7 +438,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class MyAnonamouseSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly MyAnonamouseSettingsValidator Validator = new MyAnonamouseSettingsValidator();
+        private static readonly MyAnonamouseSettingsValidator Validator = new ();
 
         public MyAnonamouseSettings()
         {

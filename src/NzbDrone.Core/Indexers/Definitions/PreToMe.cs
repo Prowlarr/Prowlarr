@@ -380,9 +380,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class PreToMeSettingsValidator : AbstractValidator<PreToMeSettings>
+    public class PreToMeSettingsValidator : NoAuthSettingsValidator<PreToMeSettings>
     {
         public PreToMeSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Pin).NotEmpty();
             RuleFor(c => c.Username).NotEmpty();
@@ -392,7 +393,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class PreToMeSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly PreToMeSettingsValidator Validator = new PreToMeSettingsValidator();
+        private static readonly PreToMeSettingsValidator Validator = new ();
 
         public PreToMeSettings()
         {

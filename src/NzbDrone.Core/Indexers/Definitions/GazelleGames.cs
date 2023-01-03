@@ -431,9 +431,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class GazelleGamesSettingsValidator : AbstractValidator<GazelleGamesSettings>
+    public class GazelleGamesSettingsValidator : NoAuthSettingsValidator<GazelleGamesSettings>
     {
         public GazelleGamesSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Apikey).NotEmpty();
         }

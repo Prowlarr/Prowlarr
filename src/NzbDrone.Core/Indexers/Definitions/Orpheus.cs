@@ -381,9 +381,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class OrpheusSettingsValidator : AbstractValidator<OrpheusSettings>
+    public class OrpheusSettingsValidator : NoAuthSettingsValidator<OrpheusSettings>
     {
         public OrpheusSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Apikey).NotEmpty();
         }
@@ -391,7 +392,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class OrpheusSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly OrpheusSettingsValidator Validator = new OrpheusSettingsValidator();
+        private static readonly OrpheusSettingsValidator Validator = new ();
 
         public OrpheusSettings()
         {

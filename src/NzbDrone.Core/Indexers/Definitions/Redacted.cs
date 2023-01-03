@@ -326,9 +326,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RedactedSettingsValidator : AbstractValidator<RedactedSettings>
+    public class RedactedSettingsValidator : NoAuthSettingsValidator<RedactedSettings>
     {
         public RedactedSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Apikey).NotEmpty();
         }

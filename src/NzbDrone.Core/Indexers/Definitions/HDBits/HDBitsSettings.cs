@@ -6,9 +6,10 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.HDBits
 {
-    public class HDBitsSettingsValidator : AbstractValidator<HDBitsSettings>
+    public class HDBitsSettingsValidator : NoAuthSettingsValidator<HDBitsSettings>
     {
         public HDBitsSettingsValidator()
+        : base()
         {
             RuleFor(c => c.ApiKey).NotEmpty();
         }

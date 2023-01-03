@@ -323,9 +323,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class TorrentSyndikatSettingsValidator : AbstractValidator<TorrentSyndikatSettings>
+    public class TorrentSyndikatSettingsValidator : NoAuthSettingsValidator<TorrentSyndikatSettings>
     {
         public TorrentSyndikatSettingsValidator()
+        : base()
         {
             RuleFor(c => c.ApiKey).NotEmpty();
         }
@@ -333,7 +334,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentSyndikatSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly TorrentSyndikatSettingsValidator Validator = new TorrentSyndikatSettingsValidator();
+        private static readonly TorrentSyndikatSettingsValidator Validator = new ();
 
         public TorrentSyndikatSettings()
         {

@@ -5,9 +5,10 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
-    public class AvistazSettingsValidator : AbstractValidator<AvistazSettings>
+    public class AvistazSettingsValidator : NoAuthSettingsValidator<AvistazSettings>
     {
         public AvistazSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Password).NotEmpty();

@@ -5,9 +5,10 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
-    public class PassThePopcornSettingsValidator : AbstractValidator<PassThePopcornSettings>
+    public class PassThePopcornSettingsValidator : NoAuthSettingsValidator<PassThePopcornSettings>
     {
         public PassThePopcornSettingsValidator()
+        : base()
         {
             RuleFor(c => c.APIUser).NotEmpty();
             RuleFor(c => c.APIKey).NotEmpty();
@@ -16,7 +17,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
     public class PassThePopcornSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly PassThePopcornSettingsValidator Validator = new PassThePopcornSettingsValidator();
+        private static readonly PassThePopcornSettingsValidator Validator = new ();
 
         public PassThePopcornSettings()
         {

@@ -208,7 +208,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Categories = new List<IndexerCategory> { TvCategoryFromQualityParser.ParseTvShowQuality(row.ReleaseTitle) },
                     Size = ParseUtil.CoerceLong(row.Size),
                     Files = row.FileList.Length,
-                    PublishDate = DateTime.Parse(row.PublishDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal),
+                    PublishDate = DateTime.Parse(row.PublishDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
                     Grabs = ParseUtil.CoerceInt(row.Snatch),
                     Seeders = ParseUtil.CoerceInt(row.Seed),
                     Peers = ParseUtil.CoerceInt(row.Seed) + ParseUtil.CoerceInt(row.Leech),

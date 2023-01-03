@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -27,7 +28,7 @@ namespace NzbDrone.Core.Indexers
         Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria);
         Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria);
 
-        Task<byte[]> Download(Uri link);
+        Task<byte[]> Download(Uri link, ReleaseInfo release = null);
         bool IsObsolete();
 
         IndexerCapabilities GetCapabilities();

@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Download
 
             byte[] nzbData;
 
-            nzbData = await indexer.Download(url);
+            nzbData = await indexer.Download(url, release);
 
             _logger.Info("Adding report [{0}] to the queue.", release.Title);
             return AddFromNzbFile(release, filename, nzbData);

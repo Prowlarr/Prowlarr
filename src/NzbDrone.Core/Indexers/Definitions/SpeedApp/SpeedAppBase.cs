@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             Cookies = GetCookies();
 

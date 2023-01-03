@@ -12,6 +12,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
@@ -165,7 +166,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             await generator.DoLogin();
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
 

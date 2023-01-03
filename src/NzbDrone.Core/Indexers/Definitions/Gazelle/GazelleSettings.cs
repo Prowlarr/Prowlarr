@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
         public GazelleSettingsValidator()
         : base()
         {
+            RuleFor(c => c.FreeleechSize).GreaterThanOrEqualTo(0);
         }
     }
 
@@ -19,6 +20,8 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         public GazelleSettings()
         {
+            UseFreeleechToken = false;
+            FreeleechSize = 0;
         }
 
         public string AuthKey;
@@ -26,6 +29,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
 
         [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
         public bool UseFreeleechToken { get; set; }
+
+        [FieldDefinition(5, Type = FieldType.Number, Label = "Freeleech Torrent Size", Unit = "bytes", Advanced = true, HelpText = "Only use freeleech tokens for torrents above a given size")]
+        public long FreeleechSize { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

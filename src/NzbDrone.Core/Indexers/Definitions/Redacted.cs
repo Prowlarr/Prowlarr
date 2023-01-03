@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return caps;
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             var request = new HttpRequestBuilder(link.AbsoluteUri)
                 .SetHeader("Authorization", Settings.Apikey)
@@ -231,7 +231,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken, long.Parse(torrent.Size)),
                             InfoUrl = infoUrl,
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
@@ -269,7 +269,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(result.GroupName),
                         Size = long.Parse(result.Size),
-                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
+                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken, long.Parse(result.Size)),
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
@@ -302,7 +302,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     .ToArray();
         }
 
-        private string GetDownloadUrl(int torrentId, bool canUseToken)
+        private string GetDownloadUrl(int torrentId, bool canUseToken, long torrentSize)
         {
             // AuthKey is required but not checked, just pass in a dummy variable
             // to avoid having to track authkey, which is randomly cycled
@@ -310,7 +310,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .CombinePath("/ajax.php")
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId)
-                .AddQueryParam("usetoken", (_settings.UseFreeleechToken && canUseToken) ? 1 : 0);
+                .AddQueryParam("usetoken", (_settings.UseFreeleechToken && canUseToken && torrentSize >= _settings.FreeleechSize) ? 1 : 0);
 
             return url.FullUri;
         }
@@ -332,6 +332,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         : base()
         {
             RuleFor(c => c.Apikey).NotEmpty();
+            RuleFor(c => c.FreeleechSize).GreaterThanOrEqualTo(0);
         }
     }
 
@@ -343,6 +344,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             Apikey = "";
             UseFreeleechToken = false;
+            FreeleechSize = 0;
         }
 
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings)", Privacy = PrivacyLevel.ApiKey)]
@@ -350,6 +352,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
         public bool UseFreeleechToken { get; set; }
+
+        [FieldDefinition(4, Type = FieldType.Number, Label = "Freeleech Torrent Size", Unit = "bytes", Advanced = true, HelpText = "Only use freeleech tokens for torrents above a given size")]
+        public long FreeleechSize { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

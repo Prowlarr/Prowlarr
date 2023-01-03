@@ -8,6 +8,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -19,7 +20,7 @@ namespace NzbDrone.Core.Indexers
         {
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             Cookies = GetCookies();
 

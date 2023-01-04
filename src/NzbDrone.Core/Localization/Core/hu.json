@@ -466,5 +466,8 @@
     "AreYouSureYouWantToDeleteCategory": "Biztosan törölni szeretnéd a leképezett kategóriát?",
     "DeleteClientCategory": "Letöltési kliens kategória törlése",
     "MappedCategories": "Térképezett kategóriák",
-    "DownloadClientCategory": "Letöltési kliens kategória"
+    "DownloadClientCategory": "Letöltési kliens kategória",
+    "AuthenticationRequired": "Azonosítás szükséges",
+    "AuthenticationRequiredHelpText": "Módosítsd, hogy mely kérésekhez van szükség hitelesítésre. Ne változtasson, hacsak nem érti a kockázatokat.",
+    "AuthenticationRequiredWarning": "A hitelesítés nélküli távoli hozzáférés megakadályozása érdekében a Prowlarrnak mostantól engedélyezni kell a hitelesítést. Opcionálisan letilthatja a helyi címekről történő hitelesítést."
 }

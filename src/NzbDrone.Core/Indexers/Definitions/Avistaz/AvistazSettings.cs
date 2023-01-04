@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page")]
+        [FieldDefinition(4, Label = "PID", HelpText = "PID from My Account or My Profile page", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Pid { get; set; }
 
         [FieldDefinition(5, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only")]

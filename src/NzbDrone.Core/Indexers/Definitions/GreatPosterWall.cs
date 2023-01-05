@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using NLog;
@@ -80,6 +81,8 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 
 public class GreatPosterWallParser : GazelleParser
 {
+    private readonly HashSet<string> _hdResolutions = new HashSet<string> { "1080p", "1080i", "720p" };
+
     public GreatPosterWallParser(GazelleSettings settings, IndexerCapabilities capabilities)
         : base(settings, capabilities)
     {
@@ -130,8 +133,8 @@ public class GreatPosterWallParser : GazelleParser
                     Guid = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
                     DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken),
-                    PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).LocalDateTime, // Time is Chinese Time, add 8 hours difference from UTC and then convert back to local time
-                    Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
+                    PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).UtcDateTime, // Time is Chinese Time, add 8 hours difference from UTC
+                    Categories = ParseCategories(torrent),
                     Size = torrent.Size,
                     Seeders = torrent.Seeders,
                     Peers = torrent.Seeders + torrent.Leechers,
@@ -173,7 +176,9 @@ public class GreatPosterWallParser : GazelleParser
             }
         }
 
-        return torrentInfos;
+        return torrentInfos
+            .OrderByDescending(o => o.PublishDate)
+            .ToArray();
     }
 
     protected string GetDownloadUrl(int torrentId, bool canUseToken)
@@ -185,6 +190,20 @@ public class GreatPosterWallParser : GazelleParser
             .AddQueryParam("id", torrentId);
 
         return url.FullUri;
+    }
+
+    protected virtual List<IndexerCategory> ParseCategories(GreatPosterWallTorrent torrent)
+    {
+        var cats = new List<IndexerCategory>();
+
+        cats.Add(torrent.Resolution switch
+        {
+            var res when _hdResolutions.Contains(res) => NewznabStandardCategory.MoviesHD,
+            "2160p" => NewznabStandardCategory.MoviesUHD,
+            _ => NewznabStandardCategory.MoviesSD
+        });
+
+        return cats;
     }
 }
 

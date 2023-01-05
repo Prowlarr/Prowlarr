@@ -98,6 +98,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     var jsonResponse = new HttpResponse<AvistazErrorResponse>(ex.Response);
                     return new ValidationFailure(string.Empty, jsonResponse.Resource?.Message ?? "Unauthorized request to indexer");
                 }
+                else if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    _logger.Warn(ex, "Too Many Requests");
+
+                    return new ValidationFailure(string.Empty, "Too Many Requests");
+                }
                 else
                 {
                     _logger.Warn(ex, "Unable to connect to indexer");

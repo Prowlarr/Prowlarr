@@ -24,24 +24,26 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var torrentInfos = new List<TorrentInfo>();
 
-            if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.NotFound)
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
-                return torrentInfos.ToArray();
-            }
-
-            if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.TooManyRequests)
-            {
-                throw new RequestLimitReachedException(indexerResponse, "API Request Limit Reached");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
             }
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
-            }
+                if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // No results found
+                    return torrentInfos.ToArray();
+                }
 
-            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
-            {
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                HttpResponse<AvistazErrorResponse> jsonErrorResponse = new HttpResponse<AvistazErrorResponse>(indexerResponse.HttpResponse);
+                if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new IndexerAuthException(string.Empty, jsonErrorResponse.Resource?.Message ?? "Unauthorized request to indexer");
+                }
+
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
             }
 
             var jsonResponse = new HttpResponse<AvistazResponse>(indexerResponse.HttpResponse);

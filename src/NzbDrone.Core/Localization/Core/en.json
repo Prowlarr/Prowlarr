@@ -47,7 +47,7 @@
   "AuthenticationMethodHelpText": "Require Username and Password to access Prowlarr",
   "AuthenticationRequired": "Authentication Required",
   "AuthenticationRequiredHelpText": "Change which requests authentication is required for. Do not change unless you understand the risks.",
-  "AuthenticationRequiredWarning": "To prevent remote access without authentication, Prowlarr now requires authentication to be enabled. You can optionally disable authentication from local addresses.",
+  "AuthenticationRequiredWarning": "To prevent remote access without authentication, Prowlarr now requires authentication to be enabled. Configure your authentication method and credentials. You can optionally disable authentication from local addresses. Refer to the FAQ for additional information.",
   "Automatic": "Automatic",
   "AutomaticSearch": "Automatic Search",
   "Backup": "Backup",

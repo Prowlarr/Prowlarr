@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                             Grabs = torrent.Snatches,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id),
+                            DownloadUrl = GetDownloadUrl(id, long.Parse(torrent.Size)),
                             InfoUrl = infoUrl,
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
@@ -115,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                         Guid = infoUrl,
                         Title = groupName,
                         Size = long.Parse(result.Size),
-                        DownloadUrl = GetDownloadUrl(id),
+                        DownloadUrl = GetDownloadUrl(id, long.Parse(result.Size)),
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
@@ -148,12 +148,12 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     .ToArray();
         }
 
-        protected virtual string GetDownloadUrl(int torrentId)
+        protected virtual string GetDownloadUrl(int torrentId, long torrentSize)
         {
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? "1" : "0")
+                .AddQueryParam("usetoken", _settings.UseFreeleechToken && torrentSize >= _settings.FreeleechSize ? "1" : "0")
                 .AddQueryParam("id", torrentId);
 
             return url.FullUri;

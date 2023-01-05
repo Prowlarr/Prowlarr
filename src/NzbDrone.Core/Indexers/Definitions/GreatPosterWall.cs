@@ -129,7 +129,7 @@ public class GreatPosterWallParser : GazelleParser
                     InfoUrl = infoUrl,
                     Guid = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
-                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken),
+                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken, torrent.Size),
                     PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).LocalDateTime, // Time is Chinese Time, add 8 hours difference from UTC and then convert back to local time
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
                     Size = torrent.Size,
@@ -176,12 +176,12 @@ public class GreatPosterWallParser : GazelleParser
         return torrentInfos;
     }
 
-    protected string GetDownloadUrl(int torrentId, bool canUseToken)
+    protected string GetDownloadUrl(int torrentId, bool canUseToken, long torrentSize)
     {
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/torrents.php")
             .AddQueryParam("action", "download")
-            .AddQueryParam("usetoken", _settings.UseFreeleechToken && canUseToken ? "1" : "0")
+            .AddQueryParam("usetoken", _settings.UseFreeleechToken && canUseToken && torrentSize >= _settings.FreeleechSize ? "1" : "0")
             .AddQueryParam("id", torrentId);
 
         return url.FullUri;

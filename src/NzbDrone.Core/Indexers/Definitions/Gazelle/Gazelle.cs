@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Gazelle
 {
@@ -80,9 +81,9 @@ namespace NzbDrone.Core.Indexers.Gazelle
             _logger.Debug("Gazelle authentication succeeded.");
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
-            var response = await base.Download(link);
+            var response = await base.Download(link, release);
 
             if (response.Length >= 1
                 && response[0] != 'd' // simple test for torrent vs HTML content
@@ -97,7 +98,7 @@ namespace NzbDrone.Core.Indexers.Gazelle
                     // download again with usetoken=0
                     var requestLinkNew = link.ToString().Replace("usetoken=1", "usetoken=0");
 
-                    response = await base.Download(new Uri(requestLinkNew));
+                    response = await base.Download(new Uri(requestLinkNew), release);
                 }
             }
 

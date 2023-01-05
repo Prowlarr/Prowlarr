@@ -5,9 +5,10 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.FileList
 {
-    public class FileListSettingsValidator : AbstractValidator<FileListSettings>
+    public class FileListSettingsValidator : NoAuthSettingsValidator<FileListSettings>
     {
         public FileListSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Passkey).NotEmpty();

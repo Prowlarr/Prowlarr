@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             Cookies = GetCookies();
 
@@ -325,9 +325,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class SpeedAppSettingsValidator : AbstractValidator<SpeedAppSettings>
+    public class SpeedAppSettingsValidator : NoAuthSettingsValidator<SpeedAppSettings>
     {
         public SpeedAppSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Email).NotEmpty();
             RuleFor(c => c.Password).NotEmpty();

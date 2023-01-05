@@ -50,9 +50,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new MyAnonamouseParser(Settings, Capabilities.Categories);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
-            if (Settings.Freeleech)
+            if (Settings.Freeleech && (release == null || release.Size >= Settings.FreeleechSize))
             {
                 _logger.Debug($"Attempting to use freeleech token for {link.AbsoluteUri}");
 
@@ -88,7 +88,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            return await base.Download(link).ConfigureAwait(false);
+            return await base.Download(link, release).ConfigureAwait(false);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -427,21 +427,24 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class MyAnonamouseSettingsValidator : AbstractValidator<MyAnonamouseSettings>
+    public class MyAnonamouseSettingsValidator : NoAuthSettingsValidator<MyAnonamouseSettings>
     {
         public MyAnonamouseSettingsValidator()
+        : base()
         {
             RuleFor(c => c.MamId).NotEmpty();
+            RuleFor(c => c.FreeleechSize).GreaterThanOrEqualTo(0);
         }
     }
 
     public class MyAnonamouseSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly MyAnonamouseSettingsValidator Validator = new MyAnonamouseSettingsValidator();
+        private static readonly MyAnonamouseSettingsValidator Validator = new ();
 
         public MyAnonamouseSettings()
         {
             MamId = "";
+            FreeleechSize = 0;
         }
 
         [FieldDefinition(2, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
@@ -452,6 +455,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Freeleech", HelpText = "Use freeleech token for download")]
         public bool Freeleech { get; set; }
+
+        [FieldDefinition(5, Type = FieldType.Number, Label = "Freeleech Torrent Size", Unit = "bytes", Advanced = true, HelpText = "Only use freeleech tokens for torrents above a given size")]
+        public long FreeleechSize { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

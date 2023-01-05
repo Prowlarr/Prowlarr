@@ -8,6 +8,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Headphones
 {
@@ -51,7 +52,7 @@ namespace NzbDrone.Core.Indexers.Headphones
             }
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 

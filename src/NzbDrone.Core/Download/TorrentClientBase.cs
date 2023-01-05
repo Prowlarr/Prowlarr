@@ -124,7 +124,7 @@ namespace NzbDrone.Core.Download
         {
             byte[] torrentFile = null;
 
-            torrentFile = await indexer.Download(new Uri(torrentUrl));
+            torrentFile = await indexer.Download(new Uri(torrentUrl), release);
 
             // handle magnet URLs
             if (torrentFile.Length >= 7

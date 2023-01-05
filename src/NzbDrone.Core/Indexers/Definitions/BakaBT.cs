@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new BakaBTParser(Settings, Capabilities.Categories);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<byte[]> Download(Uri link, ReleaseInfo release = null)
         {
             var request = new HttpRequestBuilder(link.ToString())
                         .SetCookies(GetCookies() ?? new Dictionary<string, string>())
@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new Exception("Unable to find download link.");
             }
 
-            return await base.Download(new Uri(Settings.BaseUrl + downloadLink));
+            return await base.Download(new Uri(Settings.BaseUrl + downloadLink), release);
         }
 
         protected override async Task DoLogin()

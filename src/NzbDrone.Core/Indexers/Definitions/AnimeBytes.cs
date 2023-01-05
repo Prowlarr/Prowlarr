@@ -521,9 +521,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class AnimeBytesSettingsValidator : AbstractValidator<AnimeBytesSettings>
+    public class AnimeBytesSettingsValidator : NoAuthSettingsValidator<AnimeBytesSettings>
     {
         public AnimeBytesSettingsValidator()
+        : base()
         {
             RuleFor(c => c.Passkey).NotEmpty()
                                    .Must(x => x.Length == 32 || x.Length == 48)

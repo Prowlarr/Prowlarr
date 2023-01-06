@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                     var id = torrent.Id;
                     var title = torrent.ReleaseName;
 
-                    var flags = new List<IndexerFlag>();
+                    var flags = new HashSet<IndexerFlag>();
 
                     if (torrent.GoldenPopcorn)
                     {

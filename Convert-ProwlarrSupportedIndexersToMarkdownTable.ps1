@@ -53,7 +53,7 @@ $wiki_app_path = '/prowlarr'
 $wiki_page = 'supported-indexers'
 $wiki_bookmark = '#'
 ### Page Formatting
-$markdown_escape_regex = '(\w)(\.|\[|\])(\w)'
+$markdown_escape_regex = '(\w)(\.|\[|\])(\w|\])'
 $markdown_escape_regex_rep = '$1\$2$3'
 $wiki_1newline = "`r`n"
 $wiki_2newline = "`r`n`r`n"

@@ -43,6 +43,8 @@ class SearchIndex extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.scrollerRef = React.createRef();
+
     this.state = {
       scroller: null,
       jumpBarItems: { order: [] },
@@ -84,10 +86,6 @@ class SearchIndex extends Component {
 
   //
   // Control
-
-  setScrollerRef = (ref) => {
-    this.setState({ scroller: ref });
-  };
 
   getSelectedIds = () => {
     if (this.state.allUnselected) {
@@ -236,7 +234,6 @@ class SearchIndex extends Component {
       customFilters,
       sortKey,
       sortDirection,
-      onScroll,
       onSortSelect,
       onFilterSelect,
       isSmallScreen,
@@ -245,7 +242,6 @@ class SearchIndex extends Component {
     } = this.props;
 
     const {
-      scroller,
       jumpBarItems,
       jumpToCharacter,
       selectedState,
@@ -256,7 +252,7 @@ class SearchIndex extends Component {
     const selectedIndexerIds = this.getSelectedIds();
 
     const ViewComponent = getViewComponent(isSmallScreen);
-    const isLoaded = !!(!error && isPopulated && items.length && scroller);
+    const isLoaded = !!(!error && isPopulated && items.length && this.scrollerRef.current);
     const hasNoIndexer = !totalItems;
 
     return (
@@ -297,10 +293,9 @@ class SearchIndex extends Component {
 
         <div className={styles.pageContentBodyWrapper}>
           <PageContentBody
-            registerScroller={this.setScrollerRef}
+            ref={this.scrollerRef}
             className={styles.contentBody}
             innerClassName={styles.tableInnerContentBody}
-            onScroll={onScroll}
           >
             {
               isFetching && !isPopulated &&
@@ -318,7 +313,7 @@ class SearchIndex extends Component {
               isLoaded &&
                 <div className={styles.contentBodyContainer}>
                   <ViewComponent
-                    scroller={scroller}
+                    scroller={this.scrollerRef.current}
                     items={items}
                     filters={filters}
                     sortKey={sortKey}
@@ -393,7 +388,6 @@ SearchIndex.propTypes = {
   onFilterSelect: PropTypes.func.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   onBulkGrabPress: PropTypes.func.isRequired,
-  onScroll: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired
 };
 

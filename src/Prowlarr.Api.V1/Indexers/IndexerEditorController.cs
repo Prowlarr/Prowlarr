@@ -29,9 +29,9 @@ namespace Prowlarr.Api.V1.Indexers
 
             foreach (var indexer in indexersToUpdate)
             {
-                if (resource.Enable.IsNotNullOrWhiteSpace())
+                if (resource.Enable.HasValue)
                 {
-                    indexer.Enable = bool.Parse(resource.Enable);
+                    indexer.Enable = resource.Enable.Value;
                 }
 
                 if (resource.AppProfileId.HasValue)

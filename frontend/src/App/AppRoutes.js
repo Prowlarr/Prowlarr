@@ -4,7 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import HistoryConnector from 'History/HistoryConnector';
-import IndexerIndexConnector from 'Indexer/Index/IndexerIndexConnector';
+import IndexerIndex from 'Indexer/Index/IndexerIndex';
 import StatsConnector from 'Indexer/Stats/StatsConnector';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
 import ApplicationSettingsConnector from 'Settings/Applications/ApplicationSettingsConnector';
@@ -38,7 +38,7 @@ function AppRoutes(props) {
       <Route
         exact={true}
         path="/"
-        component={IndexerIndexConnector}
+        component={IndexerIndex}
       />
 
       {

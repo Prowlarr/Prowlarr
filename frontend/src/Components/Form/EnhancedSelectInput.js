@@ -12,9 +12,9 @@ import ModalBody from 'Components/Modal/ModalBody';
 import Portal from 'Components/Portal';
 import Scroller from 'Components/Scroller/Scroller';
 import { icons, scrollDirections, sizes } from 'Helpers/Props';
+import { isMobile as isMobileUtil } from 'Utilities/browser';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getUniqueElememtId from 'Utilities/getUniqueElementId';
-import { isMobile as isMobileUtil } from 'Utilities/mobile';
 import HintedSelectInputOption from './HintedSelectInputOption';
 import HintedSelectInputSelectedValue from './HintedSelectInputSelectedValue';
 import TextInput from './TextInput';
@@ -113,10 +113,12 @@ class EnhancedSelectInput extends Component {
       this._scheduleUpdate();
     }
 
-    if (!Array.isArray(this.props.value) && prevProps.value !== this.props.value) {
-      this.setState({
-        selectedIndex: getSelectedIndex(this.props)
-      });
+    if (!Array.isArray(this.props.value)) {
+      if (prevProps.value !== this.props.value || prevProps.values !== this.props.values) {
+        this.setState({
+          selectedIndex: getSelectedIndex(this.props)
+        });
+      }
     }
   }
 
@@ -332,6 +334,11 @@ class EnhancedSelectInput extends Component {
 
     const isMultiSelect = Array.isArray(value);
     const selectedOption = getSelectedOption(selectedIndex, values);
+    let selectedValue = value;
+
+    if (!values.length) {
+      selectedValue = isMultiSelect ? [] : '';
+    }
 
     return (
       <div>
@@ -372,15 +379,17 @@ class EnhancedSelectInput extends Component {
                           onPress={this.onPress}
                         >
                           {
-                            isFetching &&
+                            isFetching ?
                               <LoadingIndicator
                                 className={styles.loading}
                                 size={20}
-                              />
+                              /> :
+                              null
                           }
 
                           {
-                            !isFetching &&
+                            isFetching ?
+                              null :
                               <Icon
                                 name={icons.CARET_DOWN}
                               />
@@ -400,7 +409,7 @@ class EnhancedSelectInput extends Component {
                         onPress={this.onPress}
                       >
                         <SelectedValueComponent
-                          value={value}
+                          value={selectedValue}
                           values={values}
                           {...selectedValueOptions}
                           {...selectedOption}
@@ -418,15 +427,17 @@ class EnhancedSelectInput extends Component {
                         >
 
                           {
-                            isFetching &&
+                            isFetching ?
                               <LoadingIndicator
                                 className={styles.loading}
                                 size={20}
-                              />
+                              /> :
+                              null
                           }
 
                           {
-                            !isFetching &&
+                            isFetching ?
+                              null :
                               <Icon
                                 name={icons.CARET_DOWN}
                               />
@@ -505,7 +516,7 @@ class EnhancedSelectInput extends Component {
         </Manager>
 
         {
-          isMobile &&
+          isMobile ?
             <Modal
               className={styles.optionsModal}
               size={sizes.EXTRA_SMALL}
@@ -555,7 +566,8 @@ class EnhancedSelectInput extends Component {
                   }
                 </Scroller>
               </ModalBody>
-            </Modal>
+            </Modal> :
+            null
         }
       </div>
     );

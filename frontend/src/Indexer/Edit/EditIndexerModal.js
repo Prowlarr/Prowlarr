@@ -7,7 +7,7 @@ import EditIndexerModalContentConnector from './EditIndexerModalContentConnector
 function EditIndexerModal({ isOpen, onModalClose, ...otherProps }) {
   return (
     <Modal
-      size={sizes.MEDIUM}
+      size={sizes.LARGE}
       isOpen={isOpen}
       onModalClose={onModalClose}
     >
@@ -20,6 +20,7 @@ function EditIndexerModal({ isOpen, onModalClose, ...otherProps }) {
 }
 
 EditIndexerModal.propTypes = {
+  ...EditIndexerModalContentConnector.propTypes,
   isOpen: PropTypes.bool.isRequired,
   onModalClose: PropTypes.func.isRequired
 };

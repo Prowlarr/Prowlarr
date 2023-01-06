@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
@@ -5,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = (env) => {
   const uiFolder = 'UI';
@@ -37,6 +39,11 @@ module.exports = (env) => {
     },
 
     resolve: {
+      extensions: [
+        '.ts',
+        '.tsx',
+        '.js'
+      ],
       modules: [
         srcFolder,
         path.join(srcFolder, 'Shims'),
@@ -129,6 +136,8 @@ module.exports = (env) => {
         }
       }),
 
+      new ForkTsCheckerWebpackPlugin(),
+
       new LiveReloadPlugin()
     ],
 
@@ -142,7 +151,7 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
+          test: [/\.jsx?$/, /\.tsx?$/],
           exclude: /[\\/]node_modules[\\/](?!(@sentry\/browser|@sentry\/integrations|chart.js|filesize|normalize.css)[\\/])/,
           use: [
             {
@@ -173,6 +182,7 @@ module.exports = (env) => {
           exclude: /(node_modules|globals.css)/,
           use: [
             { loader: MiniCssExtractPlugin.loader },
+            { loader: 'css-modules-typescript-loader' },
             {
               loader: 'css-loader',
               options: {

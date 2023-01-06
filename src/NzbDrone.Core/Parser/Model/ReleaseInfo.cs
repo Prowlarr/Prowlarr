@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Parser.Model
     {
         public ReleaseInfo()
         {
-            IndexerFlags = new List<IndexerFlag>();
+            IndexerFlags = new HashSet<IndexerFlag>();
             Categories = new List<IndexerCategory>();
             Languages = new List<string>();
             Subs = new List<string>();
@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Parser.Model
         public ICollection<string> Languages { get; set; }
         public ICollection<string> Subs { get; set; }
         public ICollection<IndexerCategory> Categories { get; set; }
-        public ICollection<IndexerFlag> IndexerFlags { get; set; }
+        public HashSet<IndexerFlag> IndexerFlags { get; set; }
 
         public int Age
         {

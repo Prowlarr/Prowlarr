@@ -229,15 +229,14 @@ namespace NzbDrone.Core.Indexers.Torznab
             return base.GetPeers(item);
         }
 
-        protected List<IndexerFlag> GetFlags(XElement item)
+        protected HashSet<IndexerFlag> GetFlags(XElement item)
         {
-            var flags = new List<IndexerFlag>();
+            var flags = new HashSet<IndexerFlag>();
 
             var downloadFactor = TryGetFloatTorznabAttribute(item, "downloadvolumefactor", 1);
-
             var uploadFactor = TryGetFloatTorznabAttribute(item, "uploadvolumefactor", 1);
 
-            if (uploadFactor == 2)
+            if (uploadFactor == 2.0)
             {
                 flags.Add(IndexerFlag.DoubleUpload);
             }

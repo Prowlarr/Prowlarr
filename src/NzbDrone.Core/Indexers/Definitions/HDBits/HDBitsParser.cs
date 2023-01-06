@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers.HDBits
                 var id = result.Id;
                 var internalRelease = result.TypeOrigin == 1 ? true : false;
 
-                var flags = new List<IndexerFlag>();
+                var flags = new HashSet<IndexerFlag>();
 
                 if (internalRelease)
                 {

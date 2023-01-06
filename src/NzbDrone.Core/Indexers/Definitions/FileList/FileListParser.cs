@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.FileList
             {
                 var id = result.Id;
 
-                var flags = new List<IndexerFlag>();
+                var flags = new HashSet<IndexerFlag>();
 
                 if (result.Internal)
                 {

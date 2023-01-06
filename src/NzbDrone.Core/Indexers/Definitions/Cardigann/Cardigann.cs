@@ -30,8 +30,23 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
-        // thinking its a partial page and insteaad all search_path requests are run for each indexer
+        // thinking its a partial page and instead all search_path requests are run for each indexer
         public override int PageSize => 1;
+
+        public override TimeSpan RateLimit
+        {
+            get
+            {
+                var definition = _definitionService.GetCachedDefinition(Settings.DefinitionFile);
+
+                if (definition.RequestDelay.HasValue && definition.RequestDelay.Value > base.RateLimit.TotalSeconds)
+                {
+                    return TimeSpan.FromSeconds(definition.RequestDelay.Value);
+                }
+
+                return base.RateLimit;
+            }
+        }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {

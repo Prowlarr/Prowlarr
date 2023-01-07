@@ -99,7 +99,7 @@
     "BackupFolderHelpText": "Относительные пути будут в каталоге AppData Radarr",
     "BeforeUpdate": "До обновления",
     "BindAddress": "Привязать адрес",
-    "BindAddressHelpText": "Действительный IP4-адрес или '*' для всех интерфейсов",
+    "BindAddressHelpText": "Действительный IP-адрес, локальный адрес или '*' для всех интерфейсов",
     "Branch": "Ветка",
     "BranchUpdate": "Ветвь для обновления Radarr",
     "BranchUpdateMechanism": "Ветвь, используемая внешним механизмом обновления",

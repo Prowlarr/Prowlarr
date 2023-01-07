@@ -469,5 +469,5 @@
     "MappedCategories": "Categorias Mapeadas",
     "AuthenticationRequired": "Autenticação Requerida",
     "AuthenticationRequiredHelpText": "Altera para quais solicitações a autenticação é necessária. Não mude a menos que você entenda os riscos.",
-    "AuthenticationRequiredWarning": "Para impedir o acesso remoto sem autenticação, o Prowlarr agora exige que a autenticação seja habilitada. Você pode, opcionalmente, desabilitar a autenticação de endereços locais."
+    "AuthenticationRequiredWarning": "Para impedir o acesso remoto sem autenticação, o Prowlarr agora exige que a autenticação seja habilitada. Configure seu método de autenticação e credenciais. Você pode, opcionalmente, desabilitar a autenticação de endereços locais. Consulte o FAQ para obter informações adicionais."
 }

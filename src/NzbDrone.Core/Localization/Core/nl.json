@@ -154,7 +154,7 @@
     "CertificateValidation": "Certificaat Validatie",
     "BypassProxyForLocalAddresses": "Omzeil Proxy voor Lokale Adressen",
     "Branch": "Branch",
-    "BindAddressHelpText": "Geldig IPv4 adres of '*' voor alle interfaces",
+    "BindAddressHelpText": "Geldig IP-adres, localhost of '*' voor alle interfaces",
     "DeleteBackup": "Verwijder Veiligheidskopie",
     "BackupIntervalHelpText": "Tussentijd voor automatische back-up",
     "Backups": "Veiligheidskopieën",

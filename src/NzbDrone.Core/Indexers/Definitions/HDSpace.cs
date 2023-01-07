@@ -269,6 +269,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.InfoUrl = _settings.BaseUrl + qLink.GetAttribute("href");
                 release.Guid = release.InfoUrl;
 
+                var qGenres = row.QuerySelector("span[style=\"color: #000000 \"]");
+                if (qGenres != null)
+                {
+                    var description = qGenres.TextContent.Split('\xA0').Last().Replace(" ", "");
+                    release.Description = description;
+                    release.Genres = description.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+
                 var imdbLink = row.Children[1].QuerySelector("a[href*=imdb]");
                 if (imdbLink != null)
                 {
@@ -311,6 +319,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var qCat = row.QuerySelector("a[href^=\"index.php?page=torrents&category=\"]");
                 var cat = qCat.GetAttribute("href").Split('=')[2];
                 release.Categories = _categories.MapTrackerCatToNewznab(cat);
+
                 torrentInfos.Add(release);
             }
 

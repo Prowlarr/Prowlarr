@@ -466,5 +466,6 @@
     "AreYouSureYouWantToDeleteCategory": "Haluatko varmasti poistaa kartoitetun kategorian?",
     "DeleteClientCategory": "Poista lataustyökalukategoria",
     "DownloadClientCategory": "Lataustyökalukategoria",
-    "MappedCategories": "Kartoitetut kategoriat"
+    "MappedCategories": "Kartoitetut kategoriat",
+    "AuthenticationRequired": "Todennus vaaditaan"
 }

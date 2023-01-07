@@ -80,26 +80,18 @@ namespace NzbDrone.Core.Indexers.Definitions
             return caps;
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
         {
-            var request = new HttpRequestBuilder(link.AbsoluteUri)
-                .SetHeader("Authorization", Settings.Apikey)
-                .Build();
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 
-            var downloadBytes = Array.Empty<byte>();
-
-            try
+            if (Cookies != null)
             {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                downloadBytes = response.ResponseData;
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
+                requestBuilder.SetCookies(Cookies);
             }
 
-            return downloadBytes;
+            var request = requestBuilder.SetHeader("Authorization", Settings.Apikey).Build();
+
+            return Task.FromResult(request);
         }
     }
 

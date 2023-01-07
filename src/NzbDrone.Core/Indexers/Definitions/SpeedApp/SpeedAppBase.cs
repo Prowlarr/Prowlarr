@@ -103,16 +103,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
         {
-            Cookies = GetCookies();
-
-            if (link.Scheme == "magnet")
-            {
-                ValidateMagnet(link.OriginalString);
-                return Encoding.UTF8.GetBytes(link.OriginalString);
-            }
-
             var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 
             if (Cookies != null)
@@ -124,46 +116,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             request.AllowAutoRedirect = FollowRedirect;
             request.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
 
-            byte[] torrentData;
-
-            try
-            {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                torrentData = response.ResponseData;
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", link.AbsoluteUri);
-                    throw new ReleaseUnavailableException("Downloading torrent failed", ex);
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
-                {
-                    _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
-                }
-                else
-                {
-                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", link.AbsoluteUri);
-                }
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
-            }
-            catch (WebException ex)
-            {
-                _logger.Error(ex, "Downloading torrent file for release failed ({0})", link.AbsoluteUri);
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Downloading torrent failed");
-                throw;
-            }
-
-            return torrentData;
+            return Task.FromResult(request);
         }
 
         protected virtual IndexerCapabilities SetCapabilities()

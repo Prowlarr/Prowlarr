@@ -493,6 +493,11 @@ namespace NzbDrone.Core.Indexers
         {
             request.Encoding = Encoding;
 
+            if (request.RateLimit < RateLimit)
+            {
+                request.RateLimit = RateLimit;
+            }
+
             var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));

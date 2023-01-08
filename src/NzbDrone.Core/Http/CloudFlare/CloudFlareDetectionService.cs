@@ -29,7 +29,11 @@ namespace NzbDrone.Core.Http.CloudFlare
                 response.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
                 var responseHtml = response.Content;
-                if (responseHtml.Contains("<title>Just a moment...") || responseHtml.Contains("<title>DDOS-GUARD"))
+                if (responseHtml.Contains("<title>Just a moment...</title>") ||
+                    responseHtml.Contains("<title>Access denied</title>") ||
+                    responseHtml.Contains("<title>Attention Required! | Cloudflare</title>") ||
+                    responseHtml.Trim().Equals("error code: 1020") ||
+                    responseHtml.Contains("<title>DDOS-GUARD</title>"))
                 {
                     return true;
                 }

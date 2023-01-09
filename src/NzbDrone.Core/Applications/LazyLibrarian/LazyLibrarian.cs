@@ -147,6 +147,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 Categories = string.Join(",", indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),
                 Enabled = indexer.Enable,
                 Type = schema,
+                Priority = indexer.Priority
             };
 
             return lazyLibrarianIndexer;

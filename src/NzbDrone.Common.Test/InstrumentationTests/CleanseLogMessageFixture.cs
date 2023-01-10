@@ -24,6 +24,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"https://beyond-hd.me/api/torrents/2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"Req: [POST] https://www3.yggtorrent.nz/user/login: id=mySecret&pass=mySecret&ci_csrf_token=2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"https://torrentseeds.org/api/torrents/filter?api_token=2b51db35e1912ffc138825a12b9933d2&name=&sortField=created_at&sortDirection=desc&perPage=100&page=1")]
+        [TestCase(@"https://beyond-hd.me/torrent/download/the-next-365-days-2022-2160p-nf-web-dl-dual-ddp-51-dovi-hdr-hevc-apex.225146.2b51db35e1912ffc138825a12b9933d2")]
 
         // Indexer and Download Client Responses
 

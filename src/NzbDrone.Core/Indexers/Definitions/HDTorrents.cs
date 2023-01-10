@@ -7,17 +7,14 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -25,12 +22,18 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "HD-Torrents";
 
-        public override string[] IndexerUrls => new string[] { "https://hdts.ru/", "https://hd-torrents.org/" };
+        public override string[] IndexerUrls => new[]
+        {
+            "https://hdts.ru/",
+            "https://hd-torrents.org/",
+            "https://hd-torrents.net/",
+            "https://hd-torrents.me/",
+        };
         public override string Description => "HD-Torrents is a private torrent website with HD torrents and strict rules on their content.";
-        private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        private string LoginUrl => Settings.BaseUrl + "login.php";
 
         public HDTorrents(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -39,7 +42,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new HDTorrentsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new HDTorrentsRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -51,10 +54,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
             requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var cookies = Cookies;
@@ -63,7 +66,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             var authLoginRequest = requestBuilder
                 .AddFormParameter("uid", Settings.Username)
                 .AddFormParameter("pwd", Settings.Password)
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .SetHeader("Referer", LoginUrl)
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
@@ -76,12 +80,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.Content.Contains("Error:You're not authorized"))
-            {
-                return true;
-            }
-
-            return false;
+            return httpResponse.Content.Contains("Error:You're not authorized");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -89,21 +88,25 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       }
+                {
+                    MusicSearchParam.Q
+                },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.Internal
+                }
             };
 
-            caps.Categories.AddCategoryMapping("70", NewznabStandardCategory.MoviesUHD, "Movie/UHD/Blu-Ray");
-            caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.MoviesHD, "Movie/Blu-Ray");
+            caps.Categories.AddCategoryMapping("70", NewznabStandardCategory.MoviesBluRay, "Movie/UHD/Blu-Ray");
+            caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.MoviesBluRay, "Movie/Blu-Ray");
             caps.Categories.AddCategoryMapping("71", NewznabStandardCategory.MoviesUHD, "Movie/UHD/Remux");
             caps.Categories.AddCategoryMapping("2", NewznabStandardCategory.MoviesHD, "Movie/Remux");
             caps.Categories.AddCategoryMapping("5", NewznabStandardCategory.MoviesHD, "Movie/1080p/i");
@@ -143,10 +146,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public HDTorrentsRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
@@ -224,7 +223,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly IndexerCapabilitiesCategories _categories;
 
         private readonly Regex _posterRegex = new Regex(@"src=\\'./([^']+)\\'", RegexOptions.IgnoreCase);
-        private readonly HashSet<string> _freeleechRanks = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private readonly HashSet<string> _freeleechRanks = new (StringComparer.OrdinalIgnoreCase)
         {
             "VIP",
             "Uploader",
@@ -248,7 +247,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var dom = parser.ParseDocument(indexerResponse.Content);
 
             var userInfo = dom.QuerySelector("table.navus tr");
-            var userRank = userInfo.Children[1].TextContent.Replace("Rank:", string.Empty).Trim();
+            var userRank = userInfo?.Children[1].TextContent.Replace("Rank:", string.Empty).Trim();
             var hasFreeleech = _freeleechRanks.Contains(userRank);
 
             var rows = dom.QuerySelectorAll("table.mainblockcontenttt tr:has(td.mainblockcontent)");
@@ -259,7 +258,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var details = new Uri(_settings.BaseUrl + mainLink.GetAttribute("href"));
 
                 var posterMatch = _posterRegex.Match(mainLink.GetAttribute("onmouseover"));
-                var poster = posterMatch.Success ? _settings.BaseUrl + posterMatch.Groups[1].Value.Replace("\\", "/") : null;
+                var poster = posterMatch.Success
+                    ? _settings.BaseUrl + posterMatch.Groups[1].Value.Replace("\\", "/")
+                    : null;
 
                 var link = new Uri(_settings.BaseUrl + row.Children[4].FirstElementChild.GetAttribute("href"));
                 var description = row.Children[2].QuerySelector("span").TextContent;
@@ -329,6 +330,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var imdbLink = row.QuerySelector("a[href*=\"www.imdb.com/title/\"]")?.GetAttribute("href");
                 var imdb = !string.IsNullOrWhiteSpace(imdbLink) ? ParseUtil.GetImdbID(imdbLink) : null;
 
+                var flags = new HashSet<IndexerFlag>();
+
+                if (row.QuerySelector("img[src$=\"internal.png\"]") != null)
+                {
+                    flags.Add(IndexerFlag.Internal);
+                }
+
                 var release = new TorrentInfo
                 {
                     Title = title,
@@ -343,6 +351,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Grabs = grabs,
                     Seeders = seeders,
                     Peers = peers,
+                    IndexerFlags = flags,
                     DownloadVolumeFactor = dlVolumeFactor,
                     UploadVolumeFactor = upVolumeFactor,
                     MinimumRatio = 1,

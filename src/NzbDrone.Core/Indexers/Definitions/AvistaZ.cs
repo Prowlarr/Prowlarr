@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Avistaz;
 using NzbDrone.Core.Messaging.Events;
@@ -10,18 +9,23 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AvistaZ : AvistazBase
     {
         public override string Name => "AvistaZ";
-        public override string[] IndexerUrls => new string[] { "https://avistaz.to/" };
+        public override string[] IndexerUrls => new[] { "https://avistaz.to/" };
         public override string Description => "Aka AsiaTorrents";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public AvistaZ(IIndexerRepository indexerRepository, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public AvistaZ(IIndexerRepository indexerRepository,
+                       IIndexerHttpClient httpClient,
+                       IEventAggregator eventAggregator,
+                       IIndexerStatusService indexerStatusService,
+                       IConfigService configService,
+                       Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AvistazRequestGenerator()
+            return new AvistazRequestGenerator
             {
                 Settings = Settings,
                 HttpClient = _httpClient,
@@ -30,18 +34,23 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
         }
 
+        public override IParseIndexerResponse GetParser()
+        {
+            return new AvistaZParser();
+        }
+
         protected override IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Genre
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Genre
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId, MovieSearchParam.Genre
-                       }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId, MovieSearchParam.Genre
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies);
@@ -56,5 +65,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return caps;
         }
+    }
+
+    public class AvistaZParser : AvistazParserBase
+    {
+        protected override string TimezoneOffset => "+01:00";
     }
 }

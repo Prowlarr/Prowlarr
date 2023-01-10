@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Avistaz;
 using NzbDrone.Core.Messaging.Events;
@@ -10,18 +9,23 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class CinemaZ : AvistazBase
     {
         public override string Name => "CinemaZ";
-        public override string[] IndexerUrls => new string[] { "https://cinemaz.to/" };
+        public override string[] IndexerUrls => new[] { "https://cinemaz.to/" };
         public override string Description => "CinemaZ (EuTorrents) is a Private Torrent Tracker for FOREIGN NON-ASIAN MOVIES.";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public CinemaZ(IIndexerRepository indexerRepository, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public CinemaZ(IIndexerRepository indexerRepository,
+                       IIndexerHttpClient httpClient,
+                       IEventAggregator eventAggregator,
+                       IIndexerStatusService indexerStatusService,
+                       IConfigService configService,
+                       Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AvistazRequestGenerator()
+            return new AvistazRequestGenerator
             {
                 Settings = Settings,
                 HttpClient = _httpClient,

@@ -12,17 +12,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     public class AvistazRequestGenerator : IIndexerRequestGenerator
     {
         public AvistazSettings Settings { get; set; }
-
-        public IDictionary<string, string> AuthCookieCache { get; set; }
         public IIndexerHttpClient HttpClient { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Logger Logger { get; set; }
-
-        protected virtual string SearchUrl => Settings.BaseUrl + "api/v1/jackett/torrents";
-        protected virtual bool ImdbInTags => false;
-
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+        protected virtual string SearchUrl => Settings.BaseUrl + "api/v1/jackett/torrents";
 
         // hook to adjust the search category
         protected virtual List<KeyValuePair<string, string>> GetBasicSearchParameters(int[] categories, string genre)
@@ -45,7 +40,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             }
 
             // resolution filter to improve the search
-            if (!categories.Contains(NewznabStandardCategory.Movies.Id) && !categories.Contains(NewznabStandardCategory.TV.Id) &&
+            if (!categories.Contains(NewznabStandardCategory.Movies.Id) &&
+                !categories.Contains(NewznabStandardCategory.TV.Id) &&
                 !categories.Contains(NewznabStandardCategory.Audio.Id))
             {
                 if (categories.Contains(NewznabStandardCategory.MoviesUHD.Id) || categories.Contains(NewznabStandardCategory.TVUHD.Id))

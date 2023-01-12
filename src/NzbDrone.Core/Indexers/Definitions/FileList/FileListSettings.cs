@@ -16,12 +16,7 @@ namespace NzbDrone.Core.Indexers.FileList
 
     public class FileListSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly FileListSettingsValidator Validator = new FileListSettingsValidator();
-
-        public FileListSettings()
-        {
-            BaseUrl = "https://filelist.io";
-        }
+        private static readonly FileListSettingsValidator Validator = new ();
 
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }

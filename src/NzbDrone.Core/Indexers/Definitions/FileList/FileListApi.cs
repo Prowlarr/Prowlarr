@@ -1,4 +1,3 @@
-using System;
 using Newtonsoft.Json;
 
 namespace NzbDrone.Core.Indexers.FileList
@@ -24,5 +23,7 @@ namespace NzbDrone.Core.Indexers.FileList
         [JsonProperty(PropertyName = "upload_date")]
         public string UploadDate { get; set; }
         public string Category { get; set; }
+        [JsonProperty(PropertyName = "small_description")]
+        public string SmallDescription { get; set; }
     }
 }

@@ -16,34 +16,35 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [SetUp]
         public void Setup()
         {
-            Subject.Settings = new FileListSettings()
+            Subject.Settings = new FileListSettings
             {
+                BaseUrl = "https://filelist.io/",
                 Passkey = "abcd",
-                Username = "somename",
-                BaseUrl = "https://filelist.io"
+                Username = "somename"
             };
 
             Subject.Capabilities = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       },
+                {
+                    BookSearchParam.Q
+                },
                 Flags = new List<IndexerFlag>
                 {
-                    IndexerFlag.FreeLeech
+                    IndexerFlag.FreeLeech,
+                    IndexerFlag.Internal,
                 }
             };
 
@@ -53,7 +54,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             _movieSearchCriteria = new MovieSearchCriteria
             {
                 SearchTerm = "Star Wars",
-                Categories = new int[] { 2000 }
+                Categories = new[] { 2000 }
             };
         }
 
@@ -65,13 +66,13 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         [Test]
         public void should_use_categories_for_feed()
         {
-            var results = Subject.GetSearchRequests(new MovieSearchCriteria { Categories = new int[] { NewznabStandardCategory.MoviesSD.Id, NewznabStandardCategory.MoviesDVD.Id } });
+            var results = Subject.GetSearchRequests(new MovieSearchCriteria { Categories = new[] { NewznabStandardCategory.MoviesSD.Id, NewznabStandardCategory.MoviesDVD.Id } });
 
             results.GetAllTiers().Should().HaveCount(1);
 
             var page = results.GetAllTiers().First().First();
 
-            page.Url.Query.Should().Contain("&category=1,2&");
+            page.Url.Query.Should().Contain("&category=1%2C2");
         }
 
         [Test]
@@ -100,7 +101,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             var page = results.GetAllTiers().First().First();
 
             page.Url.Query.Should().Contain("type=name");
-            page.Url.Query.Should().Contain("query=Star Wars");
+            page.Url.Query.Should().Contain("query=Star+Wars");
         }
     }
 }

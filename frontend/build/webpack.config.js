@@ -142,8 +142,8 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.js?$/,
-          exclude: /(node_modules|JsLibraries)/,
+          test: /\.jsx?$/,
+          exclude: /[\\/]node_modules[\\/](?!(@sentry\/browser|@sentry\/integrations|chart.js|filesize|normalize.css)[\\/])/,
           use: [
             {
               loader: 'babel-loader',

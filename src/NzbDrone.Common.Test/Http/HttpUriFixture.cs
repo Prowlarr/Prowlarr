@@ -53,6 +53,26 @@ namespace NzbDrone.Common.Test.Http
             newUri.FullUri.Should().Be(expected);
         }
 
+        [TestCase("", "./relative", "relative")]
+        [TestCase("/", "./relative", "/relative")]
+        [TestCase("/base", "./relative", "/relative")]
+        [TestCase("/base/sub", "./relative", "/base/relative")]
+        [TestCase("/base/sub/", "./relative", "/base/sub/relative")]
+        [TestCase("base/sub", "./relative", "base/relative")]
+        [TestCase("base/sub/", "./relative", "base/sub/relative")]
+        [TestCase("", "../relative", "relative")]
+        [TestCase("/", "../relative", "/relative")]
+        [TestCase("/base", "../relative", "/relative")]
+        [TestCase("/base/sub", "../relative", "/base/relative")]
+        [TestCase("/base/sub/", "../relative", "/base/sub/relative")]
+        [TestCase("base/sub", "../relative", "base/relative")]
+        [TestCase("base/sub/", "../relative", "base/sub/relative")]
+        public void should_combine_uri_with_dot_segment(string basePath, string relativePath, string expected)
+        {
+            var newUri = new HttpUri(basePath) + new HttpUri(relativePath);
+            newUri.FullUri.Should().Be(expected);
+        }
+
         [TestCase("", "", "")]
         [TestCase("/", "", "/")]
         [TestCase("base", "", "base")]

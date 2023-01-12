@@ -166,6 +166,37 @@ namespace NzbDrone.Common.Http
                 return relativePath;
             }
 
+            if (relativePath.StartsWith("./"))
+            {
+                relativePath = relativePath.TrimStart('.').TrimStart('/');
+
+                var lastIndex = basePath.LastIndexOf("/");
+
+                if (lastIndex > 0)
+                {
+                    basePath = basePath.Substring(0, lastIndex) + "/";
+                }
+            }
+
+            if (relativePath.StartsWith("../"))
+            {
+                relativePath = relativePath.TrimStart('.').TrimStart('/');
+
+                var lastIndex = basePath.LastIndexOf("/");
+
+                if (lastIndex > 0)
+                {
+                    basePath = basePath.Substring(0, lastIndex) + "/";
+                }
+
+                var secondLastIndex = basePath.LastIndexOf("/");
+
+                if (lastIndex > 0)
+                {
+                    basePath = basePath.Substring(0, secondLastIndex) + "/";
+                }
+            }
+
             var baseSlashIndex = basePath.LastIndexOf('/');
 
             if (baseSlashIndex >= 0)

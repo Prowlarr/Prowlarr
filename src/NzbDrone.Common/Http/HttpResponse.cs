@@ -76,6 +76,7 @@ namespace NzbDrone.Common.Http
             get
             {
                 var newUrl = Headers["Location"];
+
                 if (newUrl == null)
                 {
                     newUrl = Headers["Refresh"];

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
@@ -9,7 +8,8 @@ namespace NzbDrone.Core.Indexers.FileList
     public class FileList : TorrentIndexerBase<FileListSettings>
     {
         public override string Name => "FileList.io";
-        public override string[] IndexerUrls => new string[] { "https://filelist.io" };
+        public override string[] IndexerUrls => new[] { "https://filelist.io/" };
+        public override string[] LegacyUrls => new[] { "https://filelist.io" };
         public override string Description => "FileList (FL) is a ROMANIAN Private Torrent Tracker for 0DAY / GENERAL";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -18,14 +18,18 @@ namespace NzbDrone.Core.Indexers.FileList
         public override bool SupportsRedirect => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public FileList(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public FileList(IIndexerHttpClient httpClient,
+                        IEventAggregator eventAggregator,
+                        IIndexerStatusService indexerStatusService,
+                        IConfigService configService,
+                        Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new FileListRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new FileListRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -38,21 +42,21 @@ namespace NzbDrone.Core.Indexers.FileList
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.ImdbId, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       },
+                {
+                    BookSearchParam.Q
+                },
                 Flags = new List<IndexerFlag>
                 {
                     IndexerFlag.Internal,

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
+using NLog;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -14,10 +15,12 @@ namespace NzbDrone.Core.Indexers.Rarbg
         private static readonly Regex RegexGuid = new Regex(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
 
         private readonly IndexerCapabilities _capabilities;
+        private readonly Logger _logger;
 
-        public RarbgParser(IndexerCapabilities capabilities)
+        public RarbgParser(IndexerCapabilities capabilities, Logger logger)
         {
             _capabilities = capabilities;
+            _logger = logger;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -41,12 +44,19 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
             if (jsonResponse.Resource.error_code.HasValue)
             {
-                if (jsonResponse.Resource.error_code == 20 || jsonResponse.Resource.error_code == 8
-                    || jsonResponse.Resource.error_code == 9 || jsonResponse.Resource.error_code == 10
-                    || jsonResponse.Resource.error_code == 5 || jsonResponse.Resource.error_code == 13
-                    || jsonResponse.Resource.error_code == 14)
+                if (jsonResponse.Resource.error_code is 20 or 8 or 9 or 10 or 5 or 13 or 14)
                 {
-                    // No results, rate limit, or imdbid/tvdb not found
+                    var reason = $"{jsonResponse.Resource.error} ({jsonResponse.Resource.error_code})";
+
+                    if (jsonResponse.Resource.rate_limit is 1)
+                    {
+                        _logger.Debug("No results due to rate limiting. Reason: {0}", reason);
+                    }
+                    else
+                    {
+                        _logger.Debug("No results or imdbid/tvdb not found. Reason: {0}", reason);
+                    }
+
                     return results;
                 }
 

@@ -22,11 +22,10 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         private IEnumerable<IndexerRequest> GetRequest(string term, int[] categories, string imdbId = null, int? tmdbId = null, int? tvdbId = null)
         {
-            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl)
+            var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl.Trim('/'))
                 .Resource("/pubapi_v2.php")
+                .AddQueryParam("mode", "search")
                 .Accept(HttpAccept.Json);
-
-            requestBuilder.AddQueryParam("mode", "search");
 
             if (imdbId.IsNotNullOrWhiteSpace())
             {

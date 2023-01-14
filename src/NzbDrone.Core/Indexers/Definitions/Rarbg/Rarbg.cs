@@ -17,19 +17,15 @@ namespace NzbDrone.Core.Indexers.Rarbg
 {
     public class Rarbg : TorrentIndexerBase<RarbgSettings>
     {
-        private readonly IRarbgTokenProvider _tokenProvider;
-
         public override string Name => "Rarbg";
-        public override string[] IndexerUrls => new string[] { "https://torrentapi.org" };
+        public override string[] IndexerUrls => new[] { "https://torrentapi.org/" };
+        public override string[] LegacyUrls => new[] { "https://torrentapi.org" };
         public override string Description => "RARBG is a Public torrent site for MOVIES / TV / GENERAL";
-
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
-
         public override IndexerCapabilities Capabilities => SetCapabilities();
-
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
+        private readonly IRarbgTokenProvider _tokenProvider;
 
         public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -44,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
         public override IParseIndexerResponse GetParser()
         {
-            return new RarbgParser(Capabilities);
+            return new RarbgParser(Capabilities, _logger);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -52,17 +48,17 @@ namespace NzbDrone.Core.Indexers.Rarbg
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       }
+                {
+                    MusicSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.XXX, "XXX (18+)");
@@ -106,7 +102,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
             if (jsonResponse.Resource.error_code.HasValue)
             {
-                if (jsonResponse.Resource.error_code == 4 || jsonResponse.Resource.error_code == 2)
+                if (jsonResponse.Resource.error_code is 4 or 2)
                 {
                     _logger.Debug("Invalid or expired token, refreshing token from Rarbg");
                     _tokenProvider.ExpireToken(Settings);
@@ -118,7 +114,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                     request.HttpRequest.Url = request.Url.SetQuery(qs.GetQueryString());
                     response = await FetchIndexerResponse(request);
                 }
-                else if (jsonResponse.Resource.error_code == 5)
+                else if (jsonResponse.Resource.error_code is 5)
                 {
                     _logger.Debug("Rarbg temp rate limit hit, retrying request");
                     response = await FetchIndexerResponse(request);
@@ -155,9 +151,9 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 Settings.Validate().Filter("BaseUrl").ThrowOnError();
 
                 var request = new HttpRequestBuilder(Settings.BaseUrl.Trim('/'))
-                           .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}")
-                           .Accept(HttpAccept.Json)
-                           .Build();
+                    .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}")
+                    .Accept(HttpAccept.Json)
+                    .Build();
 
                 _httpClient.Get(request);
 
@@ -166,7 +162,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
                     captchaToken = ""
                 };
             }
-            else if (action == "getCaptchaCookie")
+
+            if (action == "getCaptchaCookie")
             {
                 if (query["responseUrl"].IsNullOrWhiteSpace())
                 {
@@ -200,7 +197,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
                     captchaToken = cfClearanceCookie
                 };
             }
-            else if (action == "getUrls")
+
+            if (action == "getUrls")
             {
                 var links = IndexerUrls;
 

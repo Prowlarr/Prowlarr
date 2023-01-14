@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -16,7 +15,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -38,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SceneTimeRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new SceneTimeRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -56,21 +54,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
+                {
+                    MovieSearchParam.Q
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.XXX, "Movies Adult");
@@ -111,10 +109,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public SceneTimeSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public SceneTimeRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
@@ -280,11 +274,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SceneTimeSettings : CookieTorrentBaseSettings
     {
-        public SceneTimeSettings()
-        {
-        }
-
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox,  HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
     }
 }

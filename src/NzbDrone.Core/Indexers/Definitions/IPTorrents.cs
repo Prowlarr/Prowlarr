@@ -362,7 +362,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(2, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
         public string UserAgent { get; set; }
 
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
     }
 }

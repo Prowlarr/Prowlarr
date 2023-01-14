@@ -33,7 +33,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // avistaz response
         [TestCase(@"""download"":""https://avistaz.to/rss/download/2b51db35e1910123321025a12b9933d2/tb51db35e1910123321025a12b9933d2.torrent"",")]
         [TestCase(@",""info_hash"":""2b51db35e1910123321025a12b9933d2"",")]
-        [TestCase(@"""token"":""2b51db35e1910123321025a12b9933d2"",")]
+        [TestCase(@"""token"":""2b51db35e1910123321025a12b9933d2""")]
 
         // animebytes response
         [TestCase(@"""Link"":""https://animebytes.tv/torrent/994064/download/tb51db35e1910123321025a12b9933d2"",")]

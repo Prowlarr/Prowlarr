@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
@@ -679,6 +679,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         break;
                     case "urlencode":
                         data = data.UrlEncode(_encoding);
+                        break;
+                    case "htmldecode":
+                        data = WebUtility.HtmlDecode(data);
+                        break;
+                    case "htmlencode":
+                        data = WebUtility.HtmlEncode(data);
                         break;
                     case "timeago":
                     case "reltime":

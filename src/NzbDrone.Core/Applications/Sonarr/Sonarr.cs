@@ -233,7 +233,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             // Create required new tags. If the tag already exists, it will be returned in the response so no worries about concurrency.
             foreach (var tag in missingTagLabels)
             {
-                _logger.Info("Tag '{0}' doesn't seem to exist in {1} so will be created.", tag, indexer.Name);
+                _logger.Info("Tag '{0}' doesn't seem to exist in application so will be created.", tag);
                 var newTag = _sonarrV3Proxy.CreateTag(Settings, tag);
                 existingSonarrIndexerTags.Add(newTag);
             }

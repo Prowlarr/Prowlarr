@@ -35,6 +35,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public NewznabSettingsValidator()
         {
+            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
             RuleFor(c => c.BaseUrl).ValidRootUrl();
             RuleFor(c => c.ApiPath).ValidUrlBase("/api");
             RuleFor(c => c.ApiKey).NotEmpty().When(ShouldHaveApiKey);

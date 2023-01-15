@@ -130,6 +130,8 @@ namespace NzbDrone.Core.History
                 history.Data.Add("ImdbId", ((MovieSearchCriteria)message.Query).FullImdbId ?? string.Empty);
                 history.Data.Add("TmdbId", ((MovieSearchCriteria)message.Query).TmdbId?.ToString() ?? string.Empty);
                 history.Data.Add("TraktId", ((MovieSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
+                history.Data.Add("Year", ((MovieSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
+                history.Data.Add("Genre", ((MovieSearchCriteria)message.Query).Genre ?? string.Empty);
             }
 
             if (message.Query is TvSearchCriteria)
@@ -142,18 +144,27 @@ namespace NzbDrone.Core.History
                 history.Data.Add("TvMazeId", ((TvSearchCriteria)message.Query).TvMazeId?.ToString() ?? string.Empty);
                 history.Data.Add("Season", ((TvSearchCriteria)message.Query).Season?.ToString() ?? string.Empty);
                 history.Data.Add("Episode", ((TvSearchCriteria)message.Query).Episode ?? string.Empty);
+                history.Data.Add("Year", ((TvSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
+                history.Data.Add("Genre", ((TvSearchCriteria)message.Query).Genre ?? string.Empty);
             }
 
             if (message.Query is MusicSearchCriteria)
             {
                 history.Data.Add("Artist", ((MusicSearchCriteria)message.Query).Artist ?? string.Empty);
                 history.Data.Add("Album", ((MusicSearchCriteria)message.Query).Album ?? string.Empty);
+                history.Data.Add("Track", ((MusicSearchCriteria)message.Query).Track ?? string.Empty);
+                history.Data.Add("Label", ((MusicSearchCriteria)message.Query).Label ?? string.Empty);
+                history.Data.Add("Year", ((MusicSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
+                history.Data.Add("Genre", ((MusicSearchCriteria)message.Query).Genre ?? string.Empty);
             }
 
             if (message.Query is BookSearchCriteria)
             {
                 history.Data.Add("Author", ((BookSearchCriteria)message.Query).Author ?? string.Empty);
                 history.Data.Add("BookTitle", ((BookSearchCriteria)message.Query).Title ?? string.Empty);
+                history.Data.Add("Publisher", ((BookSearchCriteria)message.Query).Publisher ?? string.Empty);
+                history.Data.Add("Year", ((BookSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
+                history.Data.Add("Genre", ((BookSearchCriteria)message.Query).Genre ?? string.Empty);
             }
 
             history.Data.Add("ElapsedTime", message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);

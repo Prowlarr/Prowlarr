@@ -28,15 +28,15 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [Test]
         public void should_return_warning_when_branch_not_valid()
         {
-            GivenValidBranch("master");
+            GivenValidBranch("test");
 
             Subject.Check().ShouldBeWarning();
         }
 
-        [TestCase("Develop")]
-        [TestCase("develop")]
         [TestCase("nightly")]
         [TestCase("Nightly")]
+        [TestCase("develop")]
+        [TestCase("master")]
         public void should_return_no_warning_when_branch_valid(string branch)
         {
             GivenValidBranch(branch);

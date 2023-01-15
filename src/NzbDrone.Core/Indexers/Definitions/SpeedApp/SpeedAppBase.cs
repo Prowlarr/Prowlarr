@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using Newtonsoft.Json;
@@ -21,7 +22,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -29,13 +29,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     public abstract class SpeedAppBase : TorrentIndexerBase<SpeedAppSettings>
     {
         private string LoginUrl => Settings.BaseUrl + "api/login";
-
         public override Encoding Encoding => Encoding.UTF8;
-
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-
         public override IndexerCapabilities Capabilities => SetCapabilities();
-
+        protected virtual int MinimumSeedTime => 172800; // 48 hours
         private IIndexerRepository _indexerRepository;
 
         public SpeedAppBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, IIndexerRepository indexerRepository)
@@ -51,7 +48,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SpeedAppParser(Settings, Capabilities.Categories);
+            return new SpeedAppParser(Settings, Capabilities.Categories, MinimumSeedTime);
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
@@ -229,7 +226,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int? season = null, string episode = null)
         {
-            var qc = new NameValueCollection();
+            var qc = new NameValueCollection()
+            {
+                { "itemsPerPage", "100" },
+                { "sort", "torrent.createdAt" },
+                { "direction", "desc" }
+            };
 
             if (imdbId.IsNotNullOrWhiteSpace())
             {
@@ -274,13 +276,15 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly SpeedAppSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
+        private readonly int _minimumSeedTime;
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public SpeedAppParser(SpeedAppSettings settings, IndexerCapabilitiesCategories categories)
+        public SpeedAppParser(SpeedAppSettings settings, IndexerCapabilitiesCategories categories, int minimumSeedTime)
         {
             _settings = settings;
             _categories = categories;
+            _minimumSeedTime = minimumSeedTime;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -300,11 +304,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             return jsonResponse.Resource.Select(torrent => new TorrentInfo
             {
                 Guid = torrent.Id.ToString(),
-                Title = torrent.Name,
+                Title = Regex.Replace(torrent.Name, @"(?i:\[REQUESTED\])", "").Trim(' ', '.'),
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
-                DownloadUrl = $"{_settings.BaseUrl}/api/torrent/{torrent.Id}/download",
+                DownloadUrl = $"{_settings.BaseUrl}api/torrent/{torrent.Id}/download",
                 PosterUrl = torrent.Poster,
                 InfoUrl = torrent.Url,
                 Grabs = torrent.TimesCompleted,
@@ -314,7 +318,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Seeders = torrent.Seeders,
                 Peers = torrent.Leechers + torrent.Seeders,
                 MinimumRatio = 1,
-                MinimumSeedTime = 172800,
+                MinimumSeedTime = _minimumSeedTime,
                 DownloadVolumeFactor = torrent.DownloadVolumeFactor,
                 UploadVolumeFactor = torrent.UploadVolumeFactor,
             }).ToArray();

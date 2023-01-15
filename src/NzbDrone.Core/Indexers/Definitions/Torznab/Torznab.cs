@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         public override IParseIndexerResponse GetParser()
         {
-            return new TorznabRssParser(Settings);
+            return new TorznabRssParser(Settings, Definition, _capabilitiesProvider);
         }
 
         public string[] GetBaseUrlFromSettings()
@@ -88,8 +88,9 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             get
             {
-                yield return GetDefinition("AnimeTosho", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("Generic Torznab", GetSettings(""));
+                yield return GetDefinition("AnimeTosho", "", GetSettings("https://feed.animetosho.org"));
+                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"));
+                yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", GetSettings(""));
             }
         }
 
@@ -99,12 +100,13 @@ namespace NzbDrone.Core.Indexers.Torznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, TorznabSettings settings)
+        private IndexerDefinition GetDefinition(string name, string description, TorznabSettings settings)
         {
             return new IndexerDefinition
             {
                 Enable = true,
                 Name = name,
+                Description = description,
                 Implementation = GetType().Name,
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,
@@ -157,13 +159,13 @@ namespace NzbDrone.Core.Indexers.Torznab
                 }
 
                 if (capabilities.MovieSearchParams != null &&
-                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId }.Any(v => capabilities.MovieSearchParams.Contains(v)))
+                    new[] { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId, MovieSearchParam.TraktId }.Any(v => capabilities.MovieSearchParams.Contains(v)))
                 {
                     return null;
                 }
 
                 if (capabilities.TvSearchParams != null &&
-                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
+                    new[] { TvSearchParam.Q, TvSearchParam.TvdbId, TvSearchParam.ImdbId, TvSearchParam.TmdbId, TvSearchParam.RId }.Any(v => capabilities.TvSearchParams.Contains(v)) &&
                     new[] { TvSearchParam.Season, TvSearchParam.Ep }.All(v => capabilities.TvSearchParams.Contains(v)))
                 {
                     return null;

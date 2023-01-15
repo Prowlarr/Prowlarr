@@ -10,6 +10,7 @@ using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -17,7 +18,6 @@ namespace NzbDrone.Core.Indexers
     {
         List<IIndexer> Enabled(bool filterBlockedIndexers = true);
         List<IIndexer> AllProviders(bool filterBlockedIndexers = true);
-        void DeleteIndexers(List<int> indexerIds);
     }
 
     public class IndexerFactory : ProviderFactory<IIndexer, IndexerDefinition>, IIndexerFactory
@@ -253,18 +253,6 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 yield return indexer;
-            }
-        }
-
-        public void DeleteIndexers(List<int> indexerIds)
-        {
-            var indexersToDelete = _providerRepository.Get(indexerIds).ToList();
-
-            _providerRepository.DeleteMany(indexerIds);
-
-            foreach (var indexer in indexersToDelete)
-            {
-                _logger.Info("Deleted indexer {0}", indexer.Name);
             }
         }
 

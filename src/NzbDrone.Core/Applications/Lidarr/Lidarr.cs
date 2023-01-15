@@ -91,6 +91,8 @@ namespace NzbDrone.Core.Applications.Lidarr
                 var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
             }
+
+            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -126,6 +128,12 @@ namespace NzbDrone.Core.Applications.Lidarr
                 {
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
+                        // Retain user fields not-affiliated with Prowlarr
+                        lidarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !lidarrIndexer.Fields.Any(s => s.Name == f.Name)));
+
+                        // Retain user settings not-affiliated with Prowlarr
+                        lidarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
+
                         // Update the indexer if it still has categories that match
                         _lidarrV1Proxy.UpdateIndexer(lidarrIndexer, Settings);
                     }
@@ -159,6 +167,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _lidarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
 
             var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
             var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
@@ -175,8 +184,10 @@ namespace NzbDrone.Core.Applications.Lidarr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = schema.Fields,
+                Fields = new List<LidarrField>()
             };
+
+            lidarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
@@ -191,7 +202,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
                 if (lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime") != null)
                 {
-                    lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
+                    lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.PackSeedTime ?? ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
                 }
             }
 

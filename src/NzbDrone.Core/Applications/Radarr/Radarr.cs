@@ -91,6 +91,8 @@ namespace NzbDrone.Core.Applications.Radarr
                 var remoteIndexer = _radarrV3Proxy.AddIndexer(radarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
             }
+
+            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -126,6 +128,12 @@ namespace NzbDrone.Core.Applications.Radarr
                 {
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
+                        // Retain user fields not-affiliated with Prowlarr
+                        radarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !radarrIndexer.Fields.Any(s => s.Name == f.Name)));
+
+                        // Retain user settings not-affiliated with Prowlarr
+                        radarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
+
                         // Update the indexer if it still has categories that match
                         _radarrV3Proxy.UpdateIndexer(radarrIndexer, Settings);
                     }
@@ -159,6 +167,7 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
 
             var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
             var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
@@ -175,8 +184,10 @@ namespace NzbDrone.Core.Applications.Radarr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = schema.Fields,
+                Fields = new List<RadarrField>()
             };
+
+            radarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";

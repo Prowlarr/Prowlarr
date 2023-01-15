@@ -38,9 +38,10 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
             _proxy.AddTorrentFromUrl(magnetLink, Settings);
 
             //_proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
-            if (Settings.Category.IsNotNullOrWhiteSpace())
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
+            if (GetCategoryForRelease(release).IsNotNullOrWhiteSpace())
             {
-                _proxy.SetTorrentLabel(hash, Settings.Category, Settings);
+                _proxy.SetTorrentLabel(hash, category, Settings);
             }
 
             if (Settings.Priority == (int)UTorrentPriority.First)
@@ -58,9 +59,10 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
             _proxy.AddTorrentFromFile(filename, fileContent, Settings);
 
             //_proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
-            if (Settings.Category.IsNotNullOrWhiteSpace())
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
+            if (category.IsNotNullOrWhiteSpace())
             {
-                _proxy.SetTorrentLabel(hash, Settings.Category, Settings);
+                _proxy.SetTorrentLabel(hash, category, Settings);
             }
 
             if (Settings.Priority == (int)UTorrentPriority.First)
@@ -74,40 +76,7 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
         }
 
         public override string Name => "uTorrent";
-
-        private List<UTorrentTorrent> GetTorrents()
-        {
-            List<UTorrentTorrent> torrents;
-
-            var cacheKey = string.Format("{0}:{1}:{2}", Settings.Host, Settings.Port, Settings.Category);
-            var cache = _torrentCache.Find(cacheKey);
-
-            var response = _proxy.GetTorrents(cache == null ? null : cache.CacheID, Settings);
-
-            if (cache != null && response.Torrents == null)
-            {
-                var removedAndUpdated = new HashSet<string>(response.TorrentsChanged.Select(v => v.Hash).Concat(response.TorrentsRemoved));
-
-                torrents = cache.Torrents
-                    .Where(v => !removedAndUpdated.Contains(v.Hash))
-                    .Concat(response.TorrentsChanged)
-                    .ToList();
-            }
-            else
-            {
-                torrents = response.Torrents;
-            }
-
-            cache = new UTorrentTorrentCache
-            {
-                CacheID = response.CacheNumber,
-                Torrents = torrents
-            };
-
-            _torrentCache.Set(cacheKey, cache, TimeSpan.FromMinutes(15));
-
-            return torrents;
-        }
+        public override bool SupportsCategories => true;
 
         protected override void Test(List<ValidationFailure> failures)
         {

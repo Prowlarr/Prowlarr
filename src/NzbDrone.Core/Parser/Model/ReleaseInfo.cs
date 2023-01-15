@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Parser.Model
     {
         public ReleaseInfo()
         {
-            IndexerFlags = new List<IndexerFlag>();
+            IndexerFlags = new HashSet<IndexerFlag>();
             Categories = new List<IndexerCategory>();
             Languages = new List<string>();
             Subs = new List<string>();
@@ -34,6 +34,7 @@ namespace NzbDrone.Core.Parser.Model
         public int ImdbId { get; set; }
         public int TmdbId { get; set; }
         public int TraktId { get; set; }
+        public int TvMazeId { get; set; }
         public int DoubanId { get; set; }
         public int Year { get; set; }
         public string Author { get; set; }
@@ -56,11 +57,11 @@ namespace NzbDrone.Core.Parser.Model
         public ICollection<string> Languages { get; set; }
         public ICollection<string> Subs { get; set; }
         public ICollection<IndexerCategory> Categories { get; set; }
-        public ICollection<IndexerFlag> IndexerFlags { get; set; }
+        public HashSet<IndexerFlag> IndexerFlags { get; set; }
 
         public int Age
         {
-            get { return DateTime.UtcNow.Subtract(PublishDate).Days; }
+            get { return DateTime.UtcNow.Subtract(PublishDate.ToUniversalTime()).Days; }
 
             //This prevents manually downloading a release from blowing up in mono
             //TODO: Is there a better way?
@@ -69,7 +70,7 @@ namespace NzbDrone.Core.Parser.Model
 
         public double AgeHours
         {
-            get { return DateTime.UtcNow.Subtract(PublishDate).TotalHours; }
+            get { return DateTime.UtcNow.Subtract(PublishDate.ToUniversalTime()).TotalHours; }
 
             //This prevents manually downloading a release from blowing up in mono
             //TODO: Is there a better way?
@@ -78,7 +79,7 @@ namespace NzbDrone.Core.Parser.Model
 
         public double AgeMinutes
         {
-            get { return DateTime.UtcNow.Subtract(PublishDate).TotalMinutes; }
+            get { return DateTime.UtcNow.Subtract(PublishDate.ToUniversalTime()).TotalMinutes; }
 
             //This prevents manually downloading a release from blowing up in mono
             //TODO: Is there a better way?

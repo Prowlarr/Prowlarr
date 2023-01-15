@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -8,10 +7,10 @@ namespace NzbDrone.Common.Instrumentation
 {
     public class CleanseLogMessage
     {
-        private static readonly Regex[] CleansingRules = new[]
-            {
+        private static readonly Regex[] CleansingRules =
+        {
                 // Url
-                new Regex(@"(?<=[?&: ;])(apikey|(?:(?:access|api)[-_]?)?token|pass(?:key|wd)?|auth|authkey|user|u?id|api|[a-z_]*apikey|account|pwd)=(?<secret>[^&=""]+?)(?=[ ""&=]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"(?<=[?&: ;])(apikey|api_key|(?:(?:access|api)[-_]?)?token|pass(?:key|wd)?|auth|authkey|user|u?id|api|[a-z_]*apikey|account|pid|pwd)=(?<secret>[^&=""]+?)(?=[ ""&=]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"(?<=[?& ;])[^=]*?(_?(?<!use|get_)token|username|passwo?rd)=(?<secret>[^&=]+?)(?= |&|$|;)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"rss\.torrentleech\.org/(?!rss)(?<secret>[0-9a-z]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"rss\.torrentleech\.org/rss/download/[0-9]+/(?<secret>[0-9a-z]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -21,6 +20,7 @@ namespace NzbDrone.Common.Instrumentation
                 new Regex(@"\b(\w*)?(_?(?<!use|get_)token|username|passwo?rd)=(?<secret>[^&=]+?)(?= |&|$|;)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"(?<=authkey = "")(?<secret>[^&=]+?)(?="")", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"(?<=beyond-hd\.[a-z]+/api/torrents/)(?<secret>[^&=][a-z0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"(?<=beyond-hd\.[a-z]+/torrent/download/[\w\d-]+[.]\d+[.])(?<secret>[a-z0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 // UNIT3D
                 new Regex(@"(?<=[a-z0-9-]+\.[a-z]+/torrent/download/\d+\.)(?<secret>[^&=][a-z0-9]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -58,9 +58,10 @@ namespace NzbDrone.Common.Instrumentation
                 new Regex(@"(?:avistaz|exoticaz|cinemaz|privatehd)\.[a-z]{2,3}/rss/download/(?<secret>[^&=]+?)/(?<secret>[^&=]+?)\.torrent", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@"(?:animebytes)\.[a-z]{2,3}/torrent/[0-9]+/download/(?<secret>[^&=]+?)[""]", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@",""info_hash"":""(?<secret>[^&=]+?)"",", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                new Regex(@"""token"":""(?<secret>[^&=]+?)""", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@",""pass[- _]?key"":""(?<secret>[^&=]+?)"",", RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 new Regex(@",""rss[- _]?key"":""(?<secret>[^&=]+?)"",", RegexOptions.Compiled | RegexOptions.IgnoreCase),
-            };
+        };
 
         private static readonly Regex CleanseRemoteIPRegex = new Regex(@"(?:Auth-\w+(?<!Failure|Unauthorized) ip|from) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", RegexOptions.Compiled);
 

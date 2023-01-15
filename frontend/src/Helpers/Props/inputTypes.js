@@ -8,6 +8,7 @@ export const DEVICE = 'device';
 export const KEY_VALUE_LIST = 'keyValueList';
 export const INFO = 'info';
 export const MOVIE_MONITORED_SELECT = 'movieMonitoredSelect';
+export const CATEGORY_SELECT = 'newznabCategorySelect';
 export const NUMBER = 'number';
 export const OAUTH = 'oauth';
 export const PASSWORD = 'password';
@@ -32,6 +33,7 @@ export const all = [
   KEY_VALUE_LIST,
   INFO,
   MOVIE_MONITORED_SELECT,
+  CATEGORY_SELECT,
   NUMBER,
   OAUTH,
   PASSWORD,

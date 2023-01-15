@@ -11,8 +11,6 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, sortDirections } from 'Helpers/Props';
-import AddIndexerModal from 'Indexer/Add/AddIndexerModal';
-import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import NoIndexer from 'Indexer/NoIndexer';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
@@ -23,12 +21,17 @@ import selectAll from 'Utilities/Table/selectAll';
 import toggleSelected from 'Utilities/Table/toggleSelected';
 import SearchIndexFilterMenu from './Menus/SearchIndexFilterMenu';
 import SearchIndexSortMenu from './Menus/SearchIndexSortMenu';
+import SearchIndexOverviewsConnector from './Mobile/SearchIndexOverviewsConnector';
 import NoSearchResults from './NoSearchResults';
 import SearchFooterConnector from './SearchFooterConnector';
 import SearchIndexTableConnector from './Table/SearchIndexTableConnector';
 import styles from './SearchIndex.css';
 
-function getViewComponent() {
+function getViewComponent(isSmallScreen) {
+  if (isSmallScreen) {
+    return SearchIndexOverviewsConnector;
+  }
+
   return SearchIndexTableConnector;
 }
 
@@ -44,8 +47,6 @@ class SearchIndex extends Component {
       scroller: null,
       jumpBarItems: { order: [] },
       jumpToCharacter: null,
-      isAddIndexerModalOpen: false,
-      isEditIndexerModalOpen: false,
       searchType: null,
       lastToggled: null,
       allSelected: false,
@@ -177,21 +178,6 @@ class SearchIndex extends Component {
   //
   // Listeners
 
-  onAddIndexerPress = () => {
-    this.setState({ isAddIndexerModalOpen: true });
-  };
-
-  onAddIndexerModalClose = ({ indexerSelected = false } = {}) => {
-    this.setState({
-      isAddIndexerModalOpen: false,
-      isEditIndexerModalOpen: indexerSelected
-    });
-  };
-
-  onEditIndexerModalClose = () => {
-    this.setState({ isEditIndexerModalOpen: false });
-  };
-
   onJumpBarItemPress = (jumpToCharacter) => {
     this.setState({ jumpToCharacter });
   };
@@ -253,6 +239,7 @@ class SearchIndex extends Component {
       onScroll,
       onSortSelect,
       onFilterSelect,
+      isSmallScreen,
       hasIndexers,
       ...otherProps
     } = this.props;
@@ -260,8 +247,6 @@ class SearchIndex extends Component {
     const {
       scroller,
       jumpBarItems,
-      isAddIndexerModalOpen,
-      isEditIndexerModalOpen,
       jumpToCharacter,
       selectedState,
       allSelected,
@@ -270,7 +255,7 @@ class SearchIndex extends Component {
 
     const selectedIndexerIds = this.getSelectedIds();
 
-    const ViewComponent = getViewComponent();
+    const ViewComponent = getViewComponent(isSmallScreen);
     const isLoaded = !!(!error && isPopulated && items.length && scroller);
     const hasNoIndexer = !totalItems;
 
@@ -383,16 +368,6 @@ class SearchIndex extends Component {
           hasIndexers={hasIndexers}
           onSearchPress={this.onSearchPress}
           onBulkGrabPress={this.onBulkGrabPress}
-        />
-
-        <AddIndexerModal
-          isOpen={isAddIndexerModalOpen}
-          onModalClose={this.onAddIndexerModalClose}
-        />
-
-        <EditIndexerModalConnector
-          isOpen={isEditIndexerModalOpen}
-          onModalClose={this.onEditIndexerModalClose}
         />
       </PageContent>
     );

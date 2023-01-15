@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Newznab
 {
@@ -13,12 +14,16 @@ namespace NzbDrone.Core.Indexers.Newznab
         public const string ns = "{http://www.newznab.com/DTD/2010/feeds/attributes/}";
 
         private readonly NewznabSettings _settings;
+        private readonly ProviderDefinition _definition;
+        private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
-        public NewznabRssParser(NewznabSettings settings)
+        public NewznabRssParser(NewznabSettings settings, ProviderDefinition definition, INewznabCapabilitiesProvider capabilitiesProvider)
         {
             PreferredEnclosureMimeTypes = UsenetEnclosureMimeTypes;
             UseEnclosureUrl = true;
             _settings = settings;
+            _definition = definition;
+            _capabilitiesProvider = capabilitiesProvider;
         }
 
         public static void CheckError(XDocument xdoc, IndexerResponse indexerResponse)
@@ -95,12 +100,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             }
 
             releaseInfo = base.ProcessItem(item, releaseInfo);
-            releaseInfo.ImdbId = GetIntAttribute(item, "imdb");
-            releaseInfo.TmdbId = GetIntAttribute(item, "tmdbid");
-            releaseInfo.TvdbId = GetIntAttribute(item, "tvdbid");
-            releaseInfo.TvRageId = GetIntAttribute(item, "rageid");
-            releaseInfo.Grabs = GetIntAttribute(item, "grabs");
-            releaseInfo.Files = GetIntAttribute(item, "files");
+            releaseInfo.ImdbId = GetIntAttribute(item, new[] { "imdb", "imdbid" });
+            releaseInfo.TmdbId = GetIntAttribute(item, new[] { "tmdbid", "tmdb" });
+            releaseInfo.TvdbId = GetIntAttribute(item, new[] { "tvdbid", "tvdb" });
+            releaseInfo.TvMazeId = GetIntAttribute(item, new[] { "tvmazeid", "tvmaze" });
+            releaseInfo.TraktId = GetIntAttribute(item, new[] { "traktid", "trakt" });
+            releaseInfo.TvRageId = GetIntAttribute(item, new[] { "rageid" });
+            releaseInfo.Grabs = GetIntAttribute(item, new[] { "grabs" });
+            releaseInfo.Files = GetIntAttribute(item, new[] { "files" });
             releaseInfo.PosterUrl = GetPosterUrl(item);
 
             return releaseInfo;
@@ -118,19 +125,23 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         protected override ICollection<IndexerCategory> GetCategory(XElement item)
         {
+            var capabilities = _capabilitiesProvider.GetCapabilities(_settings, _definition);
             var cats = TryGetMultipleNewznabAttributes(item, "category");
             var results = new List<IndexerCategory>();
 
+            // Try to find <category> elements for some indexers that suck at following the rules.
+            if (cats.Count == 0)
+            {
+                cats = item.Elements("category").Select(e => e.Value).ToList();
+            }
+
             foreach (var cat in cats)
             {
-                if (int.TryParse(cat, out var intCategory))
-                {
-                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
+                var indexerCat = capabilities.Categories.MapTrackerCatToNewznab(cat);
 
-                    if (indexerCat != null)
-                    {
-                        results.Add(indexerCat);
-                    }
+                if (indexerCat != null)
+                {
+                    results.AddRange(indexerCat);
                 }
             }
 
@@ -197,14 +208,17 @@ namespace NzbDrone.Core.Indexers.Newznab
             return url;
         }
 
-        protected virtual int GetIntAttribute(XElement item, string attribute)
+        protected virtual int GetIntAttribute(XElement item, string[] attributes)
         {
-            var idString = TryGetNewznabAttribute(item, attribute);
-            int idInt;
-
-            if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+            foreach (var attr in attributes)
             {
-                return idInt;
+                var idString = TryGetNewznabAttribute(item, attr);
+                int idInt;
+
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                {
+                    return idInt;
+                }
             }
 
             return 0;

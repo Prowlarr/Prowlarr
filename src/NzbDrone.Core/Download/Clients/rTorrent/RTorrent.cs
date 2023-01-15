@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
         {
             var priority = (RTorrentPriority)Settings.Priority;
 
-            _proxy.AddTorrentFromUrl(magnetLink, Settings.Category, priority, Settings.Directory, Settings);
+            _proxy.AddTorrentFromUrl(magnetLink, GetCategoryForRelease(release) ?? Settings.Category, priority, Settings.Directory, Settings);
 
             var tries = 10;
             var retryDelay = 500;
@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
         {
             var priority = (RTorrentPriority)Settings.Priority;
 
-            _proxy.AddTorrentFromFile(filename, fileContent, Settings.Category, priority, Settings.Directory, Settings);
+            _proxy.AddTorrentFromFile(filename, fileContent, GetCategoryForRelease(release) ?? Settings.Category, priority, Settings.Directory, Settings);
 
             var tries = 10;
             var retryDelay = 500;
@@ -73,6 +73,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
         }
 
         public override string Name => "rTorrent";
+        public override bool SupportsCategories => true;
 
         public override ProviderMessage Message => new ProviderMessage("Prowlarr is unable to remove torrents that have finished seeding when using rTorrent", ProviderMessageType.Warning);
 

@@ -14,7 +14,7 @@ function CapabilitiesLabel(props) {
   let filteredList = categories.filter((item) => item.id < 100000);
 
   if (categoryFilter.length > 0) {
-    filteredList = filteredList.filter((item) => categoryFilter.includes(item.id));
+    filteredList = filteredList.filter((item) => categoryFilter.includes(item.id) || (item.subCategories && item.subCategories.some((r) => categoryFilter.includes(r.id))));
   }
 
   const nameList = filteredList.map((item) => item.name).sort();

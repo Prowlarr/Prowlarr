@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
@@ -23,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Orpheus : TorrentIndexerBase<OrpheusSettings>
     {
         public override string Name => "Orpheus";
-        public override string[] IndexerUrls => new string[] { "https://orpheus.network/" };
+        public override string[] IndexerUrls => new[] { "https://orpheus.network/" };
         public override string Description => "Orpheus (APOLLO) is a Private Torrent Tracker for MUSIC";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -37,7 +38,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new OrpheusRequestGenerator() { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient };
+            return new OrpheusRequestGenerator { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -50,13 +51,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q, MusicSearchParam.Album, MusicSearchParam.Artist, MusicSearchParam.Label, MusicSearchParam.Year
-                       },
+                {
+                    MusicSearchParam.Q, MusicSearchParam.Album, MusicSearchParam.Artist, MusicSearchParam.Label, MusicSearchParam.Year
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Audio, "Music");
@@ -119,15 +120,32 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
         public IIndexerHttpClient HttpClient { get; set; }
 
-        public OrpheusRequestGenerator()
-        {
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.Artist, searchCriteria.Album)));
+            if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("artistname", searchCriteria.Artist);
+            }
+
+            if (searchCriteria.Album.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("groupname", searchCriteria.Album);
+            }
+
+            if (searchCriteria.Label.IsNotNullOrWhiteSpace())
+            {
+                parameters.Add("recordlabel", searchCriteria.Label);
+            }
+
+            if (searchCriteria.Year.HasValue)
+            {
+                parameters.Add("year", searchCriteria.Year.ToString());
+            }
+
+            pageableRequests.Add(GetRequest(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -135,8 +153,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetRequest(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -154,16 +173,34 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetRequest(searchCriteria, parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        private IEnumerable<IndexerRequest> GetRequest(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
+            var term = searchCriteria.SanitizedSearchTerm.Trim();
+
+            parameters.Add("action", "browse");
+            parameters.Add("order_by", "time");
+            parameters.Add("order_way", "desc");
+            parameters.Add("searchstr", term);
+
+            var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+
+            if (queryCats.Count > 0)
+            {
+                foreach (var cat in queryCats)
+                {
+                    parameters.Add($"filter_cat[{cat}]", "1");
+                }
+            }
+
             var req = RequestBuilder()
-                .Resource($"ajax.php?action=browse&searchstr={searchParameters}")
+                .Resource($"ajax.php?{parameters.GetQueryString()}")
                 .Build();
 
             yield return new IndexerRequest(req);
@@ -218,24 +255,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                     foreach (var torrent in result.Torrents)
                     {
                         var id = torrent.TorrentId;
-                        var artist = WebUtility.HtmlDecode(result.Artist);
-                        var album = WebUtility.HtmlDecode(result.GroupName);
 
-                        var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
-                        if (torrent.HasCue)
-                        {
-                            title += " [Cue]";
-                        }
-
+                        var title = GetTitle(result, torrent);
                         var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                        GazelleInfo release = new GazelleInfo()
+                        var release = new GazelleInfo
                         {
                             Guid = infoUrl,
-
-                            // Splice Title from info to avoid calling API again for every torrent.
                             Title = WebUtility.HtmlDecode(title),
-
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
@@ -272,7 +299,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var id = result.TorrentId;
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                    GazelleInfo release = new GazelleInfo()
+                    var release = new GazelleInfo
                     {
                         Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(result.GroupName),
@@ -281,7 +308,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
-                        PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
+                        PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime(result.GroupTime),
                         Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
                         Files = result.FileCount,
                         Grabs = result.Snatches,
@@ -308,6 +335,25 @@ namespace NzbDrone.Core.Indexers.Definitions
                 torrentInfos
                     .OrderByDescending(o => o.PublishDate)
                     .ToArray();
+        }
+
+        private string GetTitle(GazelleRelease result, GazelleTorrent torrent)
+        {
+            var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear})";
+
+            if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+            {
+                title += $" [{string.Format("{0} {1}", torrent.RemasterTitle, torrent.RemasterYear).Trim()}]";
+            }
+
+            title += $" [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+
+            if (torrent.HasCue)
+            {
+                title += " [Cue]";
+            }
+
+            return title;
         }
 
         private string GetDownloadUrl(int torrentId, bool canUseToken)
@@ -349,7 +395,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class OrpheusSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly OrpheusSettingsValidator Validator = new OrpheusSettingsValidator();
+        private static readonly OrpheusSettingsValidator Validator = new ();
 
         public OrpheusSettings()
         {

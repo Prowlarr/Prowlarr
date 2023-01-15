@@ -12,6 +12,8 @@ namespace NzbDrone.Core.Indexers.Settings
             {
                 RuleFor(c => c.Username).NotEmpty();
                 RuleFor(c => c.Password).NotEmpty();
+                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
             }
         }
 
@@ -32,10 +34,10 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4)]
+        [FieldDefinition(10)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
-        [FieldDefinition(5)]
+        [FieldDefinition(11)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public NzbDroneValidationResult Validate()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Xml;
 using System.Xml.Linq;
@@ -221,27 +222,66 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 foreach (var xmlCategory in xmlCategories.Elements("category"))
                 {
-                    var cat = new IndexerCategory
+                    var parentName = xmlCategory.Attribute("name").Value;
+                    var parentNameLower = parentName?.ToLowerInvariant();
+                    var parentId = int.Parse(xmlCategory.Attribute("id").Value);
+
+                    var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentNameLower.Contains(x.Name.ToLower()));
+
+                    if (mappedCat == null)
                     {
-                        Id = int.Parse(xmlCategory.Attribute("id").Value),
-                        Name = xmlCategory.Attribute("name").Value,
-                        Description = xmlCategory.Attribute("description") != null ? xmlCategory.Attribute("description").Value : string.Empty
-                    };
+                        // Try to find name and Id in AllCats for sub cats that are mapped as parents
+                        mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == parentId && x.Name.ToLower().Contains(parentNameLower));
+                    }
+
+                    if (mappedCat == null)
+                    {
+                        // Try by parent id if name fails
+                        mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => x.Id == parentId);
+                    }
+
+                    if (mappedCat == null)
+                    {
+                        // Fallback to Other
+                        mappedCat = NewznabStandardCategory.Other;
+                    }
 
                     foreach (var xmlSubcat in xmlCategory.Elements("subcat"))
                     {
-                        var subCat = new IndexerCategory
-                        {
-                            Id = int.Parse(xmlSubcat.Attribute("id").Value),
-                            Name = xmlSubcat.Attribute("name").Value,
-                            Description = xmlSubcat.Attribute("description") != null ? xmlSubcat.Attribute("description").Value : string.Empty
-                        };
+                        var subName = xmlSubcat.Attribute("name").Value;
+                        var subId = int.Parse(xmlSubcat.Attribute("id").Value);
 
-                        cat.SubCategories.Add(subCat);
-                        capabilities.Categories.AddCategoryMapping(subCat.Name, subCat);
+                        var mappingName = $"{mappedCat.Name}/{subName}";
+                        var mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == mappingName.ToLower());
+
+                        if (mappedSubCat == null)
+                        {
+                            // Try by child id if name fails
+                            mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == subId);
+                        }
+
+                        if (mappedSubCat == null && mappedCat.Id != NewznabStandardCategory.Other.Id)
+                        {
+                            // Try by Parent/Other if parent is not other
+                            mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == $"{mappedCat.Name.ToLower()}/other");
+                        }
+
+                        if (mappedSubCat == null)
+                        {
+                            // Fallback to Misc Other
+                            mappedSubCat = NewznabStandardCategory.OtherMisc;
+                        }
+
+                        if (mappedSubCat != null)
+                        {
+                            capabilities.Categories.AddCategoryMapping(subId, mappedSubCat, $"{parentName}/{subName}");
+                        }
                     }
 
-                    capabilities.Categories.AddCategoryMapping(cat.Name, cat);
+                    if (mappedCat != null)
+                    {
+                        capabilities.Categories.AddCategoryMapping(parentId, mappedCat, parentName);
+                    }
                 }
             }
 

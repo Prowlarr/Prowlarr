@@ -4548,11 +4548,19 @@
         ],
         "type": "string"
       },
+      "AuthenticationRequiredType": {
+        "enum": [
+          "enabled",
+          "disabledForLocalAddresses"
+        ],
+        "type": "string"
+      },
       "AuthenticationType": {
         "enum": [
           "none",
           "basic",
-          "forms"
+          "forms",
+          "external"
         ],
         "type": "string"
       },
@@ -4823,6 +4831,24 @@
         },
         "additionalProperties": false
       },
+      "DownloadClientCategory": {
+        "type": "object",
+        "properties": {
+          "clientCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DownloadClientConfigResource": {
         "type": "object",
         "properties": {
@@ -4895,6 +4921,16 @@
           "priority": {
             "type": "integer",
             "format": "int32"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DownloadClientCategory"
+            },
+            "nullable": true
+          },
+          "supportsCategories": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -5116,6 +5152,9 @@
           },
           "authenticationMethod": {
             "$ref": "#/components/schemas/AuthenticationType"
+          },
+          "authenticationRequired": {
+            "$ref": "#/components/schemas/AuthenticationRequiredType"
           },
           "analyticsEnabled": {
             "type": "boolean"

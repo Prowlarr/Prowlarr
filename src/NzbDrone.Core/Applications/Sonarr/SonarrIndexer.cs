@@ -17,6 +17,8 @@ namespace NzbDrone.Core.Applications.Sonarr
         public string Implementation { get; set; }
         public string ConfigContract { get; set; }
         public string InfoLink { get; set; }
+        public int? DownloadClientId { get; set; }
+        public int? SeasonSearchMaximumSingleEpisodeAge { get; set; }
         public HashSet<int> Tags { get; set; }
         public List<SonarrField> Fields { get; set; }
 
@@ -34,7 +36,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             var apiPath = Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
-            var apiPathCompare = apiPath == otherApiPath;
+            var apiPathCompare = apiPath.Equals(otherApiPath);
 
             var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);

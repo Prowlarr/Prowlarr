@@ -123,7 +123,7 @@ class AddIndexerModalContent extends Component {
     const filteredIndexers = indexers.filter((indexer) => {
       const { filter, filterProtocols, filterLanguages, filterPrivacyLevels } = this.state;
 
-      if (!indexer.name.toLowerCase().includes(filter.toLocaleLowerCase())) {
+      if (!indexer.name.toLowerCase().includes(filter.toLocaleLowerCase()) && !indexer.description.toLowerCase().includes(filter.toLocaleLowerCase())) {
         return false;
       }
 

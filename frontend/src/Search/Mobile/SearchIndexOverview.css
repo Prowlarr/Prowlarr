@@ -1,0 +1,49 @@
+$hoverScale: 1.05;
+
+.content {
+  display: flex;
+  flex-grow: 0;
+  margin-left: 5px;
+}
+
+.container {
+  border-radius: 4px;
+  background-color: var(--cardBackgroundColor);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+  height: 38px;
+}
+
+.indexerRow {
+  color: var(--disabledColor);
+}
+
+.infoRow {
+  margin-bottom: 5px;
+}
+
+.title {
+  overflow: hidden;
+  width: 85%;
+  font-weight: 500;
+  font-size: 14px;
+  overflow-wrap: break-word;
+}
+
+.actions {
+  position: absolute;
+  right: 0;
+  white-space: nowrap;
+}

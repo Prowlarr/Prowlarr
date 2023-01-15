@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using NzbDrone.Common.Extensions;
@@ -10,13 +11,10 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
-    public class AvistazParser : IParseIndexerResponse
+    public class AvistazParserBase : IParseIndexerResponse
     {
-        private readonly HashSet<string> _hdResolutions = new HashSet<string> { "1080p", "1080i", "720p" };
-
-        public AvistazParser()
-        {
-        }
+        protected virtual string TimezoneOffset => "-05:00"; // Avistaz does not specify a timezone & returns server time
+        private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
@@ -61,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     InfoUrl = details,
                     Guid = details,
                     Categories = cats,
-                    PublishDate = row.CreatedAt,
+                    PublishDate = DateTime.Parse($"{row.CreatedAt} {TimezoneOffset}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                     Size = row.FileSize,
                     Files = row.FileCount,
                     Grabs = row.Completed,

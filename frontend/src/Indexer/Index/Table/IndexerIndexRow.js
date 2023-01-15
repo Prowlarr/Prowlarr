@@ -79,6 +79,7 @@ class IndexerIndexRow extends Component {
       privacy,
       priority,
       status,
+      fields,
       appProfile,
       added,
       capabilities,
@@ -95,6 +96,8 @@ class IndexerIndexRow extends Component {
       isDeleteMovieModalOpen,
       isIndexerInfoModalOpen
     } = this.state;
+
+    const baseUrl = fields.find((field) => field.name === 'baseUrl')?.value ?? indexerUrls[0];
 
     return (
       <>
@@ -250,7 +253,7 @@ class IndexerIndexRow extends Component {
                         className={styles.externalLink}
                         name={icons.EXTERNAL_LINK}
                         title={translate('Website')}
-                        to={indexerUrls[0].replace('api.', '')}
+                        to={baseUrl.replace('api.', '')}
                       /> : null
                   }
 
@@ -299,6 +302,7 @@ IndexerIndexRow.propTypes = {
   name: PropTypes.string.isRequired,
   enable: PropTypes.bool.isRequired,
   redirect: PropTypes.bool.isRequired,
+  fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   appProfile: PropTypes.object.isRequired,
   status: PropTypes.object,
   capabilities: PropTypes.object,

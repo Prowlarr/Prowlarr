@@ -91,6 +91,8 @@ namespace NzbDrone.Core.Applications.Whisparr
                 var remoteIndexer = _whisparrV3Proxy.AddIndexer(radarrIndexer, Settings);
                 _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
             }
+
+            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -126,6 +128,8 @@ namespace NzbDrone.Core.Applications.Whisparr
                 {
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
+                        whisparrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !whisparrIndexer.Fields.Any(s => s.Name == f.Name)));
+
                         // Update the indexer if it still has categories that match
                         _whisparrV3Proxy.UpdateIndexer(whisparrIndexer, Settings);
                     }
@@ -159,6 +163,7 @@ namespace NzbDrone.Core.Applications.Whisparr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _whisparrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
+            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
 
             var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
             var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
@@ -175,8 +180,10 @@ namespace NzbDrone.Core.Applications.Whisparr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = schema.Fields,
+                Fields = new List<WhisparrField>()
             };
+
+            whisparrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
             whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";

@@ -13,7 +13,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
 {
     public interface INzbVortexProxy
     {
-        string DownloadNzb(byte[] nzbData, string filename, int priority, NzbVortexSettings settings);
+        string DownloadNzb(byte[] nzbData, string filename, int priority, NzbVortexSettings settings, string group);
         void Remove(int id, bool deleteData, NzbVortexSettings settings);
         NzbVortexVersionResponse GetVersion(NzbVortexSettings settings);
         NzbVortexApiVersionResponse GetApiVersion(NzbVortexSettings settings);
@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
             _authSessionIdCache = cacheManager.GetCache<string>(GetType(), "authCache");
         }
 
-        public string DownloadNzb(byte[] nzbData, string filename, int priority, NzbVortexSettings settings)
+        public string DownloadNzb(byte[] nzbData, string filename, int priority, NzbVortexSettings settings, string group)
         {
             var requestBuilder = BuildRequest(settings).Resource("nzb/add")
                                                        .Post()
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Download.Clients.NzbVortex
 
             if (settings.Category.IsNotNullOrWhiteSpace())
             {
-                requestBuilder.AddQueryParam("groupname", settings.Category);
+                requestBuilder.AddQueryParam("groupname", group);
             }
 
             requestBuilder.AddFormUpload("name", filename, nzbData, "application/x-nzb");

@@ -21,7 +21,7 @@
 .category {
   composes: cell;
 
-  flex: 0 0 110px;
+  flex: 0 0 130px;
 }
 
 .age,

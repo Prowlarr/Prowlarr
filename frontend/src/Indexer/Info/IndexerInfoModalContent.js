@@ -20,10 +20,13 @@ function IndexerInfoModalContent(props) {
     encoding,
     language,
     indexerUrls,
+    fields,
     protocol,
     capabilities,
     onModalClose
   } = props;
+
+  const baseUrl = fields.find((field) => field.name === 'baseUrl')?.value ?? indexerUrls[0];
 
   return (
     <ModalContent onModalClose={onModalClose}>
@@ -57,7 +60,7 @@ function IndexerInfoModalContent(props) {
               />
               <DescriptionListItemTitle>{translate('IndexerSite')}</DescriptionListItemTitle>
               <DescriptionListItemDescription>
-                <Link to={indexerUrls[0]}>{indexerUrls[0]}</Link>
+                <Link to={baseUrl}>{baseUrl}</Link>
               </DescriptionListItemDescription>
               <DescriptionListItemTitle>{`${protocol === 'usenet' ? 'Newznab' : 'Torznab'} Url`}</DescriptionListItemTitle>
               <DescriptionListItemDescription>
@@ -114,6 +117,7 @@ IndexerInfoModalContent.propTypes = {
   encoding: PropTypes.string.isRequired,
   language: PropTypes.string.isRequired,
   indexerUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+  fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   protocol: PropTypes.string.isRequired,
   capabilities: PropTypes.object.isRequired,
   onModalClose: PropTypes.func.isRequired

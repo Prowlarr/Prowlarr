@@ -154,7 +154,7 @@
     "CertificateValidation": "Certificaat Validatie",
     "BypassProxyForLocalAddresses": "Omzeil Proxy voor Lokale Adressen",
     "Branch": "Branch",
-    "BindAddressHelpText": "Geldig IPv4 adres of '*' voor alle interfaces",
+    "BindAddressHelpText": "Geldig IP-adres, localhost of '*' voor alle interfaces",
     "DeleteBackup": "Verwijder Veiligheidskopie",
     "BackupIntervalHelpText": "Tussentijd voor automatische back-up",
     "Backups": "Veiligheidskopieën",
@@ -299,11 +299,11 @@
     "MovieIndexScrollBottom": "Film Index: Scroll naar onder",
     "IndexerLongTermStatusCheckSingleClientMessage": "Indexeerders zijn niet beschikbaar vanwege storingen gedurende meer dan 6 uur: {0}",
     "IndexerLongTermStatusCheckAllClientMessage": "Alle indexeerders zijn niet beschikbaar vanwege storingen gedurende meer dan 6 uur",
-    "ClearHistoryMessageText": "Weet je zeker dat je alle geschiedenis van Prowlarr wilt verwijderen",
+    "ClearHistoryMessageText": "Weet je zeker dat je alle geschiedenis van Prowlarr wilt verwijderen?",
     "ClearHistory": "Geschiedenis verwijderen",
     "ApplicationStatusCheckSingleClientMessage": "Applicaties onbeschikbaar door fouten",
     "ApplicationStatusCheckAllClientMessage": "Alle applicaties onbeschikbaar door fouten",
-    "AllIndexersHiddenDueToFilter": "Alle indexeerders zijn verborgen door actieve filter",
+    "AllIndexersHiddenDueToFilter": "Alle indexeerders zijn verborgen door actieve filter.",
     "AddToDownloadClient": "Release toevoegen aan download client",
     "AddNewIndexer": "Voeg nieuwe Indexeerder Toe",
     "AddedToDownloadClient": "Release toegevoegd aan client",
@@ -417,5 +417,8 @@
     "ApplicationLongTermStatusCheckSingleClientMessage": "Indexeerders zijn niet beschikbaar vanwege storingen gedurende meer dan 6 uur: {0}",
     "LastDuration": "Laatste Looptijd",
     "LastExecution": "Laatste Uitvoering",
-    "Queued": "Afwachtend"
+    "Queued": "Afwachtend",
+    "Categories": "Categorieën",
+    "AddSyncProfile": "Synchronisatieprofiel toevoegen",
+    "AudioSearch": "auditief zoeken"
 }

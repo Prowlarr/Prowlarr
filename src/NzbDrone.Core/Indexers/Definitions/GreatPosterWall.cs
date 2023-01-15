@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using NLog;
@@ -18,7 +19,7 @@ namespace NzbDrone.Core.Indexers.Definitions;
 public class GreatPosterWall : Gazelle.Gazelle
 {
     public override string Name => "GreatPosterWall";
-    public override string[] IndexerUrls => new string[] { "https://greatposterwall.com/" };
+    public override string[] IndexerUrls => new[] { "https://greatposterwall.com/" };
     public override string Description => "GreatPosterWall (GPW) is a CHINESE Private site for MOVIES";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
@@ -29,7 +30,7 @@ public class GreatPosterWall : Gazelle.Gazelle
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new GreatPosterWallRequestGenerator()
+        return new GreatPosterWallRequestGenerator
         {
             Settings = Settings,
             HttpClient = _httpClient,
@@ -118,7 +119,6 @@ public class GreatPosterWallParser : GazelleParser
             foreach (var torrent in result.Torrents)
             {
                 var infoUrl = GetInfoUrl(result.GroupId.ToString(), torrent.TorrentId);
-
                 var time = DateTime.SpecifyKind(torrent.Time, DateTimeKind.Unspecified);
 
                 var release = new GazelleInfo
@@ -130,7 +130,7 @@ public class GreatPosterWallParser : GazelleParser
                     Guid = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
                     DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken),
-                    PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).LocalDateTime, // Time is Chinese Time, add 8 hours difference from UTC and then convert back to local time
+                    PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).UtcDateTime, // Time is Chinese Time, add 8 hours difference from UTC
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
                     Size = torrent.Size,
                     Seeders = torrent.Seeders,
@@ -173,10 +173,12 @@ public class GreatPosterWallParser : GazelleParser
             }
         }
 
-        return torrentInfos;
+        return torrentInfos
+            .OrderByDescending(o => o.PublishDate)
+            .ToArray();
     }
 
-    protected string GetDownloadUrl(int torrentId, bool canUseToken)
+    private string GetDownloadUrl(int torrentId, bool canUseToken)
     {
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/torrents.php")

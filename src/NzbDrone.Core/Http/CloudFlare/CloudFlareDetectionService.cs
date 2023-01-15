@@ -28,7 +28,15 @@ namespace NzbDrone.Core.Http.CloudFlare
             if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
                 response.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
-                return true; // Defected CloudFlare and DDoS-GUARD
+                var responseHtml = response.Content;
+                if (responseHtml.Contains("<title>Just a moment...</title>") ||
+                    responseHtml.Contains("<title>Access denied</title>") ||
+                    responseHtml.Contains("<title>Attention Required! | Cloudflare</title>") ||
+                    responseHtml.Trim().Equals("error code: 1020") ||
+                    responseHtml.Contains("<title>DDOS-GUARD</title>"))
+                {
+                    return true;
+                }
             }
 
             // detect Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands

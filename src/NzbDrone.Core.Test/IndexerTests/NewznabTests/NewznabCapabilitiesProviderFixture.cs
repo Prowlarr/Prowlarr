@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
@@ -68,6 +69,45 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             caps.LimitsDefault.Value.Should().Be(25);
             caps.LimitsMax.Value.Should().Be(60);
+        }
+
+        [Test]
+        public void should_map_different_categories()
+        {
+            GivenCapsResponse(_caps);
+
+            var caps = Subject.GetCapabilities(_settings, _definition);
+
+            var bookCats = caps.Categories.MapTorznabCapsToTrackers(new int[] { NewznabStandardCategory.Books.Id });
+
+            bookCats.Count.Should().Be(2);
+            bookCats.Should().Contain("8000");
+        }
+
+        [Test]
+        public void should_find_sub_categories_as_main_categories()
+        {
+            GivenCapsResponse(ReadAllText("Files/Indexers/Torznab/torznab_animetosho_caps.xml"));
+
+            var caps = Subject.GetCapabilities(_settings, _definition);
+
+            var bookCats = caps.Categories.MapTrackerCatToNewznab("5070");
+
+            bookCats.Count.Should().Be(2);
+            bookCats.First().Id.Should().Be(5070);
+        }
+
+        [Test]
+        public void should_map_by_name_when_available()
+        {
+            GivenCapsResponse(_caps);
+
+            var caps = Subject.GetCapabilities(_settings, _definition);
+
+            var bookCats = caps.Categories.MapTrackerCatToNewznab("5999");
+
+            bookCats.Count.Should().Be(2);
+            bookCats.First().Id.Should().Be(5050);
         }
 
         [Test]

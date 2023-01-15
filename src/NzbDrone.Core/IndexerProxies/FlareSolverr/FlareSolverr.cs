@@ -170,6 +170,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             newRequest.Headers.ContentType = "application/json";
             newRequest.Method = HttpMethod.Post;
             newRequest.LogResponseContent = true;
+            newRequest.RequestTimeout = TimeSpan.FromSeconds(Settings.RequestTimeout + 5);
             newRequest.SetContent(req.ToJson());
 
             _logger.Debug("Cloudflare Detected, Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);

@@ -10,6 +10,7 @@ namespace NzbDrone.Core.Indexers.Headphones
         {
             RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.Password).NotEmpty();
+            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
         }
     }
 

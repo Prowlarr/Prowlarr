@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "IPTorrents";
 
-        public override string[] IndexerUrls => new string[]
+        public override string[] IndexerUrls => new[]
         {
             "https://iptorrents.com/",
             "https://iptorrents.me/",
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new IPTorrentsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new IPTorrentsRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -64,21 +64,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(72, NewznabStandardCategory.Movies, "Movies");
@@ -161,11 +161,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IPTorrentsSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public IPTorrentsRequestGenerator()
-        {
-        }
-
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset, string imdbId = null)
         {
             var searchUrl = Settings.BaseUrl + "t";
 
@@ -194,7 +190,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add(cat, string.Empty);
             }
 
-            searchUrl = searchUrl + "?" + qc.GetQueryString();
+            if (offset > 0 && limit > 0)
+            {
+                var page = (int)(offset / limit) + 1;
+                qc.Add("p", page.ToString());
+            }
+
+            if (qc.Count > 0)
+            {
+                searchUrl += $"?{qc.GetQueryString()}";
+            }
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
@@ -210,7 +215,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -219,7 +224,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -228,7 +233,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -237,7 +242,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -246,7 +251,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -354,14 +359,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class IPTorrentsSettings : CookieTorrentBaseSettings
     {
-        public IPTorrentsSettings()
-        {
-        }
-
         [FieldDefinition(2, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
         public string UserAgent { get; set; }
 
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using NzbDrone.Core.ThingiProvider.Events;
 namespace NzbDrone.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
+    [CheckOn(typeof(ProviderBulkDeletedEvent<IIndexer>))]
     public class OutdatedDefinitionCheck : HealthCheckBase
     {
         private readonly IIndexerDefinitionUpdateService _indexerDefinitionUpdateService;

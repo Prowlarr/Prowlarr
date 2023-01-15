@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -19,14 +18,13 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class SpeedCD : TorrentIndexerBase<UserPassTorrentBaseSettings>
+    public class SpeedCD : TorrentIndexerBase<SpeedCDSettings>
     {
         public override string Name => "SpeedCD";
-        public override string[] IndexerUrls => new string[]
+        public override string[] IndexerUrls => new[]
         {
             "https://speed.cd/",
             "https://speed.click/",
@@ -40,14 +38,18 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public SpeedCD(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public SpeedCD(IIndexerHttpClient httpClient,
+                       IEventAggregator eventAggregator,
+                       IIndexerStatusService indexerStatusService,
+                       IConfigService configService,
+                       Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SpeedCDRequestGenerator() { Settings = Settings, Capabilities = Capabilities, Encoding = Encoding };
+            return new SpeedCDRequestGenerator { Settings = Settings, Capabilities = Capabilities, Encoding = Encoding };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -113,12 +115,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("/browse.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("/browse.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -126,21 +123,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q, MovieSearchParam.ImdbId
-                                   },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesOther, "Movies/XviD");
@@ -182,17 +179,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SpeedCDRequestGenerator : IIndexerRequestGenerator
     {
-        public UserPassTorrentBaseSettings Settings { get; set; }
+        public SpeedCDSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public Encoding Encoding { get; set; }
 
-        public SpeedCDRequestGenerator()
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, bool deep = false)
         {
-        }
-
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
-        {
-            var searchUrl = string.Format("{0}/browse/", Settings.BaseUrl.TrimEnd('/'));
+            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/browse/";
 
             var qc = new List<string>();
 
@@ -202,17 +195,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add(cat);
             }
 
-            if (imdbId.IsNotNullOrWhiteSpace())
+            if (Settings.FreeleechOnly)
+            {
+                qc.Add("freeleech");
+            }
+
+            if (deep)
             {
                 qc.Add("deep");
-                qc.Add("q");
-                qc.Add(imdbId);
             }
-            else
-            {
-                qc.Add("q");
-                qc.Add(term.UrlEncode(Encoding));
-            }
+
+            qc.Add("q");
+            qc.Add(term.UrlEncode(Encoding));
 
             searchUrl += string.Join("/", qc);
 
@@ -225,7 +219,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
+            var term = $"{searchCriteria.SanitizedSearchTerm}";
+
+            if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
+            {
+                term = $"{searchCriteria.FullImdbId}";
+            }
+
+            pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
 
             return pageableRequests;
         }
@@ -234,7 +235,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -243,7 +244,24 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
+            var term = $"{searchCriteria.SanitizedTvSearchString}";
+
+            if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
+            {
+                term = $"{searchCriteria.FullImdbId}";
+
+                if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
+                {
+                    term += $" {searchCriteria.EpisodeSearchString}";
+                }
+
+                if (searchCriteria.Season.HasValue)
+                {
+                    term += "*";
+                }
+            }
+
+            pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
 
             return pageableRequests;
         }
@@ -252,7 +270,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -261,7 +279,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -272,10 +290,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SpeedCDParser : IParseIndexerResponse
     {
-        private readonly UserPassTorrentBaseSettings _settings;
+        private readonly SpeedCDSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public SpeedCDParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        public SpeedCDParser(SpeedCDSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -291,28 +309,26 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in rows)
             {
-                var cells = row.QuerySelectorAll("td");
+                var title = Regex.Replace(row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").TextContent, @"(?i:\[REQ\])", "").Trim(' ', '.');
+                var downloadUrl = new Uri(_settings.BaseUrl + row.QuerySelector("td:nth-child(4) a[href^=\"/download/\"]").GetAttribute("href").TrimStart('/'));
+                var infoUrl = new Uri(_settings.BaseUrl + row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").GetAttribute("href").TrimStart('/'));
+                var size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(6)").TextContent);
+                var grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(7)").TextContent);
+                var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(8)").TextContent);
+                var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(9)").TextContent);
 
-                var title = row.QuerySelector("td[class='lft'] > div > a").TextContent.Trim();
-                var link = new Uri(_settings.BaseUrl + row.QuerySelector("img[title='Download']").ParentElement.GetAttribute("href").TrimStart('/'));
-                var details = new Uri(_settings.BaseUrl + row.QuerySelector("td[class='lft'] > div > a").GetAttribute("href").TrimStart('/'));
-                var size = ParseUtil.GetBytes(cells[5].TextContent);
-                var grabs = ParseUtil.CoerceInt(cells[6].TextContent);
-                var seeders = ParseUtil.CoerceInt(cells[7].TextContent);
-                var leechers = ParseUtil.CoerceInt(cells[8].TextContent);
-
-                var pubDateStr = row.QuerySelector("span[class^='elapsedDate']").GetAttribute("title").Replace(" at", "");
+                var pubDateStr = row.QuerySelector("td:nth-child(2) span[class^=\"elapsedDate\"]").GetAttribute("title").Replace(" at", "");
                 var publishDate = DateTime.ParseExact(pubDateStr, "dddd, MMMM d, yyyy h:mmtt", CultureInfo.InvariantCulture);
 
-                var cat = row.QuerySelector("a").GetAttribute("href").Split('/').Last();
-                var downloadVolumeFactor = row.QuerySelector("span:contains(\"[Freeleech]\")") != null ? 0 : 1;
+                var cat = row.QuerySelector("td:nth-child(1) a").GetAttribute("href").Split('/').Last();
+                var downloadVolumeFactor = row.QuerySelector("td:nth-child(2) span:contains(\"[Freeleech]\")") != null ? 0 : 1;
 
                 var release = new TorrentInfo
                 {
                     Title = title,
-                    DownloadUrl = link.AbsoluteUri,
-                    Guid = link.AbsoluteUri,
-                    InfoUrl = details.AbsoluteUri,
+                    DownloadUrl = downloadUrl.AbsoluteUri,
+                    Guid = infoUrl.AbsoluteUri,
+                    InfoUrl = infoUrl.AbsoluteUri,
                     PublishDate = publishDate,
                     Categories = _categories.MapTrackerCatToNewznab(cat),
                     Size = size,
@@ -332,5 +348,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class SpeedCDSettings : UserPassTorrentBaseSettings
+    {
+        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+        public bool FreeleechOnly { get; set; }
     }
 }

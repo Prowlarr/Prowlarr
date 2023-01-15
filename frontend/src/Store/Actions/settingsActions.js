@@ -4,6 +4,7 @@ import createHandleActions from './Creators/createHandleActions';
 import applications from './Settings/applications';
 import appProfiles from './Settings/appProfiles';
 import development from './Settings/development';
+import downloadClientCategories from './Settings/downloadClientCategories';
 import downloadClients from './Settings/downloadClients';
 import general from './Settings/general';
 import indexerCategories from './Settings/indexerCategories';
@@ -11,6 +12,7 @@ import indexerProxies from './Settings/indexerProxies';
 import notifications from './Settings/notifications';
 import ui from './Settings/ui';
 
+export * from './Settings/downloadClientCategories';
 export * from './Settings/downloadClients';
 export * from './Settings/general';
 export * from './Settings/indexerCategories';
@@ -32,6 +34,7 @@ export const section = 'settings';
 export const defaultState = {
   advancedSettings: false,
 
+  downloadClientCategories: downloadClientCategories.defaultState,
   downloadClients: downloadClients.defaultState,
   general: general.defaultState,
   indexerCategories: indexerCategories.defaultState,
@@ -61,6 +64,7 @@ export const toggleAdvancedSettings = createAction(TOGGLE_ADVANCED_SETTINGS);
 // Action Handlers
 
 export const actionHandlers = handleThunks({
+  ...downloadClientCategories.actionHandlers,
   ...downloadClients.actionHandlers,
   ...general.actionHandlers,
   ...indexerCategories.actionHandlers,
@@ -81,6 +85,7 @@ export const reducers = createHandleActions({
     return Object.assign({}, state, { advancedSettings: !state.advancedSettings });
   },
 
+  ...downloadClientCategories.reducers,
   ...downloadClients.reducers,
   ...general.reducers,
   ...indexerCategories.reducers,

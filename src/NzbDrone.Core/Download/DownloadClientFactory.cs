@@ -40,6 +40,7 @@ namespace NzbDrone.Core.Download
             base.SetProviderCharacteristics(provider, definition);
 
             definition.Protocol = provider.Protocol;
+            definition.SupportsCategories = provider.SupportsCategories;
         }
 
         public List<IDownloadClient> DownloadHandlingEnabled(bool filterBlockedClients = true)

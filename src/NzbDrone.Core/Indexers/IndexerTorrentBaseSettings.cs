@@ -43,5 +43,8 @@ namespace NzbDrone.Core.Indexers
 
         [FieldDefinition(2, Type = FieldType.Number, Label = "Seed Time", HelpText = "The time a torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
         public int? SeedTime { get; set; }
+
+        [FieldDefinition(3, Type = FieldType.Number, Label = "Pack Seed Time", HelpText = "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
+        public int? PackSeedTime { get; set; }
     }
 }

@@ -6,21 +6,26 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class PrivateHD : Avistaz.AvistazBase
+    public class PrivateHD : AvistazBase
     {
         public override string Name => "PrivateHD";
-        public override string[] IndexerUrls => new string[] { "https://privatehd.to/" };
+        public override string[] IndexerUrls => new[] { "https://privatehd.to/" };
         public override string Description => "PrivateHD is a Private Torrent Tracker for HD MOVIES / TV and the sister-site of AvistaZ, CinemaZ, ExoticaZ, and AnimeTorrents";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        public PrivateHD(IIndexerRepository indexerRepository, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public PrivateHD(IIndexerRepository indexerRepository,
+                         IIndexerHttpClient httpClient,
+                         IEventAggregator eventAggregator,
+                         IIndexerStatusService indexerStatusService,
+                         IConfigService configService,
+                         Logger logger)
             : base(indexerRepository, httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AvistazRequestGenerator()
+            return new AvistazRequestGenerator
             {
                 Settings = Settings,
                 HttpClient = _httpClient,
@@ -34,17 +39,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Genre
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Genre
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId, MovieSearchParam.Genre
-                       },
-                MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId, MovieSearchParam.Genre
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies);
@@ -55,7 +56,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVUHD);
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVHD);
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD);
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio);
 
             return caps;
         }

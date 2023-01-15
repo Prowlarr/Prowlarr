@@ -24,12 +24,16 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"https://beyond-hd.me/api/torrents/2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"Req: [POST] https://www3.yggtorrent.nz/user/login: id=mySecret&pass=mySecret&ci_csrf_token=2b51db35e1912ffc138825a12b9933d2")]
         [TestCase(@"https://torrentseeds.org/api/torrents/filter?api_token=2b51db35e1912ffc138825a12b9933d2&name=&sortField=created_at&sortDirection=desc&perPage=100&page=1")]
+        [TestCase(@"https://beyond-hd.me/torrent/download/the-next-365-days-2022-2160p-nf-web-dl-dual-ddp-51-dovi-hdr-hevc-apex.225146.2b51db35e1912ffc138825a12b9933d2")]
+        [TestCase(@"https://anthelion.me/api.php?api_key=2b51db35e1910123321025a12b9933d2&o=json&t=movie&q=&tmdb=&imdb=&cat=&limit=100&offset=0")]
+        [TestCase(@"https://avistaz.to/api/v1/jackett/auth: username=mySecret&password=mySecret&pid=mySecret")]
 
         // Indexer and Download Client Responses
 
         // avistaz response
         [TestCase(@"""download"":""https://avistaz.to/rss/download/2b51db35e1910123321025a12b9933d2/tb51db35e1910123321025a12b9933d2.torrent"",")]
         [TestCase(@",""info_hash"":""2b51db35e1910123321025a12b9933d2"",")]
+        [TestCase(@"""token"":""2b51db35e1910123321025a12b9933d2""")]
 
         // animebytes response
         [TestCase(@"""Link"":""https://animebytes.tv/torrent/994064/download/tb51db35e1910123321025a12b9933d2"",")]

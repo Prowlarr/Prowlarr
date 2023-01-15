@@ -13,12 +13,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     public abstract class AvistazBase : TorrentIndexerBase<AvistazSettings>
     {
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override string[] IndexerUrls => new string[] { "" };
-        protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override int PageSize => 50;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
         private IIndexerRepository _indexerRepository;
 
         public AvistazBase(IIndexerRepository indexerRepository,
@@ -34,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AvistazRequestGenerator()
+            return new AvistazRequestGenerator
             {
                 Settings = Settings,
                 HttpClient = _httpClient,
@@ -45,14 +44,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AvistazParser();
+            return new AvistazParserBase();
         }
 
         protected virtual IndexerCapabilities SetCapabilities()
         {
-            var caps = new IndexerCapabilities();
-
-            return caps;
+            return new IndexerCapabilities();
         }
 
         protected override async Task DoLogin()

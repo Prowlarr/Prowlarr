@@ -74,6 +74,8 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
 
         public override string Name => "Torrent Blackhole";
 
+        public override bool SupportsCategories => false;
+
         protected override void Test(List<ValidationFailure> failures)
         {
             failures.AddIfNotNull(TestFolder(Settings.TorrentFolder, "TorrentFolder"));

@@ -223,7 +223,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     InfoUrl = details,
                     Guid = details,
                     Categories = _categories.MapTrackerCatDescToNewznab(row.Category),
-                    PublishDate = DateTime.Parse(row.CreatedAt, CultureInfo.InvariantCulture),
+                    PublishDate = DateTime.Parse(row.CreatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
                     Size = row.Size,
                     Grabs = row.Grabs,
                     Seeders = row.Seeders,

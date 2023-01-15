@@ -132,20 +132,22 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (selector.Selector != null)
             {
-                if (dom.Matches(selector.Selector))
+                var selectorSelector = ApplyGoTemplateText(selector.Selector, variables);
+
+                if (dom.Matches(selectorSelector))
                 {
                     selection = dom;
                 }
                 else
                 {
-                    selection = QuerySelector(dom, selector.Selector);
+                    selection = QuerySelector(dom, selectorSelector);
                 }
 
                 if (selection == null)
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selector.Selector, dom.ToHtmlPretty()));
+                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selectorSelector, dom.ToHtmlPretty()));
                     }
 
                     return null;

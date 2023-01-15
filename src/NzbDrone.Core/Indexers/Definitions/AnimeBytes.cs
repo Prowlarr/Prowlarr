@@ -228,34 +228,34 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         if (syn.StringArray != null)
                         {
-                            if (syn.StringArray.Count >= 1)
+                            if (_settings.AddJapaneseTitle && syn.StringArray.Count >= 1)
                             {
                                 synonyms.Add(syn.StringArray[0]);
                             }
 
-                            if (syn.StringArray.Count >= 2)
+                            if (_settings.AddRomajiTitle && syn.StringArray.Count >= 2)
                             {
                                 synonyms.Add(syn.StringArray[1]);
                             }
 
-                            if (syn.StringArray.Count == 3)
+                            if (_settings.AddAlternativeTitle && syn.StringArray.Count == 3)
                             {
                                 synonyms.AddRange(syn.StringArray[2].Split(',').Select(t => t.Trim()));
                             }
                         }
                         else
                         {
-                            if (syn.StringMap.ContainsKey("0"))
+                            if (_settings.AddJapaneseTitle && syn.StringMap.ContainsKey("0"))
                             {
                                 synonyms.Add(syn.StringMap["0"]);
                             }
 
-                            if (syn.StringMap.ContainsKey("1"))
+                            if (_settings.AddRomajiTitle && syn.StringMap.ContainsKey("1"))
                             {
                                 synonyms.Add(syn.StringMap["1"]);
                             }
 
-                            if (syn.StringMap.ContainsKey("2"))
+                            if (_settings.AddAlternativeTitle && syn.StringMap.ContainsKey("2"))
                             {
                                 synonyms.AddRange(syn.StringMap["2"].Split(',').Select(t => t.Trim()));
                             }
@@ -543,6 +543,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             Username = "";
             EnableSonarrCompatibility = true;
             UseFilenameForSingleEpisodes = false;
+            AddJapaneseTitle = true;
+            AddRomajiTitle = true;
+            AddAlternativeTitle = true;
         }
 
         [FieldDefinition(2, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
@@ -556,6 +559,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(5, Label = "Use Filenames for Single Episodes", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr replace AnimeBytes release names with the actual filename, this currently only works for single episode releases")]
         public bool UseFilenameForSingleEpisodes { get; set; }
+
+        [FieldDefinition(6, Label = "Add Japanese title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add Japanese titles as synonyms, i.e kanji/hiragana/katakana.")]
+        public bool AddJapaneseTitle { get; set; }
+
+        [FieldDefinition(7, Label = "Add Romaji title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add Romaji title as a synonym, i.e \"Shingeki no Kyojin\" with Attack on Titan")]
+        public bool AddRomajiTitle { get; set; }
+
+        [FieldDefinition(8, Label = "Add alternative title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add alternative title as a synonym, i.e \"AoT\" with Attack on Titan, but also \"Attack on Titan Season 4\" Instead of \"Attack on Titan: The Final Season\"")]
+        public bool AddAlternativeTitle { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

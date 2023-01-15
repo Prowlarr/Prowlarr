@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
+using NzbDrone.Common.Cache;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
@@ -25,29 +27,30 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class MyAnonamouse : TorrentIndexerBase<MyAnonamouseSettings>
     {
-        private static readonly Regex TorrentIdRegex = new Regex(@"tor/download.php\?tid=(?<id>\d+)$");
-
         public override string Name => "MyAnonamouse";
-
-        public override string[] IndexerUrls => new string[] { "https://www.myanonamouse.net/" };
+        public override string[] IndexerUrls => new[] { "https://www.myanonamouse.net/" };
         public override string Description => "MyAnonaMouse (MAM) is a large ebook and audiobook tracker.";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        private readonly ICacheManager _cacheManager;
+        private static readonly Regex TorrentIdRegex = new Regex(@"tor/download.php\?tid=(?<id>\d+)$");
 
-        public MyAnonamouse(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public MyAnonamouse(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, ICacheManager cacheManager)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
+            _cacheManager = cacheManager;
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new MyAnonamouseRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new MyAnonamouseRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new MyAnonamouseParser(Settings, Capabilities.Categories);
+            return new MyAnonamouseParser(Settings, Capabilities.Categories, _httpClient, _cacheManager, _logger);
         }
 
         public override async Task<byte[]> Download(Uri link)
@@ -71,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     var indexerReq = new IndexerRequest(freeleechRequest);
                     var response = await FetchIndexerResponse(indexerReq).ConfigureAwait(false);
-                    var resource = Json.Deserialize<MyAnonamouseFreeleechResponse>(response.Content);
+                    var resource = Json.Deserialize<MyAnonamouseBuyPersonalFreeleechResponse>(response.Content);
 
                     if (resource.Success)
                     {
@@ -101,9 +104,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping("13", NewznabStandardCategory.AudioAudiobook, "AudioBooks");
@@ -210,84 +213,97 @@ namespace NzbDrone.Core.Indexers.Definitions
         public MyAnonamouseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public MyAnonamouseRequestGenerator()
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria)
         {
-        }
+            var term = searchCriteria.SanitizedSearchTerm.Trim();
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
-        {
-            var qParams = new NameValueCollection
+            var searchType = Settings.SearchType switch
             {
-                { "tor[text]", term },
-                { "tor[srchIn][title]", "true" },
-                { "tor[srchIn][author]", "true" },
-                { "tor[searchType]", Settings.ExcludeVip ? "nVIP" : "all" }, // exclude VIP torrents
-                { "tor[searchIn]", "torrents" },
-                { "tor[hash]", "" },
-                { "tor[sortType]", "default" },
-                { "tor[startNumber]", "0" },
-                { "thumbnails", "1" }, // gives links for thumbnail sized versions of their posters
-
-                //{ "posterLink", "1"}, // gives links for a full sized poster
-                //{ "dlLink", "1"}, // include the url to download the torrent
-                { "description", "1" } // include the description
-
-                //{"bookmarks", "0"} // include if the item is bookmarked or not
+                (int)MyAnonamouseSearchType.Active => "active",
+                (int)MyAnonamouseSearchType.Freeleech => "fl",
+                (int)MyAnonamouseSearchType.FreeleechOrVip => "fl-VIP",
+                (int)MyAnonamouseSearchType.Vip => "VIP",
+                (int)MyAnonamouseSearchType.NotVip => "nVIP",
+                _ => "all"
             };
 
-            var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            var parameters = new NameValueCollection
+            {
+                { "tor[text]", term },
+                { "tor[searchType]", searchType },
+                { "tor[srchIn][title]", "true" },
+                { "tor[srchIn][author]", "true" },
+                { "tor[srchIn][narrator]", "true" },
+                { "tor[searchIn]", "torrents" },
+                { "tor[sortType]", "default" },
+                { "tor[perpage]", searchCriteria.Limit?.ToString() ?? "100" },
+                { "tor[startNumber]", searchCriteria.Offset?.ToString() ?? "0" },
+                { "thumbnails", "1" }, // gives links for thumbnail sized versions of their posters
+                { "description", "1" } // include the description
+            };
+
+            if (Settings.SearchInDescription)
+            {
+                parameters.Add("tor[srchIn][description]", "true");
+            }
+
+            if (Settings.SearchInSeries)
+            {
+                parameters.Add("tor[srchIn][series]", "true");
+            }
+
+            if (Settings.SearchInFilenames)
+            {
+                parameters.Add("tor[srchIn][filenames]", "true");
+            }
+
+            var catList = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
             if (catList.Any())
             {
                 var index = 0;
                 foreach (var cat in catList)
                 {
-                    qParams.Add("tor[cat][" + index + "]", cat);
+                    parameters.Add("tor[cat][" + index + "]", cat);
                     index++;
                 }
             }
             else
             {
-                qParams.Add("tor[cat][]", "0");
+                parameters.Add("tor[cat][]", "0");
             }
 
-            var urlSearch = Settings.BaseUrl + "tor/js/loadSearchJSONbasic.php";
+            var searchUrl = Settings.BaseUrl + "tor/js/loadSearchJSONbasic.php";
 
-            if (qParams.Count > 0)
+            if (parameters.Count > 0)
             {
-                urlSearch += $"?{qParams.GetQueryString()}";
+                searchUrl += $"?{parameters.GetQueryString()}";
             }
 
-            var request = new IndexerRequest(urlSearch, HttpAccept.Json);
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 
             yield return request;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria));
 
             return pageableRequests;
         }
@@ -296,7 +312,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria));
 
             return pageableRequests;
         }
@@ -309,11 +325,26 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly MyAnonamouseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
+        private readonly IIndexerHttpClient _httpClient;
+        private readonly Logger _logger;
+        private readonly ICached<string> _userClassCache;
+        private readonly HashSet<string> _vipFreeleechUserClasses = new (StringComparer.OrdinalIgnoreCase)
+        {
+            "VIP",
+            "Elite VIP",
+        };
 
-        public MyAnonamouseParser(MyAnonamouseSettings settings, IndexerCapabilitiesCategories categories)
+        public MyAnonamouseParser(MyAnonamouseSettings settings,
+            IndexerCapabilitiesCategories categories,
+            IIndexerHttpClient httpClient,
+            ICacheManager cacheManager,
+            Logger logger)
         {
             _settings = settings;
             _categories = categories;
+            _httpClient = httpClient;
+            _logger = logger;
+            _userClassCache = cacheManager.GetCache<string>(GetType());
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -321,7 +352,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             // Throw auth errors here before we try to parse
             if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.Forbidden)
             {
-                throw new IndexerAuthException("[403 Forbidden] - mam_session_id expired or invalid");
+                throw new IndexerAuthException("[403 Forbidden] - mam_id expired or invalid");
             }
 
             // Throw common http errors here before we try to parse
@@ -351,45 +382,46 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return torrentInfos.ToArray();
             }
 
+            var hasUserVip = HasUserVip();
+
             foreach (var item in jsonResponse.Data)
             {
                 //TODO shift to ReleaseInfo object initializer for consistency
                 var release = new TorrentInfo();
 
                 var id = item.Id;
-                release.Title = item.Title;
 
-                // release.Description = item.Value<string>("description");
-                var author = string.Empty;
+                release.Title = item.Title;
+                release.Description = item.Description;
 
                 if (item.AuthorInfo != null)
                 {
                     var authorInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.AuthorInfo);
-                    author = authorInfo?.First().Value;
-                }
+                    var author = authorInfo?.Take(5).Select(v => v.Value).Join(", ");
 
-                if (author != null)
-                {
-                    release.Title += " by " + author;
+                    if (author.IsNotNullOrWhiteSpace())
+                    {
+                        release.Title += " by " + author;
+                    }
                 }
 
                 var flags = new List<string>();
 
-                var langCode = item.LangCode;
-                if (!string.IsNullOrEmpty(langCode))
+                var languageCode = item.LanguageCode;
+                if (!string.IsNullOrEmpty(languageCode))
                 {
-                    flags.Add(langCode);
+                    flags.Add(languageCode);
                 }
 
                 var filetype = item.Filetype;
                 if (!string.IsNullOrEmpty(filetype))
                 {
-                    flags.Add(filetype);
+                    flags.Add(filetype.ToUpper());
                 }
 
                 if (flags.Count > 0)
                 {
-                    release.Title += " [" + string.Join(" / ", flags) + "]";
+                    release.Title += " [" + flags.Join(" / ") + "]";
                 }
 
                 if (item.Vip)
@@ -397,31 +429,52 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Title += " [VIP]";
                 }
 
-                var category = item.Category;
-                release.Categories = _categories.MapTrackerCatToNewznab(category);
-
-                release.DownloadUrl = _settings.BaseUrl + "/tor/download.php?tid=" + id;
-                release.InfoUrl = _settings.BaseUrl + "/t/" + id;
+                release.DownloadUrl = _settings.BaseUrl + "tor/download.php?tid=" + id;
+                release.InfoUrl = _settings.BaseUrl + "t/" + id;
                 release.Guid = release.InfoUrl;
-
-                var dateStr = item.Added;
-                var dateTime = DateTime.ParseExact(dateStr, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                release.PublishDate = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc).ToLocalTime();
-
+                release.Categories = _categories.MapTrackerCatToNewznab(item.Category);
+                release.PublishDate = DateTime.ParseExact(item.Added, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToLocalTime();
                 release.Grabs = item.Grabs;
                 release.Files = item.NumFiles;
                 release.Seeders = item.Seeders;
                 release.Peers = item.Leechers + release.Seeders;
-                var size = item.Size;
-                release.Size = ParseUtil.GetBytes(size);
-
-                release.DownloadVolumeFactor = item.Free ? 0 : 1;
+                release.Size = ParseUtil.GetBytes(item.Size);
+                release.DownloadVolumeFactor = item.Free ? 0 : hasUserVip && item.FreeVip ? 0 : 1;
                 release.UploadVolumeFactor = 1;
+                release.MinimumRatio = 1;
+                release.MinimumSeedTime = 259200; // 72 hours
 
                 torrentInfos.Add(release);
             }
 
             return torrentInfos.ToArray();
+        }
+
+        private bool HasUserVip()
+        {
+            var cacheKey = "myanonamouse_user_class_" + _settings.ToJson().SHA256Hash();
+
+            var userClass = _userClassCache.Get(
+                cacheKey,
+                () =>
+                {
+                    var request = new HttpRequestBuilder(_settings.BaseUrl.Trim('/'))
+                        .Resource("/jsonLoad.php")
+                        .Accept(HttpAccept.Json)
+                        .Build();
+
+                    _logger.Debug("Fetching user data: " + request.Url.FullUri);
+
+                    request.Cookies.Add("mam_id", _settings.MamId);
+
+                    var response = _httpClient.Get(request);
+                    var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseUserDataResponse>(response.Content);
+
+                    return jsonResponse.UserClass?.Trim();
+                },
+                TimeSpan.FromHours(1));
+
+            return _vipFreeleechUserClasses.Contains(userClass);
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
@@ -442,16 +495,29 @@ namespace NzbDrone.Core.Indexers.Definitions
         public MyAnonamouseSettings()
         {
             MamId = "";
+            SearchType = (int)MyAnonamouseSearchType.All;
+            SearchInDescription = false;
+            SearchInSeries = false;
+            SearchInFilenames = false;
         }
 
-        [FieldDefinition(2, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
+        [FieldDefinition(2, Type = FieldType.Textbox, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
         public string MamId { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Checkbox, Label = "Exclude VIP", HelpText = "Exclude VIP Torrents from search results")]
-        public bool ExcludeVip { get; set; }
+        [FieldDefinition(3, Type = FieldType.Select, Label = "Search Type", SelectOptions = typeof(MyAnonamouseSearchType), HelpText = "Specify the desired search type")]
+        public int SearchType { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Freeleech", HelpText = "Use freeleech token for download")]
+        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Buy Freeleech Token", HelpText = "Buy personal freeleech token for download")]
         public bool Freeleech { get; set; }
+
+        [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Search in description", HelpText = "Search text in the description")]
+        public bool SearchInDescription { get; set; }
+
+        [FieldDefinition(6, Type = FieldType.Checkbox, Label = "Search in series", HelpText = "Search text in the series")]
+        public bool SearchInSeries { get; set; }
+
+        [FieldDefinition(7, Type = FieldType.Checkbox, Label = "Search in filenames", HelpText = "Search text in the filenames")]
+        public bool SearchInFilenames { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
@@ -459,22 +525,38 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
+    public enum MyAnonamouseSearchType
+    {
+        [FieldOption(Label="All torrents", Hint = "Search everything")]
+        All = 0,
+        [FieldOption(Label="Only active", Hint = "Last update had 1+ seeders")]
+        Active = 1,
+        [FieldOption(Label="Freeleech", Hint = "Freeleech torrents")]
+        Freeleech = 2,
+        [FieldOption(Label="Freeleech or VIP", Hint = "Freeleech or VIP torrents")]
+        FreeleechOrVip = 3,
+        [FieldOption(Label="VIP", Hint = "VIP torrents")]
+        Vip = 4,
+        [FieldOption(Label="Not VIP", Hint = "Torrents not VIP")]
+        NotVip = 5,
+    }
+
     public class MyAnonamouseTorrent
     {
         public int Id { get; set; }
         public string Title { get; set; }
-
         [JsonProperty(PropertyName = "author_info")]
         public string AuthorInfo { get; set; }
-
+        public string Description { get; set; }
         [JsonProperty(PropertyName = "lang_code")]
-        public string LangCode { get; set; }
+        public string LanguageCode { get; set; }
         public string Filetype { get; set; }
         public bool Vip { get; set; }
         public bool Free { get; set; }
+        [JsonProperty(PropertyName = "fl_vip")]
+        public bool FreeVip { get; set; }
         public string Category { get; set; }
         public string Added { get; set; }
-
         [JsonProperty(PropertyName = "times_completed")]
         public int Grabs { get; set; }
         public int Seeders { get; set; }
@@ -489,9 +571,15 @@ namespace NzbDrone.Core.Indexers.Definitions
         public List<MyAnonamouseTorrent> Data { get; set; }
     }
 
-    public class MyAnonamouseFreeleechResponse
+    public class MyAnonamouseBuyPersonalFreeleechResponse
     {
         public bool Success { get; set; }
         public string Error { get; set; }
+    }
+
+    public class MyAnonamouseUserDataResponse
+    {
+        [JsonProperty(PropertyName = "class")]
+        public string UserClass { get; set; }
     }
 }

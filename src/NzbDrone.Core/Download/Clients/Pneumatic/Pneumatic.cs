@@ -23,6 +23,7 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
         }
 
         public override string Name => "Pneumatic";
+        public override bool SupportsCategories => false;
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
 

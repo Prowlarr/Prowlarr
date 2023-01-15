@@ -54,7 +54,7 @@
     "BranchUpdateMechanism": "A külső frissítési mechanizmus által használt ágazat",
     "BranchUpdate": "Ágazattípus a Prowlarr frissítéseihez",
     "Branch": "Ágazat",
-    "BindAddressHelpText": "Érvényes IP4-cím, vagy „*” minden interfészhez",
+    "BindAddressHelpText": "Érvényes IP-cím, localhost vagy '*' minden interfészhez",
     "BindAddress": "Kapcsolási Cím",
     "BeforeUpdate": "Alkalmazásfrissítés előtt",
     "Backups": "Biztonsági Mentés",
@@ -449,7 +449,7 @@
     "MinimumSeedersHelpText": "Az alkalmazás által megkövetelt minimális Seeder az indexer számára",
     "InstanceName": "Példány Neve",
     "InstanceNameHelpText": "Példánynév a böngésző lapon és a syslog alkalmazás neve",
-    "ThemeHelpText": "Prowlarr felhasználói felület témájának módosítása, ihlette {0}",
+    "ThemeHelpText": "Változtasd meg az alkalmazás felhasználói felület témáját. Az „Auto” téma az operációs rendszer témáját használja a Világos vagy Sötét mód beállításához. Ihlette: {0}",
     "Duration": "Időtartam",
     "ElapsedTime": "Eltelt idő",
     "EnabledRedirected": "Engedélyezve, átirányítva",
@@ -462,5 +462,12 @@
     "Started": "Elkezdődött",
     "NextExecution": "Következő végrehajtás",
     "ApplicationLongTermStatusCheckSingleClientMessage": "Az alkamazások elérhetetlenek több mint 6 órája az alábbi hiba miatt: {0}",
-    "ApplicationLongTermStatusCheckAllClientMessage": "Az összes alkalmazás elérhetetlen több mint 6 órája meghibásodás miatt"
+    "ApplicationLongTermStatusCheckAllClientMessage": "Az összes alkalmazás elérhetetlen több mint 6 órája meghibásodás miatt",
+    "AreYouSureYouWantToDeleteCategory": "Biztosan törölni szeretnéd a leképezett kategóriát?",
+    "DeleteClientCategory": "Letöltési kliens kategória törlése",
+    "MappedCategories": "Térképezett kategóriák",
+    "DownloadClientCategory": "Letöltési kliens kategória",
+    "AuthenticationRequired": "Azonosítás szükséges",
+    "AuthenticationRequiredHelpText": "Módosítsd, hogy mely kérésekhez van szükség hitelesítésre. Ne változtasson, hacsak nem érti a kockázatokat.",
+    "AuthenticationRequiredWarning": "A hitelesítés nélküli távoli hozzáférés megakadályozása érdekében a Prowlarrnak mostantól engedélyezni kell a hitelesítést. Konfigurálja a hitelesítési módszert és a hitelesítési adatokat. Opcionálisan letilthatja a helyi címekről történő hitelesítést. További információkért tekintsd meg a GYIK-et."
 }

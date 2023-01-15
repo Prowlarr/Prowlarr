@@ -1,0 +1,144 @@
+﻿{
+  "status": "success",
+  "response": {
+    "currentPage": 1,
+    "pages": 1,
+    "results": [
+      {
+        "groupId": 2497,
+        "groupName": "Singin&#39; in the Rain",
+        "artist": "Gene Kelly & Stanley Donen",
+        "cover": "https:\/\/www.themoviedb.org\/t\/p\/original\/g2AaJDC2vSRcqHSDH29642xmQd.jpg",
+        "tags": [ "comedy", "musical", "romance" ],
+        "bookmarked": false,
+        "vanityHouse": false,
+        "groupYear": 1952,
+        "releaseType": null,
+        "groupTime": "1671129449",
+        "maxSize": 57473058680,
+        "totalSnatched": 25,
+        "totalSeeders": 9,
+        "totalLeechers": 0,
+        "torrents": [
+          {
+            "torrentId": 3599,
+            "editionId": 1,
+            "artists": [
+              {
+                "id": 126,
+                "name": "Gene Kelly",
+                "aliasid": 127
+              },
+              {
+                "id": 125,
+                "name": "Stanley Donen",
+                "aliasid": 126
+              }
+            ],
+            "remastered": false,
+            "remasterYear": 0,
+            "remasterCatalogueNumber": "",
+            "remasterTitle": "",
+            "media": "1080p",
+            "encoding": "",
+            "format": "",
+            "hasLog": false,
+            "logScore": 0,
+            "hasCue": false,
+            "scene": false,
+            "vanityHouse": false,
+            "fileCount": 1,
+            "time": "2017-09-10 11:47:27",
+            "size": 24724893991,
+            "snatches": 14,
+            "seeders": 1,
+            "leechers": 0,
+            "isFreeleech": true,
+            "isNeutralLeech": false,
+            "isPersonalFreeleech": false,
+            "canUseToken": false,
+            "hasSnatched": false
+          },
+          {
+            "torrentId": 45068,
+            "editionId": 2,
+            "artists": [
+              {
+                "id": 126,
+                "name": "Gene Kelly",
+                "aliasid": 127
+              },
+              {
+                "id": 125,
+                "name": "Stanley Donen",
+                "aliasid": 126
+              }
+            ],
+            "remastered": false,
+            "remasterYear": 0,
+            "remasterCatalogueNumber": "",
+            "remasterTitle": "",
+            "media": "2160p",
+            "encoding": "",
+            "format": "",
+            "hasLog": false,
+            "logScore": 0,
+            "hasCue": false,
+            "scene": false,
+            "vanityHouse": false,
+            "fileCount": 1,
+            "time": "2022-12-15 19:37:29",
+            "size": 57473058680,
+            "snatches": 6,
+            "seeders": 8,
+            "leechers": 0,
+            "isFreeleech": true,
+            "isNeutralLeech": false,
+            "isPersonalFreeleech": false,
+            "canUseToken": false,
+            "hasSnatched": false
+          },
+          {
+            "torrentId": 2726,
+            "editionId": 3,
+            "artists": [
+              {
+                "id": 126,
+                "name": "Gene Kelly",
+                "aliasid": 127
+              },
+              {
+                "id": 125,
+                "name": "Stanley Donen",
+                "aliasid": 126
+              }
+            ],
+            "remastered": false,
+            "remasterYear": 0,
+            "remasterCatalogueNumber": "",
+            "remasterTitle": "",
+            "media": "DVD-R",
+            "encoding": "",
+            "format": "",
+            "hasLog": false,
+            "logScore": 0,
+            "hasCue": false,
+            "scene": false,
+            "vanityHouse": false,
+            "fileCount": 37,
+            "time": "2017-08-26 14:58:58",
+            "size": 10350032896,
+            "snatches": 5,
+            "seeders": 0,
+            "leechers": 0,
+            "isFreeleech": true,
+            "isNeutralLeech": false,
+            "isPersonalFreeleech": false,
+            "canUseToken": false,
+            "hasSnatched": false
+          }
+        ]
+      }
+    ]
+  }
+}

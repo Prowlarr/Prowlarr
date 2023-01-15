@@ -4,7 +4,9 @@ using System.Linq;
 using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Torznab
 {
@@ -13,10 +15,15 @@ namespace NzbDrone.Core.Indexers.Torznab
         public const string ns = "{http://torznab.com/schemas/2015/feed}";
 
         private readonly TorznabSettings _settings;
-        public TorznabRssParser(TorznabSettings settings)
+        private readonly ProviderDefinition _definition;
+        private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
+
+        public TorznabRssParser(TorznabSettings settings, ProviderDefinition definition, INewznabCapabilitiesProvider capabilitiesProvider)
         {
             UseEnclosureUrl = true;
             _settings = settings;
+            _definition = definition;
+            _capabilitiesProvider = capabilitiesProvider;
         }
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
@@ -67,8 +74,18 @@ namespace NzbDrone.Core.Indexers.Torznab
                 torrentInfo.DownloadVolumeFactor = downloadFactor;
                 torrentInfo.UploadVolumeFactor = uploadFactor;
 
+                torrentInfo.ImdbId = GetIntAttribute(item, new[] { "imdb", "imdbid" });
+                torrentInfo.TmdbId = GetIntAttribute(item, new[] { "tmdbid", "tmdb" });
+                torrentInfo.TvdbId = GetIntAttribute(item, new[] { "tvdbid", "tvdb" });
+                torrentInfo.TvMazeId = GetIntAttribute(item, new[] { "tvmazeid", "tvmaze" });
+                torrentInfo.TraktId = GetIntAttribute(item, new[] { "traktid", "trakt" });
+                torrentInfo.TvRageId = GetIntAttribute(item, new[] { "rageid" });
+                torrentInfo.Grabs = GetIntAttribute(item, new[] { "grabs" });
+                torrentInfo.Files = GetIntAttribute(item, new[] { "files" });
+
                 torrentInfo.IndexerFlags = GetFlags(item);
                 torrentInfo.PosterUrl = GetPosterUrl(item);
+                torrentInfo.InfoHash = GetInfoHash(item);
             }
 
             return torrentInfo;
@@ -157,19 +174,23 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         protected override ICollection<IndexerCategory> GetCategory(XElement item)
         {
-            var cats = TryGetMultipleNewznabAttributes(item, "category");
+            var capabilities = _capabilitiesProvider.GetCapabilities(_settings, _definition);
+            var cats = TryGetMultipleTorznabAttributes(item, "category");
             var results = new List<IndexerCategory>();
+
+            // Try to find <category> elements for some indexers that suck at following the rules.
+            if (cats.Count == 0)
+            {
+                cats = item.Elements("category").Select(e => e.Value).ToList();
+            }
 
             foreach (var cat in cats)
             {
-                if (int.TryParse(cat, out var intCategory))
-                {
-                    var indexerCat = _settings.Categories?.FirstOrDefault(c => c.Id == intCategory) ?? null;
+                var indexerCat = capabilities.Categories.MapTrackerCatToNewznab(cat);
 
-                    if (indexerCat != null)
-                    {
-                        results.Add(indexerCat);
-                    }
+                if (indexerCat != null)
+                {
+                    results.AddRange(indexerCat);
                 }
             }
 
@@ -208,15 +229,14 @@ namespace NzbDrone.Core.Indexers.Torznab
             return base.GetPeers(item);
         }
 
-        protected List<IndexerFlag> GetFlags(XElement item)
+        protected HashSet<IndexerFlag> GetFlags(XElement item)
         {
-            var flags = new List<IndexerFlag>();
+            var flags = new HashSet<IndexerFlag>();
 
             var downloadFactor = TryGetFloatTorznabAttribute(item, "downloadvolumefactor", 1);
-
             var uploadFactor = TryGetFloatTorznabAttribute(item, "uploadvolumefactor", 1);
 
-            if (uploadFactor == 2)
+            if (uploadFactor == 2.0)
             {
                 flags.Add(IndexerFlag.DoubleUpload);
             }
@@ -260,7 +280,7 @@ namespace NzbDrone.Core.Indexers.Torznab
             return defaultValue;
         }
 
-        protected List<string> TryGetMultipleNewznabAttributes(XElement item, string key)
+        protected List<string> TryGetMultipleTorznabAttributes(XElement item, string key)
         {
             var attrElements = item.Elements(ns + "attr").Where(e => e.Attribute("name").Value.Equals(key, StringComparison.OrdinalIgnoreCase));
             var results = new List<string>();
@@ -275,6 +295,22 @@ namespace NzbDrone.Core.Indexers.Torznab
             }
 
             return results;
+        }
+
+        protected virtual int GetIntAttribute(XElement item, string[] attributes)
+        {
+            foreach (var attr in attributes)
+            {
+                var idString = TryGetTorznabAttribute(item, attr);
+                int idInt;
+
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                {
+                    return idInt;
+                }
+            }
+
+            return 0;
         }
     }
 }

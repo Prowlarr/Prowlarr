@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -14,7 +13,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public AvistazIdInfo MovieTvinfo { get; set; }
 
         [JsonProperty(PropertyName = "created_at")]
-        public DateTime CreatedAt { get; set; }
+        public string CreatedAt { get; set; }
 
         [JsonProperty(PropertyName = "file_name")]
         public string FileName { get; set; }

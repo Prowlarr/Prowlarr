@@ -11,6 +11,8 @@ namespace NzbDrone.Core.Indexers.Settings
             public CookieBaseSettingsValidator()
             {
                 RuleFor(c => c.Cookie).NotEmpty();
+                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
             }
         }
 
@@ -27,10 +29,10 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Cookie { get; set; }
 
-        [FieldDefinition(3)]
+        [FieldDefinition(10)]
         public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
 
-        [FieldDefinition(4)]
+        [FieldDefinition(11)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
 
         public virtual NzbDroneValidationResult Validate()

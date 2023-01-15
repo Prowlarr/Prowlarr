@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
 
         protected override string AddFromNzbFile(ReleaseInfo release, string filename, byte[] fileContent)
         {
-            var category = Settings.Category;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
 
             var priority = Settings.Priority;
 
@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
 
         protected override string AddFromLink(ReleaseInfo release)
         {
-            var category = Settings.Category;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
 
             var priority = Settings.Priority;
 
@@ -66,6 +66,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
         }
 
         public override string Name => "NZBGet";
+        public override bool SupportsCategories => true;
 
         protected IEnumerable<NzbgetCategory> GetCategories(Dictionary<string, string> config)
         {
@@ -138,6 +139,18 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
         {
             var config = _proxy.GetConfig(Settings);
             var categories = GetCategories(config);
+
+            foreach (var category in Categories)
+            {
+                if (!category.ClientCategory.IsNullOrWhiteSpace() && !categories.Any(v => v.Name == category.ClientCategory))
+                {
+                    return new NzbDroneValidationFailure(string.Empty, "Category does not exist")
+                    {
+                        InfoLink = _proxy.GetBaseUrl(Settings),
+                        DetailedDescription = "A mapped category you entered doesn't exist in NZBGet. Go to NZBGet to create it."
+                    };
+                }
+            }
 
             if (!Settings.Category.IsNullOrWhiteSpace() && !categories.Any(v => v.Name == Settings.Category))
             {

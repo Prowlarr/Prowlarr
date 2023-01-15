@@ -121,6 +121,13 @@ namespace NzbDrone.Core.ThingiProvider
             _eventAggregator.PublishEvent(new ProviderDeletedEvent<TProvider>(id));
         }
 
+        public void Delete(IEnumerable<int> ids)
+        {
+            _providerRepository.DeleteMany(ids);
+
+            _eventAggregator.PublishEvent(new ProviderBulkDeletedEvent<TProvider>(ids));
+        }
+
         public TProvider GetInstance(TProviderDefinition definition)
         {
             var type = GetImplementation(definition);

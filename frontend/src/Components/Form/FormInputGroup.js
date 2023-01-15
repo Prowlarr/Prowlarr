@@ -16,6 +16,7 @@ import FormInputHelpText from './FormInputHelpText';
 import IndexerFlagsSelectInputConnector from './IndexerFlagsSelectInputConnector';
 import InfoInput from './InfoInput';
 import KeyValueListInput from './KeyValueListInput';
+import NewznabCategorySelectInputConnector from './NewznabCategorySelectInputConnector';
 import NumberInput from './NumberInput';
 import OAuthInputConnector from './OAuthInputConnector';
 import PasswordInput from './PasswordInput';
@@ -67,6 +68,9 @@ function getComponent(type) {
 
     case inputTypes.PATH:
       return PathInputConnector;
+
+    case inputTypes.CATEGORY_SELECT:
+      return NewznabCategorySelectInputConnector;
 
     case inputTypes.INDEXER_FLAGS_SELECT:
       return IndexerFlagsSelectInputConnector;

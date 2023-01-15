@@ -1,4 +1,3 @@
-using System;
 using Newtonsoft.Json;
 
 namespace NzbDrone.Core.Indexers.FileList
@@ -16,12 +15,15 @@ namespace NzbDrone.Core.Indexers.FileList
         public uint Files { get; set; }
         [JsonProperty(PropertyName = "imdb")]
         public string ImdbId { get; set; }
+        public bool Internal { get; set; }
         [JsonProperty(PropertyName = "freeleech")]
         public bool FreeLeech { get; set; }
         [JsonProperty(PropertyName = "doubleup")]
         public bool DoubleUp { get; set; }
         [JsonProperty(PropertyName = "upload_date")]
-        public DateTime UploadDate { get; set; }
+        public string UploadDate { get; set; }
         public string Category { get; set; }
+        [JsonProperty(PropertyName = "small_description")]
+        public string SmallDescription { get; set; }
     }
 }

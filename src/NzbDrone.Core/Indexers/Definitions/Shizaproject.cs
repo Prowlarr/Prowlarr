@@ -19,6 +19,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Site unavailable")]
     public class Shizaproject : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "ShizaProject";

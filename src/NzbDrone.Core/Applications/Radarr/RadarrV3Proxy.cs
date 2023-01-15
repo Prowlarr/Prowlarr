@@ -19,6 +19,8 @@ namespace NzbDrone.Core.Applications.Radarr
         void RemoveIndexer(int indexerId, RadarrSettings settings);
         RadarrIndexer UpdateIndexer(RadarrIndexer indexer, RadarrSettings settings);
         ValidationFailure TestConnection(RadarrIndexer indexer, RadarrSettings settings);
+        List<RadarrTag> GetTagsFromApplication(RadarrSettings settings);
+        RadarrTag CreateTag(RadarrSettings settings, string label);
     }
 
     public class RadarrV3Proxy : IRadarrV3Proxy
@@ -132,6 +134,21 @@ namespace NzbDrone.Core.Applications.Radarr
             }
 
             return null;
+        }
+
+        public List<RadarrTag> GetTagsFromApplication(RadarrSettings settings)
+        {
+            var request = BuildRequest(settings, $"/api/v3/tag/detail", HttpMethod.Get);
+            return Execute<List<RadarrTag>>(request);
+        }
+
+        public RadarrTag CreateTag(RadarrSettings settings, string label)
+        {
+            var request = BuildRequest(settings, $"/api/v3/tag", HttpMethod.Post);
+            request.SetContent(new RadarrTag { Label = label }.ToJson());
+            var tag = Execute<RadarrTag>(request);
+            _logger.Info("Tag '{0}' created or already existed with ID '{2}'.", tag.Label, tag.Id);
+            return tag;
         }
 
         private HttpRequest BuildRequest(RadarrSettings settings, string resource, HttpMethod method)

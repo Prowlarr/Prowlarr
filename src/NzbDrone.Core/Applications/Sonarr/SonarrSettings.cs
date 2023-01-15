@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         [FieldDefinition(4, Label = "Anime Sync Categories", Type = FieldType.Select, SelectOptions = typeof(NewznabCategoryFieldConverter), Advanced = true, HelpText = "Only Indexers that support these categories will be synced")]
         public IEnumerable<int> AnimeSyncCategories { get; set; }
 
-        [FieldDefinition(5, Label = "Sync Indexer Tags", Type = FieldType.Checkbox, HelpText = "Syncs the indexer tags within Prowlarr to the application.")]
+        [FieldDefinition(5, Label = "Sync Indexer Tags", Type = FieldType.Checkbox, HelpText = "Syncs the indexer tags within Prowlarr to Sonarr.")]
         public bool SyncIndexerTags { get; set; } = false;
 
         public NzbDroneValidationResult Validate()

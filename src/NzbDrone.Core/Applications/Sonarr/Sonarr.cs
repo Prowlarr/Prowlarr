@@ -195,7 +195,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
                 Fields = schema.Fields,
-                Tags = Settings.SyncIndexerTags ? GetAndCreateSonarrTagIdsForIndexer(indexer.Tags) : new HashSet<int>()
+                Tags = Settings.SyncIndexerTags ? GetAndCreateSonarrTagIdsForIndexer(indexer) : new HashSet<int>()
             };
 
             sonarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));

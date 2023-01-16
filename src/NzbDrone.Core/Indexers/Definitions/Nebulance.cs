@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Nebulance : TorrentIndexerBase<NebulanceSettings>
     {
         public override string Name => "Nebulance";
-        public override string[] IndexerUrls => new string[] { "https://nebulance.io/" };
+        public override string[] IndexerUrls => new[] { "https://nebulance.io/" };
         public override string Description => "Nebulance (NBL) is a ratioless Private Torrent Tracker for TV";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new NebulanceParser(Settings, Capabilities.Categories);
+            return new NebulanceParser(Settings);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -49,9 +49,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                    {
-                        TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
-                    }
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
@@ -67,10 +67,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public NebulanceSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public NebulanceRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(NebulanceQuery parameters, int? results, int? offset)
         {
             var apiUrl = Settings.BaseUrl + "api.php";
@@ -85,16 +81,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
@@ -137,9 +129,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
@@ -168,19 +158,17 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class NebulanceParser : IParseIndexerResponse
     {
         private readonly NebulanceSettings _settings;
-        private readonly IndexerCapabilitiesCategories _categories;
 
-        public NebulanceParser(NebulanceSettings settings, IndexerCapabilitiesCategories categories)
+        public NebulanceParser(NebulanceSettings settings)
         {
             _settings = settings;
-            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
 
-            JsonRpcResponse<NebulanceTorrents> jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
+            var jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
             {

@@ -30,7 +30,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://speed.click/",
             "https://speeders.me/"
         };
-
         public override string Description => "Your home now!";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
@@ -309,7 +308,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in rows)
             {
-                var title = Regex.Replace(row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").TextContent, @"(?i:\[REQ\])", "").Trim(' ', '.');
+                var title = CleanTitle(row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").TextContent);
                 var downloadUrl = new Uri(_settings.BaseUrl + row.QuerySelector("td:nth-child(4) a[href^=\"/download/\"]").GetAttribute("href").TrimStart('/'));
                 var infoUrl = new Uri(_settings.BaseUrl + row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").GetAttribute("href").TrimStart('/'));
                 var size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(6)").TextContent);
@@ -348,6 +347,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private static string CleanTitle(string title)
+        {
+            title = Regex.Replace(title, @"\[REQ(UEST)?\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            return title.Trim(' ', '.');
+        }
     }
 
     public class SpeedCDSettings : UserPassTorrentBaseSettings

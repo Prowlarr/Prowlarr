@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -19,7 +20,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class IPTorrents : TorrentIndexerBase<IPTorrentsSettings>
     {
         public override string Name => "IPTorrents";
-
         public override string[] IndexerUrls => new[]
         {
             "https://iptorrents.com/",
@@ -152,6 +152,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(81, NewznabStandardCategory.XXX, "XXX/Movie/0Day");
             caps.Categories.AddCategoryMapping(91, NewznabStandardCategory.XXXPack, "XXX/Packs");
             caps.Categories.AddCategoryMapping(84, NewznabStandardCategory.XXXImageSet, "XXX/Pics/Wallpapers");
+
             return caps;
         }
     }
@@ -167,6 +168,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var qc = new NameValueCollection();
 
+            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
+            {
+                qc.Add(cat, string.Empty);
+            }
+
+            if (Settings.FreeLeechOnly)
+            {
+                qc.Add("free", "on");
+            }
+
             if (imdbId.IsNotNullOrWhiteSpace())
             {
                 // ipt uses sphinx, which supports boolean operators and grouping
@@ -178,16 +189,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 // similar to above
                 qc.Add("q", "+(" + term + ")");
-            }
-
-            if (Settings.FreeLeechOnly)
-            {
-                qc.Add("free", "on");
-            }
-
-            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
-            {
-                qc.Add(cat, string.Empty);
             }
 
             if (offset > 0 && limit > 0)
@@ -278,7 +279,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var parser = new HtmlParser();
             var doc = parser.ParseDocument(indexerResponse.Content);
 
-            var rows = doc.QuerySelectorAll("table[id='torrents'] > tbody > tr");
+            var rows = doc.QuerySelectorAll("table[id=\"torrents\"] > tbody > tr");
             foreach (var row in rows)
             {
                 var qTitleLink = row.QuerySelector("a.hv");
@@ -289,8 +290,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     continue;
                 }
 
-                // drop invalid char that seems to have cropped up in some titles. #6582
-                var title = qTitleLink.TextContent.Trim().Replace("\u000f", "");
+                var title = CleanTitle(qTitleLink.TextContent);
                 var details = new Uri(_settings.BaseUrl + qTitleLink.GetAttribute("href").TrimStart('/'));
 
                 var qLink = row.QuerySelector("a[href^=\"/download.php/\"]");
@@ -355,14 +355,23 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private static string CleanTitle(string title)
+        {
+            // drop invalid chars that seems to have cropped up in some titles. #6582
+            title = Regex.Replace(title, @"[\u0000-\u0008\u000A-\u001F\u0100-\uFFFF]", string.Empty, RegexOptions.Compiled);
+            title = Regex.Replace(title, @"[\(\[\{]REQ(UEST(ED)?)?[\)\]\}]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            return title.Trim(' ', '-', ':');
+        }
     }
 
     public class IPTorrentsSettings : CookieTorrentBaseSettings
     {
-        [FieldDefinition(2, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
+        [FieldDefinition(3, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
         public string UserAgent { get; set; }
 
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
         public bool FreeLeechOnly { get; set; }
     }
 }

@@ -304,7 +304,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return jsonResponse.Resource.Select(torrent => new TorrentInfo
             {
                 Guid = torrent.Id.ToString(),
-                Title = Regex.Replace(torrent.Name, @"(?i:\[REQUESTED\])", "").Trim(' ', '.'),
+                Title = CleanTitle(torrent.Name),
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
@@ -322,6 +322,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 DownloadVolumeFactor = torrent.DownloadVolumeFactor,
                 UploadVolumeFactor = torrent.UploadVolumeFactor,
             }).ToArray();
+        }
+
+        private static string CleanTitle(string title)
+        {
+            title = Regex.Replace(title, @"\[REQUEST(ED)?\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            return title.Trim(' ', '.');
         }
     }
 

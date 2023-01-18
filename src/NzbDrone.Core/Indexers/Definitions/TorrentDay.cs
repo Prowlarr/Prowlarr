@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -13,15 +12,13 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class TorrentDay : TorrentIndexerBase<CookieTorrentBaseSettings>
+    public class TorrentDay : TorrentIndexerBase<TorrentDaySettings>
     {
         public override string Name => "TorrentDay";
-
-        public override string[] IndexerUrls => new string[]
+        public override string[] IndexerUrls => new[]
         {
             "https://torrentday.cool/",
             "https://tday.love/",
@@ -46,7 +43,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TorrentDayRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new TorrentDayRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -64,21 +61,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.TVAnime, "Anime");
@@ -135,12 +132,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentDayRequestGenerator : IIndexerRequestGenerator
     {
-        public CookieTorrentBaseSettings Settings { get; set; }
+        public TorrentDaySettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public TorrentDayRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
@@ -154,6 +147,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var catStr = string.Join(";", cats);
             searchUrl = searchUrl + "?" + catStr;
+
+            if (Settings.FreeLeechOnly)
+            {
+                searchUrl += ";free";
+            }
+
             searchUrl += ";q=";
 
             if (imdbId.IsNotNullOrWhiteSpace())
@@ -219,10 +218,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentDayParser : IParseIndexerResponse
     {
-        private readonly CookieTorrentBaseSettings _settings;
+        private readonly TorrentDaySettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public TorrentDayParser(CookieTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        public TorrentDayParser(TorrentDaySettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -274,5 +273,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class TorrentDaySettings : CookieTorrentBaseSettings
+    {
+        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
+        public bool FreeLeechOnly { get; set; }
     }
 }

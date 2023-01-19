@@ -5,7 +5,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
-    public class AvistazSettingsValidator : AbstractValidator<AvistazSettings>
+    public class AvistazSettingsValidator : NoAuthSettingsValidator<AvistazSettings>
     {
         public AvistazSettingsValidator()
         {
@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
     public class AvistazSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly AvistazSettingsValidator Validator = new AvistazSettingsValidator();
+        private static readonly AvistazSettingsValidator Validator = new ();
 
         public AvistazSettings()
         {

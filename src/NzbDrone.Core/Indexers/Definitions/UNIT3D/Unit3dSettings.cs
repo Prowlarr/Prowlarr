@@ -5,7 +5,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
 {
-    public class Unit3dSettingsValidator : AbstractValidator<Unit3dSettings>
+    public class Unit3dSettingsValidator : NoAuthSettingsValidator<Unit3dSettings>
     {
         public Unit3dSettingsValidator()
         {
@@ -15,11 +15,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
 
     public class Unit3dSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly Unit3dSettingsValidator Validator = new Unit3dSettingsValidator();
-
-        public Unit3dSettings()
-        {
-        }
+        private static readonly Unit3dSettingsValidator Validator = new ();
 
         [FieldDefinition(2, Label = "API Key", HelpText = "Site API Key generated in My Security", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }

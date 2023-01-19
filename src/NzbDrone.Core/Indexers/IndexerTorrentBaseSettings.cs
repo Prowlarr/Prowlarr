@@ -1,6 +1,6 @@
+using System;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -10,17 +10,20 @@ namespace NzbDrone.Core.Indexers
         {
             RuleFor(c => c.SeedRatio).GreaterThan(0.0)
                 .When(c => c.SeedRatio.HasValue)
-                .AsWarning().WithMessage("Should be greater than zero");
+                .WithMessage("Should be greater than zero");
 
             RuleFor(c => c.SeedTime).GreaterThan(0)
                 .When(c => c.SeedTime.HasValue)
-                .AsWarning().WithMessage("Should be greater than zero");
+                .WithMessage("Should be greater than zero");
+
+            RuleFor(c => c.PackSeedTime).GreaterThan(0)
+                .When(c => c.PackSeedTime.HasValue)
+                .WithMessage("Should be greater than zero");
 
             if (seedRatioMinimum != 0.0)
             {
                 RuleFor(c => c.SeedRatio).GreaterThanOrEqualTo(seedRatioMinimum)
                     .When(c => c.SeedRatio > 0.0)
-                    .AsWarning()
                     .WithMessage($"Under {seedRatioMinimum} leads to H&R");
             }
 
@@ -28,15 +31,21 @@ namespace NzbDrone.Core.Indexers
             {
                 RuleFor(c => c.SeedTime).GreaterThanOrEqualTo(seedTimeMinimum)
                     .When(c => c.SeedTime > 0)
-                    .AsWarning()
                     .WithMessage($"Under {seedTimeMinimum} leads to H&R");
+            }
+
+            if (seasonPackSeedTimeMinimum != 0)
+            {
+                RuleFor(c => c.PackSeedTime).GreaterThanOrEqualTo(seasonPackSeedTimeMinimum)
+                    .When(c => c.PackSeedTime > 0)
+                    .WithMessage($"Under {seasonPackSeedTimeMinimum} leads to H&R");
             }
         }
     }
 
     public class IndexerTorrentBaseSettings
     {
-        private static readonly IndexerTorrentSettingsValidator Validator = new IndexerTorrentSettingsValidator();
+        private static readonly IndexerTorrentSettingsValidator Validator = new ();
 
         [FieldDefinition(1, Type = FieldType.Textbox, Label = "Seed Ratio", HelpText = "The ratio a torrent should reach before stopping, empty is app's default", Advanced = true)]
         public double? SeedRatio { get; set; }

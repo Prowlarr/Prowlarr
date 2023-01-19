@@ -1168,7 +1168,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NzbIndexSettings : IIndexerSettings
     {
-        private static readonly NzbIndexSettingsValidator Validator = new NzbIndexSettingsValidator();
+        private static readonly NzbIndexSettingsValidator Validator = new ();
 
         public NzbIndexSettings()
         {
@@ -1182,7 +1182,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string ApiKey { get; set; }
 
         [FieldDefinition(3)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();        public NzbDroneValidationResult Validate()
+        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+
+        public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

@@ -4,20 +4,21 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
+    public class UserPassBaseSettingsValidator<T> : AbstractValidator<T>
+        where T : UserPassTorrentBaseSettings
+    {
+        public UserPassBaseSettingsValidator()
+        {
+            RuleFor(c => c.Username).NotEmpty();
+            RuleFor(c => c.Password).NotEmpty();
+            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+            RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
+        }
+    }
+
     public class UserPassTorrentBaseSettings : ITorrentIndexerSettings
     {
-        public class UserPassBaseSettingsValidator : AbstractValidator<UserPassTorrentBaseSettings>
-        {
-            public UserPassBaseSettingsValidator()
-            {
-                RuleFor(c => c.Username).NotEmpty();
-                RuleFor(c => c.Password).NotEmpty();
-                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
-                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
-            }
-        }
-
-        private static readonly UserPassBaseSettingsValidator Validator = new UserPassBaseSettingsValidator();
+        private static readonly UserPassBaseSettingsValidator<UserPassTorrentBaseSettings> Validator = new ();
 
         public UserPassTorrentBaseSettings()
         {
@@ -35,12 +36,12 @@ namespace NzbDrone.Core.Indexers.Settings
         public string Password { get; set; }
 
         [FieldDefinition(10)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+        public IndexerBaseSettings BaseSettings { get; set; } = new ();
 
         [FieldDefinition(11)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
 
-        public NzbDroneValidationResult Validate()
+        public virtual NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

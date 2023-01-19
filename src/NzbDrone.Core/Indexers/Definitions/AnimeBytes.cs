@@ -521,7 +521,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class AnimeBytesSettingsValidator : AbstractValidator<AnimeBytesSettings>
+    public class AnimeBytesSettingsValidator : NoAuthSettingsValidator<AnimeBytesSettings>
     {
         public AnimeBytesSettingsValidator()
         {
@@ -535,7 +535,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly AnimeBytesSettingsValidator Validator = new AnimeBytesSettingsValidator();
+        private static readonly AnimeBytesSettingsValidator Validator = new ();
 
         public AnimeBytesSettings()
         {

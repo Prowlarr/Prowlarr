@@ -246,7 +246,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class BeyondHDSettingsValidator : AbstractValidator<BeyondHDSettings>
+    public class BeyondHDSettingsValidator : NoAuthSettingsValidator<BeyondHDSettings>
     {
         public BeyondHDSettingsValidator()
         {
@@ -257,7 +257,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly BeyondHDSettingsValidator Validator = new BeyondHDSettingsValidator();
+        private static readonly BeyondHDSettingsValidator Validator = new ();
 
         public BeyondHDSettings()
         {

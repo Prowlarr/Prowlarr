@@ -431,7 +431,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class GazelleGamesSettingsValidator : AbstractValidator<GazelleGamesSettings>
+    public class GazelleGamesSettingsValidator : NoAuthSettingsValidator<GazelleGamesSettings>
     {
         public GazelleGamesSettingsValidator()
         {
@@ -441,7 +441,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class GazelleGamesSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly GazelleGamesSettingsValidator Validator = new GazelleGamesSettingsValidator();
+        private static readonly GazelleGamesSettingsValidator Validator = new ();
 
         public GazelleGamesSettings()
         {

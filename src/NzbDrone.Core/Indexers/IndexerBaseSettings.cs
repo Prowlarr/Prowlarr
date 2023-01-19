@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers
 
     public class IndexerBaseSettings
     {
-        private static readonly IndexerCommonSettingsValidator Validator = new IndexerCommonSettingsValidator();
+        private static readonly IndexerCommonSettingsValidator Validator = new ();
 
         [FieldDefinition(1, Type = FieldType.Number, Label = "Query Limit", HelpText = "The number of queries within a rolling 24 hour period Prowlarr will allow to the site", Advanced = true)]
         public int? QueryLimit { get; set; }

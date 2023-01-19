@@ -219,7 +219,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string BaseUrl { get; set; }
 
         [FieldDefinition(2)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+        public IndexerBaseSettings BaseSettings { get; set; } = new ();
 
         public NzbDroneValidationResult Validate()
         {

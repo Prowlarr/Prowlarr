@@ -1,7 +1,5 @@
-using FluentValidation;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Rarbg
 {

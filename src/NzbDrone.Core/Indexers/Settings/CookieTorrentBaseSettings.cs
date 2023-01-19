@@ -4,19 +4,19 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
+    public class CookieBaseSettingsValidator : AbstractValidator<CookieTorrentBaseSettings>
+    {
+        public CookieBaseSettingsValidator()
+        {
+            RuleFor(c => c.Cookie).NotEmpty();
+            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+            RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
+        }
+    }
+
     public class CookieTorrentBaseSettings : ITorrentIndexerSettings
     {
-        public class CookieBaseSettingsValidator : AbstractValidator<CookieTorrentBaseSettings>
-        {
-            public CookieBaseSettingsValidator()
-            {
-                RuleFor(c => c.Cookie).NotEmpty();
-                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
-                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
-            }
-        }
-
-        private static readonly CookieBaseSettingsValidator Validator = new CookieBaseSettingsValidator();
+        private static readonly CookieBaseSettingsValidator Validator = new ();
 
         public CookieTorrentBaseSettings()
         {
@@ -30,10 +30,10 @@ namespace NzbDrone.Core.Indexers.Settings
         public string Cookie { get; set; }
 
         [FieldDefinition(10)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+        public IndexerBaseSettings BaseSettings { get; set; } = new ();
 
         [FieldDefinition(11)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
 
         public virtual NzbDroneValidationResult Validate()
         {

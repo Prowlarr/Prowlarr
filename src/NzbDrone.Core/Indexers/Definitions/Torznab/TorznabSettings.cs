@@ -41,14 +41,10 @@ namespace NzbDrone.Core.Indexers.Torznab
 
     public class TorznabSettings : NewznabSettings, ITorrentIndexerSettings
     {
-        private static readonly TorznabSettingsValidator Validator = new TorznabSettingsValidator();
-
-        public TorznabSettings()
-        {
-        }
+        private static readonly TorznabSettingsValidator Validator = new ();
 
         [FieldDefinition(3)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
 
         public override NzbDroneValidationResult Validate()
         {

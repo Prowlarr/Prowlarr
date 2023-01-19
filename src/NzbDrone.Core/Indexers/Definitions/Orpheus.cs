@@ -385,7 +385,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class OrpheusSettingsValidator : AbstractValidator<OrpheusSettings>
+    public class OrpheusSettingsValidator : NoAuthSettingsValidator<OrpheusSettings>
     {
         public OrpheusSettingsValidator()
         {

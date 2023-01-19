@@ -326,7 +326,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RedactedSettingsValidator : AbstractValidator<RedactedSettings>
+    public class RedactedSettingsValidator : NoAuthSettingsValidator<RedactedSettings>
     {
         public RedactedSettingsValidator()
         {
@@ -336,7 +336,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class RedactedSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly RedactedSettingsValidator Validator = new RedactedSettingsValidator();
+        private static readonly RedactedSettingsValidator Validator = new ();
 
         public RedactedSettings()
         {

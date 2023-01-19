@@ -5,7 +5,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.BroadcastheNet
 {
-    public class BroadcastheNetSettingsValidator : AbstractValidator<BroadcastheNetSettings>
+    public class BroadcastheNetSettingsValidator : NoAuthSettingsValidator<BroadcastheNetSettings>
     {
         public BroadcastheNetSettingsValidator()
         {
@@ -15,11 +15,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
     public class BroadcastheNetSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly BroadcastheNetSettingsValidator Validator = new BroadcastheNetSettingsValidator();
-
-        public BroadcastheNetSettings()
-        {
-        }
+        private static readonly BroadcastheNetSettingsValidator Validator = new ();
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }

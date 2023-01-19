@@ -332,7 +332,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class SpeedAppSettingsValidator : AbstractValidator<SpeedAppSettings>
+    public class SpeedAppSettingsValidator : NoAuthSettingsValidator<SpeedAppSettings>
     {
         public SpeedAppSettingsValidator()
         {

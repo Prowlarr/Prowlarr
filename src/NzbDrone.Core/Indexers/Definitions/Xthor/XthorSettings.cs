@@ -4,9 +4,13 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Xthor
 {
+    public class XthorSettingsValidator : NoAuthSettingsValidator<XthorSettings>
+    {
+    }
+
     public class XthorSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly XthorSettingsValidator Validator = new XthorSettingsValidator();
+        private static readonly XthorSettingsValidator Validator = new ();
 
         public XthorSettings()
         {

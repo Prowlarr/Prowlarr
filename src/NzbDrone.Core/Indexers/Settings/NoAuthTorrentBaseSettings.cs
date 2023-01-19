@@ -4,7 +4,8 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class NoAuthSettingsValidator : AbstractValidator<NoAuthTorrentBaseSettings>
+    public class NoAuthSettingsValidator<T> : AbstractValidator<T>
+        where T : NoAuthTorrentBaseSettings
     {
         public NoAuthSettingsValidator()
         {
@@ -15,16 +16,16 @@ namespace NzbDrone.Core.Indexers.Settings
 
     public class NoAuthTorrentBaseSettings : ITorrentIndexerSettings
     {
-        private static readonly NoAuthSettingsValidator Validator = new NoAuthSettingsValidator();
+        private static readonly NoAuthSettingsValidator<NoAuthTorrentBaseSettings> Validator = new ();
 
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
         [FieldDefinition(10)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
+        public IndexerBaseSettings BaseSettings { get; set; } = new ();
 
         [FieldDefinition(11)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
 
         public virtual NzbDroneValidationResult Validate()
         {

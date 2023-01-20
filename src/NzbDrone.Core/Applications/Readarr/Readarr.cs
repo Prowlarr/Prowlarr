@@ -192,7 +192,7 @@ namespace NzbDrone.Core.Applications.Readarr
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {
-                readarrIndexer.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value = indexer.AppProfile.Value.MinimumSeeders;
+                readarrIndexer.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.AppMinimumSeeders ?? indexer.AppProfile.Value.MinimumSeeders;
                 readarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedRatio;
                 readarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
 

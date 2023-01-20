@@ -8,6 +8,10 @@ namespace NzbDrone.Core.Indexers
     {
         public IndexerTorrentSettingsValidator(double seedRatioMinimum = 0.0, int seedTimeMinimum = 0, int seasonPackSeedTimeMinimum = 0)
         {
+            RuleFor(c => c.AppMinimumSeeders).GreaterThan(0)
+                .When(c => c.AppMinimumSeeders.HasValue)
+                .WithMessage("Should be greater than zero");
+
             RuleFor(c => c.SeedRatio).GreaterThan(0.0)
                 .When(c => c.SeedRatio.HasValue)
                 .AsWarning().WithMessage("Should be greater than zero");
@@ -38,13 +42,16 @@ namespace NzbDrone.Core.Indexers
     {
         private static readonly IndexerTorrentSettingsValidator Validator = new IndexerTorrentSettingsValidator();
 
-        [FieldDefinition(1, Type = FieldType.Textbox, Label = "Seed Ratio", HelpText = "The ratio a torrent should reach before stopping, empty is app's default", Advanced = true)]
+        [FieldDefinition(1, Type = FieldType.Number, Label = "Apps Minimum Seeders", HelpText = "Minimum seeders required by the Applications for the indexer to grab, empty is Sync profile's default", Advanced = true)]
+        public int? AppMinimumSeeders { get; set; }
+
+        [FieldDefinition(2, Type = FieldType.Textbox, Label = "Seed Ratio", HelpText = "The ratio a torrent should reach before stopping, empty is app's default", Advanced = true)]
         public double? SeedRatio { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Number, Label = "Seed Time", HelpText = "The time a torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
+        [FieldDefinition(3, Type = FieldType.Number, Label = "Seed Time", HelpText = "The time a torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
         public int? SeedTime { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Number, Label = "Pack Seed Time", HelpText = "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
+        [FieldDefinition(4, Type = FieldType.Number, Label = "Pack Seed Time", HelpText = "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
         public int? PackSeedTime { get; set; }
     }
 }

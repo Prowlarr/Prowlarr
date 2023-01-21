@@ -8,6 +8,7 @@ using System.Threading;
 using NLog;
 using NLog.Common;
 using NLog.Targets;
+using Npgsql;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using Sentry;
@@ -32,6 +33,14 @@ namespace NzbDrone.Common.Instrumentation.Sentry
             SQLiteErrorCode.Full,
             SQLiteErrorCode.CantOpen,
             SQLiteErrorCode.Auth
+        };
+
+        private static readonly HashSet<string> FilteredPostgresErrorCodes = new HashSet<string>
+        {
+            PostgresErrorCodes.OutOfMemory,
+            PostgresErrorCodes.TooManyConnections,
+            PostgresErrorCodes.DiskFull,
+            PostgresErrorCodes.ProgramLimitExceeded
         };
 
         // use string and not Type so we don't need a reference to the project
@@ -235,6 +244,19 @@ namespace NzbDrone.Common.Instrumentation.Sentry
                 {
                     var sqlEx = logEvent.Exception as SQLiteException;
                     if (sqlEx != null && FilteredSQLiteErrors.Contains(sqlEx.ResultCode))
+                    {
+                        return false;
+                    }
+
+                    var pgEx = logEvent.Exception as PostgresException;
+                    if (pgEx != null && FilteredPostgresErrorCodes.Contains(pgEx.SqlState))
+                    {
+                        return false;
+                    }
+
+                    // We don't care about transient network and timeout errors
+                    var npgEx = logEvent.Exception as NpgsqlException;
+                    if (npgEx != null && npgEx.IsTransient)
                     {
                         return false;
                     }

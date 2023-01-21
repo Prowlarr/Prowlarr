@@ -195,7 +195,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
                 Fields = new List<SonarrField>(),
-                Tags = Settings.SyncIndexerTags ? GetAndCreateSonarrTagIdsForIndexer(indexer) : new HashSet<int>()
+                Tags = Settings.SyncIndexerTags ? GetAndCreateSonarrTagIdsForIndexer(indexer) : GetExistingIndexerTags(id)
             };
 
             sonarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
@@ -220,7 +220,6 @@ namespace NzbDrone.Core.Applications.Sonarr
         private HashSet<int> GetAndCreateSonarrTagIdsForIndexer(IndexerDefinition indexer)
         {
             // Get Sonarr Tag IDs
-            // TODO: Use a cache to avoid spamming API
             var applicationTags = _sonarrV3Proxy.GetTagsFromApplication(Settings);
 
             // Resolve Prowlarr indexer tags to labels
@@ -240,6 +239,18 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             // Convert to int list for the indexer request
             return existingSonarrIndexerTags.Select(pt => pt.Id).ToHashSet();
+        }
+
+        private HashSet<int> GetExistingIndexerTags(int indexerId)
+        {
+            if (indexerId == 0)
+            {
+                // Indexer doesn't exist yet so no tags to set.
+                return null;
+            }
+
+            var existingIndexer = _sonarrV3Proxy.GetIndexer(indexerId, Settings);
+            return existingIndexer?.Tags;
         }
     }
 }

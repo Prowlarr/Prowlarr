@@ -81,7 +81,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var parser = new HtmlParser();
                 var dom = parser.ParseDocument(response.Content);
-                var errorMessage = dom.QuerySelector("td.embedded").TextContent.Trim();
+                var errorMessage = dom.QuerySelector("td.embedded")?.TextContent.Trim() ?? response.Content;
 
                 throw new IndexerAuthException(errorMessage);
             }

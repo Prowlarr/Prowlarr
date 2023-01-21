@@ -31,14 +31,18 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
 
-        public Orpheus(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-        : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public Orpheus(IIndexerHttpClient httpClient,
+                       IEventAggregator eventAggregator,
+                       IIndexerStatusService indexerStatusService,
+                       IConfigService configService,
+                       Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new OrpheusRequestGenerator { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient };
+            return new OrpheusRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -52,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 MusicSearchParams = new List<MusicSearchParam>
                 {
-                    MusicSearchParam.Q, MusicSearchParam.Album, MusicSearchParam.Artist, MusicSearchParam.Label, MusicSearchParam.Year
+                    MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album, MusicSearchParam.Year
                 },
                 BookSearchParams = new List<BookSearchParam>
                 {
@@ -62,11 +66,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Audio, "Music");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.PC, "Applications");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Books, "E-Books");
+            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.BooksEBook, "E-Books");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Other, "E-Learning Videos");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Other, "Comedy");
-            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.Books, "Comics");
+            caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksComics, "Comics");
 
             return caps;
         }
@@ -114,11 +118,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class OrpheusRequestGenerator : IIndexerRequestGenerator
     {
-        public OrpheusSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly OrpheusSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
+
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-        public IIndexerHttpClient HttpClient { get; set; }
+
+        public OrpheusRequestGenerator(OrpheusSettings settings, IndexerCapabilities capabilities)
+        {
+            _settings = settings;
+            _capabilities = capabilities;
+        }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
@@ -133,11 +143,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (searchCriteria.Album.IsNotNullOrWhiteSpace())
             {
                 parameters.Add("groupname", searchCriteria.Album);
-            }
-
-            if (searchCriteria.Label.IsNotNullOrWhiteSpace())
-            {
-                parameters.Add("recordlabel", searchCriteria.Label);
             }
 
             if (searchCriteria.Year.HasValue)
@@ -189,7 +194,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             parameters.Add("order_way", "desc");
             parameters.Add("searchstr", term);
 
-            var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
 
             if (queryCats.Count > 0)
             {
@@ -199,18 +204,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            var req = RequestBuilder()
-                .Resource($"ajax.php?{parameters.GetQueryString()}")
+            var request = RequestBuilder()
+                .Resource($"/ajax.php?{parameters.GetQueryString()}")
                 .Build();
 
-            yield return new IndexerRequest(req);
+            yield return new IndexerRequest(request);
         }
 
         private HttpRequestBuilder RequestBuilder()
         {
-            return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
+            return new HttpRequestBuilder($"{_settings.BaseUrl.TrimEnd('/')}")
                 .Accept(HttpAccept.Json)
-                .SetHeader("Authorization", $"token {Settings.Apikey}");
+                .SetHeader("Authorization", $"token {_settings.Apikey}");
         }
     }
 
@@ -339,11 +344,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string GetTitle(GazelleRelease result, GazelleTorrent torrent)
         {
-            var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear})";
+            var title = $"{result.Artist} - {result.GroupName} [{result.GroupYear}]";
+
+            if (result.ReleaseType.IsNotNullOrWhiteSpace() && result.ReleaseType != "Unknown")
+            {
+                title += " [" + result.ReleaseType + "]";
+            }
 
             if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
             {
-                title += $" [{string.Format("{0} {1}", torrent.RemasterTitle, torrent.RemasterYear).Trim()}]";
+                title += $" [{$"{torrent.RemasterTitle} {torrent.RemasterYear}".Trim()}]";
             }
 
             title += $" [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";

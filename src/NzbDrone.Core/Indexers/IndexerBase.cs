@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Indexers
 
                 yield return new IndexerDefinition
                 {
-                    Name = GetType().Name,
+                    Name = Name ?? GetType().Name,
                     Enable = config.Validate().IsValid && SupportsRss,
                     Implementation = GetType().Name,
                     Settings = config

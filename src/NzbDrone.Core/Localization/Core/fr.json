@@ -138,7 +138,7 @@
     "CertificateValidation": "Validation du certificat",
     "BypassProxyForLocalAddresses": "Contourner le proxy pour les adresses locales",
     "Branch": "Branche",
-    "BindAddressHelpText": "Adresse IP4 valide ou '*' pour toutes les interfaces",
+    "BindAddressHelpText": "Adresse IPv4 valide ou '*' pour toutes les interfaces",
     "BindAddress": "Adresse d'attache",
     "Backups": "Sauvegardes",
     "BackupRetentionHelpText": "Les sauvegardes automatiques plus anciennes que la période de conservation seront automatiquement effacées",

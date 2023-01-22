@@ -449,7 +449,7 @@
     "MinimumSeedersHelpText": "用于索引器抓取的应用程序所需的最小播种量",
     "InstanceName": "中文",
     "InstanceNameHelpText": "选项卡及日志应用名称",
-    "ThemeHelpText": "修改Prowlarr UI主题, 受{0}启发",
+    "ThemeHelpText": "更改应用程序UI主题，“自动”主题将使用您的操作系统主题设置明亮模式或黑暗模式。受到{0}的影响",
     "Duration": "时长",
     "ElapsedTime": "运行时间",
     "EnabledRedirected": "启用, 修改",
@@ -463,5 +463,11 @@
     "LastDuration": "上一次用时",
     "ApplicationLongTermStatusCheckAllClientMessage": "由于故障超过6小时，所有程序都不可用",
     "ApplicationLongTermStatusCheckSingleClientMessage": "由于故障超过6小时而无法使用的程序：{0}",
-    "AuthenticationRequired": "需要认证"
+    "AuthenticationRequired": "需要认证",
+    "AreYouSureYouWantToDeleteCategory": "您确定要删除映射类别吗？",
+    "DeleteClientCategory": "删除下载客户端类别",
+    "DownloadClientCategory": "下载客户端类别",
+    "MappedCategories": "映射类别",
+    "AuthenticationRequiredHelpText": "更改需要身份验证的请求。除非您了解风险，否则请勿更改。",
+    "AuthenticationRequiredWarning": "为了防止远程访问而无需身份验证，Prowlarr现在需要启用身份验证。请配置您的身份验证方法和凭据。您可以选择从本地地址禁用身份验证。有关其他信息，请参阅FAQ。"
 }

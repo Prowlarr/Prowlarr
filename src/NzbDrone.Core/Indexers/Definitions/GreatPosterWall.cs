@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -16,27 +18,25 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
-public class GreatPosterWall : Gazelle.Gazelle
+public class GreatPosterWall : GazelleBase<GreatPosterWallSettings>
 {
     public override string Name => "GreatPosterWall";
     public override string[] IndexerUrls => new[] { "https://greatposterwall.com/" };
     public override string Description => "GreatPosterWall (GPW) is a CHINESE Private site for MOVIES";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-    public GreatPosterWall(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+    public GreatPosterWall(IIndexerHttpClient httpClient,
+                           IEventAggregator eventAggregator,
+                           IIndexerStatusService indexerStatusService,
+                           IConfigService configService,
+                           Logger logger)
         : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
     {
     }
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new GreatPosterWallRequestGenerator
-        {
-            Settings = Settings,
-            HttpClient = _httpClient,
-            Logger = _logger,
-            Capabilities = Capabilities
-        };
+        return new GreatPosterWallRequestGenerator(Settings, Capabilities, _httpClient, _logger);
     }
 
     public override IParseIndexerResponse GetParser()
@@ -63,6 +63,16 @@ public class GreatPosterWall : Gazelle.Gazelle
 public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 {
     protected override bool ImdbInTags => false;
+    private readonly GreatPosterWallSettings _settings;
+
+    public GreatPosterWallRequestGenerator(GreatPosterWallSettings settings,
+                                           IndexerCapabilities capabilities,
+                                           IIndexerHttpClient httpClient,
+                                           Logger logger)
+        : base(settings, capabilities, httpClient, logger)
+    {
+        _settings = settings;
+    }
 
     public override IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
@@ -70,20 +80,35 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 
         if (searchCriteria.ImdbId != null)
         {
-            parameters += string.Format("&searchstr={0}", searchCriteria.FullImdbId);
+            parameters.Set("searchstr", searchCriteria.FullImdbId);
         }
 
         var pageableRequests = new IndexerPageableRequestChain();
         pageableRequests.Add(GetRequest(parameters));
         return pageableRequests;
     }
+
+    protected override NameValueCollection GetBasicSearchParameters(string term, int[] categories)
+    {
+        var parameters = base.GetBasicSearchParameters(term, categories);
+
+        if (_settings.FreeleechOnly)
+        {
+            parameters.Set("freetorrent", "1");
+        }
+
+        return parameters;
+    }
 }
 
 public class GreatPosterWallParser : GazelleParser
 {
-    public GreatPosterWallParser(GazelleSettings settings, IndexerCapabilities capabilities)
+    private readonly GreatPosterWallSettings _settings;
+
+    public GreatPosterWallParser(GreatPosterWallSettings settings, IndexerCapabilities capabilities)
         : base(settings, capabilities)
     {
+        _settings = settings;
     }
 
     public override IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -188,6 +213,12 @@ public class GreatPosterWallParser : GazelleParser
 
         return url.FullUri;
     }
+}
+
+public class GreatPosterWallSettings : GazelleSettings
+{
+    [FieldDefinition(5, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+    public bool FreeleechOnly { get; set; }
 }
 
 public class GreatPosterWallResponse

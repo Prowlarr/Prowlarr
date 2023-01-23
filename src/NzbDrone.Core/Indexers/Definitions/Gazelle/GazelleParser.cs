@@ -8,177 +8,174 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.Gazelle
-{
-    public class GazelleParser : IParseIndexerResponse
-    {
-        protected readonly GazelleSettings _settings;
-        protected readonly IndexerCapabilities _capabilities;
+namespace NzbDrone.Core.Indexers.Definitions.Gazelle;
 
-        public GazelleParser(GazelleSettings settings, IndexerCapabilities capabilities)
+public class GazelleParser : IParseIndexerResponse
+{
+    protected GazelleSettings Settings { get; }
+    protected IndexerCapabilities Capabilities { get; }
+
+    public GazelleParser(GazelleSettings settings, IndexerCapabilities capabilities)
+    {
+        Settings = settings;
+        Capabilities = capabilities;
+    }
+
+    public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+    public virtual IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+    {
+        var torrentInfos = new List<ReleaseInfo>();
+
+        if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
         {
-            _settings = settings;
-            _capabilities = capabilities;
+            // Remove cookie cache
+            CookiesUpdater(null, null);
+
+            throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
         }
 
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-
-        public virtual IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
         {
-            var torrentInfos = new List<ReleaseInfo>();
+            // Remove cookie cache
+            CookiesUpdater(null, null);
 
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+        }
+
+        var jsonResponse = new HttpResponse<GazelleResponse>(indexerResponse.HttpResponse);
+        if (jsonResponse.Resource.Status != "success" ||
+            jsonResponse.Resource.Status.IsNullOrWhiteSpace() ||
+            jsonResponse.Resource.Response == null)
+        {
+            return torrentInfos;
+        }
+
+        foreach (var result in jsonResponse.Resource.Response.Results)
+        {
+            var posterUrl = GetPosterUrl(result.Cover);
+
+            if (result.Torrents != null)
             {
-                // Remove cookie cache
-                CookiesUpdater(null, null);
-
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
-            }
-
-            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
-            {
-                // Remove cookie cache
-                CookiesUpdater(null, null);
-
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
-            }
-
-            var jsonResponse = new HttpResponse<GazelleResponse>(indexerResponse.HttpResponse);
-            if (jsonResponse.Resource.Status != "success" ||
-                jsonResponse.Resource.Status.IsNullOrWhiteSpace() ||
-                jsonResponse.Resource.Response == null)
-            {
-                return torrentInfos;
-            }
-
-            foreach (var result in jsonResponse.Resource.Response.Results)
-            {
-                var posterUrl = GetPosterUrl(result.Cover);
-
-                if (result.Torrents != null)
+                foreach (var torrent in result.Torrents)
                 {
-                    foreach (var torrent in result.Torrents)
+                    var id = torrent.TorrentId;
+
+                    var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                    if (torrent.HasCue)
                     {
-                        var id = torrent.TorrentId;
-                        var artist = WebUtility.HtmlDecode(result.Artist);
-                        var album = WebUtility.HtmlDecode(result.GroupName);
-
-                        var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
-                        if (torrent.HasCue)
-                        {
-                            title += " [Cue]";
-                        }
-
-                        var infoUrl = GetInfoUrl(result.GroupId, id);
-
-                        var release = new GazelleInfo()
-                        {
-                            Guid = infoUrl,
-                            Title = WebUtility.HtmlDecode(title),
-                            Container = torrent.Encoding,
-                            Files = torrent.FileCount,
-                            Grabs = torrent.Snatches,
-                            Codec = torrent.Format,
-                            Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id),
-                            InfoUrl = infoUrl,
-                            Seeders = int.Parse(torrent.Seeders),
-                            Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
-                            PublishDate = torrent.Time.ToUniversalTime(),
-                            Scene = torrent.Scene,
-                            PosterUrl = posterUrl,
-                            DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
-                            UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
-                        };
-
-                        var category = torrent.Category;
-                        if (category == null || category.Contains("Select Category"))
-                        {
-                            release.Categories = _capabilities.Categories.MapTrackerCatToNewznab("1");
-                        }
-                        else
-                        {
-                            release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
-                        }
-
-                        torrentInfos.Add(release);
+                        title += " [Cue]";
                     }
-                }
-                else
-                {
-                    var id = result.TorrentId;
-                    var groupName = WebUtility.HtmlDecode(result.GroupName);
+
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                    var release = new GazelleInfo()
+                    var release = new GazelleInfo
                     {
                         Guid = infoUrl,
-                        Title = groupName,
-                        Size = long.Parse(result.Size),
+                        Title = WebUtility.HtmlDecode(title),
+                        Container = torrent.Encoding,
+                        Files = torrent.FileCount,
+                        Grabs = torrent.Snatches,
+                        Codec = torrent.Format,
+                        Size = long.Parse(torrent.Size),
                         DownloadUrl = GetDownloadUrl(id),
                         InfoUrl = infoUrl,
-                        Seeders = int.Parse(result.Seeders),
-                        Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
-                        Files = result.FileCount,
-                        Grabs = result.Snatches,
-                        PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime((string)result.GroupTime),
+                        Seeders = int.Parse(torrent.Seeders),
+                        Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
+                        PublishDate = torrent.Time.ToUniversalTime(),
+                        Scene = torrent.Scene,
                         PosterUrl = posterUrl,
-                        DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
-                        UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
+                        DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
+                        UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
                     };
 
-                    var category = result.Category;
+                    var category = torrent.Category;
                     if (category == null || category.Contains("Select Category"))
                     {
-                        release.Categories = _capabilities.Categories.MapTrackerCatToNewznab("1");
+                        release.Categories = Capabilities.Categories.MapTrackerCatToNewznab("1");
                     }
                     else
                     {
-                        release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
+                        release.Categories = Capabilities.Categories.MapTrackerCatDescToNewznab(category);
                     }
 
                     torrentInfos.Add(release);
                 }
             }
-
-            // order by date
-            return
-                torrentInfos
-                    .OrderByDescending(o => o.PublishDate)
-                    .ToArray();
-        }
-
-        protected virtual string GetDownloadUrl(int torrentId)
-        {
-            var url = new HttpUri(_settings.BaseUrl)
-                .CombinePath("/torrents.php")
-                .AddQueryParam("action", "download")
-                .AddQueryParam("usetoken", _settings.UseFreeleechToken ? "1" : "0")
-                .AddQueryParam("id", torrentId);
-
-            return url.FullUri;
-        }
-
-        protected virtual string GetPosterUrl(string cover)
-        {
-            if (!string.IsNullOrEmpty(cover))
+            else
             {
-                return cover.StartsWith("http") ?
-                    new HttpUri(cover).FullUri :
-                    new HttpUri(_settings.BaseUrl).CombinePath(cover).FullUri;
+                var id = result.TorrentId;
+                var groupName = WebUtility.HtmlDecode(result.GroupName);
+                var infoUrl = GetInfoUrl(result.GroupId, id);
+
+                var release = new GazelleInfo
+                {
+                    Guid = infoUrl,
+                    Title = groupName,
+                    Size = long.Parse(result.Size),
+                    DownloadUrl = GetDownloadUrl(id),
+                    InfoUrl = infoUrl,
+                    Seeders = int.Parse(result.Seeders),
+                    Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
+                    Files = result.FileCount,
+                    Grabs = result.Snatches,
+                    PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime((string)result.GroupTime),
+                    PosterUrl = posterUrl,
+                    DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
+                    UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
+                };
+
+                var category = result.Category;
+                if (category == null || category.Contains("Select Category"))
+                {
+                    release.Categories = Capabilities.Categories.MapTrackerCatToNewznab("1");
+                }
+                else
+                {
+                    release.Categories = Capabilities.Categories.MapTrackerCatDescToNewznab(category);
+                }
+
+                torrentInfos.Add(release);
             }
-
-            return null;
         }
 
-        protected virtual string GetInfoUrl(string groupId, int torrentId)
+        // order by date
+        return
+            torrentInfos
+                .OrderByDescending(o => o.PublishDate)
+                .ToArray();
+    }
+
+    protected virtual string GetDownloadUrl(int torrentId)
+    {
+        var url = new HttpUri(Settings.BaseUrl)
+            .CombinePath("/torrents.php")
+            .AddQueryParam("action", "download")
+            .AddQueryParam("usetoken", Settings.UseFreeleechToken ? "1" : "0")
+            .AddQueryParam("id", torrentId);
+
+        return url.FullUri;
+    }
+
+    protected virtual string GetPosterUrl(string cover)
+    {
+        if (!string.IsNullOrEmpty(cover))
         {
-            var url = new HttpUri(_settings.BaseUrl)
-                .CombinePath("/torrents.php")
-                .AddQueryParam("id", groupId)
-                .AddQueryParam("torrentid", torrentId);
-
-            return url.FullUri;
+            return cover.StartsWith("http") ?
+                new HttpUri(cover).FullUri :
+                new HttpUri(Settings.BaseUrl).CombinePath(cover).FullUri;
         }
+
+        return null;
+    }
+
+    protected virtual string GetInfoUrl(string groupId, int torrentId)
+    {
+        var url = new HttpUri(Settings.BaseUrl)
+            .CombinePath("/torrents.php")
+            .AddQueryParam("id", groupId)
+            .AddQueryParam("torrentid", torrentId);
+
+        return url.FullUri;
     }
 }

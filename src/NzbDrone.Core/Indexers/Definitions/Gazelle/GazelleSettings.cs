@@ -2,25 +2,24 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Gazelle
+namespace NzbDrone.Core.Indexers.Definitions.Gazelle;
+
+public class GazelleSettingsValidator : UserPassBaseSettingsValidator<GazelleSettings>
 {
-    public class GazelleSettingsValidator : UserPassBaseSettingsValidator<GazelleSettings>
+}
+
+public class GazelleSettings : UserPassTorrentBaseSettings
+{
+    private static readonly GazelleSettingsValidator Validator = new ();
+
+    public string AuthKey { get; set; }
+    public string PassKey { get; set; }
+
+    [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
+    public bool UseFreeleechToken { get; set; }
+
+    public override NzbDroneValidationResult Validate()
     {
-    }
-
-    public class GazelleSettings : UserPassTorrentBaseSettings
-    {
-        private static readonly GazelleSettingsValidator Validator = new ();
-
-        public string AuthKey;
-        public string PassKey;
-
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
-        public bool UseFreeleechToken { get; set; }
-
-        public override NzbDroneValidationResult Validate()
-        {
-            return new NzbDroneValidationResult(Validator.Validate(this));
-        }
+        return new NzbDroneValidationResult(Validator.Validate(this));
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using DryIoc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -244,23 +243,23 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, IndexerCapabilities capabilities, NameValueCollection parameters)
         {
-            var baseUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
+            var searchUrl = string.Format("{0}{1}?t={2}&extended=1", Settings.BaseUrl.TrimEnd('/'), Settings.ApiPath.TrimEnd('/'), searchCriteria.SearchType);
             var categories = capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
 
             if (categories != null && categories.Any())
             {
                 var categoriesQuery = string.Join(",", categories.Distinct());
-                baseUrl += string.Format("&cat={0}", categoriesQuery);
+                searchUrl += string.Format("&cat={0}", categoriesQuery);
             }
 
             if (Settings.AdditionalParameters.IsNotNullOrWhiteSpace())
             {
-                baseUrl += Settings.AdditionalParameters;
+                searchUrl += Settings.AdditionalParameters;
             }
 
             if (Settings.ApiKey.IsNotNullOrWhiteSpace())
             {
-                baseUrl += "&apikey=" + Settings.ApiKey;
+                searchUrl += "&apikey=" + Settings.ApiKey;
             }
 
             if (searchCriteria.Limit.HasValue)
@@ -273,8 +272,18 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Add("offset", searchCriteria.Offset.ToString());
             }
 
-            var request = new IndexerRequest(string.Format("{0}&{1}", baseUrl, parameters.GetQueryString()), HttpAccept.Rss);
-            request.HttpRequest.AllowAutoRedirect = true;
+            if (parameters.Count > 0)
+            {
+                searchUrl += $"&{parameters.GetQueryString()}";
+            }
+
+            var request = new IndexerRequest(searchUrl, HttpAccept.Rss)
+            {
+                HttpRequest =
+                {
+                    AllowAutoRedirect = true
+                }
+            };
 
             yield return request;
         }

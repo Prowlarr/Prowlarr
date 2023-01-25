@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new NebulanceRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new NebulanceRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -64,15 +64,19 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NebulanceRequestGenerator : IIndexerRequestGenerator
     {
-        public NebulanceSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly NebulanceSettings _settings;
+
+        public NebulanceRequestGenerator(NebulanceSettings settings)
+        {
+            _settings = settings;
+        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(NebulanceQuery parameters, int? results, int? offset)
         {
-            var apiUrl = Settings.BaseUrl + "api.php";
+            var apiUrl = _settings.BaseUrl + "api.php";
 
             var builder = new JsonRpcRequestBuilder(apiUrl)
-                .Call("getTorrents", Settings.ApiKey, parameters, results ?? 100, offset ?? 0);
+                .Call("getTorrents", _settings.ApiKey, parameters, results ?? 100, offset ?? 0);
 
             builder.SuppressHttpError = true;
 
@@ -100,7 +104,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedTvSearchString.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, @"[ -._]", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, @"[ -._]+", "%").Trim() + "%";
             }
 
             if (searchCriteria.TvMazeId.HasValue)
@@ -109,7 +113,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]+", "%").Trim() + "%";
                 }
             }
             else if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.ImdbId, out var intImdb))
@@ -118,7 +122,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]+", "%").Trim() + "%";
                 }
             }
 
@@ -143,7 +147,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedSearchTerm.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, @"[ -._]", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, @"[ -._]+", "%").Trim() + "%";
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));

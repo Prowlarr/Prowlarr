@@ -57,6 +57,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 TvSearchParams = new List<TvSearchParam>
                 {
                     TvSearchParam.Q
+                },
+                MusicSearchParams = new List<MusicSearchParam>
+                {
+                    MusicSearchParam.Q,
+                },
+                BookSearchParams = new List<BookSearchParam>
+                {
+                    BookSearchParam.Q,
                 }
             };
 
@@ -94,10 +102,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
             return new IndexerPageableRequestChain();
         }
 

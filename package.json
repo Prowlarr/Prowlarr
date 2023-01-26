@@ -31,7 +31,7 @@
     "@fortawesome/free-regular-svg-icons": "6.2.1",
     "@fortawesome/free-solid-svg-icons": "6.2.1",
     "@fortawesome/react-fontawesome": "0.2.0",
-    "@microsoft/signalr": "6.0.11",
+    "@microsoft/signalr": "6.0.13",
     "@sentry/browser": "7.28.0",
     "@sentry/integrations": "7.28.0",
     "chart.js": "4.1.1",

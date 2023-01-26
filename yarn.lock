@@ -1168,10 +1168,10 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.1.tgz#ef72bc8022ccf77cdd2715097f062ee591ec145c"
   integrity sha512-hW0GwZj06z/ZFUW2Espl7toVDjghJN+EKqyXzPSV8NV89d5BYp5rRMBJoc+aUN0x5OXDMeRQHazejr2Xmqj2tw==
 
-"@microsoft/signalr@6.0.11":
-  version "6.0.11"
-  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.11.tgz#f8e762e4516a27850836251a15528041b3c877f9"
-  integrity sha512-5flnqEgl+7AK3+NCcavmzC4AKRt1bqa/T3zd8acyQRf/VyUe2nsFgSdaXQKZx4z3v8OIe1aQloRDvDEI4JjpAg==
+"@microsoft/signalr@6.0.13":
+  version "6.0.13"
+  resolved "https://registry.yarnpkg.com/@microsoft/signalr/-/signalr-6.0.13.tgz#0c901745bc1f0614fc99754748cb318f1c0182e7"
+  integrity sha512-kwDb8ULOxKGo79JWHydyXAdtsWg0Oq2/zwCg+EozawEaosbl5nC6z/JGcV7+6Gy7BIMofbZOx78bvDh1yjWMYw==
   dependencies:
     abort-controller "^3.0.0"
     eventsource "^1.0.7"

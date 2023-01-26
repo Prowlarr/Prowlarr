@@ -15,7 +15,7 @@ public class GazelleSettings : UserPassTorrentBaseSettings
     public string AuthKey { get; set; }
     public string PassKey { get; set; }
 
-    [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
+    [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
     public bool UseFreeleechToken { get; set; }
 
     public override NzbDroneValidationResult Validate()

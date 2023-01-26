@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NLog;
@@ -40,12 +41,27 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
 
     protected virtual IndexerCapabilities SetCapabilities()
     {
-        var caps = new IndexerCapabilities();
-
-        return caps;
+        return new IndexerCapabilities();
     }
 
     protected override async Task DoLogin()
+    {
+        var cookies = Cookies;
+        Cookies = null;
+
+        var authLoginRequestBuilder = AuthLoginRequestBuilder();
+
+        var response = await ExecuteAuth(authLoginRequestBuilder.Build());
+
+        CheckForLoginError(response);
+
+        cookies = response.GetCookies();
+        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+
+        _logger.Debug("Gazelle authentication succeeded.");
+    }
+
+    protected virtual HttpRequestBuilder AuthLoginRequestBuilder()
     {
         var requestBuilder = new HttpRequestBuilder(LoginUrl)
         {
@@ -54,25 +70,18 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         };
         requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
-        var cookies = Cookies;
-
-        Cookies = null;
-        var authLoginRequest = requestBuilder
+        var authLoginRequestBuilder = requestBuilder
             .AddFormParameter("username", Settings.Username)
             .AddFormParameter("password", Settings.Password)
             .AddFormParameter("keeplogged", "1")
             .SetHeader("Content-Type", "application/x-www-form-urlencoded")
-            .Accept(HttpAccept.Json)
-            .Build();
+            .SetHeader("Referer", LoginUrl)
+            .Accept(HttpAccept.Json);
 
-        var response = await ExecuteAuth(authLoginRequest);
-
-        cookies = response.GetCookies();
-
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
-
-        _logger.Debug("Gazelle authentication succeeded.");
+        return authLoginRequestBuilder;
     }
+
+    protected virtual bool CheckForLoginError(HttpResponse response) => true;
 
     public override async Task<byte[]> Download(Uri link)
     {
@@ -100,6 +109,8 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
 
     protected override bool CheckIfLoginNeeded(HttpResponse response)
     {
-        return response.HasHttpRedirect || (response.Content != null && response.Content.Contains("\"bad credentials\""));
+        var invalidResponses = new[] { "\"bad credentials\"", "\"groupName\":\"wrong-creds\"" };
+
+        return response.HasHttpRedirect || (response.Content != null && invalidResponses.Any(response.Content.Contains));
     }
 }

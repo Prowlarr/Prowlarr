@@ -112,9 +112,9 @@ public class AlphaRatioRequestGenerator : GazelleRequestGenerator
 
 public class AlphaRatioSettings : GazelleSettings
 {
-    [FieldDefinition(5, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+    [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
     public bool FreeleechOnly { get; set; }
 
-    [FieldDefinition(6, Label = "Exclude Scene", Type = FieldType.Checkbox, HelpText = "Exclude Scene torrents from results")]
+    [FieldDefinition(7, Label = "Exclude Scene", Type = FieldType.Checkbox, HelpText = "Exclude Scene torrents from results")]
     public bool ExcludeScene { get; set; }
 }

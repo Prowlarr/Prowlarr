@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using NLog;
@@ -214,20 +215,22 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var parameters = new NameValueCollection();
 
+            term = Regex.Replace(term, @"[ -._]+", " ").Trim();
+
             if (term.IsNotNullOrWhiteSpace())
             {
-                parameters.Add("do", "search");
-                parameters.Add("keywords", term.Trim());
-                parameters.Add("search_type", "t_name");
-                parameters.Add("category", "0");
-                parameters.Add("include_dead_torrents", "no");
+                parameters.Set("do", "search");
+                parameters.Set("keywords", term);
+                parameters.Set("search_type", "t_name");
+                parameters.Set("category", "0");
+                parameters.Set("include_dead_torrents", "no");
             }
 
             var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
 
             if (queryCats.Any())
             {
-                parameters.Add("selectedcats2", string.Join(",", queryCats));
+                parameters.Set("selectedcats2", string.Join(",", queryCats));
             }
 
             var searchUrl = _settings.BaseUrl + "browse.php";
@@ -249,6 +252,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class ImmortalSeedParser : IParseIndexerResponse
     {
         private readonly IndexerCapabilitiesCategories _categories;
+        private readonly Regex _dateAddedRegex = new (@"\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AaPp][Mm]", RegexOptions.Compiled);
 
         public ImmortalSeedParser(IndexerCapabilitiesCategories categories)
         {
@@ -282,9 +286,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var categoryLink = row.QuerySelector("td:nth-of-type(1) a").GetAttribute("href");
                 var cat = ParseUtil.GetArgumentFromQueryString(categoryLink, "category");
 
-                // 2021-03-17 03:39 AM
-                var added = row.QuerySelector("td:nth-of-type(2) > div:last-child").LastChild.TextContent.Trim();
-
                 var release = new TorrentInfo
                 {
                     Guid = infoUrl,
@@ -297,11 +298,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Peers = peers,
                     Size =  ParseUtil.GetBytes(row.QuerySelector("td:nth-of-type(5)")?.TextContent.Trim()),
                     Grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(6)")?.TextContent),
-                    PublishDate = DateTime.ParseExact(added, "yyyy-MM-dd hh:mm tt", CultureInfo.InvariantCulture),
                     UploadVolumeFactor = row.QuerySelector("img[title^=\"x2 Torrent\"]") != null ? 2 : 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 86400 // 24 hours
                 };
+
+                var dateAddedMatch = _dateAddedRegex.Match(row.QuerySelector("td:nth-of-type(2) > div:last-child").TextContent.Trim());
+                if (dateAddedMatch.Success)
+                {
+                    release.PublishDate = DateTime.ParseExact(dateAddedMatch.Value, "yyyy-MM-dd hh:mm tt", CultureInfo.InvariantCulture);
+                }
 
                 if (row.QuerySelector("img[title^=\"Free Torrent\"]") != null)
                 {

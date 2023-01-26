@@ -217,7 +217,7 @@ public class GreatPosterWallParser : GazelleParser
 
 public class GreatPosterWallSettings : GazelleSettings
 {
-    [FieldDefinition(5, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+    [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
     public bool FreeleechOnly { get; set; }
 }
 

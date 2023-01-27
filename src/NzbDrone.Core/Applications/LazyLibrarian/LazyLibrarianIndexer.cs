@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
         public string Host { get; set; }
         public string Apikey { get; set; }
         public string Categories { get; set; }
-        public bool Enabled { get; set; }
+        public bool? Enabled { get; set; }
         public string Altername { get; set; }
         public LazyLibrarianProviderType Type { get; set; }
         public int Priority { get; set; }

@@ -28,7 +28,7 @@ public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
     public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
-    private string LoginUrl => Settings.BaseUrl + "login.php";
+    private string LoginUrl => Settings.BaseUrl + "takelogin.php";
     private string CaptchaUrl => Settings.BaseUrl + "simpleCaptcha.php?numImages=1";
 
     public PirateTheNet(IIndexerHttpClient httpClient,

@@ -222,7 +222,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private readonly Regex _posterRegex = new Regex(@"src=\\'./([^']+)\\'", RegexOptions.IgnoreCase);
+        private readonly Regex _posterRegex = new (@"src=\\'./([^']+)\\'", RegexOptions.IgnoreCase);
         private readonly HashSet<string> _freeleechRanks = new (StringComparer.OrdinalIgnoreCase)
         {
             "VIP",
@@ -263,15 +263,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                     : null;
 
                 var link = new Uri(_settings.BaseUrl + row.Children[4].FirstElementChild.GetAttribute("href"));
-                var description = row.Children[2].QuerySelector("span").TextContent;
+                var description = row.Children[2].QuerySelector("span")?.TextContent.Trim();
                 var size = ParseUtil.GetBytes(row.Children[7].TextContent);
 
-                var dateTag = row.Children[6].FirstElementChild;
-                var dateString = string.Join(" ", dateTag.Attributes.Select(attr => attr.Name));
-                var publishDate = DateTime.ParseExact(dateString, "dd MMM yyyy HH:mm:ss zz00", CultureInfo.InvariantCulture).ToLocalTime();
+                var dateAdded = string.Join(" ", row.Children[6].FirstElementChild.Attributes.Select(a => a.Name).Take(4));
+                var publishDate = DateTime.ParseExact(dateAdded, "dd MMM yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
-                var catStr = row.FirstElementChild.FirstElementChild.GetAttribute("href").Split('=')[1];
-                var cat = _categories.MapTrackerCatToNewznab(catStr);
+                var categoryLink = row.FirstElementChild.FirstElementChild.GetAttribute("href");
+                var cat = ParseUtil.GetArgumentFromQueryString(categoryLink, "category");
 
                 // Sometimes the uploader column is missing, so seeders, leechers, and grabs may be at a different index.
                 // There's room for improvement, but this works for now.
@@ -340,12 +339,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var release = new TorrentInfo
                 {
                     Title = title,
+                    Description = description,
                     Guid = details.AbsoluteUri,
                     DownloadUrl = link.AbsoluteUri,
                     InfoUrl = details.AbsoluteUri,
                     PosterUrl = poster,
                     PublishDate = publishDate,
-                    Categories = cat,
+                    Categories = _categories.MapTrackerCatToNewznab(cat),
                     ImdbId = imdb ?? 0,
                     Size = size,
                     Grabs = grabs,

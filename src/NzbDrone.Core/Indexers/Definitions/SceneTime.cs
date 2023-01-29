@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new[] { "https://www.scenetime.com/" };
         public override string Description => "Always on time";
         public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
+        public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -121,20 +121,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
             foreach (var cat in catList)
             {
-                qc.Add("c" + cat, "1");
+                qc.Set($"c{cat}", "1");
             }
 
             if (term.IsNotNullOrWhiteSpace())
             {
-                qc.Add("search", term);
+                qc.Set("search", term);
             }
 
             if (Settings.FreeLeechOnly)
             {
-                qc.Add("freeleech", "on");
+                qc.Set("freeleech", "on");
             }
 
-            var searchUrl = string.Format("{0}/browse.php?{1}", Settings.BaseUrl.TrimEnd('/'), qc.GetQueryString());
+            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/browse.php?{qc.GetQueryString()}";
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
@@ -203,7 +203,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<ReleaseInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(indexerResponse.Content);
@@ -211,11 +211,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             var table = dom.QuerySelector("table.movehere");
             if (table == null)
             {
-                return torrentInfos; // no results
+                return releaseInfos; // no results
             }
 
             var headerColumns = table.QuerySelectorAll("tbody > tr > td.cat_Head")
-                                     .Select(x => x.TextContent).ToList();
+                .Select(x => x.TextContent).ToList();
             var categoryIndex = headerColumns.FindIndex(x => x.Equals("Type"));
             var nameIndex = headerColumns.FindIndex(x => x.Equals("Name"));
             var sizeIndex = headerColumns.FindIndex(x => x.Equals("Size"));
@@ -226,30 +226,29 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in rows)
             {
-                // TODO convert to initializer
                 var qDescCol = row.Children[nameIndex];
                 var qLink = qDescCol.QuerySelector("a");
-                var details = _settings.BaseUrl + "/" + qLink.GetAttribute("href");
-                var torrentId = qLink.GetAttribute("href").Split('=')[1];
-                var sizeStr = row.Children[sizeIndex].TextContent;
+                var infoUrl = _settings.BaseUrl + qLink.GetAttribute("href").TrimStart('/');
+                var torrentId = ParseUtil.GetArgumentFromQueryString(infoUrl, "id");
                 var seeders = ParseUtil.CoerceInt(row.Children[seedersIndex].TextContent.Trim());
 
-                var catId = "82"; // default
-                var qCatLink = row.Children[categoryIndex].QuerySelector("a");
-                if (qCatLink != null)
-                {
-                    catId = new Regex(@"\?cat=(\d*)").Match(qCatLink.GetAttribute("href")).Groups[1].ToString().Trim();
-                }
+                var categoryLink = row.Children[categoryIndex].QuerySelector("a").GetAttribute("href");
+                var cat = categoryLink != null ? ParseUtil.GetArgumentFromQueryString(categoryLink, "cat") : "82"; // default
+
+                var dateAdded = qDescCol.QuerySelector("span[class=\"elapsedDate\"]").GetAttribute("title").Trim();
+                var publishDate = DateTime.TryParseExact(dateAdded, "dddd, MMMM d, yyyy \\a\\t h:mmtt", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date)
+                    ? date
+                    : DateTimeUtil.FromTimeAgo(qDescCol.QuerySelector("span[class=\"elapsedDate\"]").TextContent.Trim());
 
                 var release = new TorrentInfo
                 {
+                    Guid = infoUrl,
+                    InfoUrl = infoUrl,
+                    DownloadUrl = $"{_settings.BaseUrl}download.php/{torrentId}/download.torrent",
                     Title = qLink.TextContent,
-                    InfoUrl = details,
-                    Categories = _categories.MapTrackerCatToNewznab(catId),
-                    DownloadUrl = string.Format("{0}/download.php/{1}/download.torrent", _settings.BaseUrl, torrentId),
-                    Guid = details,
-                    PublishDate = DateTimeUtil.FromTimeAgo(qDescCol.ChildNodes.Last().TextContent),
-                    Size = ParseUtil.GetBytes(sizeStr),
+                    Categories = _categories.MapTrackerCatToNewznab(cat),
+                    PublishDate = publishDate,
+                    Size = ParseUtil.GetBytes(row.Children[sizeIndex].TextContent),
                     Seeders = seeders,
                     Peers = ParseUtil.CoerceInt(row.Children[leechersIndex].TextContent.Trim()) + seeders,
                     DownloadVolumeFactor = row.QuerySelector("font > b:contains(Freeleech)") != null ? 0 : 1,
@@ -258,15 +257,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                     MinimumSeedTime = 259200 // 72 hours
                 };
 
-                release.Categories = _categories.MapTrackerCatToNewznab(catId);
-
                 //TODO Do something with this filtering
                 //if (!query.MatchQueryStringAND(release.Title))
                 //    continue;
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
 
-            return torrentInfos.ToArray();
+            return releaseInfos.ToArray();
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

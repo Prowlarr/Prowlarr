@@ -104,6 +104,7 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 public class GreatPosterWallParser : GazelleParser
 {
     private readonly GreatPosterWallSettings _settings;
+    private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
 
     public GreatPosterWallParser(GreatPosterWallSettings settings, IndexerCapabilities capabilities)
         : base(settings, capabilities)
@@ -113,7 +114,7 @@ public class GreatPosterWallParser : GazelleParser
 
     public override IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
     {
-        var torrentInfos = new List<ReleaseInfo>();
+        var releaseInfos = new List<ReleaseInfo>();
 
         if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
         {
@@ -136,7 +137,7 @@ public class GreatPosterWallParser : GazelleParser
             jsonResponse.Resource.Status.IsNullOrWhiteSpace() ||
             jsonResponse.Resource.Response == null)
         {
-            return torrentInfos;
+            return releaseInfos;
         }
 
         foreach (var result in jsonResponse.Resource.Response.Results)
@@ -148,15 +149,13 @@ public class GreatPosterWallParser : GazelleParser
 
                 var release = new GazelleInfo
                 {
-                    MinimumRatio = 1,
-                    MinimumSeedTime = 172800,
                     Title = torrent.FileName,
-                    InfoUrl = infoUrl,
                     Guid = infoUrl,
+                    InfoUrl = infoUrl,
                     PosterUrl = GetPosterUrl(result.Cover),
                     DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken),
                     PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).UtcDateTime, // Time is Chinese Time, add 8 hours difference from UTC
-                    Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
+                    Categories = ParseCategories(torrent),
                     Size = torrent.Size,
                     Seeders = torrent.Seeders,
                     Peers = torrent.Seeders + torrent.Leechers,
@@ -164,11 +163,12 @@ public class GreatPosterWallParser : GazelleParser
                     Files = torrent.FileCount,
                     Scene = torrent.Scene,
                     DownloadVolumeFactor = torrent.IsFreeleech || torrent.IsNeutralLeech || torrent.IsPersonalFreeleech ? 0 : 1,
-                    UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
+                    UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1,
+                    MinimumRatio = 1,
+                    MinimumSeedTime = 172800 // 48 hours
                 };
 
                 var imdbId = ParseUtil.GetImdbID(result.ImdbId);
-
                 if (imdbId != null)
                 {
                     release.ImdbId = (int)imdbId;
@@ -194,11 +194,11 @@ public class GreatPosterWallParser : GazelleParser
                         break;
                 }
 
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
         }
 
-        return torrentInfos
+        return releaseInfos
             .OrderByDescending(o => o.PublishDate)
             .ToArray();
     }
@@ -212,6 +212,22 @@ public class GreatPosterWallParser : GazelleParser
             .AddQueryParam("id", torrentId);
 
         return url.FullUri;
+    }
+
+    private List<IndexerCategory> ParseCategories(GreatPosterWallTorrent torrent)
+    {
+        var cats = new List<IndexerCategory>
+        {
+            NewznabStandardCategory.Movies,
+            torrent.Resolution switch
+            {
+                var res when _hdResolutions.Contains(res) => NewznabStandardCategory.MoviesHD,
+                "2160p" => NewznabStandardCategory.MoviesUHD,
+                _ => NewznabStandardCategory.MoviesSD
+            }
+        };
+
+        return cats;
     }
 }
 

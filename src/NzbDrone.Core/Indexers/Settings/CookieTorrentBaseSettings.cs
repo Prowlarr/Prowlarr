@@ -1,14 +1,25 @@
+using System;
 using FluentValidation;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class CookieBaseSettingsValidator : AbstractValidator<CookieTorrentBaseSettings>
+    public class CookieBaseSettingsValidator<T> : AbstractValidator<T>
+        where T : CookieTorrentBaseSettings
     {
         public CookieBaseSettingsValidator()
         {
             RuleFor(c => c.Cookie).NotEmpty();
+            RuleFor(c => c.Cookie)
+                .Must(c => !c.StartsWith("Cookie:", StringComparison.OrdinalIgnoreCase))
+                .When(c => c.Cookie.IsNotNullOrWhiteSpace())
+                .WithMessage("Should not start with \"Cookie:\".");
+            RuleFor(c => c.Cookie)
+                .Must(c => !c.StartsWith("Set-Cookie:", StringComparison.OrdinalIgnoreCase))
+                .When(c => c.Cookie.IsNotNullOrWhiteSpace())
+                .WithMessage("Should not start with \"Set-Cookie:\".");
             RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
             RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
         }
@@ -16,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Settings
 
     public class CookieTorrentBaseSettings : ITorrentIndexerSettings
     {
-        private static readonly CookieBaseSettingsValidator Validator = new ();
+        private static readonly CookieBaseSettingsValidator<CookieTorrentBaseSettings> Validator = new ();
 
         public CookieTorrentBaseSettings()
         {

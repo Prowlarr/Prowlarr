@@ -240,10 +240,10 @@ namespace NzbDrone.Core.Indexers
                 _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
-            catch (IndexerAuthException)
+            catch (IndexerAuthException ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn("Invalid Credentials for {0} {1}", this, url);
+                _logger.Warn(ex, "Invalid Credentials for {0} {1}", this, url);
             }
             catch (CloudFlareProtectionException ex)
             {

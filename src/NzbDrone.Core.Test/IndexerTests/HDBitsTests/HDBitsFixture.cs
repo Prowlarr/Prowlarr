@@ -10,7 +10,7 @@ using NUnit.Framework;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.HDBits;
+using NzbDrone.Core.Indexers.Definitions.HDBits;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;

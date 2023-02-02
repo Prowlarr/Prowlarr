@@ -41,7 +41,7 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new XSpeedsRequestGenerator(Settings);
+        return new XSpeedsRequestGenerator(Settings, Capabilities);
     }
 
     public override IParseIndexerResponse GetParser()
@@ -166,17 +166,19 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
 public class XSpeedsRequestGenerator : IIndexerRequestGenerator
 {
     private readonly UserPassTorrentBaseSettings _settings;
+    private readonly IndexerCapabilities _capabilities;
 
-    public XSpeedsRequestGenerator(UserPassTorrentBaseSettings settings)
+    public XSpeedsRequestGenerator(UserPassTorrentBaseSettings settings, IndexerCapabilities capabilities)
     {
         _settings = settings;
+        _capabilities = capabilities;
     }
 
     public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
         return pageableRequests;
     }
@@ -185,7 +187,7 @@ public class XSpeedsRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
         return pageableRequests;
     }
@@ -194,7 +196,7 @@ public class XSpeedsRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}"));
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}", searchCriteria.Categories));
 
         return pageableRequests;
     }
@@ -203,7 +205,7 @@ public class XSpeedsRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
         return pageableRequests;
     }
@@ -212,14 +214,22 @@ public class XSpeedsRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
         return pageableRequests;
     }
 
-    private IEnumerable<IndexerRequest> GetPagedRequests(string term)
+    private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
     {
-        var parameters = new NameValueCollection();
+        var categoryMapping = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
+
+        var parameters = new NameValueCollection
+        {
+            { "category", categoryMapping.FirstIfSingleOrDefault("0") }, // multi category search not supported
+            { "include_dead_torrents", "yes" },
+            { "sort", "added" },
+            { "order", "desc" }
+        };
 
         term = Regex.Replace(term, @"[ -._]+", " ").Trim();
 
@@ -228,8 +238,6 @@ public class XSpeedsRequestGenerator : IIndexerRequestGenerator
             parameters.Set("do", "search");
             parameters.Set("keywords", term);
             parameters.Set("search_type", "t_name");
-            parameters.Set("category", "0"); // multi category search not supported
-            parameters.Set("include_dead_torrents", "no");
         }
 
         var searchUrl = _settings.BaseUrl + "browse.php";

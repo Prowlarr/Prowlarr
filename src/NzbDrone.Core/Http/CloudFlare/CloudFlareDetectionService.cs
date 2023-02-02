@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.Http;
 
@@ -9,7 +9,7 @@ namespace NzbDrone.Core.Http.CloudFlare
 {
     public class CloudFlareDetectionService
     {
-        private static readonly HashSet<string> CloudflareServerNames = new HashSet<string> { "cloudflare", "cloudflare-nginx", "ddos-guard" };
+        private static readonly HashSet<string> CloudflareServerNames = new () { "cloudflare", "cloudflare-nginx", "ddos-guard" };
         private readonly Logger _logger;
 
         public CloudFlareDetectionService(Logger logger)
@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Http.CloudFlare
                     responseHtml.Contains("<title>Access denied</title>") ||
                     responseHtml.Contains("<title>Attention Required! | Cloudflare</title>") ||
                     responseHtml.Trim().Equals("error code: 1020") ||
-                    responseHtml.Contains("<title>DDOS-GUARD</title>"))
+                    responseHtml.Contains("<title>DDOS-GUARD</title>", StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

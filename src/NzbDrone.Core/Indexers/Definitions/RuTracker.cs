@@ -10,6 +10,7 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using FluentValidation;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
@@ -26,7 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class RuTracker : TorrentIndexerBase<RuTrackerSettings>
     {
         public override string Name => "RuTracker";
-        public override string[] IndexerUrls => new string[] { "https://rutracker.org/", "https://rutracker.net/" };
+        public override string[] IndexerUrls => new[] { "https://rutracker.org/", "https://rutracker.net/" };
 
         private string LoginUrl => Settings.BaseUrl + "forum/login.php";
         public override string Description => "RuTracker is a Semi-Private Russian torrent site with a thriving file-sharing community";
@@ -43,7 +44,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RuTrackerRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new RuTrackerRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -82,7 +83,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
 
-            _logger.Debug("RuTracker authentication succeeded.");
+            _logger.Debug("Authentication succeeded");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
@@ -133,6 +134,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2093, NewznabStandardCategory.MoviesForeign, "|- Фильмы 2011-2015");
             caps.Categories.AddCategoryMapping(2200, NewznabStandardCategory.MoviesForeign, "|- Фильмы 2016-2020");
             caps.Categories.AddCategoryMapping(1950, NewznabStandardCategory.MoviesForeign, "|- Фильмы 2021-2022");
+            caps.Categories.AddCategoryMapping(252, NewznabStandardCategory.MoviesForeign, "|- Фильмы 2023");
             caps.Categories.AddCategoryMapping(2540, NewznabStandardCategory.MoviesForeign, "|- Фильмы Ближнего Зарубежья");
             caps.Categories.AddCategoryMapping(934, NewznabStandardCategory.MoviesForeign, "|- Азиатские фильмы");
             caps.Categories.AddCategoryMapping(505, NewznabStandardCategory.MoviesForeign, "|- Индийское кино");
@@ -190,6 +192,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(816, NewznabStandardCategory.TVHD, "|- Мультсериалы (DVD Video)");
             caps.Categories.AddCategoryMapping(1460, NewznabStandardCategory.TVHD, "|- Мультсериалы (HD Video)");
             caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.TVAnime, "Аниме");
+            caps.Categories.AddCategoryMapping(1106, NewznabStandardCategory.TVAnime, "|- Онгоинги (HD Video)");
             caps.Categories.AddCategoryMapping(1105, NewznabStandardCategory.TVAnime, "|- Аниме (HD Video)");
             caps.Categories.AddCategoryMapping(599, NewznabStandardCategory.TVAnime, "|- Аниме (DVD)");
             caps.Categories.AddCategoryMapping(1389, NewznabStandardCategory.TVAnime, "|- Аниме (основной подраздел)");
@@ -207,15 +210,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TV, "Русские сериалы");
             caps.Categories.AddCategoryMapping(81, NewznabStandardCategory.TVHD, "|- Русские сериалы (HD Video)");
             caps.Categories.AddCategoryMapping(920, NewznabStandardCategory.TVSD, "|- Русские сериалы (DVD Video)");
-            caps.Categories.AddCategoryMapping(80, NewznabStandardCategory.TV, "|- Возвращение Мухтара");
-            caps.Categories.AddCategoryMapping(1535, NewznabStandardCategory.TV, "|- Воронины");
-            caps.Categories.AddCategoryMapping(188, NewznabStandardCategory.TV, "|- Чернобыль: Зона отчуждения");
-            caps.Categories.AddCategoryMapping(91, NewznabStandardCategory.TV, "|- Кухня / Отель Элеон");
+            caps.Categories.AddCategoryMapping(80, NewznabStandardCategory.TV, "|- Сельский детектив");
+            caps.Categories.AddCategoryMapping(1535, NewznabStandardCategory.TV, "|- По законам военного времени");
+            caps.Categories.AddCategoryMapping(188, NewznabStandardCategory.TV, "|- Московские тайны");
+            caps.Categories.AddCategoryMapping(91, NewznabStandardCategory.TV, "|- Я знаю твои секреты");
             caps.Categories.AddCategoryMapping(990, NewznabStandardCategory.TV, "|- Универ / Универ. Новая общага / СашаТаня");
-            caps.Categories.AddCategoryMapping(1408, NewznabStandardCategory.TV, "|- Ольга / Физрук");
+            caps.Categories.AddCategoryMapping(1408, NewznabStandardCategory.TV, "|- Женская версия");
             caps.Categories.AddCategoryMapping(175, NewznabStandardCategory.TV, "|- След");
-            caps.Categories.AddCategoryMapping(79, NewznabStandardCategory.TV, "|- Солдаты и пр.");
-            caps.Categories.AddCategoryMapping(104, NewznabStandardCategory.TV, "|- Тайны следствия");
+            caps.Categories.AddCategoryMapping(79, NewznabStandardCategory.TV, "|- Некрасивая подружка");
+            caps.Categories.AddCategoryMapping(104, NewznabStandardCategory.TV, "|- Психология преступления");
             caps.Categories.AddCategoryMapping(189, NewznabStandardCategory.TVForeign, "Зарубежные сериалы");
             caps.Categories.AddCategoryMapping(842, NewznabStandardCategory.TVForeign, "|- Новинки и сериалы в стадии показа");
             caps.Categories.AddCategoryMapping(235, NewznabStandardCategory.TVForeign, "|- Сериалы США и Канады");
@@ -283,19 +286,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(704, NewznabStandardCategory.TVForeign, "|- Сериалы Турции");
             caps.Categories.AddCategoryMapping(1537, NewznabStandardCategory.TVForeign, "|- Для некондиционных раздач");
             caps.Categories.AddCategoryMapping(2100, NewznabStandardCategory.TVForeign, "Азиатские сериалы");
-            caps.Categories.AddCategoryMapping(717, NewznabStandardCategory.TVForeign, "|- Китайские сериалы с субтитрами");
-            caps.Categories.AddCategoryMapping(915, NewznabStandardCategory.TVForeign, "|- Корейские сериалы с озвучкой");
-            caps.Categories.AddCategoryMapping(1242, NewznabStandardCategory.TVForeign, "|- Корейские сериалы с субтитрами");
-            caps.Categories.AddCategoryMapping(2412, NewznabStandardCategory.TVForeign, "|- Прочие азиатские сериалы с озвучкой");
-            caps.Categories.AddCategoryMapping(1938, NewznabStandardCategory.TVForeign, "|- Тайваньские сериалы с субтитрами");
-            caps.Categories.AddCategoryMapping(2104, NewznabStandardCategory.TVForeign, "|- Японские сериалы с субтитрами");
-            caps.Categories.AddCategoryMapping(1939, NewznabStandardCategory.TVForeign, "|- Японские сериалы с озвучкой");
+            caps.Categories.AddCategoryMapping(820, NewznabStandardCategory.TVForeign, "|- Азиатские сериалы (UHD Video)");
+            caps.Categories.AddCategoryMapping(915, NewznabStandardCategory.TVForeign, "|- Корейские сериалы");
+            caps.Categories.AddCategoryMapping(1242, NewznabStandardCategory.TVForeign, "|- Корейские сериалы (HD Video)");
+            caps.Categories.AddCategoryMapping(717, NewznabStandardCategory.TVForeign, "|- Китайские сериалы");
+            caps.Categories.AddCategoryMapping(1939, NewznabStandardCategory.TVForeign, "|- Японские сериалы");
+            caps.Categories.AddCategoryMapping(2412, NewznabStandardCategory.TVForeign, "|- Сериалы Таиланда, Индонезии, Сингапура");
             caps.Categories.AddCategoryMapping(2102, NewznabStandardCategory.TVForeign, "|- VMV и др. ролики");
+            caps.Categories.AddCategoryMapping(19, NewznabStandardCategory.TVDocumentary, "СМИ");
             caps.Categories.AddCategoryMapping(670, NewznabStandardCategory.TVDocumentary, "Вера и религия");
             caps.Categories.AddCategoryMapping(1475, NewznabStandardCategory.TVDocumentary, "|- [Видео Религия] Христианство");
             caps.Categories.AddCategoryMapping(2107, NewznabStandardCategory.TVDocumentary, "|- [Видео Религия] Ислам");
-            caps.Categories.AddCategoryMapping(294, NewznabStandardCategory.TVDocumentary, "|- [Видео Религия] Религии Индии, Тибета и Восточной Азии");
             caps.Categories.AddCategoryMapping(1453, NewznabStandardCategory.TVDocumentary, "|- [Видео Религия] Культы и новые религиозные движения");
+            caps.Categories.AddCategoryMapping(294, NewznabStandardCategory.TVDocumentary, "|- [Видео Религия] Религии Индии, Тибета и Восточной Азии");
             caps.Categories.AddCategoryMapping(46, NewznabStandardCategory.TVDocumentary, "Документальные фильмы и телепередачи");
             caps.Categories.AddCategoryMapping(103, NewznabStandardCategory.TVDocumentary, "|- Документальные (DVD)");
             caps.Categories.AddCategoryMapping(671, NewznabStandardCategory.TVDocumentary, "|- [Док] Биографии. Личности и кумиры");
@@ -338,7 +341,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(979, NewznabStandardCategory.TVDocumentary, "|- Путешествия и туризм (HD Video)");
             caps.Categories.AddCategoryMapping(2169, NewznabStandardCategory.TVDocumentary, "|- Флора и фауна (HD Video)");
             caps.Categories.AddCategoryMapping(2166, NewznabStandardCategory.TVDocumentary, "|- История (HD Video)");
-            caps.Categories.AddCategoryMapping(2164, NewznabStandardCategory.TVDocumentary, "|- BBC, Discovery, National Geographic, History Channel (HD Video)");
+            caps.Categories.AddCategoryMapping(2164, NewznabStandardCategory.TVDocumentary, "|- BBC, Discovery, National Geographic, History Channel, Netflix (HD Video)");
             caps.Categories.AddCategoryMapping(2163, NewznabStandardCategory.TVDocumentary, "|- Криминальная документалистика (HD Video)");
             caps.Categories.AddCategoryMapping(85, NewznabStandardCategory.TVDocumentary, "|- Некондиционное видео - Документальные (HD Video)");
             caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.TVDocumentary, "Развлекательные телепередачи и шоу, приколы и юмор");
@@ -389,8 +392,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(255, NewznabStandardCategory.TVSport, "Спортивные турниры, фильмы и передачи");
             caps.Categories.AddCategoryMapping(256, NewznabStandardCategory.TVSport, "|- Автоспорт");
             caps.Categories.AddCategoryMapping(1986, NewznabStandardCategory.TVSport, "|- Мотоспорт");
-            caps.Categories.AddCategoryMapping(660, NewznabStandardCategory.TVSport, "|- Формула-1 (2021)");
-            caps.Categories.AddCategoryMapping(1551, NewznabStandardCategory.TVSport, "|- Формула-1 (2012-2020)");
+            caps.Categories.AddCategoryMapping(660, NewznabStandardCategory.TVSport, "|- Формула-1 (2022)");
+            caps.Categories.AddCategoryMapping(1551, NewznabStandardCategory.TVSport, "|- Формула-1 (2012-2021)");
             caps.Categories.AddCategoryMapping(626, NewznabStandardCategory.TVSport, "|- Формула 1 (до 2011 вкл.)");
             caps.Categories.AddCategoryMapping(262, NewznabStandardCategory.TVSport, "|- Велоспорт");
             caps.Categories.AddCategoryMapping(1326, NewznabStandardCategory.TVSport, "|- Волейбол/Гандбол");
@@ -414,15 +417,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1319, NewznabStandardCategory.TVSport, "|- Спорт (видео)");
             caps.Categories.AddCategoryMapping(1608, NewznabStandardCategory.TVSport, "⚽ Футбол");
             caps.Categories.AddCategoryMapping(2294, NewznabStandardCategory.TVSport, "|- UHDTV");
+            caps.Categories.AddCategoryMapping(1229, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2022 (финальный турнир)");
+            caps.Categories.AddCategoryMapping(1693, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2022 (отбор)");
             caps.Categories.AddCategoryMapping(2532, NewznabStandardCategory.TVSport, "|- Чемпионат Европы 2020 [2021] (финальный турнир)");
             caps.Categories.AddCategoryMapping(136, NewznabStandardCategory.TVSport, "|- Чемпионат Европы 2020 [2021] (отбор)");
             caps.Categories.AddCategoryMapping(592, NewznabStandardCategory.TVSport, "|- Лига Наций");
-            caps.Categories.AddCategoryMapping(1693, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2022 (отбор)");
             caps.Categories.AddCategoryMapping(2533, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2018 (игры)");
             caps.Categories.AddCategoryMapping(1952, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2018 (обзорные передачи, документалистика)");
             caps.Categories.AddCategoryMapping(1621, NewznabStandardCategory.TVSport, "|- Чемпионаты Мира");
+            caps.Categories.AddCategoryMapping(2075, NewznabStandardCategory.TVSport, "|- Россия 2022-2023");
             caps.Categories.AddCategoryMapping(1668, NewznabStandardCategory.TVSport, "|- Россия 2021-2022");
-            caps.Categories.AddCategoryMapping(2075, NewznabStandardCategory.TVSport, "|- Россия 2020-2021");
             caps.Categories.AddCategoryMapping(1613, NewznabStandardCategory.TVSport, "|- Россия/СССР");
             caps.Categories.AddCategoryMapping(1614, NewznabStandardCategory.TVSport, "|- Англия");
             caps.Categories.AddCategoryMapping(1623, NewznabStandardCategory.TVSport, "|- Испания");
@@ -432,13 +436,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2514, NewznabStandardCategory.TVSport, "|- Украина");
             caps.Categories.AddCategoryMapping(1616, NewznabStandardCategory.TVSport, "|- Другие национальные чемпионаты и кубки");
             caps.Categories.AddCategoryMapping(2014, NewznabStandardCategory.TVSport, "|- Международные турниры");
+            caps.Categories.AddCategoryMapping(1442, NewznabStandardCategory.TVSport, "|- Еврокубки 2022-2023");
             caps.Categories.AddCategoryMapping(1491, NewznabStandardCategory.TVSport, "|- Еврокубки 2021-2022");
-            caps.Categories.AddCategoryMapping(1442, NewznabStandardCategory.TVSport, "|- Еврокубки 2020-2021");
-            caps.Categories.AddCategoryMapping(1987, NewznabStandardCategory.TVSport, "|- Еврокубки 2011-2020");
+            caps.Categories.AddCategoryMapping(1987, NewznabStandardCategory.TVSport, "|- Еврокубки 2011-2021");
             caps.Categories.AddCategoryMapping(1617, NewznabStandardCategory.TVSport, "|- Еврокубки");
             caps.Categories.AddCategoryMapping(1620, NewznabStandardCategory.TVSport, "|- Чемпионаты Европы");
             caps.Categories.AddCategoryMapping(1998, NewznabStandardCategory.TVSport, "|- Товарищеские турниры и матчи");
-            caps.Categories.AddCategoryMapping(1343, NewznabStandardCategory.TVSport, "|- Обзорные и аналитические передачи 2018-2021");
+            caps.Categories.AddCategoryMapping(1343, NewznabStandardCategory.TVSport, "|- Обзорные и аналитические передачи 2018-2022");
             caps.Categories.AddCategoryMapping(751, NewznabStandardCategory.TVSport, "|- Обзорные и аналитические передачи");
             caps.Categories.AddCategoryMapping(497, NewznabStandardCategory.TVSport, "|- Документальные фильмы (футбол)");
             caps.Categories.AddCategoryMapping(1697, NewznabStandardCategory.TVSport, "|- Мини-футбол/Пляжный футбол");
@@ -446,11 +450,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2001, NewznabStandardCategory.TVSport, "|- Международные соревнования");
             caps.Categories.AddCategoryMapping(2002, NewznabStandardCategory.TVSport, "|- NBA / NCAA (до 2000 г.)");
             caps.Categories.AddCategoryMapping(283, NewznabStandardCategory.TVSport, "|- NBA / NCAA (2000-2010 гг.)");
-            caps.Categories.AddCategoryMapping(1997, NewznabStandardCategory.TVSport, "|- NBA / NCAA (2010-2022 гг.)");
+            caps.Categories.AddCategoryMapping(1997, NewznabStandardCategory.TVSport, "|- NBA / NCAA (2010-2023 гг.)");
             caps.Categories.AddCategoryMapping(2003, NewznabStandardCategory.TVSport, "|- Европейский клубный баскетбол");
             caps.Categories.AddCategoryMapping(2009, NewznabStandardCategory.TVSport, "🏒 Хоккей");
             caps.Categories.AddCategoryMapping(2010, NewznabStandardCategory.TVSport, "|- Хоккей с мячом / Бенди");
-            caps.Categories.AddCategoryMapping(1229, NewznabStandardCategory.TVSport, "|- Чемпионат Мира по хоккею 2021");
             caps.Categories.AddCategoryMapping(2006, NewznabStandardCategory.TVSport, "|- Международные турниры");
             caps.Categories.AddCategoryMapping(2007, NewznabStandardCategory.TVSport, "|- КХЛ");
             caps.Categories.AddCategoryMapping(2005, NewznabStandardCategory.TVSport, "|- НХЛ (до 2011/12)");
@@ -841,7 +844,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2430, NewznabStandardCategory.AudioLossless, "|- Этническая музыка Индии (lossless)");
             caps.Categories.AddCategoryMapping(1283, NewznabStandardCategory.AudioMP3, "|- Этническая музыка Африки и Ближнего Востока (lossy)");
             caps.Categories.AddCategoryMapping(2085, NewznabStandardCategory.AudioLossless, "|- Этническая музыка Африки и Ближнего Востока (lossless)");
-            caps.Categories.AddCategoryMapping(1282, NewznabStandardCategory.Audio, "|- Фольклорная, Народная, Эстрадная музыка Кавказа и Закавказья (lossless)");
+            caps.Categories.AddCategoryMapping(1282, NewznabStandardCategory.Audio, "|- Фольклорная, Народная, Эстрадная музыка Кавказа и Закавказья (lossy и lossless)");
             caps.Categories.AddCategoryMapping(1284, NewznabStandardCategory.AudioMP3, "|- Этническая музыка Северной и Южной Америки (lossy)");
             caps.Categories.AddCategoryMapping(1285, NewznabStandardCategory.AudioLossless, "|- Этническая музыка Северной и Южной Америки (lossless)");
             caps.Categories.AddCategoryMapping(1138, NewznabStandardCategory.Audio, "|- Этническая музыка Австралии, Тихого и Индийского океанов (lossy и lossless)");
@@ -872,7 +875,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1768, NewznabStandardCategory.AudioLossless, "|- Reggae, Dancehall, Dub (lossless)");
             caps.Categories.AddCategoryMapping(1774, NewznabStandardCategory.AudioLossless, "|- Ska, Ska-Punk, Ska-Jazz (lossless)");
             caps.Categories.AddCategoryMapping(1772, NewznabStandardCategory.Audio, "|- Отечественный Reggae, Dub (lossy и lossless)");
-            caps.Categories.AddCategoryMapping(1773, NewznabStandardCategory.Audio, "|- Отечественная Ska музыка (lossy и lossless)");
             caps.Categories.AddCategoryMapping(2233, NewznabStandardCategory.Audio, "|- Reggae, Ska, Dub (компиляции) (lossy и lossless)");
             caps.Categories.AddCategoryMapping(416, NewznabStandardCategory.Audio, "Саундтреки, караоке и мюзиклы");
             caps.Categories.AddCategoryMapping(2377, NewznabStandardCategory.AudioVideo, "|- Караоке");
@@ -1002,8 +1004,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1739, NewznabStandardCategory.AudioMP3, "|- Punk (lossy)");
             caps.Categories.AddCategoryMapping(1740, NewznabStandardCategory.AudioLossless, "|- Hardcore (lossless)");
             caps.Categories.AddCategoryMapping(1741, NewznabStandardCategory.AudioMP3, "|- Hardcore (lossy)");
-            caps.Categories.AddCategoryMapping(1742, NewznabStandardCategory.AudioLossless, "|- Indie, Post-Rock & Post-Punk (lossless)");
-            caps.Categories.AddCategoryMapping(1743, NewznabStandardCategory.AudioMP3, "|- Indie, Post-Rock & Post-Punk (lossy)");
+            caps.Categories.AddCategoryMapping(1773, NewznabStandardCategory.AudioLossless, "|- Indie Rock, Indie Pop, Dream Pop, Brit-Pop (lossless)");
+            caps.Categories.AddCategoryMapping(202, NewznabStandardCategory.AudioMP3, "|- Indie Rock, Indie Pop, Dream Pop, Brit-Pop (lossy)");
+            caps.Categories.AddCategoryMapping(172, NewznabStandardCategory.AudioLossless, "|- Post-Punk, Shoegaze, Garage Rock, Noise Rock (lossless)");
+            caps.Categories.AddCategoryMapping(236, NewznabStandardCategory.AudioMP3, "|- Post-Punk, Shoegaze, Garage Rock, Noise Rock (lossy)");
+            caps.Categories.AddCategoryMapping(1742, NewznabStandardCategory.AudioLossless, "|- Post-Rock (lossless)");
+            caps.Categories.AddCategoryMapping(1743, NewznabStandardCategory.AudioMP3, "|- Post-Rock (lossy)");
             caps.Categories.AddCategoryMapping(1744, NewznabStandardCategory.AudioLossless, "|- Industrial & Post-industrial (lossless)");
             caps.Categories.AddCategoryMapping(1745, NewznabStandardCategory.AudioMP3, "|- Industrial & Post-industrial (lossy)");
             caps.Categories.AddCategoryMapping(1746, NewznabStandardCategory.AudioLossless, "|- Emocore, Post-hardcore, Metalcore (lossless)");
@@ -1161,8 +1167,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1886, NewznabStandardCategory.AudioVideo, "|- Электронная музыка (DVD Video)");
             caps.Categories.AddCategoryMapping(2509, NewznabStandardCategory.AudioVideo, "|- Документальные фильмы о музыке и музыкантах (DVD Video)");
             caps.Categories.AddCategoryMapping(2507, NewznabStandardCategory.AudioVideo, "Неофициальные DVD видео");
-            caps.Categories.AddCategoryMapping(2263, NewznabStandardCategory.AudioVideo, "Классическая музыка, Опера, Балет, Мюзикл (Неофициальные DVD Video)");
-            caps.Categories.AddCategoryMapping(2511, NewznabStandardCategory.AudioVideo, "Шансон, Авторская песня, Сборные концерты, МДЖ (Неофициальные DVD Video)");
+            caps.Categories.AddCategoryMapping(2263, NewznabStandardCategory.AudioVideo, "|- Классическая музыка, Опера, Балет, Мюзикл (Неофициальные DVD Video)");
+            caps.Categories.AddCategoryMapping(2511, NewznabStandardCategory.AudioVideo, "|- Шансон, Авторская песня, Сборные концерты, МДЖ (Неофициальные DVD Video)");
             caps.Categories.AddCategoryMapping(2264, NewznabStandardCategory.AudioVideo, "|- Зарубежная и Отечественная Поп-музыка (Неофициальные DVD Video)");
             caps.Categories.AddCategoryMapping(2262, NewznabStandardCategory.AudioVideo, "|- Джаз и Блюз (Неофициальные DVD Video)");
             caps.Categories.AddCategoryMapping(2261, NewznabStandardCategory.AudioVideo, "|- Зарубежная и Отечественная Рок-музыка (Неофициальные DVD Video)");
@@ -1283,6 +1289,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1041, NewznabStandardCategory.PC, "|- Изменение интерфейса ОС Windows");
             caps.Categories.AddCategoryMapping(1636, NewznabStandardCategory.PC, "|- Скринсейверы");
             caps.Categories.AddCategoryMapping(1042, NewznabStandardCategory.PC, "|- Разное (Системные программы под Windows)");
+            caps.Categories.AddCategoryMapping(1059, NewznabStandardCategory.PC, "|- Архив (Разрегистрированные раздачи)");
             caps.Categories.AddCategoryMapping(1014, NewznabStandardCategory.PC, "Системы для бизнеса, офиса, научной и проектной работы");
             caps.Categories.AddCategoryMapping(2134, NewznabStandardCategory.PC, "|- Медицина - интерактивный софт");
             caps.Categories.AddCategoryMapping(1060, NewznabStandardCategory.PC, "|- Всё для дома: кройка, шитьё, кулинария");
@@ -1328,7 +1335,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1357, NewznabStandardCategory.OtherMisc, "|- Авторские работы");
             caps.Categories.AddCategoryMapping(890, NewznabStandardCategory.OtherMisc, "|- Официальные сборники векторных клипартов");
             caps.Categories.AddCategoryMapping(830, NewznabStandardCategory.OtherMisc, "|- Прочие векторные клипарты");
-            caps.Categories.AddCategoryMapping(1290, NewznabStandardCategory.OtherMisc, "|- Photostoсks");
+            caps.Categories.AddCategoryMapping(1290, NewznabStandardCategory.OtherMisc, "|- Photostocks");
             caps.Categories.AddCategoryMapping(1962, NewznabStandardCategory.OtherMisc, "|- Дополнения для программ компоузинга и постобработки");
             caps.Categories.AddCategoryMapping(831, NewznabStandardCategory.OtherMisc, "|- Рамки, шаблоны, текстуры и фоны");
             caps.Categories.AddCategoryMapping(829, NewznabStandardCategory.OtherMisc, "|- Прочие растровые клипарты");
@@ -1416,7 +1423,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(147, NewznabStandardCategory.Books, "|- Публикации и учебные материалы (тексты)");
             caps.Categories.AddCategoryMapping(847, NewznabStandardCategory.MoviesOther, "|- Трейлеры и дополнительные материалы к фильмам");
             caps.Categories.AddCategoryMapping(1167, NewznabStandardCategory.TVOther, "|- Любительские видеоклипы");
-            caps.Categories.AddCategoryMapping(321, NewznabStandardCategory.Other, "Место встречи изменить - Отчеты о встречах");
+            caps.Categories.AddCategoryMapping(321, NewznabStandardCategory.Other, "|- Отчеты о встречах");
 
             return caps;
         }
@@ -1439,23 +1446,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class RuTrackerRequestGenerator : IIndexerRequestGenerator
     {
-        public RuTrackerSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly RuTrackerSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
 
-        public RuTrackerRequestGenerator()
+        public RuTrackerRequestGenerator(RuTrackerSettings settings, IndexerCapabilities capabilities)
         {
+            _settings = settings;
+            _capabilities = capabilities;
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int season = 0)
         {
-            var searchUrl = string.Format("{0}/forum/tracker.php", Settings.BaseUrl.TrimEnd('/'));
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/forum/tracker.php";
 
             var queryCollection = new NameValueCollection();
 
             var searchString = term;
 
             // if the search string is empty use the getnew view
-            if (string.IsNullOrWhiteSpace(searchString))
+            if (searchString.IsNullOrWhiteSpace())
             {
                 queryCollection.Add("nm", searchString);
             }
@@ -1473,7 +1482,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (categories != null && categories.Length > 0)
             {
-                queryCollection.Add("f", string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(categories)));
+                queryCollection.Add("f", string.Join(",", _capabilities.Categories.MapTorznabCapsToTrackers(categories)));
             }
 
             searchUrl = searchUrl + "?" + queryCollection.GetQueryString();
@@ -1489,7 +1498,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -1498,7 +1507,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -1512,7 +1521,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 searchCriteria.Season = 0;
             }
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -1521,7 +1530,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -1530,7 +1539,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -1638,7 +1647,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (IsAnyTvCategory(release.Categories) | IsAnyMovieCategory(release.Categories))
             {
-                                // remove director's name from title
+                // remove director's name from title
                 // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
                 // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
                 // this part should be removed: (Мартин Скорсезе / Martin Scorsese)

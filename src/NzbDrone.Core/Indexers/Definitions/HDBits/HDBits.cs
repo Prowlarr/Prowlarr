@@ -1,21 +1,20 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace NzbDrone.Core.Indexers.Definitions.HDBits
 {
     public class HDBits : TorrentIndexerBase<HDBitsSettings>
     {
         public override string Name => "HDBits";
-        public override string[] IndexerUrls => new string[] { "https://hdbits.org" };
+        public override string[] IndexerUrls => new[] { "https://hdbits.org/" };
+        public override string[] LegacyUrls => new[] { "https://hdbits.org" };
         public override string Description => "Best HD Tracker";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
-
         public override int PageSize => 30;
 
         public HDBits(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -25,7 +24,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new HDBitsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new HDBitsRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -38,13 +37,13 @@ namespace NzbDrone.Core.Indexers.HDBits
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                }
             };
 
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Audio, "Audio Track");

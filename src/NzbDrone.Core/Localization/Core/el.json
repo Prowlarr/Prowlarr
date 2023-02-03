@@ -125,7 +125,7 @@
     "AuthenticationMethodHelpText": "Απαιτήστε όνομα χρήστη και κωδικό πρόσβασης για πρόσβαση στο Radarr",
     "Automatic": "Αυτόματο",
     "BeforeUpdate": "Πριν από την ενημέρωση",
-    "BindAddressHelpText": "Έγκυρη διεύθυνση IPv4 ή «*» για όλες τις διεπαφές",
+    "BindAddressHelpText": "Έγκυρη διεύθυνση IP, localhost ή '*' για όλες τις διεπαφές",
     "Branch": "Κλαδί",
     "ChangeHasNotBeenSavedYet": "Η αλλαγή δεν έχει αποθηκευτεί ακόμα",
     "CloneProfile": "Προφίλ κλώνου",
@@ -348,5 +348,8 @@
     "Database": "Βάση δεδομένων",
     "OnApplicationUpdate": "Στην ενημέρωση της εφαρμογής",
     "OnApplicationUpdateHelpText": "Στην ενημέρωση της εφαρμογής",
-    "NotificationTriggersHelpText": "Επιλέξτε ποια συμβάντα θα ενεργοποιήσουν αυτήν την ειδοποίηση"
+    "NotificationTriggersHelpText": "Επιλέξτε ποια συμβάντα θα ενεργοποιήσουν αυτήν την ειδοποίηση",
+    "Started": "Ξεκίνησε",
+    "MassEditor": "Μαζικός Συντάκτης",
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent που παρέχεται από την εφαρμογή που κάλεσε το API"
 }

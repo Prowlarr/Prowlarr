@@ -65,7 +65,6 @@ public class PreToMe : TorrentIndexerBase<PreToMeSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequest = requestBuilder
             .SetCookies(loginPage.GetCookies())

@@ -58,11 +58,10 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var cookies = Cookies;
-
         Cookies = null;
+
         var authLoginRequest = requestBuilder
             .AddFormParameter("username", Settings.Username)
             .AddFormParameter("password", Settings.Password)

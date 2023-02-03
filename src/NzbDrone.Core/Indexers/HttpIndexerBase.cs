@@ -404,6 +404,11 @@ namespace NzbDrone.Core.Indexers
         {
             request.Encoding = Encoding;
 
+            if (request.RequestTimeout == TimeSpan.Zero)
+            {
+                request.RequestTimeout = TimeSpan.FromSeconds(15);
+            }
+
             var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));

@@ -65,7 +65,6 @@ public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequest = requestBuilder
             .SetCookies(captchaPage.GetCookies())

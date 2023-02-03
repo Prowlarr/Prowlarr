@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -20,7 +19,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -28,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "RuTracker";
         public override string[] IndexerUrls => new[] { "https://rutracker.org/", "https://rutracker.net/" };
-
         private string LoginUrl => Settings.BaseUrl + "forum/login.php";
         public override string Description => "RuTracker is a Semi-Private Russian torrent site with a thriving file-sharing community";
         public override string Language => "ru-org";
@@ -57,21 +54,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
             var cookies = Cookies;
-
             Cookies = null;
-            requestBuilder.AddFormParameter("login_username", Settings.Username)
+
+            var authLoginRequest = requestBuilder
+                .AddFormParameter("login_username", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "Login")
-                .SetHeader("Content-Type", "multipart/form-data");
-
-            var authLoginRequest = requestBuilder.Build();
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
 
@@ -88,12 +83,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.RedirectUrl.Contains("login.php") || !httpResponse.Content.Contains("id=\"logged-in-username\""))
-            {
-                return true;
-            }
-
-            return false;
+            return httpResponse.RedirectUrl.Contains("login.php") || !httpResponse.Content.Contains("id=\"logged-in-username\"");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -101,24 +91,23 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
+                {
+                    MovieSearchParam.Q
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                {
+                    BookSearchParam.Q
+                },
+                SupportsRawSearch = true
             };
-
-            caps.SupportsRawSearch = true;
 
             caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.Movies, "Наше кино");
             caps.Categories.AddCategoryMapping(941, NewznabStandardCategory.Movies, "|- Кино СССР");

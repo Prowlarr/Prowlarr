@@ -57,7 +57,6 @@ public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequest = requestBuilder
             .AddFormParameter("username", Settings.Username)

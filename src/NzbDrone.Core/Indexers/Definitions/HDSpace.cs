@@ -59,10 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Method = HttpMethod.Post
             };
 
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
             var cookies = Cookies;
-
             Cookies = null;
 
             var authLoginRequest = requestBuilder

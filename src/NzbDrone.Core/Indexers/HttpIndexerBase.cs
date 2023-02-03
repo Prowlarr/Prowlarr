@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
@@ -258,6 +259,16 @@ namespace NzbDrone.Core.Indexers
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn(ex, "{0}", url);
             }
+            catch (HttpRequestException ex)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Warn(ex, "Unable to connect to indexer, please check your DNS settings and ensure IPv6 is working or disabled. {0}", url);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout. {0}", url);
+            }
             catch (Exception ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
@@ -362,7 +373,7 @@ namespace NzbDrone.Core.Indexers
             }
 
             request.HttpRequest.SuppressHttpError = true;
-            request.HttpRequest.Encoding = request.HttpRequest.Encoding ?? Encoding;
+            request.HttpRequest.Encoding ??= Encoding;
 
             var response = await _httpClient.ExecuteProxiedAsync(request.HttpRequest, Definition);
 
@@ -490,12 +501,22 @@ namespace NzbDrone.Core.Indexers
                     _logger.Warn(ex, "Indexer does not support the query");
                     return new ValidationFailure(string.Empty, "Indexer does not support the current query. Check if the categories and or searching for movies are supported. Check the log for more details.");
                 }
-                else
-                {
-                    _logger.Warn(ex, "Unable to connect to indexer");
 
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
-                }
+                _logger.Warn(ex, "Unable to connect to indexer");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.Warn(ex, "Unable to connect to indexer");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, please check your DNS settings and ensure IPv6 is working or disabled. " + ex.Message);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.Warn(ex, "Unable to connect to indexer");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, possibly due to a timeout. Try again or check your network settings. " + ex.Message);
             }
             catch (Exception ex)
             {

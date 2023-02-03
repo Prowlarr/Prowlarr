@@ -68,7 +68,6 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
             LogResponseContent = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequestBuilder = requestBuilder
             .AddFormParameter("username", Settings.Username)

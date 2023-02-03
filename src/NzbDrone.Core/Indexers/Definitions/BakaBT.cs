@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
@@ -19,7 +18,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -27,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "BakaBT";
 
-        public override string[] IndexerUrls => new string[] { "https://bakabt.me/" };
+        public override string[] IndexerUrls => new[] { "https://bakabt.me/" };
         public override string Description => "Anime Community";
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -41,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new BakaBTRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new BakaBTRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -52,14 +50,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override async Task<byte[]> Download(Uri link)
         {
             var request = new HttpRequestBuilder(link.ToString())
-                        .SetCookies(GetCookies() ?? new Dictionary<string, string>())
-                        .Build();
+                .SetCookies(GetCookies() ?? new Dictionary<string, string>())
+                .Build();
 
             var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(response.Content);
-            var downloadLink = dom.QuerySelectorAll(".download_link").First().GetAttribute("href");
+            var downloadLink = dom.QuerySelector(".download_link")?.GetAttribute("href");
 
             if (string.IsNullOrWhiteSpace(downloadLink))
             {
@@ -76,18 +74,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
             var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
-
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-            requestBuilder.SetCookies(loginPage.GetCookies());
-
-            requestBuilder.AddFormParameter("username", Settings.Username);
-            requestBuilder.AddFormParameter("password", Settings.Password);
-            requestBuilder.AddFormParameter("returnto", "/index.php");
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(loginPage.Content);
@@ -98,7 +89,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var authLoginRequest = requestBuilder
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetCookies(loginPage.GetCookies())
+                .AddFormParameter("username", Settings.Username)
+                .AddFormParameter("password", Settings.Password)
+                .AddFormParameter("returnto", "/index.php")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
@@ -117,12 +112,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("<a href=\"logout.php\">Logout</a>"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("<a href=\"logout.php\">Logout</a>");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -130,21 +120,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       },
+                {
+                    MovieSearchParam.Q
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "Anime Series");
@@ -165,10 +155,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public BakaBTSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public BakaBTRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
@@ -245,7 +231,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly BakaBTSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly List<IndexerCategory> _defaultCategories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime };
+        private readonly List<IndexerCategory> _defaultCategories = new () { NewznabStandardCategory.TVAnime };
 
         public BakaBTParser(BakaBTSettings settings, IndexerCapabilitiesCategories categories)
         {
@@ -415,10 +401,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BakaBTSettings : UserPassTorrentBaseSettings
     {
-        public BakaBTSettings()
-        {
-        }
-
         [FieldDefinition(4, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
         public bool AddRomajiTitle { get; set; }
 

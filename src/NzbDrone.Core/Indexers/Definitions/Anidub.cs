@@ -9,10 +9,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -20,14 +18,13 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
     public class Anidub : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Anidub";
-        public override string[] IndexerUrls => new string[] { "https://tr.anidub.com/" };
+        public override string[] IndexerUrls => new[] { "https://tr.anidub.com/" };
         public override string Description => "Anidub is russian anime voiceover group and eponymous anime tracker.";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
@@ -42,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnidubRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new AnidubRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -54,19 +51,17 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             UpdateCookies(null, null);
 
+            var mainPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl));
+
             var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "index.php")
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            var mainPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl));
-
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-            requestBuilder.SetCookies(mainPage.GetCookies());
-
             var authLoginRequest = requestBuilder
+                .SetCookies(mainPage.GetCookies())
                 .AddFormParameter("login_name", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "submit")
@@ -82,22 +77,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else
             {
-                const string ErrorSelector = "#content .berror .berror_c";
                 var parser = new HtmlParser();
                 var document = await parser.ParseDocumentAsync(response.Content);
-                var errorMessage = document.QuerySelector(ErrorSelector).TextContent.Trim();
-                throw new IndexerAuthException("Anidub authentication failed. Error: " + errorMessage);
+                var errorMessage = document.QuerySelector("#content .berror .berror_c")?.TextContent.Trim();
+
+                throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
             }
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.Content.Contains("index.php?action=logout"))
-            {
-                return false;
-            }
-
-            return true;
+            return !httpResponse.Content.Contains("index.php?action=logout");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -138,6 +128,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.BooksComics, "Манга");
             caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.Audio, "OST");
             caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.Audio, "Подкасты");
+
             return caps;
         }
     }
@@ -146,10 +137,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public AnidubRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {

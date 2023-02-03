@@ -59,7 +59,6 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequest = requestBuilder
             .SetCookies(landingPage.GetCookies())
@@ -81,7 +80,7 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
                 errorMessage = dom.QuerySelector("div.notification-body")?.TextContent.Trim().Replace("\n\t", " ");
             }
 
-            throw new IndexerAuthException(errorMessage);
+            throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
         }
 
         var cookies = response.GetCookies();

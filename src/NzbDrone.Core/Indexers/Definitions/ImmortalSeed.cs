@@ -212,7 +212,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
-            var parameters = new NameValueCollection();
+            var parameters = new NameValueCollection
+            {
+                { "category", "0" },
+                { "include_dead_torrents", "yes" },
+                { "sort", "added" },
+                { "order", "desc" }
+            };
 
             term = Regex.Replace(term, @"[ -._]+", " ").Trim();
 
@@ -221,12 +227,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("do", "search");
                 parameters.Set("keywords", term);
                 parameters.Set("search_type", "t_name");
-                parameters.Set("category", "0");
-                parameters.Set("include_dead_torrents", "no");
             }
 
             var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
-
             if (queryCats.Any())
             {
                 parameters.Set("selectedcats2", string.Join(",", queryCats));

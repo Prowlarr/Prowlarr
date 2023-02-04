@@ -239,180 +239,76 @@ public class GreatPosterWallSettings : GazelleSettings
 
 public class GreatPosterWallResponse
 {
-    [JsonProperty("status")]
     public string Status { get; set; }
 
-    [JsonProperty("response")]
-    public Response Response { get; set; }
+    public GreatPosterWallResponseWithResults Response { get; set; }
 }
 
-public class Response
+public class GreatPosterWallResponseWithResults
 {
-    [JsonProperty("currentPage")]
     public int CurrentPage { get; set; }
-
-    [JsonProperty("pages")]
     public int Pages { get; set; }
 
     [JsonProperty("results")]
-    public List<Result> Results { get; set; }
+    public List<GreatPosterWallResult> Results { get; set; }
 }
 
-public class Result
+public class GreatPosterWallResult
 {
-    [JsonProperty("groupId")]
     public int GroupId { get; set; }
-
-    [JsonProperty("groupName")]
     public string GroupName { get; set; }
-
-    [JsonProperty("groupSubName")]
     public string GroupSubName { get; set; }
-
-    [JsonProperty("cover")]
     public string Cover { get; set; }
-
-    [JsonProperty("tags")]
     public List<string> Tags { get; set; }
-
-    [JsonProperty("bookmarked")]
     public bool Bookmarked { get; set; }
-
-    [JsonProperty("groupYear")]
     public int GroupYear { get; set; }
-
-    [JsonProperty("releaseType")]
     public string ReleaseType { get; set; }
-
-    [JsonProperty("groupTime")]
     public string GroupTime { get; set; }
-
-    [JsonProperty("maxSize")]
     public object MaxSize { get; set; }
-
-    [JsonProperty("totalSnatched")]
     public int TotalSnatched { get; set; }
-
-    [JsonProperty("totalSeeders")]
     public int TotalSeeders { get; set; }
-
-    [JsonProperty("totalLeechers")]
     public int TotalLeechers { get; set; }
-
-    [JsonProperty("imdbId")]
     public string ImdbId { get; set; }
-
-    [JsonProperty("imdbRating")]
     public string ImdbRating { get; set; }
-
-    [JsonProperty("imdbVote")]
     public string ImdbVote { get; set; }
-
-    [JsonProperty("doubanId")]
     public string DoubanId { get; set; }
-
-    [JsonProperty("doubanRating")]
     public string DoubanRating { get; set; }
-
-    [JsonProperty("doubanVote")]
     public string DoubanVote { get; set; }
-
-    [JsonProperty("rtRating")]
     public string RtRating { get; set; }
-
-    [JsonProperty("region")]
     public string Region { get; set; }
-
     [JsonProperty("torrents")]
     public List<GreatPosterWallTorrent> Torrents { get; set; }
 }
 
 public class GreatPosterWallTorrent
 {
-    [JsonProperty("torrentId")]
     public int TorrentId { get; set; }
-
-    [JsonProperty("editionId")]
     public int EditionId { get; set; }
-
-    [JsonProperty("remasterYear")]
     public int RemasterYear { get; set; }
-
-    [JsonProperty("remasterTitle")]
     public string RemasterTitle { get; set; }
-
-    [JsonProperty("remasterCustomTitle")]
     public string RemasterCustomTitle { get; set; }
-
-    [JsonProperty("scene")]
     public bool Scene { get; set; }
-
-    [JsonProperty("jinzhuan")]
     public bool Jinzhuan { get; set; }
-
-    [JsonProperty("fileCount")]
     public int FileCount { get; set; }
-
-    [JsonProperty("time")]
     public DateTime Time { get; set; }
-
-    [JsonProperty("size")]
     public long Size { get; set; }
-
-    [JsonProperty("snatches")]
     public int Snatches { get; set; }
-
-    [JsonProperty("seeders")]
     public int Seeders { get; set; }
-
-    [JsonProperty("leechers")]
     public int Leechers { get; set; }
-
-    [JsonProperty("isFreeleech")]
     public bool IsFreeleech { get; set; }
-
-    [JsonProperty("isNeutralLeech")]
     public bool IsNeutralLeech { get; set; }
-
-    [JsonProperty("freeType")]
     public string FreeType { get; set; }
-
-    [JsonProperty("isPersonalFreeleech")]
     public bool IsPersonalFreeleech { get; set; }
-
-    [JsonProperty("canUseToken")]
     public bool CanUseToken { get; set; }
-
-    [JsonProperty("hasSnatched")]
     public bool HasSnatched { get; set; }
-
-    [JsonProperty("resolution")]
     public string Resolution { get; set; }
-
-    [JsonProperty("source")]
     public string Source { get; set; }
-
-    [JsonProperty("codec")]
     public string Codec { get; set; }
-
-    [JsonProperty("container")]
     public string Container { get; set; }
-
-    [JsonProperty("processing")]
     public string Processing { get; set; }
-
-    [JsonProperty("chineseDubbed")]
     public string ChineseDubbed { get; set; }
-
-    [JsonProperty("specialSub")]
     public string SpecialSub { get; set; }
-
-    [JsonProperty("subtitles")]
     public string Subtitles { get; set; }
-
-    [JsonProperty("fileName")]
     public string FileName { get; set; }
-
-    [JsonProperty("releaseGroup")]
     public string ReleaseGroup { get; set; }
 }

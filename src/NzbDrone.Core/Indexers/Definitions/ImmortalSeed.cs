@@ -311,7 +311,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.PublishDate = DateTime.ParseExact(dateAddedMatch.Value, "yyyy-MM-dd hh:mm tt", CultureInfo.InvariantCulture);
                 }
 
-                if (row.QuerySelector("img[title^=\"Free Torrent\"]") != null)
+                if (row.QuerySelector("img[title^=\"Free Torrent\"], img[title^=\"Sitewide Free Torrent\"]") != null)
                 {
                     release.DownloadVolumeFactor = 0;
                 }

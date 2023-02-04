@@ -311,7 +311,7 @@ public class XSpeedsParser : IParseIndexerResponse
                 release.PublishDate = DateTime.ParseExact(dateAddedMatch.Value, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
             }
 
-            if (row.QuerySelector("img[title^=\"Free Torrent\"]") != null)
+            if (row.QuerySelector("img[title^=\"Free Torrent\"], img[title^=\"Sitewide Free Torrent\"]") != null)
             {
                 release.DownloadVolumeFactor = 0;
             }

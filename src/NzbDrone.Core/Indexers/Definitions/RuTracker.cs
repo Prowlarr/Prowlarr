@@ -1662,6 +1662,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Title += " rus";
                 }
 
+                // language fix: if releases contains Original track, add "multi"
+                if (release.Title.IndexOf("Original", StringComparison.OrdinalIgnoreCase) > 0)
+                {
+                    release.Title += " multi";
+                }
+
                 // remove russian letters
                 if (_settings.RussianLetters == true)
                 {

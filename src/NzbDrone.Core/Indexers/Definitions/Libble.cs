@@ -101,7 +101,8 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
             MusicSearchParams = new List<MusicSearchParam>
             {
                 MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album, MusicSearchParam.Label, MusicSearchParam.Year, MusicSearchParam.Genre
-            }
+            },
+            SupportsRawSearch = true
         };
 
         caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Audio, "Music");

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -25,10 +24,13 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class RuTracker : TorrentIndexerBase<RuTrackerSettings>
     {
         public override string Name => "RuTracker";
-        public override string[] IndexerUrls => new[] { "https://rutracker.org/", "https://rutracker.net/" };
-        private string LoginUrl => Settings.BaseUrl + "forum/login.php";
+        public override string[] IndexerUrls => new[]
+        {
+            "https://rutracker.org/",
+            "https://rutracker.net/"
+        };
         public override string Description => "RuTracker is a Semi-Private Russian torrent site with a thriving file-sharing community";
-        public override string Language => "ru-org";
+        public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
@@ -51,21 +53,24 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override async Task DoLogin()
         {
-            var requestBuilder = new HttpRequestBuilder(LoginUrl)
+            var loginUrl = $"{Settings.BaseUrl}forum/login.php";
+
+            var requestBuilder = new HttpRequestBuilder(loginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true,
-                Method = HttpMethod.Post
+                AllowAutoRedirect = true
             };
 
             var cookies = Cookies;
             Cookies = null;
 
-            var authLoginRequest = requestBuilder
+            var authLoginRequest = requestBuilder.Post()
                 .AddFormParameter("login_username", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "Login")
+                .AddFormParameter("redirect", "index.php")
                 .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .SetHeader("Referer", loginUrl)
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
@@ -1416,21 +1421,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return caps;
         }
-
-        public override object RequestAction(string action, IDictionary<string, string> query)
-        {
-            if (action == "getUrls")
-            {
-                var links = IndexerUrls;
-
-                return new
-                {
-                    options = links.Select(d => new { Value = d, Name = d })
-                };
-            }
-
-            return null;
-        }
     }
 
     public class RuTrackerRequestGenerator : IIndexerRequestGenerator
@@ -1446,16 +1436,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int season = 0)
         {
-            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/forum/tracker.php";
-
-            var queryCollection = new NameValueCollection();
+            var parameters = new NameValueCollection();
 
             var searchString = term;
 
             // if the search string is empty use the getnew view
             if (searchString.IsNullOrWhiteSpace())
             {
-                queryCollection.Add("nm", searchString);
+                parameters.Set("nm", searchString);
             }
             else
             {
@@ -1466,19 +1454,28 @@ namespace NzbDrone.Core.Indexers.Definitions
                     searchString += " Сезон: " + season;
                 }
 
-                queryCollection.Add("nm", searchString);
+                parameters.Set("nm", searchString);
             }
 
             if (categories != null && categories.Length > 0)
             {
-                queryCollection.Add("f", string.Join(",", _capabilities.Categories.MapTorznabCapsToTrackers(categories)));
+                parameters.Set("f", string.Join(",", _capabilities.Categories.MapTorznabCapsToTrackers(categories)));
             }
 
-            searchUrl = searchUrl + "?" + queryCollection.GetQueryString();
+            var searchUrl = $"{_settings.BaseUrl}forum/tracker.php";
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
+            if (parameters.Count > 0)
+            {
+                searchUrl += $"?{parameters.GetQueryString()}";
+            }
 
-            request.HttpRequest.AllowAutoRedirect = false;
+            var request = new IndexerRequest(searchUrl, HttpAccept.Html)
+            {
+                HttpRequest =
+                {
+                    AllowAutoRedirect = false
+                }
+            };
 
             yield return request;
         }
@@ -1542,6 +1539,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly RuTrackerSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
+        private readonly RuTrackerTitleParser _titleParser = new ();
+
         public RuTrackerParser(RuTrackerSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
@@ -1578,12 +1577,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return null;
             }
 
-            var link = _settings.BaseUrl + "forum/" + qDownloadLink.GetAttribute("href");
-
             var qDetailsLink = row.QuerySelector("td.t-title-col > div.t-title > a.tLink");
-            var details = _settings.BaseUrl + "forum/" + qDetailsLink.GetAttribute("href");
+            var infoUrl = _settings.BaseUrl + "forum/" + qDetailsLink.GetAttribute("href");
+            var downloadUrl = _settings.BaseUrl + "forum/" + qDownloadLink.GetAttribute("href");
 
-            var category = GetCategoryOfRelease(row);
+            var title = qDetailsLink.TextContent.Trim();
+            var categories = GetCategoryOfRelease(row);
 
             var size = GetSizeOfRelease(row);
 
@@ -1596,85 +1595,22 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var release = new TorrentInfo
             {
-                MinimumRatio = 1,
-                MinimumSeedTime = 0,
-                Title = qDetailsLink.TextContent,
-                InfoUrl = details,
-                DownloadUrl = link,
-                Guid = details,
+                Guid = infoUrl,
+                InfoUrl = infoUrl,
+                DownloadUrl = downloadUrl,
+                Title = _titleParser.Parse(title, categories, _settings.RussianLetters, _settings.MoveFirstTagsToEndOfReleaseTitle, _settings.MoveAllTagsToEndOfReleaseTitle),
+                Description = title,
+                Categories = categories,
                 Size = size,
                 Seeders = seeders,
                 Peers = leechers + seeders,
                 Grabs = grabs,
                 PublishDate = publishDate,
-                Categories = category,
                 DownloadVolumeFactor = 1,
-                UploadVolumeFactor = 1
+                UploadVolumeFactor = 1,
+                MinimumRatio = 1,
+                MinimumSeedTime = 0
             };
-
-            // TODO finish extracting release variables to simplify release initialization
-            if (IsAnyTvCategory(release.Categories))
-            {
-                // extract season and episodes
-                // should also handle multi-season releases listed as Сезон: 1-8 and Сезоны: 1-8
-                var regex = new Regex(@".+\/\s([^а-яА-я\/]+)\s\/.+Сезон.\s*[:]*\s+(\d*\-?\d*).+(?:Серии|Эпизод)+\s*[:]*\s+(\d+-?\d*).+(\[.*\])[\s]?(.*)");
-
-                var title = regex.Replace(release.Title, "$1 - S$2E$3 - rus $4 $5");
-                title = Regex.Replace(title, "-Rip", "Rip", RegexOptions.IgnoreCase);
-                title = Regex.Replace(title, "WEB-DLRip", "WEBDL", RegexOptions.IgnoreCase);
-                title = Regex.Replace(title, "WEB-DL", "WEBDL", RegexOptions.IgnoreCase);
-                title = Regex.Replace(title, "HDTVRip", "HDTV", RegexOptions.IgnoreCase);
-                title = Regex.Replace(title, "Кураж-Бамбей", "kurazh", RegexOptions.IgnoreCase);
-
-                release.Title = title;
-            }
-            else if (IsAnyMovieCategory(release.Categories))
-            {
-                // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
-                release.Title = Regex.Replace(release.Title, "Blu-ray Disc", "BR-DISK", RegexOptions.IgnoreCase);
-            }
-
-            if (IsAnyTvCategory(release.Categories) | IsAnyMovieCategory(release.Categories))
-            {
-                // remove director's name from title
-                // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
-                // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
-                // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
-                //var director = new Regex(@"(\([А-Яа-яЁё\W]+)\s/\s(.+?)\)");
-                var director = new Regex(@"(\([А-Яа-яЁё\W].+?\))");
-                release.Title = director.Replace(release.Title, "");
-
-                // Remove VO, MVO and DVO from titles
-                var vo = new Regex(@".VO\s\(.+?\)");
-                release.Title = vo.Replace(release.Title, "");
-
-                // Remove R5 and (R5) from release names
-                var r5 = new Regex(@"(.*)(.R5.)(.*)");
-                release.Title = r5.Replace(release.Title, "$1");
-
-                // Remove Sub languages from release names
-                var sub = new Regex(@"(Sub.*\+)|(Sub.*$)");
-                release.Title = sub.Replace(release.Title, "");
-
-                // language fix: all rutracker releases contains russian track
-                if (release.Title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
-                {
-                    release.Title += " rus";
-                }
-
-                // remove russian letters
-                if (_settings.RussianLetters == true)
-                {
-                    //Strip russian letters
-                    var rusRegex = new Regex(@"(\([А-Яа-яЁё\W]+\))|(^[А-Яа-яЁё\W\d]+\/ )|([а-яА-ЯЁё \-]+,+)|([а-яА-ЯЁё]+)");
-
-                    release.Title = rusRegex.Replace(release.Title, "");
-
-                    // Replace everything after first forward slash with a year (to avoid filtering away releases with an fwdslash after title+year, like: Title Year [stuff / stuff])
-                    var fwdslashRegex = new Regex(@"(\/\s.+?\[)");
-                    release.Title = fwdslashRegex.Replace(release.Title, "[");
-                }
-            }
 
             return release;
         }
@@ -1697,38 +1633,186 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private ICollection<IndexerCategory> GetCategoryOfRelease(in IElement row)
         {
-            var forum = row.QuerySelector("td.f-name-col > div.f-name > a");
-            var forumid = forum.GetAttribute("href").Split('=')[1];
-            return _categories.MapTrackerCatToNewznab(forumid);
+            var forum = row.QuerySelector("td.f-name-col > div.f-name > a")?.GetAttribute("href");
+            var cat = ParseUtil.GetArgumentFromQueryString(forum, "f");
+
+            return _categories.MapTrackerCatToNewznab(cat);
         }
 
         private long GetSizeOfRelease(in IElement row)
         {
-            var qSize = row.QuerySelector("td.tor-size");
-            var size = ParseUtil.GetBytes(qSize.GetAttribute("data-ts_text"));
-            return size;
+            return ParseUtil.GetBytes(row.QuerySelector("td.tor-size").GetAttribute("data-ts_text"));
         }
 
         private DateTime GetPublishDateOfRelease(in IElement row)
         {
-            var timestr = row.QuerySelector("td:nth-child(10)").GetAttribute("data-ts_text");
-            var publishDate = DateTimeUtil.UnixTimestampToDateTime(long.Parse(timestr));
-            return publishDate;
-        }
-
-        private bool IsAnyTvCategory(ICollection<IndexerCategory> category)
-        {
-            return category.Contains(NewznabStandardCategory.TV)
-                || NewznabStandardCategory.TV.SubCategories.Any(subCat => category.Contains(subCat));
-        }
-
-        private bool IsAnyMovieCategory(ICollection<IndexerCategory> category)
-        {
-            return category.Contains(NewznabStandardCategory.Movies)
-                || NewznabStandardCategory.Movies.SubCategories.Any(subCat => category.Contains(subCat));
+            return DateTimeUtil.UnixTimestampToDateTime(long.Parse(row.QuerySelector("td:nth-child(10)").GetAttribute("data-ts_text")));
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class RuTrackerTitleParser
+    {
+        private static readonly List<Regex> FindTagsInTitlesRegexList = new ()
+        {
+            new Regex(@"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)"),
+            new Regex(@"\[(?>\[(?<c>)|[^\[\]]+|\](?<-c>))*(?(c)(?!))\]")
+        };
+
+        private readonly Regex _stripCyrillicRegex = new (@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private readonly Regex _tvTitleCommaRegex = new (@"\s(\d+),(\d+)", RegexOptions.Compiled);
+        private readonly Regex _tvTitleCyrillicXRegex = new (@"([\s-])Х+([\s\)\]])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private readonly Regex _tvTitleRusSeasonEpisodeOfRegex = new (@"Сезон\s*[:]*\s+(\d+).+(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusSeasonEpisodeRegex = new (@"Сезон\s*[:]*\s+(\d+).+(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusSeasonRegex = new (@"Сезон\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusEpisodeOfRegex = new (@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusEpisodeRegex = new (@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true, bool moveFirstTagsToEndOfReleaseTitle = false, bool moveAllTagsToEndOfReleaseTitle = false)
+        {
+            // https://www.fileformat.info/info/unicode/category/Pd/list.htm
+            title = Regex.Replace(title, @"\p{Pd}", "-", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            // replace double 4K quality in title
+            title = Regex.Replace(title, @"\b(2160p), 4K\b", "$1", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            if (IsAnyTvCategory(categories))
+            {
+                title = _tvTitleCommaRegex.Replace(title, " $1-$2");
+                title = _tvTitleCyrillicXRegex.Replace(title, "$1XX$2");
+
+                title = _tvTitleRusSeasonEpisodeOfRegex.Replace(title, "S$1E$2 of $3");
+                title = _tvTitleRusSeasonEpisodeRegex.Replace(title, "S$1E$2");
+                title = _tvTitleRusSeasonRegex.Replace(title, "S$1");
+                title = _tvTitleRusEpisodeOfRegex.Replace(title, "E$1 of $2");
+                title = _tvTitleRusEpisodeRegex.Replace(title, "E$1");
+            }
+            else if (IsAnyMovieCategory(categories))
+            {
+                // Bluray quality fix: radarr parse Blu-ray Disc as Bluray-1080p but should be BR-DISK
+                title = Regex.Replace(title, @"\bBlu-ray Disc\b", "BR-DISK", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            }
+
+            if (IsAnyTvCategory(categories) | IsAnyMovieCategory(categories))
+            {
+                // remove director's name from title
+                // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
+                // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
+                // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
+                title = Regex.Replace(title, @"(\([\p{IsCyrillic}\W]+)\s/\s(.+?)\)", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+                // Remove VO, MVO and DVO from titles
+                var vo = new Regex(@".VO\s\(.+?\)");
+                title = vo.Replace(title, string.Empty);
+
+                // Remove R5 and (R5) from release names
+                var r5 = new Regex(@"(.*)(.R5.)(.*)");
+                title = r5.Replace(title, "$1");
+
+                // Remove Sub languages from release names
+                title = Regex.Replace(title, @"(\bSub\b.*$|\b[\+]*Sub[\+]*\b)", string.Empty);
+
+                // language fix: all rutracker releases contains russian track
+                if (title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
+                {
+                    title += " rus";
+                }
+            }
+
+            if (stripCyrillicLetters)
+            {
+                title = _stripCyrillicRegex.Replace(title, string.Empty).Trim(' ', '-');
+            }
+
+            if (moveAllTagsToEndOfReleaseTitle)
+            {
+                title = MoveAllTagsToEndOfReleaseTitle(title);
+            }
+            else if (moveFirstTagsToEndOfReleaseTitle)
+            {
+                title = MoveFirstTagsToEndOfReleaseTitle(title);
+            }
+
+            title = Regex.Replace(title, @"\b-Rip\b", "Rip", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            title = Regex.Replace(title, @"\bHDTVRip\b", "HDTV", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            title = Regex.Replace(title, @"\bWEB-DLRip\b", "WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            title = Regex.Replace(title, @"\bWEBDLRip\b", "WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            title = Regex.Replace(title, @"\bWEBDL\b", "WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            title = Regex.Replace(title, @"\bКураж-Бамбей\b", "kurazh", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            title = Regex.Replace(title, @"\(\s*\/\s*", "(", RegexOptions.Compiled);
+            title = Regex.Replace(title, @"\s*\/\s*\)", ")", RegexOptions.Compiled);
+
+            title = Regex.Replace(title, @"[\[\(]\s*[\)\]]", "", RegexOptions.Compiled);
+
+            title = Regex.Replace(title, @"\s+\+(?:\s+\+)+\s+", " + ", RegexOptions.Compiled);
+
+            title = title.Trim(' ', '&', ',', '.', '!', '?', '+', '-', '_', '|', '/', '\\', ':');
+
+            // replace multiple spaces with a single space
+            title = Regex.Replace(title, @"\s+", " ");
+
+            return title.Trim();
+        }
+
+        private static bool IsAnyTvCategory(ICollection<IndexerCategory> category)
+        {
+            return category.Contains(NewznabStandardCategory.TV) || NewznabStandardCategory.TV.SubCategories.Any(subCat => category.Contains(subCat));
+        }
+
+        private static bool IsAnyMovieCategory(ICollection<IndexerCategory> category)
+        {
+            return category.Contains(NewznabStandardCategory.Movies) || NewznabStandardCategory.Movies.SubCategories.Any(subCat => category.Contains(subCat));
+        }
+
+        private static string MoveAllTagsToEndOfReleaseTitle(string input)
+        {
+            var output = input;
+            foreach (var findTagsRegex in FindTagsInTitlesRegexList)
+            {
+                foreach (Match match in findTagsRegex.Matches(input))
+                {
+                    var tag = match.ToString();
+                    output = $"{output.Replace(tag, "")} {tag}".Trim();
+                }
+            }
+
+            return output.Trim();
+        }
+
+        private static string MoveFirstTagsToEndOfReleaseTitle(string input)
+        {
+            var output = input;
+            foreach (var findTagsRegex in FindTagsInTitlesRegexList)
+            {
+                var expectedIndex = 0;
+                foreach (Match match in findTagsRegex.Matches(output))
+                {
+                    if (match.Index > expectedIndex)
+                    {
+                        var substring = output.Substring(expectedIndex, match.Index - expectedIndex);
+                        if (string.IsNullOrWhiteSpace(substring))
+                        {
+                            expectedIndex = match.Index;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    var tag = match.ToString();
+                    var regex = new Regex(Regex.Escape(tag));
+                    output = $"{regex.Replace(output, string.Empty, 1)} {tag}".Trim();
+                    expectedIndex += tag.Length;
+                }
+            }
+
+            return output.Trim();
+        }
     }
 
     public class RuTrackerSettings : UserPassTorrentBaseSettings
@@ -1736,9 +1820,17 @@ namespace NzbDrone.Core.Indexers.Definitions
         public RuTrackerSettings()
         {
             RussianLetters = false;
+            MoveFirstTagsToEndOfReleaseTitle = false;
+            MoveAllTagsToEndOfReleaseTitle = false;
         }
 
-        [FieldDefinition(4, Label = "Strip Russian letters", Type = FieldType.Checkbox, SelectOptionsProviderAction = "stripRussian", HelpText = "Removes russian letters")]
+        [FieldDefinition(4, Label = "Strip Russian letters", Type = FieldType.Checkbox, HelpText = "Removes russian letters")]
         public bool RussianLetters { get; set; }
+
+        [FieldDefinition(5, Label = "Move first tags to end of release title", Type = FieldType.Checkbox)]
+        public bool MoveFirstTagsToEndOfReleaseTitle { get; set; }
+
+        [FieldDefinition(6, Label = "Move all tags to end of release title", Type = FieldType.Checkbox)]
+        public bool MoveAllTagsToEndOfReleaseTitle { get; set; }
     }
 }

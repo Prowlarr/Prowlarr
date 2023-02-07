@@ -46,7 +46,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
         if (searchCriteria.ImdbId != null)
         {
@@ -62,19 +62,34 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
-        if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+        if (Capabilities.SupportsRawSearch)
+        {
+            if (searchCriteria.SanitizedArtist.IsNotNullOrWhiteSpace() && searchCriteria.SanitizedArtist != "VA")
+            {
+                parameters.Set("artistname", searchCriteria.SanitizedArtist);
+            }
+        }
+        else if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
         {
             parameters.Set("artistname", searchCriteria.Artist);
         }
 
-        if (searchCriteria.Album.IsNotNullOrWhiteSpace())
+        if (Capabilities.SupportsRawSearch && searchCriteria.SanitizedAlbum.IsNotNullOrWhiteSpace())
+        {
+            parameters.Set("groupname", searchCriteria.SanitizedAlbum);
+        }
+        else if (searchCriteria.Album.IsNotNullOrWhiteSpace())
         {
             parameters.Set("groupname", searchCriteria.Album);
         }
 
-        if (searchCriteria.Label.IsNotNullOrWhiteSpace())
+        if (Capabilities.SupportsRawSearch && searchCriteria.SanitizedLabel.IsNotNullOrWhiteSpace())
+        {
+            parameters.Set("recordlabel", searchCriteria.SanitizedLabel);
+        }
+        else if (searchCriteria.Label.IsNotNullOrWhiteSpace())
         {
             parameters.Set("recordlabel", searchCriteria.Label);
         }
@@ -104,7 +119,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
         pageableRequests.Add(GetRequest(parameters));
 
         return pageableRequests;
@@ -114,7 +129,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
         pageableRequests.Add(GetRequest(parameters));
 
         return pageableRequests;

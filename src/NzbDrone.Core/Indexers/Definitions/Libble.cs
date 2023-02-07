@@ -129,19 +129,22 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
         var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
-        if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+        if (searchCriteria.SanitizedArtist.IsNotNullOrWhiteSpace() && searchCriteria.SanitizedArtist != "VA")
         {
-            parameters.Set("artistname", searchCriteria.Artist);
+            parameters.Set("artistname", searchCriteria.SanitizedArtist);
         }
 
-        if (searchCriteria.Album.IsNotNullOrWhiteSpace())
+        if (searchCriteria.SanitizedAlbum.IsNotNullOrWhiteSpace())
         {
-            parameters.Set("groupname", searchCriteria.Album);
+            // Remove year
+            var album = Regex.Replace(searchCriteria.SanitizedAlbum, @"(.+)\b\d{4}$", "$1");
+
+            parameters.Set("groupname", album.Trim());
         }
 
-        if (searchCriteria.Label.IsNotNullOrWhiteSpace())
+        if (searchCriteria.SanitizedLabel.IsNotNullOrWhiteSpace())
         {
-            parameters.Set("recordlabel", searchCriteria.Label);
+            parameters.Set("recordlabel", searchCriteria.SanitizedLabel);
         }
 
         if (searchCriteria.Year.HasValue)
@@ -149,9 +152,9 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
             parameters.Set("year", searchCriteria.Year.ToString());
         }
 
-        if (searchCriteria.Genre.IsNotNullOrWhiteSpace())
+        if (searchCriteria.SanitizedGenre.IsNotNullOrWhiteSpace())
         {
-            parameters.Set("taglist", searchCriteria.Genre);
+            parameters.Set("taglist", searchCriteria.SanitizedGenre);
             parameters.Set("tags_type", "0");
         }
 
@@ -189,9 +192,14 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
     {
         var term = searchCriteria.SanitizedSearchTerm.Trim();
 
+        parameters.Set("action", "advanced");
         parameters.Set("order_by", "time");
         parameters.Set("order_way", "desc");
-        parameters.Set("searchstr", term);
+
+        if (term.IsNotNullOrWhiteSpace())
+        {
+            parameters.Set("searchstr", term);
+        }
 
         var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
         if (queryCats.Any())
@@ -277,7 +285,9 @@ public class LibbleParser : IParseIndexerResponse
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
                     DownloadUrl = downloadLink,
-                    Title = $"{releaseArtist} - {releaseAlbumName} {releaseAlbumYear} {releaseTags}".Trim(' ', '-'),
+                    Title = $"{releaseArtist} - {releaseAlbumName} {releaseAlbumYear.Value} {releaseTags}".Trim(' ', '-'),
+                    Artist = releaseArtist,
+                    Album = releaseAlbumName,
                     Categories = ParseCategories(group),
                     Description = releaseDescription,
                     Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(4)").TextContent.Trim()),

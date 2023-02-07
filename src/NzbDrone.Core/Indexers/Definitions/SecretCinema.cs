@@ -147,13 +147,15 @@ public class SecretCinemaParser : IParseIndexerResponse
                         release.Title = $"{title} ({result.GroupYear}) {torrent.Media}";
 
                         // Replace media formats with standards
-                        release.Title = Regex.Replace(release.Title, "BDMV", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
-                        release.Title = Regex.Replace(release.Title, "SD", "DVDRip", RegexOptions.IgnoreCase);
+                        release.Title = Regex.Replace(release.Title, @"\bBDMV\b", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
+                        release.Title = Regex.Replace(release.Title, @"\bSD\b", "DVDRip", RegexOptions.IgnoreCase);
                     }
                     else
                     {
                         // SC API currently doesn't return anything but title.
                         release.Title = $"{artist} - {title} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+                        release.Artist = artist;
+                        release.Album = title;
                     }
 
                     if (torrent.HasCue)

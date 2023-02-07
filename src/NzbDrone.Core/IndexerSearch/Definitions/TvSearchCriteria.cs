@@ -21,23 +21,12 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? Year { get; set; }
         public string Genre { get; set; }
 
-        public string SanitizedTvSearchString => (SanitizedSearchTerm + " " + EpisodeSearchString).Trim();
+        public string SanitizedTvSearchString => $"{SanitizedSearchTerm} {EpisodeSearchString}".Trim();
         public string EpisodeSearchString => GetEpisodeSearchString();
 
         public string FullImdbId => ParseUtil.GetFullImdbId(ImdbId);
 
-        public override bool RssSearch
-        {
-            get
-            {
-                if (SearchTerm.IsNullOrWhiteSpace() && ImdbId.IsNullOrWhiteSpace() && !TvdbId.HasValue && !RId.HasValue && !TraktId.HasValue && !TvMazeId.HasValue)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
+        public override bool RssSearch => SearchTerm.IsNullOrWhiteSpace() && ImdbId.IsNullOrWhiteSpace() && !TvdbId.HasValue && !RId.HasValue && !TraktId.HasValue && !TvMazeId.HasValue;
 
         public override string SearchQuery
         {

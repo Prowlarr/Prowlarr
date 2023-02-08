@@ -128,14 +128,17 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
         var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
-        if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+        if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
         {
             parameters.Set("artistname", searchCriteria.Artist);
         }
 
         if (searchCriteria.Album.IsNotNullOrWhiteSpace())
         {
-            parameters.Set("groupname", searchCriteria.Album);
+            // Remove year
+            var album = Regex.Replace(searchCriteria.Album, @"(.+)\b\d{4}$", "$1");
+
+            parameters.Set("groupname", album.Trim());
         }
 
         if (searchCriteria.Label.IsNotNullOrWhiteSpace())
@@ -188,9 +191,14 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
     {
         var term = searchCriteria.SanitizedSearchTerm.Trim();
 
+        parameters.Set("action", "advanced");
         parameters.Set("order_by", "time");
         parameters.Set("order_way", "desc");
-        parameters.Set("searchstr", term);
+
+        if (term.IsNotNullOrWhiteSpace())
+        {
+            parameters.Set("searchstr", term);
+        }
 
         var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
         if (queryCats.Any())
@@ -276,7 +284,9 @@ public class LibbleParser : IParseIndexerResponse
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
                     DownloadUrl = downloadLink,
-                    Title = $"{releaseArtist} - {releaseAlbumName} {releaseAlbumYear} {releaseTags}".Trim(' ', '-'),
+                    Title = $"{releaseArtist} - {releaseAlbumName} {releaseAlbumYear.Value} {releaseTags}".Trim(' ', '-'),
+                    Artist = releaseArtist,
+                    Album = releaseAlbumName,
                     Categories = ParseCategories(group),
                     Description = releaseDescription,
                     Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(4)").TextContent.Trim()),

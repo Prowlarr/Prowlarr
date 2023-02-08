@@ -10,17 +10,6 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? Year { get; set; }
         public string Genre { get; set; }
 
-        public override bool RssSearch
-        {
-            get
-            {
-                if (SearchTerm.IsNullOrWhiteSpace() && Author.IsNullOrWhiteSpace() && Title.IsNullOrWhiteSpace())
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
+        public override bool RssSearch => SearchTerm.IsNullOrWhiteSpace() && Author.IsNullOrWhiteSpace() && Title.IsNullOrWhiteSpace();
     }
 }

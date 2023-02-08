@@ -49,8 +49,7 @@ public class SecretCinema : GazelleBase<GazelleSettings>
             MusicSearchParams = new List<MusicSearchParam>
             {
                 MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album, MusicSearchParam.Label, MusicSearchParam.Year
-            },
-            SupportsRawSearch = true
+            }
         };
 
         caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies, "Movies");

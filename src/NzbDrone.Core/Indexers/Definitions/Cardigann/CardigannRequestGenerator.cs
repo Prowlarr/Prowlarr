@@ -226,7 +226,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 CheckForError(response, login.Error);
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else if (login.Method == "form")
             {
@@ -467,13 +467,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 Cookies = loginResult.GetCookies();
                 CheckForError(loginResult, login.Error);
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else if (login.Method == "cookie")
             {
                 CookiesUpdater(null, null);
                 Settings.ExtraFieldData.TryGetValue("cookie", out var cookies);
-                CookiesUpdater(CookieUtil.CookieHeaderToDictionary((string)cookies), DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(CookieUtil.CookieHeaderToDictionary((string)cookies), DateTime.Now.AddDays(30));
             }
             else if (login.Method == "get")
             {
@@ -504,7 +504,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 CheckForError(response, login.Error);
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else if (login.Method == "oneurl")
             {
@@ -529,7 +529,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 CheckForError(response, login.Error);
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else
             {

@@ -130,7 +130,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             response = await ExecuteAuth(authLoginRequest3);
 
-            UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
         }
 
         private static string Sha1Hash(string input)

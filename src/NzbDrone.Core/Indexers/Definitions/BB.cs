@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("BB authentication succeeded.");
         }

@@ -55,7 +55,7 @@ namespace NzbDrone.Core.HealthCheck
             _startupHealthChecks = _healthChecks.Where(v => v.CheckOnStartup).ToArray();
             _scheduledHealthChecks = _healthChecks.Where(v => v.CheckOnSchedule).ToArray();
             _eventDrivenHealthChecks = GetEventDrivenHealthChecks();
-            _startupGracePeriodEndTime = runtimeInfo.StartTime + TimeSpan.FromMinutes(15);
+            _startupGracePeriodEndTime = runtimeInfo.StartTime.AddMinutes(15);
         }
 
         public List<HealthCheck> Results()

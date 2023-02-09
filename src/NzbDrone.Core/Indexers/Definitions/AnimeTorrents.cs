@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (response.Content != null && response.Content.Contains("logout.php"))
             {
-                UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+                UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 
                 _logger.Debug("AnimeTorrents authentication succeeded");
             }

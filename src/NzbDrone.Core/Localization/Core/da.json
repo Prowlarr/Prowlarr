@@ -347,5 +347,8 @@
     "AddToDownloadClient": "Føj udgivelse til downloadklient",
     "AppProfileDeleteConfirm": "Er du sikker på at du vil fjerne {0}?",
     "AddIndexerProxy": "Tilføj en indeksørproxy",
-    "AddSyncProfile": "Tilføj synkroniseringsprofil"
+    "AddSyncProfile": "Tilføj synkroniseringsprofil",
+    "EditSyncProfile": "Tilføj synkroniseringsprofil",
+    "Notifications": "Notifikationer",
+    "Notification": "Notifikationer"
 }

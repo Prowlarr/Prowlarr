@@ -420,5 +420,6 @@
     "Queued": "Afwachtend",
     "Categories": "Categorieën",
     "AddSyncProfile": "Synchronisatieprofiel toevoegen",
-    "AudioSearch": "auditief zoeken"
+    "AudioSearch": "auditief zoeken",
+    "EditSyncProfile": "Synchronisatieprofiel toevoegen"
 }

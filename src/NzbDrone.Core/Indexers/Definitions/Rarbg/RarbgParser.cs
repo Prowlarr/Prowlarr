@@ -50,11 +50,11 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
                     if (jsonResponse.Resource.rate_limit is 1)
                     {
-                        _logger.Debug("No results due to rate limiting. Reason: {0}", reason);
+                        _logger.Info("No results due to rate limiting. Reason: {0}", reason);
                     }
                     else
                     {
-                        _logger.Debug("No results or imdbid/tvdb not found. Reason: {0}", reason);
+                        _logger.Info("No results or imdbid/tvdb not found. Reason: {0}", reason);
                     }
 
                     return results;

@@ -380,5 +380,8 @@
     "AppSettingsSummary": "אפליקציות והגדרות אינטרקציה עם תוכניות PVR",
     "AuthenticationRequiredWarning": "בכדי למנוע גישה מרחוק ללא אימות, Prowlarr דורש הגדרת אימות.\nהגדר את הפרטים ושיטת האימות. ישנה אפשרות לדלג על אימות מהרשת הביתית שלך. \nבמידת הצורך יש לפנות אל שו״ת למידע נוסף.",
     "AddNewIndexer": "הוספת אינדקסר חדש",
-    "AddSyncProfile": "הוספת פרופיל סינכרון"
+    "AddSyncProfile": "הוספת פרופיל סינכרון",
+    "EditSyncProfile": "הוספת פרופיל סינכרון",
+    "Notifications": "התראות",
+    "Notification": "התראות"
 }

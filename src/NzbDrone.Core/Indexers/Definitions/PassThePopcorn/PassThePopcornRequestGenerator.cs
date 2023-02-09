@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                     request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
                 }
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
 
             yield return request;

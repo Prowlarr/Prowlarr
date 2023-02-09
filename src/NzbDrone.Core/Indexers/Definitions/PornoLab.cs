@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report");
             }
 
-            UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 
             _logger.Debug("Authentication succeeded");
         }

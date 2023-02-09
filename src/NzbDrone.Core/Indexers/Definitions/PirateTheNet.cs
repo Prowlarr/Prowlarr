@@ -83,7 +83,7 @@ public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
         }
 
         var cookies = response.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Authentication succeeded.");
     }
@@ -275,7 +275,7 @@ public class PirateTheNetParser : IParseIndexerResponse
             }
             else if (added.StartsWith("Yesterday "))
             {
-                release.PublishDate = DateTime.Now.Date + DateTime.ParseExact(added.Split(" ", 2).Last(), "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay - TimeSpan.FromDays(1);
+                release.PublishDate = DateTime.Now.AddDays(-1).Date + DateTime.ParseExact(added.Split(" ", 2).Last(), "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
             }
             else
             {

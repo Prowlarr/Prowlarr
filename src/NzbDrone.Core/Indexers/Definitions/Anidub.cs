@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (response.Content != null && !CheckIfLoginNeeded(response))
             {
-                UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+                UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
                 _logger.Debug("Anidub authentication succeeded");
             }
             else

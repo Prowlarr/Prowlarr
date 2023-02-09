@@ -56,7 +56,7 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         CheckForLoginError(response);
 
         cookies = response.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Gazelle authentication succeeded.");
     }

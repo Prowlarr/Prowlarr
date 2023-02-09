@@ -93,9 +93,7 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
 
     protected override bool CheckIfLoginNeeded(HttpResponse response)
     {
-        return !response.Content.Contains("onclick=\"document.location='logout'\"") &&
-               !response.Content.Contains("show_id") && !response.Content.Contains("Filename") &&
-               !response.Content.Contains("Peers") && !response.Content.Contains("Download");
+        return response.Content.ContainsIgnoreCase("sign in now");
     }
 
     private IndexerCapabilities SetCapabilities()

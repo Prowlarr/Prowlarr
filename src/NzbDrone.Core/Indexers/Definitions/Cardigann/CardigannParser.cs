@@ -40,12 +40,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                // Remove cookie cache
-                if (indexerResponse.HttpResponse.HasHttpRedirect && indexerResponse.HttpResponse.RedirectUrl
-                        .ContainsIgnoreCase("login.php"))
+                if (indexerResponse.HttpResponse.HasHttpRedirect)
                 {
-                    CookiesUpdater(null, null);
-                    throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Recheck your cookie or credentials and try testing the indexer.");
+                    if (indexerResponse.HttpResponse.RedirectUrl.ContainsIgnoreCase("login.php"))
+                    {
+                        // Remove cookie cache
+                        CookiesUpdater(null, null);
+                        throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Recheck your cookie or credentials and try testing the indexer.");
+                    }
+
+                    throw new IndexerException(indexerResponse, $"Redirected to {indexerResponse.HttpResponse.RedirectUrl} from API request");
                 }
 
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");

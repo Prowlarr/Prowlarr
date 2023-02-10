@@ -97,7 +97,7 @@ class IndexerIndexRow extends Component {
       isIndexerInfoModalOpen
     } = this.state;
 
-    const baseUrl = fields.find((field) => field.name === 'baseUrl')?.value ?? indexerUrls[0];
+    const baseUrl = fields.find((field) => field.name === 'baseUrl')?.value ?? Array.isArray(indexerUrls) ? indexerUrls[0] : undefined;
 
     return (
       <>
@@ -248,7 +248,7 @@ class IndexerIndexRow extends Component {
                   />
 
                   {
-                    indexerUrls ?
+                    baseUrl ?
                       <IconButton
                         className={styles.externalLink}
                         name={icons.EXTERNAL_LINK}

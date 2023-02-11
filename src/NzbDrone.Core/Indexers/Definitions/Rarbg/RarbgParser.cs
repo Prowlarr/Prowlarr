@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
 {
     public class RarbgParser : IParseIndexerResponse
     {
-        private static readonly Regex RegexGuid = new Regex(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
+        private static readonly Regex RegexGuid = new (@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
 
         private readonly IndexerCapabilities _capabilities;
         private readonly Logger _logger;
@@ -22,6 +22,8 @@ namespace NzbDrone.Core.Indexers.Rarbg
             _capabilities = capabilities;
             _logger = logger;
         }
+
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
@@ -48,9 +50,9 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 {
                     var reason = $"{jsonResponse.Resource.error} ({jsonResponse.Resource.error_code})";
 
-                    if (jsonResponse.Resource.rate_limit is 1)
+                    if ((reason == "5") || (jsonResponse.Resource.rate_limit is 1 && jsonResponse.Resource.torrent_results == null))
                     {
-                        _logger.Debug("No results due to rate limiting. Reason: {0}", reason);
+                        throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, TimeSpan.FromMinutes(5));
                     }
                     else
                     {
@@ -65,24 +67,30 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
             if (jsonResponse.Resource.torrent_results == null)
             {
+                if (jsonResponse.Resource.rate_limit == 1)
+                {
+                    throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, TimeSpan.FromMinutes(5));
+                }
+
                 return results;
             }
 
             foreach (var torrent in jsonResponse.Resource.torrent_results)
             {
-                var torrentInfo = new TorrentInfo();
-
-                torrentInfo.Guid = GetGuid(torrent);
-                torrentInfo.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(torrent.category);
-                torrentInfo.Title = torrent.title;
-                torrentInfo.Size = torrent.size;
-                torrentInfo.DownloadUrl = torrent.download;
-                torrentInfo.InfoUrl = $"{torrent.info_page}&app_id={BuildInfo.AppName}";
-                torrentInfo.PublishDate = torrent.pubdate.ToUniversalTime();
-                torrentInfo.Seeders = torrent.seeders;
-                torrentInfo.Peers = torrent.leechers + torrent.seeders;
-                torrentInfo.DownloadVolumeFactor = 0;
-                torrentInfo.UploadVolumeFactor = 1;
+                var torrentInfo = new TorrentInfo
+                {
+                    Guid = GetGuid(torrent),
+                    Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(torrent.category),
+                    Title = torrent.title,
+                    Size = torrent.size,
+                    DownloadUrl = torrent.download,
+                    InfoUrl = $"{torrent.info_page}&app_id={BuildInfo.AppName}",
+                    PublishDate = torrent.pubdate.ToUniversalTime(),
+                    Seeders = torrent.seeders,
+                    Peers = torrent.leechers + torrent.seeders,
+                    DownloadVolumeFactor = 0,
+                    UploadVolumeFactor = 1
+                };
 
                 if (torrent.movie_info != null)
                 {
@@ -102,8 +110,6 @@ namespace NzbDrone.Core.Indexers.Rarbg
 
             return results;
         }
-
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         private string GetGuid(RarbgTorrent torrent)
         {

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.History;
 
 namespace NzbDrone.Core.Indexers
@@ -10,6 +9,8 @@ namespace NzbDrone.Core.Indexers
     {
         bool AtDownloadLimit(IndexerDefinition indexer);
         bool AtQueryLimit(IndexerDefinition indexer);
+        int CalculateRetryAfterDownloadLimit(IndexerDefinition indexer);
+        int CalculateRetryAfterQueryLimit(IndexerDefinition indexer);
     }
 
     public class IndexerLimitService : IIndexerLimitService
@@ -31,9 +32,9 @@ namespace NzbDrone.Core.Indexers
                 var grabCount = _historyService.CountSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.ReleaseGrabbed });
                 var grabLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.GrabLimit;
 
-                if (grabCount > grabLimit)
+                if (grabCount >= grabLimit)
                 {
-                    _logger.Info("Indexer {0} has exceeded maximum grab limit for last 24 hours", indexer.Name);
+                    _logger.Info("Indexer {0} has performed {1} of possible {2} grabs in last 24 hours, exceeding the maximum grab limit", indexer.Name, grabCount, grabLimit);
 
                     return true;
                 }
@@ -51,9 +52,9 @@ namespace NzbDrone.Core.Indexers
                 var queryCount = _historyService.CountSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.IndexerQuery, HistoryEventType.IndexerRss });
                 var queryLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit;
 
-                if (queryCount > queryLimit)
+                if (queryCount >= queryLimit)
                 {
-                    _logger.Info("Indexer {0} has exceeded maximum query limit for last 24 hours", indexer.Name);
+                    _logger.Info("Indexer {0} has performed {1} of possible {2} queries in last 24 hours, exceeding the maximum query limit", indexer.Name, queryCount, queryLimit);
 
                     return true;
                 }
@@ -62,6 +63,40 @@ namespace NzbDrone.Core.Indexers
             }
 
             return false;
+        }
+
+        public int CalculateRetryAfterDownloadLimit(IndexerDefinition indexer)
+        {
+            if (indexer.Id > 0 && ((IIndexerSettings)indexer.Settings).BaseSettings.GrabLimit.HasValue)
+            {
+                var grabLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.GrabLimit.GetValueOrDefault();
+
+                var firstHistorySince = _historyService.FindFirstForIndexerSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.ReleaseGrabbed }, grabLimit);
+
+                if (firstHistorySince != null)
+                {
+                    return Convert.ToInt32(firstHistorySince.Date.ToLocalTime().AddHours(24).Subtract(DateTime.Now).TotalSeconds);
+                }
+            }
+
+            return 0;
+        }
+
+        public int CalculateRetryAfterQueryLimit(IndexerDefinition indexer)
+        {
+            if (indexer.Id > 0 && ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit.HasValue)
+            {
+                var queryLimit = ((IIndexerSettings)indexer.Settings).BaseSettings.QueryLimit.GetValueOrDefault();
+
+                var firstHistorySince = _historyService.FindFirstForIndexerSince(indexer.Id, DateTime.Now.AddHours(-24), new List<HistoryEventType> { HistoryEventType.IndexerQuery, HistoryEventType.IndexerRss }, queryLimit);
+
+                if (firstHistorySince != null)
+                {
+                    return Convert.ToInt32(firstHistorySince.Date.ToLocalTime().AddHours(24).Subtract(DateTime.Now).TotalSeconds);
+                }
+            }
+
+            return 0;
         }
     }
 }

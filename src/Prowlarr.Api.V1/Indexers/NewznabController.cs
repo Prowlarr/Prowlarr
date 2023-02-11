@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
-using NzbDrone.Core.History;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
-using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
@@ -131,7 +131,22 @@ namespace NzbDrone.Api.V1.Indexers
             //TODO Optimize this so it's not called here and in NzbSearchService (for manual search)
             if (_indexerLimitService.AtQueryLimit(indexerDef))
             {
-                return Content(CreateErrorXML(429, $"Request limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit})"), "application/rss+xml");
+                if (!HttpContext.Response.Headers.ContainsKey("Retry-After"))
+                {
+                    var retryAfterQueryLimit = _indexerLimitService.CalculateRetryAfterQueryLimit(indexerDef);
+
+                    if (retryAfterQueryLimit > 0)
+                    {
+                        HttpContext.Response.Headers.Add("Retry-After", $"{retryAfterQueryLimit}");
+                    }
+                }
+
+                return new ContentResult
+                {
+                    StatusCode = StatusCodes.Status429TooManyRequests,
+                    Content = CreateErrorXML(429, $"Request limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit})"),
+                    ContentType = MediaTypeHeaderValue.Parse("application/rss+xml").ToString()
+                };
             }
 
             switch (requestType)
@@ -171,7 +186,22 @@ namespace NzbDrone.Api.V1.Indexers
 
             if (_indexerLimitService.AtDownloadLimit(indexerDef))
             {
-                return Content(CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit})"), "application/rss+xml");
+                if (!HttpContext.Response.Headers.ContainsKey("Retry-After"))
+                {
+                    var retryAfterDownloadLimit = _indexerLimitService.CalculateRetryAfterDownloadLimit(indexerDef);
+
+                    if (retryAfterDownloadLimit > 0)
+                    {
+                        HttpContext.Response.Headers.Add("Retry-After", $"{retryAfterDownloadLimit}");
+                    }
+                }
+
+                return new ContentResult
+                {
+                    StatusCode = StatusCodes.Status429TooManyRequests,
+                    Content = CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit})"),
+                    ContentType = MediaTypeHeaderValue.Parse("application/rss+xml").ToString()
+                };
             }
 
             if (link.IsNullOrWhiteSpace() || file.IsNullOrWhiteSpace())

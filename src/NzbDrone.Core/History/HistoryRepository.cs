@@ -19,6 +19,7 @@ namespace NzbDrone.Core.History
         List<History> Since(DateTime date, HistoryEventType? eventType);
         void Cleanup(int days);
         int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
+        History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit);
     }
 
     public class HistoryRepository : BasicRepository<History>, IHistoryRepository
@@ -114,6 +115,25 @@ namespace NzbDrone.Core.History
             {
                 return conn.ExecuteScalar<int>(sql.RawSql, sql.Parameters);
             }
+        }
+
+        public History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit)
+        {
+            var intEvents = eventTypes.Select(t => (int)t).ToList();
+
+            var builder = Builder()
+                .Where<History>(x => x.IndexerId == indexerId)
+                .Where<History>(x => x.Date >= date)
+                .Where<History>(x => intEvents.Contains((int)x.EventType));
+
+            var query = Query(builder);
+
+            if (limit > 0)
+            {
+                query = query.OrderByDescending(h => h.Date).Take(limit).ToList();
+            }
+
+            return query.MinBy(h => h.Date);
         }
     }
 }

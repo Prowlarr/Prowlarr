@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                     }
                     else
                     {
-                        _logger.Info("No results or imdbid/tvdb not found. Reason: {0}", reason);
+                        _logger.Debug("No results or imdbid/tvdb not found. Reason: {0}", reason);
                     }
 
                     return results;

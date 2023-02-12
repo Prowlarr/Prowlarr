@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 {
                     var reason = $"{jsonResponse.Resource.error} ({jsonResponse.Resource.error_code})";
 
-                    if ((reason == "5") || (jsonResponse.Resource.rate_limit is 1 && jsonResponse.Resource.torrent_results == null))
+                    if (jsonResponse.Resource.error_code is 5 || (jsonResponse.Resource.rate_limit is 1 && jsonResponse.Resource.torrent_results == null))
                     {
                         throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, TimeSpan.FromMinutes(5));
                     }

@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Security;
@@ -9,7 +8,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http.Proxy;
@@ -18,11 +16,11 @@ namespace NzbDrone.Common.Http.Dispatchers
 {
     public class ManagedHttpDispatcher : IHttpDispatcher
     {
-        private const string NO_PROXY_KEY = "no-proxy";
+        private const string NoProxyKey = "no-proxy";
 
-        private const int connection_establish_timeout = 2000;
-        private static bool useIPv6 = Socket.OSSupportsIPv6;
-        private static bool hasResolvedIPv6Availability;
+        private const int ConnectionEstablishTimeout = 2000;
+        private static bool _useIPv6 = Socket.OSSupportsIPv6;
+        private static bool _hasResolvedIPv6Availability;
 
         private readonly IHttpProxySettingsProvider _proxySettingsProvider;
         private readonly ICreateManagedWebProxy _createManagedWebProxy;
@@ -129,8 +127,6 @@ namespace NzbDrone.Common.Http.Dispatchers
 
                 headers.Add(responseMessage.Content.Headers.ToNameValueCollection());
 
-                CookieContainer responseCookies = new CookieContainer();
-
                 if (responseMessage.Headers.TryGetValues("Set-Cookie", out var cookieHeaders))
                 {
                     foreach (var responseCookieHeader in cookieHeaders)
@@ -158,14 +154,14 @@ namespace NzbDrone.Common.Http.Dispatchers
         {
             var proxySettings = requestProxy ?? _proxySettingsProvider.GetProxySettings(uri);
 
-            var key = proxySettings?.Key ?? NO_PROXY_KEY;
+            var key = proxySettings?.Key ?? NoProxyKey;
 
             return _httpClientCache.Get(key, () => CreateHttpClient(proxySettings));
         }
 
         protected virtual System.Net.Http.HttpClient CreateHttpClient(HttpProxySettings proxySettings)
         {
-            var handler = new SocketsHttpHandler()
+            var handler = new SocketsHttpHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Brotli,
                 UseCookies = false, // sic - we don't want to use a shared cookie container
@@ -268,16 +264,16 @@ namespace NzbDrone.Common.Http.Dispatchers
         {
             // Until .NET supports an implementation of Happy Eyeballs (https://tools.ietf.org/html/rfc8305#section-2), let's make IPv4 fallback work in a simple way.
             // This issue is being tracked at https://github.com/dotnet/runtime/issues/26177 and expected to be fixed in .NET 6.
-            if (useIPv6)
+            if (_useIPv6)
             {
                 try
                 {
                     var localToken = cancellationToken;
 
-                    if (!hasResolvedIPv6Availability)
+                    if (!_hasResolvedIPv6Availability)
                     {
                         // to make things move fast, use a very low timeout for the initial ipv6 attempt.
-                        var quickFailCts = new CancellationTokenSource(connection_establish_timeout);
+                        var quickFailCts = new CancellationTokenSource(ConnectionEstablishTimeout);
                         var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, quickFailCts.Token);
 
                         localToken = linkedTokenSource.Token;
@@ -290,11 +286,11 @@ namespace NzbDrone.Common.Http.Dispatchers
                     // very naively fallback to ipv4 permanently for this execution based on the response of the first connection attempt.
                     // note that this may cause users to eventually get switched to ipv4 (on a random failure when they are switching networks, for instance)
                     // but in the interest of keeping this implementation simple, this is acceptable.
-                    useIPv6 = false;
+                    _useIPv6 = false;
                 }
                 finally
                 {
-                    hasResolvedIPv6Availability = true;
+                    _hasResolvedIPv6Availability = true;
                 }
             }
 

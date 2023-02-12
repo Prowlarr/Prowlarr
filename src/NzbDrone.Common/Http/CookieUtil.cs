@@ -9,7 +9,7 @@ namespace NzbDrone.Common.Http
     {
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
         // NOTE: we are not checking non-ascii characters and we should
-        private static readonly Regex _CookieRegex = new Regex(@"([^\(\)<>@,;:\\""/\[\]\?=\{\}\s]+)=([^,;\\""\s]+)");
+        private static readonly Regex CookieRegex = new (@"([^\(\)<>@,;:\\""/\[\]\?=\{\}\s]+)=([^,;\\""\s]+)");
         private static readonly string[] FilterProps = { "COMMENT", "COMMENTURL", "DISCORD", "DOMAIN", "EXPIRES", "MAX-AGE", "PATH", "PORT", "SECURE", "VERSION", "HTTPONLY", "SAMESITE" };
         private static readonly char[] InvalidKeyChars = { '(', ')', '<', '>', '@', ',', ';', ':', '\\', '"', '/', '[', ']', '?', '=', '{', '}', ' ', '\t', '\n' };
         private static readonly char[] InvalidValueChars = { '"', ',', ';', '\\', ' ', '\t', '\n' };
@@ -22,7 +22,7 @@ namespace NzbDrone.Common.Http
                 return cookieDictionary;
             }
 
-            var matches = _CookieRegex.Match(cookieHeader);
+            var matches = CookieRegex.Match(cookieHeader);
             while (matches.Success)
             {
                 if (matches.Groups.Count > 2 && !FilterProps.Contains(matches.Groups[1].Value.ToUpperInvariant()))

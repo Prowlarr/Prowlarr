@@ -192,10 +192,17 @@ namespace NzbDrone.Common.Http
         {
             lock (_cookieContainerCache)
             {
-                var sourceContainer = new CookieContainer();
+                var sourceContainer = new CookieContainer
+                {
+                    PerDomainCapacity = 100
+                };
 
-                var presistentContainer = _cookieContainerCache.Get("container", () => new CookieContainer());
-                var persistentCookies = presistentContainer.GetCookies((Uri)request.Url);
+                var persistentContainer = _cookieContainerCache.Get("container", () => new CookieContainer
+                {
+                    PerDomainCapacity = 100
+                });
+
+                var persistentCookies = persistentContainer.GetCookies((Uri)request.Url);
                 sourceContainer.Add(persistentCookies);
 
                 if (request.Cookies.Count != 0)
@@ -224,7 +231,7 @@ namespace NzbDrone.Common.Http
 
                         if (request.StoreRequestCookie)
                         {
-                            presistentContainer.Add((Uri)request.Url, cookie);
+                            persistentContainer.Add((Uri)request.Url, cookie);
                         }
                     }
                 }
@@ -235,7 +242,10 @@ namespace NzbDrone.Common.Http
 
         private CookieContainer HandleRedirectCookies(HttpRequest request, HttpResponse response)
         {
-            var sourceContainer = new CookieContainer();
+            var sourceContainer = new CookieContainer
+            {
+                PerDomainCapacity = 100
+            };
             var responseCookies = response.GetCookies();
             if (responseCookies.Count != 0)
             {
@@ -285,7 +295,10 @@ namespace NzbDrone.Common.Http
             {
                 lock (_cookieContainerCache)
                 {
-                    var persistentCookieContainer = _cookieContainerCache.Get("container", () => new CookieContainer());
+                    var persistentCookieContainer = _cookieContainerCache.Get("container", () => new CookieContainer
+                    {
+                        PerDomainCapacity = 100
+                    });
 
                     AddCookiesToContainer(response.Request.Url, cookieHeaders, persistentCookieContainer);
                 }

@@ -10,7 +10,6 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Configuration.Events;
 using NzbDrone.Core.Messaging.Events;
-using NzbDrone.Core.Parser;
 
 namespace NzbDrone.Core.Localization
 {
@@ -89,6 +88,7 @@ namespace NzbDrone.Core.Localization
             yield return new LocalizationOption("العربية", "ar");
             yield return new LocalizationOption("Български", "bg");
             yield return new LocalizationOption("বাংলা (বাংলাদেশ)", "bn");
+            yield return new LocalizationOption("Bosanski", "bs");
             yield return new LocalizationOption("Català", "ca");
             yield return new LocalizationOption("Čeština", "cs");
             yield return new LocalizationOption("Dansk", "da");
@@ -96,12 +96,16 @@ namespace NzbDrone.Core.Localization
             yield return new LocalizationOption("English", "en");
             yield return new LocalizationOption("Ελληνικά", "el");
             yield return new LocalizationOption("Español", "es");
+            yield return new LocalizationOption("Español (Latino)", "es_MX");
+            yield return new LocalizationOption("Eesti", "et");
             yield return new LocalizationOption("فارسی", "fa");
             yield return new LocalizationOption("Suomi", "fi");
             yield return new LocalizationOption("Français", "fr");
             yield return new LocalizationOption("עִבְרִית", "he");
             yield return new LocalizationOption("हिन्दी", "hi");
+            yield return new LocalizationOption("Hrvatski", "hr");
             yield return new LocalizationOption("Magyar", "hu");
+            yield return new LocalizationOption("Indonesia", "id");
             yield return new LocalizationOption("Íslenska", "is");
             yield return new LocalizationOption("Italiano", "it");
             yield return new LocalizationOption("日本語", "ja");
@@ -115,7 +119,9 @@ namespace NzbDrone.Core.Localization
             yield return new LocalizationOption("Românește", "ro");
             yield return new LocalizationOption("Русский", "ru");
             yield return new LocalizationOption("Slovenčina", "sk");
+            yield return new LocalizationOption("српски", "sr");
             yield return new LocalizationOption("Svenska", "sv");
+            yield return new LocalizationOption("தமிழ்", "ta");
             yield return new LocalizationOption("ภาษาไทย", "th");
             yield return new LocalizationOption("Türkçe", "tr");
             yield return new LocalizationOption("Українська", "uk");

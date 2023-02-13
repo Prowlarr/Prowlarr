@@ -25,7 +25,7 @@ const columns = [
   },
   {
     name: 'size',
-    label: 'Size',
+    label: translate('Size'),
     isVisible: true
   },
   {

@@ -26,7 +26,7 @@ function IndexerIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          Status
+          {translate('Status')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -62,7 +62,7 @@ function IndexerIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          {'Priority'}
+          {translate('Priority')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -71,7 +71,7 @@ function IndexerIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          {'Protocol'}
+          {translate('Protocol')}
         </SortMenuItem>
 
         <SortMenuItem
@@ -80,7 +80,7 @@ function IndexerIndexSortMenu(props) {
           sortDirection={sortDirection}
           onPress={onSortSelect}
         >
-          {'Privacy'}
+          {translate('Privacy')}
         </SortMenuItem>
       </MenuContent>
     </SortMenu>

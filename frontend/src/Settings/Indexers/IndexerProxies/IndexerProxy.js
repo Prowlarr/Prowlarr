@@ -106,7 +106,7 @@ class IndexerProxy extends Component {
               kind={kinds.DISABLED}
               outline={true}
             >
-              Disabled
+              {translate('Disabled')}
             </Label> :
             null
         }

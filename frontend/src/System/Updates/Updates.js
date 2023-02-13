@@ -113,7 +113,7 @@ class Updates extends Component {
                 />
 
                 <div className={styles.message}>
-                  The latest version of Prowlarr is already installed
+                  {translate('TheLatestVersionIsAlreadyInstalled', ['Prowlarr'])}
                 </div>
 
                 {

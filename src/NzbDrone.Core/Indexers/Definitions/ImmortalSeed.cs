@@ -28,6 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
 
         public ImmortalSeed(IIndexerHttpClient httpClient,

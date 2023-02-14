@@ -312,8 +312,8 @@ public class ShazbatParser : IParseIndexerResponse
         var rows = dom.QuerySelectorAll("#torrent-table tr.eprow, table tr.eprow");
         foreach (var row in rows)
         {
-            var downloadUrl = row.QuerySelector("td:nth-of-type(5) a[href^=\"load_torrent?\"]")?.GetAttribute("href");
-            var infoUrl = row.QuerySelector("td:nth-of-type(5) [href^=\"torrent_info?\"]")?.GetAttribute("href");
+            var downloadUrl = _settings.BaseUrl + row.QuerySelector("td:nth-of-type(5) a[href^=\"load_torrent?\"]")?.GetAttribute("href");
+            var infoUrl = _settings.BaseUrl + row.QuerySelector("td:nth-of-type(5) [href^=\"torrent_info?\"]")?.GetAttribute("href");
             var title = ParseTitle(row.QuerySelector("td:nth-of-type(3)"));
 
             var infoString = row.QuerySelector("td:nth-of-type(4)")?.TextContent.Trim() ?? string.Empty;
@@ -328,8 +328,8 @@ public class ShazbatParser : IParseIndexerResponse
             var release = new TorrentInfo
             {
                 Guid = infoUrl,
-                InfoUrl = _settings.BaseUrl + infoUrl,
-                DownloadUrl = _settings.BaseUrl + downloadUrl,
+                InfoUrl = infoUrl,
+                DownloadUrl = downloadUrl,
                 Title = title,
                 Categories = ParseCategories(title),
                 Size = size,

@@ -51,6 +51,32 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new RuTrackerParser(Settings, Capabilities.Categories);
         }
 
+        public override async Task<byte[]> Download(Uri link)
+        {
+            if (Settings.UseMagnetLinks && link.PathAndQuery.Contains("viewtopic.php?t="))
+            {
+                var request = new HttpRequestBuilder(link.ToString())
+                    .SetCookies(GetCookies() ?? new Dictionary<string, string>())
+                    .Accept(HttpAccept.Html)
+                    .Build();
+
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+
+                var parser = new HtmlParser();
+                var dom = parser.ParseDocument(response.Content);
+                var magnetLink = dom.QuerySelector("table.attach a.magnet-link[href^=\"magnet:?\"]")?.GetAttribute("href");
+
+                if (magnetLink == null)
+                {
+                    throw new Exception($"Failed to fetch magnet link from {link}");
+                }
+
+                link = new Uri(magnetLink);
+            }
+
+            return await base.Download(link);
+        }
+
         protected override async Task DoLogin()
         {
             var loginUrl = $"{Settings.BaseUrl}forum/login.php";
@@ -1597,8 +1623,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 Guid = infoUrl,
                 InfoUrl = infoUrl,
-                DownloadUrl = downloadUrl,
-                Title = _titleParser.Parse(title, categories, _settings.RussianLetters, _settings.MoveFirstTagsToEndOfReleaseTitle, _settings.MoveAllTagsToEndOfReleaseTitle),
+                DownloadUrl = _settings.UseMagnetLinks ? infoUrl : downloadUrl,
+                Title = _titleParser.Parse(title, categories, _settings.RussianLetters, _settings.MoveFirstTagsToEndOfReleaseTitle, _settings.MoveAllTagsToEndOfReleaseTitle, _settings.AddRussianToTitle),
                 Description = title,
                 Categories = categories,
                 Size = size,
@@ -1671,7 +1697,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly Regex _tvTitleRusEpisodeOfRegex = new (@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _tvTitleRusEpisodeRegex = new (@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true, bool moveFirstTagsToEndOfReleaseTitle = false, bool moveAllTagsToEndOfReleaseTitle = false)
+        public string Parse(string title,
+                            ICollection<IndexerCategory> categories,
+                            bool stripCyrillicLetters = true,
+                            bool moveFirstTagsToEndOfReleaseTitle = false,
+                            bool moveAllTagsToEndOfReleaseTitle = false,
+                            bool addRussianToTitle = false)
         {
             // https://www.fileformat.info/info/unicode/category/Pd/list.htm
             title = Regex.Replace(title, @"\p{Pd}", "-", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -1714,12 +1745,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // Remove Sub languages from release names
                 title = Regex.Replace(title, @"(\bSub\b.*$|\b[\+]*Sub[\+]*\b)", string.Empty);
+            }
 
-                // language fix: all rutracker releases contains russian track
-                if (title.IndexOf("rus", StringComparison.OrdinalIgnoreCase) < 0)
-                {
-                    title += " rus";
-                }
+            // language fix: all rutracker releases contains russian track
+            if (addRussianToTitle && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.Match(title, "\bRUS\b", RegexOptions.IgnoreCase).Success)
+            {
+                title += " RUS";
             }
 
             if (stripCyrillicLetters)
@@ -1820,6 +1851,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public RuTrackerSettings()
         {
             RussianLetters = false;
+            UseMagnetLinks = false;
+            AddRussianToTitle = false;
             MoveFirstTagsToEndOfReleaseTitle = false;
             MoveAllTagsToEndOfReleaseTitle = false;
         }
@@ -1827,10 +1860,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "Strip Russian letters", Type = FieldType.Checkbox, HelpText = "Removes russian letters")]
         public bool RussianLetters { get; set; }
 
-        [FieldDefinition(5, Label = "Move first tags to end of release title", Type = FieldType.Checkbox)]
+        [FieldDefinition(5, Label = "Use Magnet Links", Type = FieldType.Checkbox, HelpText = "When enabled this option will disable torrent links")]
+        public bool UseMagnetLinks { get; set; }
+
+        [FieldDefinition(6, Label = "Add RUS to titles", Type = FieldType.Checkbox, HelpText = "Add RUS to end of all titles to improve language detection by Sonarr and Radarr. Will cause English-only results to be misidentified.")]
+        public bool AddRussianToTitle { get; set; }
+
+        [FieldDefinition(7, Label = "Move first tags to end of release title", Type = FieldType.Checkbox)]
         public bool MoveFirstTagsToEndOfReleaseTitle { get; set; }
 
-        [FieldDefinition(6, Label = "Move all tags to end of release title", Type = FieldType.Checkbox)]
+        [FieldDefinition(8, Label = "Move all tags to end of release title", Type = FieldType.Checkbox)]
         public bool MoveAllTagsToEndOfReleaseTitle { get; set; }
     }
 }

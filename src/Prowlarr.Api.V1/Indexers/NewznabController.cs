@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
@@ -54,7 +54,7 @@ namespace NzbDrone.Api.V1.Indexers
 
             if (requestType.IsNullOrWhiteSpace())
             {
-                return Content(CreateErrorXML(200, "Missing parameter (t)"), "application/rss+xml");
+                return CreateResponse(CreateErrorXML(200, "Missing parameter (t)"), statusCode: StatusCodes.Status400BadRequest);
             }
 
             request.imdbid = request.imdbid?.TrimStart('t') ?? null;
@@ -63,7 +63,7 @@ namespace NzbDrone.Api.V1.Indexers
             {
                 if (!int.TryParse(request.imdbid, out var imdb) || imdb == 0)
                 {
-                    return Content(CreateErrorXML(201, "Incorrect parameter (imdbid)"), "application/rss+xml");
+                    return CreateResponse(CreateErrorXML(201, "Incorrect parameter (imdbid)"), statusCode: StatusCodes.Status400BadRequest);
                 }
             }
 
@@ -97,7 +97,7 @@ namespace NzbDrone.Api.V1.Indexers
                             caps.Categories.AddCategoryMapping(1, cat);
                         }
 
-                        return Content(caps.ToXml(), "application/rss+xml");
+                        return CreateResponse(caps.ToXml());
                     case "search":
                     case "tvsearch":
                     case "music":
@@ -115,7 +115,7 @@ namespace NzbDrone.Api.V1.Indexers
                             }
                         };
 
-                        return Content(results.ToXml(DownloadProtocol.Usenet), "application/rss+xml");
+                        return CreateResponse(results.ToXml(DownloadProtocol.Usenet));
                 }
             }
 
@@ -141,19 +141,14 @@ namespace NzbDrone.Api.V1.Indexers
                     }
                 }
 
-                return new ContentResult
-                {
-                    StatusCode = StatusCodes.Status429TooManyRequests,
-                    Content = CreateErrorXML(429, $"Request limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit})"),
-                    ContentType = MediaTypeHeaderValue.Parse("application/rss+xml").ToString()
-                };
+                return CreateResponse(CreateErrorXML(429, $"Request limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit})"), statusCode: StatusCodes.Status429TooManyRequests);
             }
 
             switch (requestType)
             {
                 case "caps":
                     var caps = indexer.GetCapabilities();
-                    return Content(caps.ToXml(), "application/rss+xml");
+                    return CreateResponse(caps.ToXml());
                 case "search":
                 case "tvsearch":
                 case "music":
@@ -171,9 +166,9 @@ namespace NzbDrone.Api.V1.Indexers
                         }
                     }
 
-                    return Content(results.ToXml(indexer.Protocol), "application/rss+xml");
+                    return CreateResponse(results.ToXml(indexer.Protocol));
                 default:
-                    return Content(CreateErrorXML(202, $"No such function ({requestType})"), "application/rss+xml");
+                    return CreateResponse(CreateErrorXML(202, $"No such function ({requestType})"), statusCode: StatusCodes.Status400BadRequest);
             }
         }
 
@@ -196,12 +191,7 @@ namespace NzbDrone.Api.V1.Indexers
                     }
                 }
 
-                return new ContentResult
-                {
-                    StatusCode = StatusCodes.Status429TooManyRequests,
-                    Content = CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit})"),
-                    ContentType = MediaTypeHeaderValue.Parse("application/rss+xml").ToString()
-                };
+                return CreateResponse(CreateErrorXML(429, $"Grab limit reached ({((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit})"), statusCode: StatusCodes.Status429TooManyRequests);
             }
 
             if (link.IsNullOrWhiteSpace() || file.IsNullOrWhiteSpace())
@@ -261,6 +251,19 @@ namespace NzbDrone.Api.V1.Indexers
                     new XAttribute("description", description)));
 
             return xdoc.Declaration + Environment.NewLine + xdoc;
+        }
+
+        private ContentResult CreateResponse(string content, string contentType = "application/rss+xml", int statusCode = StatusCodes.Status200OK)
+        {
+            var mediaTypeHeaderValue = MediaTypeHeaderValue.Parse(contentType);
+            mediaTypeHeaderValue.Encoding = Encoding.UTF8;
+
+            return new ContentResult
+            {
+                StatusCode = statusCode,
+                Content = content,
+                ContentType = mediaTypeHeaderValue.ToString()
+            };
         }
     }
 }

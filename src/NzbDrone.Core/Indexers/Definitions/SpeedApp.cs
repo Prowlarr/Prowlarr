@@ -8,8 +8,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class SpeedApp : SpeedAppBase
     {
         public override string Name => "SpeedApp.io";
-        public override string[] IndexerUrls => new string[] { "https://speedapp.io/" };
-        public override string[] LegacyUrls => new string[] { "https://speedapp.io" };
+        public override string[] IndexerUrls => new[] { "https://speedapp.io/" };
+        public override string[] LegacyUrls => new[] { "https://speedapp.io" };
         public override string Description => "SpeedApp is a ROMANIAN Private Torrent Tracker for MOVIES / TV / GENERAL";
         public override string Language => "ro-RO";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 BookSearchParams = new List<BookSearchParam>
                 {
                     BookSearchParam.Q,
-                },
+                }
             };
 
             caps.Categories.AddCategoryMapping(38, NewznabStandardCategory.Movies, "Movie Packs");

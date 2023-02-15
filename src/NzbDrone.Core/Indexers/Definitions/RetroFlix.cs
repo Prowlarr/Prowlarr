@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 BookSearchParams = new List<BookSearchParam>
                 {
                     BookSearchParam.Q,
-                },
+                }
             };
 
             caps.Categories.AddCategoryMapping(401, NewznabStandardCategory.Movies, "Movies");

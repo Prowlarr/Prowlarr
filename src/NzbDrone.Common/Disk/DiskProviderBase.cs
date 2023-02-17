@@ -351,7 +351,7 @@ namespace NzbDrone.Common.Disk
             }
         }
 
-        public string GetPathRoot(string path)
+        public virtual string GetPathRoot(string path)
         {
             Ensure.That(path, () => path).IsValidPath();
 

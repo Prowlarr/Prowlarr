@@ -97,7 +97,7 @@ class IndexerIndexRow extends Component {
       isIndexerInfoModalOpen
     } = this.state;
 
-    const baseUrl = fields.find((field) => field.name === 'baseUrl')?.value ?? Array.isArray(indexerUrls) ? indexerUrls[0] : undefined;
+    const baseUrl = fields.find((field) => field.name === 'baseUrl')?.value ?? (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
 
     return (
       <>

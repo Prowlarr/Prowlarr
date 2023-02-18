@@ -78,12 +78,26 @@ namespace NzbDrone.Core.Indexers
                 throw;
             }
 
+            ValidateTorrent(torrentData);
             return torrentData;
         }
 
         protected void ValidateMagnet(string link)
         {
             MagnetLink.Parse(link);
+        }
+
+        protected void ValidateTorrent(byte[] torrentData)
+        {
+            try
+            {
+                Torrent.Load(torrentData);
+            }
+            catch
+            {
+                _logger.Trace("Invalid torrent file contents: {0}", Encoding.ASCII.GetString(torrentData));
+                throw;
+            }
         }
     }
 }

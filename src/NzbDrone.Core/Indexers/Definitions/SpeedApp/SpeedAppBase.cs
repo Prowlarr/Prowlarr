@@ -164,6 +164,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw;
             }
 
+            ValidateTorrent(torrentData);
             return torrentData;
         }
 

@@ -233,6 +233,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 throw;
             }
 
+            ValidateTorrent(downloadBytes);
             return downloadBytes;
         }
 

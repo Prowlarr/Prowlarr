@@ -113,7 +113,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 {
                     if (request.ResponseStream != null && responseMessage.StatusCode == HttpStatusCode.OK)
                     {
-                        responseMessage.Content.CopyTo(request.ResponseStream, null, cts.Token);
+                        await responseMessage.Content.CopyToAsync(request.ResponseStream, null, cts.Token);
                     }
                     else
                     {

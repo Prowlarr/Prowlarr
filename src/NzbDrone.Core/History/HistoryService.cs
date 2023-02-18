@@ -27,6 +27,7 @@ namespace NzbDrone.Core.History
         List<History> Between(DateTime start, DateTime end);
         List<History> Since(DateTime date, HistoryEventType? eventType);
         int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
+        History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit);
     }
 
     public class HistoryService : IHistoryService,
@@ -231,6 +232,11 @@ namespace NzbDrone.Core.History
         public int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes)
         {
             return _historyRepository.CountSince(indexerId, date, eventTypes);
+        }
+
+        public History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit)
+        {
+            return _historyRepository.FindFirstForIndexerSince(indexerId, date, eventTypes, limit);
         }
     }
 }

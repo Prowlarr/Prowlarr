@@ -92,8 +92,7 @@ namespace NzbDrone.Core.Download
             }
             catch (ReleaseDownloadException ex)
             {
-                var http429 = ex.InnerException as TooManyRequestsException;
-                if (http429 != null)
+                if (ex.InnerException is TooManyRequestsException http429)
                 {
                     _indexerStatusService.RecordFailure(release.IndexerId, http429.RetryAfter);
                 }
@@ -141,8 +140,7 @@ namespace NzbDrone.Core.Download
             }
             catch (ReleaseDownloadException ex)
             {
-                var http429 = ex.InnerException as TooManyRequestsException;
-                if (http429 != null)
+                if (ex.InnerException is TooManyRequestsException http429)
                 {
                     _indexerStatusService.RecordFailure(indexerId, http429.RetryAfter);
                 }

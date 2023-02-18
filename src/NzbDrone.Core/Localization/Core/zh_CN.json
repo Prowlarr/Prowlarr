@@ -278,7 +278,7 @@
     "Queue": "队列",
     "ReadTheWikiForMoreInformation": "查阅Wiki获得更多信息",
     "Reddit": "Reddit",
-    "ReleaseBranchCheckOfficialBranchMessage": "分支 {0} 不是合法的Radarr发布分支，您不会收到任何更新",
+    "ReleaseBranchCheckOfficialBranchMessage": "分支 {0} 不是合法的Prowlarr发布分支，您不会收到任何更新",
     "RemovedFromTaskQueue": "从任务队列中移除",
     "RemoveFilter": "移除过滤条件",
     "RemovingTag": "移除标签",
@@ -333,7 +333,7 @@
     "Tomorrow": "明天",
     "UI": "UI界面",
     "UILanguage": "UI界面语言",
-    "UILanguageHelpText": "Radarr使用的UI界面语言",
+    "UILanguageHelpText": "Prowlarr使用的UI界面语言",
     "UpdateCheckUINotWritableMessage": "无法安装升级，因为用户“{1}”不可写入界面文件夹“{0}”。",
     "UpdateMechanismHelpText": "使用 Prowlarr 内置的更新器或者脚本",
     "Updates": "更新",
@@ -469,5 +469,8 @@
     "DownloadClientCategory": "下载客户端类别",
     "MappedCategories": "映射类别",
     "AuthenticationRequiredHelpText": "更改需要身份验证的请求。除非您了解风险，否则请勿更改。",
-    "AuthenticationRequiredWarning": "为了防止远程访问而无需身份验证，Prowlarr现在需要启用身份验证。请配置您的身份验证方法和凭据。您可以选择从本地地址禁用身份验证。有关其他信息，请参阅FAQ。"
+    "AuthenticationRequiredWarning": "为了防止远程访问而无需身份验证，Prowlarr现在需要启用身份验证。请配置您的身份验证方法和凭据。您可以选择从本地地址禁用身份验证。有关其他信息，请参阅FAQ。",
+    "Replace": "替换",
+    "TheLatestVersionIsAlreadyInstalled": "已安装最新版的Prowlarr",
+    "Remove": "移除"
 }

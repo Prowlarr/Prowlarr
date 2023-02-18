@@ -155,7 +155,9 @@ namespace NzbDrone.Core.Download
                 throw;
             }
 
+            _logger.Trace("Downloaded {0} bytes from {1}", downloadedBytes.Length, link);
             _eventAggregator.PublishEvent(new IndexerDownloadEvent(indexerId, success, source, host, title, url.AbsoluteUri));
+
             return downloadedBytes;
         }
 

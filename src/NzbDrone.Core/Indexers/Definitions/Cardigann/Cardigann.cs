@@ -189,6 +189,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             if (request.Url.Scheme == "magnet")
             {
                 ValidateMagnet(request.Url.FullUri);
+
                 return Encoding.UTF8.GetBytes(request.Url.FullUri);
             }
 
@@ -232,6 +233,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 _logger.Error("Downloading torrent failed");
                 throw;
             }
+
+            ValidateTorrent(downloadBytes);
 
             return downloadBytes;
         }

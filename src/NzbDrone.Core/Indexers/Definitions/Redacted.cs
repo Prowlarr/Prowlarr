@@ -94,6 +94,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 _logger.Error("Download failed");
             }
 
+            ValidateTorrent(downloadBytes);
+
             return downloadBytes;
         }
     }

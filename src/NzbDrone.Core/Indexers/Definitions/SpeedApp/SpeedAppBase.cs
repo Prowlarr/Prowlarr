@@ -111,6 +111,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (link.Scheme == "magnet")
             {
                 ValidateMagnet(link.OriginalString);
+
                 return Encoding.UTF8.GetBytes(link.OriginalString);
             }
 
@@ -163,6 +164,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 _logger.Error("Downloading torrent failed");
                 throw;
             }
+
+            ValidateTorrent(torrentData);
 
             return torrentData;
         }

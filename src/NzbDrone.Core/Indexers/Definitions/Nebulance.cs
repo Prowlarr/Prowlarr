@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -43,6 +44,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new NebulanceParser(Settings);
+        }
+
+        public override async Task<byte[]> Download(Uri link)
+        {
+            // Invalidate cookies before downloading to prevent redirect to login page.
+            UpdateCookies(null, null);
+
+            return await base.Download(link);
         }
 
         private IndexerCapabilities SetCapabilities()

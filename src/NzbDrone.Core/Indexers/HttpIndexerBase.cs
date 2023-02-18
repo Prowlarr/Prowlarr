@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Indexers
 
         public override Encoding Encoding => Encoding.UTF8;
         public override string Language => "en-US";
-        public override string[] LegacyUrls => new string[] { };
+        public override string[] LegacyUrls => Array.Empty<string>();
 
         public override bool FollowRedirect => false;
         public override IndexerCapabilities Capabilities { get; protected set; }

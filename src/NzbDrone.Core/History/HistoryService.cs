@@ -173,7 +173,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Host", message.Query.Host ?? string.Empty);
-            history.Data.Add("QueryResults", message.QueryResult.Releases?.Count().ToString() ?? string.Empty);
+            history.Data.Add("QueryResults", message.QueryResult.Releases?.Count.ToString() ?? string.Empty);
             history.Data.Add("Url", message.QueryResult.Response?.Request.Url.FullUri ?? string.Empty);
 
             _historyRepository.Insert(history);

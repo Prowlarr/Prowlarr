@@ -1,6 +1,7 @@
 <Project>
   <!-- Common to all Prowlarr Projects -->
   <PropertyGroup>
+    <AnalysisLevel>6.0-all</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles> 
     <PlatformTarget>AnyCPU</PlatformTarget>

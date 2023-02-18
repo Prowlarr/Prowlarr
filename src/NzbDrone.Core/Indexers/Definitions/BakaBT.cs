@@ -281,7 +281,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var stringSeparator = new[] { " | " };
                 var titles = titleSeries.Split(stringSeparator, StringSplitOptions.RemoveEmptyEntries);
 
-                if (titles.Count() > 1 && !_settings.AddRomajiTitle)
+                if (titles.Length > 1 && !_settings.AddRomajiTitle)
                 {
                     titles = titles.Skip(1).ToArray();
                 }
@@ -293,7 +293,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Title = (name + releaseInfo).Trim();
 
                     // Ensure the season is defined as this tracker only deals with full seasons
-                    if (release.Title.IndexOf("Season") == -1 && _settings.AppendSeason)
+                    if (!release.Title.Contains("Season", StringComparison.CurrentCulture) && _settings.AppendSeason)
                     {
                         // Insert before the release info
                         var aidx = release.Title.IndexOf('(');

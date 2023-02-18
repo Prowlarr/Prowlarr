@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 if (request.SearchPath.Response != null &&
                     request.SearchPath.Response.NoResultsMessage != null &&
-                    ((request.SearchPath.Response.NoResultsMessage != string.Empty && results.Contains(request.SearchPath.Response.NoResultsMessage)) || (request.SearchPath.Response.NoResultsMessage == string.Empty && results == string.Empty)))
+                    ((request.SearchPath.Response.NoResultsMessage.IsNotNullOrWhiteSpace() && results.Contains(request.SearchPath.Response.NoResultsMessage)) || (request.SearchPath.Response.NoResultsMessage.IsNullOrWhiteSpace() && results.IsNullOrWhiteSpace())))
                 {
                     return releases;
                 }

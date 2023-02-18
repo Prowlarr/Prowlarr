@@ -162,7 +162,7 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
             releaseInfo.InfoHash.Should().Be("(removed)");
             releaseInfo.Seeders.Should().Be(3);
             releaseInfo.Peers.Should().Be(3);
-            releaseInfo.Categories.Count().Should().Be(4);
+            releaseInfo.Categories.Count.Should().Be(4);
         }
 
         [Test]

@@ -425,7 +425,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         }
 
                         var releaseGroup = releaseTags.LastOrDefault();
-                        if (releaseGroup != null && releaseGroup.Contains("(") && releaseGroup.Contains(")"))
+                        if (releaseGroup != null && releaseGroup.Contains('(') && releaseGroup.Contains(')'))
                         {
                             //// Skip raws if set
                             //if (releaseGroup.ToLowerInvariant().StartsWith("raw") && !AllowRaws)

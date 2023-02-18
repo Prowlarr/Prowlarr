@@ -351,7 +351,7 @@ public class ShazbatParser : IParseIndexerResponse
 
     private static string ParseTitle(IElement titleRow)
     {
-        var title = titleRow?.ChildNodes.First(n => n.NodeType == NodeType.Text && n.TextContent.Trim() != string.Empty);
+        var title = titleRow?.ChildNodes.First(n => n.NodeType == NodeType.Text && n.TextContent.Trim().IsNotNullOrWhiteSpace());
 
         return title?.TextContent.Trim();
     }

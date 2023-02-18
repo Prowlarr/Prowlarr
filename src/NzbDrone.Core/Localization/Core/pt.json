@@ -415,5 +415,8 @@
     "Notifications": "Notificações",
     "Started": "Começado",
     "NextExecution": "Próxima execução",
-    "Queued": "Em fila"
+    "Queued": "Em fila",
+    "Remove": "Remover",
+    "Replace": "Substituir",
+    "TheLatestVersionIsAlreadyInstalled": "A versão mais recente do Prowlarr já está instalada"
 }

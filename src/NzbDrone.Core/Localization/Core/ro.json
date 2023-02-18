@@ -127,7 +127,7 @@
     "SettingsTimeFormat": "Format de timp",
     "RSSIsNotSupportedWithThisIndexer": "RSS nu este suportat de acest indexator",
     "ShowSearchHelpText": "Afișați butonul de căutare pe hover",
-    "UILanguageHelpText": "Limba pe care Radarr o va folosi pentru interfața de utilizare",
+    "UILanguageHelpText": "Limba pe care Prowlarr o va folosi pentru interfața de utilizare",
     "UILanguageHelpTextWarning": "Reîncărcare browser necesară",
     "Wiki": "Wiki",
     "YesCancel": "Da, Anulați",
@@ -135,7 +135,7 @@
     "DeleteNotificationMessageText": "Sigur doriți să ștergeți notificarea „{0}”?",
     "DeleteTag": "Ștergeți eticheta",
     "AddingTag": "Se adaugă etichetă",
-    "LaunchBrowserHelpText": " Deschideți un browser web și navigați la pagina de pornire Radarr la pornirea aplicației.",
+    "LaunchBrowserHelpText": " Deschideți un browser web și navigați la pagina de pornire Prowlarr la pornirea aplicației.",
     "AppDataDirectory": "Directorul AppData",
     "ApplicationStatusCheckAllClientMessage": "Toate aplicațiile sunt indisponibile datorită erorilor",
     "AreYouSureYouWantToResetYourAPIKey": "Sigur doriți să vă resetați cheia API?",
@@ -226,7 +226,7 @@
     "UnableToLoadNotifications": "Nu se pot încărca notificările",
     "UnableToLoadTags": "Nu se pot încărca etichete",
     "UnableToLoadUISettings": "Nu se pot încărca setările UI",
-    "UpdateMechanismHelpText": "Utilizați actualizatorul încorporat al lui Radarr sau un script",
+    "UpdateMechanismHelpText": "Utilizați actualizatorul încorporat al lui Prowlarr sau un script",
     "AnalyticsEnabledHelpText": "Trimiteți informații anonime privind utilizarea și erorile către serverele Prowlarr. Aceasta include informații despre browserul folosit, ce pagini WebUI Prowlarr utilizați, raportarea erorilor, precum și sistemul de operare și versiunea de execuție. Vom folosi aceste informații pentru a acorda prioritate caracteristicilor și remedierilor de erori.",
     "ApiKey": "Cheie API",
     "BackupRetentionHelpText": "Copiile de siguranță automate mai vechi decât perioada de păstrare vor fi curățate automat",
@@ -384,5 +384,8 @@
     "Queued": "În așteptare",
     "Application": "Aplicații",
     "Applications": "Aplicații",
-    "NextExecution": "Următoarea execuție"
+    "NextExecution": "Următoarea execuție",
+    "Remove": "Elimina",
+    "Replace": "A inlocui",
+    "TheLatestVersionIsAlreadyInstalled": "Cea mai recentă versiune a Prowlarr este deja instalată"
 }

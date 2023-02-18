@@ -469,5 +469,8 @@
     "MappedCategories": "Catégories mappées",
     "EnabledRedirected": "Activé, Redirigé",
     "GrabTitle": "Récupérer le titre",
-    "AuthenticationRequiredWarning": "Pour empêcher l'accès à distance sans authentification, Prowlarr exige désormais que l'authentification soit activée. Configurez votre méthode d'authentification et vos informations d'identification. Vous pouvez éventuellement désactiver l'authentification à partir des adresses locales. Reportez-vous à la FAQ pour plus d'informations."
+    "AuthenticationRequiredWarning": "Pour empêcher l'accès à distance sans authentification, Prowlarr exige désormais que l'authentification soit activée. Configurez votre méthode d'authentification et vos informations d'identification. Vous pouvez éventuellement désactiver l'authentification à partir des adresses locales. Reportez-vous à la FAQ pour plus d'informations.",
+    "Remove": "Retirer",
+    "Replace": "Remplacer",
+    "TheLatestVersionIsAlreadyInstalled": "La dernière version de Prowlarr est déjà installée"
 }

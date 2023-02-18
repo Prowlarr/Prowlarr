@@ -373,5 +373,8 @@
     "ApplicationLongTermStatusCheckSingleClientMessage": "Indexers no disponible por errores durando más de 6 horas: {0}",
     "Ended": "Terminó",
     "NextExecution": "Siguiente ejecución",
-    "Started": "Iniciado"
+    "Started": "Iniciado",
+    "Remove": "Eliminar",
+    "Replace": "Reemplazar",
+    "TheLatestVersionIsAlreadyInstalled": "La última versión de Prowlarr ya está instalada"
 }

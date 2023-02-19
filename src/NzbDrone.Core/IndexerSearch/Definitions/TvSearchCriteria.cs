@@ -26,7 +26,17 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public string FullImdbId => ParseUtil.GetFullImdbId(ImdbId);
 
-        public override bool RssSearch => SearchTerm.IsNullOrWhiteSpace() && ImdbId.IsNullOrWhiteSpace() && !TvdbId.HasValue && !RId.HasValue && !TraktId.HasValue && !TvMazeId.HasValue;
+        public override bool IsRssSearch =>
+            SearchTerm.IsNullOrWhiteSpace() &&
+            Episode.IsNullOrWhiteSpace() &&
+            ImdbId.IsNullOrWhiteSpace() &&
+            !Season.HasValue &&
+            !TvdbId.HasValue &&
+            !RId.HasValue &&
+            !TraktId.HasValue &&
+            !TvMazeId.HasValue &&
+            !TmdbId.HasValue &&
+            !DoubanId.HasValue;
 
         public override string SearchQuery
         {

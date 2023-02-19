@@ -24,7 +24,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public virtual string SearchQuery => $"Term: [{SearchTerm}]";
 
-        public virtual bool RssSearch => SearchTerm.IsNullOrWhiteSpace();
+        public virtual bool IsRssSearch => SearchTerm.IsNullOrWhiteSpace();
 
         public string SanitizedSearchTerm => GetSanitizedTerm(SearchTerm);
 

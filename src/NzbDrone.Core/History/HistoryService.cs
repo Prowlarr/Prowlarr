@@ -122,7 +122,7 @@ namespace NzbDrone.Core.History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = message.Query.RssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
+                EventType = message.Query.IsRssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
                 Successful = message.QueryResult.Response?.StatusCode == HttpStatusCode.OK
             };
 

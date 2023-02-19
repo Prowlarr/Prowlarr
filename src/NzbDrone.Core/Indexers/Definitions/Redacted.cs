@@ -50,6 +50,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new RedactedParser(Settings, Capabilities.Categories);
         }
 
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            var request = requestBuilder
+                .SetHeader("Authorization", Settings.Apikey)
+                .Build();
+
+            return Task.FromResult(request);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -73,30 +87,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksComics, "Comics");
 
             return caps;
-        }
-
-        public override async Task<byte[]> Download(Uri link)
-        {
-            var request = new HttpRequestBuilder(link.AbsoluteUri)
-                .SetHeader("Authorization", Settings.Apikey)
-                .Build();
-
-            var downloadBytes = Array.Empty<byte>();
-
-            try
-            {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                downloadBytes = response.ResponseData;
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
-            }
-
-            ValidateTorrent(downloadBytes);
-
-            return downloadBytes;
         }
     }
 
@@ -188,18 +178,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
             }
 
-            var request = RequestBuilder()
-                .Resource($"/ajax.php?{parameters.GetQueryString()}")
-                .Build();
+            var searchUrl = _settings.BaseUrl.TrimEnd('/') + $"/ajax.php?{parameters.GetQueryString()}";
 
-            yield return new IndexerRequest(request);
-        }
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+            request.HttpRequest.Headers.Set("Authorization", _settings.Apikey);
 
-        private HttpRequestBuilder RequestBuilder()
-        {
-            return new HttpRequestBuilder($"{_settings.BaseUrl.TrimEnd('/')}")
-                .Accept(HttpAccept.Json)
-                .SetHeader("Authorization", _settings.Apikey);
+            yield return request;
         }
     }
 

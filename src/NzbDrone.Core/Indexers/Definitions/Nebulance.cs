@@ -46,12 +46,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new NebulanceParser(Settings);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
         {
-            // Invalidate cookies before downloading to prevent redirect to login page.
-            UpdateCookies(null, null);
+            // Avoid using cookies to prevent redirects to login page
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
 
-            return await base.Download(link);
+            var request = requestBuilder.Build();
+
+            return Task.FromResult(request);
         }
 
         private IndexerCapabilities SetCapabilities()

@@ -300,7 +300,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "checkbox")
                 {
-                    variables[name] = ((bool)value) ? ".True" : null;
+                    if (value is string stringValue && bool.TryParse(stringValue, out var result))
+                    {
+                        value = result;
+                    }
+
+                    variables[name] = (bool)value ? ".True" : null;
                 }
                 else if (setting.Type == "select")
                 {
@@ -328,12 +333,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else
                 {
-                    throw new NotSupportedException();
+                    throw new NotSupportedException($"Type {setting.Type} is not supported.");
                 }
 
-                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging)
+                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging && variables.ContainsKey(name))
                 {
-                    _logger.Debug($"Setting {setting.Name} to {variables[name]}");
+                    _logger.Debug($"Setting {setting.Name} to {variables[name].ToJson()}");
                 }
             }
 

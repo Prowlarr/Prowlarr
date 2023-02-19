@@ -5955,10 +5955,19 @@
             "type": "string",
             "nullable": true
           },
+          "onGrab": {
+            "type": "boolean"
+          },
           "onHealthIssue": {
             "type": "boolean"
           },
           "onApplicationUpdate": {
+            "type": "boolean"
+          },
+          "supportsOnGrab": {
+            "type": "boolean"
+          },
+          "includeManualGrabs": {
             "type": "boolean"
           },
           "supportsOnHealthIssue": {
@@ -6138,6 +6147,11 @@
           },
           "protocol": {
             "$ref": "#/components/schemas/DownloadProtocol"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false

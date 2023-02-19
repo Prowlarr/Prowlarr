@@ -6,10 +6,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
+using MonoTorrent;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -99,6 +101,95 @@ namespace NzbDrone.Core.Indexers
             }
 
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+        }
+
+        public override async Task<byte[]> Download(Uri link)
+        {
+            Cookies = GetCookies();
+
+            var request = await GetDownloadRequest(link);
+
+            if (request.Url.Scheme == "magnet")
+            {
+                ValidateMagnet(request.Url.FullUri);
+                return Encoding.UTF8.GetBytes(request.Url.FullUri);
+            }
+
+            if (request.RateLimit < RateLimit)
+            {
+                request.RateLimit = RateLimit;
+            }
+
+            byte[] fileData;
+
+            try
+            {
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                fileData = response.ResponseData;
+
+                _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);
+            }
+            catch (HttpException ex)
+            {
+                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.Error(ex, "Downloading file for release failed since it no longer exists ({0})", link.AbsoluteUri);
+                    throw new ReleaseUnavailableException("Download failed", ex);
+                }
+
+                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
+                }
+                else
+                {
+                    _logger.Error(ex, "Downloading for release failed ({0})", link.AbsoluteUri);
+                }
+
+                throw new ReleaseDownloadException("Download failed", ex);
+            }
+            catch (WebException ex)
+            {
+                _logger.Error(ex, "Downloading for release failed ({0})", link.AbsoluteUri);
+
+                throw new ReleaseDownloadException("Download failed", ex);
+            }
+            catch (Exception)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Error("Download failed");
+                throw;
+            }
+
+            ValidateDownloadData(fileData);
+
+            return fileData;
+        }
+
+        protected virtual Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            if (Cookies != null)
+            {
+                requestBuilder.SetCookies(Cookies);
+            }
+
+            var request = requestBuilder.Build();
+
+            return Task.FromResult(request);
+        }
+
+        protected virtual void ValidateDownloadData(byte[] fileData)
+        {
+        }
+
+        protected void ValidateMagnet(string link)
+        {
+            MagnetLink.Parse(link);
         }
 
         protected IIndexerRequestGenerator SetCookieFunctions(IIndexerRequestGenerator generator)
@@ -418,6 +509,11 @@ namespace NzbDrone.Core.Indexers
             if (request.RequestTimeout == TimeSpan.Zero)
             {
                 request.RequestTimeout = TimeSpan.FromSeconds(15);
+            }
+
+            if (request.RateLimit < RateLimit)
+            {
+                request.RateLimit = RateLimit;
             }
 
             var response = await _httpClient.ExecuteProxiedAsync(request, Definition);

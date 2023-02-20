@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -129,7 +129,7 @@ namespace NzbDrone.Update.UpdateEngine
                     _diskTransferService.MirrorFolder(_appFolderInfo.GetUpdatePackageFolder(), installationFolder);
 
                     // Set executable flag on app
-                    if (OsInfo.IsOsx || (OsInfo.IsLinux && PlatformInfo.IsNetCore))
+                    if (OsInfo.IsOsx || OsInfo.IsLinux)
                     {
                         _diskProvider.SetFilePermissions(Path.Combine(installationFolder, "Prowlarr"), "755", null);
                     }

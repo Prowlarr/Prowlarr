@@ -118,17 +118,23 @@ public class GreatPosterWallParser : GazelleParser
 
         if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
         {
-            // Remove cookie cache
-            CookiesUpdater(null, null);
+            if (indexerResponse.HttpResponse.HasHttpRedirect)
+            {
+                if (indexerResponse.HttpResponse.RedirectUrl.ContainsIgnoreCase("login.php"))
+                {
+                    // Remove cookie cache
+                    CookiesUpdater(null, null);
+                    throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Recheck your cookie or credentials and try testing the indexer.");
+                }
+
+                throw new IndexerException(indexerResponse, $"Redirected to {indexerResponse.HttpResponse.RedirectUrl} from API request");
+            }
 
             throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
         }
 
         if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
         {
-            // Remove cookie cache
-            CookiesUpdater(null, null);
-
             throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
         }
 

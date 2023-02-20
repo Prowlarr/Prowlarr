@@ -13,7 +13,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
     public class Rarbg : TorrentIndexerBase<RarbgSettings>
     {
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Indexers.Rarbg
                 }
             };
 
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.XXX, "XXX (18+)");
+            // caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.XXX, "XXX (18+)"); // 3x is not supported by API #11848
             caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.MoviesSD, "Movies/XVID");
             caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.MoviesSD, "Movies/x264");
             caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.TVSD, "TV Episodes");

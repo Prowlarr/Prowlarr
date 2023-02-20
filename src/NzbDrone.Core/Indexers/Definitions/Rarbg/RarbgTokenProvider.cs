@@ -5,7 +5,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
     public interface IRarbgTokenProvider
     {

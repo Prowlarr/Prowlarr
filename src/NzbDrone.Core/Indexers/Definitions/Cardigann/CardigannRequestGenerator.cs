@@ -193,6 +193,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var login = _definition.Login;
 
+            var variables = GetBaseTemplateVariables();
+            var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
+
             if (login.Method == "post")
             {
                 var pairs = new Dictionary<string, string>();
@@ -221,7 +224,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     requestBuilder.AddFormParameter(pair.Key, pair.Value);
                 }
 
+                Cookies = null;
+                if (login.Cookies != null)
+                {
+                    Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
+                }
+
                 var request = requestBuilder
+                    .SetCookies(Cookies ?? new Dictionary<string, string>())
+                    .SetHeaders(headers ?? new Dictionary<string, string>())
                     .SetHeader("Referer", SiteLink)
                     .WithRateLimit(_rateLimit.TotalSeconds)
                     .Build();
@@ -241,13 +252,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var queryCollection = new NameValueCollection();
                 var pairs = new Dictionary<string, string>();
 
-                var formSelector = login.Form;
-                if (formSelector == null)
-                {
-                    formSelector = "form";
-                }
+                var formSelector = login.Form ?? "form";
 
-                // landingResultDocument might not be initiated if the login is caused by a relogin during a query
+                // landingResultDocument might not be initiated if the login is caused by a re-login during a query
                 if (landingResultDocument == null)
                 {
                     await GetConfigurationForSetup(true);
@@ -279,11 +286,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         continue;
                     }
 
-                    var value = input.GetAttribute("value");
-                    if (value == null)
-                    {
-                        value = "";
-                    }
+                    var value = input.GetAttribute("value") ?? "";
 
                     pairs[name] = value;
                 }
@@ -364,6 +367,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     var request = requestBuilder
                         .SetCookies(Cookies)
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
                         .SetHeader("Referer", loginUrl)
                         .WithRateLimit(_rateLimit.TotalSeconds)
                         .Build();
@@ -406,7 +410,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var enctype = form.GetAttribute("enctype");
                 if (enctype == "multipart/form-data")
                 {
-                    var headers = new Dictionary<string, string>();
                     var boundary = "---------------------------" + DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString().Replace(".", "");
                     var bodyParts = new List<string>();
 
@@ -437,13 +440,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    foreach (var header in headers)
-                    {
-                        requestBuilder.SetHeader(header.Key, header.Value);
-                    }
-
                     var request = requestBuilder
                         .SetCookies(Cookies)
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
                         .SetHeader("Referer", SiteLink)
                         .WithRateLimit(_rateLimit.TotalSeconds)
                         .Build();
@@ -470,6 +469,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     var request = requestBuilder
                         .SetCookies(Cookies)
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
                         .SetHeader("Referer", loginUrl)
                         .WithRateLimit(_rateLimit.TotalSeconds)
                         .Build();
@@ -509,6 +509,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 };
 
                 var request = requestBuilder
+                    .SetHeaders(headers ?? new Dictionary<string, string>())
                     .SetHeader("Referer", SiteLink)
                     .WithRateLimit(_rateLimit.TotalSeconds)
                     .Build();
@@ -537,6 +538,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 };
 
                 var request = requestBuilder
+                    .SetHeaders(headers ?? new Dictionary<string, string>())
                     .SetHeader("Referer", SiteLink)
                     .WithRateLimit(_rateLimit.TotalSeconds)
                     .Build();
@@ -551,7 +553,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
             else
             {
-                throw new NotImplementedException("Login method " + login.Method + " not implemented");
+                throw new NotImplementedException($"Login method {login.Method} not implemented");
             }
         }
 
@@ -596,14 +598,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return null;
             }
 
+            var variables = GetBaseTemplateVariables();
+            var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
+
             var loginUrl = ResolvePath(login.Path);
-
-            Cookies = null;
-
-            if (login.Cookies != null)
-            {
-                Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
-            }
 
             var requestBuilder = new HttpRequestBuilder(loginUrl.AbsoluteUri)
             {
@@ -612,12 +610,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Encoding = _encoding
             };
 
-            if (Cookies != null)
+            Cookies = null;
+            if (login.Cookies != null)
             {
-                requestBuilder.SetCookies(Cookies);
+                Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
             }
 
             var request = requestBuilder
+                .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetHeaders(headers ?? new Dictionary<string, string>())
                 .SetHeader("Referer", SiteLink)
                 .WithRateLimit(_rateLimit.TotalSeconds)
                 .Build();
@@ -653,6 +654,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var captcha = login.Captcha;
 
+            var variables = GetBaseTemplateVariables();
+            var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
+
             if (captcha.Type == "image")
             {
                 var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
@@ -663,6 +667,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                     var request = new HttpRequestBuilder(captchaUrl.ToString())
                         .SetCookies(landingResult.GetCookies())
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
                         .SetHeader("Referer", loginUrl.AbsoluteUri)
                         .SetEncoding(_encoding)
                         .WithRateLimit(_rateLimit.TotalSeconds)
@@ -757,8 +762,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
             }
 
+            var headers = ParseCustomHeaders(_definition.Download?.Headers ?? _definition.Search?.Headers, variables);
+
             var httpRequest = httpRequestBuilder
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetHeaders(headers ?? new Dictionary<string, string>())
                 .SetHeader("Referer", referer)
                 .WithRateLimit(_rateLimit.TotalSeconds)
                 .Build();
@@ -773,11 +781,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             Cookies = GetCookies();
             var method = HttpMethod.Get;
-            var headers = new Dictionary<string, string>();
 
             var variables = GetBaseTemplateVariables();
             AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
-            headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+            var headers = ParseCustomHeaders(_definition.Download?.Headers ?? _definition.Search?.Headers, variables);
 
             if (_definition.Download != null)
             {

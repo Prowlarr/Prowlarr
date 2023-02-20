@@ -763,8 +763,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return data;
         }
 
-        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders,
-                                                      Dictionary<string, object> variables)
+        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders, Dictionary<string, object> variables)
         {
             if (customHeaders == null)
             {

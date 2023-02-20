@@ -40,12 +40,11 @@ namespace NzbDrone.Core.Test.UpdateTests
         }
 
         [Test]
-        [Ignore("TODO No Updates On Server")]
         public void should_get_recent_updates()
         {
             const string branch = "develop";
             UseRealHttp();
-            var recent = Subject.GetRecentUpdates(branch, new Version(2, 0), null);
+            var recent = Subject.GetRecentUpdates(branch, new Version(1, 0), null);
             var recentWithChanges = recent.Where(c => c.Changes != null);
 
             recent.Should().NotBeEmpty();

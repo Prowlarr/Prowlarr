@@ -278,7 +278,7 @@ namespace NzbDrone.Common.Test
         [Test]
         public void GetUpdateClientExePath()
         {
-            GetIAppDirectoryInfo().GetUpdateClientExePath().Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr.Update.exe".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientExePath().Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr.Update".AsOsAgnostic().ProcessNameToExe());
         }
 
         [Test]

@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                 {
                     var requestBuilder = new HttpRequestBuilder(settings.BaseUrl.Trim('/'))
                         .WithRateLimit(5.0)
-                        .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}_{BuildInfo.Version}")
+                        .Resource($"/pubapi_v2.php?get_token=get_token&app_id=rralworP_{BuildInfo.Version}")
                         .Accept(HttpAccept.Json);
 
                     var response = _httpClient.Get<JObject>(requestBuilder.Build());

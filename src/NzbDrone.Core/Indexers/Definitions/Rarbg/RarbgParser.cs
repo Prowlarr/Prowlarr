@@ -84,7 +84,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                     Title = torrent.title,
                     Size = torrent.size,
                     DownloadUrl = torrent.download,
-                    InfoUrl = $"{torrent.info_page}&app_id={BuildInfo.AppName}_{BuildInfo.Version}",
+                    InfoUrl = $"{torrent.info_page}&app_id=rralworP_{BuildInfo.Version}",
                     PublishDate = torrent.pubdate.ToUniversalTime(),
                     Seeders = torrent.seeders,
                     Peers = torrent.leechers + torrent.seeders,

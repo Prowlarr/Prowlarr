@@ -12,10 +12,13 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public override bool IsRssSearch =>
             SearchTerm.IsNullOrWhiteSpace() &&
-            Author.IsNullOrWhiteSpace() &&
-            Title.IsNullOrWhiteSpace() &&
-            Publisher.IsNullOrWhiteSpace() &&
-            Genre.IsNullOrWhiteSpace() &&
-            !Year.HasValue;
+            !IsIdSearch;
+
+        public override bool IsIdSearch =>
+            Author.IsNotNullOrWhiteSpace() ||
+            Title.IsNotNullOrWhiteSpace() ||
+            Publisher.IsNotNullOrWhiteSpace() ||
+            Genre.IsNotNullOrWhiteSpace() ||
+            Year.HasValue;
     }
 }

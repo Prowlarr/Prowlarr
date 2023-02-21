@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -104,7 +105,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract IndexerCapabilities GetCapabilities();
 
-        protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
+        protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
         {
             var result = releases.ToList();
 
@@ -144,6 +145,24 @@ namespace NzbDrone.Core.Indexers
             });
 
             return result.DistinctBy(v => v.Guid).ToList();
+        }
+
+        protected IEnumerable<ReleaseInfo> FilterReleasesByQuery(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var commonWords = new[] { "and", "the", "an", "of" };
+
+            if (!searchCriteria.IsRssSearch && !searchCriteria.IsIdSearch)
+            {
+                var splitRegex = new Regex("[^\\w]+");
+
+                // split search term to individual terms for less aggressive filtering, filter common terms
+                var terms = splitRegex.Split(searchCriteria.SearchTerm).Where(t => t.IsNotNullOrWhiteSpace() && t.Length > 1 && !commonWords.ContainsIgnoreCase(t));
+
+                // check in title and description for any term searched for
+                releases = releases.Where(r => terms.Any(t => r.Title.ContainsIgnoreCase(t) || r.Description.ContainsIgnoreCase(t))).ToList();
+            }
+
+            return releases;
         }
 
         protected virtual TSettings GetDefaultBaseUrl(TSettings settings)

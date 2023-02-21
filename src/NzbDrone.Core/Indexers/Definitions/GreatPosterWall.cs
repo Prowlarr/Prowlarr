@@ -15,6 +15,7 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
@@ -237,10 +238,17 @@ public class GreatPosterWallParser : GazelleParser
     }
 }
 
-public class GreatPosterWallSettings : GazelleSettings
+public class GreatPosterWallSettings : GazelleUserPassOrCookieSettings
 {
+    private static readonly GazelleUserPassOrCookieValidator<GreatPosterWallSettings> Validator = new ();
+
     [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
     public bool FreeleechOnly { get; set; }
+
+    public override NzbDroneValidationResult Validate()
+    {
+        return new NzbDroneValidationResult(Validator.Validate(this));
+    }
 }
 
 public class GreatPosterWallResponse

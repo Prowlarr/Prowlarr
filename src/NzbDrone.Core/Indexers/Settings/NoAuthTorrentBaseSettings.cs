@@ -9,8 +9,8 @@ namespace NzbDrone.Core.Indexers.Settings
     {
         public NoAuthSettingsValidator()
         {
-            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
-            RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
+            RuleFor(c => c.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
+            RuleFor(c => c.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
         }
     }
 
@@ -21,10 +21,10 @@ namespace NzbDrone.Core.Indexers.Settings
         [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(10)]
+        [FieldDefinition(20)]
         public IndexerBaseSettings BaseSettings { get; set; } = new ();
 
-        [FieldDefinition(11)]
+        [FieldDefinition(21)]
         public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
 
         public virtual NzbDroneValidationResult Validate()

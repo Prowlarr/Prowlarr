@@ -151,7 +151,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                 Settings.Validate().Filter("BaseUrl").ThrowOnError();
 
                 var request = new HttpRequestBuilder(Settings.BaseUrl.Trim('/'))
-                    .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}_{BuildInfo.Version}")
+                    .Resource($"/pubapi_v2.php?get_token=get_token&app_id=rralworP_{BuildInfo.Version}")
                     .Accept(HttpAccept.Json)
                     .Build();
 

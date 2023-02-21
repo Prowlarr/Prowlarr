@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.EnvironmentInfo;
@@ -28,19 +27,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var results = new List<ReleaseInfo>();
-            var responseCode = (int)indexerResponse.HttpResponse.StatusCode;
 
-            switch (responseCode)
-            {
-                case (int)HttpStatusCode.TooManyRequests:
-                    throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, TimeSpan.FromMinutes(2));
-                case 520:
-                    throw new TooManyRequestsException(indexerResponse.HttpRequest, indexerResponse.HttpResponse, TimeSpan.FromMinutes(3));
-                case (int)HttpStatusCode.OK:
-                    break;
-                default:
-                    throw new IndexerException(indexerResponse, "Indexer API call returned an unexpected StatusCode [{0}]", responseCode);
-            }
+            Rarbg.CheckResponseByStatusCode(indexerResponse);
 
             var jsonResponse = new HttpResponse<RarbgResponse>(indexerResponse.HttpResponse);
 

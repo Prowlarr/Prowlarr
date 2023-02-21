@@ -11,13 +11,15 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
     public class RarbgRequestGenerator : IIndexerRequestGenerator
     {
         private readonly IRarbgTokenProvider _tokenProvider;
+        private readonly TimeSpan _rateLimit;
 
         public RarbgSettings Settings { get; set; }
         public IndexerCapabilitiesCategories Categories { get; set; }
 
-        public RarbgRequestGenerator(IRarbgTokenProvider tokenProvider)
+        public RarbgRequestGenerator(IRarbgTokenProvider tokenProvider, TimeSpan rateLimit)
         {
             _tokenProvider = tokenProvider;
+            _rateLimit = rateLimit;
         }
 
         private IEnumerable<IndexerRequest> GetRequest(string term, int[] categories, string imdbId = null, int? tmdbId = null, int? tvdbId = null)
@@ -59,7 +61,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
             }
 
             requestBuilder.AddQueryParam("limit", "100");
-            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings));
+            requestBuilder.AddQueryParam("token", _tokenProvider.GetToken(Settings, _rateLimit));
             requestBuilder.AddQueryParam("format", "json_extended");
             requestBuilder.AddQueryParam("app_id", $"rralworP_{BuildInfo.Version}");
 

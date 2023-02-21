@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using NLog;
@@ -9,6 +10,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Validation;
@@ -24,7 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(7);
         private readonly IRarbgTokenProvider _tokenProvider;
 
         public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -35,12 +37,29 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RarbgRequestGenerator(_tokenProvider) { Settings = Settings, Categories = Capabilities.Categories };
+            return new RarbgRequestGenerator(_tokenProvider, RateLimit) { Settings = Settings, Categories = Capabilities.Categories };
         }
 
         public override IParseIndexerResponse GetParser()
         {
             return new RarbgParser(Capabilities, _logger);
+        }
+
+        public static void CheckResponseByStatusCode(IndexerResponse response)
+        {
+            var responseCode = (int)response.HttpResponse.StatusCode;
+
+            switch (responseCode)
+            {
+                case (int)HttpStatusCode.TooManyRequests:
+                    throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(2));
+                case 520:
+                    throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(3));
+                case (int)HttpStatusCode.OK:
+                    break;
+                default:
+                    throw new IndexerException(response, "Indexer API call returned an unexpected StatusCode [{0}]", responseCode);
+            }
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -97,6 +116,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         {
             var response = await FetchIndexerResponse(request);
 
+            CheckResponseByStatusCode(response);
+
             // try and recover from token errors
             var jsonResponse = new HttpResponse<RarbgResponse>(response.HttpResponse);
 
@@ -106,7 +127,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                 {
                     _logger.Debug("Invalid or expired token, refreshing token from Rarbg");
                     _tokenProvider.ExpireToken(Settings);
-                    var newToken = _tokenProvider.GetToken(Settings);
+                    var newToken = _tokenProvider.GetToken(Settings, RateLimit);
 
                     var qs = HttpUtility.ParseQueryString(request.HttpRequest.Url.Query);
                     qs.Set("token", newToken);

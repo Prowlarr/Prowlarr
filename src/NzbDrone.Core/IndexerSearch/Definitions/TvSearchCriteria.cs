@@ -28,15 +28,18 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public override bool IsRssSearch =>
             SearchTerm.IsNullOrWhiteSpace() &&
-            Episode.IsNullOrWhiteSpace() &&
-            ImdbId.IsNullOrWhiteSpace() &&
-            !Season.HasValue &&
-            !TvdbId.HasValue &&
-            !RId.HasValue &&
-            !TraktId.HasValue &&
-            !TvMazeId.HasValue &&
-            !TmdbId.HasValue &&
-            !DoubanId.HasValue;
+            !IsIdSearch;
+
+        public override bool IsIdSearch =>
+            Episode.IsNotNullOrWhiteSpace() ||
+            ImdbId.IsNotNullOrWhiteSpace() ||
+            Season.HasValue ||
+            TvdbId.HasValue ||
+            RId.HasValue ||
+            TraktId.HasValue ||
+            TvMazeId.HasValue ||
+            TmdbId.HasValue ||
+            DoubanId.HasValue;
 
         public override string SearchQuery
         {

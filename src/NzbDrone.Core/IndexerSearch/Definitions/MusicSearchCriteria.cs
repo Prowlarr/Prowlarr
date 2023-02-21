@@ -13,11 +13,14 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public override bool IsRssSearch =>
             SearchTerm.IsNullOrWhiteSpace() &&
-            Album.IsNullOrWhiteSpace() &&
-            Artist.IsNullOrWhiteSpace() &&
-            Label.IsNullOrWhiteSpace() &&
-            Genre.IsNullOrWhiteSpace() &&
-            Track.IsNullOrWhiteSpace() &&
-            !Year.HasValue;
+            !IsIdSearch;
+
+        public override bool IsIdSearch =>
+            Album.IsNotNullOrWhiteSpace() ||
+            Artist.IsNotNullOrWhiteSpace() ||
+            Label.IsNotNullOrWhiteSpace() ||
+            Genre.IsNotNullOrWhiteSpace() ||
+            Track.IsNotNullOrWhiteSpace() ||
+            Year.HasValue;
     }
 }

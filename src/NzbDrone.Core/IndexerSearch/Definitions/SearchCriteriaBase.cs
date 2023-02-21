@@ -26,6 +26,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public virtual bool IsRssSearch => SearchTerm.IsNullOrWhiteSpace();
 
+        public virtual bool IsIdSearch => false;
+
         public string SanitizedSearchTerm => GetSanitizedTerm(SearchTerm);
 
         private static string GetSanitizedTerm(string term)

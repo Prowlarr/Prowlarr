@@ -15,12 +15,15 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 
         public override bool IsRssSearch =>
             SearchTerm.IsNullOrWhiteSpace() &&
-            ImdbId.IsNullOrWhiteSpace() &&
-            Genre.IsNullOrWhiteSpace() &&
-            !TmdbId.HasValue &&
-            !TraktId.HasValue &&
-            !DoubanId.HasValue &&
-            !Year.HasValue;
+            !IsIdSearch;
+
+        public override bool IsIdSearch =>
+            ImdbId.IsNotNullOrWhiteSpace() ||
+            Genre.IsNotNullOrWhiteSpace() ||
+            TmdbId.HasValue ||
+            TraktId.HasValue ||
+            DoubanId.HasValue ||
+            Year.HasValue;
 
         public string FullImdbId => ParseUtil.GetFullImdbId(ImdbId);
 

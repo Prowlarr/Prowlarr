@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
-            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(MusicSearchCriteria searchCriteria)
@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
-            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(TvSearchCriteria searchCriteria)
@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
-            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria)
@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
-            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria)
@@ -100,7 +100,7 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
-            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria));
+            return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override async Task<byte[]> Download(Uri link)
@@ -233,7 +233,7 @@ namespace NzbDrone.Core.Indexers
             _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
         }
 
-        protected virtual async Task<IndexerPageableQueryResult> FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, bool isRecent = false)
+        protected virtual async Task<IndexerPageableQueryResult> FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, SearchCriteriaBase searchCriteria, bool isRecent = false)
         {
             var releases = new List<ReleaseInfo>();
             var result = new IndexerPageableQueryResult();
@@ -367,7 +367,7 @@ namespace NzbDrone.Core.Indexers
                 _logger.Error(ex, "An error occurred while processing indexer feed. {0}", url);
             }
 
-            result.Releases = CleanupReleases(releases);
+            result.Releases = CleanupReleases(releases, searchCriteria);
 
             return result;
         }

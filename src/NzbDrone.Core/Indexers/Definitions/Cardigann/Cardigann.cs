@@ -7,8 +7,10 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
@@ -75,6 +77,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 Settings = Settings
             };
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            if (_definitionService.GetCachedDefinition(Settings.DefinitionFile).Search?.Rows?.Filters?.Any(x => x.Name == "andmatch") ?? false)
+            {
+                cleanReleases = FilterReleasesByQuery(releases, searchCriteria).ToList();
+            }
+
+            return cleanReleases;
         }
 
         protected override IDictionary<string, string> GetCookies()

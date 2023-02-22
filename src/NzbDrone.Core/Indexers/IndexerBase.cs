@@ -159,7 +159,7 @@ namespace NzbDrone.Core.Indexers
                 var terms = splitRegex.Split(searchCriteria.SearchTerm).Where(t => t.IsNotNullOrWhiteSpace() && t.Length > 1 && !commonWords.ContainsIgnoreCase(t));
 
                 // check in title and description for any term searched for
-                releases = releases.Where(r => terms.Any(t => r.Title.ContainsIgnoreCase(t) || r.Description.ContainsIgnoreCase(t))).ToList();
+                releases = releases.Where(r => terms.Any(t => (r.Title.IsNotNullOrWhiteSpace() && r.Title.ContainsIgnoreCase(t)) || (r.Description.IsNotNullOrWhiteSpace() && r.Description.ContainsIgnoreCase(t)))).ToList();
             }
 
             return releases;

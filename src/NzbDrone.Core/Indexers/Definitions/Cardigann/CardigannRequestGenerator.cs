@@ -712,8 +712,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var requestLinkStr = ResolvePath(ApplyGoTemplateText(request.Path, variables)).ToString();
 
-            _logger.Debug("CardigannIndexer ({0}): handleRequest() requestLinkStr= {1}", _definition.Id, requestLinkStr);
-
             Dictionary<string, string> pairs = null;
             var queryCollection = new NameValueCollection();
 
@@ -771,9 +769,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 .WithRateLimit(_rateLimit.TotalSeconds)
                 .Build();
 
+            _logger.Debug("CardigannIndexer ({0}): handleRequest() httpRequest={1}", _definition.Id, httpRequest);
+
             var response = await HttpClient.ExecuteProxiedAsync(httpRequest, Definition);
 
             _logger.Debug("CardigannIndexer ({0}): handleRequest() remote server returned {1}", _definition.Id, response.StatusCode);
+
             return response;
         }
 
@@ -822,7 +823,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     try
                     {
-                        if (!download.Infohash.UseBeforeResponse || download.Before == null || response == null)
+                        if (!download.Infohash.Usebeforeresponse || download.Before == null || response == null)
                         {
                             response = await HttpClient.ExecuteProxiedAsync(request, Definition);
                         }
@@ -830,13 +831,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         var hash = MatchSelector(response, download.Infohash.Hash, variables);
                         if (hash == null)
                         {
-                            throw new CardigannException($"InfoHash selectors didn't match");
+                            throw new CardigannException("InfoHash selectors didn't match hash.");
                         }
 
                         var title = MatchSelector(response, download.Infohash.Title, variables);
                         if (title == null)
                         {
-                            throw new CardigannException($"InfoHash selectors didn't match");
+                            throw new CardigannException("InfoHash selectors didn't match title.");
                         }
 
                         var magnet = MagnetLinkBuilder.BuildPublicMagnetLink(hash, title);
@@ -868,7 +869,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                         try
                         {
-                            if (!selector.UseBeforeResponse || download.Before == null || response == null)
+                            if (!selector.Usebeforeresponse || download.Before == null || response == null)
                             {
                                 response = await HttpClient.ExecuteProxiedAsync(request, Definition);
                             }
@@ -941,8 +942,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var selectorText = ApplyGoTemplateText(selector.Selector, variables);
             var parser = new HtmlParser();
 
-            var results = response.Content;
-            var resultDocument = parser.ParseDocument(results);
+            var resultDocument = parser.ParseDocument(response.Content);
 
             var element = resultDocument.QuerySelector(selectorText);
             if (element == null)

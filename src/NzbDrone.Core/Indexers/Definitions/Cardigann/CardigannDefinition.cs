@@ -190,14 +190,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
     {
         public SelectorField Hash { get; set; }
         public SelectorField Title { get; set; }
-        public bool UseBeforeResponse { get; set; }
+        public bool Usebeforeresponse { get; set; }
     }
 
     public class SelectorField
     {
         public string Selector { get; set; }
         public string Attribute { get; set; }
-        public bool UseBeforeResponse { get; set; }
+        public bool Usebeforeresponse { get; set; }
         public List<FilterBlock> Filters { get; set; }
     }
 

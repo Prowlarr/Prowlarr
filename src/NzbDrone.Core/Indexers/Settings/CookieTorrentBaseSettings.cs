@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Settings
             Cookie = "";
         }
 
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie", Privacy = PrivacyLevel.Password)]
         public string Cookie { get; set; }
 
         public override NzbDroneValidationResult Validate()

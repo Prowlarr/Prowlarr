@@ -586,8 +586,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.PosterUrl;
                     break;
                 case "genre":
+                    release.Genres ??= new List<string>();
                     char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
-                    release.Genres = release.Genres.Union(value.Split(delimiters, System.StringSplitOptions.RemoveEmptyEntries)).ToList();
+                    release.Genres = release.Genres
+                        .Union(value.Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " "))
+                        .ToList();
                     value = string.Join(", ", release.Genres);
                     break;
                 case "year":
@@ -633,29 +637,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     switch (filter.Name)
                     {
                         case "andmatch":
-                            var characterLimit = -1;
-                            if (filter.Args != null)
-                            {
-                                characterLimit = int.Parse(filter.Args);
-                            }
-
-                            var queryKeywords = variables[".Keywords"] as string;
-
+                            // See IndexerBase.FilterReleasesByQuery
                             break;
                         case "strdump":
                             // for debugging
-                            _logger.Debug(string.Format("CardigannIndexer ({0}): row strdump: {1}", _definition.Id, row.ToString()));
-                            break;
-                        case "validate":
-                            char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
-                            var args = (string)filter.Args;
-                            var argsList = args.ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-                            var validList = argsList.ToList();
-                            var validIntersect = validList.Intersect(row.ToString().ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries)).ToList();
-                            row = string.Join(", ", validIntersect);
+                            _logger.Debug($"CardigannIndexer ({_definition.Id}): row strdump: {row}");
                             break;
                         default:
-                            _logger.Error(string.Format("CardigannIndexer ({0}): Unsupported rows filter: {1}", _definition.Id, filter.Name));
+                            _logger.Error($"CardigannIndexer ({_definition.Id}): Unsupported rows filter: {filter.Name}");
                             break;
                     }
                 }

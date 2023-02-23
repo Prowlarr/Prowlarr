@@ -746,18 +746,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         // for debugging
                         var debugData = data.Replace("\r", "\\r").Replace("\n", "\\n").Replace("\xA0", "\\xA0");
                         var strTag = (string)filter.Args;
-                        if (strTag != null)
-                        {
-                            strTag = string.Format("({0}):", strTag);
-                        }
-                        else
-                        {
-                            strTag = ":";
-                        }
+                        strTag = strTag != null ? $"({strTag}):" : ":";
 
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): strdump{1} {2}", _definition.Id, strTag, debugData));
+                        _logger.Debug($"CardigannIndexer ({_definition.Id}): strdump{strTag} {debugData}");
+                        break;
+                    case "validate":
+                        char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
+                        var args = (string)filter.Args;
+                        var argsList = args.ToLower().Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                        var validList = argsList.ToList();
+                        var validIntersect = validList.Intersect(data.ToLower().Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)).ToList();
+                        data = string.Join(", ", validIntersect);
                         break;
                     default:
+                        _logger.Error($"CardigannIndexer ({_definition.Id}): Unsupported field filter: {filter.Name}");
                         break;
                 }
             }

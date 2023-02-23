@@ -165,196 +165,188 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
             else
             {
-                try
+                IHtmlCollection<IElement> rowsDom;
+
+                if (request.SearchPath.Response != null && request.SearchPath.Response.Type.Equals("xml"))
                 {
-                    IHtmlCollection<IElement> rowsDom;
+                    var searchResultParser = new XmlParser();
+                    var searchResultDocument = searchResultParser.ParseDocument(results);
 
-                    if (request.SearchPath.Response != null && request.SearchPath.Response.Type.Equals("xml"))
+                    if (search.Preprocessingfilters != null)
                     {
-                        var searchResultParser = new XmlParser();
-                        var searchResultDocument = searchResultParser.ParseDocument(results);
-
-                        if (search.Preprocessingfilters != null)
-                        {
-                            results = ApplyFilters(results, search.Preprocessingfilters, variables);
-                            searchResultDocument = searchResultParser.ParseDocument(results);
-                            _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
-                        }
-
-                        var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
-                        rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
-                    }
-                    else
-                    {
-                        var searchResultParser = new HtmlParser();
-                        var searchResultDocument = searchResultParser.ParseDocument(results);
-
-                        if (search.Preprocessingfilters != null)
-                        {
-                            results = ApplyFilters(results, search.Preprocessingfilters, variables);
-                            searchResultDocument = searchResultParser.ParseDocument(results);
-                            _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
-                        }
-
-                        var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
-                        rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
+                        results = ApplyFilters(results, search.Preprocessingfilters, variables);
+                        searchResultDocument = searchResultParser.ParseDocument(results);
+                        _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
                     }
 
-                    var rows = new List<IElement>();
-                    foreach (var rowDom in rowsDom)
+                    var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
+                    rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
+                }
+                else
+                {
+                    var searchResultParser = new HtmlParser();
+                    var searchResultDocument = searchResultParser.ParseDocument(results);
+
+                    if (search.Preprocessingfilters != null)
                     {
-                        rows.Add(rowDom);
+                        results = ApplyFilters(results, search.Preprocessingfilters, variables);
+                        searchResultDocument = searchResultParser.ParseDocument(results);
+                        _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
                     }
 
-                    // merge following rows for After selector
-                    var after = search.Rows.After;
-                    if (after > 0)
+                    var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
+                    rowsDom = searchResultDocument.QuerySelectorAll(rowsSelector);
+                }
+
+                var rows = new List<IElement>();
+                foreach (var rowDom in rowsDom)
+                {
+                    rows.Add(rowDom);
+                }
+
+                // merge following rows for After selector
+                var after = search.Rows.After;
+                if (after > 0)
+                {
+                    for (var i = 0; i < rows.Count; i += 1)
                     {
-                        for (var i = 0; i < rows.Count; i += 1)
+                        var currentRow = rows[i];
+                        for (var j = 0; j < after; j += 1)
                         {
-                            var currentRow = rows[i];
-                            for (var j = 0; j < after; j += 1)
+                            var mergeRowIndex = i + j + 1;
+                            var mergeRow = rows[mergeRowIndex];
+                            var mergeNodes = new List<INode>();
+                            foreach (var node in mergeRow.ChildNodes)
                             {
-                                var mergeRowIndex = i + j + 1;
-                                var mergeRow = rows[mergeRowIndex];
-                                var mergeNodes = new List<INode>();
-                                foreach (var node in mergeRow.ChildNodes)
-                                {
-                                    mergeNodes.Add(node);
-                                }
-
-                                currentRow.Append(mergeNodes.ToArray());
+                                mergeNodes.Add(node);
                             }
 
-                            rows.RemoveRange(i + 1, after);
+                            currentRow.Append(mergeNodes.ToArray());
                         }
+
+                        rows.RemoveRange(i + 1, after);
                     }
+                }
 
-                    foreach (var row in rows)
+                foreach (var row in rows)
+                {
+                    try
                     {
-                        try
-                        {
-                            var release = new TorrentInfo();
+                        var release = new TorrentInfo();
 
-                            // Parse fields
-                            foreach (var field in search.Fields)
+                        // Parse fields
+                        foreach (var field in search.Fields)
+                        {
+                            var fieldParts = field.Key.Split('|');
+                            var fieldName = fieldParts[0];
+                            var fieldModifiers = new List<string>();
+                            for (var i = 1; i < fieldParts.Length; i++)
                             {
-                                var fieldParts = field.Key.Split('|');
-                                var fieldName = fieldParts[0];
-                                var fieldModifiers = new List<string>();
-                                for (var i = 1; i < fieldParts.Length; i++)
+                                fieldModifiers.Add(fieldParts[i]);
+                            }
+
+                            string value = null;
+                            var variablesKey = ".Result." + fieldName;
+                            var isOptional = OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional;
+                            try
+                            {
+                                value = HandleSelector(field.Value, row, variables, !isOptional);
+
+                                if (isOptional && string.IsNullOrWhiteSpace(value))
                                 {
-                                    fieldModifiers.Add(fieldParts[i]);
+                                    variables[variablesKey] = null;
+                                    continue;
                                 }
 
-                                string value = null;
-                                var variablesKey = ".Result." + fieldName;
-                                var isOptional = OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional;
+                                variables[variablesKey] = ParseFields(value, fieldName, release, fieldModifiers, searchUrlUri);
+                            }
+                            catch (Exception ex)
+                            {
+                                if (!variables.ContainsKey(variablesKey))
+                                {
+                                    variables[variablesKey] = null;
+                                }
+
+                                if (OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional)
+                                {
+                                    variables[variablesKey] = null;
+                                    continue;
+                                }
+
+                                if (indexerLogging)
+                                {
+                                    _logger.Trace("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
+                                }
+                            }
+                        }
+
+                        var filters = search.Rows.Filters;
+                        var skipRelease = ParseRowFilters(filters, release, variables, row.ToHtmlPretty());
+
+                        if (skipRelease)
+                        {
+                            continue;
+                        }
+
+                        // if DateHeaders is set go through the previous rows and look for the header selector
+                        var dateHeaders = _definition.Search.Rows.Dateheaders;
+                        if (release.PublishDate == DateTime.MinValue && dateHeaders != null)
+                        {
+                            var prevRow = row.PreviousElementSibling;
+                            string value = null;
+                            if (prevRow == null)
+                            {
+                                // continue with parent
+                                var parent = row.ParentElement;
+                                if (parent != null)
+                                {
+                                    prevRow = parent.PreviousElementSibling;
+                                }
+                            }
+
+                            while (prevRow != null)
+                            {
+                                var curRow = prevRow;
+                                _logger.Debug(prevRow.OuterHtml);
                                 try
                                 {
-                                    value = HandleSelector(field.Value, row, variables, !isOptional);
-
-                                    if (isOptional && string.IsNullOrWhiteSpace(value))
-                                    {
-                                        variables[variablesKey] = null;
-                                        continue;
-                                    }
-
-                                    variables[variablesKey] = ParseFields(value, fieldName, release, fieldModifiers, searchUrlUri);
+                                    value = HandleSelector(dateHeaders, curRow);
+                                    break;
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
-                                    if (!variables.ContainsKey(variablesKey))
-                                    {
-                                        variables[variablesKey] = null;
-                                    }
-
-                                    if (OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional)
-                                    {
-                                        variables[variablesKey] = null;
-                                        continue;
-                                    }
-
-                                    if (indexerLogging)
-                                    {
-                                        _logger.Trace("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
-                                    }
+                                    // do nothing
                                 }
-                            }
 
-                            var filters = search.Rows.Filters;
-                            var skipRelease = ParseRowFilters(filters, release, variables, row.ToHtmlPretty());
-
-                            if (skipRelease)
-                            {
-                                continue;
-                            }
-
-                            // if DateHeaders is set go through the previous rows and look for the header selector
-                            var dateHeaders = _definition.Search.Rows.Dateheaders;
-                            if (release.PublishDate == DateTime.MinValue && dateHeaders != null)
-                            {
-                                var prevRow = row.PreviousElementSibling;
-                                string value = null;
+                                prevRow = curRow.PreviousElementSibling;
                                 if (prevRow == null)
                                 {
                                     // continue with parent
-                                    var parent = row.ParentElement;
+                                    var parent = curRow.ParentElement;
                                     if (parent != null)
                                     {
                                         prevRow = parent.PreviousElementSibling;
                                     }
                                 }
-
-                                while (prevRow != null)
-                                {
-                                    var curRow = prevRow;
-                                    _logger.Debug(prevRow.OuterHtml);
-                                    try
-                                    {
-                                        value = HandleSelector(dateHeaders, curRow);
-                                        break;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        // do nothing
-                                    }
-
-                                    prevRow = curRow.PreviousElementSibling;
-                                    if (prevRow == null)
-                                    {
-                                        // continue with parent
-                                        var parent = curRow.ParentElement;
-                                        if (parent != null)
-                                        {
-                                            prevRow = parent.PreviousElementSibling;
-                                        }
-                                    }
-                                }
-
-                                if (value == null && dateHeaders.Optional == false)
-                                {
-                                    throw new CardigannException(string.Format("No date header row found for {0}", release.ToString()));
-                                }
-
-                                if (value != null)
-                                {
-                                    release.PublishDate = DateTimeUtil.FromUnknown(value);
-                                }
                             }
 
-                            releases.Add(release);
+                            if (value == null && dateHeaders.Optional == false)
+                            {
+                                throw new CardigannException(string.Format("No date header row found for {0}", release.ToString()));
+                            }
+
+                            if (value != null)
+                            {
+                                release.PublishDate = DateTimeUtil.FromUnknown(value);
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            _logger.Error(ex, "CardigannIndexer ({0}): Error while parsing row '{1}':\n\n{2}", _definition.Id, row.ToHtmlPretty());
-                        }
+
+                        releases.Add(release);
                     }
-                }
-                catch (Exception)
-                {
-                    // OnParseError(results, ex);
-                    throw;
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, "CardigannIndexer ({0}): Error while parsing row '{1}':\n\n{2}", _definition.Id, row.ToHtmlPretty());
+                    }
                 }
             }
 
@@ -425,11 +417,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     break;
                 case "comments":
                     var commentsUrl = ResolvePath(value, searchUrlUri);
-                    if (release.CommentUrl == null)
-                    {
-                        release.CommentUrl = commentsUrl.AbsoluteUri;
-                    }
-
+                    release.CommentUrl ??= commentsUrl.AbsoluteUri;
                     value = commentsUrl.ToString();
                     break;
                 case "title":
@@ -554,38 +542,38 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.ImdbId.ToString();
                     break;
                 case "tmdbid":
-                    var tmdbIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var tmdbIDMatch = tmdbIDRegEx.Match(value);
-                    var tmdbID = tmdbIDMatch.Groups[1].Value;
-                    release.TmdbId = (int)ParseUtil.CoerceLong(tmdbID);
+                    var tmdbIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var tmdbIdMatch = tmdbIdRegex.Match(value);
+                    var tmdbId = tmdbIdMatch.Groups[1].Value;
+                    release.TmdbId = (int)ParseUtil.CoerceLong(tmdbId);
                     value = release.TmdbId.ToString();
                     break;
                 case "rageid":
-                    var rageIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var rageIDMatch = rageIDRegEx.Match(value);
-                    var rageID = rageIDMatch.Groups[1].Value;
-                    release.TvRageId = (int)ParseUtil.CoerceLong(rageID);
+                    var rageIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var rageIdMatch = rageIdRegex.Match(value);
+                    var rageId = rageIdMatch.Groups[1].Value;
+                    release.TvRageId = (int)ParseUtil.CoerceLong(rageId);
                     value = release.TvRageId.ToString();
                     break;
                 case "traktid":
-                    var traktIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var traktIDMatch = traktIDRegEx.Match(value);
-                    var traktID = traktIDMatch.Groups[1].Value;
-                    release.TraktId = (int)ParseUtil.CoerceLong(traktID);
+                    var traktIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var traktIdMatch = traktIdRegex.Match(value);
+                    var traktId = traktIdMatch.Groups[1].Value;
+                    release.TraktId = (int)ParseUtil.CoerceLong(traktId);
                     value = release.TraktId.ToString();
                     break;
                 case "tvdbid":
-                    var tvdbIdRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var tvdbIdMatch = tvdbIdRegEx.Match(value);
+                    var tvdbIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var tvdbIdMatch = tvdbIdRegex.Match(value);
                     var tvdbId = tvdbIdMatch.Groups[1].Value;
                     release.TvdbId = (int)ParseUtil.CoerceLong(tvdbId);
                     value = release.TvdbId.ToString();
                     break;
                 case "doubanid":
-                    var doubanIDRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var doubanIDMatch = doubanIDRegEx.Match(value);
-                    var doubanID = doubanIDMatch.Groups[1].Value;
-                    release.DoubanId = (int)ParseUtil.CoerceLong(doubanID);
+                    var doubanIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
+                    var doubanIdMatch = doubanIdRegex.Match(value);
+                    var doubanId = doubanIdMatch.Groups[1].Value;
+                    release.DoubanId = (int)ParseUtil.CoerceLong(doubanId);
                     value = release.DoubanId.ToString();
                     break;
                 case "poster":

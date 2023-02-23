@@ -349,10 +349,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)
         {
-            if (variables == null)
+            if (template.IsNullOrWhiteSpace() || !template.Contains("{{"))
             {
-                variables = GetBaseTemplateVariables();
+                return template;
             }
+
+            variables ??= GetBaseTemplateVariables();
 
             // handle re_replace expression
             // Example: {{ re_replace .Query.Keywords "[^a-zA-Z0-9]+" "%" }}

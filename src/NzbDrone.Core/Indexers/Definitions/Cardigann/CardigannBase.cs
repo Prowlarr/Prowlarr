@@ -349,7 +349,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)
         {
-            if (string.IsNullOrWhiteSpace(template) || !template.Contains("{{"))
+            if (template.IsNullOrWhiteSpace() || !template.Contains("{{"))
             {
                 return template;
             }

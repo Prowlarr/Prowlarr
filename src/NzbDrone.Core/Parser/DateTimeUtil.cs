@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NzbDrone.Core.Parser
@@ -120,6 +121,13 @@ namespace NzbDrone.Core.Parser
             try
             {
                 str = str.Trim();
+
+                // try parsing the str as an unix timestamp
+                if (str.All(char.IsDigit) && long.TryParse(str, out var unixTimeStamp))
+                {
+                    return UnixTimestampToDateTime(unixTimeStamp);
+                }
+
                 if (str.ToLower().Contains("now"))
                 {
                     return DateTime.UtcNow;
@@ -211,14 +219,6 @@ namespace NzbDrone.Core.Parser
 
                     return dt;
                 }
-
-                // try parsing the str as an unix timestamp
-                if (long.TryParse(str, out var unixTimeStamp))
-                {
-                    return UnixTimestampToDateTime(unixTimeStamp);
-                }
-
-                // it wasn't a timestamp, continue....
 
                 // add missing year
                 match = _MissingYearRegexp.Match(str);
@@ -312,7 +312,7 @@ namespace NzbDrone.Core.Parser
             }
             catch (FormatException ex)
             {
-                throw new InvalidDateException($"Error while parsing DateTime \"{date}\", using layout \"{layout}\" ({pattern}): {ex.Message}");
+                throw new InvalidDateException($"Error while parsing DateTime \"{date}\", using layout \"{layout}\" ({pattern}): {ex.Message}", ex);
             }
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -613,14 +614,22 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case "timeparse":
                     case "dateparse":
                         var layout = (string)filter.Args;
-                        try
+
+                        if (layout.Contains("yy") && DateTime.TryParseExact(data, layout, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                         {
-                            var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
-                            data = date.ToString(DateTimeUtil.Rfc1123ZPattern);
+                            data = parsedDate.ToString(DateTimeUtil.Rfc1123ZPattern);
                         }
-                        catch (InvalidDateException ex)
+                        else
                         {
-                            _logger.Debug(ex.Message);
+                            try
+                            {
+                                var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
+                                data = date.ToString(DateTimeUtil.Rfc1123ZPattern);
+                            }
+                            catch (InvalidDateException ex)
+                            {
+                                _logger.Debug(ex.Message);
+                            }
                         }
 
                         break;
@@ -657,15 +666,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         break;
                     case "trim":
                         var cutset = (string)filter.Args;
-                        if (cutset != null)
-                        {
-                            data = data.Trim(cutset[0]);
-                        }
-                        else
-                        {
-                            data = data.Trim();
-                        }
-
+                        data = cutset != null ? data.Trim(cutset[0]) : data.Trim();
                         break;
                     case "prepend":
                         var prependstr = (string)filter.Args;

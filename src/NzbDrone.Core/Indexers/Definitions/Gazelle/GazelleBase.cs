@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -106,8 +107,23 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         return response;
     }
 
+    protected override IDictionary<string, string> GetCookies()
+    {
+        if (Settings is GazelleUserPassOrCookieSettings cookieSettings && !string.IsNullOrWhiteSpace(cookieSettings.Cookie))
+        {
+            return CookieUtil.CookieHeaderToDictionary(cookieSettings.Cookie);
+        }
+
+        return base.GetCookies();
+    }
+
     protected override bool CheckIfLoginNeeded(HttpResponse response)
     {
+        if (Settings is GazelleUserPassOrCookieSettings cookieSettings && !string.IsNullOrWhiteSpace(cookieSettings.Cookie))
+        {
+            return false;
+        }
+
         var invalidResponses = new[] { "\"bad credentials\"", "\"groupName\":\"wrong-creds\"" };
 
         return response.HasHttpRedirect || (response.Content != null && invalidResponses.Any(response.Content.Contains));

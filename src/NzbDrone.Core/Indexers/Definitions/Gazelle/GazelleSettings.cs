@@ -4,13 +4,14 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Gazelle;
 
-public class GazelleSettingsValidator : UserPassBaseSettingsValidator<GazelleSettings>
+public class GazelleSettingsValidator<T> : UserPassBaseSettingsValidator<T>
+    where T : GazelleSettings
 {
 }
 
 public class GazelleSettings : UserPassTorrentBaseSettings
 {
-    private static readonly GazelleSettingsValidator Validator = new ();
+    private static readonly GazelleSettingsValidator<GazelleSettings> Validator = new ();
 
     public string AuthKey { get; set; }
     public string PassKey { get; set; }

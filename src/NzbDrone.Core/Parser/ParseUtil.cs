@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.WebUtilities;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.Parser
 {
@@ -65,20 +66,29 @@ namespace NzbDrone.Core.Parser
 
         public static long? GetLongFromString(string str)
         {
-            if (str == null)
+            if (str.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            var idRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-            var idMatch = idRegEx.Match(str);
-            if (!idMatch.Success)
+            var extractedLong = string.Empty;
+
+            foreach (var c in str)
             {
-                return null;
+                if (c < '0' || c > '9')
+                {
+                    if (extractedLong.Length > 0)
+                    {
+                        break;
+                    }
+
+                    continue;
+                }
+
+                extractedLong += c;
             }
 
-            var id = idMatch.Groups[1].Value;
-            return CoerceLong(id);
+            return CoerceLong(extractedLong);
         }
 
         public static int? GetImdbID(string imdbstr)

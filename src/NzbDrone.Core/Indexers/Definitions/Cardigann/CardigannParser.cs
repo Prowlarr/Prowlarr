@@ -541,38 +541,23 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.ImdbId.ToString();
                     break;
                 case "tmdbid":
-                    var tmdbIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var tmdbIdMatch = tmdbIdRegex.Match(value);
-                    var tmdbId = tmdbIdMatch.Groups[1].Value;
-                    release.TmdbId = (int)ParseUtil.CoerceLong(tmdbId);
+                    release.TmdbId = (int)ParseUtil.GetLongFromString(value);
                     value = release.TmdbId.ToString();
                     break;
                 case "rageid":
-                    var rageIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var rageIdMatch = rageIdRegex.Match(value);
-                    var rageId = rageIdMatch.Groups[1].Value;
-                    release.TvRageId = (int)ParseUtil.CoerceLong(rageId);
+                    release.TvRageId = (int)ParseUtil.GetLongFromString(value);
                     value = release.TvRageId.ToString();
                     break;
                 case "traktid":
-                    var traktIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var traktIdMatch = traktIdRegex.Match(value);
-                    var traktId = traktIdMatch.Groups[1].Value;
-                    release.TraktId = (int)ParseUtil.CoerceLong(traktId);
+                    release.TraktId = (int)ParseUtil.GetLongFromString(value);
                     value = release.TraktId.ToString();
                     break;
                 case "tvdbid":
-                    var tvdbIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var tvdbIdMatch = tvdbIdRegex.Match(value);
-                    var tvdbId = tvdbIdMatch.Groups[1].Value;
-                    release.TvdbId = (int)ParseUtil.CoerceLong(tvdbId);
+                    release.TvdbId = (int)ParseUtil.GetLongFromString(value);
                     value = release.TvdbId.ToString();
                     break;
                 case "doubanid":
-                    var doubanIdRegex = new Regex(@"(\d+)", RegexOptions.Compiled);
-                    var doubanIdMatch = doubanIdRegex.Match(value);
-                    var doubanId = doubanIdMatch.Groups[1].Value;
-                    release.DoubanId = (int)ParseUtil.CoerceLong(doubanId);
+                    release.DoubanId = (int)ParseUtil.GetLongFromString(value);
                     value = release.DoubanId.ToString();
                     break;
                 case "poster":

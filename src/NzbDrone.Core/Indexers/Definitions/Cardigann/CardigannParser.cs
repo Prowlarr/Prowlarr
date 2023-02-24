@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -509,7 +510,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     break;
                 case "date":
                     release.PublishDate = DateTimeUtil.FromUnknown(value);
-                    value = release.PublishDate.ToString(DateTimeUtil.Rfc1123ZPattern);
+                    value = release.PublishDate.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                     break;
                 case "files":
                     release.Files = ParseUtil.CoerceInt(value);

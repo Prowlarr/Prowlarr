@@ -617,14 +617,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                         if (layout.Contains("yy") && DateTime.TryParseExact(data, layout, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                         {
-                            data = parsedDate.ToString(DateTimeUtil.Rfc1123ZPattern);
+                            data = parsedDate.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         }
                         else
                         {
                             try
                             {
                                 var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
-                                data = date.ToString(DateTimeUtil.Rfc1123ZPattern);
+                                data = date.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                             }
                             catch (InvalidDateException ex)
                             {
@@ -696,10 +696,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         break;
                     case "timeago":
                     case "reltime":
-                        data = DateTimeUtil.FromTimeAgo(data).ToString(DateTimeUtil.Rfc1123ZPattern);
+                        data = DateTimeUtil.FromTimeAgo(data).ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         break;
                     case "fuzzytime":
-                        data = DateTimeUtil.FromUnknown(data).ToString(DateTimeUtil.Rfc1123ZPattern);
+                        data = DateTimeUtil.FromUnknown(data).ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         break;
                     case "validfilename":
                         data = StringUtil.MakeValidFileName(data, '_', false);

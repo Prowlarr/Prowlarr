@@ -257,5 +257,18 @@ namespace NzbDrone.Common.Extensions
         {
             return input.Contains(':') ? $"[{input}]" : input;
         }
+
+        public static bool IsAllDigits(this string input)
+        {
+            foreach (var c in input)
+            {
+                if (c < '0' || c > '9')
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

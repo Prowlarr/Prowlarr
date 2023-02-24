@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.Parser
 {
@@ -123,7 +124,7 @@ namespace NzbDrone.Core.Parser
                 str = str.Trim();
 
                 // try parsing the str as an unix timestamp
-                if (str.All(char.IsDigit) && long.TryParse(str, out var unixTimeStamp))
+                if (str.IsAllDigits() && long.TryParse(str, out var unixTimeStamp))
                 {
                     return UnixTimestampToDateTime(unixTimeStamp);
                 }

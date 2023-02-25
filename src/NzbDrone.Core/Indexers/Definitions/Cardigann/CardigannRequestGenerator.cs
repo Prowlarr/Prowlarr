@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -79,7 +79,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.Track"] = searchCriteria.Track;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -107,7 +107,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -126,7 +126,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Publisher"] = searchCriteria.Publisher;
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -139,7 +139,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -1015,8 +1015,17 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return false;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
+        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables, SearchCriteriaBase searchCriteria)
         {
+            var limit = searchCriteria.Limit ?? 100;
+            var offset = searchCriteria.Offset ?? 0;
+
+            if (offset > 0 && limit > 0 && offset / limit > 0)
+            {
+                // Pagination doesn't work yet, this is to prevent fetching the first page multiple times.
+                yield break;
+            }
+
             var search = _definition.Search;
 
             var mappedCategories = _categories.MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);

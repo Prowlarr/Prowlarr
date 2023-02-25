@@ -129,8 +129,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var defaultSettings = new List<SettingsField>
             {
-                new SettingsField { Name = "username", Label = "Username", Type = "text" },
-                new SettingsField { Name = "password", Label = "Password", Type = "password" }
+                new () { Name = "username", Label = "Username", Type = "text" },
+                new () { Name = "password", Label = "Password", Type = "password" }
             };
 
             var settings = definition.Settings ?? defaultSettings;

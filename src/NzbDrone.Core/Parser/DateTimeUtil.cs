@@ -122,6 +122,11 @@ namespace NzbDrone.Core.Parser
             {
                 str = str.Trim();
 
+                if (DateTime.TryParseExact(str, Rfc1123ZPattern, null, DateTimeStyles.None, out var parsedDt))
+                {
+                    return parsedDt;
+                }
+
                 // try parsing the str as an unix timestamp
                 if (str.All(char.IsDigit) && long.TryParse(str, out var unixTimeStamp))
                 {

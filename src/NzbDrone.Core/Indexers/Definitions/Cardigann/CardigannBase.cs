@@ -615,21 +615,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case "dateparse":
                         var layout = (string)filter.Args;
 
-                        if (layout.Contains("yy") && DateTime.TryParseExact(data, layout, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                        try
                         {
-                            data = parsedDate.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
+                            var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
+                            data = date.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         }
-                        else
+                        catch (InvalidDateException ex)
                         {
-                            try
-                            {
-                                var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
-                                data = date.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
-                            }
-                            catch (InvalidDateException ex)
-                            {
-                                _logger.Debug(ex.Message);
-                            }
+                            _logger.Debug(ex.Message);
                         }
 
                         break;

@@ -509,7 +509,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     value = release.Seeders.ToString();
                     break;
                 case "date":
-                    release.PublishDate = DateTimeUtil.FromUnknown(value);
+                    release.PublishDate = DateTime.TryParseExact(value, DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate) ? parsedDate : DateTimeUtil.FromUnknown(value);
                     value = release.PublishDate.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                     break;
                 case "files":

@@ -5466,7 +5466,7 @@
             "nullable": true
           },
           "enable": {
-            "type": "string",
+            "type": "boolean",
             "nullable": true
           },
           "appProfileId": {

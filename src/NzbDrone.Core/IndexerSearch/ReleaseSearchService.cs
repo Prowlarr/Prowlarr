@@ -138,8 +138,8 @@ namespace NzbDrone.Core.IndexerSearch
 
             spec.SearchTerm = query.q;
             spec.SearchType = query.t;
-            spec.Limit = query.limit;
-            spec.Offset = query.offset;
+            spec.Limit = query.limit ?? 100;
+            spec.Offset = query.offset ?? 0;
             spec.Source = query.source;
             spec.Host = query.host;
 

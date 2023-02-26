@@ -123,9 +123,8 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
         _capabilities = capabilities;
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
         if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
@@ -157,34 +156,29 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
             parameters.Set("tags_type", "0");
         }
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
     private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
@@ -206,7 +200,7 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
             queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
         }
 
-        if (searchCriteria.Offset.HasValue && searchCriteria.Limit.HasValue && searchCriteria.Offset > 0 && searchCriteria.Limit > 0)
+        if (searchCriteria.Offset > 0 && searchCriteria.Limit > 0)
         {
             var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
             parameters.Set("page", page.ToString());

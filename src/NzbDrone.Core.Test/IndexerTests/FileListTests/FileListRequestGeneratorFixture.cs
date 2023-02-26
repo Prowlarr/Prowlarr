@@ -68,9 +68,9 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
         {
             var results = Subject.GetSearchRequests(new MovieSearchCriteria { Categories = new[] { NewznabStandardCategory.MoviesSD.Id, NewznabStandardCategory.MoviesDVD.Id } });
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("&category=1%2C2");
         }
@@ -81,9 +81,9 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             _movieSearchCriteria.ImdbId = "0076759";
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("type=imdb");
             page.Url.Query.Should().Contain("query=tt0076759");
@@ -96,9 +96,9 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("type=name");
             page.Url.Query.Should().Contain("query=Star+Wars");

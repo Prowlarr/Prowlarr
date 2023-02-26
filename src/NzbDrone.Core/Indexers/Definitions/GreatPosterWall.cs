@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -75,7 +75,7 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
         _settings = settings;
     }
 
-    public override IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public override IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
         var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
 
@@ -84,9 +84,7 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
             parameters.Set("searchstr", searchCriteria.FullImdbId);
         }
 
-        var pageableRequests = new IndexerPageableRequestChain();
-        pageableRequests.Add(GetRequest(parameters));
-        return pageableRequests;
+        return GetRequest(parameters);
     }
 
     protected override NameValueCollection GetBasicSearchParameters(string term, int[] categories)

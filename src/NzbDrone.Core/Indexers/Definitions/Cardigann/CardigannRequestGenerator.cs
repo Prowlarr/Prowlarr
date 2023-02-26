@@ -42,11 +42,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Movie search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -59,16 +57,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Music search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -79,16 +73,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.Track"] = searchCriteria.Track;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting TV search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -107,16 +97,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Book search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -126,22 +112,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Publisher"] = searchCriteria.Publisher;
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Basic search");
 
-            var pageableRequests = new IndexerPageableRequestChain();
-
             var variables = GetQueryVariableDefaults(searchCriteria);
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
         private Dictionary<string, object> GetQueryVariableDefaults(SearchCriteriaBase searchCriteria)
@@ -151,8 +131,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Type"] = searchCriteria.SearchType;
             variables[".Query.Q"] = searchCriteria.SearchTerm;
             variables[".Query.Categories"] = searchCriteria.Categories;
-            variables[".Query.Limit"] = searchCriteria.Limit?.ToString() ?? null;
-            variables[".Query.Offset"] = searchCriteria.Offset?.ToString() ?? null;
+            variables[".Query.Limit"] = searchCriteria.Limit.ToString() ?? null;
+            variables[".Query.Offset"] = searchCriteria.Offset.ToString() ?? null;
             variables[".Query.Extended"] = null;
             variables[".Query.APIKey"] = null;
             variables[".Query.Genre"] = null;
@@ -1017,8 +997,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables, SearchCriteriaBase searchCriteria)
         {
-            var limit = searchCriteria.Limit ?? 100;
-            var offset = searchCriteria.Offset ?? 0;
+            var limit = searchCriteria.Limit;
+            var offset = searchCriteria.Offset;
 
             if (offset > 0 && limit > 0 && offset / limit > 0)
             {

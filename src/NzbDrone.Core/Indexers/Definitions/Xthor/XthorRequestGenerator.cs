@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
@@ -83,21 +83,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
             yield return request;
         }
 
-        public IndexerPageableRequestChain GetSearchRequestsCommon(SearchCriteriaBase searchCriteria,
-            string searchTerm,
-            string tmdbid = null)
+        public IEnumerable<IndexerRequest> GetSearchRequestsCommon(SearchCriteriaBase searchCriteria, string searchTerm, string tmdbid = null)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var actualPage = 0;
+
+            var requests = new List<IndexerRequest>();
 
             while (actualPage < Settings.MaxPages)
             {
-                pageableRequests.Add(GetPagedRequests(searchTerm, searchCriteria.Categories, actualPage, tmdbid));
+                requests.AddRange(GetPagedRequests(searchTerm, searchCriteria.Categories, actualPage, tmdbid));
 
                 if (Settings.EnhancedFrenchAccent && (Settings.Accent == 1 || Settings.Accent == 2))
                 {
-                    pageableRequests.Add(
-                        GetPagedRequests(searchTerm, searchCriteria.Categories, actualPage, tmdbid, 47));
+                    requests.AddRange(GetPagedRequests(searchTerm, searchCriteria.Categories, actualPage, tmdbid, 47));
                 }
 
                 if (tmdbid.IsNotNullOrWhiteSpace() && Settings.ByPassPageForTmDbid)
@@ -108,33 +106,33 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
                 ++actualPage;
             }
 
-            return pageableRequests;
+            return requests;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             return GetSearchRequestsCommon(searchCriteria,
                 string.Format("{0}", searchCriteria.SanitizedSearchTerm),
                 searchCriteria.TmdbId.ToString());
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             return GetSearchRequestsCommon(searchCriteria, string.Format("{0}", searchCriteria.SanitizedSearchTerm));
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             return GetSearchRequestsCommon(searchCriteria,
                 string.Format("{0}", searchCriteria.SanitizedTvSearchString));
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             return GetSearchRequestsCommon(searchCriteria, string.Format("{0}", searchCriteria.SanitizedSearchTerm));
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             return GetSearchRequestsCommon(searchCriteria, string.Format("{0}", searchCriteria.SanitizedSearchTerm));
         }

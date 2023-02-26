@@ -140,38 +140,34 @@ namespace NzbDrone.Core.Indexers.Definitions
             _pageSize = pageSize;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             return GetSearch(searchCriteria, searchCriteria.FullImdbId);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             return GetSearch(searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             return GetSearch(searchCriteria, searchCriteria.FullImdbId, searchCriteria.Season, searchCriteria.Episode);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             return GetSearch(searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             return GetSearch(searchCriteria);
         }
 
-        private IndexerPageableRequestChain GetSearch(SearchCriteriaBase searchCriteria, string imdbId = null, int? season = null, string episode = null)
+        private IEnumerable<IndexerRequest> GetSearch(SearchCriteriaBase searchCriteria, string imdbId = null, int? season = null, string episode = null)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? _pageSize, searchCriteria.Offset ?? 0, imdbId, season, episode));
-
-            return pageableRequests;
+            return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit, searchCriteria.Offset, imdbId, season, episode);
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset, string imdbId = null, int? season = null, string episode = null)

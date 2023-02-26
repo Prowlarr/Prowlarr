@@ -14,13 +14,9 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
         {
         }
 
-        public virtual IndexerPageableRequestChain GetRecentRequests()
+        public virtual IEnumerable<IndexerRequest> GetRecentRequests()
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests("list", null, null));
-
-            return pageableRequests;
+            return GetPagedRequests("list", null, null);
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string mode, int? tvdbId, string query, params object[] args)
@@ -72,31 +68,29 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
             yield return new IndexerRequest(requestBuilder.Build());
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetMovieRequest(searchCriteria));
-            return pageableRequests;
+            return GetMovieRequest(searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

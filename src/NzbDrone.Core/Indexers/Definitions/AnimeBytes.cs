@@ -107,34 +107,30 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
             => GetRequestWithSearchType(searchCriteria, "anime");
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
             => GetRequestWithSearchType(searchCriteria, "music");
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
             => GetRequestWithSearchType(searchCriteria, "anime");
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
             => GetRequestWithSearchType(searchCriteria, "anime");
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
             => GetRequestWithSearchType(searchCriteria, "anime");
 
-        private IndexerPageableRequestChain GetRequestWithSearchType(SearchCriteriaBase searchCriteria, string searchType)
+        private IEnumerable<IndexerRequest> GetRequestWithSearchType(SearchCriteriaBase searchCriteria, string searchType)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
             // TODO: Remove this once Prowlarr has proper support for non Pageable Indexers and can tell Sonarr that indexer doesn't support pagination in a proper way, for now just return empty release list on all request containing an offset
             if (searchCriteria.Offset is > 0)
             {
-                return pageableRequests;
+                return new List<IndexerRequest>();
             }
 
-            pageableRequests.Add(GetRequest(searchType, searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
+            return GetRequest(searchType, searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
         }
 
         private IEnumerable<IndexerRequest> GetRequest(string searchType, string term, int[] categories)

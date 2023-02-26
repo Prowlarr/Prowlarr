@@ -90,28 +90,26 @@ public class MoreThanTVRequestGenerator : IIndexerRequestGenerator
         };
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         => PerformRequest(searchCriteria);
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         => PerformRequest(searchCriteria);
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         => PerformRequest(searchCriteria);
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         => PerformRequest(searchCriteria);
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         => PerformRequest(searchCriteria);
 
     public Func<IDictionary<string, string>> GetCookies { get; set; }
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-    private IndexerPageableRequestChain PerformRequest(SearchCriteriaBase query)
+    private IEnumerable<IndexerRequest> PerformRequest(SearchCriteriaBase query)
     {
-        var chain = new IndexerPageableRequestChain();
-
         var requests = new List<IndexerRequest> { new (new HttpRequest(GetTorrentSearchUrl(query)) { Headers = new HttpHeader(BrowserHeaders), AllowAutoRedirect = true }) };
 
         if (query is TvSearchCriteria tvSearchCriteria)
@@ -127,9 +125,7 @@ public class MoreThanTVRequestGenerator : IIndexerRequestGenerator
             }
         }
 
-        chain.Add(requests);
-
-        return chain;
+        return requests;
     }
 
     private string GetTorrentSearchUrl(SearchCriteriaBase query, string overrideSearchTerm = null)

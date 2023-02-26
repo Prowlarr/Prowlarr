@@ -99,43 +99,31 @@ namespace NzbDrone.Core.Indexers.Definitions
             yield return new IndexerRequest(requestUrl, HttpAccept.Html);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
-
-            return pageableRequests;
+            return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}");
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}"));
-
-            return pageableRequests;
+            return GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}");
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
-
-            return pageableRequests;
+            return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}");
         }
 
         // Animedia doesn't support music, but this function required by interface
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
         // Animedia doesn't support books, but this function required by interface
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

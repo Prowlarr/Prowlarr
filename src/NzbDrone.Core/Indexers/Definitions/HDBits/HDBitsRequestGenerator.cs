@@ -16,9 +16,8 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         public IndexerCapabilities Capabilities { get; set; }
         public HDBitsSettings Settings { get; set; }
 
-        public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public virtual IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
             var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
 
@@ -38,9 +37,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 query.ImdbInfo.Id = imdbId;
             }
 
-            pageableRequests.Add(GetRequest(query));
-
-            return pageableRequests;
+            return GetRequest(query);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -68,14 +65,13 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             yield return new IndexerRequest(request);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
             var tvdbId = searchCriteria.TvdbId.GetValueOrDefault(0);
             var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
@@ -112,19 +108,16 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 query.ImdbInfo.Id = imdbId;
             }
 
-            pageableRequests.Add(GetRequest(query));
-
-            return pageableRequests;
+            return GetRequest(query);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
 
             if (searchCriteria.Categories?.Length > 0)
@@ -137,9 +130,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 query.Search = searchCriteria.SanitizedSearchTerm;
             }
 
-            pageableRequests.Add(GetRequest(query));
-
-            return pageableRequests;
+            return GetRequest(query);
         }
     }
 }

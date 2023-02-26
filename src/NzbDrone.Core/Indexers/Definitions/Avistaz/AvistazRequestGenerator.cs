@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             yield return request;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.Categories, searchCriteria.Genre);
 
@@ -93,23 +93,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
             }
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.Categories, null);
 
             parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.Categories, searchCriteria.Genre);
 
@@ -128,12 +124,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedTvSearchString).Trim());
             }
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             throw new NotImplementedException();
         }
@@ -141,15 +135,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         // hook to adjust the search term
         protected virtual string GetSearchTerm(string term) => term;
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.Categories, null);
 
             parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
     }
 }

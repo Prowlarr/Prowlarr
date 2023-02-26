@@ -233,7 +233,7 @@ namespace NzbDrone.Core.Indexers
             _indexerStatusService.UpdateCookies(Definition.Id, cookies, expiration);
         }
 
-        protected virtual async Task<IndexerPageableQueryResult> FetchReleases(Func<IIndexerRequestGenerator, IndexerPageableRequestChain> pageableRequestChainSelector, SearchCriteriaBase searchCriteria, bool isRecent = false)
+        protected virtual async Task<IndexerPageableQueryResult> FetchReleases(Func<IIndexerRequestGenerator, IEnumerable<IndexerRequest>> pageableRequestChainSelector, SearchCriteriaBase searchCriteria, bool isRecent = false)
         {
             var releases = new List<ReleaseInfo>();
             var result = new IndexerPageableQueryResult();
@@ -250,41 +250,19 @@ namespace NzbDrone.Core.Indexers
 
                 var pageableRequestChain = pageableRequestChainSelector(generator);
 
-                for (int i = 0; i < pageableRequestChain.Tiers; i++)
+                foreach (var pageableRequest in pageableRequestChain)
                 {
-                    var pageableRequests = pageableRequestChain.GetTier(i);
+                    var pageSize = PageSize;
 
-                    foreach (var pageableRequest in pageableRequests)
-                    {
-                        var pagedReleases = new List<ReleaseInfo>();
+                    url = pageableRequest.Url.FullUri;
 
-                        var pageSize = PageSize;
+                    var page = await FetchPage(pageableRequest, parser);
 
-                        foreach (var request in pageableRequest)
-                        {
-                            url = request.Url.FullUri;
+                    pageSize = pageSize == 1 ? page.Releases.Count : pageSize;
 
-                            var page = await FetchPage(request, parser);
+                    result.Queries.Add(page);
 
-                            pageSize = pageSize == 1 ? page.Releases.Count : pageSize;
-
-                            result.Queries.Add(page);
-
-                            pagedReleases.AddRange(page.Releases);
-
-                            if (!IsFullPage(page.Releases, pageSize))
-                            {
-                                break;
-                            }
-                        }
-
-                        releases.AddRange(pagedReleases);
-                    }
-
-                    if (releases.Any())
-                    {
-                        break;
-                    }
+                    releases.AddRange(page.Releases);
                 }
 
                 _indexerStatusService.RecordSuccess(Definition.Id);
@@ -375,11 +353,6 @@ namespace NzbDrone.Core.Indexers
         public override IndexerCapabilities GetCapabilities()
         {
             return Capabilities ?? ((IndexerDefinition)Definition).Capabilities;
-        }
-
-        protected virtual bool IsFullPage(IList<ReleaseInfo> page, int pageSize)
-        {
-            return pageSize != 0 && page.Count >= pageSize;
         }
 
         protected virtual async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
@@ -549,7 +522,7 @@ namespace NzbDrone.Core.Indexers
                     testCriteria.SearchTerm = "test";
                 }
 
-                var firstRequest = generator.GetSearchRequests(testCriteria).GetAllTiers().FirstOrDefault()?.FirstOrDefault();
+                var firstRequest = generator.GetSearchRequests(testCriteria).FirstOrDefault();
 
                 if (firstRequest == null)
                 {

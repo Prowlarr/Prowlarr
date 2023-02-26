@@ -34,31 +34,29 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             yield return new IndexerRequest(builder.Build());
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
             var parameters = new BroadcastheNetTorrentQuery();
 
             var searchString = searchCriteria.SearchTerm != null ? searchCriteria.SearchTerm : "";
 
-            var btnResults = searchCriteria.Limit.GetValueOrDefault();
+            var btnResults = searchCriteria.Limit;
             if (btnResults == 0)
             {
                 btnResults = (int)Capabilities.LimitsDefault;
             }
 
-            var btnOffset = searchCriteria.Offset.GetValueOrDefault();
+            var btnOffset = searchCriteria.Offset;
 
             if (searchCriteria.TvdbId > 0)
             {
@@ -93,25 +91,21 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             // Neither a season only search nor daily nor standard, fall back to query
             parameters.Search = searchString.Replace(" ", "%");
 
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
-
-            return pageableRequests;
+            return GetPagedRequests(parameters, btnResults, btnOffset);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
             var parameters = new BroadcastheNetTorrentQuery();
 
             var searchString = searchCriteria.SearchTerm != null ? searchCriteria.SearchTerm : "";
 
-            var btnResults = searchCriteria.Limit.GetValueOrDefault();
+            var btnResults = searchCriteria.Limit;
             if (btnResults == 0)
             {
                 btnResults = (int)Capabilities.LimitsDefault;
@@ -119,11 +113,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             parameters.Search = searchString.Replace(" ", "%");
 
-            var btnOffset = searchCriteria.Offset.GetValueOrDefault();
+            var btnOffset = searchCriteria.Offset;
 
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
-
-            return pageableRequests;
+            return GetPagedRequests(parameters, btnResults, btnOffset);
         }
     }
 }

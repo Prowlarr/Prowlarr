@@ -66,7 +66,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 TvSearchParams = new List<TvSearchParam>
                 {
                     TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
-                }
+                },
+                SupportsRawSearch = true
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
@@ -119,7 +120,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedTvSearchString.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, @"[ -._]+", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, "[\\W]+", "%").Trim() + "%";
             }
 
             if (searchCriteria.TvMazeId.HasValue)
@@ -128,7 +129,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]+", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, "[\\W]+", "%").Trim() + "%";
                 }
             }
             else if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.ImdbId, out var intImdb))
@@ -137,7 +138,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]+", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, "[\\W]+", "%").Trim() + "%";
                 }
             }
 
@@ -162,7 +163,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedSearchTerm.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, @"[ -._]+", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, "[\\W]+", "%").Trim() + "%";
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));

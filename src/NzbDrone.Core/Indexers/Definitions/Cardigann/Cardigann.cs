@@ -28,10 +28,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
-        // thinking its a partial page and instead all search_path requests are run for each indexer
-        public override int PageSize => 1;
-
         public override TimeSpan RateLimit
         {
             get
@@ -44,6 +40,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 return base.RateLimit;
+            }
+        }
+
+        public override int PageSize
+        {
+            get
+            {
+                var definition = _definitionService.GetCachedDefinition(Settings.DefinitionFile);
+
+                if (definition.Search != null && definition.Search.PageSize > 0)
+                {
+                    return definition.Search.PageSize;
+                }
+
+                return 0;
             }
         }
 
@@ -86,6 +97,25 @@ namespace NzbDrone.Core.Indexers.Cardigann
             if (_definitionService.GetCachedDefinition(Settings.DefinitionFile).Search?.Rows?.Filters?.Any(x => x.Name == "andmatch") ?? false)
             {
                 cleanReleases = FilterReleasesByQuery(releases, searchCriteria).ToList();
+            }
+
+            // Only take the request results using Offset and Limit from the search
+            var pageSize = PageSize;
+
+            if (pageSize > 0)
+            {
+                var minPage = searchCriteria.Offset / pageSize;
+                var firstResult = searchCriteria.Offset - (pageSize * minPage);
+
+                cleanReleases = cleanReleases
+                    .Skip(firstResult)
+                    .Take(searchCriteria.Limit).ToList();
+            }
+            else
+            {
+                cleanReleases = cleanReleases
+                    .Skip(searchCriteria.Offset)
+                    .Take(searchCriteria.Limit).ToList();
             }
 
             return cleanReleases;

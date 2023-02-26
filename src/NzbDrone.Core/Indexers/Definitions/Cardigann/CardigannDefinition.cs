@@ -142,6 +142,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
     public class SearchBlock
     {
+        public int PageSize { get; set; }
+        public int FirstPageNumber { get; set; }
         public string Path { get; set; }
         public List<SearchPathBlock> Paths { get; set; }
         public Dictionary<string, List<string>> Headers { get; set; }

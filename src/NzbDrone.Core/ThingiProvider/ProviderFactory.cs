@@ -171,7 +171,6 @@ namespace NzbDrone.Core.ThingiProvider
             definition.Message = provider.Message;
         }
 
-        //TODO: Remove providers even if the ConfigContract can't be deserialized (this will fail to remove providers if the settings can't be deserialized).
         private void RemoveMissingImplementations()
         {
             var storedProvider = _providerRepository.All();

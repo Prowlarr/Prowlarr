@@ -549,13 +549,17 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     release.TvRageId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.TvRageId.ToString();
                     break;
-                case "traktid":
-                    release.TraktId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
-                    value = release.TraktId.ToString();
-                    break;
                 case "tvdbid":
                     release.TvdbId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.TvdbId.ToString();
+                    break;
+                case "tvmazeid":
+                    release.TvMazeId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
+                    value = release.TvMazeId.ToString();
+                    break;
+                case "traktid":
+                    release.TraktId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
+                    value = release.TraktId.ToString();
                     break;
                 case "doubanid":
                     release.DoubanId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();

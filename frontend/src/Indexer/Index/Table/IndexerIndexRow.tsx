@@ -12,7 +12,7 @@ import { icons } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import createIndexerIndexItemSelector from 'Indexer/Index/createIndexerIndexItemSelector';
-import IndexerInfoModal from 'Indexer/Info/IndexerInfoModal';
+import IndexerTitleLink from 'Indexer/IndexerTitleLink';
 import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
@@ -53,7 +53,6 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
     fields.find((field) => field.name === 'baseUrl')?.value ??
     (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
 
-  const [isIndexerInfoModalOpen, setIsIndexerInfoModalOpen] = useState(false);
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
   const [isDeleteIndexerModalOpen, setIsDeleteIndexerModalOpen] =
     useState(false);
@@ -66,14 +65,6 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const onEditIndexerModalClose = useCallback(() => {
     setIsEditIndexerModalOpen(false);
   }, [setIsEditIndexerModalOpen]);
-
-  const onIndexerInfoPress = useCallback(() => {
-    setIsIndexerInfoModalOpen(true);
-  }, [setIsIndexerInfoModalOpen]);
-
-  const onIndexerInfoModalClose = useCallback(() => {
-    setIsIndexerInfoModalOpen(false);
-  }, [setIsIndexerInfoModalOpen]);
 
   const onDeleteIndexerPress = useCallback(() => {
     setIsEditIndexerModalOpen(false);
@@ -134,7 +125,10 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
         if (name === 'sortName') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              {indexerName}
+              <IndexerTitleLink
+                indexerId={indexerId}
+                indexerName={indexerName}
+              />
             </VirtualTableRowCell>
           );
         }
@@ -204,12 +198,6 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
               key={column.name}
               className={styles[column.name]}
             >
-              <IconButton
-                name={icons.INFO}
-                title={translate('IndexerInfo')}
-                onPress={onIndexerInfoPress}
-              />
-
               {baseUrl ? (
                 <IconButton
                   className={styles.externalLink}
@@ -236,12 +224,6 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
         id={indexerId}
         onModalClose={onEditIndexerModalClose}
         onDeleteIndexerPress={onDeleteIndexerPress}
-      />
-
-      <IndexerInfoModal
-        indexerId={indexerId}
-        isOpen={isIndexerInfoModalOpen}
-        onModalClose={onIndexerInfoModalClose}
       />
 
       <DeleteIndexerModal

@@ -13,6 +13,12 @@ export interface IndexerCategory extends ModelBase {
 export interface IndexerCapabilities extends ModelBase {
   limitsMax: number;
   limitsDefault: number;
+  supportsRawSearch: boolean;
+  searchParams: string[];
+  tvSearchParams: string[];
+  movieSearchParams: string[];
+  musicSearchParams: string[];
+  bookSearchParams: string[];
   categories: IndexerCategory[];
 }
 
@@ -26,6 +32,9 @@ export interface IndexerField extends ModelBase {
 
 interface Indexer extends ModelBase {
   name: string;
+  description: string;
+  encoding: string;
+  language: string;
   added: Date;
   enable: boolean;
   redirect: boolean;

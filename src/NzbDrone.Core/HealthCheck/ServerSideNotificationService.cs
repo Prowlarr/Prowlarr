@@ -42,19 +42,25 @@ namespace NzbDrone.Core.HealthCheck
 
         public List<HealthCheck> GetServerChecks()
         {
-            return _cache.Get("ServerChecks", () => RetrieveServerChecks(), TimeSpan.FromHours(2));
+            return _cache.Get("ServerChecks", RetrieveServerChecks, TimeSpan.FromHours(2));
         }
 
         private List<HealthCheck> RetrieveServerChecks()
         {
+            if (BuildInfo.IsDebug)
+            {
+                return new List<HealthCheck>();
+            }
+
             var request = _cloudRequestBuilder.Create()
-                                      .Resource("/notification")
-                                      .AddQueryParam("version", BuildInfo.Version)
-                                      .AddQueryParam("os", OsInfo.Os.ToString().ToLowerInvariant())
-                                      .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
-                                      .AddQueryParam("runtime", "netcore")
-                                      .AddQueryParam("branch", _configFileProvider.Branch)
-                                      .Build();
+                .Resource("/notification")
+                .AddQueryParam("version", BuildInfo.Version)
+                .AddQueryParam("os", OsInfo.Os.ToString().ToLowerInvariant())
+                .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
+                .AddQueryParam("runtime", "netcore")
+                .AddQueryParam("branch", _configFileProvider.Branch)
+                .Build();
+
             try
             {
                 _logger.Trace("Getting server side health notifications");
@@ -65,8 +71,9 @@ namespace NzbDrone.Core.HealthCheck
             catch (Exception ex)
             {
                 _logger.Error(ex, "Failed to retrieve server notifications");
-                return new List<HealthCheck>();
             }
+
+            return new List<HealthCheck>();
         }
     }
 

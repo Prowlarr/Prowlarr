@@ -13,7 +13,7 @@ import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import createIndexerIndexItemSelector from 'Indexer/Index/createIndexerIndexItemSelector';
 import IndexerTitleLink from 'Indexer/IndexerTitleLink';
-import titleCase from 'Utilities/String/titleCase';
+import firstCharToUpper from 'Utilities/String/firstCharToUpper';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
 import IndexerStatusCell from './IndexerStatusCell';
@@ -136,7 +136,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
         if (name === 'privacy') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
-              <Label>{titleCase(privacy)}</Label>
+              <Label>{translate(firstCharToUpper(privacy))}</Label>
             </VirtualTableRowCell>
           );
         }

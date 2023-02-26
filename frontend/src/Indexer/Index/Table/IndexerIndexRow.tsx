@@ -35,6 +35,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   );
 
   const {
+    id,
     name: indexerName,
     indexerUrls,
     enable,
@@ -52,6 +53,8 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const baseUrl =
     fields.find((field) => field.name === 'baseUrl')?.value ??
     (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
+
+  const rssUrl = `${window.location.origin}${window.Prowlarr.urlBase}/${id}/api?t=search&extended=1&apikey=${window.Prowlarr.apiKey}`;
 
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
   const [isDeleteIndexerModalOpen, setIsDeleteIndexerModalOpen] =
@@ -198,6 +201,12 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
               key={column.name}
               className={styles[column.name]}
             >
+              <IconButton
+                name={icons.RSS}
+                title={translate('RssFeed')}
+                to={rssUrl}
+              />
+
               {baseUrl ? (
                 <IconButton
                   className={styles.externalLink}

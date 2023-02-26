@@ -1117,7 +1117,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                 }
                                 else
                                 {
-                                    queryCollection.Add(input.Key, ApplyGoTemplateText(input.Value, variables));
+                                    var inputValue = ApplyGoTemplateText(input.Value, variables);
+
+                                    if (!string.IsNullOrWhiteSpace(inputValue) || search.AllowEmptyInputs)
+                                    {
+                                        queryCollection.Add(input.Key, inputValue);
+                                    }
                                 }
                             }
                         }

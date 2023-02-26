@@ -538,27 +538,27 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     break;
                 case "imdb":
                 case "imdbid":
-                    release.ImdbId = (int)ParseUtil.GetLongFromString(value);
+                    release.ImdbId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.ImdbId.ToString();
                     break;
                 case "tmdbid":
-                    release.TmdbId = (int)ParseUtil.GetLongFromString(value);
+                    release.TmdbId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.TmdbId.ToString();
                     break;
                 case "rageid":
-                    release.TvRageId = (int)ParseUtil.GetLongFromString(value);
+                    release.TvRageId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.TvRageId.ToString();
                     break;
                 case "traktid":
-                    release.TraktId = (int)ParseUtil.GetLongFromString(value);
+                    release.TraktId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.TraktId.ToString();
                     break;
                 case "tvdbid":
-                    release.TvdbId = (int)ParseUtil.GetLongFromString(value);
+                    release.TvdbId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.TvdbId.ToString();
                     break;
                 case "doubanid":
-                    release.DoubanId = (int)ParseUtil.GetLongFromString(value);
+                    release.DoubanId = (int)ParseUtil.GetLongFromString(value).GetValueOrDefault();
                     value = release.DoubanId.ToString();
                     break;
                 case "poster":

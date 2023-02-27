@@ -54,6 +54,9 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
     fields.find((field) => field.name === 'baseUrl')?.value ??
     (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
 
+  const vipExpiration =
+    fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
+
   const rssUrl = `${window.location.origin}${window.Prowlarr.urlBase}/${id}/api?t=search&extended=1&apikey=${window.Prowlarr.apiKey}`;
 
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
@@ -182,6 +185,17 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
               key={name}
               className={styles[name]}
               date={added.toString()}
+              component={VirtualTableRowCell}
+            />
+          );
+        }
+
+        if (name === 'vipExpiration') {
+          return (
+            <RelativeDateCellConnector
+              key={name}
+              className={styles[name]}
+              date={vipExpiration}
               component={VirtualTableRowCell}
             />
           );

@@ -60,6 +60,9 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     fields.find((field) => field.name === 'baseUrl')?.value ??
     (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
 
+  const vipExpiration =
+    fields.find((field) => field.name === 'vipExpiration')?.value ?? undefined;
+
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
   const [isDeleteIndexerModalOpen, setIsDeleteIndexerModalOpen] =
     useState(false);
@@ -110,6 +113,13 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                 title={translate('Language')}
                 data={language ?? '-'}
               />
+              {vipExpiration ? (
+                <DescriptionListItem
+                  descriptionClassName={styles.description}
+                  title={translate('VipExpiration')}
+                  data={vipExpiration}
+                />
+              ) : null}
               <DescriptionListItemTitle>
                 {translate('IndexerSite')}
               </DescriptionListItemTitle>

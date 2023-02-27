@@ -14,6 +14,7 @@ interface CssExports {
   'sortName': string;
   'status': string;
   'tags': string;
+  'vipExpiration': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

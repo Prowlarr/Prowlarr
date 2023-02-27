@@ -79,6 +79,12 @@ export const defaultState = {
       isVisible: true
     },
     {
+      name: 'vipExpiration',
+      label: translate('VipExpiration'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
       name: 'capabilities',
       label: translate('Categories'),
       isSortable: false,
@@ -122,6 +128,12 @@ export const defaultState = {
     {
       name: 'added',
       label: translate('Added'),
+      type: filterBuilderTypes.DATE,
+      valueType: filterBuilderValueTypes.DATE
+    },
+    {
+      name: 'vipExpiration',
+      label: translate('VipExpiration'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },

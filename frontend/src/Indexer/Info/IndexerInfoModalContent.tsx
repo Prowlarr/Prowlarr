@@ -124,7 +124,9 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                 {translate('IndexerSite')}
               </DescriptionListItemTitle>
               <DescriptionListItemDescription>
-                <Link to={baseUrl}>{baseUrl.replace('api.', '')}</Link>
+                <Link to={baseUrl}>
+                  {baseUrl.replace(/(:\/\/)api\./, '$1')}
+                </Link>
               </DescriptionListItemDescription>
               <DescriptionListItemTitle>{`${
                 protocol === 'usenet' ? 'Newznab' : 'Torznab'

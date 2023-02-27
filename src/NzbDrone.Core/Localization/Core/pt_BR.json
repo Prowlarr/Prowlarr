@@ -36,7 +36,7 @@
     "SendAnonymousUsageData": "Enviar dados de uso anônimos",
     "SettingsEnableColorImpairedModeHelpText": "Estilo alterado para permitir que usuários com daltonismo distingam melhor as informações codificadas por cores",
     "SettingsLogRotateHelpText": "Quantidade máxima de arquivos de log a manter na pasta",
-    "ShownClickToHide": "Exibido, clique para ocultar",
+    "ShownClickToHide": "Mostrar configurações avançadas, clique para ocultar",
     "SSLCertPasswordHelpText": "Senha para arquivo pfx",
     "StartupDirectory": "Diretório de inicialização",
     "SuggestTranslationChange": "Sugerir alteração para a tradução",
@@ -404,7 +404,7 @@
     "HistoryCleanupDaysHelpText": "Defina como 0 para desabilitar a limpeza automática",
     "OnApplicationUpdate": "Ao Atualizar o Aplicativo",
     "OnApplicationUpdateHelpText": "Ao Atualizar o Aplicativo",
-    "OnGrab": "Em Espera",
+    "OnGrab": "Ao Obter Lançamento",
     "OnHealthIssue": "Ao ter problema de integridade",
     "TestAllIndexers": "Testar todos os indexadores",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent fornecido pelo aplicativo que chamou a API",
@@ -474,5 +474,13 @@
     "Replace": "Substituir",
     "TheLatestVersionIsAlreadyInstalled": "A versão mais recente do Prowlarr já está instalada",
     "AddApplication": "Adicionar Aplicativo",
-    "AddCustomFilter": "Adicionar Filtro Personalizado"
+    "AddCustomFilter": "Adicionar Filtro Personalizado",
+    "OnGrabHelpText": "Ao Obter Lançamento",
+    "IncludeManualGrabsHelpText": "Incluir Capturas Manuais feitas no Prowlarr",
+    "RssFeed": "Alimentador RSS",
+    "VipExpiration": "Expiração VIP",
+    "DisabledUntil": "Desabilitar Até",
+    "IndexerDisabled": "Indexador Desabilitado",
+    "InitialFailure": "Falha Inicial",
+    "LastFailure": "Última Falha"
 }

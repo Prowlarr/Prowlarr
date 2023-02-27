@@ -85,5 +85,11 @@
     "About": "O",
     "Actions": "Akcije",
     "AcceptConfirmationModal": "Prihvati Modal Potvrde",
-    "AddDownloadClient": "Dodaj Klijenta za Preuzimanje"
+    "AddDownloadClient": "Dodaj Klijenta za Preuzimanje",
+    "All": "Sve",
+    "AppDataDirectory": "AppData direktorij",
+    "BypassProxyForLocalAddresses": "Zaobiđi Proxy za Lokalne Adrese",
+    "CancelPendingTask": "Jeste li sigurni da želite otkazati ovaj zadatak na čekanju?",
+    "CertificateValidation": "Potvrda Certifikata",
+    "ChangeHasNotBeenSavedYet": "Promjene još nisu spremljene"
 }

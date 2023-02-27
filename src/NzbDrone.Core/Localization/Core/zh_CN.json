@@ -159,7 +159,7 @@
     "BranchUpdateMechanism": "外部更新机制使用的分支",
     "BranchUpdate": "更新Prowlarr的分支",
     "Branch": "分支",
-    "BindAddressHelpText": "有效的 IP 地址，localhost，或以'*'代表所有地址",
+    "BindAddressHelpText": "有效的 IPv4 地址、localhost、或以'*'代表所有接口",
     "BindAddress": "绑定地址",
     "BeforeUpdate": "更新前",
     "Backups": "备份",
@@ -472,5 +472,8 @@
     "AuthenticationRequiredWarning": "为了防止远程访问而无需身份验证，Prowlarr现在需要启用身份验证。请配置您的身份验证方法和凭据。您可以选择从本地地址禁用身份验证。有关其他信息，请参阅FAQ。",
     "Replace": "替换",
     "TheLatestVersionIsAlreadyInstalled": "已安装最新版的Prowlarr",
-    "Remove": "移除"
+    "Remove": "移除",
+    "OnGrabHelpText": "抓取中",
+    "AddApplication": "添加应用程序",
+    "AddCustomFilter": "添加自定义过滤"
 }

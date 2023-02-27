@@ -22,7 +22,7 @@
     "Clear": "Borrar",
     "BackupNow": "Hacer copia de seguridad",
     "Backup": "Backup",
-    "AppDataLocationHealthCheckMessage": "La actualización no será posible para evitar que se elimine AppData durante la actualización",
+    "AppDataLocationHealthCheckMessage": "No será posible actualizar para prevenir que AppData se borre durante la actualización",
     "Analytics": "Analíticas",
     "All": "Todas",
     "About": "Acerca",

@@ -6149,6 +6149,10 @@
             "type": "string",
             "nullable": true
           },
+          "sortTitle": {
+            "type": "string",
+            "nullable": true
+          },
           "approved": {
             "type": "boolean"
           },

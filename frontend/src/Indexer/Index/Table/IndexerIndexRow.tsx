@@ -226,7 +226,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
                   className={styles.externalLink}
                   name={icons.EXTERNAL_LINK}
                   title={translate('Website')}
-                  to={baseUrl.replace('api.', '')}
+                  to={baseUrl.replace(/(:\/\/)api\./, '$1')}
                 />
               ) : null}
 

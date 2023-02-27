@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
@@ -14,6 +14,8 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
+import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import Indexer from 'Indexer/Indexer';
 import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
 import translate from 'Utilities/String/translate';
@@ -57,6 +59,28 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
   const baseUrl =
     fields.find((field) => field.name === 'baseUrl')?.value ??
     (Array.isArray(indexerUrls) ? indexerUrls[0] : undefined);
+
+  const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
+  const [isDeleteIndexerModalOpen, setIsDeleteIndexerModalOpen] =
+    useState(false);
+
+  const onEditIndexerPress = useCallback(() => {
+    setIsEditIndexerModalOpen(true);
+  }, [setIsEditIndexerModalOpen]);
+
+  const onEditIndexerModalClose = useCallback(() => {
+    setIsEditIndexerModalOpen(false);
+  }, [setIsEditIndexerModalOpen]);
+
+  const onDeleteIndexerPress = useCallback(() => {
+    setIsEditIndexerModalOpen(false);
+    setIsDeleteIndexerModalOpen(true);
+  }, [setIsDeleteIndexerModalOpen]);
+
+  const onDeleteIndexerModalClose = useCallback(() => {
+    setIsDeleteIndexerModalOpen(false);
+    onModalClose();
+  }, [setIsDeleteIndexerModalOpen, onModalClose]);
 
   return (
     <ModalContent onModalClose={onModalClose}>
@@ -191,8 +215,29 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
         </FieldSet>
       </ModalBody>
       <ModalFooter>
+        <Button
+          className={styles.deleteButton}
+          kind={kinds.DANGER}
+          onPress={onDeleteIndexerPress}
+        >
+          {translate('Delete')}
+        </Button>
+        <Button onPress={onEditIndexerPress}>{translate('Edit')}</Button>
         <Button onPress={onModalClose}>{translate('Close')}</Button>
       </ModalFooter>
+
+      <EditIndexerModalConnector
+        isOpen={isEditIndexerModalOpen}
+        id={id}
+        onModalClose={onEditIndexerModalClose}
+        onDeleteIndexerPress={onDeleteIndexerPress}
+      />
+
+      <DeleteIndexerModal
+        isOpen={isDeleteIndexerModalOpen}
+        indexerId={id}
+        onModalClose={onDeleteIndexerModalClose}
+      />
     </ModalContent>
   );
 }

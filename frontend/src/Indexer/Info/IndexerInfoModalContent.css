@@ -3,3 +3,9 @@
 
   overflow-wrap: break-word;
 }
+
+.deleteButton {
+  composes: button from '~Components/Link/Button.css';
+
+  margin-right: auto;
+}

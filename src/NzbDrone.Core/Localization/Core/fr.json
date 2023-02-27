@@ -396,7 +396,7 @@
     "Filters": "Filtres",
     "HistoryCleanupDaysHelpText": "Définir sur 0 pour désactiver le nettoyage automatique",
     "HistoryCleanupDaysHelpTextWarning": "Les fichiers dans la corbeille plus anciens que le nombre de jours sélectionné seront nettoyés automatiquement",
-    "OnGrab": "À la Récupération",
+    "OnGrab": "Saisie à la diffusion",
     "OnHealthIssue": "Lors d'un problème de santé",
     "TestAllIndexers": "Tester tous les indexeurs",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent fourni par l'application qui a appelé l'API",
@@ -472,5 +472,9 @@
     "AuthenticationRequiredWarning": "Pour empêcher l'accès à distance sans authentification, Prowlarr exige désormais que l'authentification soit activée. Configurez votre méthode d'authentification et vos informations d'identification. Vous pouvez éventuellement désactiver l'authentification à partir des adresses locales. Reportez-vous à la FAQ pour plus d'informations.",
     "Remove": "Retirer",
     "Replace": "Remplacer",
-    "TheLatestVersionIsAlreadyInstalled": "La dernière version de Prowlarr est déjà installée"
+    "TheLatestVersionIsAlreadyInstalled": "La dernière version de Prowlarr est déjà installée",
+    "AddCustomFilter": "Ajouter filtre personnalisé",
+    "AddApplication": "Ajouter application",
+    "IncludeManualGrabsHelpText": "Inclure les saisies manuelles effectuées dans Prowlarr",
+    "OnGrabHelpText": "Saisie à la  diffussion"
 }

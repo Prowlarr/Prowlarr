@@ -23,7 +23,9 @@ function CapabilitiesLabel(props: CapabilitiesLabelProps) {
     );
   }
 
-  const nameList = filteredList.map((item) => item.name).sort();
+  const nameList = Array.from(
+    new Set(filteredList.map((item) => item.name).sort())
+  );
 
   return (
     <span>

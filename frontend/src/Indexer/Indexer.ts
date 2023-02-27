@@ -2,6 +2,8 @@ import ModelBase from 'App/ModelBase';
 
 export interface IndexerStatus extends ModelBase {
   disabledTill: Date;
+  initialFailure: Date;
+  mostRecentFailure: Date;
 }
 
 export interface IndexerCategory extends ModelBase {

@@ -1,9 +1,11 @@
 import React from 'react';
 import Icon from 'Components/Icon';
 import VirtualTableRowCell from 'Components/Table/Cells/TableRowCell';
-import { icons, kinds } from 'Helpers/Props';
+import Popover from 'Components/Tooltip/Popover';
+import { icons, kinds, tooltipPositions } from 'Helpers/Props';
 import { IndexerStatus } from 'Indexer/Indexer';
-import formatDateTime from 'Utilities/Date/formatDateTime';
+import translate from 'Utilities/String/translate';
+import DisabledIndexerInfo from './DisabledIndexerInfo';
 import styles from './IndexerStatusCell.css';
 
 interface IndexerStatusCellProps {
@@ -11,6 +13,8 @@ interface IndexerStatusCellProps {
   enabled: boolean;
   redirect: boolean;
   status: IndexerStatus;
+  longDateFormat: string;
+  timeFormat: string;
   component?: React.ElementType;
 }
 
@@ -20,6 +24,8 @@ function IndexerStatusCell(props: IndexerStatusCellProps) {
     enabled,
     redirect,
     status,
+    longDateFormat,
+    timeFormat,
     component: Component = VirtualTableRowCell,
     ...otherProps
   } = props;
@@ -41,13 +47,29 @@ function IndexerStatusCell(props: IndexerStatusCellProps) {
         />
       }
       {status ? (
-        <Icon
-          className={styles.statusIcon}
-          kind={kinds.DANGER}
-          name={icons.WARNING}
-          title={`Indexer is Disabled due to failures until ${formatDateTime(
-            status.disabledTill
-          )}`}
+        <Popover
+          className={styles.indexerStatusTooltip}
+          canFlip={true}
+          anchor={
+            <Icon
+              className={styles.statusIcon}
+              kind={kinds.DANGER}
+              name={icons.WARNING}
+            />
+          }
+          title={translate('IndexerDisabled')}
+          body={
+            <div>
+              <DisabledIndexerInfo
+                mostRecentFailure={status.mostRecentFailure}
+                initialFailure={status.initialFailure}
+                disabledTill={status.disabledTill}
+                longDateFormat={longDateFormat}
+                timeFormat={timeFormat}
+              />
+            </div>
+          }
+          position={tooltipPositions.BOTTOM}
         />
       ) : null}
     </Component>

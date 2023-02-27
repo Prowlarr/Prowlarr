@@ -30,9 +30,8 @@ interface IndexerIndexRowProps {
 function IndexerIndexRow(props: IndexerIndexRowProps) {
   const { indexerId, columns, isSelectMode } = props;
 
-  const { indexer, appProfile } = useSelector(
-    createIndexerIndexItemSelector(props.indexerId)
-  );
+  const { indexer, appProfile, status, longDateFormat, timeFormat } =
+    useSelector(createIndexerIndexItemSelector(props.indexerId));
 
   const {
     id,
@@ -44,7 +43,6 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
     protocol,
     privacy,
     priority,
-    status,
     fields,
     added,
     capabilities,
@@ -123,6 +121,8 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
               enabled={enable}
               redirect={redirect}
               status={status}
+              longDateFormat={longDateFormat}
+              timeFormat={timeFormat}
               component={VirtualTableRowCell}
             />
           );

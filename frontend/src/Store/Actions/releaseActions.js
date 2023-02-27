@@ -65,7 +65,7 @@ export const defaultState = {
       isVisible: true
     },
     {
-      name: 'title',
+      name: 'sortTitle',
       label: translate('Title'),
       isSortable: true,
       isVisible: true

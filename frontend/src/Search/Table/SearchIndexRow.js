@@ -8,6 +8,7 @@ import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import ProtocolLabel from 'Indexer/Index/Table/ProtocolLabel';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
@@ -15,7 +16,6 @@ import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CategoryLabel from './CategoryLabel';
 import Peers from './Peers';
-import ProtocolLabel from './ProtocolLabel';
 import styles from './SearchIndexRow.css';
 
 function getDownloadIcon(isGrabbing, isGrabbed, grabError) {
@@ -165,7 +165,7 @@ class SearchIndexRow extends Component {
               );
             }
 
-            if (column.name === 'title') {
+            if (column.name === 'sortTitle') {
               return (
                 <VirtualTableRowCell
                   key={column.name}

@@ -10,7 +10,7 @@ function SearchIndexFilterMenu(props) {
     filters,
     customFilters,
     isDisabled,
-    onFilterSelect
+    onFilterSelect,
   } = props;
 
   return (
@@ -27,15 +27,16 @@ function SearchIndexFilterMenu(props) {
 }
 
 SearchIndexFilterMenu.propTypes = {
-  selectedFilterKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  selectedFilterKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   isDisabled: PropTypes.bool.isRequired,
-  onFilterSelect: PropTypes.func.isRequired
+  onFilterSelect: PropTypes.func.isRequired,
 };
 
 SearchIndexFilterMenu.defaultProps = {
-  showCustomFilters: false
+  showCustomFilters: false,
 };
 
 export default SearchIndexFilterMenu;

@@ -7,18 +7,10 @@ import { align, sortDirections } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 
 function SearchIndexSortMenu(props) {
-  const {
-    sortKey,
-    sortDirection,
-    isDisabled,
-    onSortSelect
-  } = props;
+  const { sortKey, sortDirection, isDisabled, onSortSelect } = props;
 
   return (
-    <SortMenu
-      isDisabled={isDisabled}
-      alignMenu={align.RIGHT}
-    >
+    <SortMenu isDisabled={isDisabled} alignMenu={align.RIGHT}>
       <MenuContent>
         <SortMenuItem
           name="protocol"
@@ -39,7 +31,7 @@ function SearchIndexSortMenu(props) {
         </SortMenuItem>
 
         <SortMenuItem
-          name="title"
+          name="sortTitle"
           sortKey={sortKey}
           sortDirection={sortDirection}
           onPress={onSortSelect}
@@ -109,7 +101,7 @@ SearchIndexSortMenu.propTypes = {
   sortKey: PropTypes.string,
   sortDirection: PropTypes.oneOf(sortDirections.all),
   isDisabled: PropTypes.bool.isRequired,
-  onSortSelect: PropTypes.func.isRequired
+  onSortSelect: PropTypes.func.isRequired,
 };
 
 export default SearchIndexSortMenu;

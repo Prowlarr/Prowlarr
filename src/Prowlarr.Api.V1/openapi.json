@@ -5794,6 +5794,16 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "mostRecentFailure": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "initialFailure": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false

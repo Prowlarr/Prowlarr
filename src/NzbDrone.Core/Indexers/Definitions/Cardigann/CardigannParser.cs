@@ -90,8 +90,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
 
                 var rowsArray = JsonParseRowsSelector(parsedJson, search.Rows.Selector);
+
                 if (rowsArray == null)
                 {
+                    if (search.Rows.MissingAttributeEqualsNoResults)
+                    {
+                        return releases;
+                    }
+
                     throw new IndexerException(indexerResponse, "Error Parsing Rows Selector");
                 }
 

@@ -159,6 +159,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public SelectorBlock Dateheaders { get; set; }
         public SelectorBlock Count { get; set; }
         public bool Multiple { get; set; }
+        public bool MissingAttributeEqualsNoResults { get; set; }
     }
 
     public class SearchPathBlock : RequestBlock

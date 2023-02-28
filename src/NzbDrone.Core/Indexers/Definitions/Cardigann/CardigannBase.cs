@@ -825,9 +825,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected JArray JsonParseRowsSelector(JToken parsedJson, string rowSelector)
         {
             var selector = rowSelector.Split(':')[0];
-            var rowsObj = parsedJson.SelectToken(selector).Value<JArray>();
-            return new JArray(rowsObj.Where(t =>
-                                                JsonParseFieldSelector(t.Value<JObject>(), rowSelector.Remove(0, selector.Length)) != null));
+
+            try
+            {
+                var rowsObj = parsedJson.SelectToken(selector).Value<JArray>();
+
+                return new JArray(rowsObj.Where(t => JsonParseFieldSelector(t.Value<JObject>(), rowSelector.Remove(0, selector.Length)) != null));
+            }
+            catch (Exception ex)
+            {
+                _logger.Trace(ex, "Failed to parse JSON rows for selector \"{0}\"", rowSelector);
+
+                return null;
+            }
         }
 
         private string JsonParseFieldSelector(JToken parsedJson, string rowSelector)

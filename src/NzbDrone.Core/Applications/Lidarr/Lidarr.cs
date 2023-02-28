@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         public override List<AppIndexerMap> GetIndexerMappings()
         {
             var indexers = _lidarrV1Proxy.GetIndexers(Settings)
-                                         .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
+                .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
 
             var mappings = new List<AppIndexerMap>();
 
@@ -73,8 +73,8 @@ namespace NzbDrone.Core.Applications.Lidarr
 
                     if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                     {
-                        //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
-                        mappings.Add(new AppIndexerMap { RemoteIndexerId = indexer.Id, IndexerId = indexerId });
+                        // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                        mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerId = indexer.Id });
                     }
                 }
             }
@@ -84,15 +84,19 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
-                var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol);
+                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
-                var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
+                return;
             }
 
-            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+            _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
+
+            var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol);
+
+            var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
+            _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -129,7 +133,10 @@ namespace NzbDrone.Core.Applications.Lidarr
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
-                        lidarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !lidarrIndexer.Fields.Any(s => s.Name == f.Name)));
+                        lidarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => lidarrIndexer.Fields.All(s => s.Name != f.Name)));
+
+                        // Retain user tags not-affiliated with Prowlarr
+                        lidarrIndexer.Tags.UnionWith(remoteIndexer.Tags);
 
                         // Retain user settings not-affiliated with Prowlarr
                         lidarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
@@ -151,14 +158,14 @@ namespace NzbDrone.Core.Applications.Lidarr
 
                 if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
-                    _logger.Debug("Remote indexer not found, re-adding {0} to Lidarr", indexer.Name);
+                    _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Lidarr", indexer.Name, indexer.Id);
                     lidarrIndexer.Id = 0;
                     var newRemoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
                     _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
                 }
                 else
                 {
-                    _logger.Debug("Remote indexer not found for {0}, skipping re-add to Lidarr due to indexer capabilities", indexer.Name);
+                    _logger.Debug("Remote indexer not found for {0} [{1}], skipping re-add to Lidarr due to indexer capabilities", indexer.Name, indexer.Id);
                 }
             }
         }
@@ -167,10 +174,10 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _lidarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
+            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
 
-            var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
-            var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
+            var newznab = schemas.First(i => i.Implementation == "Newznab");
+            var torznab = schemas.First(i => i.Implementation == "Torznab");
 
             var schema = protocol == DownloadProtocol.Usenet ? newznab : torznab;
 
@@ -184,7 +191,8 @@ namespace NzbDrone.Core.Applications.Lidarr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = new List<LidarrField>()
+                Fields = new List<LidarrField>(),
+                Tags = new HashSet<int>()
             };
 
             lidarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));

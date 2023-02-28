@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FluentValidation.Results;
-using Newtonsoft.Json.Linq;
 using NLog;
-using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
@@ -57,8 +55,8 @@ namespace NzbDrone.Core.Applications.Mylar
 
                     if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                     {
-                        //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
-                        mappings.Add(new AppIndexerMap { RemoteIndexerName = $"{indexer.Type},{indexer.Name}", IndexerId = indexerId });
+                        // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                        mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerName = $"{indexer.Type},{indexer.Name}" });
                     }
                 }
             }
@@ -68,15 +66,19 @@ namespace NzbDrone.Core.Applications.Mylar
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
-                var mylarIndexer = BuildMylarIndexer(indexer, indexer.Protocol);
+                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
-                var remoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
+                return;
             }
 
-            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+            _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
+
+            var mylarIndexer = BuildMylarIndexer(indexer, indexer.Protocol);
+
+            var remoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
+            _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -124,13 +126,13 @@ namespace NzbDrone.Core.Applications.Mylar
 
                 if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
-                    _logger.Debug("Remote indexer not found, re-adding {0} to Mylar", indexer.Name);
+                    _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Mylar", indexer.Name, indexer.Id);
                     var newRemoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
                     _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{newRemoteIndexer.Type},{newRemoteIndexer.Name}" });
                 }
                 else
                 {
-                    _logger.Debug("Remote indexer not found for {0}, skipping re-add to Mylar due to indexer capabilities", indexer.Name);
+                    _logger.Debug("Remote indexer not found for {0} [{1}], skipping re-add to Mylar due to indexer capabilities", indexer.Name, indexer.Id);
                 }
             }
         }

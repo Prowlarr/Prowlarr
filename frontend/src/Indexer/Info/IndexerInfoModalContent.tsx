@@ -13,6 +13,7 @@ import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
+import TagListConnector from 'Components/TagListConnector';
 import { kinds } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
@@ -50,6 +51,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     language,
     indexerUrls,
     fields,
+    tags,
     protocol,
     capabilities,
   } = indexer;
@@ -134,6 +136,16 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
               <DescriptionListItemDescription>
                 {`${window.location.origin}${window.Prowlarr.urlBase}/${id}/api`}
               </DescriptionListItemDescription>
+              {tags.length > 0 ? (
+                <>
+                  <DescriptionListItemTitle>
+                    {translate('Tags')}
+                  </DescriptionListItemTitle>
+                  <DescriptionListItemDescription>
+                    <TagListConnector tags={tags} />
+                  </DescriptionListItemDescription>
+                </>
+              ) : null}
             </DescriptionList>
           </div>
         </FieldSet>

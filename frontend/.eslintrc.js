@@ -1,15 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable @typescript-eslint/no-var-requires
 const fs = require('fs');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
 const typescriptEslintRecommended = require('@typescript-eslint/eslint-plugin').configs.recommended;
 
+const frontendFolder = __dirname;
+
 const dirs = fs
-  .readdirSync('frontend/src', { withFileTypes: true })
+  .readdirSync(path.join(frontendFolder, 'src'), { withFileTypes: true })
   .filter((dirent) => dirent.isDirectory())
   .map((dirent) => dirent.name)
   .join('|');
-
-const frontendFolder = __dirname;
 
 module.exports = {
   parser: '@babel/eslint-parser',

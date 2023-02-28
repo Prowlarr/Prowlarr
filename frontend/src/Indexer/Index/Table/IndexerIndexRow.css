@@ -64,7 +64,7 @@
 }
 
 .externalLink {
-  composes: link from '~Components/Link/Link.css';
+  composes: button from '~Components/Link/IconButton.css';
 
   color: var(--textColor);
 }

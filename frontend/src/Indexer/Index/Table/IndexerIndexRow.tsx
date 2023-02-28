@@ -216,6 +216,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
               className={styles[column.name]}
             >
               <IconButton
+                className={styles.externalLink}
                 name={icons.RSS}
                 title={translate('RssFeed')}
                 to={rssUrl}

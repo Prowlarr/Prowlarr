@@ -181,9 +181,16 @@ namespace NzbDrone.Core.Applications
 
                     foreach (var mapping in indexerMappings)
                     {
+                        var indexer = allIndexers.FirstOrDefault(x => x.Id == mapping.IndexerId);
+
                         if (allIndexers.All(x => x.Id != mapping.IndexerId))
                         {
-                            _logger.Info("Indexer with the ID {0} was found within {1} but is no longer defined within Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
+                            _logger.Warn("Indexer with the ID {0} was found within {1} but is no longer defined within Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
+                            ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
+                        }
+                        else if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync && indexer != null && !ShouldHandleIndexer(app.Definition, indexer))
+                        {
+                            _logger.Warn("Indexer with the ID {0} was found within {1} but is no longer handled by Prowlarr, this is being removed.", mapping.IndexerId, app.Name);
                             ExecuteAction(a => a.RemoveIndexer(mapping.IndexerId), app);
                         }
                     }
@@ -207,7 +214,7 @@ namespace NzbDrone.Core.Applications
                 return true;
             }
 
-            _logger.Debug("Application {0} does not have any intersecting tags with {1} [{2}]. Indexer will not be synced.", app.Name, indexer.Name, indexer.Id);
+            _logger.Info("Application {0} does not have any intersecting tags with {1} [{2}]. Indexer will not be handled.", app.Name, indexer.Name, indexer.Id);
             return false;
         }
 

@@ -100,7 +100,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             FlareSolverrRequest req;
 
             var url = request.Url.ToString();
-            var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36";
             var maxTimeout = Settings.RequestTimeout * 1000;
 
             // Use Proxy if no credentials are set (creds not supported as of FS 2.2.9)
@@ -114,7 +113,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     Cmd = "request.get",
                     Url = url,
                     MaxTimeout = maxTimeout,
-                    UserAgent = userAgent,
                     Proxy = new FlareSolverrProxy
                     {
                         Url = proxyUrl?.AbsoluteUri
@@ -141,7 +139,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                             ContentLength = null
                         },
                         MaxTimeout = maxTimeout,
-                        UserAgent = userAgent,
                         Proxy = new FlareSolverrProxy
                         {
                             Url = proxyUrl?.AbsoluteUri
@@ -226,7 +223,6 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
         {
             public string Cmd { get; set; }
             public string Url { get; set; }
-            public string UserAgent { get; set; }
             public Cookie[] Cookies { get; set; }
             public FlareSolverrProxy Proxy { get; set; }
         }

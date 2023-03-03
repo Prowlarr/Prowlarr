@@ -10,6 +10,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
@@ -42,6 +43,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new SceneTimeParser(Settings, Capabilities.Categories);
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            if (!httpResponse.Content.Contains("logout.php"))
+            {
+                throw new IndexerAuthException("SceneTime authentication with cookies failed.");
+            }
+
+            return false;
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -228,14 +239,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var qDescCol = row.Children[nameIndex];
                 var qLink = qDescCol.QuerySelector("a");
-                var infoUrl = _settings.BaseUrl + qLink.GetAttribute("href").TrimStart('/');
+
+                // Clean up title
+                qLink.QuerySelectorAll("font[color=\"green\"]").ToList().ForEach(e => e.Remove());
+                var title = qLink.TextContent.Trim();
+
+                var infoUrl = _settings.BaseUrl + qLink.GetAttribute("href")?.TrimStart('/');
                 var torrentId = ParseUtil.GetArgumentFromQueryString(infoUrl, "id");
                 var seeders = ParseUtil.CoerceInt(row.Children[seedersIndex].TextContent.Trim());
 
-                var categoryLink = row.Children[categoryIndex].QuerySelector("a").GetAttribute("href");
+                var categoryLink = row.Children[categoryIndex].QuerySelector("a")?.GetAttribute("href");
                 var cat = categoryLink != null ? ParseUtil.GetArgumentFromQueryString(categoryLink, "cat") : "82"; // default
 
-                var dateAdded = qDescCol.QuerySelector("span[class=\"elapsedDate\"]").GetAttribute("title").Trim();
+                var dateAdded = qDescCol.QuerySelector("span[class=\"elapsedDate\"]")?.GetAttribute("title")?.Trim();
                 var publishDate = DateTime.TryParseExact(dateAdded, "dddd, MMMM d, yyyy \\a\\t h:mmtt", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date)
                     ? date
                     : DateTimeUtil.FromTimeAgo(qDescCol.QuerySelector("span[class=\"elapsedDate\"]").TextContent.Trim());
@@ -245,7 +261,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
                     DownloadUrl = $"{_settings.BaseUrl}download.php/{torrentId}/download.torrent",
-                    Title = qLink.TextContent,
+                    Title = title,
                     Categories = _categories.MapTrackerCatToNewznab(cat),
                     PublishDate = publishDate,
                     Size = ParseUtil.GetBytes(row.Children[sizeIndex].TextContent),

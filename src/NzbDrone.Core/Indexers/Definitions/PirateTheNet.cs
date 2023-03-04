@@ -135,37 +135,29 @@ public class PirateTheNetRequestGenerator : IIndexerRequestGenerator
         _capabilities = capabilities;
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.FullImdbId));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.FullImdbId);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories);
     }
 
     private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)

@@ -16,9 +16,8 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
     public Func<IDictionary<string, string>> GetCookies { get; set; }
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
         if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() || searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
@@ -47,14 +46,11 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
             }
         }
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
         if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
@@ -70,14 +66,11 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
             parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
         if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
@@ -87,14 +80,11 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
             parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
         if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
@@ -104,14 +94,11 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
             parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
         if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
@@ -121,9 +108,7 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
             parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-        return pageableRequests;
+        return GetPagedRequests(searchCriteria, parameters);
     }
 
     private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)

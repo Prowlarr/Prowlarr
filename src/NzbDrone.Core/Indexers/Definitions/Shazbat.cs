@@ -124,37 +124,29 @@ public class ShazbatRequestGenerator : IIndexerRequestGenerator
         _settings = settings;
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}");
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        return new IndexerPageableRequestChain();
+        return new List<IndexerRequest>();
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}");
     }
 
     private IEnumerable<IndexerRequest> GetPagedRequests(string term)

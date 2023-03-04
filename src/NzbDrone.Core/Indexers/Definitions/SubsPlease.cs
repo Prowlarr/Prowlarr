@@ -111,47 +111,33 @@ namespace NzbDrone.Core.Indexers.Definitions
             yield return request;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(searchCriteria.IsRssSearch
+            return searchCriteria.IsRssSearch
                 ? GetRssRequest()
-                : GetSearchRequests(searchCriteria.SanitizedTvSearchString));
-
-            return pageableRequests;
+                : GetSearchRequests(searchCriteria.SanitizedTvSearchString);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(searchCriteria.IsRssSearch
+            return searchCriteria.IsRssSearch
                 ? GetRssRequest()
-                : GetSearchRequests(searchCriteria.SanitizedSearchTerm));
-
-            return pageableRequests;
+                : GetSearchRequests(searchCriteria.SanitizedSearchTerm);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

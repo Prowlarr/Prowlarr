@@ -225,10 +225,8 @@ public class SpeedCDRequestGenerator : IIndexerRequestGenerator
         yield return request;
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var term = $"{searchCriteria.SanitizedSearchTerm}";
 
         if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
@@ -236,24 +234,16 @@ public class SpeedCDRequestGenerator : IIndexerRequestGenerator
             term = $"{searchCriteria.FullImdbId}";
         }
 
-        pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
-
-        return pageableRequests;
+        return GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace());
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var term = $"{searchCriteria.SanitizedTvSearchString}";
 
         if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
@@ -271,27 +261,17 @@ public class SpeedCDRequestGenerator : IIndexerRequestGenerator
             }
         }
 
-        pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
-
-        return pageableRequests;
+        return GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace());
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
-        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-        return pageableRequests;
+        return GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories);
     }
 
     public Func<IDictionary<string, string>> GetCookies { get; set; }

@@ -18,20 +18,14 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public IIndexerHttpClient HttpClient { get; set; }
         public Logger Logger { get; set; }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest(searchCriteria.FullImdbId));
-            }
-            else
-            {
-                pageableRequests.Add(GetRequest(string.Format("{0}", searchCriteria.SearchTerm)));
+                return GetRequest(searchCriteria.FullImdbId);
             }
 
-            return pageableRequests;
+            return GetRequest(string.Format("{0}", searchCriteria.SearchTerm));
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -72,28 +66,24 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
             yield return request;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetRequest(string.Format("{0}", searchCriteria.SearchTerm)));
-
-            return pageableRequests;
+            return GetRequest(string.Format("{0}", searchCriteria.SearchTerm));
         }
     }
 }

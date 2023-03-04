@@ -9,6 +9,7 @@ using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using Newtonsoft.Json.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
@@ -42,11 +43,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Movie search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -59,16 +58,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Music search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -79,16 +74,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.Track"] = searchCriteria.Track;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting TV search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -107,16 +98,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Book search");
-
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
@@ -126,22 +113,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Publisher"] = searchCriteria.Publisher;
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             _logger.Trace("Getting Basic search");
 
-            var pageableRequests = new IndexerPageableRequestChain();
-
             var variables = GetQueryVariableDefaults(searchCriteria);
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
-
-            return pageableRequests;
+            return GetRequest(variables, searchCriteria);
         }
 
         private Dictionary<string, object> GetQueryVariableDefaults(SearchCriteriaBase searchCriteria)
@@ -151,8 +132,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Type"] = searchCriteria.SearchType;
             variables[".Query.Q"] = searchCriteria.SearchTerm;
             variables[".Query.Categories"] = searchCriteria.Categories;
-            variables[".Query.Limit"] = searchCriteria.Limit?.ToString() ?? null;
-            variables[".Query.Offset"] = searchCriteria.Offset?.ToString() ?? null;
+            variables[".Query.Limit"] = searchCriteria.Limit.ToString() ?? null;
+            variables[".Query.Offset"] = searchCriteria.Offset.ToString() ?? null;
             variables[".Query.Extended"] = null;
             variables[".Query.APIKey"] = null;
             variables[".Query.Genre"] = null;
@@ -1017,15 +998,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables, SearchCriteriaBase searchCriteria)
         {
-            var limit = searchCriteria.Limit ?? 100;
-            var offset = searchCriteria.Offset ?? 0;
-
-            if (offset > 0 && limit > 0 && offset / limit > 0)
-            {
-                // Pagination doesn't work yet, this is to prevent fetching the first page multiple times.
-                yield break;
-            }
-
             var search = _definition.Search;
 
             var mappedCategories = _categories.MapTorznabCapsToTrackers((int[])variables[".Query.Categories"]);
@@ -1055,117 +1027,145 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Keywords"] = string.Join(" ", keywordTokens);
             variables[".Keywords"] = ApplyFilters((string)variables[".Query.Keywords"], search.Keywordsfilters, variables);
 
+            var pageSize = search.PageSize;
+            var minPage = 0;
+            var maxPage = 0;
+
+            if (pageSize > 0)
+            {
+                variables[".PageSize"] = pageSize;
+                minPage = (searchCriteria.Offset / pageSize) + search.FirstPageNumber;
+                maxPage = ((searchCriteria.Offset + searchCriteria.Limit - 1) / pageSize) + search.FirstPageNumber;
+            }
+
+            if (pageSize == 0 && searchCriteria.Offset >= 100)
+            {
+                // Indexer doesn't support pagination
+                yield break;
+            }
+
             // TODO: prepare queries first and then send them parallel
             var searchPaths = search.Paths;
-            foreach (var searchPath in searchPaths)
+
+            // Grab all pages we will need to return user requested limit and offset
+            for (var page = minPage; page <= maxPage; page++)
             {
-                // skip path if categories don't match
-                if (searchPath.Categories != null && mappedCategories.Count > 0)
+                variables[".Query.Page"] = page;
+
+                foreach (var searchPath in searchPaths)
                 {
-                    var invertMatch = searchPath.Categories[0] == "!";
-                    var hasIntersect = mappedCategories.Intersect(searchPath.Categories).Any();
-                    if (invertMatch)
+                    // skip path if categories don't match
+                    if (searchPath.Categories != null && mappedCategories.Count > 0)
                     {
-                        hasIntersect = !hasIntersect;
-                    }
-
-                    if (!hasIntersect)
-                    {
-                        continue;
-                    }
-                }
-
-                // build search URL
-                // HttpUtility.UrlPathEncode seems to only encode spaces, we use UrlEncode and replace + with %20 as a workaround
-                var searchUrl = ResolvePath(ApplyGoTemplateText(searchPath.Path, variables, WebUtility.UrlEncode).Replace("+", "%20")).AbsoluteUri;
-                var queryCollection = new List<KeyValuePair<string, string>>();
-                var method = HttpMethod.Get;
-
-                if (string.Equals(searchPath.Method, "post", StringComparison.OrdinalIgnoreCase))
-                {
-                    method = HttpMethod.Post;
-                }
-
-                var inputsList = new List<Dictionary<string, string>>();
-                if (searchPath.Inheritinputs)
-                {
-                    inputsList.Add(search.Inputs);
-                }
-
-                inputsList.Add(searchPath.Inputs);
-
-                foreach (var inputs in inputsList)
-                {
-                    if (inputs != null)
-                    {
-                        foreach (var input in inputs)
+                        var invertMatch = searchPath.Categories[0] == "!";
+                        var hasIntersect = mappedCategories.Intersect(searchPath.Categories).Any();
+                        if (invertMatch)
                         {
-                            if (input.Key == "$raw")
+                            hasIntersect = !hasIntersect;
+                        }
+
+                        if (!hasIntersect)
+                        {
+                            continue;
+                        }
+                    }
+
+                    // build search URL
+                    // HttpUtility.UrlPathEncode seems to only encode spaces, we use UrlEncode and replace + with %20 as a workaround
+                    var searchUrl = ResolvePath(ApplyGoTemplateText(searchPath.Path, variables, WebUtility.UrlEncode).Replace("+", "%20")).AbsoluteUri;
+                    var queryCollection = new List<KeyValuePair<string, string>>();
+                    var method = HttpMethod.Get;
+
+                    if (string.Equals(searchPath.Method, "post", StringComparison.OrdinalIgnoreCase))
+                    {
+                        method = HttpMethod.Post;
+                    }
+
+                    var inputsList = new List<Dictionary<string, string>>();
+                    if (searchPath.Inheritinputs)
+                    {
+                        inputsList.Add(search.Inputs);
+                    }
+
+                    inputsList.Add(searchPath.Inputs);
+
+                    foreach (var inputs in inputsList)
+                    {
+                        if (inputs != null)
+                        {
+                            foreach (var input in inputs)
                             {
-                                var rawStr = ApplyGoTemplateText(input.Value, variables, WebUtility.UrlEncode);
-                                foreach (var part in rawStr.Split('&'))
+                                if (input.Key == "$raw")
                                 {
-                                    var parts = part.Split(new char[] { '=' }, 2);
-                                    var key = parts[0];
-                                    if (key.Length == 0)
+                                    var rawStr = ApplyGoTemplateText(input.Value, variables, WebUtility.UrlEncode);
+                                    foreach (var part in rawStr.Split('&'))
                                     {
-                                        continue;
-                                    }
+                                        var parts = part.Split(new char[] { '=' }, 2);
+                                        var key = parts[0];
+                                        if (key.Length == 0)
+                                        {
+                                            continue;
+                                        }
 
-                                    var value = "";
-                                    if (parts.Length == 2)
-                                    {
-                                        value = parts[1];
-                                    }
+                                        var value = "";
+                                        if (parts.Length == 2)
+                                        {
+                                            value = parts[1];
+                                        }
 
-                                    queryCollection.Add(key, value);
+                                        queryCollection.Add(key, value);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                queryCollection.Add(input.Key, ApplyGoTemplateText(input.Value, variables));
+                                else
+                                {
+                                    var inputValue = ApplyGoTemplateText(input.Value, variables);
+
+                                    if (inputValue.IsNotNullOrWhiteSpace() || search.AllowEmptyInputs)
+                                    {
+                                        queryCollection.Add(input.Key, inputValue);
+                                    }
+                                }
                             }
                         }
                     }
-                }
 
-                if (method == HttpMethod.Get)
-                {
-                    if (queryCollection.Count > 0)
+                    if (method == HttpMethod.Get)
                     {
-                        searchUrl += "?" + queryCollection.GetQueryString(_encoding);
+                        if (queryCollection.Count > 0)
+                        {
+                            searchUrl += "?" + queryCollection.GetQueryString(_encoding);
+                        }
                     }
-                }
 
-                _logger.Info($"Adding request: {searchUrl}");
+                    _logger.Info($"Adding request: {searchUrl}");
 
-                var requestBuilder = new HttpRequestBuilder(searchUrl)
-                {
-                    Method = method,
-                    Encoding = _encoding
-                };
-
-                // Add FormData for searchs that POST
-                if (method == HttpMethod.Post)
-                {
-                    foreach (var param in queryCollection)
+                    var requestBuilder = new HttpRequestBuilder(searchUrl)
                     {
-                        requestBuilder.AddFormParameter(param.Key, param.Value);
+                        Method = method,
+                        Encoding = _encoding
+                    };
+
+                    // Add FormData for searchs that POST
+                    if (method == HttpMethod.Post)
+                    {
+                        foreach (var param in queryCollection)
+                        {
+                            requestBuilder.AddFormParameter(param.Key, param.Value);
+                        }
                     }
-                }
 
-                // send HTTP request
-                if (search.Headers != null)
-                {
-                    var headers = ParseCustomHeaders(search.Headers, variables);
-                    requestBuilder.SetHeaders(headers ?? new Dictionary<string, string>());
-                }
+                    // send HTTP request
+                    if (search.Headers != null)
+                    {
+                        var headers = ParseCustomHeaders(search.Headers, variables);
+                        requestBuilder.SetHeaders(headers ?? new Dictionary<string, string>());
+                    }
 
-                var request = requestBuilder
-                    .WithRateLimit(_rateLimit.TotalSeconds)
-                    .Build();
+                    var request = requestBuilder
+                        .WithRateLimit(_rateLimit.TotalSeconds)
+                        .Build();
 
-                var cardigannRequest = new CardigannRequest(request, variables, searchPath)
+                    var cardigannRequest = new CardigannRequest(request, variables, searchPath)
                     {
                         HttpRequest =
                         {
@@ -1173,7 +1173,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         }
                     };
 
-                yield return cardigannRequest;
+                    yield return cardigannRequest;
+                }
             }
         }
     }

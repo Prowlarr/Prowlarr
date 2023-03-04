@@ -99,20 +99,18 @@ namespace NzbDrone.Core.Indexers.Definitions
             yield return new IndexerRequest(builder.Build());
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
             var queryParams = new NebulanceQuery
             {
                 Age = ">0"
@@ -142,20 +140,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
-
-            return pageableRequests;
+            return GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
             var queryParams = new NebulanceQuery
             {
                 Age = ">0"
@@ -166,9 +160,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, "[\\W]+", "%").Trim() + "%";
             }
 
-            pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
-
-            return pageableRequests;
+            return GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

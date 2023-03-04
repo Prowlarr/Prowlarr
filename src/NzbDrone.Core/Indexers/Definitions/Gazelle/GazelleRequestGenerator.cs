@@ -42,10 +42,8 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
         yield return request;
     }
 
-    public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public virtual IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
         if (searchCriteria.ImdbId != null)
@@ -53,15 +51,11 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
             parameters.Set(ImdbInTags ? "taglist" : "cataloguenumber", searchCriteria.FullImdbId);
         }
 
-        pageableRequests.Add(GetRequest(parameters));
-
-        return pageableRequests;
+        return GetRequest(parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
         if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
@@ -79,15 +73,11 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
             parameters.Set("recordlabel", searchCriteria.Label);
         }
 
-        pageableRequests.Add(GetRequest(parameters));
-
-        return pageableRequests;
+        return GetRequest(parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var parameters = GetBasicSearchParameters(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories);
 
         if (searchCriteria.ImdbId != null)
@@ -95,29 +85,21 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
             parameters.Set(ImdbInTags ? "taglist" : "cataloguenumber", searchCriteria.FullImdbId);
         }
 
-        pageableRequests.Add(GetRequest(parameters));
-
-        return pageableRequests;
+        return GetRequest(parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
-        pageableRequests.Add(GetRequest(parameters));
 
-        return pageableRequests;
+        return GetRequest(parameters);
     }
 
-    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
-        var pageableRequests = new IndexerPageableRequestChain();
-
         var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
-        pageableRequests.Add(GetRequest(parameters));
 
-        return pageableRequests;
+        return GetRequest(parameters);
     }
 
     // hook to adjust the search term

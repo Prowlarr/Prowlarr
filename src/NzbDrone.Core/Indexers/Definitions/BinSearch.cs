@@ -90,7 +90,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "adv_sort", "date" },
                 { "q", term },
                 { "m", searchCriteria.Offset.ToString() },
-                { "max", searchCriteria.Limit?.ToString() ?? "100" }
+                { "max", searchCriteria.Limit.ToString() ?? "100" }
             };
 
             var searchUrl = string.Format("{0}/?{1}", Settings.BaseUrl.TrimEnd('/'), qc.GetQueryString());
@@ -100,49 +100,29 @@ namespace NzbDrone.Core.Indexers.Definitions
             yield return request;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria));
-
-            return pageableRequests;
+            return GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria));
-
-            return pageableRequests;
+            return GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria));
-
-            return pageableRequests;
+            return GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria));
-
-            return pageableRequests;
+            return GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria));
-
-            return pageableRequests;
+            return GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

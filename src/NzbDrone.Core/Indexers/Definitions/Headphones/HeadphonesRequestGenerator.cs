@@ -25,18 +25,15 @@ namespace NzbDrone.Core.Indexers.Headphones
             PageSize = 100;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var capabilities = Capabilities;
 
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
             if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && capabilities.MusicSearchArtistAvailable)
@@ -67,30 +64,22 @@ namespace NzbDrone.Core.Indexers.Headphones
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria,
-                parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var capabilities = Capabilities;
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var parameters = new NameValueCollection();
 
@@ -99,9 +88,7 @@ namespace NzbDrone.Core.Indexers.Headphones
                 parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, parameters);
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
@@ -120,15 +107,9 @@ namespace NzbDrone.Core.Indexers.Headphones
                 baseUrl += "&apikey=" + Settings.ApiKey;
             }
 
-            if (searchCriteria.Limit.HasValue)
-            {
-                parameters.Add("limit", searchCriteria.Limit.ToString());
-            }
+            parameters.Add("limit", searchCriteria.Limit.ToString());
 
-            if (searchCriteria.Offset.HasValue)
-            {
-                parameters.Add("offset", searchCriteria.Offset.ToString());
-            }
+            parameters.Add("offset", searchCriteria.Offset.ToString());
 
             var request = new IndexerRequest(string.Format("{0}&{1}", baseUrl, parameters.GetQueryString()), HttpAccept.Rss);
             request.HttpRequest.Credentials = new BasicNetworkCredential(Settings.Username, Settings.Password);

@@ -51,9 +51,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _movieSearchCriteria.Offset = 0;
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var pages = results.GetAllTiers().First().Take(3).ToList();
+            var pages = results.Take(3).ToList();
 
             pages[0].Url.FullUri.Should().Contain("&offset=0");
         }
@@ -63,9 +63,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         {
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var pages = results.GetAllTiers().First().Take(500).ToList();
+            var pages = results.Take(500).ToList();
 
             pages.Count.Should().BeLessThan(500);
         }
@@ -77,9 +77,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().NotContain("imdbid=0076759");
             page.Url.Query.Should().Contain("q=Star");
@@ -92,9 +92,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.GetTier(0).Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("imdbid=0076759");
         }
@@ -106,9 +106,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.GetTier(0).Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("tmdbid=11");
         }
@@ -120,9 +120,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.GetTier(0).Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("tmdbid=11");
             page.Url.Query.Should().NotContain("imdbid=0076759");
@@ -136,9 +136,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.GetTier(0).Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetTier(0).First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("tmdbid=11");
             page.Url.Query.Should().Contain("imdbid=0076759");
@@ -150,10 +150,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.Tiers.Should().Be(1);
-            results.GetTier(0).Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetTier(0).First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("q=");
         }
@@ -167,7 +166,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
-            var page = results.GetTier(0).First().First();
+            var page = results.First();
 
             page.Url.Query.Should().Contain("q=");
         }
@@ -178,9 +177,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.MovieSearchParams = new List<MovieSearchParam> { MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId };
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
-            results.Tiers.Should().Be(1);
+            results.Should().HaveCount(1);
 
-            var pageTier2 = results.GetTier(0).First().First();
+            var pageTier2 = results.First();
 
             pageTier2.Url.Query.Should().NotContain("tmdbid=11");
             pageTier2.Url.Query.Should().NotContain("imdbid=0076759");
@@ -193,9 +192,9 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             _capabilities.TvSearchParams = new List<TvSearchParam> { TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep };
 
             var results = Subject.GetSearchRequests(_tvSearchCriteria);
-            results.Tiers.Should().Be(1);
+            results.Should().HaveCount(1);
 
-            var pageTier = results.GetTier(0).First().First();
+            var pageTier = results.First();
 
             pageTier.Url.Query.Should().Contain("season=00");
         }

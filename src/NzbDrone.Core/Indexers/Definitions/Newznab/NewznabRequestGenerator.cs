@@ -26,11 +26,10 @@ namespace NzbDrone.Core.Indexers.Newznab
             PageSize = 100;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
             if (searchCriteria.TmdbId.HasValue && capabilities.MovieSearchTmdbAvailable)
@@ -66,18 +65,13 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria,
-                capabilities,
-                parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, capabilities, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
             if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && capabilities.MusicSearchArtistAvailable)
@@ -108,18 +102,13 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria,
-                capabilities,
-                parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, capabilities, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
             if (searchCriteria.TvdbId.HasValue && capabilities.TvSearchTvdbAvailable)
@@ -175,18 +164,13 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria,
-                capabilities,
-                parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, capabilities, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
 
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
             if (searchCriteria.Author.IsNotNullOrWhiteSpace() && capabilities.BookSearchAuthorAvailable)
@@ -217,17 +201,12 @@ namespace NzbDrone.Core.Indexers.Newznab
                 }
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria,
-                capabilities,
-                parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, capabilities, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var capabilities = _capabilitiesProvider.GetCapabilities(Settings, Definition);
-            var pageableRequests = new IndexerPageableRequestChain();
 
             var parameters = new NameValueCollection();
 
@@ -236,9 +215,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, capabilities, parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, capabilities, parameters);
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, IndexerCapabilities capabilities, NameValueCollection parameters)
@@ -262,15 +239,9 @@ namespace NzbDrone.Core.Indexers.Newznab
                 searchUrl += "&apikey=" + Settings.ApiKey;
             }
 
-            if (searchCriteria.Limit.HasValue)
-            {
-                parameters.Set("limit", searchCriteria.Limit.ToString());
-            }
+            parameters.Set("limit", searchCriteria.Limit.ToString());
 
-            if (searchCriteria.Offset.HasValue)
-            {
-                parameters.Set("offset", searchCriteria.Offset.ToString());
-            }
+            parameters.Set("offset", searchCriteria.Offset.ToString());
 
             if (parameters.Count > 0)
             {

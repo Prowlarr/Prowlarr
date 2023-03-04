@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
@@ -38,21 +38,17 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
                 parameters.Add("tmdbId", searchCriteria.TmdbId.ToString());
             }
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories);
 
@@ -68,27 +64,21 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
                 parameters.Add("tvdbId", searchCriteria.TvdbId.ToString());
             }
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
 
-            var pageableRequests = new IndexerPageableRequestChain();
-            pageableRequests.Add(GetRequest(parameters));
-            return pageableRequests;
+            return GetRequest(parameters);
         }
 
         private IEnumerable<IndexerRequest> GetRequest(List<KeyValuePair<string, string>> searchParameters)

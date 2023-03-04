@@ -76,9 +76,9 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
             var imdbQuery = int.Parse(_movieSearchCriteria.ImdbId);
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             var encoding = HttpHeader.GetEncodingFromContentType(page.HttpRequest.Headers.ContentType);
 
@@ -95,9 +95,9 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             var results = Subject.GetSearchRequests(_tvSearchSeasonEpisodeCriteria);
             var tvdbQuery = _tvSearchSeasonEpisodeCriteria.TvdbId;
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             var encoding = HttpHeader.GetEncodingFromContentType(page.HttpRequest.Headers.ContentType);
 
@@ -117,9 +117,9 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             var results = Subject.GetSearchRequests(_tvSearchDailyEpisodeCriteria);
             var tvdbQuery = _tvSearchDailyEpisodeCriteria.TvdbId;
 
-            results.GetAllTiers().Should().HaveCount(1);
+            results.Should().HaveCount(1);
 
-            var page = results.GetAllTiers().First().First();
+            var page = results.First();
 
             var encoding = HttpHeader.GetEncodingFromContentType(page.HttpRequest.Headers.ContentType);
 

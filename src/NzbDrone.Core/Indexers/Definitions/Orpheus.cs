@@ -132,9 +132,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             _capabilities = capabilities;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
             if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
@@ -152,39 +151,31 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("year", searchCriteria.Year.ToString());
             }
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, parameters);
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return new List<IndexerRequest>();
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        public IEnumerable<IndexerRequest> GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
-
-            return pageableRequests;
+            return GetPagedRequests(searchCriteria, parameters);
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)

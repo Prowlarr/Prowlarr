@@ -4,16 +4,19 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
+using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -52,6 +55,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new IPTorrentsParser(Settings, Capabilities.Categories);
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            if (!httpResponse.Content.Contains("lout.php"))
+            {
+                throw new IndexerAuthException("IPTorrents authentication with cookies failed.");
+            }
+
+            return false;
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -274,7 +287,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<TorrentInfo>();
+            var torrentInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
             var doc = parser.ParseDocument(indexerResponse.Content);
@@ -366,12 +379,27 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
+    public class IPTorrentsValidator : CookieBaseSettingsValidator<IPTorrentsSettings>
+    {
+        public IPTorrentsValidator()
+        {
+            RuleFor(c => c.UserAgent).NotEmpty();
+        }
+    }
+
     public class IPTorrentsSettings : CookieTorrentBaseSettings
     {
+        private static readonly IPTorrentsValidator Validator = new ();
+
         [FieldDefinition(3, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
         public string UserAgent { get; set; }
 
-        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search FreeLeech torrents only")]
         public bool FreeLeechOnly { get; set; }
+
+        public override NzbDroneValidationResult Validate()
+        {
+            return new NzbDroneValidationResult(Validator.Validate(this));
+        }
     }
 }

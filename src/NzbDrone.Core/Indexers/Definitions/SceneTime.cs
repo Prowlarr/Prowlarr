@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SceneTimeRequestGenerator { Settings = Settings, Capabilities = Capabilities };
+            return new SceneTimeRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -66,11 +66,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                 {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
                 },
                 MovieSearchParams = new List<MovieSearchParam>
                 {
-                    MovieSearchParam.Q
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
                 },
                 MusicSearchParams = new List<MusicSearchParam>
                 {
@@ -118,54 +118,20 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SceneTimeRequestGenerator : IIndexerRequestGenerator
     {
-        public SceneTimeSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly SceneTimeSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        public SceneTimeRequestGenerator(SceneTimeSettings settings, IndexerCapabilities capabilities)
         {
-            var qc = new NameValueCollection
-            {
-                { "cata", "yes" },
-                { "sec", "jax" }
-            };
-
-            var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
-            foreach (var cat in catList)
-            {
-                qc.Set($"c{cat}", "1");
-            }
-
-            if (term.IsNotNullOrWhiteSpace())
-            {
-                qc.Set("search", term);
-            }
-
-            if (Settings.FreeLeechOnly)
-            {
-                qc.Set("freeleech", "on");
-            }
-
-            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/browse.php?{qc.GetQueryString()}";
-
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-
-            yield return request;
+            _settings = settings;
+            _capabilities = capabilities;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -174,7 +140,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}", searchCriteria.Categories, searchCriteria.FullImdbId));
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -183,7 +158,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -192,9 +167,42 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
 
             return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
+        {
+            var parameters = new NameValueCollection
+            {
+                { "cata", "yes" }
+            };
+
+            var catList = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            foreach (var cat in catList)
+            {
+                parameters.Set($"c{cat}", "1");
+            }
+
+            if (imdbId.IsNotNullOrWhiteSpace())
+            {
+                parameters.Set("imdb", imdbId);
+            }
+
+            if (term.IsNotNullOrWhiteSpace())
+            {
+                parameters.Set("search", term);
+            }
+
+            if (_settings.FreeLeechOnly)
+            {
+                parameters.Set("freeleech", "on");
+            }
+
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/browse.php?{parameters.GetQueryString()}";
+
+            yield return new IndexerRequest(searchUrl, HttpAccept.Html);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -225,8 +233,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return releaseInfos; // no results
             }
 
-            var headerColumns = table.QuerySelectorAll("tbody > tr > td.cat_Head")
-                .Select(x => x.TextContent).ToList();
+            var headerColumns = table.QuerySelectorAll("tbody > tr > td.cat_Head").Select(x => x.TextContent).ToList();
             var categoryIndex = headerColumns.FindIndex(x => x.Equals("Type"));
             var nameIndex = headerColumns.FindIndex(x => x.Equals("Name"));
             var sizeIndex = headerColumns.FindIndex(x => x.Equals("Size"));
@@ -287,7 +294,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SceneTimeSettings : CookieTorrentBaseSettings
     {
-        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox,  HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(3, Label = "FreeLeech Only", Type = FieldType.Checkbox,  HelpText = "Search FreeLeech torrents only")]
         public bool FreeLeechOnly { get; set; }
     }
 }

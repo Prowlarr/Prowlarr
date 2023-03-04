@@ -10,7 +10,7 @@ interface CapabilitiesLabelProps {
 function CapabilitiesLabel(props: CapabilitiesLabelProps) {
   const { categoryFilter = [] } = props;
 
-  const { categories = [] } = props.capabilities;
+  const { categories = [] } = props.capabilities || ({} as IndexerCapabilities);
 
   let filteredList = categories.filter((item) => item.id < 100000);
 

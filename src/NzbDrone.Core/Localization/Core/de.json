@@ -426,7 +426,7 @@
     "Application": "Anwendungen",
     "GrabReleases": "Release erfassen",
     "Link": "Links",
-    "MappedDrivesRunningAsService": "Zugeordnete Netzlaufwerke sind nicht verfügbar, wenn Radarr als Windows-Dienst ausgeführt wird. Bitte lesen Sie die FAQ für weitere Informationen",
+    "MappedDrivesRunningAsService": "Zugeordnete Netzlaufwerke sind nicht verfügbar, wenn Prowlarr als Windows-Dienst ausgeführt wird. Bitte lesen Sie die FAQ für weitere Informationen",
     "No": "Nein",
     "SearchTypes": "Suchtyp",
     "TVSearchTypes": "Suchtyp",
@@ -462,5 +462,8 @@
     "IndexerDetails": "Indexer-Details",
     "IndexerName": "Indexer-Name",
     "ApplicationLongTermStatusCheckAllClientMessage": "Alle Anwendungen sind nicht verfügbar, da es zu Störungen für mehr als 6 Stunden kam",
-    "ApplicationLongTermStatusCheckSingleClientMessage": "Anwendungen nicht verfügbar, da es zu Störungen für mehr als 6 Stunden kam: {0}"
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Anwendungen nicht verfügbar, da es zu Störungen für mehr als 6 Stunden kam: {0}",
+    "Remove": "Entfernen",
+    "Replace": "Ersetzen",
+    "TheLatestVersionIsAlreadyInstalled": "Die aktuellste Version ist bereits installiert"
 }

@@ -26,6 +26,11 @@ namespace NzbDrone.Core.Notifications.Email
 
         public override string Link => null;
 
+        public override void OnGrab(GrabMessage message)
+        {
+            SendEmail(Settings, RELEASE_GRABBED_TITLE_BRANDED, message.Message);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck message)
         {
             SendEmail(Settings, HEALTH_ISSUE_TITLE_BRANDED, message.Message);

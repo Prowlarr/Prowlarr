@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Routing.Constraints;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using Prowlarr.Http.REST;
 
@@ -21,6 +23,7 @@ namespace Prowlarr.Api.V1.Search
         public string SubGroup { get; set; }
         public string ReleaseHash { get; set; }
         public string Title { get; set; }
+        public string SortTitle { get; set; }
         public bool Approved { get; set; }
         public int ImdbId { get; set; }
         public DateTime PublishDate { get; set; }
@@ -36,6 +39,21 @@ namespace Prowlarr.Api.V1.Search
         public int? Seeders { get; set; }
         public int? Leechers { get; set; }
         public DownloadProtocol Protocol { get; set; }
+
+        public string FileName
+        {
+            get
+            {
+                var extension = "torrent";
+
+                if (Protocol == DownloadProtocol.Usenet)
+                {
+                    extension = "nzb";
+                }
+
+                return $"{Title}.{extension}";
+            }
+        }
     }
 
     public static class ReleaseResourceMapper
@@ -61,6 +79,7 @@ namespace Prowlarr.Api.V1.Search
                 IndexerId = releaseInfo.IndexerId,
                 Indexer = releaseInfo.Indexer,
                 Title = releaseInfo.Title,
+                SortTitle = releaseInfo.Title.NormalizeTitle(),
                 ImdbId = releaseInfo.ImdbId,
                 PublishDate = releaseInfo.PublishDate,
                 CommentUrl = releaseInfo.CommentUrl,

@@ -5,10 +5,8 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -16,14 +14,13 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
     public class Animedia : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "Animedia";
-        public override string[] IndexerUrls => new string[] { "https://tt.animedia.tv/" };
+        public override string[] IndexerUrls => new[] { "https://tt.animedia.tv/" };
         public override string Description => "Animedia is russian anime voiceover group and eponymous anime tracker.";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
@@ -38,12 +35,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnimediaRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new AnimediaRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AnimediaParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger };
+            return new AnimediaParser(Settings, Capabilities.Categories, RateLimit, _httpClient);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -51,38 +48,40 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
+                {
+                    MovieSearchParam.Q
+                }
             };
+
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "TV Anime");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "OVA/ONA/Special");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TV, "Dorama");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.Movies, "Movies");
+
             return caps;
         }
     }
 
     public class AnimediaRequestGenerator : IIndexerRequestGenerator
     {
-        public NoAuthTorrentBaseSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly NoAuthTorrentBaseSettings _settings;
 
-        public AnimediaRequestGenerator()
+        public AnimediaRequestGenerator(NoAuthTorrentBaseSettings settings)
         {
+            _settings = settings;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
-            var requestUrl = string.Empty;
+            string requestUrl;
 
             if (string.IsNullOrWhiteSpace(term))
             {
-                requestUrl = Settings.BaseUrl;
+                requestUrl = _settings.BaseUrl;
             }
             else
             {
@@ -94,18 +93,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                     { "orderby_sort", "entry_date|desc" }
                 };
 
-                requestUrl = string.Format("{0}/ajax/search_result/P0?{1}", Settings.BaseUrl.TrimEnd('/'), queryCollection.GetQueryString());
+                requestUrl = $"{_settings.BaseUrl.TrimEnd('/')}/ajax/search_result/P0?{queryCollection.GetQueryString()}";
             }
 
-            var request = new IndexerRequest(requestUrl, HttpAccept.Html);
-            yield return request;
+            yield return new IndexerRequest(requestUrl, HttpAccept.Html);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
 
             return pageableRequests;
         }
@@ -114,7 +112,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}"));
 
             return pageableRequests;
         }
@@ -123,7 +121,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
 
             return pageableRequests;
         }
@@ -148,6 +146,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly NoAuthTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
+        private readonly TimeSpan _rateLimit;
+        private readonly IIndexerHttpClient _httpClient;
+
         private static readonly Regex EpisodesInfoQueryRegex = new Regex(@"сери[ия] (\d+)(?:-(\d+))? из.*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ResolutionInfoQueryRegex = new Regex(@"качество (\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex SizeInfoQueryRegex = new Regex(@"размер:(.*)\n", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -155,25 +156,25 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static readonly Regex CategorieMovieRegex = new Regex(@"Фильм", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex CategorieOVARegex = new Regex(@"ОВА|OVA|ОНА|ONA|Special", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex CategorieDoramaRegex = new Regex(@"Дорама", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        public IIndexerHttpClient HttpClient { get; set; }
-        public Logger Logger { get; set; }
 
-        public AnimediaParser(NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        public AnimediaParser(NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient)
         {
             _settings = settings;
             _categories = categories;
+            _rateLimit = rateLimit;
+            _httpClient = httpClient;
         }
 
-        private string composeTitle(AngleSharp.Html.Dom.IHtmlDocument dom, AngleSharp.Dom.IElement t, AngleSharp.Dom.IElement tr)
+        private string ComposeTitle(AngleSharp.Html.Dom.IHtmlDocument dom, AngleSharp.Dom.IElement t, AngleSharp.Dom.IElement tr)
         {
-            var name_ru = dom.QuerySelector("div.media__post__header > h1").TextContent.Trim();
-            var name_en = dom.QuerySelector("div.media__panel > div:nth-of-type(1) > div.col-l:nth-of-type(1) > div > span").TextContent.Trim();
-            var name_orig = dom.QuerySelector("div.media__panel > div:nth-of-type(1) > div.col-l:nth-of-type(2) > div > span").TextContent.Trim();
+            var nameRu = dom.QuerySelector("div.media__post__header > h1")?.TextContent.Trim() ?? string.Empty;
+            var nameEn = dom.QuerySelector("div.media__panel > div:nth-of-type(1) > div.col-l:nth-of-type(1) > div > span")?.TextContent.Trim() ?? string.Empty;
+            var nameOrig = dom.QuerySelector("div.media__panel > div:nth-of-type(1) > div.col-l:nth-of-type(2) > div > span")?.TextContent.Trim() ?? string.Empty;
 
-            var title = name_ru + " / " + name_en;
-            if (name_en != name_orig)
+            var title = nameRu + " / " + nameEn;
+            if (nameEn != nameOrig)
             {
-                title += " / " + name_orig;
+                title += " / " + nameOrig;
             }
 
             var tabName = t.TextContent;
@@ -183,7 +184,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 tabName = "";
             }
 
-            var heading = tr.QuerySelector("h3.tracker_info_bold").TextContent;
+            var heading = tr.QuerySelector("h3.tracker_info_bold")?.TextContent.Trim() ?? string.Empty;
 
             // Parse episodes info from heading if episods info present
             var match = EpisodesInfoQueryRegex.Match(heading);
@@ -192,40 +193,40 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 if (string.IsNullOrEmpty(match.Groups[2].Value))
                 {
-                    heading += " E" + match.Groups[1].Value;
+                    heading += $" E{match.Groups[1].Value}";
                 }
                 else
                 {
-                    heading += string.Format(" E{0}-{1}", match.Groups[1].Value, match.Groups[2].Value);
+                    heading += $" E{match.Groups[1].Value}-{match.Groups[2].Value}";
                 }
             }
 
-            return title + " - " + heading + " [" + getResolution(tr) + "p]";
+            return title + " - " + heading + " [" + GetResolution(tr) + "p]";
         }
 
-        private string getResolution(AngleSharp.Dom.IElement tr)
+        private string GetResolution(AngleSharp.Dom.IElement tr)
         {
-            var resolution = tr.QuerySelector("div.tracker_info_left").TextContent;
+            var resolution = tr.QuerySelector("div.tracker_info_left")?.TextContent.Trim() ?? string.Empty;
             return ResolutionInfoQueryRegex.Match(resolution).Groups[1].Value;
         }
 
-        private long getReleaseSize(AngleSharp.Dom.IElement tr)
+        private long GetReleaseSize(AngleSharp.Dom.IElement tr)
         {
-            var sizeStr = tr.QuerySelector("div.tracker_info_left").TextContent;
+            var sizeStr = tr.QuerySelector("div.tracker_info_left")?.TextContent.Trim() ?? string.Empty;
             return ParseUtil.GetBytes(SizeInfoQueryRegex.Match(sizeStr).Groups[1].Value.Trim());
         }
 
-        private DateTime getReleaseDate(AngleSharp.Dom.IElement tr)
+        private DateTime GetReleaseDate(AngleSharp.Dom.IElement tr)
         {
-            var sizeStr = tr.QuerySelector("div.tracker_info_left").TextContent;
+            var sizeStr = tr.QuerySelector("div.tracker_info_left")?.TextContent.Trim() ?? string.Empty;
             return DateTime.Parse(ReleaseDateInfoQueryRegex.Match(sizeStr).Groups[1].Value.Trim());
         }
 
         private ICollection<IndexerCategory> MapCategories(AngleSharp.Html.Dom.IHtmlDocument dom, AngleSharp.Dom.IElement t, AngleSharp.Dom.IElement tr)
         {
             var rName = t.TextContent;
-            var rDesc = tr.QuerySelector("h3.tracker_info_bold").TextContent;
-            var type = dom.QuerySelector("div.releases-date:contains('Тип:')").TextContent;
+            var rDesc = tr.QuerySelector("h3.tracker_info_bold")?.TextContent.Trim() ?? string.Empty;
+            var type = dom.QuerySelector("div.releases-date:contains('Тип:')")?.TextContent.Trim() ?? string.Empty;
 
             // Check OVA first cause OVA looks like anime with OVA in release name or description
             if (CategorieOVARegex.IsMatch(rName) || CategorieOVARegex.IsMatch(rDesc))
@@ -256,28 +257,28 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var t in dom.QuerySelectorAll("ul.media__tabs__nav > li > a"))
             {
-                var tr_id = t.Attributes["href"].Value;
-                var tr = dom.QuerySelector("div" + tr_id);
+                var trId = t.GetAttribute("href");
+                var tr = dom.QuerySelector("div" + trId);
                 var seeders = int.Parse(tr.QuerySelector("div.circle_green_text_top").TextContent);
-                var url = indexerResponse.HttpRequest.Url.ToString();
+                var url = indexerResponse.HttpRequest.Url.FullUri;
 
                 var release = new TorrentInfo
                 {
-                    Title = composeTitle(dom, t, tr),
+                    Title = ComposeTitle(dom, t, tr),
                     InfoUrl = url,
                     DownloadVolumeFactor = 0,
                     UploadVolumeFactor = 1,
 
-                    Guid = url + tr_id,
+                    Guid = url + trId,
                     Seeders = seeders,
                     Peers = seeders + int.Parse(tr.QuerySelector("div.circle_red_text_top").TextContent),
                     Grabs = int.Parse(tr.QuerySelector("div.circle_grey_text_top").TextContent),
                     Categories = MapCategories(dom, t, tr),
-                    PublishDate = getReleaseDate(tr),
-                    DownloadUrl = tr.QuerySelector("div.download_tracker > a.btn__green").Attributes["href"].Value,
-                    MagnetUrl = tr.QuerySelector("div.download_tracker > a.btn__d-gray").Attributes["href"].Value,
-                    Size = getReleaseSize(tr),
-                    Resolution = getResolution(tr)
+                    PublishDate = GetReleaseDate(tr),
+                    DownloadUrl = tr.QuerySelector("div.download_tracker > a.btn__green").GetAttribute("href"),
+                    MagnetUrl = tr.QuerySelector("div.download_tracker > a.btn__d-gray").GetAttribute("href"),
+                    Size = GetReleaseSize(tr),
+                    Resolution = GetResolution(tr)
                 };
                 torrentInfos.Add(release);
             }
@@ -291,6 +292,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(indexerResponse.Content);
+
             var links = dom.QuerySelectorAll("a.ads-list__item__title");
             foreach (var link in links)
             {
@@ -302,20 +304,24 @@ namespace NzbDrone.Core.Indexers.Definitions
                     url = "https:" + url;
                 }
 
-                var releaseRequest = new IndexerRequest(url, HttpAccept.Html);
-                var releaseResponse = new IndexerResponse(releaseRequest, HttpClient.Execute(releaseRequest.HttpRequest));
+                var releaseRequest = new HttpRequestBuilder(url)
+                    .WithRateLimit(_rateLimit.TotalSeconds)
+                    .SetHeader("Referer", _settings.BaseUrl)
+                    .Accept(HttpAccept.Html)
+                    .Build();
+
+                var releaseIndexerRequest = new IndexerRequest(releaseRequest);
+                var releaseResponse = new IndexerResponse(releaseIndexerRequest, _httpClient.Execute(releaseIndexerRequest.HttpRequest));
 
                 // Throw common http errors here before we try to parse
                 if (releaseResponse.HttpResponse.HasHttpError)
                 {
                     if (releaseResponse.HttpResponse.StatusCode == HttpStatusCode.TooManyRequests)
                     {
-                        throw new TooManyRequestsException(releaseRequest.HttpRequest, releaseResponse.HttpResponse);
+                        throw new TooManyRequestsException(releaseResponse.HttpRequest, releaseResponse.HttpResponse);
                     }
-                    else
-                    {
-                        throw new IndexerException(releaseResponse, "Http error code: " + releaseResponse.HttpResponse.StatusCode);
-                    }
+
+                    throw new IndexerException(releaseResponse, $"HTTP Error - {releaseResponse.HttpResponse.StatusCode}. {url}");
                 }
 
                 torrentInfos.AddRange(ParseRelease(releaseResponse));

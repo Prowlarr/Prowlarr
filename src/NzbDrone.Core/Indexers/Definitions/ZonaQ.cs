@@ -10,11 +10,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -22,14 +20,13 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
     public class ZonaQ : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "ZonaQ";
-        public override string[] IndexerUrls => new string[] { "https://www.zonaq.pw/" };
+        public override string[] IndexerUrls => new[] { "https://www.zonaq.pw/" };
         private string Login1Url => Settings.BaseUrl + "index.php";
         private string Login2Url => Settings.BaseUrl + "paDentro.php";
         private string Login3Url => Settings.BaseUrl + "retorno/include/puerta_8_ajax.php";
@@ -48,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new ZonaQRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new ZonaQRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -78,14 +75,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var requestBuilder = new HttpRequestBuilder(Login2Url)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-            requestBuilder.SetCookies(loginPage.GetCookies());
-
             var authLoginRequest = requestBuilder
+                .SetCookies(loginPage.GetCookies())
                 .AddFormParameter("user", Settings.Username)
                 .AddFormParameter("passwrd", Settings.Password)
                 .AddFormParameter("hash_passwrd", hashPassword)
@@ -101,14 +96,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Thread.Sleep(3000);
                 var requestBuilder2 = new HttpRequestBuilder(Login3Url)
                 {
-                    LogResponseContent = true
+                    LogResponseContent = true,
+                    Method = HttpMethod.Post
                 };
 
-                requestBuilder2.Method = HttpMethod.Post;
-                requestBuilder2.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-                requestBuilder2.SetCookies(response.GetCookies());
-
                 var authLoginRequest2 = requestBuilder2
+                    .SetCookies(response.GetCookies())
                     .AddFormParameter("passwd", "")
                     .AddFormParameter("cookielength", "43200")
                     .AddFormParameter("respuesta", "")
@@ -131,12 +124,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 LogResponseContent = true
             };
 
-            requestBuilder4.SetCookies(response.GetCookies());
-            var authLoginRequest3 = requestBuilder4.Build();
+            var authLoginRequest3 = requestBuilder4
+                .SetCookies(response.GetCookies())
+                .Build();
 
             response = await ExecuteAuth(authLoginRequest3);
 
-            UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
         }
 
         private static string Sha1Hash(string input)
@@ -147,12 +141,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.Content == null || !httpResponse.Content.Contains("/index.php?action=logout;"))
-            {
-                return true;
-            }
-
-            return false;
+            return httpResponse.Content == null || !httpResponse.Content.Contains("/index.php?action=logout;");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -160,13 +149,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
+                {
+                    MovieSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping("cat[]=1&subcat[]=1", NewznabStandardCategory.MoviesDVD, "Películas/DVD");
@@ -237,10 +226,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public ZonaQRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {

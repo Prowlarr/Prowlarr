@@ -1,13 +1,10 @@
-using System.Collections.Generic;
 using System.Threading;
-using Microsoft.Extensions.Configuration;
 using NLog;
-using Npgsql;
 using NUnit.Framework;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Datastore.Migration.Framework;
-using NzbDrone.Core.Indexers.FileList;
+using NzbDrone.Core.Indexers.Definitions.FileList;
 using NzbDrone.Test.Common;
 using NzbDrone.Test.Common.Datastore;
 using Prowlarr.Http.ClientSchema;

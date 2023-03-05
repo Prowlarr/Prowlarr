@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -21,12 +22,13 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Nebulance : TorrentIndexerBase<NebulanceSettings>
     {
         public override string Name => "Nebulance";
-        public override string[] IndexerUrls => new string[] { "https://nebulance.io/" };
+        public override string[] IndexerUrls => new[] { "https://nebulance.io/" };
         public override string Description => "Nebulance (NBL) is a ratioless Private Torrent Tracker for TV";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsRedirect => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public Nebulance(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -36,12 +38,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new NebulanceRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new NebulanceRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new NebulanceParser(Settings, Capabilities.Categories);
+            return new NebulanceParser(Settings);
+        }
+
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            // Avoid using cookies to prevent redirects to login page
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            var request = requestBuilder.Build();
+
+            return Task.FromResult(request);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -49,9 +64,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                    {
-                        TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
-                    }
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
+                },
+                SupportsRawSearch = true
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
@@ -64,19 +80,19 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NebulanceRequestGenerator : IIndexerRequestGenerator
     {
-        public NebulanceSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly NebulanceSettings _settings;
 
-        public NebulanceRequestGenerator()
+        public NebulanceRequestGenerator(NebulanceSettings settings)
         {
+            _settings = settings;
         }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(NebulanceQuery parameters, int? results, int? offset)
         {
-            var apiUrl = Settings.BaseUrl + "api.php";
+            var apiUrl = _settings.BaseUrl + "api.php";
 
             var builder = new JsonRpcRequestBuilder(apiUrl)
-                .Call("getTorrents", Settings.ApiKey, parameters, results ?? 100, offset ?? 0);
+                .Call("getTorrents", _settings.ApiKey, parameters, results ?? 100, offset ?? 0);
 
             builder.SuppressHttpError = true;
 
@@ -85,16 +101,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
@@ -108,7 +120,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedTvSearchString.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, @"[ -._]", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, "[\\W]+", "%").Trim() + "%";
             }
 
             if (searchCriteria.TvMazeId.HasValue)
@@ -117,7 +129,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, "[\\W]+", "%").Trim() + "%";
                 }
             }
             else if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.ImdbId, out var intImdb))
@@ -126,7 +138,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, "[\\W]+", "%").Trim() + "%";
                 }
             }
 
@@ -137,9 +149,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
@@ -153,7 +163,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedSearchTerm.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, @"[ -._]", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, "[\\W]+", "%").Trim() + "%";
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
@@ -168,19 +178,17 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class NebulanceParser : IParseIndexerResponse
     {
         private readonly NebulanceSettings _settings;
-        private readonly IndexerCapabilitiesCategories _categories;
 
-        public NebulanceParser(NebulanceSettings settings, IndexerCapabilitiesCategories categories)
+        public NebulanceParser(NebulanceSettings settings)
         {
             _settings = settings;
-            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
 
-            JsonRpcResponse<NebulanceTorrents> jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
+            var jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
             {

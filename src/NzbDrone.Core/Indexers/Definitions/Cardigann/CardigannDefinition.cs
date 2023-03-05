@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public double? RequestDelay { get; set; }
         public List<string> Links { get; set; }
         public List<string> Legacylinks { get; set; }
-        public bool Followredirect { get; set; } = false;
+        public bool Followredirect { get; set; }
         public bool TestLinkTorrent { get; set; } = true;
         public List<string> Certificates { get; set; }
         public CapabilitiesBlock Caps { get; set; }
@@ -95,13 +95,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public List<string> Cookies { get; set; }
         public string Method { get; set; }
         public string Form { get; set; }
-        public bool Selectors { get; set; } = false;
+        public bool Selectors { get; set; }
         public Dictionary<string, string> Inputs { get; set; }
         public Dictionary<string, SelectorBlock> Selectorinputs { get; set; }
         public Dictionary<string, SelectorBlock> Getselectorinputs { get; set; }
         public List<ErrorBlock> Error { get; set; }
         public PageTestBlock Test { get; set; }
         public CaptchaBlock Captcha { get; set; }
+        public Dictionary<string, List<string>> Headers { get; set; }
     }
 
     public class ErrorBlock
@@ -114,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
     public class SelectorBlock
     {
         public string Selector { get; set; }
-        public bool Optional { get; set; } = false;
+        public bool Optional { get; set; }
         public string Text { get; set; }
         public string Attribute { get; set; }
         public string Remove { get; set; }
@@ -157,7 +158,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public int After { get; set; }
         public SelectorBlock Dateheaders { get; set; }
         public SelectorBlock Count { get; set; }
-        public bool Multiple { get; set; } = false;
+        public bool Multiple { get; set; }
     }
 
     public class SearchPathBlock : RequestBlock
@@ -182,20 +183,21 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public string Method { get; set; }
         public BeforeBlock Before { get; set; }
         public InfohashBlock Infohash { get; set; }
+        public Dictionary<string, List<string>> Headers { get; set; }
     }
 
     public class InfohashBlock
     {
         public SelectorField Hash { get; set; }
         public SelectorField Title { get; set; }
-        public bool UseBeforeResponse { get; set; }
+        public bool Usebeforeresponse { get; set; }
     }
 
     public class SelectorField
     {
         public string Selector { get; set; }
         public string Attribute { get; set; }
-        public bool UseBeforeResponse { get; set; }
+        public bool Usebeforeresponse { get; set; }
         public List<FilterBlock> Filters { get; set; }
     }
 

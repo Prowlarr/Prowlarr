@@ -5,7 +5,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.PassThePopcorn
 {
-    public class PassThePopcornSettingsValidator : AbstractValidator<PassThePopcornSettings>
+    public class PassThePopcornSettingsValidator : NoAuthSettingsValidator<PassThePopcornSettings>
     {
         public PassThePopcornSettingsValidator()
         {
@@ -16,11 +16,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
     public class PassThePopcornSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly PassThePopcornSettingsValidator Validator = new PassThePopcornSettingsValidator();
-
-        public PassThePopcornSettings()
-        {
-        }
+        private static readonly PassThePopcornSettingsValidator Validator = new ();
 
         [FieldDefinition(2, Label = "API User", HelpText = "These settings are found in your PassThePopcorn security settings (Edit Profile > Security).", Privacy = PrivacyLevel.UserName)]
         public string APIUser { get; set; }

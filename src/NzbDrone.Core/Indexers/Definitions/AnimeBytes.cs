@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using NLog;
+using NzbDrone.Common;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
@@ -425,7 +423,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         }
 
                         var releaseGroup = releaseTags.LastOrDefault();
-                        if (releaseGroup != null && releaseGroup.Contains("(") && releaseGroup.Contains(")"))
+                        if (releaseGroup != null && releaseGroup.Contains('(') && releaseGroup.Contains(')'))
                         {
                             //// Skip raws if set
                             //if (releaseGroup.ToLowerInvariant().StartsWith("raw") && !AllowRaws)
@@ -454,7 +452,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         {
                             var fileName = torrent.Files.First().FileName;
 
-                            var guid = new Uri(details + "&nh=" + StringUtil.Hash(fileName));
+                            var guid = new Uri(details + "&nh=" + HashUtil.CalculateMd5(fileName));
 
                             var release = new TorrentInfo
                             {
@@ -487,7 +485,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                                 $"{title} {year} {releaseGroup}{infoString}" :
                                 $"{releaseGroup}{title} {releaseInfo} {infoString}";
 
-                            var guid = new Uri(details + "&nh=" + StringUtil.Hash(title));
+                            var guid = new Uri(details + "&nh=" + HashUtil.CalculateMd5(title));
 
                             var release = new TorrentInfo
                             {
@@ -521,7 +519,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class AnimeBytesSettingsValidator : AbstractValidator<AnimeBytesSettings>
+    public class AnimeBytesSettingsValidator : NoAuthSettingsValidator<AnimeBytesSettings>
     {
         public AnimeBytesSettingsValidator()
         {
@@ -535,7 +533,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly AnimeBytesSettingsValidator Validator = new AnimeBytesSettingsValidator();
+        private static readonly AnimeBytesSettingsValidator Validator = new ();
 
         public AnimeBytesSettings()
         {

@@ -61,7 +61,7 @@ namespace Prowlarr.Api.V1
                 Implementation = resource.Implementation,
                 ConfigContract = resource.ConfigContract,
                 Message = resource.Message,
-                Tags = resource.Tags
+                Tags = resource.Tags ?? new HashSet<int>()
             };
 
             var configContract = ReflectionExtensions.CoreAssembly.FindTypeByName(definition.ConfigContract);

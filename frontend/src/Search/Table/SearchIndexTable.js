@@ -51,7 +51,8 @@ class SearchIndexTable extends Component {
       timeFormat,
       selectedState,
       onSelectedChange,
-      onGrabPress
+      onGrabPress,
+      onSavePress
     } = this.props;
 
     const release = items[rowIndex];
@@ -71,6 +72,7 @@ class SearchIndexTable extends Component {
           longDateFormat={longDateFormat}
           timeFormat={timeFormat}
           onGrabPress={onGrabPress}
+          onSavePress={onSavePress}
         />
       </VirtualTableRow>
     );
@@ -134,6 +136,7 @@ SearchIndexTable.propTypes = {
   timeFormat: PropTypes.string.isRequired,
   onSortPress: PropTypes.func.isRequired,
   onGrabPress: PropTypes.func.isRequired,
+  onSavePress: PropTypes.func.isRequired,
   allSelected: PropTypes.bool.isRequired,
   allUnselected: PropTypes.bool.isRequired,
   selectedState: PropTypes.object.isRequired,

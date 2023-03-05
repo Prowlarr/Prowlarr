@@ -66,12 +66,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         protected override bool CheckIfLoginNeeded(HttpResponse response)
         {
-            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.PreconditionFailed)
-            {
-                return true;
-            }
-
-            return false;
+            return response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.PreconditionFailed;
         }
 
         protected override void ModifyRequest(IndexerRequest request)
@@ -99,14 +94,14 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 {
                     _logger.Warn(ex, "Unable to connect to indexer");
 
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
                 }
             }
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Unable to connect to indexer");
 
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details");
             }
 
             return null;
@@ -116,11 +111,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                Method = HttpMethod.Post
             };
-
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)

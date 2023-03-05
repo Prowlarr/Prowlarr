@@ -71,14 +71,14 @@ class Application extends Component {
         {
           syncLevel === 'addOnly' &&
             <Label kind={kinds.WARNING}>
-              Add and Remove Only
+              {translate('AddRemoveOnly')}
             </Label>
         }
 
         {
           syncLevel === 'fullSync' &&
             <Label kind={kinds.SUCCESS}>
-              Full Sync
+              {translate('FullSync')}
             </Label>
         }
 
@@ -88,7 +88,7 @@ class Application extends Component {
               kind={kinds.DISABLED}
               outline={true}
             >
-              Disabled
+              {translate('Disabled')}
             </Label>
         }
 

@@ -35,14 +35,6 @@ export const defaultState = {
 
   columns: [
     {
-      name: 'select',
-      columnLabel: translate('Select'),
-      isSortable: false,
-      isVisible: true,
-      isModifiable: false,
-      isHidden: true
-    },
-    {
       name: 'status',
       columnLabel: translate('ReleaseStatus'),
       isSortable: true,
@@ -85,6 +77,12 @@ export const defaultState = {
       label: translate('Added'),
       isSortable: true,
       isVisible: true
+    },
+    {
+      name: 'vipExpiration',
+      label: translate('VipExpiration'),
+      isSortable: true,
+      isVisible: false
     },
     {
       name: 'capabilities',
@@ -134,6 +132,12 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.DATE
     },
     {
+      name: 'vipExpiration',
+      label: translate('VipExpiration'),
+      type: filterBuilderTypes.DATE,
+      valueType: filterBuilderValueTypes.DATE
+    },
+    {
       name: 'priority',
       label: translate('Priority'),
       type: filterBuilderTypes.NUMBER
@@ -178,20 +182,20 @@ export const persistState = [
 //
 // Actions Types
 
-export const SET_MOVIE_SORT = 'indexerIndex/setMovieSort';
-export const SET_MOVIE_FILTER = 'indexerIndex/setMovieFilter';
-export const SET_MOVIE_VIEW = 'indexerIndex/setMovieView';
-export const SET_MOVIE_TABLE_OPTION = 'indexerIndex/setMovieTableOption';
+export const SET_INDEXER_SORT = 'indexerIndex/setIndexerSort';
+export const SET_INDEXER_FILTER = 'indexerIndex/setIndexerFilter';
+export const SET_INDEXER_VIEW = 'indexerIndex/setIndexerView';
+export const SET_INDEXER_TABLE_OPTION = 'indexerIndex/setIndexerTableOption';
 export const SAVE_INDEXER_EDITOR = 'indexerIndex/saveIndexerEditor';
 export const BULK_DELETE_INDEXERS = 'indexerIndex/bulkDeleteIndexers';
 
 //
 // Action Creators
 
-export const setMovieSort = createAction(SET_MOVIE_SORT);
-export const setMovieFilter = createAction(SET_MOVIE_FILTER);
-export const setMovieView = createAction(SET_MOVIE_VIEW);
-export const setMovieTableOption = createAction(SET_MOVIE_TABLE_OPTION);
+export const setIndexerSort = createAction(SET_INDEXER_SORT);
+export const setIndexerFilter = createAction(SET_INDEXER_FILTER);
+export const setIndexerView = createAction(SET_INDEXER_VIEW);
+export const setIndexerTableOption = createAction(SET_INDEXER_TABLE_OPTION);
 export const saveIndexerEditor = createThunk(SAVE_INDEXER_EDITOR);
 export const bulkDeleteIndexers = createThunk(BULK_DELETE_INDEXERS);
 
@@ -281,13 +285,13 @@ export const actionHandlers = handleThunks({
 
 export const reducers = createHandleActions({
 
-  [SET_MOVIE_SORT]: createSetClientSideCollectionSortReducer(section),
-  [SET_MOVIE_FILTER]: createSetClientSideCollectionFilterReducer(section),
+  [SET_INDEXER_SORT]: createSetClientSideCollectionSortReducer(section),
+  [SET_INDEXER_FILTER]: createSetClientSideCollectionFilterReducer(section),
 
-  [SET_MOVIE_VIEW]: function(state, { payload }) {
+  [SET_INDEXER_VIEW]: function(state, { payload }) {
     return Object.assign({}, state, { view: payload.view });
   },
 
-  [SET_MOVIE_TABLE_OPTION]: createSetTableOptionReducer(section)
+  [SET_INDEXER_TABLE_OPTION]: createSetTableOptionReducer(section)
 
 }, defaultState, section);

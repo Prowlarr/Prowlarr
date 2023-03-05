@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Notifications.Twitter
@@ -17,6 +18,11 @@ namespace NzbDrone.Core.Notifications.Twitter
 
         public override string Name => "Twitter";
         public override string Link => "https://twitter.com/";
+
+        public override void OnGrab(GrabMessage message)
+        {
+            _twitterService.SendNotification($"Release Grabbed: {message.Message}", Settings);
+        }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {

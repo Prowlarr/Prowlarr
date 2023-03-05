@@ -5,7 +5,7 @@ namespace Prowlarr.Api.V1.Indexers
     public class IndexerEditorResource
     {
         public List<int> IndexerIds { get; set; }
-        public string Enable { get; set; }
+        public bool? Enable { get; set; }
         public int? AppProfileId { get; set; }
         public List<int> Tags { get; set; }
         public ApplyTags ApplyTags { get; set; }

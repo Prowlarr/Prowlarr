@@ -11,15 +11,13 @@ namespace NzbDrone.Common.Http
         {
             if (response.Headers.ContainsKey("Retry-After"))
             {
-                var retryAfter = response.Headers["Retry-After"].ToString();
-                int seconds;
-                DateTime date;
+                var retryAfter = response.Headers["Retry-After"];
 
-                if (int.TryParse(retryAfter, out seconds))
+                if (int.TryParse(retryAfter, out var seconds))
                 {
                     RetryAfter = TimeSpan.FromSeconds(seconds);
                 }
-                else if (DateTime.TryParse(retryAfter, out date))
+                else if (DateTime.TryParse(retryAfter, out var date))
                 {
                     RetryAfter = date.ToUniversalTime() - DateTime.UtcNow;
                 }

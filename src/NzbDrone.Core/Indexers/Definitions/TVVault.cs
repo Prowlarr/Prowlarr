@@ -8,11 +8,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -20,7 +18,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -45,7 +42,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TVVaultRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new TVVaultRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -58,28 +55,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
-
             var cookies = Cookies;
-
             Cookies = null;
+
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("keeplogged", "1")
                 .AddFormParameter("login", "Log+In!")
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .SetHeader("Referer", LoginUrl)
                 .Build();
-
-            var headers = new NameValueCollection
-            {
-                { "Referer", LoginUrl }
-            };
-
-            authLoginRequest.Headers.Add(headers);
 
             var response = await ExecuteAuth(authLoginRequest);
 
@@ -87,25 +77,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var parser = new HtmlParser();
                 var dom = parser.ParseDocument(response.Content);
-                var errorMessage = dom.QuerySelector("form#loginform").TextContent.Trim();
+                var errorMessage = dom.QuerySelector("form#loginform")?.TextContent.Trim();
 
-                throw new IndexerAuthException(errorMessage);
+                throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
             }
 
             cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("TVVault authentication succeeded.");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("logout.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("logout.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -139,11 +124,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-        public string BaseUrl { get; set; }
-
-        public TVVaultRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {

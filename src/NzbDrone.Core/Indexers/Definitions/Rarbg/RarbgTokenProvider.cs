@@ -5,11 +5,11 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
     public interface IRarbgTokenProvider
     {
-        string GetToken(RarbgSettings settings);
+        string GetToken(RarbgSettings settings, TimeSpan rateLimit);
         void ExpireToken(RarbgSettings settings);
     }
 
@@ -31,15 +31,17 @@ namespace NzbDrone.Core.Indexers.Rarbg
             _tokenCache.Remove(settings.BaseUrl);
         }
 
-        public string GetToken(RarbgSettings settings)
+        public string GetToken(RarbgSettings settings, TimeSpan rateLimit)
         {
             return _tokenCache.Get(settings.BaseUrl,
                 () =>
                 {
                     var requestBuilder = new HttpRequestBuilder(settings.BaseUrl.Trim('/'))
-                        .WithRateLimit(5.0)
-                        .Resource($"/pubapi_v2.php?get_token=get_token&app_id={BuildInfo.AppName}")
+                        .WithRateLimit(rateLimit.TotalSeconds)
+                        .Resource($"/pubapi_v2.php?get_token=get_token&app_id=rralworP_{BuildInfo.Version}")
                         .Accept(HttpAccept.Json);
+
+                    requestBuilder.LogResponseContent = true;
 
                     var response = _httpClient.Get<JObject>(requestBuilder.Build());
 

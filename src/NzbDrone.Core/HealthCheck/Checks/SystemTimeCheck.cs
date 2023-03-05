@@ -1,6 +1,7 @@
 using System;
 using NLog;
 using NzbDrone.Common.Cloud;
+using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Localization;
@@ -23,9 +24,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
+            if (BuildInfo.IsDebug)
+            {
+                return new HealthCheck(GetType());
+            }
+
             var request = _cloudRequestBuilder.Create()
-                                              .Resource("/time")
-                                              .Build();
+                .Resource("/time")
+                .Build();
 
             var response = _client.Execute(request);
             var result = Json.Deserialize<ServiceTimeResponse>(response.Content);

@@ -467,5 +467,8 @@
     "DeleteClientCategory": "Poista lataustyökalukategoria",
     "DownloadClientCategory": "Lataustyökalukategoria",
     "MappedCategories": "Kartoitetut kategoriat",
-    "AuthenticationRequired": "Todennus vaaditaan"
+    "AuthenticationRequired": "Todennus vaaditaan",
+    "Remove": "Poista",
+    "Replace": "Korvaa",
+    "TheLatestVersionIsAlreadyInstalled": "Prowlarrin uusin versio on jo asennettu"
 }

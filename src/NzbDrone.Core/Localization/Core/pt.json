@@ -130,7 +130,7 @@
     "Age": "Tempo de vida",
     "Added": "Adicionado",
     "Actions": "Ações",
-    "About": "Informações",
+    "About": "Sobre",
     "Automatic": "Automático",
     "AuthenticationMethodHelpText": "Solicitar nome de utilizador e palavra-passe para acessar ao Prowlarr",
     "Authentication": "Autenticação",
@@ -415,5 +415,8 @@
     "Notifications": "Notificações",
     "Started": "Começado",
     "NextExecution": "Próxima execução",
-    "Queued": "Em fila"
+    "Queued": "Em fila",
+    "Remove": "Remover",
+    "Replace": "Substituir",
+    "TheLatestVersionIsAlreadyInstalled": "A versão mais recente do Prowlarr já está instalada"
 }

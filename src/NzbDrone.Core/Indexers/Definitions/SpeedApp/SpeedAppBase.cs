@@ -15,7 +15,6 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -31,6 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private string LoginUrl => Settings.BaseUrl + "api/login";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         protected virtual int MinimumSeedTime => 172800; // 48 hours
         private IIndexerRepository _indexerRepository;
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SpeedAppRequestGenerator(Capabilities, Settings);
+            return new SpeedAppRequestGenerator(Capabilities, Settings, PageSize);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -103,91 +103,41 @@ namespace NzbDrone.Core.Indexers.Definitions
             request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
         {
-            Cookies = GetCookies();
-
-            if (link.Scheme == "magnet")
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
             {
-                ValidateMagnet(link.OriginalString);
-                return Encoding.UTF8.GetBytes(link.OriginalString);
-            }
+                AllowAutoRedirect = FollowRedirect
+            };
 
-            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
+            var request = requestBuilder
+                .SetHeader("Authorization", $"Bearer {Settings.ApiKey}")
+                .Build();
 
-            if (Cookies != null)
-            {
-                requestBuilder.SetCookies(Cookies);
-            }
-
-            var request = requestBuilder.Build();
-            request.AllowAutoRedirect = FollowRedirect;
-            request.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
-
-            byte[] torrentData;
-
-            try
-            {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                torrentData = response.ResponseData;
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", link.AbsoluteUri);
-                    throw new ReleaseUnavailableException("Downloading torrent failed", ex);
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
-                {
-                    _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
-                }
-                else
-                {
-                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", link.AbsoluteUri);
-                }
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
-            }
-            catch (WebException ex)
-            {
-                _logger.Error(ex, "Downloading torrent file for release failed ({0})", link.AbsoluteUri);
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Downloading torrent failed");
-                throw;
-            }
-
-            return torrentData;
+            return Task.FromResult(request);
         }
 
         protected virtual IndexerCapabilities SetCapabilities()
         {
-            var caps = new IndexerCapabilities();
-
-            return caps;
+            return new IndexerCapabilities();
         }
     }
 
     public class SpeedAppRequestGenerator : IIndexerRequestGenerator
     {
+        private readonly IndexerCapabilities _capabilities;
+        private readonly SpeedAppSettings _settings;
+        private readonly int _pageSize;
+
         public Func<IDictionary<string, string>> GetCookies { get; set; }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        private IndexerCapabilities Capabilities { get; }
-
-        private SpeedAppSettings Settings { get; }
-
-        public SpeedAppRequestGenerator(IndexerCapabilities capabilities, SpeedAppSettings settings)
+        public SpeedAppRequestGenerator(IndexerCapabilities capabilities, SpeedAppSettings settings, int pageSize)
         {
-            Capabilities = capabilities;
-            Settings = settings;
+            _capabilities = capabilities;
+            _settings = settings;
+            _pageSize = pageSize;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -219,54 +169,61 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, imdbId, season, episode));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? _pageSize, searchCriteria.Offset ?? 0, imdbId, season, episode));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int? season = null, string episode = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset, string imdbId = null, int? season = null, string episode = null)
         {
-            var qc = new NameValueCollection()
+            limit = Math.Min(_pageSize, limit);
+            offset = Math.Max(0, offset);
+
+            var parameters = new NameValueCollection
             {
-                { "itemsPerPage", "100" },
+                { "itemsPerPage", limit.ToString() },
                 { "sort", "torrent.createdAt" },
                 { "direction", "desc" }
             };
 
+            if (limit > 0 && offset > 0)
+            {
+                var page = (offset / limit) + 1;
+                parameters.Set("page", page.ToString());
+            }
+
             if (imdbId.IsNotNullOrWhiteSpace())
             {
-                qc.Add("imdbId", imdbId);
+                parameters.Set("imdbId", imdbId);
             }
             else
             {
-                qc.Add("search", term);
+                parameters.Set("search", term);
             }
 
             if (season != null)
             {
-                qc.Add("season", season.Value.ToString());
+                parameters.Set("season", season.Value.ToString());
             }
 
             if (episode != null)
             {
-                qc.Add("episode", episode);
+                parameters.Set("episode", episode);
             }
 
-            var cats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
-
+            var cats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
             if (cats.Count > 0)
             {
                 foreach (var cat in cats)
                 {
-                    qc.Add("categories[]", cat);
+                    parameters.Add("categories[]", cat);
                 }
             }
 
-            var searchUrl = Settings.BaseUrl + "api/torrent?" + qc.GetQueryString(duplicateKeysIfMulti: true);
+            var searchUrl = _settings.BaseUrl + "api/torrent?" + parameters.GetQueryString(duplicateKeysIfMulti: true);
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
-
-            request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.ApiKey}");
+            request.HttpRequest.Headers.Set("Authorization", $"Bearer {_settings.ApiKey}");
 
             yield return request;
         }
@@ -304,7 +261,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return jsonResponse.Resource.Select(torrent => new TorrentInfo
             {
                 Guid = torrent.Id.ToString(),
-                Title = Regex.Replace(torrent.Name, @"(?i:\[REQUESTED\])", "").Trim(' ', '.'),
+                Title = CleanTitle(torrent.Name),
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
                 ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
@@ -323,9 +280,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 UploadVolumeFactor = torrent.UploadVolumeFactor,
             }).ToArray();
         }
+
+        private static string CleanTitle(string title)
+        {
+            title = Regex.Replace(title, @"\[REQUEST(ED)?\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            return title.Trim(' ', '.');
+        }
     }
 
-    public class SpeedAppSettingsValidator : AbstractValidator<SpeedAppSettings>
+    public class SpeedAppSettingsValidator : NoAuthSettingsValidator<SpeedAppSettings>
     {
         public SpeedAppSettingsValidator()
         {

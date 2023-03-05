@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using FluentValidation.Results;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.Indexers.Exceptions;
-using NzbDrone.Core.Indexers.Gazelle;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
@@ -25,21 +24,25 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class Redacted : TorrentIndexerBase<RedactedSettings>
     {
         public override string Name => "Redacted";
-        public override string[] IndexerUrls => new string[] { "https://redacted.ch/" };
+        public override string[] IndexerUrls => new[] { "https://redacted.ch/" };
         public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
 
-        public Redacted(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Redacted(IIndexerHttpClient httpClient,
+                        IEventAggregator eventAggregator,
+                        IIndexerStatusService indexerStatusService,
+                        IConfigService configService,
+                        Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RedactedRequestGenerator() { Settings = Settings, Capabilities = Capabilities, HttpClient = _httpClient };
+            return new RedactedRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -47,26 +50,32 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new RedactedParser(Settings, Capabilities.Categories);
         }
 
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            var request = requestBuilder
+                .SetHeader("Authorization", Settings.Apikey)
+                .Build();
+
+            return Task.FromResult(request);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
-                TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
-                MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q, MusicSearchParam.Album, MusicSearchParam.Artist, MusicSearchParam.Label, MusicSearchParam.Year
-                       },
+                {
+                    MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album, MusicSearchParam.Year
+                },
                 BookSearchParams = new List<BookSearchParam>
-                       {
-                           BookSearchParam.Q
-                       }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Audio, "Music");
@@ -79,47 +88,43 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return caps;
         }
-
-        public override async Task<byte[]> Download(Uri link)
-        {
-            var request = new HttpRequestBuilder(link.AbsoluteUri)
-                .SetHeader("Authorization", Settings.Apikey)
-                .Build();
-
-            var downloadBytes = Array.Empty<byte>();
-
-            try
-            {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                downloadBytes = response.ResponseData;
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
-            }
-
-            return downloadBytes;
-        }
     }
 
     public class RedactedRequestGenerator : IIndexerRequestGenerator
     {
-        public RedactedSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly RedactedSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
+
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-        public IIndexerHttpClient HttpClient { get; set; }
 
-        public RedactedRequestGenerator()
+        public RedactedRequestGenerator(RedactedSettings settings, IndexerCapabilities capabilities)
         {
+            _settings = settings;
+            _capabilities = capabilities;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(string.Format("&artistname={0}&groupname={1}", searchCriteria.Artist, searchCriteria.Album)));
+            if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
+            {
+                parameters.Set("artistname", searchCriteria.Artist);
+            }
+
+            if (searchCriteria.Album.IsNotNullOrWhiteSpace())
+            {
+                parameters.Set("groupname", searchCriteria.Album);
+            }
+
+            if (searchCriteria.Year.HasValue)
+            {
+                parameters.Set("year", searchCriteria.Year.ToString());
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -127,8 +132,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -146,26 +152,38 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
+            var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
-            var req = RequestBuilder()
-                .Resource($"ajax.php?action=browse&searchstr={searchParameters}")
-                .Build();
+            var term = searchCriteria.SanitizedSearchTerm.Trim();
 
-            yield return new IndexerRequest(req);
-        }
+            parameters.Set("action", "browse");
+            parameters.Set("order_by", "time");
+            parameters.Set("order_way", "desc");
 
-        private HttpRequestBuilder RequestBuilder()
-        {
-            return new HttpRequestBuilder($"{Settings.BaseUrl.Trim().TrimEnd('/')}")
-                .Accept(HttpAccept.Json)
-                .SetHeader("Authorization", Settings.Apikey);
+            if (term.IsNotNullOrWhiteSpace())
+            {
+                parameters.Set("searchstr", term);
+            }
+
+            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+            if (queryCats.Any())
+            {
+                queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
+            }
+
+            var searchUrl = _settings.BaseUrl.TrimEnd('/') + $"/ajax.php?{parameters.GetQueryString()}";
+
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+            request.HttpRequest.Headers.Set("Authorization", _settings.Apikey);
+
+            yield return request;
         }
     }
 
@@ -210,29 +228,21 @@ namespace NzbDrone.Core.Indexers.Definitions
                     foreach (var torrent in result.Torrents)
                     {
                         var id = torrent.TorrentId;
-                        var artist = WebUtility.HtmlDecode(result.Artist);
-                        var album = WebUtility.HtmlDecode(result.GroupName);
 
-                        var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
-                        if (torrent.HasCue)
-                        {
-                            title += " [Cue]";
-                        }
-
+                        var title = GetTitle(result, torrent);
                         var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                        GazelleInfo release = new GazelleInfo()
+                        var release = new GazelleInfo
                         {
                             Guid = infoUrl,
-
-                            // Splice Title from info to avoid calling API again for every torrent.
+                            InfoUrl = infoUrl,
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
                             Title = WebUtility.HtmlDecode(title),
-
+                            Artist = WebUtility.HtmlDecode(result.Artist),
+                            Album = WebUtility.HtmlDecode(result.GroupName),
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
-                            InfoUrl = infoUrl,
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
@@ -264,7 +274,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var id = result.TorrentId;
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                    GazelleInfo release = new GazelleInfo()
+                    var release = new GazelleInfo
                     {
                         Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(result.GroupName),
@@ -302,6 +312,30 @@ namespace NzbDrone.Core.Indexers.Definitions
                     .ToArray();
         }
 
+        private string GetTitle(GazelleRelease result, GazelleTorrent torrent)
+        {
+            var title = $"{result.Artist} - {result.GroupName} [{result.GroupYear}]";
+
+            if (result.ReleaseType.IsNotNullOrWhiteSpace() && result.ReleaseType != "Unknown")
+            {
+                title += " [" + result.ReleaseType + "]";
+            }
+
+            if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+            {
+                title += $" [{$"{torrent.RemasterTitle} {torrent.RemasterYear}".Trim()}]";
+            }
+
+            title += $" [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+
+            if (torrent.HasCue)
+            {
+                title += " [Cue]";
+            }
+
+            return title;
+        }
+
         private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
             // AuthKey is required but not checked, just pass in a dummy variable
@@ -326,7 +360,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RedactedSettingsValidator : AbstractValidator<RedactedSettings>
+    public class RedactedSettingsValidator : NoAuthSettingsValidator<RedactedSettings>
     {
         public RedactedSettingsValidator()
         {
@@ -336,7 +370,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class RedactedSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly RedactedSettingsValidator Validator = new RedactedSettingsValidator();
+        private static readonly RedactedSettingsValidator Validator = new ();
 
         public RedactedSettings()
         {

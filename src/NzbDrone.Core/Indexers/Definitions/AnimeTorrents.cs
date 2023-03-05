@@ -7,10 +7,8 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -18,7 +16,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -26,7 +23,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public override string Name => "AnimeTorrents";
 
-        public override string[] IndexerUrls => new string[] { "https://animetorrents.me/" };
+        public override string[] IndexerUrls => new[] { "https://animetorrents.me/" };
         public override string Description => "Definitive source for anime and manga";
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -40,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnimeTorrentsRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new AnimeTorrentsRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -52,30 +49,29 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             UpdateCookies(null, null);
 
+            var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
+
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-            requestBuilder.SetCookies(loginPage.GetCookies());
-
             var authLoginRequest = requestBuilder
+                .SetCookies(loginPage.GetCookies())
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("form", "login")
                 .AddFormParameter("rememberme[]", "1")
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
 
             if (response.Content != null && response.Content.Contains("logout.php"))
             {
-                UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+                UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 
                 _logger.Debug("AnimeTorrents authentication succeeded");
             }
@@ -87,12 +83,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.Content.Contains("Access Denied!") || httpResponse.Content.Contains("login.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return httpResponse.Content.Contains("Access Denied!") || httpResponse.Content.Contains("login.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -100,13 +91,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q
-                       }
+                {
+                    MovieSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesSD, "Anime Movie");
@@ -137,10 +128,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public AnimeTorrentsRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {

@@ -19,6 +19,12 @@ namespace NzbDrone.Core.Notifications.Notifiarr
 
         public override string Link => "https://notifiarr.com";
         public override string Name => "Notifiarr";
+
+        public override void OnGrab(GrabMessage grabMessage)
+        {
+            _proxy.SendNotification(BuildGrabPayload(grabMessage), Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(BuildHealthPayload(healthCheck), Settings);

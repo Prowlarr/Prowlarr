@@ -7,3 +7,7 @@
 .statusIcon {
   width: 20px !important;
 }
+
+.indexerStatusTooltip {
+  display: flex;
+}

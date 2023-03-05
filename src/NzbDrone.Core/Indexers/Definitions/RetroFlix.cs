@@ -9,9 +9,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class RetroFlix : SpeedAppBase
     {
         public override string Name => "RetroFlix";
-        public override string[] IndexerUrls => new string[] { "https://retroflix.club/" };
-        public override string[] LegacyUrls => new string[] { "https://retroflix.net/" };
-        public override string Description => "Private Torrent Tracker for Classic Movies / TV / General Releases";
+        public override string[] IndexerUrls => new[] { "https://retroflix.club/" };
+        public override string[] LegacyUrls => new[] { "https://retroflix.net/" };
+        public override string Description => "RetroFlix (RFX) is a Private Torrent Tracker for Classic Movies / TV / General Releases";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.1);
         protected override int MinimumSeedTime => 432000; // 120 hours
@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 BookSearchParams = new List<BookSearchParam>
                 {
                     BookSearchParam.Q,
-                },
+                }
             };
 
             caps.Categories.AddCategoryMapping(401, NewznabStandardCategory.Movies, "Movies");

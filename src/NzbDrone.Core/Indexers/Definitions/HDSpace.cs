@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -58,10 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Method = HttpMethod.Post
             };
 
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
             var cookies = Cookies;
-
             Cookies = null;
 
             var authLoginRequest = requestBuilder
@@ -86,19 +84,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("HDSpace authentication succeeded.");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("logout.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("logout.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -155,26 +148,30 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdb = null)
         {
-            var searchUrl = string.Format("{0}/index.php?page=torrents&", Settings.BaseUrl.TrimEnd('/'));
-
             var queryCollection = new NameValueCollection
             {
+                { "page", "torrents" },
                 { "active", "0" },
-                { "category", string.Join(";", Capabilities.Categories.MapTorznabCapsToTrackers(categories)) }
             };
 
-            if (imdb != null)
+            var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            if (catList.Any())
             {
-                queryCollection.Add("options", "2");
-                queryCollection.Add("search", imdb);
+                queryCollection.Set("category", string.Join(";", catList));
+            }
+
+            if (imdb.IsNotNullOrWhiteSpace())
+            {
+                queryCollection.Set("options", "2");
+                queryCollection.Set("search", imdb);
             }
             else
             {
-                queryCollection.Add("options", "0");
-                queryCollection.Add("search", term.Replace(".", " "));
+                queryCollection.Set("options", "0");
+                queryCollection.Set("search", term.Replace(".", " "));
             }
 
-            searchUrl += queryCollection.GetQueryString();
+            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/index.php?{queryCollection.GetQueryString()}";
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
 
@@ -267,15 +264,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.DownloadUrl = _settings.BaseUrl + downloadUrl;
 
                 // Use the torrent filename as release title
-                var torrentTitle = ParseUtil.GetArgumentFromQueryString(downloadUrl, "f")?
-                    .Replace("&amp;", "&")
-                    .Replace("&#039;", "'")
-                    .Replace(".torrent", "")
-                    .Trim();
-
+                var torrentTitle = ParseUtil.GetArgumentFromQueryString(downloadUrl, "f")?.Replace(".torrent", "").Trim();
                 if (torrentTitle.IsNotNullOrWhiteSpace())
                 {
-                    release.Title = torrentTitle;
+                    release.Title = WebUtility.HtmlDecode(torrentTitle);
                 }
 
                 var qGenres = row.QuerySelector("td:nth-child(2) span[style=\"color: #000000 \"]");
@@ -318,8 +310,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 release.UploadVolumeFactor = 1;
-                var qCat = row.QuerySelector("a[href^=\"index.php?page=torrents&category=\"]");
-                var cat = qCat.GetAttribute("href").Split('=')[2];
+
+                var categoryLink = row.QuerySelector("a[href^=\"index.php?page=torrents&category=\"]").GetAttribute("href");
+                var cat = ParseUtil.GetArgumentFromQueryString(categoryLink, "category");
                 release.Categories = _categories.MapTrackerCatToNewznab(cat);
 
                 torrentInfos.Add(release);

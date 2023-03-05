@@ -13,18 +13,17 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public int? Year { get; set; }
         public string Genre { get; set; }
 
-        public override bool RssSearch
-        {
-            get
-            {
-                if (SearchTerm.IsNullOrWhiteSpace() && ImdbId.IsNullOrWhiteSpace() && !TmdbId.HasValue && !TraktId.HasValue)
-                {
-                    return true;
-                }
+        public override bool IsRssSearch =>
+            SearchTerm.IsNullOrWhiteSpace() &&
+            !IsIdSearch;
 
-                return false;
-            }
-        }
+        public override bool IsIdSearch =>
+            ImdbId.IsNotNullOrWhiteSpace() ||
+            Genre.IsNotNullOrWhiteSpace() ||
+            TmdbId.HasValue ||
+            TraktId.HasValue ||
+            DoubanId.HasValue ||
+            Year.HasValue;
 
         public string FullImdbId => ParseUtil.GetFullImdbId(ImdbId);
 

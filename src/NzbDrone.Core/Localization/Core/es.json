@@ -22,7 +22,7 @@
     "Clear": "Borrar",
     "BackupNow": "Hacer copia de seguridad",
     "Backup": "Backup",
-    "AppDataLocationHealthCheckMessage": "La actualización no será posible para evitar que se elimine AppData durante la actualización",
+    "AppDataLocationHealthCheckMessage": "No será posible actualizar para prevenir que AppData se borre durante la actualización",
     "Analytics": "Analíticas",
     "All": "Todas",
     "About": "Acerca",
@@ -373,5 +373,8 @@
     "ApplicationLongTermStatusCheckSingleClientMessage": "Indexers no disponible por errores durando más de 6 horas: {0}",
     "Ended": "Terminó",
     "NextExecution": "Siguiente ejecución",
-    "Started": "Iniciado"
+    "Started": "Iniciado",
+    "Remove": "Eliminar",
+    "Replace": "Reemplazar",
+    "TheLatestVersionIsAlreadyInstalled": "La última versión de Prowlarr ya está instalada"
 }

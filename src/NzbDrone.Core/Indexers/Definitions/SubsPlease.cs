@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(searchCriteria.RssSearch
+            pageableRequests.Add(searchCriteria.IsRssSearch
                 ? GetRssRequest()
                 : GetSearchRequests(searchCriteria.SanitizedTvSearchString));
 
@@ -147,7 +147,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(searchCriteria.RssSearch
+            pageableRequests.Add(searchCriteria.IsRssSearch
                 ? GetRssRequest()
                 : GetSearchRequests(searchCriteria.SanitizedSearchTerm));
 

@@ -56,17 +56,9 @@ class Notification extends Component {
       id,
       name,
       onGrab,
-      onDownload,
-      onUpgrade,
-      onRename,
-      onDelete,
       onHealthIssue,
       onApplicationUpdate,
       supportsOnGrab,
-      supportsOnDownload,
-      supportsOnUpgrade,
-      supportsOnRename,
-      supportsOnDelete,
       supportsOnHealthIssue,
       supportsOnApplicationUpdate
     } = this.props;
@@ -89,34 +81,6 @@ class Notification extends Component {
         }
 
         {
-          supportsOnDelete && onDelete &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnDelete')}
-            </Label>
-        }
-
-        {
-          supportsOnDownload && onDownload &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnImport')}
-            </Label>
-        }
-
-        {
-          supportsOnUpgrade && onDownload && onUpgrade &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnUpgrade')}
-            </Label>
-        }
-
-        {
-          supportsOnRename && onRename &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnRename')}
-            </Label>
-        }
-
-        {
           supportsOnHealthIssue && onHealthIssue &&
             <Label kind={kinds.SUCCESS}>
               {translate('OnHealthIssue')}
@@ -132,7 +96,7 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onDownload && !onRename && !onHealthIssue && !onDelete && !onApplicationUpdate ?
+          !onGrab && !onHealthIssue && !onApplicationUpdate ?
             <Label
               kind={kinds.DISABLED}
               outline={true}
@@ -167,17 +131,9 @@ Notification.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   onGrab: PropTypes.bool.isRequired,
-  onDownload: PropTypes.bool.isRequired,
-  onUpgrade: PropTypes.bool.isRequired,
-  onRename: PropTypes.bool.isRequired,
-  onDelete: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
   onApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
-  supportsOnDownload: PropTypes.bool.isRequired,
-  supportsOnDelete: PropTypes.bool.isRequired,
-  supportsOnUpgrade: PropTypes.bool.isRequired,
-  supportsOnRename: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
   supportsOnApplicationUpdate: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired

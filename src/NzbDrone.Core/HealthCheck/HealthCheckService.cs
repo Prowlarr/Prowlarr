@@ -34,8 +34,8 @@ namespace NzbDrone.Core.HealthCheck
 
         private readonly ICached<HealthCheck> _healthCheckResults;
 
-        private bool _hasRunHealthChecksAfterGracePeriod = false;
-        private bool _isRunningHealthChecksAfterGracePeriod = false;
+        private bool _hasRunHealthChecksAfterGracePeriod;
+        private bool _isRunningHealthChecksAfterGracePeriod;
 
         public HealthCheckService(IEnumerable<IProvideHealthCheck> healthChecks,
                                   IServerSideNotificationService serverSideNotificationService,
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.HealthCheck
             _startupHealthChecks = _healthChecks.Where(v => v.CheckOnStartup).ToArray();
             _scheduledHealthChecks = _healthChecks.Where(v => v.CheckOnSchedule).ToArray();
             _eventDrivenHealthChecks = GetEventDrivenHealthChecks();
-            _startupGracePeriodEndTime = runtimeInfo.StartTime + TimeSpan.FromMinutes(15);
+            _startupGracePeriodEndTime = runtimeInfo.StartTime.AddMinutes(15);
         }
 
         public List<HealthCheck> Results()

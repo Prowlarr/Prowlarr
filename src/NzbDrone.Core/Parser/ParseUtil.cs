@@ -2,15 +2,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.WebUtilities;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.Parser
 {
     public static class ParseUtil
     {
-        private static readonly Regex InvalidXmlChars =
-            new Regex(
-                @"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]",
-                RegexOptions.Compiled);
         private static readonly Regex ImdbId = new Regex(@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
 
         public static string NormalizeMultiSpaces(string s) =>
@@ -45,8 +42,6 @@ namespace NzbDrone.Core.Parser
             return valStr;
         }
 
-        public static string RemoveInvalidXmlChars(string text) => string.IsNullOrEmpty(text) ? "" : InvalidXmlChars.Replace(text, "");
-
         public static double CoerceDouble(string str) => double.Parse(NormalizeNumber(str), NumberStyles.Any, CultureInfo.InvariantCulture);
 
         public static float CoerceFloat(string str) => float.Parse(NormalizeNumber(str), NumberStyles.Any, CultureInfo.InvariantCulture);
@@ -65,20 +60,29 @@ namespace NzbDrone.Core.Parser
 
         public static long? GetLongFromString(string str)
         {
-            if (str == null)
+            if (str.IsNullOrWhiteSpace())
             {
                 return null;
             }
 
-            var idRegEx = new Regex(@"(\d+)", RegexOptions.Compiled);
-            var idMatch = idRegEx.Match(str);
-            if (!idMatch.Success)
+            var extractedLong = string.Empty;
+
+            foreach (var c in str)
             {
-                return null;
+                if (c < '0' || c > '9')
+                {
+                    if (extractedLong.Length > 0)
+                    {
+                        break;
+                    }
+
+                    continue;
+                }
+
+                extractedLong += c;
             }
 
-            var id = idMatch.Groups[1].Value;
-            return CoerceLong(id);
+            return CoerceLong(extractedLong);
         }
 
         public static int? GetImdbID(string imdbstr)

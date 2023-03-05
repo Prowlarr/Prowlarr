@@ -219,11 +219,11 @@ namespace NzbDrone.Core.Parser
                 }
             }
 
-            if (string.Compare(m.Groups["ampm"].Value, "PM", true) == 0 && hour < 12)
+            if (string.Equals(m.Groups["ampm"].Value, "PM", StringComparison.InvariantCultureIgnoreCase) && hour < 12)
             {
                 hour += 12;
             }
-            else if (string.Compare(m.Groups["ampm"].Value, "AM", true) == 0 && hour == 12)
+            else if (string.Equals(m.Groups["ampm"].Value, "AM", StringComparison.InvariantCultureIgnoreCase) && hour == 12)
             {
                 hour -= 12;
             }

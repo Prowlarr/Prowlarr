@@ -4,9 +4,9 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace NzbDrone.Core.Indexers.Definitions.HDBits
 {
-    public class HDBitsSettingsValidator : AbstractValidator<HDBitsSettings>
+    public class HDBitsSettingsValidator : NoAuthSettingsValidator<HDBitsSettings>
     {
         public HDBitsSettingsValidator()
         {
@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
     public class HDBitsSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly HDBitsSettingsValidator Validator = new HDBitsSettingsValidator();
+        private static readonly HDBitsSettingsValidator Validator = new ();
 
         public HDBitsSettings()
         {

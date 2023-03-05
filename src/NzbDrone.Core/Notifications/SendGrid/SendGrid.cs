@@ -19,6 +19,11 @@ namespace NzbDrone.Core.Notifications.SendGrid
         public override string Name => "SendGrid";
         public override string Link => "https://sendgrid.com/";
 
+        public override void OnGrab(GrabMessage message)
+        {
+            _proxy.SendNotification(RELEASE_GRABBED_TITLE, message.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);

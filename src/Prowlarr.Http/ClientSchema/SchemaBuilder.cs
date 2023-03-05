@@ -226,7 +226,11 @@ namespace Prowlarr.Http.ClientSchema
             {
                 return fieldValue =>
                 {
-                    if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
+                    if (fieldValue == null)
+                    {
+                        return Enumerable.Empty<int>();
+                    }
+                    else if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
                     {
                         return e.EnumerateArray().Select(s => s.GetInt32());
                     }
@@ -240,13 +244,17 @@ namespace Prowlarr.Http.ClientSchema
             {
                 return fieldValue =>
                 {
-                    if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
+                    if (fieldValue == null)
+                    {
+                        return Enumerable.Empty<string>();
+                    }
+                    else if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
                     {
                         return e.EnumerateArray().Select(s => s.GetString());
                     }
                     else
                     {
-                        return fieldValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim());
+                        return fieldValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim());
                     }
                 };
             }

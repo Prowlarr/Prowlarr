@@ -58,10 +58,24 @@ export const filters = [
 export const filterPredicates = {
   added: function(item, filterValue, type) {
     return dateFilterPredicate(item.added, filterValue, type);
+  },
+
+  vipExpiration: function(item, filterValue, type) {
+    const vipExpiration =
+    item.fields.find((field) => field.name === 'vipExpiration')?.value ?? null;
+
+    return dateFilterPredicate(vipExpiration, filterValue, type);
   }
 };
 
-export const sortPredicates = {};
+export const sortPredicates = {
+  vipExpiration: function(item) {
+    const vipExpiration =
+    item.fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
+
+    return vipExpiration;
+  }
+};
 
 //
 // Actions Types

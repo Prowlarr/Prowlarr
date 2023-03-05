@@ -19,340 +19,354 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.Definitions
+namespace NzbDrone.Core.Indexers.Definitions;
+
+public class SpeedCD : TorrentIndexerBase<SpeedCDSettings>
 {
-    public class SpeedCD : TorrentIndexerBase<SpeedCDSettings>
+    public override string Name => "SpeedCD";
+    public override string[] IndexerUrls => new[]
     {
-        public override string Name => "SpeedCD";
-        public override string[] IndexerUrls => new[]
-        {
-            "https://speed.cd/",
-            "https://speed.click/",
-            "https://speeders.me/"
-        };
+        "https://speed.cd/",
+        "https://speed.click/",
+        "https://speeders.me/"
+    };
+    public override string Description => "Your home now!";
+    public override string Language => "en-US";
+    public override Encoding Encoding => Encoding.UTF8;
+    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+    public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+    public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public override string Description => "Your home now!";
-        public override string Language => "en-US";
-        public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
-        public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override IndexerCapabilities Capabilities => SetCapabilities();
-
-        public SpeedCD(IIndexerHttpClient httpClient,
-                       IEventAggregator eventAggregator,
-                       IIndexerStatusService indexerStatusService,
-                       IConfigService configService,
-                       Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
-        {
-        }
-
-        public override IIndexerRequestGenerator GetRequestGenerator()
-        {
-            return new SpeedCDRequestGenerator { Settings = Settings, Capabilities = Capabilities, Encoding = Encoding };
-        }
-
-        public override IParseIndexerResponse GetParser()
-        {
-            return new SpeedCDParser(Settings, Capabilities.Categories);
-        }
-
-        protected override async Task DoLogin()
-        {
-            var requestBuilder = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "checkpoint/API"))
-            {
-                Method = HttpMethod.Post,
-                LogResponseContent = true,
-                AllowAutoRedirect = true
-            };
-
-            var loginPage = await ExecuteAuth(requestBuilder.AddFormParameter("username", Settings.Username).Build());
-
-            var tokenRegex = new Regex(@"name=\\""a\\"" value=\\""([^""]+)\\""");
-            var matches = tokenRegex.Match(loginPage.Content);
-            if (!matches.Success)
-            {
-                throw new IndexerAuthException("Error parsing the login form");
-            }
-
-            var token = matches.Groups[1].Value;
-
-            Cookies = null;
-
-            var requestBuilder2 = new HttpRequestBuilder(string.Format("{0}/{1}", Settings.BaseUrl.TrimEnd('/'), "checkpoint/"))
-            {
-                Method = HttpMethod.Post,
-                LogResponseContent = true,
-                AllowAutoRedirect = true
-            };
-
-            var authLoginRequest = requestBuilder2
-                .AddFormParameter("pwd", Settings.Password)
-                .AddFormParameter("a", token)
-                .SetCookies(loginPage.GetCookies())
-                .Build();
-
-            var response = await ExecuteAuth(authLoginRequest);
-
-            if (CheckIfLoginNeeded(response))
-            {
-                var parser = new HtmlParser();
-                var dom = parser.ParseDocument(response.Content);
-                var errorMessage = dom.QuerySelector("h5")?.TextContent;
-                if (response.Content.Contains("Wrong Captcha!"))
-                {
-                    errorMessage = "Captcha required due to a failed login attempt. Login via a browser to whitelist your IP and then reconfigure Prowlarr.";
-                }
-
-                throw new IndexerAuthException(errorMessage);
-            }
-
-            var cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
-
-            _logger.Debug("SpeedCD authentication succeeded.");
-        }
-
-        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
-        {
-            return !httpResponse.Content.Contains("/browse.php");
-        }
-
-        private IndexerCapabilities SetCapabilities()
-        {
-            var caps = new IndexerCapabilities
-            {
-                TvSearchParams = new List<TvSearchParam>
-                {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                },
-                MovieSearchParams = new List<MovieSearchParam>
-                {
-                    MovieSearchParam.Q, MovieSearchParam.ImdbId
-                },
-                MusicSearchParams = new List<MusicSearchParam>
-                {
-                    MusicSearchParam.Q
-                },
-                BookSearchParams = new List<BookSearchParam>
-                {
-                    BookSearchParam.Q
-                }
-            };
-
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesOther, "Movies/XviD");
-            caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.Movies, "Movies/Packs");
-            caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.Movies, "Movies/Kids");
-            caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.MoviesHD, "Movies/HD");
-            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Movies, "Movies/DiVERSiTY");
-            caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.MoviesBluRay, "Movies/B-Ray");
-            caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Movies3D, "Movies/3D");
-            caps.Categories.AddCategoryMapping(40, NewznabStandardCategory.MoviesDVD, "Movies/DVD-R");
-            caps.Categories.AddCategoryMapping(56, NewznabStandardCategory.Movies, "Movies/Anime");
-            caps.Categories.AddCategoryMapping(50, NewznabStandardCategory.TVSport, "TV/Sports");
-            caps.Categories.AddCategoryMapping(52, NewznabStandardCategory.TVHD, "TV/B-Ray");
-            caps.Categories.AddCategoryMapping(53, NewznabStandardCategory.TVSD, "TV/DVD-R");
-            caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.TV, "TV/Packs");
-            caps.Categories.AddCategoryMapping(55, NewznabStandardCategory.TV, "TV/Kids");
-            caps.Categories.AddCategoryMapping(57, NewznabStandardCategory.TV, "TV/DiVERSiTY");
-            caps.Categories.AddCategoryMapping(49, NewznabStandardCategory.TVHD, "TV/HD");
-            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/Episodes");
-            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.TVAnime, "TV/Anime");
-            caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.PCISO, "Games/PC ISO");
-            caps.Categories.AddCategoryMapping(39, NewznabStandardCategory.ConsoleWii, "Games/Wii");
-            caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.ConsolePS3, "Games/PS3");
-            caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.Console, "Games/Nintendo");
-            caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.ConsoleXBox360, "Games/XboX360");
-            caps.Categories.AddCategoryMapping(46, NewznabStandardCategory.PCMobileOther, "Mobile");
-            caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.PC0day, "Apps/0DAY");
-            caps.Categories.AddCategoryMapping(51, NewznabStandardCategory.PCMac, "Mac");
-            caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.Books, "Educational");
-            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.Books, "Books-Mags");
-            caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.Audio, "Music/Audio");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio, "Music/Flac");
-            caps.Categories.AddCategoryMapping(44, NewznabStandardCategory.Audio, "Music/Pack");
-            caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.AudioVideo, "Music/Video");
-
-            return caps;
-        }
+    public SpeedCD(IIndexerHttpClient httpClient,
+        IEventAggregator eventAggregator,
+        IIndexerStatusService indexerStatusService,
+        IConfigService configService,
+        Logger logger)
+        : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+    {
     }
 
-    public class SpeedCDRequestGenerator : IIndexerRequestGenerator
+    public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        public SpeedCDSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
-        public Encoding Encoding { get; set; }
+        return new SpeedCDRequestGenerator(Settings, Capabilities, Encoding);
+    }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, bool deep = false)
+    public override IParseIndexerResponse GetParser()
+    {
+        return new SpeedCDParser(Settings, Capabilities.Categories);
+    }
+
+    protected override async Task DoLogin()
+    {
+        var requestBuilder = new HttpRequestBuilder($"{Settings.BaseUrl.TrimEnd('/')}/checkpoint/API")
         {
-            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/browse/";
+            Method = HttpMethod.Post,
+            LogResponseContent = true,
+            AllowAutoRedirect = true
+        };
 
-            var qc = new List<string>();
+        var loginPage = await ExecuteAuth(requestBuilder.AddFormParameter("username", Settings.Username).Build());
 
-            var catList = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
-            foreach (var cat in catList)
-            {
-                qc.Add(cat);
-            }
-
-            if (Settings.FreeleechOnly)
-            {
-                qc.Add("freeleech");
-            }
-
-            if (deep)
-            {
-                qc.Add("deep");
-            }
-
-            qc.Add("q");
-            qc.Add(term.UrlEncode(Encoding));
-
-            searchUrl += string.Join("/", qc);
-
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-
-            yield return request;
+        var tokenRegex = new Regex(@"name=\\""a\\"" value=\\""([^""]+)\\""");
+        var matches = tokenRegex.Match(loginPage.Content);
+        if (!matches.Success)
+        {
+            throw new IndexerAuthException("Error parsing the login form");
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        var token = matches.Groups[1].Value;
+
+        Cookies = null;
+
+        var requestBuilder2 = new HttpRequestBuilder($"{Settings.BaseUrl.TrimEnd('/')}/checkpoint/")
         {
-            var pageableRequests = new IndexerPageableRequestChain();
+            Method = HttpMethod.Post,
+            LogResponseContent = true,
+            AllowAutoRedirect = true
+        };
 
-            var term = $"{searchCriteria.SanitizedSearchTerm}";
+        var authLoginRequest = requestBuilder2
+            .AddFormParameter("pwd", Settings.Password)
+            .AddFormParameter("a", token)
+            .SetCookies(loginPage.GetCookies())
+            .Build();
 
-            if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
+        var response = await ExecuteAuth(authLoginRequest);
+
+        if (CheckIfLoginNeeded(response))
+        {
+            var parser = new HtmlParser();
+            var dom = parser.ParseDocument(response.Content);
+            var errorMessage = dom.QuerySelector("h5")?.TextContent.Trim();
+
+            if (response.Content.Contains("Wrong Captcha!"))
             {
-                term = $"{searchCriteria.FullImdbId}";
+                errorMessage = "Captcha required due to a failed login attempt. Login via a browser to whitelist your IP and then reconfigure Prowlarr.";
             }
 
-            pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
-
-            return pageableRequests;
+            throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        var cookies = response.GetCookies();
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
+
+        _logger.Debug("Authentication succeeded.");
+    }
+
+    protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+    {
+        return !httpResponse.Content.Contains("/browse.php");
+    }
+
+    private IndexerCapabilities SetCapabilities()
+    {
+        var caps = new IndexerCapabilities
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            var term = $"{searchCriteria.SanitizedTvSearchString}";
-
-            if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
+            TvSearchParams = new List<TvSearchParam>
             {
-                term = $"{searchCriteria.FullImdbId}";
+                TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+            },
+            MovieSearchParams = new List<MovieSearchParam>
+            {
+                MovieSearchParam.Q, MovieSearchParam.ImdbId
+            },
+            MusicSearchParams = new List<MusicSearchParam>
+            {
+                MusicSearchParam.Q
+            },
+            BookSearchParams = new List<BookSearchParam>
+            {
+                BookSearchParam.Q
+            }
+        };
 
-                if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
-                {
-                    term += $" {searchCriteria.EpisodeSearchString}";
-                }
+        caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesOther, "Movies/XviD");
+        caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.Movies, "Movies/Packs");
+        caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.Movies, "Movies/Kids");
+        caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.MoviesHD, "Movies/HD");
+        caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Movies, "Movies/DiVERSiTY");
+        caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.MoviesBluRay, "Movies/B-Ray");
+        caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Movies3D, "Movies/3D");
+        caps.Categories.AddCategoryMapping(40, NewznabStandardCategory.MoviesDVD, "Movies/DVD-R");
+        caps.Categories.AddCategoryMapping(56, NewznabStandardCategory.Movies, "Movies/Anime");
+        caps.Categories.AddCategoryMapping(50, NewznabStandardCategory.TVSport, "TV/Sports");
+        caps.Categories.AddCategoryMapping(52, NewznabStandardCategory.TVHD, "TV/B-Ray");
+        caps.Categories.AddCategoryMapping(53, NewznabStandardCategory.TVSD, "TV/DVD-R");
+        caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.TV, "TV/Packs");
+        caps.Categories.AddCategoryMapping(55, NewznabStandardCategory.TV, "TV/Kids");
+        caps.Categories.AddCategoryMapping(57, NewznabStandardCategory.TV, "TV/DiVERSiTY");
+        caps.Categories.AddCategoryMapping(49, NewznabStandardCategory.TVHD, "TV/HD");
+        caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/Episodes");
+        caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.TVAnime, "TV/Anime");
+        caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.PCISO, "Games/PC ISO");
+        caps.Categories.AddCategoryMapping(39, NewznabStandardCategory.ConsoleWii, "Games/Wii");
+        caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.ConsolePS3, "Games/PS3");
+        caps.Categories.AddCategoryMapping(35, NewznabStandardCategory.Console, "Games/Nintendo");
+        caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.ConsoleXBox360, "Games/XboX360");
+        caps.Categories.AddCategoryMapping(46, NewznabStandardCategory.PCMobileOther, "Mobile");
+        caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.PC0day, "Apps/0DAY");
+        caps.Categories.AddCategoryMapping(51, NewznabStandardCategory.PCMac, "Mac");
+        caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.Books, "Educational");
+        caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.Books, "Books-Mags");
+        caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.Audio, "Music/Audio");
+        caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Audio, "Music/Flac");
+        caps.Categories.AddCategoryMapping(44, NewznabStandardCategory.Audio, "Music/Pack");
+        caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.AudioVideo, "Music/Video");
 
-                if (searchCriteria.Season.HasValue)
+        return caps;
+    }
+}
+
+public class SpeedCDRequestGenerator : IIndexerRequestGenerator
+{
+    private readonly SpeedCDSettings _settings;
+    private readonly IndexerCapabilities _capabilities;
+    private readonly Encoding _encoding;
+
+    public SpeedCDRequestGenerator(SpeedCDSettings settings, IndexerCapabilities capabilities, Encoding encoding)
+    {
+        _settings = settings;
+        _capabilities = capabilities;
+        _encoding = encoding;
+    }
+
+    private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, bool deep = false)
+    {
+        var parameters = new List<string>();
+
+        var catList = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
+        foreach (var cat in catList)
+        {
+            parameters.Add(cat);
+        }
+
+        if (_settings.FreeleechOnly)
+        {
+            parameters.Add("freeleech");
+        }
+
+        if (_settings.ExcludeArchives)
+        {
+            parameters.Add("norar");
+        }
+
+        if (deep)
+        {
+            parameters.Add("deep");
+        }
+
+        parameters.Add("q");
+        parameters.Add(term.UrlEncode(_encoding));
+
+        var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/browse/{string.Join("/", parameters)}";
+
+        var request = new IndexerRequest(searchUrl, HttpAccept.Html);
+
+        yield return request;
+    }
+
+    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+
+        var term = $"{searchCriteria.SanitizedSearchTerm}";
+
+        if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
+        {
+            term = $"{searchCriteria.FullImdbId}";
+        }
+
+        pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
+
+        return pageableRequests;
+    }
+
+    public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
+
+        return pageableRequests;
+    }
+
+    public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+
+        var term = $"{searchCriteria.SanitizedTvSearchString}";
+
+        if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
+        {
+            term = $"{searchCriteria.FullImdbId}";
+
+            if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
+            {
+                term += $" {searchCriteria.EpisodeSearchString}";
+
+                if (searchCriteria.Season.HasValue && searchCriteria.Episode.IsNullOrWhiteSpace())
                 {
                     term += "*";
                 }
             }
-
-            pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
-
-            return pageableRequests;
         }
 
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
+        pageableRequests.Add(GetPagedRequests(term.Trim(), searchCriteria.Categories, searchCriteria.FullImdbId.IsNotNullOrWhiteSpace()));
 
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public Func<IDictionary<string, string>> GetCookies { get; set; }
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+        return pageableRequests;
     }
 
-    public class SpeedCDParser : IParseIndexerResponse
+    public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
     {
-        private readonly SpeedCDSettings _settings;
-        private readonly IndexerCapabilitiesCategories _categories;
+        var pageableRequests = new IndexerPageableRequestChain();
 
-        public SpeedCDParser(SpeedCDSettings settings, IndexerCapabilitiesCategories categories)
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
+
+        return pageableRequests;
+    }
+
+    public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+    {
+        var pageableRequests = new IndexerPageableRequestChain();
+
+        pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories));
+
+        return pageableRequests;
+    }
+
+    public Func<IDictionary<string, string>> GetCookies { get; set; }
+    public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+}
+
+public class SpeedCDParser : IParseIndexerResponse
+{
+    private readonly SpeedCDSettings _settings;
+    private readonly IndexerCapabilitiesCategories _categories;
+
+    public SpeedCDParser(SpeedCDSettings settings, IndexerCapabilitiesCategories categories)
+    {
+        _settings = settings;
+        _categories = categories;
+    }
+
+    public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+    {
+        var releaseInfos = new List<ReleaseInfo>();
+
+        var parser = new HtmlParser();
+        var dom = parser.ParseDocument(indexerResponse.Content);
+
+        var rows = dom.QuerySelectorAll("div.boxContent > table > tbody > tr");
+        foreach (var row in rows)
         {
-            _settings = settings;
-            _categories = categories;
-        }
+            var title = CleanTitle(row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]")?.TextContent);
+            var downloadUrl = _settings.BaseUrl + row.QuerySelector("td:nth-child(4) a[href^=\"/download/\"]")?.GetAttribute("href")?.TrimStart('/');
+            var infoUrl = _settings.BaseUrl + row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]")?.GetAttribute("href")?.TrimStart('/');
+            var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(8)")?.TextContent);
+            var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(9)")?.TextContent);
+            var dateAdded = row.QuerySelector("td:nth-child(2) span[class^=\"elapsedDate\"]")?.GetAttribute("title")?.Replace(" at", "");
+            var cat = row.QuerySelector("td:nth-child(1) a")?.GetAttribute("href")?.Split('/').Last();
+            var downloadVolumeFactor = row.QuerySelector("td:nth-child(2) span:contains(\"[Freeleech]\")") != null ? 0 : 1;
 
-        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
-        {
-            var torrentInfos = new List<ReleaseInfo>();
-
-            var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
-            var rows = dom.QuerySelectorAll("div.boxContent > table > tbody > tr");
-
-            foreach (var row in rows)
+            var release = new TorrentInfo
             {
-                var title = Regex.Replace(row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").TextContent, @"(?i:\[REQ\])", "").Trim(' ', '.');
-                var downloadUrl = new Uri(_settings.BaseUrl + row.QuerySelector("td:nth-child(4) a[href^=\"/download/\"]").GetAttribute("href").TrimStart('/'));
-                var infoUrl = new Uri(_settings.BaseUrl + row.QuerySelector("td:nth-child(2) > div > a[href^=\"/t/\"]").GetAttribute("href").TrimStart('/'));
-                var size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(6)").TextContent);
-                var grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(7)").TextContent);
-                var seeders = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(8)").TextContent);
-                var leechers = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(9)").TextContent);
+                Guid = infoUrl,
+                InfoUrl = infoUrl,
+                DownloadUrl = downloadUrl,
+                Title = title,
+                Categories = _categories.MapTrackerCatToNewznab(cat),
+                PublishDate = DateTime.ParseExact(dateAdded, "dddd, MMMM d, yyyy h:mmtt", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+                Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(6)")?.TextContent),
+                Grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(7)")?.TextContent),
+                Seeders = seeders,
+                Peers = seeders + leechers,
+                DownloadVolumeFactor = downloadVolumeFactor,
+                UploadVolumeFactor = 1,
+                MinimumRatio = 1,
+                MinimumSeedTime = 259200 // 72 hours
+            };
 
-                var pubDateStr = row.QuerySelector("td:nth-child(2) span[class^=\"elapsedDate\"]").GetAttribute("title").Replace(" at", "");
-                var publishDate = DateTime.ParseExact(pubDateStr, "dddd, MMMM d, yyyy h:mmtt", CultureInfo.InvariantCulture);
-
-                var cat = row.QuerySelector("td:nth-child(1) a").GetAttribute("href").Split('/').Last();
-                var downloadVolumeFactor = row.QuerySelector("td:nth-child(2) span:contains(\"[Freeleech]\")") != null ? 0 : 1;
-
-                var release = new TorrentInfo
-                {
-                    Title = title,
-                    DownloadUrl = downloadUrl.AbsoluteUri,
-                    Guid = infoUrl.AbsoluteUri,
-                    InfoUrl = infoUrl.AbsoluteUri,
-                    PublishDate = publishDate,
-                    Categories = _categories.MapTrackerCatToNewznab(cat),
-                    Size = size,
-                    Grabs = grabs,
-                    Seeders = seeders,
-                    Peers = seeders + leechers,
-                    MinimumRatio = 1,
-                    MinimumSeedTime = 259200, // 72 hours
-                    DownloadVolumeFactor = downloadVolumeFactor,
-                    UploadVolumeFactor = 1
-                };
-
-                torrentInfos.Add(release);
-            }
-
-            return torrentInfos.ToArray();
+            releaseInfos.Add(release);
         }
 
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+        return releaseInfos.ToArray();
     }
 
-    public class SpeedCDSettings : UserPassTorrentBaseSettings
+    private static string CleanTitle(string title)
     {
-        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
-        public bool FreeleechOnly { get; set; }
+        title = Regex.Replace(title, @"\[REQ(UEST)?\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        return title.Trim(' ', '.');
     }
+
+    public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+}
+
+public class SpeedCDSettings : UserPassTorrentBaseSettings
+{
+    [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+    public bool FreeleechOnly { get; set; }
+
+    [FieldDefinition(5, Label = "Exclude Archives", Type = FieldType.Checkbox, HelpText = "Exclude torrents containing RAR files from results")]
+    public bool ExcludeArchives { get; set; }
 }

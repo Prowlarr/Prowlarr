@@ -8,6 +8,7 @@ import VirtualTableRowCell from 'Components/Table/Cells/VirtualTableRowCell';
 import VirtualTableSelectCell from 'Components/Table/Cells/VirtualTableSelectCell';
 import Popover from 'Components/Tooltip/Popover';
 import { icons, kinds, tooltipPositions } from 'Helpers/Props';
+import ProtocolLabel from 'Indexer/Index/Table/ProtocolLabel';
 import formatDateTime from 'Utilities/Date/formatDateTime';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
@@ -15,7 +16,6 @@ import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CategoryLabel from './CategoryLabel';
 import Peers from './Peers';
-import ProtocolLabel from './ProtocolLabel';
 import styles from './SearchIndexRow.css';
 
 function getDownloadIcon(isGrabbing, isGrabbed, grabError) {
@@ -71,6 +71,19 @@ class SearchIndexRow extends Component {
     });
   };
 
+  onSavePress = () => {
+    const {
+      downloadUrl,
+      fileName,
+      onSavePress
+    } = this.props;
+
+    onSavePress({
+      downloadUrl,
+      fileName
+    });
+  };
+
   //
   // Render
 
@@ -85,7 +98,6 @@ class SearchIndexRow extends Component {
       publishDate,
       title,
       infoUrl,
-      downloadUrl,
       indexer,
       size,
       files,
@@ -153,7 +165,7 @@ class SearchIndexRow extends Component {
               );
             }
 
-            if (column.name === 'title') {
+            if (column.name === 'sortTitle') {
               return (
                 <VirtualTableRowCell
                   key={column.name}
@@ -300,7 +312,7 @@ class SearchIndexRow extends Component {
                     className={styles.downloadLink}
                     name={icons.SAVE}
                     title={translate('Save')}
-                    to={downloadUrl}
+                    onPress={this.onSavePress}
                   />
                 </VirtualTableRowCell>
               );
@@ -323,6 +335,7 @@ SearchIndexRow.propTypes = {
   ageMinutes: PropTypes.number.isRequired,
   publishDate: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  fileName: PropTypes.string.isRequired,
   infoUrl: PropTypes.string.isRequired,
   downloadUrl: PropTypes.string.isRequired,
   indexerId: PropTypes.number.isRequired,
@@ -335,6 +348,7 @@ SearchIndexRow.propTypes = {
   indexerFlags: PropTypes.arrayOf(PropTypes.string).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   onGrabPress: PropTypes.func.isRequired,
+  onSavePress: PropTypes.func.isRequired,
   isGrabbing: PropTypes.bool.isRequired,
   isGrabbed: PropTypes.bool.isRequired,
   grabError: PropTypes.string,

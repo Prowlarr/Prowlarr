@@ -16,6 +16,11 @@ namespace NzbDrone.Core.Notifications.Telegram
         public override string Name => "Telegram";
         public override string Link => "https://telegram.org/";
 
+        public override void OnGrab(GrabMessage message)
+        {
+            _proxy.SendNotification(RELEASE_GRABBED_TITLE, message.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);

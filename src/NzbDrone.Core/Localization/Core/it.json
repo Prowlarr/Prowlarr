@@ -469,5 +469,8 @@
     "AuthenticationRequiredWarning": "Per impedire accessi remoti senza autenticazione, Prowlarr ora richiede che l'autenticazione venga attivata. Puoi disattivare l'autenticazione per indirizzi privati.",
     "DeleteClientCategory": "Cancella categoria del client di download",
     "DownloadClientCategory": "Categoria client di download",
-    "MappedCategories": "Categorie mappate"
+    "MappedCategories": "Categorie mappate",
+    "Remove": "Rimuovi",
+    "Replace": "Sostituire",
+    "TheLatestVersionIsAlreadyInstalled": "L'ultima versione di Prowlarr è già installata"
 }

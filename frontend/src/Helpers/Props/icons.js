@@ -15,7 +15,8 @@ import {
   faHdd as farHdd,
   faKeyboard as farKeyboard,
   faObjectGroup as farObjectGroup,
-  faObjectUngroup as farObjectUngroup
+  faObjectUngroup as farObjectUngroup,
+  faSquare as farSquare
 } from '@fortawesome/free-regular-svg-icons';
 //
 // Solid
@@ -38,7 +39,6 @@ import {
   faCaretDown as fasCaretDown,
   faCheck as fasCheck,
   faCheckCircle as fasCheckCircle,
-  faCheckSquare as fasCheckSquare,
   faChevronCircleDown as fasChevronCircleDown,
   faChevronCircleRight as fasChevronCircleRight,
   faChevronCircleUp as fasChevronCircleUp,
@@ -95,6 +95,8 @@ import {
   faSortDown as fasSortDown,
   faSortUp as fasSortUp,
   faSpinner as fasSpinner,
+  faSquareCheck as fasSquareCheck,
+  faSquareMinus as fasSquareMinus,
   faStop as fasStop,
   faSync as fasSync,
   faTable as fasTable,
@@ -135,7 +137,7 @@ export const CARET_DOWN = fasCaretDown;
 export const CHECK = fasCheck;
 export const CHECK_INDETERMINATE = fasMinus;
 export const CHECK_CIRCLE = fasCheckCircle;
-export const CHECK_SQUARE = fasCheckSquare;
+export const CHECK_SQUARE = fasSquareCheck;
 export const CIRCLE = fasCircle;
 export const CIRCLE_OUTLINE = farCircle;
 export const CLEAR = fasTrashAlt;
@@ -220,6 +222,8 @@ export const SORT_ASCENDING = fasSortUp;
 export const SORT_DESCENDING = fasSortDown;
 export const SPINNER = fasSpinner;
 export const STUDIO = fasBuilding;
+export const SQUARE = farSquare;
+export const SQUARE_MINUS = fasSquareMinus;
 export const SUBTRACT = fasMinus;
 export const SYSTEM = fasLaptop;
 export const TABLE = fasTable;

@@ -4,20 +4,19 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class UserPassTorrentBaseSettings : ITorrentIndexerSettings
+    public class UserPassBaseSettingsValidator<T> : NoAuthSettingsValidator<T>
+        where T : UserPassTorrentBaseSettings
     {
-        public class UserPassBaseSettingsValidator : AbstractValidator<UserPassTorrentBaseSettings>
+        public UserPassBaseSettingsValidator()
         {
-            public UserPassBaseSettingsValidator()
-            {
-                RuleFor(c => c.Username).NotEmpty();
-                RuleFor(c => c.Password).NotEmpty();
-                RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
-                RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
-            }
+            RuleFor(c => c.Username).NotEmpty();
+            RuleFor(c => c.Password).NotEmpty();
         }
+    }
 
-        private static readonly UserPassBaseSettingsValidator Validator = new UserPassBaseSettingsValidator();
+    public class UserPassTorrentBaseSettings : NoAuthTorrentBaseSettings
+    {
+        private static readonly UserPassBaseSettingsValidator<UserPassTorrentBaseSettings> Validator = new ();
 
         public UserPassTorrentBaseSettings()
         {
@@ -25,22 +24,13 @@ namespace NzbDrone.Core.Indexers.Settings
             Password = "";
         }
 
-        [FieldDefinition(1, Label = "Base Url", HelpText = "Select which baseurl Prowlarr will use for requests to the site", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls")]
-        public string BaseUrl { get; set; }
-
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(10)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new IndexerBaseSettings();
-
-        [FieldDefinition(11)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new IndexerTorrentBaseSettings();
-
-        public NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

@@ -131,7 +131,7 @@ namespace NzbDrone.Common.Extensions
 
         public static string WrapInQuotes(this string text)
         {
-            if (!text.Contains(" "))
+            if (!text.Contains(' '))
             {
                 return text;
             }
@@ -255,7 +255,20 @@ namespace NzbDrone.Common.Extensions
 
         public static string ToUrlHost(this string input)
         {
-            return input.Contains(":") ? $"[{input}]" : input;
+            return input.Contains(':') ? $"[{input}]" : input;
+        }
+
+        public static bool IsAllDigits(this string input)
+        {
+            foreach (var c in input)
+            {
+                if (c < '0' || c > '9')
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

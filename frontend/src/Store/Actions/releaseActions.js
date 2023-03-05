@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { createAction } from 'redux-actions';
 import { batchActions } from 'redux-batched-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
@@ -64,7 +65,7 @@ export const defaultState = {
       isVisible: true
     },
     {
-      name: 'title',
+      name: 'sortTitle',
       label: translate('Title'),
       isSortable: true,
       isVisible: true
@@ -229,6 +230,7 @@ export const CANCEL_FETCH_RELEASES = 'releases/cancelFetchReleases';
 export const SET_RELEASES_SORT = 'releases/setReleasesSort';
 export const CLEAR_RELEASES = 'releases/clearReleases';
 export const GRAB_RELEASE = 'releases/grabRelease';
+export const SAVE_RELEASE = 'releases/saveRelease';
 export const BULK_GRAB_RELEASES = 'release/bulkGrabReleases';
 export const UPDATE_RELEASE = 'releases/updateRelease';
 export const SET_RELEASES_FILTER = 'releases/setReleasesFilter';
@@ -243,6 +245,7 @@ export const cancelFetchReleases = createThunk(CANCEL_FETCH_RELEASES);
 export const setReleasesSort = createAction(SET_RELEASES_SORT);
 export const clearReleases = createAction(CLEAR_RELEASES);
 export const grabRelease = createThunk(GRAB_RELEASE);
+export const saveRelease = createThunk(SAVE_RELEASE);
 export const bulkGrabReleases = createThunk(BULK_GRAB_RELEASES);
 export const updateRelease = createAction(UPDATE_RELEASE);
 export const setReleasesFilter = createAction(SET_RELEASES_FILTER);
@@ -301,6 +304,32 @@ export const actionHandlers = handleThunks({
         isGrabbed: false,
         grabError
       }));
+    });
+  },
+
+  [SAVE_RELEASE]: function(getState, payload, dispatch) {
+    const link = payload.downloadUrl;
+    const file = payload.fileName;
+
+    $.ajax({
+      url: link,
+      method: 'GET',
+      headers: {
+        'X-Prowlarr-Client': true
+      },
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: function(data) {
+        const a = document.createElement('a');
+        const url = window.URL.createObjectURL(data);
+        a.href = url;
+        a.download = file;
+        document.body.append(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      }
     });
   },
 

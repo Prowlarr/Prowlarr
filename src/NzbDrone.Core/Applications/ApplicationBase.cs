@@ -14,8 +14,7 @@ namespace NzbDrone.Core.Applications
         protected readonly IAppIndexerMapService _appIndexerMapService;
         protected readonly Logger _logger;
 
-        protected static readonly Regex AppIndexerRegex = new Regex(@"\/(?<indexer>\d{1,3})(?:\/(?:api)?\/?)?$",
-                                                                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected static readonly Regex AppIndexerRegex = new (@"\/(?<indexer>\d{1,3})(?:\/(?:api)?\/?)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public abstract string Name { get; }
 

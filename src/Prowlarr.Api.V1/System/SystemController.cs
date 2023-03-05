@@ -54,9 +54,9 @@ namespace Prowlarr.Api.V1.System
         }
 
         [HttpGet("status")]
-        public object GetStatus()
+        public SystemResource GetStatus()
         {
-            return new
+            return new SystemResource
             {
                 AppName = BuildInfo.AppName,
                 InstanceName = _configFileProvider.InstanceName,
@@ -70,8 +70,7 @@ namespace Prowlarr.Api.V1.System
                 AppData = _appFolderInfo.GetAppDataPath(),
                 OsName = _osInfo.Name,
                 OsVersion = _osInfo.Version,
-                IsNetCore = PlatformInfo.IsNetCore,
-                IsMono = PlatformInfo.IsMono,
+                IsNetCore = true,
                 IsLinux = OsInfo.IsLinux,
                 IsOsx = OsInfo.IsOsx,
                 IsWindows = OsInfo.IsWindows,
@@ -84,7 +83,7 @@ namespace Prowlarr.Api.V1.System
                 MigrationVersion = _database.Migration,
                 UrlBase = _configFileProvider.UrlBase,
                 RuntimeVersion = _platformInfo.Version,
-                RuntimeName = PlatformInfo.Platform,
+                RuntimeName = "netcore",
                 StartTime = _runtimeInfo.StartTime,
                 PackageVersion = _deploymentInfoProvider.PackageVersion,
                 PackageAuthor = _deploymentInfoProvider.PackageAuthor,

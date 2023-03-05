@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Indexers
 
         public DateTime GetIndexerCookiesExpirationDate(int indexerId)
         {
-            return GetProviderStatus(indexerId)?.CookiesExpirationDate ?? DateTime.Now + TimeSpan.FromDays(12);
+            return GetProviderStatus(indexerId)?.CookiesExpirationDate ?? DateTime.Now.AddDays(12);
         }
 
         public void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo)

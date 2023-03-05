@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import withScrollPosition from 'Components/withScrollPosition';
 import { bulkGrabReleases, cancelFetchReleases, clearReleases, fetchReleases, setReleasesFilter, setReleasesSort, setReleasesTableOption } from 'Store/Actions/releaseActions';
-import scrollPositions from 'Store/scrollPositions';
 import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import createReleaseClientSideCollectionItemsSelector from 'Store/Selectors/createReleaseClientSideCollectionItemsSelector';
 import SearchIndex from './SearchIndex';
@@ -66,10 +65,6 @@ class SearchIndexConnector extends Component {
     this.props.dispatchCancelFetchReleases();
     this.props.dispatchClearReleases();
   }
-
-  onScroll = ({ scrollTop }) => {
-    scrollPositions.movieIndex = scrollTop;
-  };
 
   //
   // Render

@@ -21,6 +21,8 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
     public class LazyLibrarianV1Proxy : ILazyLibrarianV1Proxy
     {
+        private const int ProwlarrHighestPriority = 50;
+
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
 
@@ -90,7 +92,8 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 { "host", indexer.Host },
                 { "prov_apikey", indexer.Apikey },
                 { "enabled", indexer.Enabled.ToString().ToLower() },
-                { "categories", indexer.Categories }
+                { "categories", indexer.Categories },
+                { "dlpriority", CalculatePriority(indexer.Priority).ToString() }
             };
 
             var request = BuildRequest(settings, "/api", "addProvider", HttpMethod.Get, parameters);
@@ -108,7 +111,8 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
                 { "prov_apikey", indexer.Apikey },
                 { "enabled", indexer.Enabled.ToString().ToLower() },
                 { "categories", indexer.Categories },
-                { "altername", indexer.Altername }
+                { "altername", indexer.Altername },
+                { "dlpriority", CalculatePriority(indexer.Priority).ToString() }
             };
 
             var request = BuildRequest(settings, "/api", "changeProvider", HttpMethod.Get, parameters);
@@ -191,5 +195,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
             return results;
         }
+
+        private int CalculatePriority(int indexerPriority) => ProwlarrHighestPriority - indexerPriority + 1;
     }
 }

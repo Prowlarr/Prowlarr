@@ -233,7 +233,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class SceneHDSettingsValidator : AbstractValidator<SceneHDSettings>
+    public class SceneHDSettingsValidator : NoAuthSettingsValidator<SceneHDSettings>
     {
         public SceneHDSettingsValidator()
         {
@@ -243,7 +243,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SceneHDSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly SceneHDSettingsValidator Validator = new SceneHDSettingsValidator();
+        private static readonly SceneHDSettingsValidator Validator = new ();
 
         public SceneHDSettings()
         {

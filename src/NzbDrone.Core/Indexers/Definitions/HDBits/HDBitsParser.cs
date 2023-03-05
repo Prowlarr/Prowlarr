@@ -7,7 +7,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace NzbDrone.Core.Indexers.Definitions.HDBits
 {
     public class HDBitsParser : IParseIndexerResponse
     {

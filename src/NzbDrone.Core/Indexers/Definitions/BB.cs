@@ -7,10 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -18,14 +17,13 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
     public class BB : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "BB";
-        public override string[] IndexerUrls => new string[] { StringUtil.FromBase64("aHR0cHM6Ly9iYWNvbmJpdHMub3JnLw==") };
+        public override string[] IndexerUrls => new[] { Base64Extensions.FromBase64("aHR0cHM6Ly9iYWNvbmJpdHMub3JnLw==") };
         private string LoginUrl => Settings.BaseUrl + "login.php";
         public override string Description => "BB is a Private Torrent Tracker for 0DAY / GENERAL";
         public override string Language => "en-US";
@@ -41,7 +39,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new BBRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new BBRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -54,29 +52,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
             var cookies = Cookies;
-
             Cookies = null;
+
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("keeplogged", "1")
                 .AddFormParameter("login", "Log+In!")
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .SetHeader("Referer", LoginUrl)
                 .Build();
-
-            var headers = new NameValueCollection
-            {
-                { "Referer", LoginUrl }
-            };
-
-            authLoginRequest.Headers.Add(headers);
 
             var response = await ExecuteAuth(authLoginRequest);
 
@@ -98,19 +88,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("BB authentication succeeded.");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("logout.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("logout.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -118,21 +103,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
+                {
+                    MovieSearchParam.Q
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Audio);
@@ -162,10 +147,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public BBRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {

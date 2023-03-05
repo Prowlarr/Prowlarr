@@ -33,7 +33,7 @@ namespace NzbDrone.Common.Extensions
 
             var info = new FileInfo(path.Trim());
 
-            //UNC
+            // UNC
             if (OsInfo.IsWindows && info.FullName.StartsWith(@"\\"))
             {
                 return info.FullName.TrimEnd('/', '\\', ' ');
@@ -166,7 +166,7 @@ namespace NzbDrone.Common.Extensions
             var parentDirInfo = dirInfo.Parent;
             if (parentDirInfo == null)
             {
-                //Drive letter
+                // Drive letter
                 return dirInfo.Name.ToUpper();
             }
 
@@ -238,19 +238,14 @@ namespace NzbDrone.Common.Extensions
             return null;
         }
 
-        public static string ProcessNameToExe(this string processName, PlatformType runtime)
+        public static string ProcessNameToExe(this string processName)
         {
-            if (OsInfo.IsWindows || runtime != PlatformType.NetCore)
+            if (OsInfo.IsWindows)
             {
                 processName += ".exe";
             }
 
             return processName;
-        }
-
-        public static string ProcessNameToExe(this string processName)
-        {
-            return processName.ProcessNameToExe(PlatformInfo.Platform);
         }
 
         public static string GetAppDataPath(this IAppFolderInfo appFolderInfo)
@@ -318,9 +313,9 @@ namespace NzbDrone.Common.Extensions
             return Path.Combine(GetUpdatePackageFolder(appFolderInfo), UPDATE_CLIENT_FOLDER_NAME);
         }
 
-        public static string GetUpdateClientExePath(this IAppFolderInfo appFolderInfo, PlatformType runtime)
+        public static string GetUpdateClientExePath(this IAppFolderInfo appFolderInfo)
         {
-            return Path.Combine(GetUpdateSandboxFolder(appFolderInfo), UPDATE_CLIENT_EXE_NAME).ProcessNameToExe(runtime);
+            return Path.Combine(GetUpdateSandboxFolder(appFolderInfo), UPDATE_CLIENT_EXE_NAME).ProcessNameToExe();
         }
 
         public static string GetDatabase(this IAppFolderInfo appFolderInfo)

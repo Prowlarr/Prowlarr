@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
@@ -300,7 +301,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "checkbox")
                 {
-                    variables[name] = ((bool)value) ? ".True" : null;
+                    if (value is string stringValue && bool.TryParse(stringValue, out var result))
+                    {
+                        value = result;
+                    }
+
+                    variables[name] = (bool)value ? ".True" : null;
                 }
                 else if (setting.Type == "select")
                 {
@@ -328,12 +334,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else
                 {
-                    throw new NotSupportedException();
+                    throw new NotSupportedException($"Type {setting.Type} is not supported.");
                 }
 
-                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging)
+                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging && variables.ContainsKey(name))
                 {
-                    _logger.Debug($"Setting {setting.Name} to {variables[name]}");
+                    _logger.Debug($"Setting {setting.Name} to {variables[name].ToJson()}");
                 }
             }
 
@@ -344,10 +350,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)
         {
-            if (variables == null)
+            if (template.IsNullOrWhiteSpace() || !template.Contains("{{"))
             {
-                variables = GetBaseTemplateVariables();
+                return template;
             }
+
+            variables ??= GetBaseTemplateVariables();
 
             // handle re_replace expression
             // Example: {{ re_replace .Query.Keywords "[^a-zA-Z0-9]+" "%" }}
@@ -606,10 +614,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case "timeparse":
                     case "dateparse":
                         var layout = (string)filter.Args;
+
                         try
                         {
                             var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
-                            data = date.ToString(DateTimeUtil.Rfc1123ZPattern);
+                            data = date.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         }
                         catch (InvalidDateException ex)
                         {
@@ -650,15 +659,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         break;
                     case "trim":
                         var cutset = (string)filter.Args;
-                        if (cutset != null)
-                        {
-                            data = data.Trim(cutset[0]);
-                        }
-                        else
-                        {
-                            data = data.Trim();
-                        }
-
+                        data = cutset != null ? data.Trim(cutset[0]) : data.Trim();
                         break;
                     case "prepend":
                         var prependstr = (string)filter.Args;
@@ -680,12 +681,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case "urlencode":
                         data = data.UrlEncode(_encoding);
                         break;
+                    case "htmldecode":
+                        data = WebUtility.HtmlDecode(data);
+                        break;
+                    case "htmlencode":
+                        data = WebUtility.HtmlEncode(data);
+                        break;
                     case "timeago":
                     case "reltime":
-                        data = DateTimeUtil.FromTimeAgo(data).ToString(DateTimeUtil.Rfc1123ZPattern);
+                        data = DateTimeUtil.FromTimeAgo(data).ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         break;
                     case "fuzzytime":
-                        data = DateTimeUtil.FromUnknown(data).ToString(DateTimeUtil.Rfc1123ZPattern);
+                        data = DateTimeUtil.FromUnknown(data).ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         break;
                     case "validfilename":
                         data = StringUtil.MakeValidFileName(data, '_', false);
@@ -733,18 +740,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         // for debugging
                         var debugData = data.Replace("\r", "\\r").Replace("\n", "\\n").Replace("\xA0", "\\xA0");
                         var strTag = (string)filter.Args;
-                        if (strTag != null)
-                        {
-                            strTag = string.Format("({0}):", strTag);
-                        }
-                        else
-                        {
-                            strTag = ":";
-                        }
+                        strTag = strTag != null ? $"({strTag}):" : ":";
 
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): strdump{1} {2}", _definition.Id, strTag, debugData));
+                        _logger.Debug($"CardigannIndexer ({_definition.Id}): strdump{strTag} {debugData}");
+                        break;
+                    case "validate":
+                        char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
+                        var args = (string)filter.Args;
+                        var argsList = args.ToLower().Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                        var validList = argsList.ToList();
+                        var validIntersect = validList.Intersect(data.ToLower().Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)).ToList();
+                        data = string.Join(", ", validIntersect);
                         break;
                     default:
+                        _logger.Error($"CardigannIndexer ({_definition.Id}): Unsupported field filter: {filter.Name}");
                         break;
                 }
             }
@@ -752,8 +761,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return data;
         }
 
-        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders,
-                                                      Dictionary<string, object> variables)
+        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders, Dictionary<string, object> variables)
         {
             if (customHeaders == null)
             {

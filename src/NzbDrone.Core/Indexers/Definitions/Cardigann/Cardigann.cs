@@ -165,6 +165,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
+                SupportsPagination = SupportsPagination,
                 Capabilities = new IndexerCapabilities(),
                 ExtraFields = settings
             };

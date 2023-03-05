@@ -32,7 +32,8 @@ namespace NzbDrone.Core.Indexers.TorrentPotato
                 Protocol = DownloadProtocol.Torrent,
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
-                SupportsRedirect = SupportsRedirect
+                SupportsRedirect = SupportsRedirect,
+                SupportsPagination = SupportsPagination
             };
         }
 

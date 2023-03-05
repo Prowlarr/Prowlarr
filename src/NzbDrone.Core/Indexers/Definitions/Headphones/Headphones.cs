@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Indexers.Headphones
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override string[] IndexerUrls => new string[] { "https://indexer.codeshy.com" };
         public override string Description => "A Private Usenet indexer for music";
+        public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public override IIndexerRequestGenerator GetRequestGenerator()

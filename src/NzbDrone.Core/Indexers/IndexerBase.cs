@@ -36,6 +36,7 @@ namespace NzbDrone.Core.Indexers
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
         public abstract bool SupportsRedirect { get; }
+        public abstract bool SupportsPagination { get; }
         public abstract IndexerCapabilities Capabilities { get; protected set; }
 
         public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -51,12 +52,7 @@ namespace NzbDrone.Core.Indexers
         {
             var attributes = GetType().GetCustomAttributes(false);
 
-            foreach (ObsoleteAttribute attribute in attributes.OfType<ObsoleteAttribute>())
-            {
-                return true;
-            }
-
-            return false;
+            return attributes.OfType<ObsoleteAttribute>().Any();
         }
 
         public virtual ProviderMessage Message => null;

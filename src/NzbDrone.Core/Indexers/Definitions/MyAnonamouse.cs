@@ -32,6 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "MyAnonaMouse (MAM) is a large ebook and audiobook tracker.";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         private readonly ICacheManager _cacheManager;

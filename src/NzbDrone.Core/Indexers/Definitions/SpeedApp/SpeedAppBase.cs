@@ -30,6 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private string LoginUrl => Settings.BaseUrl + "api/login";
         public override Encoding Encoding => Encoding.UTF8;
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
+        public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         protected virtual int MinimumSeedTime => 172800; // 48 hours
@@ -169,26 +170,23 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? _pageSize, searchCriteria.Offset ?? 0, imdbId, season, episode));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria, imdbId, season, episode));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset, string imdbId = null, int? season = null, string episode = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, SearchCriteriaBase searchCriteria, string imdbId = null, int? season = null, string episode = null)
         {
-            limit = Math.Min(_pageSize, limit);
-            offset = Math.Max(0, offset);
-
             var parameters = new NameValueCollection
             {
-                { "itemsPerPage", limit.ToString() },
+                { "itemsPerPage", Math.Min(_pageSize, searchCriteria.Limit.GetValueOrDefault(_pageSize)).ToString() },
                 { "sort", "torrent.createdAt" },
                 { "direction", "desc" }
             };
 
-            if (limit > 0 && offset > 0)
+            if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
             {
-                var page = (offset / limit) + 1;
+                var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
                 parameters.Set("page", page.ToString());
             }
 
@@ -211,7 +209,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("episode", episode);
             }
 
-            var cats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            var cats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
             if (cats.Count > 0)
             {
                 foreach (var cat in cats)

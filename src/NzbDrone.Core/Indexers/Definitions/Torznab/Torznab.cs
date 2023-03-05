@@ -113,6 +113,7 @@ namespace NzbDrone.Core.Indexers.Torznab
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
+                SupportsPagination = SupportsPagination,
                 Capabilities = Capabilities
             };
         }

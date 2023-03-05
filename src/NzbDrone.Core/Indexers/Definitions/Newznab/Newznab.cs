@@ -23,6 +23,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override string Description => "Newznab is an API search specification for Usenet";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
+        public override bool SupportsPagination => true;
 
         public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -135,6 +136,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
+                SupportsPagination = SupportsPagination,
                 Capabilities = Capabilities
             };
         }

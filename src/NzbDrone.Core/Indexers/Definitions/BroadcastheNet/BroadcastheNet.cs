@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+        public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);

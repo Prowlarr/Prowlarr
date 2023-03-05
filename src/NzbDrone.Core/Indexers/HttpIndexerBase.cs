@@ -33,6 +33,7 @@ namespace NzbDrone.Core.Indexers
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override bool SupportsRedirect => false;
+        public override bool SupportsPagination => false;
 
         public override Encoding Encoding => Encoding.UTF8;
         public override string Language => "en-US";
@@ -60,12 +61,22 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
+            if (!SupportsPagination && searchCriteria.Offset is > 0)
+            {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(MusicSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
+            {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
+            if (!SupportsPagination && searchCriteria.Offset is > 0)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
@@ -80,6 +91,11 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
+            if (!SupportsPagination && searchCriteria.Offset is > 0)
+            {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
@@ -90,12 +106,22 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
+            if (!SupportsPagination && searchCriteria.Offset is > 0)
+            {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
         public override Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria)
         {
             if (!SupportsSearch)
+            {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
+            if (!SupportsPagination && searchCriteria.Offset is > 0)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }

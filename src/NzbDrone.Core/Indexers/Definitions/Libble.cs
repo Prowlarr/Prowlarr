@@ -33,6 +33,7 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
     public override Encoding Encoding => Encoding.UTF8;
     public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+    public override bool SupportsPagination => true;
     public override int PageSize => 50;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -206,7 +207,7 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
             queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
         }
 
-        if (searchCriteria.Offset.HasValue && searchCriteria.Limit.HasValue && searchCriteria.Offset > 0 && searchCriteria.Limit > 0)
+        if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
         {
             var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
             parameters.Set("page", page.ToString());

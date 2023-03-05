@@ -124,12 +124,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            // TODO: Remove this once Prowlarr has proper support for non Pageable Indexers and can tell Sonarr that indexer doesn't support pagination in a proper way, for now just return empty release list on all request containing an offset
-            if (searchCriteria.Offset is > 0)
-            {
-                return pageableRequests;
-            }
-
             pageableRequests.Add(GetRequest(searchType, searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;

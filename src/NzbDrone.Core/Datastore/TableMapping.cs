@@ -55,6 +55,7 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(i => i.SupportsRss)
                   .Ignore(i => i.SupportsSearch)
                   .Ignore(i => i.SupportsRedirect)
+                  .Ignore(i => i.SupportsPagination)
                   .Ignore(i => i.Capabilities)
                   .HasOne(a => a.AppProfile, a => a.AppProfileId);
 

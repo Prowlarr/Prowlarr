@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             var otherSeedRatio = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
             var seedRatioCompare = seedRatio == otherSeedRatio;
 
-            var tagsEqual = (Tags ?? new HashSet<int>()).Equals(other.Tags ?? new HashSet<int>());
+            var tagsCompare = (Tags ?? new HashSet<int>()).Equals(other.Tags ?? new HashSet<int>());
 
             return other.EnableRss == EnableRss &&
                 other.EnableAutomaticSearch == EnableAutomaticSearch &&
@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKey && apiPathCompare && baseUrl && cats && animeCats && tagsEqual && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare;
+                apiKey && apiPathCompare && baseUrl && cats && animeCats && tagsCompare && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare;
         }
     }
 }

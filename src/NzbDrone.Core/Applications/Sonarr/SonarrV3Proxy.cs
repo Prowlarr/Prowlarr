@@ -153,7 +153,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             var request = BuildRequest(settings, $"/api/v3/tag", HttpMethod.Post);
             request.SetContent(new SonarrTag { Label = label }.ToJson());
             var tag = Execute<SonarrTag>(request);
-            _logger.Info("Tag '{0}' created or already existed with ID '{2}'.", tag.Label, tag.Id);
+            _logger.Info("Tag '{0}' created or already existed with ID '{1}'.", tag.Label, tag.Id);
             return tag;
         }
 

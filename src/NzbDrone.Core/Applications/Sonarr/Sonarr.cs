@@ -203,7 +203,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
                 Fields = new List<SonarrField>(),
-                Tags = Settings.SyncIndexerTags ? GetAndCreateSonarrTagIdsForIndexer(indexer) : GetExistingIndexerTags(id)
+                Tags = Settings.SyncIndexerTags ? GetAndCreateApplicationTagIdsForIndexer(indexer) : GetExistingIndexerTags(id)
             };
 
             sonarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
@@ -225,28 +225,28 @@ namespace NzbDrone.Core.Applications.Sonarr
             return sonarrIndexer;
         }
 
-        private HashSet<int> GetAndCreateSonarrTagIdsForIndexer(IndexerDefinition indexer)
+        private HashSet<int> GetAndCreateApplicationTagIdsForIndexer(IndexerDefinition indexer)
         {
-            // Get Sonarr Tag IDs
+            // Get Application Tag IDs
             var applicationTags = _sonarrV3Proxy.GetTagsFromApplication(Settings);
 
             // Resolve Prowlarr indexer tags to labels
             var indexerTagLabels = _tagService.GetTags(indexer.Tags).Select(t => t.Label);
 
-            // Determine tags from indexer which are present in sonarr and those that need creating
-            var existingSonarrIndexerTags = applicationTags.Where(at => indexerTagLabels.Contains(at.Label)).ToList();
-            var missingTagLabels = indexerTagLabels.Except(existingSonarrIndexerTags.Select(pt => pt.Label));
+            // Determine tags from indexer which are present in application and those that need creating
+            var existingApplicationIndexerTags = applicationTags.Where(at => indexerTagLabels.Contains(at.Label)).ToList();
+            var missingTagLabels = indexerTagLabels.Except(existingApplicationIndexerTags.Select(pt => pt.Label));
 
             // Create required new tags. If the tag already exists, it will be returned in the response so no worries about concurrency.
             foreach (var tag in missingTagLabels)
             {
                 _logger.Info("Tag '{0}' doesn't seem to exist in application so will be created.", tag);
                 var newTag = _sonarrV3Proxy.CreateTag(Settings, tag);
-                existingSonarrIndexerTags.Add(newTag);
+                existingApplicationIndexerTags.Add(newTag);
             }
 
             // Convert to int list for the indexer request
-            return existingSonarrIndexerTags.Select(pt => pt.Id).ToHashSet();
+            return existingApplicationIndexerTags.Select(pt => pt.Id).ToHashSet();
         }
 
         private HashSet<int> GetExistingIndexerTags(int indexerId)

@@ -46,6 +46,8 @@ namespace NzbDrone.Core.IndexerVersions
             "desitorrents",
             "hdbits",
             "lat-team",
+            "mteamtp",
+            "mteamtp2fa",
             "reelflix",
             "shareisland",
             "skipthecommercials",

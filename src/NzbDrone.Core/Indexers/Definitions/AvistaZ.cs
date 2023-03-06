@@ -23,17 +23,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        public override IIndexerRequestGenerator GetRequestGenerator()
-        {
-            return new AvistazRequestGenerator
-            {
-                Settings = Settings,
-                HttpClient = _httpClient,
-                Logger = _logger,
-                Capabilities = Capabilities
-            };
-        }
-
         public override IParseIndexerResponse GetParser()
         {
             return new AvistaZParser();
@@ -43,6 +32,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var caps = new IndexerCapabilities
             {
+                LimitsDefault = PageSize,
+                LimitsMax = PageSize,
                 TvSearchParams = new List<TvSearchParam>
                 {
                     TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvdbId, TvSearchParam.Genre

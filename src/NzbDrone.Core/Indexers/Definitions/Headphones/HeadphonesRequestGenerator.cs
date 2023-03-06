@@ -54,14 +54,14 @@ namespace NzbDrone.Core.Indexers.Headphones
             {
                 searchCriteria.SearchType = "search";
 
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
                 {
                     parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
             }
             else
             {
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MusicSearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MusicSearchQueryAvailable)
                 {
                     parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
@@ -94,7 +94,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
             var parameters = new NameValueCollection();
 
-            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
             {
                 parameters.Add("q", NewsnabifyTitle(searchCriteria.SearchTerm));
             }

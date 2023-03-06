@@ -53,14 +53,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 searchCriteria.SearchType = "search";
 
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
             }
             else
             {
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MovieSearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MovieSearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
@@ -95,14 +95,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 searchCriteria.SearchType = "search";
 
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
             }
             else
             {
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MusicSearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.MusicSearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
@@ -162,14 +162,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 searchCriteria.SearchType = "search";
 
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
             }
             else
             {
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.TvSearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.TvSearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
@@ -204,14 +204,14 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 searchCriteria.SearchType = "search";
 
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
             }
             else
             {
-                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.BookSearchAvailable)
+                if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.BookSearchQueryAvailable)
                 {
                     parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
                 }
@@ -231,7 +231,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             var parameters = new NameValueCollection();
 
-            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchAvailable)
+            if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace() && capabilities.SearchQueryAvailable)
             {
                 parameters.Set("q", NewsnabifyTitle(searchCriteria.SearchTerm));
             }

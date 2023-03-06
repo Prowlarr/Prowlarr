@@ -69,9 +69,11 @@ namespace NzbDrone.Core.Indexers
 
         public List<SearchParam> SearchParams;
         public bool SearchAvailable => SearchParams.Count > 0;
+        public bool SearchQueryAvailable => SearchParams.Contains(SearchParam.Q);
 
         public List<TvSearchParam> TvSearchParams;
         public bool TvSearchAvailable => TvSearchParams.Count > 0;
+        public bool TvSearchQueryAvailable => TvSearchParams.Contains(TvSearchParam.Q);
         public bool TvSearchSeasonAvailable => TvSearchParams.Contains(TvSearchParam.Season);
         public bool TvSearchEpAvailable => TvSearchParams.Contains(TvSearchParam.Ep);
         public bool TvSearchImdbAvailable => TvSearchParams.Contains(TvSearchParam.ImdbId);
@@ -86,6 +88,7 @@ namespace NzbDrone.Core.Indexers
 
         public List<MovieSearchParam> MovieSearchParams;
         public bool MovieSearchAvailable => MovieSearchParams.Count > 0;
+        public bool MovieSearchQueryAvailable => MovieSearchParams.Contains(MovieSearchParam.Q);
         public bool MovieSearchImdbAvailable => MovieSearchParams.Contains(MovieSearchParam.ImdbId);
         public bool MovieSearchTmdbAvailable => MovieSearchParams.Contains(MovieSearchParam.TmdbId);
         public bool MovieSearchTraktAvailable => MovieSearchParams.Contains(MovieSearchParam.TraktId);
@@ -95,6 +98,7 @@ namespace NzbDrone.Core.Indexers
 
         public List<MusicSearchParam> MusicSearchParams;
         public bool MusicSearchAvailable => MusicSearchParams.Count > 0;
+        public bool MusicSearchQueryAvailable => MusicSearchParams.Contains(MusicSearchParam.Q);
         public bool MusicSearchAlbumAvailable => MusicSearchParams.Contains(MusicSearchParam.Album);
         public bool MusicSearchArtistAvailable => MusicSearchParams.Contains(MusicSearchParam.Artist);
         public bool MusicSearchLabelAvailable => MusicSearchParams.Contains(MusicSearchParam.Label);
@@ -104,6 +108,7 @@ namespace NzbDrone.Core.Indexers
 
         public List<BookSearchParam> BookSearchParams;
         public bool BookSearchAvailable => BookSearchParams.Count > 0;
+        public bool BookSearchQueryAvailable => BookSearchParams.Contains(BookSearchParam.Q);
         public bool BookSearchTitleAvailable => BookSearchParams.Contains(BookSearchParam.Title);
         public bool BookSearchAuthorAvailable => BookSearchParams.Contains(BookSearchParam.Author);
         public bool BookSearchPublisherAvailable => BookSearchParams.Contains(BookSearchParam.Publisher);
@@ -116,7 +121,7 @@ namespace NzbDrone.Core.Indexers
         public IndexerCapabilities()
         {
             SupportsRawSearch = false;
-            SearchParams = new List<SearchParam> { SearchParam.Q };
+            SearchParams = new List<SearchParam>();
             TvSearchParams = new List<TvSearchParam>();
             MovieSearchParams = new List<MovieSearchParam>();
             MusicSearchParams = new List<MusicSearchParam>();
@@ -134,22 +139,12 @@ namespace NzbDrone.Core.Indexers
                 throw new Exception("At least one search mode is required");
             }
 
-            if (!modes.ContainsKey("search"))
-            {
-                throw new Exception("The search mode 'search' is mandatory");
-            }
-
             foreach (var entry in modes)
             {
                 switch (entry.Key)
                 {
                     case "search":
-                        if (entry.Value == null || entry.Value.Count != 1 || entry.Value[0] != "q")
-                        {
-                            throw new Exception("In search mode 'search' only 'q' parameter is supported and it's mandatory");
-                        }
-
-                        SearchParams.Add(SearchParam.Q);
+                        ParseSearchParams(entry.Value);
                         break;
                     case "tv-search":
                         ParseTvSearchParams(entry.Value);
@@ -165,6 +160,33 @@ namespace NzbDrone.Core.Indexers
                         break;
                     default:
                         throw new Exception($"Unsupported search mode: {entry.Key}");
+                }
+            }
+        }
+
+        public void ParseSearchParams(IEnumerable<string> paramsList)
+        {
+            if (paramsList == null)
+            {
+                return;
+            }
+
+            foreach (var paramStr in paramsList)
+            {
+                if (Enum.TryParse(paramStr, true, out SearchParam param))
+                {
+                    if (!SearchParams.Contains(param))
+                    {
+                        SearchParams.Add(param);
+                    }
+                    else
+                    {
+                        throw new Exception($"Duplicate search param: {paramStr}");
+                    }
+                }
+                else
+                {
+                    throw new Exception($"Not supported search param: {paramStr}");
                 }
             }
         }
@@ -279,7 +301,12 @@ namespace NzbDrone.Core.Indexers
 
         private string SupportedTvSearchParams()
         {
-            var parameters = new List<string> { "q" }; // q is always enabled
+            var parameters = new List<string>();
+            if (TvSearchQueryAvailable)
+            {
+                parameters.Add("q");
+            }
+
             if (TvSearchSeasonAvailable)
             {
                 parameters.Add("season");
@@ -340,14 +367,23 @@ namespace NzbDrone.Core.Indexers
 
         private string SupportedSearchParams()
         {
-            var parameters = new List<string> { "q" }; // q is always enabled
+            var parameters = new List<string>();
+            if (SearchQueryAvailable)
+            {
+                parameters.Add("q");
+            }
 
             return string.Join(",", parameters);
         }
 
         private string SupportedMovieSearchParams()
         {
-            var parameters = new List<string> { "q" }; // q is always enabled
+            var parameters = new List<string>();
+            if (MovieSearchQueryAvailable)
+            {
+                parameters.Add("q");
+            }
+
             if (MovieSearchImdbAvailable)
             {
                 parameters.Add("imdbid");
@@ -383,7 +419,12 @@ namespace NzbDrone.Core.Indexers
 
         private string SupportedMusicSearchParams()
         {
-            var parameters = new List<string> { "q" }; // q is always enabled
+            var parameters = new List<string>();
+            if (MusicSearchQueryAvailable)
+            {
+                parameters.Add("q");
+            }
+
             if (MusicSearchAlbumAvailable)
             {
                 parameters.Add("album");
@@ -419,7 +460,12 @@ namespace NzbDrone.Core.Indexers
 
         private string SupportedBookSearchParams()
         {
-            var parameters = new List<string> { "q" }; // q is always enabled
+            var parameters = new List<string>();
+            if (BookSearchQueryAvailable)
+            {
+                parameters.Add("q");
+            }
+
             if (BookSearchTitleAvailable)
             {
                 parameters.Add("title");

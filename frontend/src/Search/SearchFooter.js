@@ -78,6 +78,8 @@ class SearchFooter extends Component {
 
     if (defaultSearchQuery && defaultSearchQuery !== prevProps.defaultSearchQuery) {
       newState.searchQuery = defaultSearchQuery;
+      newState.searchOffset = 0;
+      newState.newSearch = true;
     }
 
     if (searchType !== defaultSearchType) {

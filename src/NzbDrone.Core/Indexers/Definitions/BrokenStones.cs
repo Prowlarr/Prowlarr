@@ -1,3 +1,4 @@
+using System;
 using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
@@ -5,6 +6,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
+[Obsolete("Site unavailable")]
 public class BrokenStones : GazelleBase<GazelleSettings>
 {
     public override string Name => "BrokenStones";

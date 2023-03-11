@@ -91,5 +91,11 @@
     "BypassProxyForLocalAddresses": "Zaobiđi Proxy za Lokalne Adrese",
     "CancelPendingTask": "Jeste li sigurni da želite otkazati ovaj zadatak na čekanju?",
     "CertificateValidation": "Potvrda Certifikata",
-    "ChangeHasNotBeenSavedYet": "Promjene još nisu spremljene"
+    "ChangeHasNotBeenSavedYet": "Promjene još nisu spremljene",
+    "CloneProfile": "Kloniraj Profil",
+    "Close": "Zatvori",
+    "Columns": "Stupci",
+    "AppDataLocationHealthCheckMessage": "Ažuriranje ne može spriječiti brisanje AppData pri ažuriranju",
+    "ClientPriority": "Prioritet Klijenata",
+    "CloseCurrentModal": "Zatvori Trenutni Modal"
 }

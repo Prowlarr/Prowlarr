@@ -14,7 +14,7 @@
     "BackupNow": "Sikkerhetskopier nå",
     "Backups": "Sikkerhetskopier",
     "BeforeUpdate": "Før oppdatering",
-    "BindAddressHelpText": "Gyldig IP4 -adresse eller \"*\" for alle grensesnitt",
+    "BindAddressHelpText": "Gyldig IPv4 -adresse, localhost eller \"*\" for alle grensesnitt",
     "Branch": "Gren",
     "Cancel": "Avbryt",
     "CertificateValidation": "Sertifikatvalidering",

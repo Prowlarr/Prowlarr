@@ -360,6 +360,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var seeders = string.IsNullOrWhiteSpace(seederString) ? 0 : ParseUtil.CoerceInt(seederString);
 
                     var forumid = ParseUtil.GetArgumentFromQueryString(qForumLink?.GetAttribute("href"), "f");
+                    var detailsId = ParseUtil.GetArgumentFromQueryString(qDetailsLink.GetAttribute("href"), "t");
+                    var downloadUrl = _settings.BaseUrl + "forum/dl.php?t=" + detailsId;
                     var title = _settings.StripRussianLetters
                         ? StripRussianRegex.Replace(qDetailsLink.TextContent, string.Empty)
                         : qDetailsLink.TextContent;
@@ -371,7 +373,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
-                        DownloadUrl = infoUrl,
+                        DownloadUrl = downloadUrl,
                         InfoUrl = infoUrl,
                         Title = title,
                         Description = qForumLink.TextContent,

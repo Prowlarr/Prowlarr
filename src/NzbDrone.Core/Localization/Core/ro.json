@@ -387,5 +387,7 @@
     "NextExecution": "Următoarea execuție",
     "Remove": "Elimina",
     "Replace": "A inlocui",
-    "TheLatestVersionIsAlreadyInstalled": "Cea mai recentă versiune a Prowlarr este deja instalată"
+    "TheLatestVersionIsAlreadyInstalled": "Cea mai recentă versiune a Prowlarr este deja instalată",
+    "AddApplication": "Adaugă",
+    "AddCustomFilter": "Adaugă filtru personalizat"
 }

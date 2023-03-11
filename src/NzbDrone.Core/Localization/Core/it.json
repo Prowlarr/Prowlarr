@@ -93,7 +93,7 @@
     "Cancel": "Annulla",
     "BypassProxyForLocalAddresses": "Evita il Proxy per gli Indirizzi Locali",
     "Branch": "Ramo",
-    "BindAddressHelpText": "Indirizzo IP valido, localhost o '*' per tutte le interfacce",
+    "BindAddressHelpText": "Indirizzo IP valido, localhost o '*' per tutte le interfacce di rete",
     "BindAddress": "Indirizzo di Bind",
     "Backups": "I Backup",
     "BackupRetentionHelpText": "I backup automatici più vecchi del periodo di conservazione verranno eliminati automaticamente",

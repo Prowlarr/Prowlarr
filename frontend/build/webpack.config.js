@@ -152,7 +152,7 @@ module.exports = (env) => {
       rules: [
         {
           test: [/\.jsx?$/, /\.tsx?$/],
-          exclude: /[\\/]node_modules[\\/](?!(@sentry\/browser|@sentry\/integrations|chart.js|filesize|normalize.css)[\\/])/,
+          exclude: /[\\/]node_modules[\\/](?!(@sentry|chart\.js|filesize)[\\/])/,
           use: [
             {
               loader: 'babel-loader',

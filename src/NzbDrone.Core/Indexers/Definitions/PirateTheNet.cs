@@ -23,7 +23,8 @@ namespace NzbDrone.Core.Indexers.Definitions;
 public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
 {
     public override string Name => "PirateTheNet";
-    public override string[] IndexerUrls => new[] { "http://piratethenet.org/" };
+    public override string[] IndexerUrls => new[] { "https://piratethenet.org/" };
+    public override string[] LegacyUrls => new[] { "http://piratethenet.org/" };
     public override string Description => "PirateTheNet (PTN) is a ratioless movie tracker.";
     public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

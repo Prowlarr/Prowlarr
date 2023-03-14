@@ -510,7 +510,10 @@ namespace NzbDrone.Core.Indexers
             // Throw common http errors here before we try to parse
             if (response.HasHttpError)
             {
-                _logger.Warn("HTTP Error - {0}", response);
+                if (response.Request.LogHttpError)
+                {
+                    _logger.Warn("HTTP Error - {0}", response);
+                }
 
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {

@@ -85,6 +85,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             var request = new IndexerRequest(searchUrl, HttpAccept.Html);
             request.HttpRequest.Headers.Add("Authorization", $"Bearer {Settings.Token}");
 
+            if (searchParameters.Any(p => p.Key is "imdb" or "tmdb" or "tvdb"))
+            {
+                request.HttpRequest.LogHttpError = false;
+            }
+
             yield return request;
         }
 

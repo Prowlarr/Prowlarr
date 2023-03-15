@@ -666,7 +666,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var captchaUrl = ResolvePath(captchaElement.GetAttribute("src"), loginUrl);
 
                     var request = new HttpRequestBuilder(captchaUrl.ToString())
-                        .SetCookies(landingResult.GetCookies())
+                        .SetCookies(Cookies ?? new Dictionary<string, string>())
                         .SetHeaders(headers ?? new Dictionary<string, string>())
                         .SetHeader("Referer", loginUrl.AbsoluteUri)
                         .SetEncoding(_encoding)
@@ -674,6 +674,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         .Build();
 
                     var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
+
+                    if (response.GetCookies().Any())
+                    {
+                        Cookies = response.GetCookies();
+                    }
 
                     return new Captcha
                     {

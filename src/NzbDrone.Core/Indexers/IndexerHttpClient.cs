@@ -8,6 +8,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Dispatchers;
 using NzbDrone.Common.TPL;
 using NzbDrone.Core.IndexerProxies;
+using NzbDrone.Core.IndexerProxies.FlareSolverr;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -53,7 +54,7 @@ namespace NzbDrone.Core.Indexers
         private IIndexerProxy GetProxy(ProviderDefinition definition)
         {
             //Skip DB call if no tags on the indexers
-            if (definition.Tags.Count == 0)
+            if (definition.Tags.Count == 0 && definition.Id > 0)
             {
                 return null;
             }
@@ -68,6 +69,11 @@ namespace NzbDrone.Core.Indexers
                     selectedProxy = proxy;
                     break;
                 }
+            }
+
+            if (selectedProxy == null && definition.Id == 0)
+            {
+                selectedProxy = proxies.FirstOrDefault(p => p is FlareSolverr);
             }
 
             return selectedProxy;

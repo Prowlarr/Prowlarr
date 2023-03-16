@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         {
             _settings = settings;
             _categories = categories;
-            _torrentDetailsUrl = _settings.BaseUrl.Replace("api.", "") + "details.php?id={id}";
+            _torrentDetailsUrl = _settings.BaseUrl.Replace("api.", "").TrimEnd('/') + "/details.php?id={id}";
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)

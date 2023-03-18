@@ -177,7 +177,7 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && (v.Name != typeof(Cardigann.Cardigann).Name || v.Name != typeof(Newznab.Newznab).Name || v.Name != typeof(Torznab.Torznab).Name));
+                    .Where(v => v.Name != null && v.Name != nameof(Cardigann.Cardigann) && v.Name != nameof(Newznab.Newznab) && v.Name != nameof(Torznab.Torznab));
 
                 foreach (IndexerDefinition definition in definitions)
                 {

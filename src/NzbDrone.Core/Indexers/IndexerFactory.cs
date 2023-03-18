@@ -10,7 +10,6 @@ using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
-using NzbDrone.Core.ThingiProvider.Events;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -209,7 +208,7 @@ namespace NzbDrone.Core.Indexers
                 definition.IndexerUrls = provider.IndexerUrls;
                 definition.LegacyUrls = provider.LegacyUrls;
                 definition.Privacy = provider.Privacy;
-                definition.Description = provider.Description;
+                definition.Description ??= provider.Description;
                 definition.Encoding = provider.Encoding;
                 definition.Language = provider.Language;
                 definition.Capabilities = provider.Capabilities;

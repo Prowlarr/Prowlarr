@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.Messaging.Events;
@@ -23,6 +22,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         public override string Description => "A Newznab-like api for torrents.";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
+        public override bool SupportsPagination => true;
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

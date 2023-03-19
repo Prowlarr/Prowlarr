@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using NLog;
@@ -31,7 +29,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
-        private string LoginUrl => Settings.BaseUrl + "index.php?page=login";
 
         public HDSpace(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -50,37 +47,41 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override async Task DoLogin()
         {
-            var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
+            var loginUrl = Settings.BaseUrl + "index.php?page=login";
 
-            var requestBuilder = new HttpRequestBuilder(LoginUrl)
+            var loginPage = await ExecuteAuth(new HttpRequest(loginUrl));
+
+            var requestBuilder = new HttpRequestBuilder(loginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true,
-                Method = HttpMethod.Post
+                AllowAutoRedirect = true
             };
 
             var cookies = Cookies;
             Cookies = null;
 
             var authLoginRequest = requestBuilder
+                .Post()
                 .AddFormParameter("uid", Settings.Username)
                 .AddFormParameter("pwd", Settings.Password)
                 .SetCookies(loginPage.GetCookies())
                 .SetHeader("Content-Type", "application/x-www-form-urlencoded")
-                .SetHeader("Referer", LoginUrl)
+                .SetHeader("Referer", loginUrl)
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
 
             if (CheckIfLoginNeeded(response))
             {
-                var errorStr = "Login Failed: You have {0} remaining login attempts";
-                var remainingAttemptSpan = new Regex(string.Format(errorStr, "(.*?)"))
-                                           .Match(loginPage.Content).Groups[1].ToString();
-                var attempts = Regex.Replace(remainingAttemptSpan, "<.*?>", string.Empty);
-                var errorMessage = string.Format(errorStr, attempts);
+                var parser = new HtmlParser();
+                var dom = parser.ParseDocument(response.Content);
+                var errorMessages = dom
+                    .QuerySelectorAll("table.lista td.lista span[style*=\"#FF0000\"], table.lista td.header:contains(\"login attempts\")")
+                    .Select(r => r.TextContent.Trim())
+                    .Where(m => m.IsNotNullOrWhiteSpace())
+                    .ToArray();
 
-                throw new IndexerAuthException(errorMessage);
+                throw new IndexerAuthException(errorMessages.Any() ? errorMessages.Join(" ") : "Unknown error message, please report.");
             }
 
             cookies = response.GetCookies();
@@ -91,7 +92,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return !httpResponse.Content.Contains("logout.php");
+            return !httpResponse.Content.Contains("logout.php") && !httpResponse.Content.Contains("Rank: Parked");
         }
 
         private IndexerCapabilities SetCapabilities()

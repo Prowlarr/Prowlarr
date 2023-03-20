@@ -123,6 +123,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             string value = null;
                             var variablesKey = ".Result." + fieldName;
                             var isOptional = OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional;
+
                             try
                             {
                                 var parentObj = mulRow;
@@ -132,28 +133,35 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                 }
 
                                 value = HandleJsonSelector(field.Value, parentObj, variables, !isOptional);
-                                if (isOptional && string.IsNullOrWhiteSpace(value))
+
+                                if (isOptional && value.IsNullOrWhiteSpace())
                                 {
-                                    variables[variablesKey] = null;
-                                    continue;
+                                    var defaultValue = ApplyGoTemplateText(field.Value.Default, variables);
+
+                                    if (defaultValue.IsNullOrWhiteSpace())
+                                    {
+                                        variables[variablesKey] = null;
+                                        continue;
+                                    }
+
+                                    value = defaultValue;
                                 }
 
                                 variables[variablesKey] = ParseFields(value, fieldName, release, fieldModifiers, searchUrlUri);
                             }
                             catch (Exception ex)
                             {
-                                if (!variables.ContainsKey(variablesKey))
+                                if (!variables.ContainsKey(variablesKey) || isOptional)
                                 {
                                     variables[variablesKey] = null;
                                 }
 
                                 if (isOptional)
                                 {
-                                    variables[variablesKey] = null;
                                     continue;
                                 }
 
-                                throw new CardigannException(string.Format("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value ?? "<null>", ex.Message));
+                                throw new CardigannException($"Error while parsing field={field.Key}, selector={field.Value.Selector}, value={value ?? "<null>"}: {ex.Message}", ex);
                             }
                         }
 
@@ -254,34 +262,41 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             string value = null;
                             var variablesKey = ".Result." + fieldName;
                             var isOptional = OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional;
+
                             try
                             {
                                 value = HandleSelector(field.Value, row, variables, !isOptional);
 
-                                if (isOptional && string.IsNullOrWhiteSpace(value))
+                                if (isOptional && value.IsNullOrWhiteSpace())
                                 {
-                                    variables[variablesKey] = null;
-                                    continue;
+                                    var defaultValue = ApplyGoTemplateText(field.Value.Default, variables);
+
+                                    if (defaultValue.IsNullOrWhiteSpace())
+                                    {
+                                        variables[variablesKey] = null;
+                                        continue;
+                                    }
+
+                                    value = defaultValue;
                                 }
 
                                 variables[variablesKey] = ParseFields(value, fieldName, release, fieldModifiers, searchUrlUri);
                             }
                             catch (Exception ex)
                             {
-                                if (!variables.ContainsKey(variablesKey))
+                                if (!variables.ContainsKey(variablesKey) || isOptional)
                                 {
                                     variables[variablesKey] = null;
                                 }
 
-                                if (OptionalFields.Contains(field.Key) || fieldModifiers.Contains("optional") || field.Value.Optional)
+                                if (isOptional)
                                 {
-                                    variables[variablesKey] = null;
                                     continue;
                                 }
 
                                 if (indexerLogging)
                                 {
-                                    _logger.Trace("Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value == null ? "<null>" : value, ex.Message);
+                                    _logger.Trace(ex, "Error while parsing field={0}, selector={1}, value={2}: {3}", field.Key, field.Value.Selector, value ?? "<null>", ex.Message);
                                 }
                             }
                         }

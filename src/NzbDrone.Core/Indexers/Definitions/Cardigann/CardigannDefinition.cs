@@ -146,6 +146,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public List<SearchPathBlock> Paths { get; set; }
         public Dictionary<string, List<string>> Headers { get; set; }
         public List<FilterBlock> Keywordsfilters { get; set; }
+        public bool AllowEmptyInputs { get; set; }
         public Dictionary<string, string> Inputs { get; set; }
         public List<ErrorBlock> Error { get; set; }
         public List<FilterBlock> Preprocessingfilters { get; set; }

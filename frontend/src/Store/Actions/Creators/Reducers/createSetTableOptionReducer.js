@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { pick } from 'lodash-es';
 import getSectionState from 'Utilities/State/getSectionState';
 import updateSectionState from 'Utilities/State/updateSectionState';
 
@@ -12,7 +12,7 @@ function createSetTableOptionReducer(section) {
   return (state, { payload }) => {
     const newState = Object.assign(
       getSectionState(state, section),
-      _.pick(payload, whitelistedProperties));
+      pick(payload, whitelistedProperties));
 
     return updateSectionState(state, section, newState);
   };

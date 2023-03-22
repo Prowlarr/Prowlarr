@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { find, map } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -13,7 +13,7 @@ function createMapStateToProps() {
     (state, { includeNoChange }) => includeNoChange,
     (state, { includeMixed }) => includeMixed,
     (appProfiles, includeNoChange, includeMixed) => {
-      const values = _.map(appProfiles.items, (appProfile) => {
+      const values = map(appProfiles.items, (appProfile) => {
         return {
           key: appProfile.id,
           value: appProfile.name
@@ -56,7 +56,7 @@ class AppProfileSelectInputConnector extends Component {
     } = this.props;
 
     if (!value || !values.some((v) => v.key === value) ) {
-      const firstValue = _.find(values, (option) => !isNaN(parseInt(option.key)));
+      const firstValue = find(values, (option) => !isNaN(parseInt(option.key)));
 
       if (firstValue) {
         this.onChange({ name, value: firstValue.key });

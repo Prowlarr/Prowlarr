@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isEmpty } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import FormInputButton from 'Components/Form/FormInputButton';
@@ -98,7 +98,7 @@ class SearchFooter extends Component {
       newState.searchingReleases = false;
     }
 
-    if (!_.isEmpty(newState)) {
+    if (!isEmpty(newState)) {
       this.setState(newState);
     }
   }

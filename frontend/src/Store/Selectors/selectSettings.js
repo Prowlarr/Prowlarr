@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import { cloneDeep, filter, isEmpty, map, reduce, remove } from 'lodash-es';
 
 function getValidationFailures(saveError) {
   if (!saveError || saveError.status !== 400) {
     return [];
   }
 
-  return _.cloneDeep(saveError.responseJSON);
+  return cloneDeep(saveError.responseJSON);
 }
 
 function mapFailure(failure) {
@@ -24,7 +24,7 @@ function selectSettings(item, pendingChanges, saveError) {
   // with the item are included.
   const allSettings = Object.assign({}, item, pendingChanges);
 
-  const settings = _.reduce(allSettings, (result, value, key) => {
+  const settings = reduce(allSettings, (result, value, key) => {
     if (key === 'fields') {
       return result;
     }
@@ -44,11 +44,11 @@ function selectSettings(item, pendingChanges, saveError) {
 
     const setting = {
       value: item[key],
-      errors: _.map(_.remove(validationFailures, (failure) => {
+      errors: map(remove(validationFailures, (failure) => {
         return failure.propertyName.toLowerCase() === key.toLowerCase() && !failure.isWarning;
       }), mapFailure),
 
-      warnings: _.map(_.remove(validationFailures, (failure) => {
+      warnings: map(remove(validationFailures, (failure) => {
         return failure.propertyName.toLowerCase() === key.toLowerCase() && failure.isWarning;
       }), mapFailure)
     };
@@ -63,7 +63,7 @@ function selectSettings(item, pendingChanges, saveError) {
     return result;
   }, {});
 
-  const fields = _.reduce(item.fields, (result, f) => {
+  const fields = reduce(item.fields, (result, f) => {
     const field = Object.assign({ pending: false }, f);
     const hasPendingFieldChange = pendingChanges.fields && pendingChanges.fields.hasOwnProperty(field.name);
 
@@ -73,11 +73,11 @@ function selectSettings(item, pendingChanges, saveError) {
       field.pending = true;
     }
 
-    field.errors = _.map(_.remove(validationFailures, (failure) => {
+    field.errors = map(remove(validationFailures, (failure) => {
       return failure.propertyName.toLowerCase() === field.name.toLowerCase() && !failure.isWarning;
     }), mapFailure);
 
-    field.warnings = _.map(_.remove(validationFailures, (failure) => {
+    field.warnings = map(remove(validationFailures, (failure) => {
       return failure.propertyName.toLowerCase() === field.name.toLowerCase() && failure.isWarning;
     }), mapFailure);
 
@@ -89,11 +89,11 @@ function selectSettings(item, pendingChanges, saveError) {
     settings.fields = fields;
   }
 
-  const validationErrors = _.filter(validationFailures, (failure) => {
+  const validationErrors = filter(validationFailures, (failure) => {
     return !failure.isWarning;
   });
 
-  const validationWarnings = _.filter(validationFailures, (failure) => {
+  const validationWarnings = filter(validationFailures, (failure) => {
     return failure.isWarning;
   });
 
@@ -101,8 +101,8 @@ function selectSettings(item, pendingChanges, saveError) {
     settings,
     validationErrors,
     validationWarnings,
-    hasPendingChanges: !_.isEmpty(pendingChanges),
-    hasSettings: !_.isEmpty(settings),
+    hasPendingChanges: !isEmpty(pendingChanges),
+    hasSettings: !isEmpty(settings),
     pendingChanges
   };
 }

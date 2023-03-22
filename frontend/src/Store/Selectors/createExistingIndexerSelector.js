@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { some } from 'lodash-es';
 import { createSelector } from 'reselect';
 import createAllIndexersSelector from './createAllIndexersSelector';
 
@@ -7,7 +7,7 @@ function createExistingIndexerSelector() {
     (state, { definitionName }) => definitionName,
     createAllIndexersSelector(),
     (definitionName, indexers) => {
-      return _.some(indexers, { definitionName });
+      return some(indexers, { definitionName });
     }
   );
 }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { filter, indexOf, reduce } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
@@ -146,7 +146,7 @@ class SearchIndex extends Component {
       return;
     }
 
-    const characters = _.reduce(items, (acc, item) => {
+    const characters = reduce(items, (acc, item) => {
       let char = item.sortTitle.charAt(0);
 
       if (!isNaN(char)) {
@@ -190,7 +190,7 @@ class SearchIndex extends Component {
 
   onBulkGrabPress = () => {
     const selectedIds = this.getSelectedIds();
-    const result = _.filter(this.props.items, (release) => _.indexOf(selectedIds, release.guid) !== -1);
+    const result = filter(this.props.items, (release) => indexOf(selectedIds, release.guid) !== -1);
     this.props.onBulkGrabPress(result);
   };
 

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { some } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import Icon from 'Components/Icon';
@@ -41,7 +41,7 @@ class Updates extends Component {
     const hasError = !!(updatesError || generalSettingsError);
     const hasUpdates = isPopulated && !hasError && items.length > 0;
     const noUpdates = isPopulated && !hasError && !items.length;
-    const hasUpdateToInstall = hasUpdates && _.some(items, { installable: true, latest: true });
+    const hasUpdateToInstall = hasUpdates && some(items, { installable: true, latest: true });
     const noUpdateToInstall = hasUpdates && !hasUpdateToInstall;
 
     const externalUpdaterPrefix = 'Unable to update Prowlarr directly,';

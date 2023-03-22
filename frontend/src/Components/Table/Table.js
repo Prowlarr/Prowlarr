@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import _ from 'lodash';
+import { reduce } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React from 'react';
 import IconButton from 'Components/Link/IconButton';
@@ -17,7 +17,7 @@ const tableHeaderCellProps = [
 ];
 
 function getTableHeaderCellProps(props) {
-  return _.reduce(tableHeaderCellProps, (result, key) => {
+  return reduce(tableHeaderCellProps, (result, key) => {
     if (props.hasOwnProperty(key)) {
       result[key] = props[key];
     }

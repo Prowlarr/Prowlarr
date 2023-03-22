@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { filter } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -16,7 +16,7 @@ function createMapStateToProps() {
         files
       } = paths;
 
-      const filteredPaths = _.filter([...directories, ...files], ({ path }) => {
+      const filteredPaths = filter([...directories, ...files], ({ path }) => {
         return path.toLowerCase().startsWith(currentPath.toLowerCase());
       });
 

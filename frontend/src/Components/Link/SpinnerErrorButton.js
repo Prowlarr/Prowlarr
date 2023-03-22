@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { some } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Icon from 'Components/Icon';
@@ -25,8 +25,8 @@ function getTestResult(error) {
 
   const failures = error.responseJSON;
 
-  const hasWarning = _.some(failures, { isWarning: true });
-  const hasError = _.some(failures, (failure) => !failure.isWarning);
+  const hasWarning = some(failures, { isWarning: true });
+  const hasError = some(failures, (failure) => !failure.isWarning);
 
   return {
     wasSuccessful: false,

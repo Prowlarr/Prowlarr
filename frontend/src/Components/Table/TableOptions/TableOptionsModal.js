@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { cloneDeep, find } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { DndProvider } from 'react-dnd-multi-backend';
@@ -65,9 +65,9 @@ class TableOptionsModal extends Component {
   };
 
   onVisibleChange = ({ name, value }) => {
-    const columns = _.cloneDeep(this.props.columns);
+    const columns = cloneDeep(this.props.columns);
 
-    const column = _.find(columns, { name });
+    const column = find(columns, { name });
     column.isVisible = value;
 
     this.props.onTableOptionChange({ columns });
@@ -89,7 +89,7 @@ class TableOptionsModal extends Component {
     } = this.state;
 
     if (didDrop && dropIndex !== null) {
-      const columns = _.cloneDeep(this.props.columns);
+      const columns = cloneDeep(this.props.columns);
       const items = columns.splice(dragIndex, 1);
       columns.splice(dropIndex, 0, items[0]);
 

@@ -1,8 +1,8 @@
-import _ from 'lodash';
+import { get } from 'lodash-es';
 
 function getSectionState(state, section, isFullStateTree = false) {
   if (isFullStateTree) {
-    return _.get(state, section);
+    return get(state, section);
   }
 
   const [, subSection] = section.split('.');

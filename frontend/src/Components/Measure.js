@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { debounce } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactMeasure from 'react-measure';
@@ -15,7 +15,7 @@ class Measure extends Component {
   //
   // Listeners
 
-  onMeasure = _.debounce((payload) => {
+  onMeasure = debounce((payload) => {
     this.props.onMeasure(payload);
   }, 250, { leading: true, trailing: false });
 

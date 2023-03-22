@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { pick } from 'lodash-es';
 import { batchActions } from 'redux-batched-actions';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import findSelectedFilters from 'Utilities/Filter/findSelectedFilters';
@@ -13,7 +13,7 @@ function createFetchServerSideCollectionHandler(section, url, fetchDataAugmenter
     const page = payload.page || sectionState.page || 1;
 
     const data = Object.assign({ page },
-      _.pick(sectionState, [
+      pick(sectionState, [
         'pageSize',
         'sortDirection',
         'sortKey'

@@ -1,4 +1,4 @@
-import { concat, uniq } from 'lodash';
+import { concat, uniq } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Form from 'Components/Form/Form';

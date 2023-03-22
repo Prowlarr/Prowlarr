@@ -1,7 +1,7 @@
-import _ from 'lodash';
+import { reduce } from 'lodash-es';
 
 function getSelectedIds(selectedState, { parseIds = true } = {}) {
-  return _.reduce(selectedState, (result, value, id) => {
+  return reduce(selectedState, (result, value, id) => {
     if (value) {
       const parsedId = parseIds ? parseInt(id) : id;
 

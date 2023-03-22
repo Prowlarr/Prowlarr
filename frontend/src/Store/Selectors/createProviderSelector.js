@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { find, isArray } from 'lodash-es';
 import { createSelector } from 'reselect';
 import selectSettings from 'Store/Selectors/selectSettings';
 
@@ -8,7 +8,7 @@ function createProviderSelector(sectionName) {
     (state) => state[sectionName],
     (id, section) => {
       if (!id) {
-        const item = _.isArray(section.schema) ? section.selectedSchema : section.schema;
+        const item = isArray(section.schema) ? section.selectedSchema : section.schema;
         const settings = selectSettings(Object.assign({ name: '' }, item), section.pendingChanges, section.saveError);
 
         const {
@@ -44,7 +44,7 @@ function createProviderSelector(sectionName) {
         pendingChanges
       } = section;
 
-      const settings = selectSettings(_.find(section.items, { id }), pendingChanges, saveError);
+      const settings = selectSettings(find(section.items, { id }), pendingChanges, saveError);
 
       return {
         isFetching,

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import _ from 'lodash';
+import { isEmpty } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Manager, Popper, Reference } from 'react-popper';
@@ -252,7 +252,7 @@ class EnhancedSelectInput extends Component {
       newState.selectedIndex = getSelectedIndex(this.props);
     }
 
-    if (!_.isEmpty(newState)) {
+    if (!isEmpty(newState)) {
       this.setState(newState);
     }
   };

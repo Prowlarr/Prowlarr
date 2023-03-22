@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { findIndex, remove } from 'lodash-es';
 import { createAction } from 'redux-actions';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
@@ -149,7 +149,7 @@ export const reducers = createHandleActions({
   [SHOW_MESSAGE]: function(state, { payload }) {
     const newState = getSectionState(state, messagesSection);
     const items = newState.items;
-    const index = _.findIndex(items, { id: payload.id });
+    const index = findIndex(items, { id: payload.id });
 
     newState.items = [...items];
 
@@ -168,7 +168,7 @@ export const reducers = createHandleActions({
     const newState = getSectionState(state, messagesSection);
 
     newState.items = [...newState.items];
-    _.remove(newState.items, { id: payload.id });
+    remove(newState.items, { id: payload.id });
 
     return updateSectionState(state, messagesSection, newState);
   },

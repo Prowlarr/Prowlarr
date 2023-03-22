@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { filter, get, orderBy } from 'lodash-es';
 import { createSelector } from 'reselect';
 import { filterTypePredicates, filterTypes, sortDirections } from 'Helpers/Props';
 import findSelectedFilters from 'Utilities/Filter/findSelectedFilters';
@@ -15,7 +15,7 @@ function getSortClause(sortKey, sortDirection, sortPredicates) {
   };
 }
 
-function filter(items, state) {
+function filterItems(items, state) {
   const {
     selectedFilterKey,
     filters,
@@ -29,7 +29,7 @@ function filter(items, state) {
 
   const selectedFilters = findSelectedFilters(selectedFilterKey, filters, customFilters);
 
-  return _.filter(items, (item) => {
+  return filter(items, (item) => {
     let i = 0;
     let accepted = true;
 
@@ -82,7 +82,7 @@ function filter(items, state) {
   });
 }
 
-function sort(items, state) {
+function sortItems(items, state) {
   const {
     sortKey,
     sortDirection,
@@ -105,7 +105,7 @@ function sort(items, state) {
     orders.push(secondarySortDirection === sortDirections.ASCENDING ? 'asc' : 'desc');
   }
 
-  return _.orderBy(items, clauses, orders);
+  return orderBy(items, clauses, orders);
 }
 
 function createCustomFiltersSelector(type, alternateType) {
@@ -121,14 +121,14 @@ function createCustomFiltersSelector(type, alternateType) {
 
 function createClientSideCollectionSelector(section, uiSection) {
   return createSelector(
-    (state) => _.get(state, section),
-    (state) => _.get(state, uiSection),
+    (state) => get(state, section),
+    (state) => get(state, uiSection),
     createCustomFiltersSelector(section, uiSection),
     (sectionState, uiSectionState = {}, customFilters) => {
       const state = Object.assign({}, sectionState, uiSectionState, { customFilters });
 
-      const filtered = filter(state.items, state);
-      const sorted = sort(filtered, state);
+      const filtered = filterItems(state.items, state);
+      const sorted = sortItems(filtered, state);
 
       return {
         ...sectionState,

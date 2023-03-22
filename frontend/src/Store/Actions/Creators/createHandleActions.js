@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isArray, isEqual, omit, remove } from 'lodash-es';
 import { handleActions } from 'redux-actions';
 import {
   CLEAR_PENDING_CHANGES,
@@ -31,7 +31,7 @@ export default function createHandleActions(handlers, defaultState, section) {
 
       if (section === baseSection) {
         const newState = Object.assign(getSectionState(state, payloadSection),
-          _.omit(payload, omittedProperties));
+          omit(payload, omittedProperties));
 
         return updateSectionState(state, payloadSection, newState);
       }
@@ -46,7 +46,7 @@ export default function createHandleActions(handlers, defaultState, section) {
       if (section === baseSection) {
         const newState = getSectionState(state, payloadSection);
 
-        if (_.isArray(payload.data)) {
+        if (isArray(payload.data)) {
           newState.items = payload.data;
           newState.itemMap = createItemMap(payload.data);
         } else {
@@ -88,7 +88,7 @@ export default function createHandleActions(handlers, defaultState, section) {
 
           // if the item to update is equal to existing, then don't actually update
           // to prevent costly reselections
-          if (_.isEqual(item, newItem)) {
+          if (isEqual(item, newItem)) {
             return state;
           }
 
@@ -132,7 +132,7 @@ export default function createHandleActions(handlers, defaultState, section) {
         const newState = getSectionState(state, payloadSection);
 
         newState.items = [...newState.items];
-        _.remove(newState.items, { id: payload.id });
+        remove(newState.items, { id: payload.id });
 
         newState.itemMap = createItemMap(newState.items);
 
@@ -150,7 +150,7 @@ export default function createHandleActions(handlers, defaultState, section) {
         const data = payload.data;
         const newState = getSectionState(state, payloadSection);
 
-        const serverState = _.omit(data, ['records']);
+        const serverState = omit(data, ['records']);
         const calculatedState = {
           totalPages: Math.max(Math.ceil(data.totalRecords / data.pageSize), 1),
           items: data.records,

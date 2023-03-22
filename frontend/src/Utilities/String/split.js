@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import { reduce } from 'lodash-es';
 
 function split(input, separator = ',') {
   if (!input) {
     return [];
   }
 
-  return _.reduce(input.split(separator), (result, s) => {
+  return reduce(input.split(separator), (result, s) => {
     if (s) {
       result.push(s);
     }

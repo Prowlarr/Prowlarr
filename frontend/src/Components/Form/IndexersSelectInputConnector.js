@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { groupBy, map } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -12,7 +12,7 @@ function createMapStateToProps() {
     (state) => state.indexers,
     (value, indexers) => {
       const values = [];
-      const groupedIndexers = _(indexers.items).groupBy((x) => x.protocol).map((val, key) => ({ protocol: key, indexers: val })).value();
+      const groupedIndexers = map(groupBy(indexers.items, 'protocol'), (val, key) => ({ protocol: key, indexers: val }));
 
       groupedIndexers.forEach((element) => {
         values.push({

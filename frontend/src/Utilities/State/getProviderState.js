@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { find, reduce } from 'lodash-es';
 import getSectionState from 'Utilities/State/getSectionState';
 
 function getProviderState(payload, getState, section, keyValueOnly=true) {
@@ -12,10 +12,10 @@ function getProviderState(payload, getState, section, keyValueOnly=true) {
   const pendingFields = state.pendingChanges.fields || {};
   delete pendingChanges.fields;
 
-  const item = id ? _.find(state.items, { id }) : state.selectedSchema || state.schema || state.schema && state.schema.items || {};
+  const item = id ? find(state.items, { id }) : state.selectedSchema || state.schema || state.schema && state.schema.items || {};
 
   if (item.fields) {
-    pendingChanges.fields = _.reduce(item.fields, (result, field) => {
+    pendingChanges.fields = reduce(item.fields, (result, field) => {
       const name = field.name;
 
       const value = pendingFields.hasOwnProperty(name) ?

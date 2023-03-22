@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { throttle } from 'lodash';
+import { throttle } from 'lodash-es';
 import React, { forwardRef, ReactNode, useEffect, useRef } from 'react';
 import ScrollDirection from 'Helpers/Props/ScrollDirection';
 import styles from './Scroller.css';

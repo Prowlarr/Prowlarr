@@ -1,7 +1,7 @@
-import _ from 'lodash';
+import { reduce } from 'lodash-es';
 
 function selectAll(selectedState, selected) {
-  const newSelectedState = _.reduce(Object.keys(selectedState), (result, item) => {
+  const newSelectedState = reduce(Object.keys(selectedState), (result, item) => {
     result[item] = selected;
     return result;
   }, {});

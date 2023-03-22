@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { filter } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -17,8 +17,8 @@ function createMapStateToProps() {
         schema
       } = downloadClients;
 
-      const usenetDownloadClients = _.filter(schema, { protocol: 'usenet' });
-      const torrentDownloadClients = _.filter(schema, { protocol: 'torrent' });
+      const usenetDownloadClients = filter(schema, { protocol: 'usenet' });
+      const torrentDownloadClients = filter(schema, { protocol: 'torrent' });
 
       return {
         isSchemaFetching,

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { keyBy } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Label from 'Components/Label';
@@ -15,7 +15,7 @@ function HintedSelectInputSelectedValue(props) {
     ...otherProps
   } = props;
 
-  const valuesMap = isMultiSelect && _.keyBy(values, 'key');
+  const valuesMap = isMultiSelect && keyBy(values, 'key');
 
   return (
     <EnhancedSelectInputSelectedValue

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { filter, find, indexOf, some, sortBy } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -22,12 +22,12 @@ function createMapStateToProps() {
     (state, { value }) => value,
     createTagsSelector(),
     (tags, tagList) => {
-      const sortedTags = _.sortBy(tagList, 'label');
-      const filteredTagList = _.filter(sortedTags, (tag) => _.indexOf(tags, tag.id) === -1);
+      const sortedTags = sortBy(tagList, 'label');
+      const filteredTagList = filter(sortedTags, (tag) => indexOf(tags, tag.id) === -1);
 
       return {
         tags: tags.reduce((acc, tag) => {
-          const matchingTag = _.find(tagList, { id: tag });
+          const matchingTag = find(tagList, { id: tag });
 
           if (matchingTag) {
             acc.push({
@@ -85,7 +85,7 @@ class TagInputConnector extends Component {
     } = this.props;
 
     if (!tag.id) {
-      const existingTag =_.some(allTags, { label: tag.name });
+      const existingTag = some(allTags, { label: tag.name });
 
       if (isValidTag(tag.name) && !existingTag) {
         this.props.addTag({

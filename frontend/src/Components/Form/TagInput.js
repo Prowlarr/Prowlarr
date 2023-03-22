@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import _ from 'lodash';
+import { debounce, isObject } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { kinds } from 'Helpers/Props';
@@ -63,7 +63,7 @@ class TagInput extends Component {
     return name;
   }
 
-  addTag = _.debounce((tag) => {
+  addTag = debounce((tag) => {
     this.props.onTagAdd(tag);
 
     this.setState({
@@ -80,7 +80,7 @@ class TagInput extends Component {
   };
 
   onInputChange = (event, { newValue, method }) => {
-    const value = _.isObject(newValue) ? newValue.name : newValue;
+    const value = isObject(newValue) ? newValue.name : newValue;
 
     if (method === 'type') {
       this.setState({ value });

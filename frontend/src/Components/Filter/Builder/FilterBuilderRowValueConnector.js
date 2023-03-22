@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { uniqBy } from 'lodash-es';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { filterBuilderTypes } from 'Helpers/Props';
@@ -41,7 +41,7 @@ function createTagListSelector() {
         }, []).sort(sortByName);
       }
 
-      return _.uniqBy(items, 'id');
+      return uniqBy(items, 'id');
     }
   );
 }

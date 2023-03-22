@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import _ from 'lodash';
+import { isEqual } from 'lodash-es';
 import { batchActions } from 'redux-batched-actions';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import getProviderState from 'Utilities/State/getProviderState';
@@ -34,7 +34,7 @@ function createSaveProviderHandler(section, url, options = {}) {
     // If the user is re-saving the same provider without changes
     // force it to be saved. Only applies to editing existing providers.
 
-    if (id && _.isEqual(saveData, lastSaveData)) {
+    if (id && isEqual(saveData, lastSaveData)) {
       params.forceSave = true;
     }
 

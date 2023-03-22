@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isEqual } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -79,7 +79,7 @@ class EnhancedSelectInputConnector extends Component {
     const prevKey = getProviderDataKey(prevProps.providerData);
     const nextKey = getProviderDataKey(this.props.providerData);
 
-    if (!_.isEqual(prevKey, nextKey)) {
+    if (!isEqual(prevKey, nextKey)) {
       this.setState({ refetchRequired: true });
     }
   };

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { reduce } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React from 'react';
 import FormGroup from 'Components/Form/FormGroup';
@@ -49,7 +49,7 @@ function getSelectValues(selectOptions) {
     return;
   }
 
-  return _.reduce(selectOptions, (result, option) => {
+  return reduce(selectOptions, (result, option) => {
     result.push({
       key: option.value,
       value: option.name,

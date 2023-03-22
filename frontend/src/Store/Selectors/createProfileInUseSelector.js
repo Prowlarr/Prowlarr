@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { some } from 'lodash-es';
 import { createSelector } from 'reselect';
 import createAllIndexersSelector from './createAllIndexersSelector';
 
@@ -12,11 +12,7 @@ function createProfileInUseSelector(profileProp) {
         return false;
       }
 
-      if (_.some(indexers, { [profileProp]: id }) || profiles.length <= 1) {
-        return true;
-      }
-
-      return false;
+      return some(indexers, { [profileProp]: id }) || profiles.length <= 1;
     }
   );
 }

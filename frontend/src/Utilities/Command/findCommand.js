@@ -1,8 +1,8 @@
-import _ from 'lodash';
+import { findLast } from 'lodash-es';
 import isSameCommand from './isSameCommand';
 
 function findCommand(commands, options) {
-  return _.findLast(commands, (command) => {
+  return findLast(commands, (command) => {
     return isSameCommand(command.body, options);
   });
 }

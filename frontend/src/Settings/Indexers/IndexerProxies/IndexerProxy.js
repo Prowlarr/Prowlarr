@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { filter } from 'lodash-es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Card from 'Components/Card';
@@ -80,7 +80,7 @@ class IndexerProxy extends Component {
         <div className={styles.indexers}>
           {
             tags.map((t) => {
-              const indexers = _.filter(indexerList, { tags: [t] });
+              const indexers = filter(indexerList, { tags: [t] });
 
               if (!indexers || indexers.length === 0) {
                 return null;

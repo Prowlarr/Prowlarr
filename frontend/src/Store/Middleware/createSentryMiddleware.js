@@ -1,6 +1,6 @@
 import * as sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
-import _ from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import parseUrl from 'Utilities/String/parseUrl';
 
 function cleanseUrl(url) {
@@ -10,7 +10,7 @@ function cleanseUrl(url) {
 }
 
 function cleanseData(data) {
-  const result = _.cloneDeep(data);
+  const result = cloneDeep(data);
 
   result.transaction = cleanseUrl(result.transaction);
 

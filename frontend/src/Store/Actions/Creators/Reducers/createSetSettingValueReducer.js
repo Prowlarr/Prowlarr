@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isNumber } from 'lodash-es';
 import getSectionState from 'Utilities/State/getSectionState';
 import updateSectionState from 'Utilities/State/updateSectionState';
 
@@ -14,7 +14,7 @@ function createSetSettingValueReducer(section) {
 
       let parsedValue = null;
 
-      if (_.isNumber(currentValue) && value != null) {
+      if (isNumber(currentValue) && value != null) {
         parsedValue = parseInt(value);
       } else {
         parsedValue = value;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -55,6 +56,9 @@ namespace Prowlarr.Api.V1.Search
                 return $"{Title}{extension}";
             }
         }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int? DownloadClientId { get; set; }
     }
 
     public static class ReleaseResourceMapper

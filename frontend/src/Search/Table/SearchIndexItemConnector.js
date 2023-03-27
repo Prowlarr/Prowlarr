@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { executeCommand } from 'Store/Actions/commandActions';
 
 function createReleaseSelector() {
   return createSelector(
@@ -37,10 +36,6 @@ function createMapStateToProps() {
   );
 }
 
-const mapDispatchToProps = {
-  dispatchExecuteCommand: executeCommand
-};
-
 class SearchIndexItemConnector extends Component {
 
   //
@@ -71,4 +66,4 @@ SearchIndexItemConnector.propTypes = {
   component: PropTypes.elementType.isRequired
 };
 
-export default connect(createMapStateToProps, mapDispatchToProps)(SearchIndexItemConnector);
+export default connect(createMapStateToProps, null)(SearchIndexItemConnector);

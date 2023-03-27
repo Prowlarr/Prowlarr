@@ -6,12 +6,15 @@ interface CssExports {
   'category': string;
   'cell': string;
   'checkInput': string;
+  'downloadIcon': string;
   'downloadLink': string;
   'externalLinks': string;
   'files': string;
   'grabs': string;
   'indexer': string;
   'indexerFlags': string;
+  'interactiveIcon': string;
+  'manualDownloadContent': string;
   'peers': string;
   'protocol': string;
   'size': string;

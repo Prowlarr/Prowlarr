@@ -4,9 +4,13 @@ interface CssExports {
   'actions': string;
   'container': string;
   'content': string;
+  'downloadIcon': string;
+  'downloadLink': string;
   'indexerRow': string;
   'info': string;
   'infoRow': string;
+  'interactiveIcon': string;
+  'manualDownloadContent': string;
   'title': string;
   'titleRow': string;
 }

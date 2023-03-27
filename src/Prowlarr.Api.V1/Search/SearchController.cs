@@ -74,7 +74,7 @@ namespace Prowlarr.Api.V1.Search
 
             try
             {
-                await _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null);
+                await _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, release.DownloadClientId);
             }
             catch (ReleaseDownloadException ex)
             {

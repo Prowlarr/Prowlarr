@@ -47,3 +47,42 @@ $hoverScale: 1.05;
   right: 0;
   white-space: nowrap;
 }
+
+.downloadLink {
+  composes: link from '~Components/Link/Link.css';
+
+  margin: 0 2px;
+  width: 22px;
+  color: var(--textColor);
+  text-align: center;
+}
+
+.manualDownloadContent {
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+  width: 22px;
+  height: 20.39px;
+  vertical-align: middle;
+  line-height: 20.39px;
+
+  &:hover {
+    color: var(--iconButtonHoverColor);
+  }
+}
+
+.interactiveIcon {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  /* width: 100%; */
+  text-align: center;
+}
+
+.downloadIcon {
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  /* width: 100%; */
+  text-align: center;
+}

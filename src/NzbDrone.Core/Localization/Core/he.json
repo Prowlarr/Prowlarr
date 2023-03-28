@@ -276,7 +276,7 @@
     "Backup": "גיבוי",
     "BackupNow": "גיבוי עכשיו",
     "BindAddress": "כתובת איגוד",
-    "BindAddressHelpText": "כתובת IP4 תקפה או '*' לכל הממשקים",
+    "BindAddressHelpText": "יש להזין localhost, כתובת IP או '*' כדי לאפשר הכל",
     "CertificateValidation": "אימות תעודה",
     "Clear": "ברור",
     "ClientPriority": "עדיפות לקוח",
@@ -291,7 +291,7 @@
     "DeleteTagMessageText": "האם אתה בטוח שברצונך למחוק את התג '{0}'?",
     "Details": "פרטים",
     "Disabled": "נָכֶה",
-    "Discord": "מַחֲלוֹקֶת",
+    "Discord": "דיסקורד",
     "EnableAutomaticSearch": "אפשר חיפוש אוטומטי",
     "EnableSslHelpText": " דרוש הפעלה מחדש כמנהל כדי להיכנס לתוקף",
     "Error": "שְׁגִיאָה",
@@ -356,7 +356,7 @@
     "AddToDownloadClient": "הוספת הפצה לקליינט הורדות",
     "AuthenticationRequired": "נדרש אימות",
     "AuthenticationRequiredHelpText": "הגדר עבור אילו קריאות נדרש אימות. עדיף להשאיר את ברירת המחדל.",
-    "DeleteClientCategory": "מחיקת קטגורית קליינט הורדות",
+    "DeleteClientCategory": "מחיקת קטגוריה בקליינט הורדות",
     "Description": "תיאור",
     "DevelopmentSettings": "הגדרות פיתוח",
     "DownloadClientCategory": "קטגוריית קליינט הורדות",
@@ -386,5 +386,8 @@
     "Notification": "התראות",
     "TheLatestVersionIsAlreadyInstalled": "הגרסה האחרונה של Prowlarr כבר מותקנת",
     "Remove": "לְהַסִיר",
-    "Replace": "החלף"
+    "Replace": "החלף",
+    "AddApplication": "הוספת אפליקציה",
+    "AddCustomFilter": "הוספת פילטר מותאם",
+    "DisabledUntil": "מבוטל 'עד ש'"
 }

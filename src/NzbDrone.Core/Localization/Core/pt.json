@@ -182,7 +182,7 @@
     "CertificateValidation": "Validação de certificado",
     "BypassProxyForLocalAddresses": "Ignorar proxy para endereços locais",
     "Branch": "Ramificação",
-    "BindAddressHelpText": "Endereço IP4 válido ou \"*\" para todas as interfaces",
+    "BindAddressHelpText": "Endereço de IP válido, localhost ou \"*\" para todas as interfaces",
     "BindAddress": "Endereço de vínculo",
     "Backups": "Cópias de segurança",
     "BackupFolderHelpText": "Caminhos relativos estarão na pasta AppData do Prowlarr",

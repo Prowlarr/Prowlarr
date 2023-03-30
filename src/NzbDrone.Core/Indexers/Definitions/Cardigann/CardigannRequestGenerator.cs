@@ -9,6 +9,7 @@ using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using Newtonsoft.Json.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
@@ -1119,7 +1120,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             }
                             else
                             {
-                                queryCollection.Add(input.Key, ApplyGoTemplateText(input.Value, variables));
+                                var inputValue = ApplyGoTemplateText(input.Value, variables);
+
+                                if (inputValue.IsNotNullOrWhiteSpace() || search.AllowEmptyInputs)
+                                {
+                                    queryCollection.Add(input.Key, inputValue);
+                                }
                             }
                         }
                     }

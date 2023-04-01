@@ -323,6 +323,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "nm", term.IsNotNullOrWhiteSpace() ? term.Replace("-", " ") : "" }
             };
 
+            if (_settings.FreeleechOnly)
+            {
+                parameters.Add("sds", "1");
+            }
+
             var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
             if (queryCats.Any())
             {
@@ -407,6 +412,19 @@ namespace NzbDrone.Core.Indexers.Definitions
                     MinimumRatio = 1,
                     MinimumSeedTime = 0
                 };
+
+                if (row.QuerySelector("img[src=\"images/gold.gif\"]") != null)
+                {
+                    release.DownloadVolumeFactor = 0;
+                }
+                else if (row.QuerySelector("img[src=\"images/silver.gif\"]") != null)
+                {
+                    release.DownloadVolumeFactor = 0.5;
+                }
+                else if (row.QuerySelector("img[src=\"images/bronze.gif\"]") != null)
+                {
+                    release.DownloadVolumeFactor = 0.75;
+                }
 
                 releaseInfos.Add(release);
             }
@@ -540,7 +558,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             StripCyrillicLetters = true;
         }
 
-        [FieldDefinition(4, Label = "Strip Cyrillic Letters", Type = FieldType.Checkbox)]
+        [FieldDefinition(4, Label = "Freeleech Only", HelpText = "Search Freeleech torrents only", Type = FieldType.Checkbox)]
+        public bool FreeleechOnly { get; set; }
+
+        [FieldDefinition(5, Label = "Strip Cyrillic Letters", Type = FieldType.Checkbox)]
         public bool StripCyrillicLetters { get; set; }
     }
 }

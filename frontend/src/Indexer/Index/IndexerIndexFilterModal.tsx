@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 import FilterModal from 'Components/Filter/FilterModal';
 import { setIndexerFilter } from 'Store/Actions/indexerIndexActions';
 
 function createIndexerSelector() {
   return createSelector(
-    (state) => state.indexers.items,
+    (state: AppState) => state.indexers.items,
     (indexers) => {
       return indexers;
     }
@@ -15,14 +16,20 @@ function createIndexerSelector() {
 
 function createFilterBuilderPropsSelector() {
   return createSelector(
-    (state) => state.indexerIndex.filterBuilderProps,
+    (state: AppState) => state.indexerIndex.filterBuilderProps,
     (filterBuilderProps) => {
       return filterBuilderProps;
     }
   );
 }
 
-export default function IndexerIndexFilterModal(props) {
+interface IndexerIndexFilterModalProps {
+  isOpen: boolean;
+}
+
+export default function IndexerIndexFilterModal(
+  props: IndexerIndexFilterModalProps
+) {
   const sectionItems = useSelector(createIndexerSelector());
   const filterBuilderProps = useSelector(createFilterBuilderPropsSelector());
   const customFilterType = 'indexerIndex';
@@ -30,7 +37,7 @@ export default function IndexerIndexFilterModal(props) {
   const dispatch = useDispatch();
 
   const dispatchSetFilter = useCallback(
-    (payload) => {
+    (payload: unknown) => {
       dispatch(setIndexerFilter(payload));
     },
     [dispatch]
@@ -38,6 +45,7 @@ export default function IndexerIndexFilterModal(props) {
 
   return (
     <FilterModal
+      // TODO: Don't spread all the props
       {...props}
       sectionItems={sectionItems}
       filterBuilderProps={filterBuilderProps}

@@ -11,6 +11,8 @@ function ProtocolLabel(props: ProtocolLabelProps) {
 
   const protocolName = protocol === 'usenet' ? 'nzb' : protocol;
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore ts(7053)
   return <Label className={styles[protocol]}>{protocolName}</Label>;
 }
 

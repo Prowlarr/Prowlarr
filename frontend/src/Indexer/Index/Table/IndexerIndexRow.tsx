@@ -13,6 +13,7 @@ import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import createIndexerIndexItemSelector from 'Indexer/Index/createIndexerIndexItemSelector';
 import IndexerTitleLink from 'Indexer/IndexerTitleLink';
+import { SelectStateInputProps } from 'typings/props';
 import firstCharToUpper from 'Utilities/String/firstCharToUpper';
 import translate from 'Utilities/String/translate';
 import CapabilitiesLabel from './CapabilitiesLabel';
@@ -100,12 +101,8 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
     setIsDeleteIndexerModalOpen(false);
   }, [setIsDeleteIndexerModalOpen]);
 
-  const checkInputCallback = useCallback(() => {
-    // Mock handler to satisfy `onChange` being required for `CheckInput`.
-  }, []);
-
   const onSelectedChange = useCallback(
-    ({ id, value, shiftKey }) => {
+    ({ id, value, shiftKey }: SelectStateInputProps) => {
       selectDispatch({
         type: 'toggleSelected',
         id,
@@ -202,6 +199,8 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
 
         if (name === 'added') {
           return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore ts(2739)
             <RelativeDateCellConnector
               key={name}
               className={styles[name]}
@@ -213,6 +212,8 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
 
         if (name === 'vipExpiration') {
           return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore ts(2739)
             <RelativeDateCellConnector
               key={name}
               className={styles[name]}
@@ -266,6 +267,8 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
           return (
             <VirtualTableRowCell
               key={column.name}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore ts(2739)
               className={styles[column.name]}
             >
               <IconButton

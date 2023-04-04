@@ -1,6 +1,7 @@
-import { concat, uniq } from 'lodash';
+import { uniq } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Tag } from 'App/State/TagsAppState';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -12,6 +13,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds, sizes } from 'Helpers/Props';
+import Indexer from 'Indexer/Indexer';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
 import translate from 'Utilities/String/translate';
@@ -26,29 +28,35 @@ interface TagsModalContentProps {
 function TagsModalContent(props: TagsModalContentProps) {
   const { indexerIds, onModalClose, onApplyTagsPress } = props;
 
-  const allIndexers = useSelector(createAllIndexersSelector());
-  const tagList = useSelector(createTagsSelector());
+  const allIndexers: Indexer[] = useSelector(createAllIndexersSelector());
+  const tagList: Tag[] = useSelector(createTagsSelector());
 
   const [tags, setTags] = useState<number[]>([]);
   const [applyTags, setApplyTags] = useState('add');
 
   const indexerTags = useMemo(() => {
-    const indexers = indexerIds.map((id) => {
-      return allIndexers.find((s) => s.id === id);
-    });
+    const tags = indexerIds.reduce((acc: number[], id) => {
+      const s = allIndexers.find((s) => s.id === id);
 
-    return uniq(concat(...indexers.map((s) => s.tags)));
+      if (s) {
+        acc.push(...s.tags);
+      }
+
+      return acc;
+    }, []);
+
+    return uniq(tags);
   }, [indexerIds, allIndexers]);
 
   const onTagsChange = useCallback(
-    ({ value }) => {
+    ({ value }: { value: number[] }) => {
       setTags(value);
     },
     [setTags]
   );
 
   const onApplyTagsChange = useCallback(
-    ({ value }) => {
+    ({ value }: { value: string }) => {
       setApplyTags(value);
     },
     [setApplyTags]

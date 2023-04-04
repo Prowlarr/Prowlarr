@@ -55,7 +55,8 @@ class Tag extends Component {
       label,
       notificationIds,
       indexerIds,
-      indexerProxyIds
+      indexerProxyIds,
+      applicationIds
     } = this.props;
 
     const {
@@ -66,7 +67,8 @@ class Tag extends Component {
     const isTagUsed = !!(
       indexerIds.length ||
       notificationIds.length ||
-      indexerProxyIds.length
+      indexerProxyIds.length ||
+      applicationIds.length
     );
 
     return (
@@ -102,6 +104,13 @@ class Tag extends Component {
                     {indexerProxyIds.length} {indexerProxyIds.length > 1 ? translate('IndexerProxies') : translate('IndexerProxy')}
                   </div>
               }
+
+              {
+                !!applicationIds.length &&
+                  <div>
+                    {applicationIds.length} {applicationIds.length > 1 ? translate('Applications') : translate('Application')}
+                  </div>
+              }
             </div>
         }
 
@@ -118,6 +127,7 @@ class Tag extends Component {
           indexerIds={indexerIds}
           notificationIds={notificationIds}
           indexerProxyIds={indexerProxyIds}
+          applicationIds={applicationIds}
           isOpen={isDetailsModalOpen}
           onModalClose={this.onDetailsModalClose}
           onDeleteTagPress={this.onDeleteTagPress}
@@ -143,13 +153,15 @@ Tag.propTypes = {
   notificationIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   indexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   indexerProxyIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  applicationIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   onConfirmDeleteTag: PropTypes.func.isRequired
 };
 
 Tag.defaultProps = {
   indexerIds: [],
   notificationIds: [],
-  indexerProxyIds: []
+  indexerProxyIds: [],
+  applicationIds: []
 };
 
 export default Tag;

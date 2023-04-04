@@ -7,7 +7,7 @@ import translate from 'Utilities/String/translate';
 interface IndexerIndexSelectAllButtonProps {
   label: string;
   isSelectMode: boolean;
-  overflowComponent: React.FunctionComponent;
+  overflowComponent: React.FunctionComponent<never>;
 }
 
 function IndexerIndexSelectAllButton(props: IndexerIndexSelectAllButtonProps) {

@@ -107,7 +107,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
   ]);
 
   const onInputChange = useCallback(
-    ({ name, value }) => {
+    ({ name, value }: { name: string; value: string }) => {
       switch (name) {
         case 'enable':
           setEnable(value);

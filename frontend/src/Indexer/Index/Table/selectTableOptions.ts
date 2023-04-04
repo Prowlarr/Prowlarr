@@ -1,7 +1,8 @@
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 
 const selectTableOptions = createSelector(
-  (state) => state.indexerIndex.tableOptions,
+  (state: AppState) => state.indexerIndex.tableOptions,
   (tableOptions) => tableOptions
 );
 

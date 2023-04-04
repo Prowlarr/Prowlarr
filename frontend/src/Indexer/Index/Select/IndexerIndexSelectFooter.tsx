@@ -15,6 +15,16 @@ import EditIndexerModal from './Edit/EditIndexerModal';
 import TagsModal from './Tags/TagsModal';
 import styles from './IndexerIndexSelectFooter.css';
 
+interface SavePayload {
+  enable?: boolean;
+  appProfileId?: number;
+  priority?: number;
+  minimumSeeders?: number;
+  seedRatio?: number;
+  seedTime?: number;
+  packSeedTime?: number;
+}
+
 const indexersEditorSelector = createSelector(
   (state: AppState) => state.indexers,
   (indexers) => {
@@ -60,7 +70,7 @@ function IndexerIndexSelectFooter() {
   }, [setIsEditModalOpen]);
 
   const onSavePress = useCallback(
-    (payload) => {
+    (payload: SavePayload) => {
       setIsSavingIndexer(true);
       setIsEditModalOpen(false);
 
@@ -83,7 +93,7 @@ function IndexerIndexSelectFooter() {
   }, [setIsTagsModalOpen]);
 
   const onApplyTagsPress = useCallback(
-    (tags, applyTags) => {
+    (tags: number[], applyTags: string) => {
       setIsSavingTags(true);
       setIsTagsModalOpen(false);
 

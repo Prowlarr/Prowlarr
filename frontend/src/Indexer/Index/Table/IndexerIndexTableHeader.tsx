@@ -14,12 +14,11 @@ import {
   setIndexerSort,
   setIndexerTableOption,
 } from 'Store/Actions/indexerIndexActions';
-import { SelectStateInputProps } from 'typings/props';
+import { CheckInputChanged } from 'typings/inputs';
 import IndexerIndexTableOptions from './IndexerIndexTableOptions';
 import styles from './IndexerIndexTableHeader.css';
 
 interface IndexerIndexTableHeaderProps {
-  showBanners: boolean;
   columns: Column[];
   sortKey?: string;
   sortDirection?: SortDirection;
@@ -32,21 +31,21 @@ function IndexerIndexTableHeader(props: IndexerIndexTableHeaderProps) {
   const [selectState, selectDispatch] = useSelect();
 
   const onSortPress = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setIndexerSort({ sortKey: value }));
     },
     [dispatch]
   );
 
   const onTableOptionChange = useCallback(
-    (payload) => {
+    (payload: unknown) => {
       dispatch(setIndexerTableOption(payload));
     },
     [dispatch]
   );
 
   const onSelectAllChange = useCallback(
-    ({ value }: SelectStateInputProps) => {
+    ({ value }: CheckInputChanged) => {
       selectDispatch({
         type: value ? 'selectAll' : 'unselectAll',
       });
@@ -93,7 +92,11 @@ function IndexerIndexTableHeader(props: IndexerIndexTableHeaderProps) {
         return (
           <VirtualTableHeaderCell
             key={name}
-            className={classNames(styles[name])}
+            className={classNames(
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              styles[name]
+            )}
             name={name}
             sortKey={sortKey}
             sortDirection={sortDirection}

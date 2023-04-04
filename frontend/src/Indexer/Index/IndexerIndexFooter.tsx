@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { ColorImpairedConsumer } from 'App/ColorImpairedContext';
+import IndexerAppState from 'App/State/IndexerAppState';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
@@ -13,7 +14,7 @@ import styles from './IndexerIndexFooter.css';
 function createUnoptimizedSelector() {
   return createSelector(
     createClientSideCollectionSelector('indexers', 'indexerIndex'),
-    (indexers) => {
+    (indexers: IndexerAppState) => {
       return indexers.items.map((s) => {
         const { protocol, privacy, enable } = s;
 

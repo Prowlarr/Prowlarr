@@ -45,6 +45,7 @@ interface Indexer extends ModelBase {
   priority: number;
   fields: IndexerField[];
   tags: number[];
+  sortName: string;
   status: IndexerStatus;
   capabilities: IndexerCapabilities;
   indexerUrls: string[];

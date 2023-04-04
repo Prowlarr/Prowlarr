@@ -1,6 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SelectProvider } from 'App/SelectContext';
+import ClientSideCollectionAppState from 'App/State/ClientSideCollectionAppState';
+import IndexerAppState, {
+  IndexerIndexAppState,
+} from 'App/State/IndexerAppState';
 import { APP_INDEXER_SYNC } from 'Commands/commandNames';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
@@ -64,19 +68,20 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
     sortKey,
     sortDirection,
     view,
-  } = useSelector(
-    createIndexerClientSideCollectionItemsSelector('indexerIndex')
-  );
+  }: IndexerAppState & IndexerIndexAppState & ClientSideCollectionAppState =
+    useSelector(createIndexerClientSideCollectionItemsSelector('indexerIndex'));
 
   const isSyncingIndexers = useSelector(
     createCommandExecutingSelector(APP_INDEXER_SYNC)
   );
   const { isSmallScreen } = useSelector(createDimensionsSelector());
   const dispatch = useDispatch();
-  const scrollerRef = useRef<HTMLDivElement>();
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [isAddIndexerModalOpen, setIsAddIndexerModalOpen] = useState(false);
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
-  const [jumpToCharacter, setJumpToCharacter] = useState<string | null>(null);
+  const [jumpToCharacter, setJumpToCharacter] = useState<string | undefined>(
+    undefined
+  );
   const [isSelectMode, setIsSelectMode] = useState(false);
 
   const onAppIndexerSyncPress = useCallback(() => {
@@ -112,37 +117,37 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
   }, [isSelectMode, setIsSelectMode]);
 
   const onTableOptionChange = useCallback(
-    (payload) => {
+    (payload: unknown) => {
       dispatch(setIndexerTableOption(payload));
     },
     [dispatch]
   );
 
   const onSortSelect = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setIndexerSort({ sortKey: value }));
     },
     [dispatch]
   );
 
   const onFilterSelect = useCallback(
-    (value) => {
+    (value: string) => {
       dispatch(setIndexerFilter({ selectedFilterKey: value }));
     },
     [dispatch]
   );
 
   const onJumpBarItemPress = useCallback(
-    (character) => {
+    (character: string) => {
       setJumpToCharacter(character);
     },
     [setJumpToCharacter]
   );
 
   const onScroll = useCallback(
-    ({ scrollTop }) => {
-      setJumpToCharacter(null);
-      scrollPositions.seriesIndex = scrollTop;
+    ({ scrollTop }: { scrollTop: number }) => {
+      setJumpToCharacter(undefined);
+      scrollPositions.indexerIndex = scrollTop;
     },
     [setJumpToCharacter]
   );
@@ -155,7 +160,7 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
       };
     }
 
-    const characters = items.reduce((acc, item) => {
+    const characters = items.reduce((acc: Record<string, number>, item) => {
       let char = item.sortName.charAt(0);
 
       if (!isNaN(Number(char))) {
@@ -277,6 +282,8 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
           <PageContentBody
             ref={scrollerRef}
             className={styles.contentBody}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             innerClassName={styles[`${view}InnerContentBody`]}
             initialScrollTop={props.initialScrollTop}
             onScroll={onScroll}

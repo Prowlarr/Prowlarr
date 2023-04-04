@@ -22,13 +22,13 @@ import { kinds } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import Indexer from 'Indexer/Indexer';
-import createIndexerSelector from 'Store/Selectors/createIndexerSelector';
+import { createIndexerSelectorForHook } from 'Store/Selectors/createIndexerSelector';
 import translate from 'Utilities/String/translate';
 import styles from './IndexerInfoModalContent.css';
 
 function createIndexerInfoItemSelector(indexerId: number) {
   return createSelector(
-    createIndexerSelector(indexerId),
+    createIndexerSelectorForHook(indexerId),
     (indexer: Indexer) => {
       return {
         indexer,
@@ -130,9 +130,13 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                 {translate('IndexerSite')}
               </DescriptionListItemTitle>
               <DescriptionListItemDescription>
-                <Link to={baseUrl}>
-                  {baseUrl.replace(/(:\/\/)api\./, '$1')}
-                </Link>
+                {baseUrl ? (
+                  <Link to={baseUrl}>
+                    {baseUrl.replace(/(:\/\/)api\./, '$1')}
+                  </Link>
+                ) : (
+                  '-'
+                )}
               </DescriptionListItemDescription>
               <DescriptionListItemTitle>
                 {protocol === 'usenet'

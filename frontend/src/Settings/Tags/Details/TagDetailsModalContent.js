@@ -17,6 +17,7 @@ function TagDetailsModalContent(props) {
     indexers,
     notifications,
     indexerProxies,
+    applications,
     onModalClose,
     onDeleteTagPress
   } = props;
@@ -79,6 +80,21 @@ function TagDetailsModalContent(props) {
               }
             </FieldSet>
         }
+
+        {
+          !!applications.length &&
+            <FieldSet legend={translate('Applications')}>
+              {
+                applications.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      {item.name}
+                    </div>
+                  );
+                })
+              }
+            </FieldSet>
+        }
       </ModalBody>
 
       <ModalFooter>
@@ -110,6 +126,7 @@ TagDetailsModalContent.propTypes = {
   indexers: PropTypes.arrayOf(PropTypes.object).isRequired,
   notifications: PropTypes.arrayOf(PropTypes.object).isRequired,
   indexerProxies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  applications: PropTypes.arrayOf(PropTypes.object).isRequired,
   onModalClose: PropTypes.func.isRequired,
   onDeleteTagPress: PropTypes.func.isRequired
 };

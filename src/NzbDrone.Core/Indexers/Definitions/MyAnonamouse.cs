@@ -378,7 +378,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseResponse>(indexerResponse.Content);
 
             var error = jsonResponse.Error;
-            if (error != null && error == "Nothing returned, out of 0")
+            if (error is "Nothing returned, out of 0" or "Nothing returned, out of 1")
             {
                 return torrentInfos.ToArray();
             }

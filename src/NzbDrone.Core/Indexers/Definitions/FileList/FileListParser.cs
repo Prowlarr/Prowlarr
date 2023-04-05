@@ -72,7 +72,7 @@ public class FileListParser : IParseIndexerResponse
                 InfoUrl = GetInfoUrl(id),
                 Seeders = row.Seeders,
                 Peers = row.Leechers + row.Seeders,
-                PublishDate = DateTime.Parse(row.UploadDate + " +0200", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                PublishDate = DateTime.Parse(row.UploadDate + " +0300", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                 Description = row.SmallDescription,
                 Genres = row.SmallDescription.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList(),
                 ImdbId = imdbId,

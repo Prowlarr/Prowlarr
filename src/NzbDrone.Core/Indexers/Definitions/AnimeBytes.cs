@@ -9,6 +9,7 @@ using FluentValidation;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
@@ -25,7 +26,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AnimeBytes : TorrentIndexerBase<AnimeBytesSettings>
     {
         public override string Name => "AnimeBytes";
-        public override string[] IndexerUrls => new string[] { "https://animebytes.tv/" };
+        public override string[] IndexerUrls => new[] { "https://animebytes.tv/" };
         public override string Description => "AnimeBytes (AB) is the largest private torrent tracker that specialises in anime and anime-related content.";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
@@ -40,7 +41,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnimeBytesRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new AnimeBytesRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -58,21 +59,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
+                {
+                    MovieSearchParam.Q
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping("anime[tv_series]", NewznabStandardCategory.TVAnime, "TV Series");
@@ -98,11 +99,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesRequestGenerator : IIndexerRequestGenerator
     {
-        public AnimeBytesSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly AnimeBytesSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
 
-        public AnimeBytesRequestGenerator()
+        private static Regex YearRegex => new (@"\b((?:19|20)\d{2})$", RegexOptions.Compiled);
+
+        public AnimeBytesRequestGenerator(AnimeBytesSettings settings, IndexerCapabilities capabilities)
         {
+            _settings = settings;
+            _capabilities = capabilities;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -124,51 +129,78 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest(searchType, searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+            pageableRequests.Add(GetRequest(searchCriteria, searchType));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchType, string term, int[] categories)
+        private IEnumerable<IndexerRequest> GetRequest(SearchCriteriaBase searchCriteria, string searchType)
         {
-            var searchUrl = string.Format("{0}/scrape.php", Settings.BaseUrl.TrimEnd('/'));
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/scrape.php";
 
-            var queryCollection = new NameValueCollection
+            var term = searchCriteria.SanitizedSearchTerm.Trim();
+
+            var parameters = new NameValueCollection
             {
-                { "username", Settings.Username },
-                { "torrent_pass", Settings.Passkey },
+                { "username", _settings.Username },
+                { "torrent_pass", _settings.Passkey },
                 { "type", searchType },
                 { "searchstr", StripEpisodeNumber(term) }
             };
 
-            var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
-
-            if (queryCats.Count > 0)
+            if (_settings.SearchByYear)
             {
-                foreach (var cat in queryCats)
+                var searchYear = ParseYearFromSearchTerm(term);
+
+                if (searchYear is > 0)
                 {
-                    queryCollection.Add(cat, "1");
+                    parameters.Set("year", searchYear.ToString());
                 }
             }
 
-            var queryUrl = searchUrl + "?" + queryCollection.GetQueryString();
+            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
 
-            var request = new IndexerRequest(queryUrl, HttpAccept.Json);
+            if (queryCats.Any())
+            {
+                queryCats.ForEach(cat => parameters.Set(cat, "1"));
+            }
+
+            searchUrl += "?" + parameters.GetQueryString();
+
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
 
             yield return request;
         }
 
-        public Func<IDictionary<string, string>> GetCookies { get; set; }
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-
-        private string StripEpisodeNumber(string term)
+        private static string StripEpisodeNumber(string term)
         {
             // Tracer does not support searching with episode number so strip it if we have one
             term = Regex.Replace(term, @"\W(\dx)?\d?\d$", string.Empty);
             term = Regex.Replace(term, @"\W(S\d\d?E)?\d?\d$", string.Empty);
             term = Regex.Replace(term, @"\W\d+$", string.Empty);
-            return term;
+
+            return term.Trim();
         }
+
+        private static int? ParseYearFromSearchTerm(string term)
+        {
+            if (term.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+
+            var yearMatch = YearRegex.Match(term);
+
+            if (!yearMatch.Success)
+            {
+                return null;
+            }
+
+            return ParseUtil.CoerceInt(yearMatch.Groups[1].Value);
+        }
+
+        public Func<IDictionary<string, string>> GetCookies { get; set; }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
     public class AnimeBytesParser : IParseIndexerResponse
@@ -517,11 +549,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public AnimeBytesSettingsValidator()
         {
-            RuleFor(c => c.Passkey).NotEmpty()
-                                   .Must(x => x.Length == 32 || x.Length == 48)
-                                   .WithMessage("Passkey length must be 32 or 48");
-
             RuleFor(c => c.Username).NotEmpty();
+
+            RuleFor(c => c.Passkey).NotEmpty()
+                .Must(x => x.Length is 32 or 48)
+                .WithMessage("Passkey length must be 32 or 48");
         }
     }
 
@@ -531,8 +563,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public AnimeBytesSettings()
         {
-            Passkey = "";
             Username = "";
+            Passkey = "";
+            SearchByYear = false;
             EnableSonarrCompatibility = true;
             UseFilenameForSingleEpisodes = false;
             AddJapaneseTitle = true;
@@ -540,25 +573,28 @@ namespace NzbDrone.Core.Indexers.Definitions
             AddAlternativeTitle = true;
         }
 
-        [FieldDefinition(2, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
-        public string Passkey { get; set; }
-
-        [FieldDefinition(3, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(4, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
+        [FieldDefinition(3, Label = "Passkey", HelpText = "Site Passkey", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        public string Passkey { get; set; }
+
+        [FieldDefinition(5, Label = "Search By Year", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr to search by year as a different argument in the request.")]
+        public bool SearchByYear { get; set; }
+
+        [FieldDefinition(5, Label = "Enable Sonarr Compatibility", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr try to add Season information into Release names, without this Sonarr can't match any Seasons, but it has a lot of false positives as well")]
         public bool EnableSonarrCompatibility { get; set; }
 
-        [FieldDefinition(5, Label = "Use Filenames for Single Episodes", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr replace AnimeBytes release names with the actual filename, this currently only works for single episode releases")]
+        [FieldDefinition(6, Label = "Use Filenames for Single Episodes", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr replace AnimeBytes release names with the actual filename, this currently only works for single episode releases")]
         public bool UseFilenameForSingleEpisodes { get; set; }
 
-        [FieldDefinition(6, Label = "Add Japanese title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add Japanese titles as synonyms, i.e kanji/hiragana/katakana.")]
+        [FieldDefinition(7, Label = "Add Japanese title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add Japanese titles as synonyms, i.e kanji/hiragana/katakana.")]
         public bool AddJapaneseTitle { get; set; }
 
-        [FieldDefinition(7, Label = "Add Romaji title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add Romaji title as a synonym, i.e \"Shingeki no Kyojin\" with Attack on Titan")]
+        [FieldDefinition(8, Label = "Add Romaji title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add Romaji title as a synonym, i.e \"Shingeki no Kyojin\" with Attack on Titan")]
         public bool AddRomajiTitle { get; set; }
 
-        [FieldDefinition(8, Label = "Add alternative title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add alternative title as a synonym, i.e \"AoT\" with Attack on Titan, but also \"Attack on Titan Season 4\" Instead of \"Attack on Titan: The Final Season\"")]
+        [FieldDefinition(9, Label = "Add alternative title as a synonym", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr add alternative title as a synonym, i.e \"AoT\" with Attack on Titan, but also \"Attack on Titan Season 4\" Instead of \"Attack on Titan: The Final Season\"")]
         public bool AddAlternativeTitle { get; set; }
 
         public override NzbDroneValidationResult Validate()

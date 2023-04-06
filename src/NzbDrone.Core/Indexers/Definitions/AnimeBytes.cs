@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(10);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
 
         public AnimeBytes(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)

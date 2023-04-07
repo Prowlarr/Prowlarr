@@ -413,7 +413,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     MinimumSeedTime = 0
                 };
 
-                if (row.QuerySelector("img[src=\"images/gold.gif\"]") != null)
+                if (row.QuerySelector("img[src=\"images/gold.gif\"], img[src=\"images/authors.gif\"]") != null)
                 {
                     release.DownloadVolumeFactor = 0;
                 }

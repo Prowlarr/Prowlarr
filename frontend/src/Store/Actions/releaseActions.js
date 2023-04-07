@@ -144,7 +144,7 @@ export const defaultState = {
     },
 
     category: function(item) {
-      if (item.categories.length > 0) {
+      if (item.categories !== undefined && item.categories.length > 0) {
         const sortedCats = item.categories.filter((cat) => cat.name !== undefined).sort((c) => c.id);
         const firstCat = sortedCats[0];
 

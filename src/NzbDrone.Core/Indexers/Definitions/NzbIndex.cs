@@ -1037,7 +1037,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "key", Settings.ApiKey },
                 { "max", limit.ToString() },
                 { "q", searchString },
-                { "p", ((offset / limit) + 1).ToString() }
+                { "p", (offset / limit).ToString() }
             };
 
             var searchUrl = string.Format("{0}/api/v3/search/?{1}", Settings.BaseUrl.TrimEnd('/'), queryCollection.GetQueryString());

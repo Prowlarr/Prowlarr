@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Newtonsoft.Json.Linq;
@@ -10,6 +10,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new NzbIndexRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new NzbIndexRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -48,21 +49,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
+                {
+                    MovieSearchParam.Q
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                {
+                    MusicSearchParam.Q
+                },
                 BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                {
+                    BookSearchParam.Q
+                }
             };
 
             // TODO build this out more
@@ -349,15 +350,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(915, NewznabStandardCategory.Other, "a.b.graveyard");
             caps.Categories.AddCategoryMapping(255, NewznabStandardCategory.Other, "a.b.guitar.tab");
             caps.Categories.AddCategoryMapping(256, NewznabStandardCategory.Other, "a.b.hd.ger.moviez");
-            caps.Categories.AddCategoryMapping(257, NewznabStandardCategory.Other, "a.b.hdtv");
+            caps.Categories.AddCategoryMapping(257, NewznabStandardCategory.TV, "a.b.hdtv");
             caps.Categories.AddCategoryMapping(258, NewznabStandardCategory.Other, "a.b.hdtv.french");
             caps.Categories.AddCategoryMapping(259, NewznabStandardCategory.Other, "a.b.hdtv.french.repost");
-            caps.Categories.AddCategoryMapping(260, NewznabStandardCategory.Other, "a.b.hdtv.german");
-            caps.Categories.AddCategoryMapping(261, NewznabStandardCategory.Other, "a.b.hdtv.german-audio");
+            caps.Categories.AddCategoryMapping(260, NewznabStandardCategory.TVForeign, "a.b.hdtv.german");
+            caps.Categories.AddCategoryMapping(261, NewznabStandardCategory.TVForeign, "a.b.hdtv.german-audio");
             caps.Categories.AddCategoryMapping(262, NewznabStandardCategory.Other, "a.b.hdtv.repost");
-            caps.Categories.AddCategoryMapping(263, NewznabStandardCategory.Other, "a.b.hdtv.tv-episodes");
-            caps.Categories.AddCategoryMapping(264, NewznabStandardCategory.Other, "a.b.hdtv.x264");
-            caps.Categories.AddCategoryMapping(265, NewznabStandardCategory.Other, "a.b.hdtv.x264.french");
+            caps.Categories.AddCategoryMapping(263, NewznabStandardCategory.TV, "a.b.hdtv.tv-episodes");
+            caps.Categories.AddCategoryMapping(264, NewznabStandardCategory.TV, "a.b.hdtv.x264");
+            caps.Categories.AddCategoryMapping(265, NewznabStandardCategory.TVForeign, "a.b.hdtv.x264.french");
             caps.Categories.AddCategoryMapping(266, NewznabStandardCategory.Other, "a.b.highspeed");
             caps.Categories.AddCategoryMapping(267, NewznabStandardCategory.Other, "a.b.hitoshirezu");
             caps.Categories.AddCategoryMapping(268, NewznabStandardCategory.Other, "a.b.holiday");
@@ -1021,45 +1022,20 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NzbIndexRequestGenerator : IIndexerRequestGenerator
     {
-        public NzbIndexSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly NzbIndexSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
 
-        public NzbIndexRequestGenerator()
+        public NzbIndexRequestGenerator(NzbIndexSettings settings, IndexerCapabilities capabilities)
         {
-        }
-
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset)
-        {
-            var searchString = term;
-
-            var queryCollection = new NameValueCollection
-            {
-                { "key", Settings.ApiKey },
-                { "max", limit.ToString() },
-                { "q", searchString },
-                { "p", (offset / limit).ToString() }
-            };
-
-            var searchUrl = string.Format("{0}/api/v3/search/?{1}", Settings.BaseUrl.TrimEnd('/'), queryCollection.GetQueryString());
-
-            if (categories != null)
-            {
-                foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
-                {
-                    searchUrl += string.Format("&g[]={0}", cat);
-                }
-            }
-
-            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
-
-            yield return request;
+            _settings = settings;
+            _capabilities = capabilities;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -1068,7 +1044,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -1077,7 +1053,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}", searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -1086,7 +1062,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
         }
@@ -1095,9 +1071,34 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
 
             return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset)
+        {
+            var queryCollection = new List<KeyValuePair<string, string>>
+            {
+                { "key", _settings.ApiKey },
+                { "max", limit.ToString() },
+                { "q", term },
+                { "p", (offset / limit).ToString() }
+            };
+
+            if (categories != null)
+            {
+                foreach (var cat in _capabilities.Categories.MapTorznabCapsToTrackers(categories))
+                {
+                    queryCollection.Add("g[]", $"{cat}");
+                }
+            }
+
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/v3/search/?{queryCollection.GetQueryString()}";
+
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+
+            yield return request;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -1109,6 +1110,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly NzbIndexSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
+        private static readonly Regex ParseTitleRegex = new (@"\""(?<title>[^:\/]*?)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))?\""", RegexOptions.Compiled);
+
         public NzbIndexParser(NzbIndexSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
@@ -1117,6 +1120,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new IndexerException(indexerResponse, "Unexpected response status {0} code from API request", indexerResponse.HttpResponse.StatusCode);
+            }
+
+            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            {
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            }
+
             var releaseInfos = new List<ReleaseInfo>();
 
             // TODO Deserialize to TorrentSyndikatResponse Type
@@ -1153,8 +1166,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return releaseInfos.ToArray();
         }
-
-        private static readonly Regex ParseTitleRegex = new Regex(@"\""(?<title>[^:\/]*?)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))?\""");
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }

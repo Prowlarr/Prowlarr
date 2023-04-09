@@ -478,8 +478,7 @@ namespace NzbDrone.Common.Disk
 
                 return mounts.Where(drive => drive.RootDirectory.PathEquals(path) ||
                                              drive.RootDirectory.IsParentPath(path))
-                          .OrderByDescending(drive => drive.RootDirectory.Length)
-                          .FirstOrDefault();
+                    .MaxBy(drive => drive.RootDirectory.Length);
             }
             catch (Exception ex)
             {

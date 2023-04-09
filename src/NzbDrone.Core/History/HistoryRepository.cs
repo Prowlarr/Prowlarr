@@ -31,9 +31,7 @@ namespace NzbDrone.Core.History
 
         public History MostRecentForDownloadId(string downloadId)
         {
-            return FindByDownloadId(downloadId)
-                .OrderByDescending(h => h.Date)
-                .FirstOrDefault();
+            return FindByDownloadId(downloadId).MaxBy(h => h.Date);
         }
 
         public List<History> FindByDownloadId(string downloadId)
@@ -75,9 +73,7 @@ namespace NzbDrone.Core.History
 
         public History MostRecentForIndexer(int indexerId)
         {
-            return Query(x => x.IndexerId == indexerId)
-                .OrderByDescending(h => h.Date)
-                .FirstOrDefault();
+            return Query(x => x.IndexerId == indexerId).MaxBy(h => h.Date);
         }
 
         public List<History> Between(DateTime start, DateTime end)

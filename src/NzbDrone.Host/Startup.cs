@@ -225,6 +225,8 @@ namespace NzbDrone.Host
             appFolderFactory.Register();
             pidFileProvider.Write();
 
+            configFileProvider.EnsureDefaultConfigFile();
+
             reconfigureLogging.Reconfigure();
 
             EnsureSingleInstance(false, startupContext, singleInstancePolicy);

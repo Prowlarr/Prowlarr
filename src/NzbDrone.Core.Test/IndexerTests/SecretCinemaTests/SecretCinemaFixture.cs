@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
             Subject.Definition = new IndexerDefinition()
             {
                 Name = "SecretCinema",
-                Settings = new GazelleSettings() { Username = "somekey", Password = "somekey" }
+                Settings = new GazelleSettings { Username = "somekey", Password = "somekey" }
             };
         }
 
@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
 
-            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new int[] { 2000 } })).Releases;
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(3);
             releases.First().Should().BeOfType<GazelleInfo>();
@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
             torrentInfo.InfoUrl.Should().Be("https://secret-cinema.pw/torrents.php?id=2497&torrentid=45068");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-12-15 19:37:29"));
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-12-15 17:37:29"));
             torrentInfo.Size.Should().Be(57473058680);
             torrentInfo.InfoHash.Should().Be(null);
             torrentInfo.MagnetUrl.Should().Be(null);

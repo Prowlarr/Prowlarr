@@ -72,7 +72,7 @@ public class SecretCinemaParser : IParseIndexerResponse
 
     public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
     {
-        var torrentInfos = new List<ReleaseInfo>();
+        var releaseInfos = new List<ReleaseInfo>();
 
         if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
         {
@@ -95,7 +95,7 @@ public class SecretCinemaParser : IParseIndexerResponse
             jsonResponse.Resource.Status.IsNullOrWhiteSpace() ||
             jsonResponse.Resource.Response == null)
         {
-            return torrentInfos;
+            return releaseInfos.ToArray();
         }
 
         foreach (var result in jsonResponse.Resource.Response.Results)
@@ -109,10 +109,11 @@ public class SecretCinemaParser : IParseIndexerResponse
                     // in SC movies, artist=director and GroupName=title
                     var artist = WebUtility.HtmlDecode(result.Artist);
                     var title = WebUtility.HtmlDecode(result.GroupName);
+                    var time = DateTime.SpecifyKind(torrent.Time, DateTimeKind.Unspecified);
 
                     var release = new GazelleInfo
                     {
-                        Guid = string.Format("SecretCinema-{0}", id),
+                        Guid = $"SecretCinema-{id}",
                         Title = title,
                         Container = torrent.Encoding,
                         Files = torrent.FileCount,
@@ -123,7 +124,7 @@ public class SecretCinemaParser : IParseIndexerResponse
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         Seeders = int.Parse(torrent.Seeders),
                         Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
-                        PublishDate = torrent.Time.ToUniversalTime(),
+                        PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(2)).UtcDateTime,
                         Scene = torrent.Scene,
                         DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
                         UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
@@ -162,7 +163,7 @@ public class SecretCinemaParser : IParseIndexerResponse
                         release.Title += " [Cue]";
                     }
 
-                    torrentInfos.Add(release);
+                    releaseInfos.Add(release);
                 }
             }
             else
@@ -172,7 +173,7 @@ public class SecretCinemaParser : IParseIndexerResponse
 
                 var release = new GazelleInfo
                 {
-                    Guid = string.Format("SecretCinema-{0}", id),
+                    Guid = $"SecretCinema-{id}",
                     Title = groupName,
                     Size = long.Parse(result.Size),
                     DownloadUrl = GetDownloadUrl(id),
@@ -196,13 +197,13 @@ public class SecretCinemaParser : IParseIndexerResponse
                     release.Categories = _capabilities.Categories.MapTrackerCatDescToNewznab(category);
                 }
 
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
         }
 
         // order by date
         return
-            torrentInfos
+            releaseInfos
                 .OrderByDescending(o => o.PublishDate)
                 .ToArray();
     }

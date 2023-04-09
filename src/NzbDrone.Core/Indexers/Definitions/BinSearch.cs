@@ -29,6 +29,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override bool SupportsRss => false;
         public override bool SupportsPagination => true;
+        public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public BinSearch(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
@@ -86,7 +87,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "adv_sort", "date" },
                 { "q", term },
                 { "m", searchCriteria.Offset.ToString() },
-                { "max", searchCriteria.Limit?.ToString() ?? "100" }
+                { "max", searchCriteria.Limit.ToString() }
             };
 
             var searchUrl = string.Format("{0}/?{1}", Settings.BaseUrl.TrimEnd('/'), qc.GetQueryString());

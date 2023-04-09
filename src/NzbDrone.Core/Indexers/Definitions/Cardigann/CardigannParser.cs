@@ -407,12 +407,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 }
             }
 
-            /*
-            if (query.Limit > 0)
-            {
-                releases = releases.Take(query.Limit).ToList();
-            }*/
-
             releases.ForEach(c =>
             {
                 // generate magnet link from info hash (not allowed for private sites)

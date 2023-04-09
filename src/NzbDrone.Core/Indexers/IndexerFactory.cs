@@ -123,6 +123,16 @@ namespace NzbDrone.Core.Indexers
             definition.Capabilities.ParseCardigannSearchModes(defFile.Caps.Modes);
             definition.Capabilities.SupportsRawSearch = defFile.Caps.Allowrawsearch;
             MapCardigannCategories(definition, defFile);
+
+            if (defFile.Caps?.LimitsDefault is > 0)
+            {
+                definition.Capabilities.LimitsDefault = defFile.Caps.LimitsDefault;
+            }
+
+            if (defFile.Caps?.LimitsMax is > 0)
+            {
+                definition.Capabilities.LimitsMax = defFile.Caps.LimitsMax;
+            }
         }
 
         private void MapCardigannCategories(IndexerDefinition def, CardigannDefinition defFile)

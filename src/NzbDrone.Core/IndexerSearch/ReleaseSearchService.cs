@@ -142,8 +142,8 @@ namespace NzbDrone.Core.IndexerSearch
 
             spec.SearchTerm = query.q?.Trim();
             spec.SearchType = query.t;
-            spec.Limit = query.limit;
-            spec.Offset = query.offset;
+            spec.Limit = query.limit ?? 100;
+            spec.Offset = query.offset ?? 0;
             spec.MinAge = query.minage;
             spec.MaxAge = query.maxage;
             spec.MinSize = query.minsize;

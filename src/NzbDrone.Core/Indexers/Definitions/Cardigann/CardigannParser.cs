@@ -101,6 +101,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     throw new IndexerException(indexerResponse, "Error Parsing Rows Selector");
                 }
 
+                if (rowsArray.Count == 0)
+                {
+                    return releases;
+                }
+
                 foreach (var row in rowsArray)
                 {
                     var selObj = search.Rows.Attribute != null ? row.SelectToken(search.Rows.Attribute).Value<JToken>() : row;

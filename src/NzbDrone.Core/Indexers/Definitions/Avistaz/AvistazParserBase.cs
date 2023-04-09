@@ -13,18 +13,18 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
     public class AvistazParserBase : IParseIndexerResponse
     {
-        protected virtual string TimezoneOffset => "-05:00"; // Avistaz does not specify a timezone & returns server time
+        protected virtual string TimezoneOffset => "-04:00"; // Avistaz does not specify a timezone & returns server time
         private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<TorrentInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
 
             if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                return torrentInfos.ToArray();
+                return releaseInfos.ToArray();
             }
 
             if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.TooManyRequests)
@@ -80,11 +80,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     release.TvdbId = row.MovieTvinfo.Tvdb.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.MovieTvinfo.Tvdb, out var tvdbResult) ? tvdbResult : 0;
                 }
 
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
 
             // order by date
-            return torrentInfos.OrderByDescending(o => o.PublishDate).ToArray();
+            return releaseInfos
+                .OrderByDescending(o => o.PublishDate)
+                .ToArray();
         }
 
         // hook to adjust category parsing
@@ -115,7 +117,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     cats.Add(NewznabStandardCategory.Audio);
                     break;
                 default:
-                    throw new Exception(string.Format("Error parsing Avistaz category type {0}", row.Type));
+                    throw new Exception($"Error parsing Avistaz category type {row.Type}");
             }
 
             return cats;

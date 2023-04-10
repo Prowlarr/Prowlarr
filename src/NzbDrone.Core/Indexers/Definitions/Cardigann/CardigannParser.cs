@@ -81,11 +81,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                 if (search.Rows.Count != null)
                 {
-                    var countVal = HandleJsonSelector(search.Rows.Count, parsedJson, variables);
-
-                    if (int.TryParse(countVal, out var count) && count < 1)
+                    try
                     {
-                        return releases;
+                        var countVal = HandleJsonSelector(search.Rows.Count, parsedJson, variables);
+
+                        if (int.TryParse(countVal, out var count) && count < 1)
+                        {
+                            return releases;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Trace(ex, "Failed to parse JSON rows count.");
                     }
                 }
 

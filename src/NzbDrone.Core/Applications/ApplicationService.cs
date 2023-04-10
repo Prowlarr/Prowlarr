@@ -210,11 +210,11 @@ namespace NzbDrone.Core.Applications
 
             if (intersectingTags.Any())
             {
-                _logger.Debug("Application {0} and indexer {1} [{2}] have {3} intersecting tags.", app.Name, indexer.Name, indexer.Id, intersectingTags.Length);
+                _logger.Debug("Application {0} and indexer {1} [{2}] have {3} intersecting (matching) tags.", app.Name, indexer.Name, indexer.Id, intersectingTags.Length);
                 return true;
             }
 
-            _logger.Info("Application {0} does not have any intersecting tags with {1} [{2}]. Indexer will not be handled.", app.Name, indexer.Name, indexer.Id);
+            _logger.Info("Application {0} does not have any intersecting (matching) tags with {1} [{2}]. Indexer will neither be synced to nor removed from the application.", app.Name, indexer.Name, indexer.Id);
             return false;
         }
 

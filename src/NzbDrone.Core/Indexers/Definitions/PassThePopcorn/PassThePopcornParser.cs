@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
             }
 
-            var jsonResponse = JsonConvert.DeserializeObject<PassThePopcornResponse>(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<PassThePopcornResponse>(indexerResponse.Content);
             if (jsonResponse.TotalResults == "0" ||
                 jsonResponse.TotalResults.IsNullOrWhiteSpace() ||
                 jsonResponse.Movies == null)
@@ -94,13 +94,14 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                     // Only add approved torrents
                     try
                     {
-                        torrentInfos.Add(new TorrentInfo()
+                        torrentInfos.Add(new TorrentInfo
                         {
                             Guid = string.Format("PassThePopcorn-{0}", id),
                             Title = title,
                             Size = long.Parse(torrent.Size),
                             DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
                             InfoUrl = GetInfoUrl(result.GroupId, id),
+                            Grabs = int.Parse(torrent.Snatched),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.UploadTime.ToUniversalTime(),
@@ -128,8 +129,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 }
             }
 
-            return
-                torrentInfos;
+            return torrentInfos;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Cache;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
@@ -10,20 +8,19 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
     public class PassThePopcorn : TorrentIndexerBase<PassThePopcornSettings>
     {
         public override string Name => "PassThePopcorn";
-        public override string[] IndexerUrls => new string[] { "https://passthepopcorn.me" };
+        public override string[] IndexerUrls => new[] { "https://passthepopcorn.me" };
         public override string Description => "PassThePopcorn (PTP) is a Private site for MOVIES / TV";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+        public override bool SupportsPagination => true;
+        public override int PageSize => 50;
 
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public override int PageSize => 50;
-
         public PassThePopcorn(IIndexerHttpClient httpClient,
             IEventAggregator eventAggregator,
-            ICacheManager cacheManager,
             IIndexerStatusService indexerStatusService,
             IConfigService configService,
             Logger logger)
@@ -33,7 +30,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new PassThePopcornRequestGenerator()
+            return new PassThePopcornRequestGenerator
             {
                 Settings = Settings,
                 HttpClient = _httpClient,

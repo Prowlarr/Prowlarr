@@ -728,16 +728,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 pairs = new Dictionary<string, string>();
             }
 
-            foreach (var input in request.Inputs)
+            if (request.Inputs != null)
             {
-                var value = ApplyGoTemplateText(input.Value, variables);
-                if (method == HttpMethod.Get)
+                foreach (var input in request.Inputs)
                 {
-                    queryCollection.Add(input.Key, value);
-                }
-                else if (method == HttpMethod.Post)
-                {
-                    pairs.Add(input.Key, value);
+                    var value = ApplyGoTemplateText(input.Value, variables);
+                    if (method == HttpMethod.Get)
+                    {
+                        queryCollection.Add(input.Key, value);
+                    }
+                    else if (method == HttpMethod.Post)
+                    {
+                        pairs.Add(input.Key, value);
+                    }
                 }
             }
 

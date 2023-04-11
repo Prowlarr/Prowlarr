@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
@@ -34,13 +35,15 @@ namespace NzbDrone.Api.V1.Indexers
         private IIndexerStatusService _indexerStatusService;
         private IDownloadMappingService _downloadMappingService { get; set; }
         private IDownloadService _downloadService { get; set; }
+        private readonly Logger _logger;
 
         public NewznabController(IndexerFactory indexerFactory,
             ISearchForNzb nzbSearchService,
             IIndexerLimitService indexerLimitService,
             IIndexerStatusService indexerStatusService,
             IDownloadMappingService downloadMappingService,
-            IDownloadService downloadService)
+            IDownloadService downloadService,
+            Logger logger)
         {
             _indexerFactory = indexerFactory;
             _nzbSearchService = nzbSearchService;
@@ -48,6 +51,7 @@ namespace NzbDrone.Api.V1.Indexers
             _indexerStatusService = indexerStatusService;
             _downloadMappingService = downloadMappingService;
             _downloadService = downloadService;
+            _logger = logger;
         }
 
         [HttpGet("/api/v1/indexer/{id:int}/newznab")]
@@ -82,21 +86,21 @@ namespace NzbDrone.Api.V1.Indexers
                         var caps = new IndexerCapabilities
                         {
                             TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                            {
+                                TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                            },
                             MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   },
+                            {
+                                MovieSearchParam.Q
+                            },
                             MusicSearchParams = new List<MusicSearchParam>
-                                   {
-                                       MusicSearchParam.Q
-                                   },
+                            {
+                                MusicSearchParam.Q
+                            },
                             BookSearchParams = new List<BookSearchParam>
-                                   {
-                                       BookSearchParam.Q
-                                   }
+                            {
+                                BookSearchParam.Q
+                            }
                         };
 
                         foreach (var cat in NewznabStandardCategory.AllCats)
@@ -263,6 +267,8 @@ namespace NzbDrone.Api.V1.Indexers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex);
+
                 return CreateResponse(CreateErrorXML(500, ex.Message), statusCode: StatusCodes.Status500InternalServerError);
             }
 

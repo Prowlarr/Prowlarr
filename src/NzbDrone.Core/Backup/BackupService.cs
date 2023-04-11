@@ -69,7 +69,9 @@ namespace NzbDrone.Core.Backup
             _diskProvider.EnsureFolder(_backupTempFolder);
             _diskProvider.EnsureFolder(GetBackupFolder(backupType));
 
-            var backupFilename = string.Format("prowlarr_backup_v{0}_{1:yyyy.MM.dd_HH.mm.ss}.zip", BuildInfo.Version, DateTime.Now);
+            var dateNow = DateTime.Now;
+
+            var backupFilename = $"prowlarr_backup_v{BuildInfo.Version}_{dateNow:yyyy.MM.dd_HH.mm.ss}.zip";
             var backupPath = Path.Combine(GetBackupFolder(backupType), backupFilename);
 
             Cleanup();
@@ -81,7 +83,7 @@ namespace NzbDrone.Core.Backup
 
             BackupConfigFile();
             BackupDatabase();
-            CreateVersionInfo();
+            CreateVersionInfo(dateNow);
 
             _logger.ProgressDebug("Creating backup zip");
 
@@ -208,11 +210,12 @@ namespace NzbDrone.Core.Backup
             _diskTransferService.TransferFile(configFile, tempConfigFile, TransferMode.Copy);
         }
 
-        private void CreateVersionInfo()
+        private void CreateVersionInfo(DateTime dateNow)
         {
-            var builder = new StringBuilder();
+            var tempFile = Path.Combine(_backupTempFolder, "INFO");
+            var contents = $"v{BuildInfo.Version}\n{dateNow:yyyy-MM-dd HH:mm:ss}";
 
-            builder.AppendLine(BuildInfo.Version.ToString());
+            _diskProvider.WriteAllText(tempFile, contents);
         }
 
         private void CleanupOldBackups(BackupType backupType)

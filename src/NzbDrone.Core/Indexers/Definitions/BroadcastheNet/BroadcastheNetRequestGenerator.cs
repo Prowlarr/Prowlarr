@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -89,10 +90,10 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
                 pageableRequests.Add(GetPagedRequests(episodeParameters, btnResults, btnOffset));
             }
-            else if (searchCriteria.Season > 0 && Regex.IsMatch(searchCriteria.EpisodeSearchString, "(\\d{4}\\.\\d{2}\\.\\d{2})"))
+            else if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
                 // Daily Episode
-                parameters.Name = searchCriteria.EpisodeSearchString;
+                parameters.Name = string.Format("{0:yyyy}.{0:MM}.{0:dd}", showDate);
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }

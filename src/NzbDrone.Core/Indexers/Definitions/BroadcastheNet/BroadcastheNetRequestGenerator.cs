@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -63,44 +62,40 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             if (searchCriteria.TvdbId > 0)
             {
-                parameters.Tvdb = string.Format("{0}", searchCriteria.TvdbId);
+                parameters.Tvdb = $"{searchCriteria.TvdbId}";
             }
 
             if (searchCriteria.RId > 0)
             {
-                parameters.Tvrage = string.Format("{0}", searchCriteria.RId);
+                parameters.Tvrage = $"{searchCriteria.RId}";
             }
 
             // If only the season/episode is searched for then change format to match expected format
             if (searchCriteria.Season > 0 && searchCriteria.Episode.IsNullOrWhiteSpace())
             {
-                // Season Only
-                // Search by Season and by Episode to cover all use cases
-                // This mirrors Sonarr's logic
-                var episodeParameters = parameters.Clone();
-
                 // Search Season
                 parameters.Category = "Season";
-                parameters.Name = string.Format("Season {0}%", searchCriteria.Season);
+                parameters.Name = $"Season {searchCriteria.Season}%";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
 
-                // Search Episode
-                episodeParameters.Category = "Episode";
-                episodeParameters.Name = string.Format("S{0:00}E%", searchCriteria.Season);
+                parameters = parameters.Clone();
 
-                pageableRequests.Add(GetPagedRequests(episodeParameters, btnResults, btnOffset));
+                // Search Episode
+                parameters.Category = "Episode";
+                parameters.Name = $"S{searchCriteria.Season:00}E%";
+                pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
             else if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
                 // Daily Episode
-                parameters.Name = string.Format("{0:yyyy}.{0:MM}.{0:dd}", showDate);
+                parameters.Name = showDate.ToString("yyyy.MM.dd");
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
-            else if (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
+            else if (searchCriteria.Season > 0 && int.TryParse(searchCriteria.Episode, out var episode) && episode > 0)
             {
                 // Standard (S/E) Episode
-                parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
+                parameters.Name = $"S{searchCriteria.Season:00}E{episode:00}";
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }

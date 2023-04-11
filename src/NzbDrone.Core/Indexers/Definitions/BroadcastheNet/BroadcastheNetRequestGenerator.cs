@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var parameters = new BroadcastheNetTorrentQuery();
 
-            var searchString = searchCriteria.SearchTerm != null ? searchCriteria.SearchTerm : "";
+            var searchString = searchCriteria.SearchTerm ?? "";
 
             var btnResults = searchCriteria.Limit.GetValueOrDefault();
             if (btnResults == 0)
@@ -74,26 +74,41 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             if (searchCriteria.Season > 0 && searchCriteria.Episode.IsNullOrWhiteSpace())
             {
                 // Season Only
-                parameters.Name = string.Format("Season {0}%", searchCriteria.Season.Value);
+                // Search by Season and by Episode to cover all use cases
+                // This mirrors Sonarr's logic
+                var episodeParameters = parameters.Clone();
+
+                // Search Season
                 parameters.Category = "Season";
+                parameters.Name = string.Format("Season {0}%", searchCriteria.Season);
+                pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
+
+                // Search Episode
+                episodeParameters.Category = "Episode";
+                episodeParameters.Name = string.Format("S{0:00}E%", searchCriteria.Season);
+
+                pageableRequests.Add(GetPagedRequests(episodeParameters, btnResults, btnOffset));
             }
             else if (searchCriteria.Season > 0 && Regex.IsMatch(searchCriteria.EpisodeSearchString, "(\\d{4}\\.\\d{2}\\.\\d{2})"))
             {
                 // Daily Episode
                 parameters.Name = searchCriteria.EpisodeSearchString;
                 parameters.Category = "Episode";
+                pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
-            else if    (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
+            else if (searchCriteria.Season > 0 && int.Parse(searchCriteria.Episode) > 0)
             {
                 // Standard (S/E) Episode
                 parameters.Name = string.Format("S{0:00}E{1:00}", searchCriteria.Season.Value, int.Parse(searchCriteria.Episode));
                 parameters.Category = "Episode";
+                pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
-
-            // Neither a season only search nor daily nor standard, fall back to query
-            parameters.Search = searchString.Replace(" ", "%");
-
-            pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
+            else
+            {
+                // Neither a season only search nor daily nor standard, fall back to query
+                parameters.Search = searchString.Replace(" ", "%");
+                pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
+            }
 
             return pageableRequests;
         }
@@ -109,7 +124,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var parameters = new BroadcastheNetTorrentQuery();
 
-            var searchString = searchCriteria.SearchTerm != null ? searchCriteria.SearchTerm : "";
+            var searchString = searchCriteria.SearchTerm ?? "";
 
             var btnResults = searchCriteria.Limit.GetValueOrDefault();
             if (btnResults == 0)

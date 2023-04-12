@@ -376,5 +376,9 @@
     "Started": "Iniciado",
     "Remove": "Eliminar",
     "Replace": "Reemplazar",
-    "TheLatestVersionIsAlreadyInstalled": "La última versión de Prowlarr ya está instalada"
+    "TheLatestVersionIsAlreadyInstalled": "La última versión de Prowlarr ya está instalada",
+    "Apps": "Aplicaciones",
+    "AddApplication": "Añadir aplicación",
+    "AddCustomFilter": "Añadir filtro personalizado",
+    "Description": "Descripción"
 }

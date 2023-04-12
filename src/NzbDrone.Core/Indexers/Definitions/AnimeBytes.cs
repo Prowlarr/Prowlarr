@@ -340,44 +340,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         if (_settings.EnableSonarrCompatibility)
                         {
-                            var simpleSeasonRegEx = new Regex(@"Season (\d+)", RegexOptions.Compiled);
-                            var simpleSeasonRegExMatch = simpleSeasonRegEx.Match(releaseInfo);
-                            if (simpleSeasonRegExMatch.Success)
+                            var simpleSeasonRegex = new Regex(@"Season (\d+)", RegexOptions.Compiled);
+                            var simpleSeasonRegexMatch = simpleSeasonRegex.Match(releaseInfo);
+                            if (simpleSeasonRegexMatch.Success)
                             {
-                                season = ParseUtil.CoerceInt(simpleSeasonRegExMatch.Groups[1].Value);
+                                season = ParseUtil.CoerceInt(simpleSeasonRegexMatch.Groups[1].Value);
                             }
                         }
 
-                        var episodeRegEx = new Regex(@"Episode (\d+)", RegexOptions.Compiled);
-                        var episodeRegExMatch = episodeRegEx.Match(releaseInfo);
-                        if (episodeRegExMatch.Success)
+                        var episodeRegex = new Regex(@"Episode (\d+)", RegexOptions.Compiled);
+                        var episodeRegexMatch = episodeRegex.Match(releaseInfo);
+                        if (episodeRegexMatch.Success)
                         {
-                            episode = ParseUtil.CoerceInt(episodeRegExMatch.Groups[1].Value);
+                            episode = ParseUtil.CoerceInt(episodeRegexMatch.Groups[1].Value);
                         }
                     }
 
-                    if (_settings.EnableSonarrCompatibility)
+                    if (_settings.EnableSonarrCompatibility && season == null)
                     {
-                        var advancedSeasonRegEx = new Regex(@"(\d+)(st|nd|rd|th) Season", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                        var advancedSeasonRegExMatch = advancedSeasonRegEx.Match(mainTitle);
-                        if (advancedSeasonRegExMatch.Success)
-                        {
-                            season = ParseUtil.CoerceInt(advancedSeasonRegExMatch.Groups[1].Value);
-                        }
-
-                        var seasonCharactersRegEx = new Regex(@"(I{2,})$", RegexOptions.Compiled);
-                        var seasonCharactersRegExMatch = seasonCharactersRegEx.Match(mainTitle);
-                        if (seasonCharactersRegExMatch.Success)
-                        {
-                            season = seasonCharactersRegExMatch.Groups[1].Value.Length;
-                        }
-
-                        var seasonNumberRegEx = new Regex(@"([2-9])$", RegexOptions.Compiled);
-                        var seasonNumberRegExMatch = seasonNumberRegEx.Match(mainTitle);
-                        if (seasonNumberRegExMatch.Success)
-                        {
-                            season = ParseUtil.CoerceInt(seasonNumberRegExMatch.Groups[1].Value);
-                        }
+                        season = ParseSeasonFromTitles(synonyms);
                     }
 
                     if (episode is > 0)
@@ -549,6 +530,36 @@ namespace NzbDrone.Core.Indexers.Definitions
             return releaseInfos
                 .OrderByDescending(o => o.PublishDate)
                 .ToArray();
+        }
+
+        private static int? ParseSeasonFromTitles(IReadOnlyCollection<string> titles)
+        {
+            var advancedSeasonRegex = new Regex(@"(\d+)(st|nd|rd|th) Season", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var seasonCharactersRegex = new Regex(@"(I{2,})$", RegexOptions.Compiled);
+            var seasonNumberRegex = new Regex(@"([2-9])$", RegexOptions.Compiled);
+
+            foreach (var title in titles)
+            {
+                var advancedSeasonRegexMatch = advancedSeasonRegex.Match(title);
+                if (advancedSeasonRegexMatch.Success)
+                {
+                    return ParseUtil.CoerceInt(advancedSeasonRegexMatch.Groups[1].Value);
+                }
+
+                var seasonCharactersRegexMatch = seasonCharactersRegex.Match(title);
+                if (seasonCharactersRegexMatch.Success)
+                {
+                    return seasonCharactersRegexMatch.Groups[1].Value.Length;
+                }
+
+                var seasonNumberRegexMatch = seasonNumberRegex.Match(title);
+                if (seasonNumberRegexMatch.Success)
+                {
+                    return ParseUtil.CoerceInt(seasonNumberRegexMatch.Groups[1].Value);
+                }
+            }
+
+            return null;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

@@ -516,7 +516,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     foreach (var title in synonyms)
                     {
                         var releaseTitle = groupName is "Movie" or "Live Action Movie" ?
-                            $"{title} {year} {releaseGroup}{infoString}" :
+                            $"{releaseGroup}{title} {year} {infoString}" :
                             $"{releaseGroup}{title} {releaseInfo} {infoString}";
 
                         var guid = new Uri(details + "?nh=" + HashUtil.CalculateMd5(title));

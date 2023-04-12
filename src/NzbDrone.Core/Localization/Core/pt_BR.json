@@ -384,7 +384,7 @@
     "IndexerSettingsSummary": "Defina várias configurações globais do Indexador, incluindo Proxies.",
     "IndexerProxyStatusCheckAllClientMessage": "Todos os proxies estão indisponíveis devido a falhas",
     "IndexerProxyStatusCheckSingleClientMessage": "Proxies indisponíveis devido a falhas: {0}",
-    "IndexerTagsHelpText": "Usar etiquetas para especificar proxies do indexador, com quais aplicativos o indexador é sincronizado ou apenas para organizar seus indexadores.",
+    "IndexerTagsHelpText": "Usar etiquetas para especificar os proxies do indexador ou com quais aplicativos o indexador está sincronizado. Aplicativos sem 1 ou mais etiquetas de indexador correspondentes não serão sincronizados.",
     "Notifications": "Notificações",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Não foi possível adicionar um novo proxy indexador, tente novamente.",
     "UnableToLoadIndexerProxies": "Não foi possível carregar proxies do indexador",

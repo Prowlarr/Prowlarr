@@ -139,7 +139,7 @@
     "Automatic": "Automatisch",
     "BackupIntervalHelpText": "Intervall zum sichern der Datenbank und Einstellungen",
     "BackupRetentionHelpText": "Automatische Backups, die älter als die Aufbewahrungsfrist sind, werden automatisch gelöscht",
-    "Backups": "Backups",
+    "Backups": "Sicherungen",
     "BindAddress": "Adresse binden",
     "BindAddressHelpText": "Gültige IP Adresse oder \"*\" für alle Netzwerke",
     "Branch": "Git-Branch",

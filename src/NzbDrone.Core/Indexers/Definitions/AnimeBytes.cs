@@ -228,6 +228,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             "Freeleech"
         };
 
+        private readonly HashSet<string> _commonReleaseGroupsProperties = new (StringComparer.OrdinalIgnoreCase)
+        {
+            "Softsubs",
+            "Hardsubs",
+            "RAW",
+            "Translated"
+        };
+
         public AnimeBytesParser(AnimeBytesSettings settings)
         {
             _settings = settings;
@@ -321,9 +329,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                         .Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
 
-                    properties.RemoveAll(p => _excludedProperties.Any(p.Contains));
+                    properties.RemoveAll(p => _excludedProperties.Any(p.ContainsIgnoreCase));
 
-                    if (_settings.ExcludeRaw && properties.ContainsIgnoreCase("RAW"))
+                    if (_settings.ExcludeRaw && properties.Any(p => p.StartsWithIgnoreCase("RAW")))
                     {
                         continue;
                     }
@@ -449,7 +457,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     // We don't actually have a release name >.> so try to create one
-                    var releaseGroup = properties.LastOrDefault(p => !p.ContainsIgnoreCase("Hentai"));
+                    var releaseGroup = properties.LastOrDefault(p => _commonReleaseGroupsProperties.Any(p.StartsWithIgnoreCase));
 
                     if (releaseGroup.IsNotNullOrWhiteSpace() && releaseGroup.Contains('(') && releaseGroup.Contains(')'))
                     {

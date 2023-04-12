@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AnimeBytesTests
 
             var secondTorrentInfo = releases.Skip(2).First() as TorrentInfo;
 
-            secondTorrentInfo.Title.Should().Be("Cowboy Bebop: Tengoku no Tobira 2001 [Polarwindz] [Blu-ray][MKV][h265 10-bit][1080p][Opus 5.1][Softsubs (Polarwindz)]");
+            secondTorrentInfo.Title.Should().Be("[Polarwindz] Cowboy Bebop: Tengoku no Tobira 2001 [Blu-ray][MKV][h265 10-bit][1080p][Opus 5.1][Softsubs (Polarwindz)]");
             secondTorrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             secondTorrentInfo.DownloadUrl.Should().Be("https://animebytes.tv/torrent/959397/download/somepass");
             secondTorrentInfo.InfoUrl.Should().Be("https://animebytes.tv/torrent/959397/group");

@@ -40,8 +40,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
                     InfoUrl = torrent.details_url,
                     PublishDate = torrent.publish_date.ToUniversalTime(),
                     Seeders = torrent.seeders,
-                    Peers = torrent.leechers + torrent.seeders,
-                    Freeleech = torrent.freeleech
+                    Peers = torrent.leechers + torrent.seeders
                 };
 
                 results.Add(torrentInfo);

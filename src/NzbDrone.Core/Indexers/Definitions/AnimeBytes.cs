@@ -742,7 +742,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string FileName { get; set; }
 
         [JsonProperty("size")]
-        public string FileSize { get; set; }
+        public long FileSize { get; set; }
     }
 
     public class AnimeBytesEditionData

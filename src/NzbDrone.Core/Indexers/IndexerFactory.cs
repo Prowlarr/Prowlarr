@@ -189,7 +189,7 @@ namespace NzbDrone.Core.Indexers
 
         public override IEnumerable<IndexerDefinition> GetPresetDefinitions(IndexerDefinition providerDefinition)
         {
-            return new List<IndexerDefinition>();
+            return Array.Empty<IndexerDefinition>();
         }
 
         public override void SetProviderCharacteristics(IIndexer provider, IndexerDefinition definition)

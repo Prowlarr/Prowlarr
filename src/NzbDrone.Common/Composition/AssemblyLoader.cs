@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using System.Text;
-using System.Threading.Tasks;
 using NzbDrone.Common.EnvironmentInfo;
 
 namespace NzbDrone.Common.Composition
@@ -19,16 +17,17 @@ namespace NzbDrone.Common.Composition
             RegisterSQLiteResolver();
         }
 
-        public static IEnumerable<Assembly> Load(IEnumerable<string> assemblies)
+        public static IList<Assembly> Load(IList<string> assemblyNames)
         {
-            var toLoad = assemblies.ToList();
+            var toLoad = assemblyNames.ToList();
             toLoad.Add("Prowlarr.Common");
             toLoad.Add(OsInfo.IsWindows ? "Prowlarr.Windows" : "Prowlarr.Mono");
 
             var startupPath = AppDomain.CurrentDomain.BaseDirectory;
 
-            return toLoad.Select(x =>
-                AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(startupPath, $"{x}.dll")));
+            return toLoad
+                .Select(x => AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.Combine(startupPath, $"{x}.dll")))
+                .ToList();
         }
 
         private static Assembly ContainerResolveEventHandler(object sender, ResolveEventArgs args)

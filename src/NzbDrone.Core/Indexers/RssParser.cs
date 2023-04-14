@@ -82,7 +82,12 @@ namespace NzbDrone.Core.Indexers
                 }
             }
 
-            return !PostProcess(indexerResponse, items, releases) ? new List<ReleaseInfo>() : releases;
+            if (!PostProcess(indexerResponse, items, releases))
+            {
+                return Array.Empty<ReleaseInfo>();
+            }
+
+            return releases;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using NLog;
@@ -64,7 +65,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation.Proxies
             catch (DownloadClientException e)
             {
                 _logger.Error(e);
-                return new List<DownloadStationTask>();
+                return Array.Empty<DownloadStationTask>();
             }
         }
 

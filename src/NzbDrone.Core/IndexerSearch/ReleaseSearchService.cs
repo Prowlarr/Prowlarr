@@ -148,7 +148,7 @@ namespace NzbDrone.Core.IndexerSearch
             return spec;
         }
 
-        private async Task<List<ReleaseInfo>> Dispatch(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, SearchCriteriaBase criteriaBase)
+        private async Task<IList<ReleaseInfo>> Dispatch(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, SearchCriteriaBase criteriaBase)
         {
             var indexers = _indexerFactory.Enabled();
 
@@ -168,7 +168,7 @@ namespace NzbDrone.Core.IndexerSearch
                 if (indexers.Count == 0)
                 {
                     _logger.Debug("All provided categories are unsupported by selected indexers: {0}", string.Join(", ", criteriaBase.Categories));
-                    return new List<ReleaseInfo>();
+                    return Array.Empty<ReleaseInfo>();
                 }
             }
 
@@ -189,7 +189,7 @@ namespace NzbDrone.Core.IndexerSearch
         {
             if (_indexerLimitService.AtQueryLimit((IndexerDefinition)indexer.Definition))
             {
-                return new List<ReleaseInfo>();
+                return Array.Empty<ReleaseInfo>();
             }
 
             try
@@ -224,7 +224,7 @@ namespace NzbDrone.Core.IndexerSearch
                 _logger.Error(e, "Error while searching for {0}", criteriaBase);
             }
 
-            return new List<ReleaseInfo>();
+            return Array.Empty<ReleaseInfo>();
         }
     }
 }

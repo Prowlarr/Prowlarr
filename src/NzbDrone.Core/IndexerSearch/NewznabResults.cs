@@ -22,7 +22,7 @@ namespace NzbDrone.Core.IndexerSearch
             @"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]",
             RegexOptions.Compiled);
 
-        public List<ReleaseInfo> Releases { get; set; }
+        public IList<ReleaseInfo> Releases { get; set; }
 
         private static string RemoveInvalidXMLChars(string text)
         {

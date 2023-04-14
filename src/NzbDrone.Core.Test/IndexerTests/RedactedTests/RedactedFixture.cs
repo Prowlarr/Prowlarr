@@ -13,25 +13,25 @@ using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Test.Framework;
 
-namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
+namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
 {
     [TestFixture]
-    public class OrpheusFixture : CoreTest<Orpheus>
+    public class RedactedFixture : CoreTest<Redacted>
     {
         [SetUp]
         public void Setup()
         {
             Subject.Definition = new IndexerDefinition
             {
-                Name = "Orpheus",
-                Settings = new OrpheusSettings { Apikey = "somekey" }
+                Name = "Redacted",
+                Settings = new RedactedSettings { Apikey = "somekey" }
             };
         }
 
         [Test]
-        public async Task should_parse_recent_feed_from_Orpheus()
+        public async Task should_parse_recent_feed_from_Redacted()
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/Orpheus/recentfeed.json");
+            var recentFeed = ReadAllText(@"Files/Indexers/Redacted/recentfeed.json");
 
             Mocker.GetMock<IIndexerHttpClient>()
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
@@ -39,24 +39,24 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
 
             var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 3000 } })).Releases;
 
-            releases.Should().HaveCount(65);
+            releases.Should().HaveCount(39);
             releases.First().Should().BeOfType<GazelleInfo>();
 
             var torrentInfo = releases.First() as GazelleInfo;
 
-            torrentInfo.Title.Should().Be("The Beatles - Abbey Road [1969] [Album] [2.0 Mix 2019] [MP3 V2 (VBR)] [BD]");
+            torrentInfo.Title.Should().Be("Red Hot Chili Peppers - Californication [1999] [Album] [US / Reissue 2020] [FLAC 24bit Lossless] [Vinyl]");
             torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
-            torrentInfo.DownloadUrl.Should().Be("https://orpheus.network/ajax.php?action=download&id=1902448");
-            torrentInfo.InfoUrl.Should().Be("https://orpheus.network/torrents.php?id=466&torrentid=1902448");
+            torrentInfo.DownloadUrl.Should().Be("https://redacted.ch/ajax.php?action=download&id=3892313&usetoken=0");
+            torrentInfo.InfoUrl.Should().Be("https://redacted.ch/torrents.php?id=16720&torrentid=3892313");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-08-08 2:07:39"));
-            torrentInfo.Size.Should().Be(68296866);
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-12-17 08:02:35"));
+            torrentInfo.Size.Should().Be(1247137236);
             torrentInfo.InfoHash.Should().Be(null);
             torrentInfo.MagnetUrl.Should().Be(null);
-            torrentInfo.Peers.Should().Be(0);
-            torrentInfo.Seeders.Should().Be(0);
-            torrentInfo.Files.Should().Be(18);
+            torrentInfo.Peers.Should().Be(4);
+            torrentInfo.Seeders.Should().Be(4);
+            torrentInfo.Files.Should().Be(23);
             torrentInfo.ImdbId.Should().Be(0);
             torrentInfo.TmdbId.Should().Be(0);
             torrentInfo.TvdbId.Should().Be(0);

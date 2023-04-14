@@ -1,6 +1,6 @@
 using System;
 
-namespace NzbDrone.Core.Indexers.TorrentPotato
+namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
 {
     public class TorrentPotatoResponse
     {

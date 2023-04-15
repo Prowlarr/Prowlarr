@@ -38,6 +38,9 @@ namespace NzbDrone.Core.Applications.Radarr
         [FieldDefinition(3, Label = "Sync Categories", Type = FieldType.Select, SelectOptions = typeof(NewznabCategoryFieldConverter), Advanced = true, HelpText = "Only Indexers that support these categories will be synced")]
         public IEnumerable<int> SyncCategories { get; set; }
 
+        [FieldDefinition(4, Label = "Sync Indexer Tags", Type = FieldType.Checkbox, HelpText = "Syncs the indexer tags within Prowlarr to Radarr.")]
+        public bool SyncIndexerTags { get; set; } = false;
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

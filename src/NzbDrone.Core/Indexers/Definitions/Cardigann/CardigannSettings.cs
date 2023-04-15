@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using FluentValidation;
-using FluentValidation.Results;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
-using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     public class CardigannSettings : NoAuthTorrentBaseSettings
     {

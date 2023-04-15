@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     // A Dictionary allowing the same key multiple times
     public class KeyValuePairList : List<KeyValuePair<string, SelectorBlock>>, IDictionary<string, SelectorBlock>

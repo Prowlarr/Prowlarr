@@ -1,5 +1,3 @@
-using NzbDrone.Core.Indexers.Cardigann;
-
 namespace NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions
 {
     public class CardigannConfigException : CardigannException

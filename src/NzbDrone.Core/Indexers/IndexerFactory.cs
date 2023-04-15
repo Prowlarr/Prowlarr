@@ -5,7 +5,7 @@ using System.Text;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Indexers.Newznab;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Indexers
 
             foreach (var definition in definitions)
             {
-                if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+                if (definition.Implementation == nameof(Cardigann))
                 {
                     try
                     {
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers
         {
             var definition = base.Get(id);
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            if (definition.Implementation == nameof(Cardigann))
             {
                 try
                 {
@@ -177,7 +177,7 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 var definitions = provider.DefaultDefinitions
-                    .Where(v => v.Name != null && v.Name != nameof(Cardigann.Cardigann) && v.Name != nameof(Newznab.Newznab) && v.Name != nameof(Torznab.Torznab));
+                    .Where(v => v.Name != null && v.Name != nameof(Cardigann) && v.Name != nameof(Newznab.Newznab) && v.Name != nameof(Torznab.Torznab));
 
                 foreach (IndexerDefinition definition in definitions)
                 {
@@ -203,7 +203,7 @@ namespace NzbDrone.Core.Indexers
             definition.SupportsPagination = provider.SupportsPagination;
 
             //We want to use the definition Caps and Privacy for Cardigann instead of the provider.
-            if (definition.Implementation != nameof(Cardigann.Cardigann))
+            if (definition.Implementation != nameof(Cardigann))
             {
                 definition.IndexerUrls = provider.IndexerUrls;
                 definition.LegacyUrls = provider.LegacyUrls;
@@ -276,13 +276,13 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name)
+            if (definition.Implementation is nameof(Newznab.Newznab) or nameof(Torznab.Torznab))
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            if (definition.Implementation == nameof(Cardigann))
             {
                 MapCardigannDefinition(definition);
             }
@@ -296,13 +296,13 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Enable && (definition.Implementation == typeof(Newznab.Newznab).Name || definition.Implementation == typeof(Torznab.Torznab).Name))
+            if (definition.Enable && definition.Implementation is nameof(Newznab.Newznab) or nameof(Torznab.Torznab))
             {
                 var settings = (NewznabSettings)definition.Settings;
                 settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
             }
 
-            if (definition.Implementation == typeof(Cardigann.Cardigann).Name)
+            if (definition.Implementation == nameof(Cardigann))
             {
                 MapCardigannDefinition(definition);
             }

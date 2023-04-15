@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Test.Framework;
 
 namespace NzbDrone.Core.Test.IndexerTests.CardigannTests

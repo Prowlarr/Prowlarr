@@ -12,13 +12,12 @@ using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     public class CardigannRequestGenerator : CardigannBase, IIndexerRequestGenerator
     {
@@ -590,7 +589,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return true;
         }
 
-        public async Task<Captcha> GetConfigurationForSetup(bool automaticlogin)
+        public async Task<Captcha> GetConfigurationForSetup(bool automaticLogin)
         {
             var login = _definition.Login;
 
@@ -643,7 +642,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 captcha = await GetCaptcha(login);
             }
 
-            if (captcha != null && automaticlogin)
+            if (captcha != null && automaticLogin)
             {
                 _logger.Error("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id);
             }
@@ -1105,7 +1104,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                 var rawStr = ApplyGoTemplateText(input.Value, variables, WebUtility.UrlEncode);
                                 foreach (var part in rawStr.Split('&'))
                                 {
-                                    var parts = part.Split(new char[] { '=' }, 2);
+                                    var parts = part.Split(new[] { '=' }, 2);
                                     var key = parts[0];
                                     if (key.Length == 0)
                                     {

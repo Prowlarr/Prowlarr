@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Profiles;
 using NzbDrone.Core.ThingiProvider;
 

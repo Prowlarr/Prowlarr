@@ -8,7 +8,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;

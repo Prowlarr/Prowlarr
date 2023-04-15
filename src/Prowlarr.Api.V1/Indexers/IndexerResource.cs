@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Parser;
 using Prowlarr.Http.ClientSchema;
@@ -112,7 +111,7 @@ namespace Prowlarr.Api.V1.Indexers
 
             var definition = base.ToModel(resource);
 
-            if (resource.Implementation == typeof(Cardigann).Name)
+            if (resource.Implementation == nameof(Cardigann))
             {
                 var standardFields = base.ToResource(definition).Fields.Select(x => x.Name).ToList();
 

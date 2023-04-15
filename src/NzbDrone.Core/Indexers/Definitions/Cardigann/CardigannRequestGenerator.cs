@@ -1142,7 +1142,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     }
                 }
 
-                _logger.Info($"Adding request: {searchUrl}");
+                _logger.Debug($"Adding request: {searchUrl}");
 
                 var requestBuilder = new HttpRequestBuilder(searchUrl)
                 {

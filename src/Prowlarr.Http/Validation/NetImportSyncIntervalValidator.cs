@@ -4,10 +4,7 @@ namespace Prowlarr.Http.Validation
 {
     public class ImportListSyncIntervalValidator : PropertyValidator
     {
-        public ImportListSyncIntervalValidator()
-            : base("Must be between 10 and 1440 or 0 to disable")
-        {
-        }
+        protected override string GetDefaultMessageTemplate() => "Must be between 10 and 1440 or 0 to disable";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
@@ -23,12 +20,7 @@ namespace Prowlarr.Http.Validation
                 return true;
             }
 
-            if (value >= 10 && value <= 1440)
-            {
-                return true;
-            }
-
-            return false;
+            return value is >= 10 and <= 1440;
         }
     }
 }

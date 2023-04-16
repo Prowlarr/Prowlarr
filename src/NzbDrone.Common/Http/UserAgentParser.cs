@@ -4,7 +4,7 @@ namespace NzbDrone.Common.Http
 {
     public static class UserAgentParser
     {
-        private static readonly Regex AppSourceRegex = new Regex(@"(?<agent>[a-z0-9]*)\/.*(?:\(.*\))?",
+        private static readonly Regex AppSourceRegex = new Regex(@"(?<agent>[a-z0-9-]*)\/?.*(?:\(.*\))?",
                                                         RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static string SimplifyUserAgent(string userAgent)

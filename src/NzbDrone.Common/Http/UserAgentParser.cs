@@ -21,7 +21,7 @@ namespace NzbDrone.Common.Http
         {
             var match = AppSourceRegex.Match(SimplifyUserAgent(userAgent) ?? string.Empty);
 
-            if (match.Groups["agent"].Success)
+            if (match.Groups["agent"].Success && match.Groups["agent"].Value.IsNotNullOrWhiteSpace())
             {
                 return match.Groups["agent"].Value;
             }

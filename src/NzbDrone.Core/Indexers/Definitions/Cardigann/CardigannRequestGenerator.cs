@@ -1165,19 +1165,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     requestBuilder.SetHeaders(headers ?? new Dictionary<string, string>());
                 }
 
+                if (searchPath.Followredirect)
+                {
+                    requestBuilder.AllowAutoRedirect = true;
+                }
+
                 var request = requestBuilder
                     .WithRateLimit(_rateLimit.TotalSeconds)
                     .Build();
 
-                var cardigannRequest = new CardigannRequest(request, variables, searchPath)
-                    {
-                        HttpRequest =
-                        {
-                            AllowAutoRedirect = searchPath.Followredirect
-                        }
-                    };
-
-                yield return cardigannRequest;
+                yield return new CardigannRequest(request, variables, searchPath);
             }
         }
     }

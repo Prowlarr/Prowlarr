@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 
                     return response.Resource["token"].ToString();
                 },
-                TimeSpan.FromMinutes(14.0));
+                TimeSpan.FromMinutes(14));
         }
     }
 }

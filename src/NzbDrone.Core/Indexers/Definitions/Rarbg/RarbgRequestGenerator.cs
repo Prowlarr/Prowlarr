@@ -46,11 +46,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                 {
                     requestBuilder.AddQueryParam("search_imdb", imdbId);
                 }
-                else if (tmdbId.HasValue && tmdbId > 0)
+                else if (tmdbId is > 0)
                 {
                     requestBuilder.AddQueryParam("search_themoviedb", tmdbId);
                 }
-                else if (tvdbId.HasValue && tvdbId > 0)
+                else if (tvdbId is > 0)
                 {
                     requestBuilder.AddQueryParam("search_tvdb", tvdbId);
                 }

@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                 case (int)HttpStatusCode.OK:
                     break;
                 default:
-                    throw new IndexerException(response, "Indexer API call returned an unexpected StatusCode [{0}]", responseCode);
+                    throw new IndexerException(response, "Indexer API call returned an unexpected status code [{0}]", responseCode);
             }
         }
 
@@ -112,9 +112,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
             return caps;
         }
 
-        protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
+        protected override async Task<IndexerResponse> FetchIndexerResponse(IndexerRequest request)
         {
-            var response = await FetchIndexerResponse(request);
+            var response = await base.FetchIndexerResponse(request);
 
             CheckResponseByStatusCode(response);
 
@@ -133,36 +133,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
                     qs.Set("token", newToken);
 
                     request.HttpRequest.Url = request.Url.SetQuery(qs.GetQueryString());
-                    response = await FetchIndexerResponse(request);
+
+                    return await FetchIndexerResponse(request);
                 }
-                else if (jsonResponse.Resource.error_code is 5)
+
+                if (jsonResponse.Resource.error_code is 5)
                 {
                     _logger.Debug("Rarbg temp rate limit hit, retrying request");
-                    response = await FetchIndexerResponse(request);
+
+                    return await FetchIndexerResponse(request);
                 }
             }
 
-            try
-            {
-                var releases = parser.ParseResponse(response).ToList();
-
-                if (releases.Count == 0)
-                {
-                    _logger.Trace(response.Content);
-                }
-
-                return new IndexerQueryResult
-                {
-                    Releases = releases,
-                    Response = response.HttpResponse
-                };
-            }
-            catch (Exception ex)
-            {
-                ex.WithData(response.HttpResponse, 128 * 1024);
-                _logger.Trace("Unexpected Response content ({0} bytes): {1}", response.HttpResponse.ResponseData.Length, response.HttpResponse.Content);
-                throw;
-            }
+            return response;
         }
 
         public override object RequestAction(string action, IDictionary<string, string> query)

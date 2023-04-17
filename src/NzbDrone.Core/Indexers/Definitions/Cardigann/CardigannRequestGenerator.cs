@@ -610,6 +610,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 Encoding = _encoding
             };
 
+            if (_definition.Followredirect)
+            {
+                requestBuilder.AllowAutoRedirect = true;
+            }
+
             Cookies = null;
             if (login.Cookies != null)
             {
@@ -627,11 +632,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             Cookies = landingResult.GetCookies();
 
-            // Some sites have a temporary redirect before the login page, we need to process it.
-            //if (_definition.Followredirect)
-            //{
-            //    await FollowIfRedirect(landingResult, loginUrl.AbsoluteUri, overrideCookies: landingResult.Cookies, accumulateCookies: true);
-            //}
             var htmlParser = new HtmlParser();
             landingResultDocument = htmlParser.ParseDocument(landingResult.Content);
 

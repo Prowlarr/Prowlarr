@@ -21,6 +21,7 @@ namespace NzbDrone.Common.Http
         public Dictionary<string, string> Segments { get; private set; }
         public HttpHeader Headers { get; private set; }
         public bool SuppressHttpError { get; set; }
+        public IEnumerable<HttpStatusCode> SuppressHttpErrorStatusCodes { get; set; }
         public bool LogHttpError { get; set; }
         public bool UseSimplifiedUserAgent { get; set; }
         public bool AllowAutoRedirect { get; set; }
@@ -108,6 +109,7 @@ namespace NzbDrone.Common.Http
             request.Method = Method;
             request.Encoding = Encoding;
             request.SuppressHttpError = SuppressHttpError;
+            request.SuppressHttpErrorStatusCodes = SuppressHttpErrorStatusCodes;
             request.LogHttpError = LogHttpError;
             request.UseSimplifiedUserAgent = UseSimplifiedUserAgent;
             request.AllowAutoRedirect = AllowAutoRedirect;

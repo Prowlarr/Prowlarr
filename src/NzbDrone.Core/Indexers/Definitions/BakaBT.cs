@@ -112,7 +112,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return !httpResponse.Content.Contains("<a href=\"/logout.php\">Logout</a>");
+            return !httpResponse.Content.Contains("<a href=\"logout.php\">Logout</a>")
+                && !httpResponse.Content.Contains("<a href=\"/logout.php\">Logout</a>");
         }
 
         private IndexerCapabilities SetCapabilities()

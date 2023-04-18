@@ -18,10 +18,12 @@ namespace NzbDrone.Core.Applications.Lidarr
 
     public class LidarrSettings : IApplicationSettings
     {
-        private static readonly LidarrSettingsValidator Validator = new LidarrSettingsValidator();
+        private static readonly LidarrSettingsValidator Validator = new ();
 
         public LidarrSettings()
         {
+            ProwlarrUrl = "http://localhost:9696";
+            BaseUrl = "http://localhost:8686";
             SyncCategories = new[] { 3000, 3010, 3030, 3040, 3050, 3060 };
         }
 

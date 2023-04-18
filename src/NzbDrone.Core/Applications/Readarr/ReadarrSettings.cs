@@ -19,10 +19,12 @@ namespace NzbDrone.Core.Applications.Readarr
 
     public class ReadarrSettings : IApplicationSettings
     {
-        private static readonly ReadarrSettingsValidator Validator = new ReadarrSettingsValidator();
+        private static readonly ReadarrSettingsValidator Validator = new ();
 
         public ReadarrSettings()
         {
+            ProwlarrUrl = "http://localhost:9696";
+            BaseUrl = "http://localhost:8787";
             SyncCategories = new[] { 3030, 7000, 7010, 7020, 7030, 7040, 7050, 7060 };
         }
 

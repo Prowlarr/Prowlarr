@@ -19,10 +19,12 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
     public class LazyLibrarianSettings : IApplicationSettings
     {
-        private static readonly LazyLibrarianSettingsValidator Validator = new LazyLibrarianSettingsValidator();
+        private static readonly LazyLibrarianSettingsValidator Validator = new ();
 
         public LazyLibrarianSettings()
         {
+            ProwlarrUrl = "http://localhost:9696";
+            BaseUrl = "http://localhost:5299";
             SyncCategories = new[]
             {
                 NewznabStandardCategory.AudioAudiobook.Id,

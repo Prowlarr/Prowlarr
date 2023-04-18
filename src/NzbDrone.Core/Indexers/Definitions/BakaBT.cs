@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var response = await ExecuteAuth(authLoginRequest);
 
-            if (response.Content != null && response.Content.Contains("<a href=\"logout.php\">Logout</a>"))
+            if (response.Content != null && !CheckIfLoginNeeded(response))
             {
                 UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 
@@ -112,7 +112,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return !httpResponse.Content.Contains("<a href=\"logout.php\">Logout</a>");
+            return !httpResponse.Content.Contains("logout.php");
         }
 
         private IndexerCapabilities SetCapabilities()

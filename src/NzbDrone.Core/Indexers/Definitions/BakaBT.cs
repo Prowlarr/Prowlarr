@@ -98,7 +98,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var response = await ExecuteAuth(authLoginRequest);
 
-            if (response.Content != null && response.Content.Contains("<a href=\"logout.php\">Logout</a>"))
+            if (response.Content != null && response.Content.Contains("<a href=\"/logout.php\">Logout</a>"))
             {
                 UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 

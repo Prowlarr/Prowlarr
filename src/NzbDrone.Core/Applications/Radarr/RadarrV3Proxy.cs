@@ -162,16 +162,16 @@ namespace NzbDrone.Core.Applications.Radarr
                         _logger.Error(ex, "App returned redirect and is invalid. Check App URL");
                         break;
                     case HttpStatusCode.NotFound:
-                        _logger.Error(ex, "Indexer not found");
+                        _logger.Error(ex, "Remote indexer not found");
                         break;
                     default:
-                        _logger.Error(ex, "Unexpected HTTP Response Code");
+                        _logger.Error(ex, "Unexpected response status code: {0}", ex.Response.StatusCode);
                         throw;
                 }
             }
             catch (JsonReaderException ex)
             {
-                _logger.Error(ex, "Unable to parse response from App");
+                _logger.Error(ex, "Unable to parse JSON response from application");
                 throw;
             }
             catch (Exception ex)

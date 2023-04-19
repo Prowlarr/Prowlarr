@@ -325,13 +325,19 @@ namespace NzbDrone.Core.Indexers.Definitions
                     // MST with additional 5 hours per GB
                     var minimumSeedTime = 259200 + (int)(size / (int)Math.Pow(1024, 3) * 18000);
 
-                    var properties = WebUtility.HtmlDecode(torrent.Property)
+                    var propertyList = WebUtility.HtmlDecode(torrent.Property)
                         .Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
 
-                    properties.RemoveAll(p => _excludedProperties.Any(p.ContainsIgnoreCase));
+                    propertyList.RemoveAll(p => _excludedProperties.Any(p.ContainsIgnoreCase));
+                    var properties = propertyList.ToHashSet();
 
-                    if (_settings.ExcludeRaw && properties.Any(p => p.StartsWithIgnoreCase("RAW")))
+                    if (propertyList.Any(p => p.StartsWithIgnoreCase("M2TS")))
+                    {
+                        properties.Add("BR-DISK");
+                    }
+
+                    if (_settings.ExcludeRaw && properties.Any(p => p.StartsWithIgnoreCase("RAW") || p.Contains("BR-DISK")))
                     {
                         continue;
                     }
@@ -457,9 +463,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     // We don't actually have a release name >.> so try to create one
-                    var releaseGroup = properties.LastOrDefault(p => _commonReleaseGroupsProperties.Any(p.StartsWithIgnoreCase));
+                    var releaseGroup = properties.LastOrDefault(p => _commonReleaseGroupsProperties.Any(p.StartsWithIgnoreCase) && p.Contains('(') && p.Contains(')'));
 
-                    if (releaseGroup.IsNotNullOrWhiteSpace() && releaseGroup.Contains('(') && releaseGroup.Contains(')'))
+                    if (releaseGroup.IsNotNullOrWhiteSpace())
                     {
                         var start = releaseGroup.IndexOf("(", StringComparison.Ordinal);
                         releaseGroup = "[" + releaseGroup.Substring(start + 1, releaseGroup.IndexOf(")", StringComparison.Ordinal) - 1 - start) + "] ";

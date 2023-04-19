@@ -23,6 +23,8 @@ namespace NzbDrone.Core.Applications.Radarr
 
     public class RadarrV3Proxy : IRadarrV3Proxy
     {
+        private const string AppApiRoute = "/api/v3";
+        private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
 
@@ -34,13 +36,13 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public RadarrStatus GetStatus(RadarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/system/status", HttpMethod.Get);
+            var request = BuildRequest(settings, $"{AppApiRoute}/system/status", HttpMethod.Get);
             return Execute<RadarrStatus>(request);
         }
 
         public List<RadarrIndexer> GetIndexers(RadarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.Get);
+            var request = BuildRequest(settings, $"{AppIndexerApiRoute}", HttpMethod.Get);
             return Execute<List<RadarrIndexer>>(request);
         }
 
@@ -48,7 +50,7 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             try
             {
-                var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.Get);
+                var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexerId}", HttpMethod.Get);
                 return Execute<RadarrIndexer>(request);
             }
             catch (HttpException ex)
@@ -64,37 +66,37 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public void RemoveIndexer(int indexerId, RadarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v3/indexer/{indexerId}", HttpMethod.Delete);
+            var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexerId}", HttpMethod.Delete);
             _httpClient.Execute(request);
         }
 
         public List<RadarrIndexer> GetIndexerSchema(RadarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/indexer/schema", HttpMethod.Get);
+            var request = BuildRequest(settings, $"{AppIndexerApiRoute}/schema", HttpMethod.Get);
             return Execute<List<RadarrIndexer>>(request);
         }
 
         public RadarrIndexer AddIndexer(RadarrIndexer indexer, RadarrSettings settings)
         {
-            var request = BuildRequest(settings, "/api/v3/indexer", HttpMethod.Post);
+            var request = BuildRequest(settings, $"{AppIndexerApiRoute}", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
 
-            return Execute<RadarrIndexer>(request);
+            return ExecuteIndexerRequest(request);
         }
 
         public RadarrIndexer UpdateIndexer(RadarrIndexer indexer, RadarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v3/indexer/{indexer.Id}", HttpMethod.Put);
+            var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexer.Id}", HttpMethod.Put);
 
             request.SetContent(indexer.ToJson());
 
-            return Execute<RadarrIndexer>(request);
+            return ExecuteIndexerRequest(request);
         }
 
         public ValidationFailure TestConnection(RadarrIndexer indexer, RadarrSettings settings)
         {
-            var request = BuildRequest(settings, $"/api/v3/indexer/test", HttpMethod.Post);
+            var request = BuildRequest(settings, $"{AppIndexerApiRoute}/test", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
 
@@ -129,6 +131,53 @@ namespace NzbDrone.Core.Applications.Radarr
             {
                 _logger.Error(ex, "Unable to send test message");
                 return new ValidationFailure("", "Unable to send test message");
+            }
+
+            return null;
+        }
+
+        private RadarrIndexer ExecuteIndexerRequest(HttpRequest request)
+        {
+            try
+            {
+                return Execute<RadarrIndexer>(request);
+            }
+            catch (HttpException ex)
+            {
+                switch (ex.Response.StatusCode)
+                {
+                    case HttpStatusCode.Unauthorized:
+                        _logger.Error(ex, "API Key is invalid");
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        if (ex.Response.Content.Contains("Query successful, but no results in the configured categories were returned from your indexer.", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            _logger.Error(ex, "No Results in configured categories. See FAQ Entry: Prowlarr will not sync X Indexer to App");
+                            break;
+                        }
+
+                        _logger.Error(ex, "Invalid Request");
+                        break;
+                    case HttpStatusCode.SeeOther:
+                        _logger.Error(ex, "App returned redirect and is invalid. Check App URL");
+                        break;
+                    case HttpStatusCode.NotFound:
+                        _logger.Error(ex, "Remote indexer not found");
+                        break;
+                    default:
+                        _logger.Error(ex, "Unexpected response status code: {0}", ex.Response.StatusCode);
+                        throw;
+                }
+            }
+            catch (JsonReaderException ex)
+            {
+                _logger.Error(ex, "Unable to parse JSON response from application");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Unable to add or update indexer");
+                throw;
             }
 
             return null;

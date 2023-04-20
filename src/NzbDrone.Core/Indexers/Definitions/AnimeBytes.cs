@@ -223,12 +223,9 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly AnimeBytesSettings _settings;
 
-        private readonly HashSet<string> _excludedProperties = new (StringComparer.OrdinalIgnoreCase)
-        {
-            "Freeleech"
-        };
-
-        private readonly HashSet<string> _commonReleaseGroupsProperties = new (StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> ExcludedProperties = new (StringComparer.OrdinalIgnoreCase) { "Freeleech" };
+        private static readonly HashSet<string> RemuxResolutions = new (StringComparer.OrdinalIgnoreCase) { "1080i", "1080p", "2160p", "4K" };
+        private static readonly HashSet<string> CommonReleaseGroupsProperties = new (StringComparer.OrdinalIgnoreCase)
         {
             "Softsubs",
             "Hardsubs",
@@ -329,10 +326,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                         .Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
 
-                    propertyList.RemoveAll(p => _excludedProperties.Any(p.ContainsIgnoreCase));
+                    propertyList.RemoveAll(p => ExcludedProperties.Any(p.ContainsIgnoreCase));
                     var properties = propertyList.ToHashSet();
 
-                    if (propertyList.Any(p => p.StartsWithIgnoreCase("M2TS")))
+                    if (torrent.Files.Any(f => f.FileName.ContainsIgnoreCase("Remux")))
+                    {
+                        var resolutionProperty = properties.FirstOrDefault(RemuxResolutions.ContainsIgnoreCase);
+
+                        properties.Add(resolutionProperty.IsNotNullOrWhiteSpace() ? $"{resolutionProperty} Remux" : "Remux");
+                    }
+
+                    if (properties.Any(p => p.StartsWithIgnoreCase("M2TS")))
                     {
                         properties.Add("BR-DISK");
                     }
@@ -463,7 +467,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     // We don't actually have a release name >.> so try to create one
-                    var releaseGroup = properties.LastOrDefault(p => _commonReleaseGroupsProperties.Any(p.StartsWithIgnoreCase) && p.Contains('(') && p.Contains(')'));
+                    var releaseGroup = properties.LastOrDefault(p => CommonReleaseGroupsProperties.Any(p.StartsWithIgnoreCase) && p.Contains('(') && p.Contains(')'));
 
                     if (releaseGroup.IsNotNullOrWhiteSpace())
                     {

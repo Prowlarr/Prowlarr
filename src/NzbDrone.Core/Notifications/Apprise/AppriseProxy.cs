@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Notifications.Apprise
 {
     public interface IAppriseProxy
     {
-        void SendNotification(AppriseSettings settings, string title, string message);
+        void SendNotification(string title, string message, AppriseSettings settings);
         ValidationFailure Test(AppriseSettings settings);
     }
 
@@ -26,7 +26,7 @@ namespace NzbDrone.Core.Notifications.Apprise
             _logger = logger;
         }
 
-        public void SendNotification(AppriseSettings settings, string title, string message)
+        public void SendNotification(string title, string message, AppriseSettings settings)
         {
             var payload = new ApprisePayload
             {
@@ -85,7 +85,7 @@ namespace NzbDrone.Core.Notifications.Apprise
 
             try
             {
-                SendNotification(settings, title, body);
+                SendNotification(title, body, settings);
             }
             catch (AppriseException ex) when (ex.InnerException is HttpException httpException)
             {

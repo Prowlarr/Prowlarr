@@ -17,19 +17,19 @@ namespace NzbDrone.Core.Notifications.Apprise
             _proxy = proxy;
         }
 
-        public override void OnGrab(GrabMessage message)
+        public override void OnGrab(GrabMessage grabMessage)
         {
-            _proxy.SendNotification(Settings, RELEASE_GRABBED_TITLE_BRANDED, $"{message.Message}");
+            _proxy.SendNotification(RELEASE_GRABBED_TITLE_BRANDED, grabMessage.Message, Settings);
         }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            _proxy.SendNotification(Settings, HEALTH_ISSUE_TITLE_BRANDED, $"{healthCheck.Message}");
+            _proxy.SendNotification(HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message, Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            _proxy.SendNotification(Settings, APPLICATION_UPDATE_TITLE_BRANDED, $"{updateMessage.Message}");
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message, Settings);
         }
 
         public override ValidationResult Test()

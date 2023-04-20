@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace NzbDrone.Core.Notifications.Apprise
 {
     public class ApprisePayload

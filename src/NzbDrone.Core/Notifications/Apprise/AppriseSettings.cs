@@ -41,6 +41,7 @@ namespace NzbDrone.Core.Notifications.Apprise
 
         public AppriseSettings()
         {
+            NotificationType = (int)AppriseNotificationType.Info;
             Tags = Array.Empty<string>();
         }
 
@@ -53,13 +54,16 @@ namespace NzbDrone.Core.Notifications.Apprise
         [FieldDefinition(3, Label = "Apprise Stateless Urls", Type = FieldType.Textbox, HelpText = "One or more URLs separated by commas identifying where the notification should be sent to. Leave empty if Persistent Storage is used.", HelpLink = "https://github.com/caronc/apprise#productivity-based-notifications")]
         public string StatelessUrls { get; set; }
 
-        [FieldDefinition(4, Label = "Apprise Tags", Type = FieldType.Tag, HelpText = "Optionally notify only those tagged accordingly.")]
+        [FieldDefinition(4, Label = "Apprise Notification Type", Type = FieldType.Select, SelectOptions = typeof(AppriseNotificationType))]
+        public int NotificationType { get; set; }
+
+        [FieldDefinition(5, Label = "Apprise Tags", Type = FieldType.Tag, HelpText = "Optionally notify only those tagged accordingly.")]
         public IEnumerable<string> Tags { get; set; }
 
-        [FieldDefinition(5, Label = "Auth Username", Type = FieldType.Textbox, HelpText = "HTTP Basic Auth Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(6, Label = "Auth Username", Type = FieldType.Textbox, HelpText = "HTTP Basic Auth Username", Privacy = PrivacyLevel.UserName)]
         public string AuthUsername { get; set; }
 
-        [FieldDefinition(6, Label = "Auth Password", Type = FieldType.Password, HelpText = "HTTP Basic Auth Password", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(7, Label = "Auth Password", Type = FieldType.Password, HelpText = "HTTP Basic Auth Password", Privacy = PrivacyLevel.Password)]
         public string AuthPassword { get; set; }
 
         public NzbDroneValidationResult Validate()

@@ -52,8 +52,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
             switch (responseCode)
             {
                 case (int)HttpStatusCode.TooManyRequests:
+                     _logger.Warn("Rarbg API limit reached. Disabled for 2 minutes.");
                     throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(2));
                 case 520:
+                    _logger.Warn("Rarbg API error. Likely rate limited by origin server due to site internal api overload. Disabled for 3 minutes.");
                     throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(3));
                 case (int)HttpStatusCode.OK:
                     break;

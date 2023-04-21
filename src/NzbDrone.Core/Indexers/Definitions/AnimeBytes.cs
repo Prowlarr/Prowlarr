@@ -141,7 +141,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/scrape.php";
 
             var term = searchCriteria.SanitizedSearchTerm.Trim();
-            var searchTerm = StripEpisodeNumber(term);
+            var searchTerm = CleanSearchTerm(term);
 
             var parameters = new NameValueCollection
             {
@@ -188,12 +188,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             yield return request;
         }
 
-        private static string StripEpisodeNumber(string term)
+        private static string CleanSearchTerm(string term)
         {
             // Tracer does not support searching with episode number so strip it if we have one
-            term = Regex.Replace(term, @"\W(\dx)?\d?\d$", string.Empty);
-            term = Regex.Replace(term, @"\W(S\d\d?E)?\d?\d$", string.Empty);
-            term = Regex.Replace(term, @"\W\d+$", string.Empty);
+            term = Regex.Replace(term, @"\W(\dx)?\d?\d$", string.Empty, RegexOptions.Compiled);
+            term = Regex.Replace(term, @"\W(S\d\d?E)?\d?\d$", string.Empty, RegexOptions.Compiled);
+            term = Regex.Replace(term, @"\W\d+$", string.Empty, RegexOptions.Compiled);
+
+            term = Regex.Replace(term.Trim(), @"\bThe Movie$", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             return term.Trim();
         }

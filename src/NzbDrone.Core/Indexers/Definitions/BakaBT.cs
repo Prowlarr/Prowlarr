@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
@@ -27,7 +28,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override string[] IndexerUrls => new[] { "https://bakabt.me/" };
         public override string Description => "Anime Community";
-        private string LoginUrl => Settings.BaseUrl + "login.php";
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var dom = parser.ParseDocument(response.Content);
             var downloadLink = dom.QuerySelector(".download_link")?.GetAttribute("href");
 
-            if (string.IsNullOrWhiteSpace(downloadLink))
+            if (downloadLink.IsNullOrWhiteSpace())
             {
                 throw new Exception("Unable to find download link.");
             }
@@ -71,17 +71,19 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             UpdateCookies(null, null);
 
-            var requestBuilder = new HttpRequestBuilder(LoginUrl)
+            var loginUrl = Settings.BaseUrl + "login.php";
+
+            var requestBuilder = new HttpRequestBuilder(loginUrl)
             {
                 LogResponseContent = true,
                 AllowAutoRedirect = true,
                 Method = HttpMethod.Post
             };
 
-            var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
+            var loginPage = await ExecuteAuth(new HttpRequest(loginUrl));
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(loginPage.Content);
+            var dom = await parser.ParseDocumentAsync(loginPage.Content);
             var loginKey = dom.QuerySelector("input[name=\"loginKey\"]");
             if (loginKey != null)
             {
@@ -98,21 +100,23 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var response = await ExecuteAuth(authLoginRequest);
 
-            if (response.Content != null && !CheckIfLoginNeeded(response))
+            if (CheckIfLoginNeeded(response))
             {
-                UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
+                var htmlParser = new HtmlParser();
+                var document = await htmlParser.ParseDocumentAsync(response.Content);
+                var errorMessage = document.QuerySelector("#loginError, .error")?.TextContent.Trim();
 
-                _logger.Debug("BakaBT authentication succeeded");
+                throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
             }
-            else
-            {
-                throw new IndexerAuthException("BakaBT authentication failed");
-            }
+
+            UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
+
+            _logger.Debug("BakaBT authentication succeeded");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return !httpResponse.Content.Contains("logout.php");
+            return httpResponse.Content.Contains("loginForm");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -241,7 +245,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<TorrentInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(indexerResponse.Content);
@@ -356,11 +360,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.DownloadVolumeFactor = row.QuerySelector("span.freeleech") != null ? 0 : 1;
                     release.UploadVolumeFactor = 1;
 
-                    torrentInfos.Add(release);
+                    releaseInfos.Add(release);
                 }
             }
 
-            return torrentInfos.ToArray();
+            return releaseInfos.ToArray();
         }
 
         private ICollection<IndexerCategory> GetNextCategory(IElement row, ICollection<IndexerCategory> currentCategories)
@@ -388,12 +392,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var categoryName = categoryElement.GetAttribute("title");
 
-            if (!string.IsNullOrWhiteSpace(categoryName))
-            {
-                return categoryName;
-            }
-
-            return null;
+            return categoryName.IsNotNullOrWhiteSpace() ? categoryName : null;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

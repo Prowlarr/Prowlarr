@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -223,8 +224,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesParser : IParseIndexerResponse
     {
-        private readonly AnimeBytesSettings _settings;
-
         private static readonly HashSet<string> ExcludedProperties = new (StringComparer.OrdinalIgnoreCase) { "Freeleech" };
         private static readonly HashSet<string> RemuxResolutions = new (StringComparer.OrdinalIgnoreCase) { "1080i", "1080p", "2160p", "4K" };
         private static readonly HashSet<string> CommonReleaseGroupsProperties = new (StringComparer.OrdinalIgnoreCase)
@@ -234,6 +233,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             "RAW",
             "Translated"
         };
+        private static readonly HashSet<string> ExcludedFileExtensions = new (StringComparer.OrdinalIgnoreCase) { ".mka", ".mds", ".md5", ".nfo", ".sfv", ".ass", ".mks", ".srt", ".ssa", ".sup", ".jpeg", ".jpg", ".png", ".otf", ".ttf" };
+
+        private readonly AnimeBytesSettings _settings;
 
         public AnimeBytesParser(AnimeBytesSettings settings)
         {
@@ -497,35 +499,45 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     var infoString = properties.Select(p => "[" + p + "]").Join(string.Empty);
 
-                    if (_settings.UseFilenameForSingleEpisodes && torrent.FileCount == 1)
+                    if (_settings.UseFilenameForSingleEpisodes)
                     {
-                        var fileName = torrent.Files.First().FileName;
+                        var files = torrent.Files;
 
-                        var guid = new Uri(details + "?nh=" + HashUtil.CalculateMd5(fileName));
-
-                        var release = new TorrentInfo
+                        if (files.Count > 1)
                         {
-                            MinimumRatio = 1,
-                            MinimumSeedTime = minimumSeedTime,
-                            Title = fileName,
-                            InfoUrl = details.AbsoluteUri,
-                            Guid = guid.AbsoluteUri,
-                            DownloadUrl = link.AbsoluteUri,
-                            PublishDate = publishDate,
-                            Categories = categories,
-                            Description = description,
-                            Size = size,
-                            Seeders = seeders,
-                            Peers = peers,
-                            Grabs = snatched,
-                            Files = fileCount,
-                            DownloadVolumeFactor = rawDownMultiplier,
-                            UploadVolumeFactor = rawUpMultiplier,
-                        };
+                            files = files.Where(f => !ExcludedFileExtensions.Contains(Path.GetExtension(f.FileName))).ToList();
+                        }
 
-                        releaseInfos.Add(release);
+                        if (files.Count == 1)
+                        {
+                            var fileName = files.First().FileName;
 
-                        continue;
+                            var guid = new Uri(details + "?nh=" + HashUtil.CalculateMd5(fileName));
+
+                            var release = new TorrentInfo
+                            {
+                                MinimumRatio = 1,
+                                MinimumSeedTime = minimumSeedTime,
+                                Title = fileName,
+                                InfoUrl = details.AbsoluteUri,
+                                Guid = guid.AbsoluteUri,
+                                DownloadUrl = link.AbsoluteUri,
+                                PublishDate = publishDate,
+                                Categories = categories,
+                                Description = description,
+                                Size = size,
+                                Seeders = seeders,
+                                Peers = peers,
+                                Grabs = snatched,
+                                Files = fileCount,
+                                DownloadVolumeFactor = rawDownMultiplier,
+                                UploadVolumeFactor = rawUpMultiplier,
+                            };
+
+                            releaseInfos.Add(release);
+
+                            continue;
+                        }
                     }
 
                     foreach (var title in synonyms)

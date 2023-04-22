@@ -383,12 +383,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                         }
                     }
 
-                    if (_settings.EnableSonarrCompatibility)
+                    if (_settings.EnableSonarrCompatibility && categoryName == "Anime")
                     {
                         season ??= ParseSeasonFromTitles(synonyms);
-                    }
 
-                    season ??= _settings.EnableSonarrCompatibility && categoryName == "Anime" ? 1 : null;
+                        // Default to S01
+                        season ??= 1;
+                    }
 
                     if (season is > 0 || episode is > 0)
                     {

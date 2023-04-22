@@ -348,7 +348,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                         properties.Add("BR-DISK");
                     }
 
-                    if (_settings.ExcludeRaw && properties.Any(p => p.StartsWithIgnoreCase("RAW") || p.Contains("BR-DISK")))
+                    if (_settings.ExcludeRaw &&
+                        categoryName == "Anime" &&
+                        properties.Any(p => p.StartsWithIgnoreCase("RAW") || p.Contains("BR-DISK")))
                     {
                         continue;
                     }

@@ -6,13 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using FluentValidation;
-using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -256,7 +257,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
             }
 
-            var response = JsonConvert.DeserializeObject<AnimeBytesResponse>(indexerResponse.Content);
+            var response = STJson.Deserialize<AnimeBytesResponse>(indexerResponse.Content);
 
             if (response.Matches == 0)
             {
@@ -688,109 +689,104 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesResponse
     {
-        [JsonProperty("Matches")]
+        [JsonPropertyName("Matches")]
         public int Matches { get; set; }
 
-        [JsonProperty("Groups")]
+        [JsonPropertyName("Groups")]
         public AnimeBytesGroup[] Groups { get; set; }
     }
 
     public class AnimeBytesGroup
     {
-        [JsonProperty("ID")]
+        [JsonPropertyName("ID")]
         public long Id { get; set; }
 
-        [JsonProperty("CategoryName")]
+        [JsonPropertyName("CategoryName")]
         public string CategoryName { get; set; }
 
-        [JsonProperty("FullName")]
+        [JsonPropertyName("FullName")]
         public string FullName { get; set; }
 
-        [JsonProperty("GroupName")]
+        [JsonPropertyName("GroupName")]
         public string GroupName { get; set; }
 
-        [JsonProperty("SeriesID")]
-        public long? SeriesId { get; set; }
-
-        [JsonProperty("SeriesName")]
+        [JsonPropertyName("SeriesName")]
         public string SeriesName { get; set; }
 
-        [JsonProperty("Year")]
+        [JsonPropertyName("Year")]
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
         public int? Year { get; set; }
 
-        [JsonProperty("Image")]
+        [JsonPropertyName("Image")]
         public string Image { get; set; }
 
-        [JsonProperty("SynonymnsV2", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("SynonymnsV2")]
         public Dictionary<string, string> Synonymns { get; set; }
 
-        [JsonProperty("Description")]
+        [JsonPropertyName("Description")]
         public string Description { get; set; }
 
-        [JsonProperty("DescriptionHTML")]
-        public string DescriptionHtml { get; set; }
-
-        [JsonProperty("Tags")]
+        [JsonPropertyName("Tags")]
         public List<string> Tags { get; set; }
 
-        [JsonProperty("Torrents")]
+        [JsonPropertyName("Torrents")]
         public List<AnimeBytesTorrent> Torrents { get; set; }
     }
 
     public class AnimeBytesTorrent
     {
-        [JsonProperty("ID")]
+        [JsonPropertyName("ID")]
         public long Id { get; set; }
 
-        [JsonProperty("EditionData")]
+        [JsonPropertyName("EditionData")]
         public AnimeBytesEditionData EditionData { get; set; }
 
-        [JsonProperty("RawDownMultiplier")]
+        [JsonPropertyName("RawDownMultiplier")]
         public double RawDownMultiplier { get; set; }
 
-        [JsonProperty("RawUpMultiplier")]
+        [JsonPropertyName("RawUpMultiplier")]
         public double RawUpMultiplier { get; set; }
 
-        [JsonProperty("Link")]
+        [JsonPropertyName("Link")]
         public Uri Link { get; set; }
 
-        [JsonProperty("Property")]
+        [JsonPropertyName("Property")]
         public string Property { get; set; }
 
-        [JsonProperty("Snatched")]
+        [JsonPropertyName("Snatched")]
         public int Snatched { get; set; }
 
-        [JsonProperty("Seeders")]
+        [JsonPropertyName("Seeders")]
         public int Seeders { get; set; }
 
-        [JsonProperty("Leechers")]
+        [JsonPropertyName("Leechers")]
         public int Leechers { get; set; }
 
-        [JsonProperty("Size")]
+        [JsonPropertyName("Size")]
         public long Size { get; set; }
 
-        [JsonProperty("FileCount")]
+        [JsonPropertyName("FileCount")]
         public int FileCount { get; set; }
 
-        [JsonProperty("FileList")]
+        [JsonPropertyName("FileList")]
         public List<AnimeBytesFile> Files  { get; set; }
 
-        [JsonProperty("UploadTime")]
+        [JsonPropertyName("UploadTime")]
         public string UploadTime { get; set; }
     }
 
     public class AnimeBytesFile
     {
-        [JsonProperty("filename")]
+        [JsonPropertyName("filename")]
         public string FileName { get; set; }
 
-        [JsonProperty("size")]
+        [JsonPropertyName("size")]
         public long FileSize { get; set; }
     }
 
     public class AnimeBytesEditionData
     {
-        [JsonProperty("EditionTitle")]
+        [JsonPropertyName("EditionTitle")]
         public string EditionTitle { get; set; }
     }
 }

@@ -355,11 +355,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                         continue;
                     }
 
-                    var releaseInfo = _settings.EnableSonarrCompatibility && categoryName == "Anime" ? "S01" : "";
-                    var editionTitle = torrent.EditionData.EditionTitle;
-
-                    int? episode = null;
                     int? season = null;
+                    int? episode = null;
+
+                    var releaseInfo = string.Empty;
+                    var editionTitle = torrent.EditionData.EditionTitle;
 
                     if (editionTitle.IsNotNullOrWhiteSpace())
                     {
@@ -383,10 +383,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                         }
                     }
 
-                    if (_settings.EnableSonarrCompatibility && season == null)
+                    if (_settings.EnableSonarrCompatibility)
                     {
-                        season = ParseSeasonFromTitles(synonyms);
+                        season ??= ParseSeasonFromTitles(synonyms);
                     }
+
+                    season ??= _settings.EnableSonarrCompatibility && categoryName == "Anime" ? 1 : null;
 
                     if (season is > 0 || episode is > 0)
                     {

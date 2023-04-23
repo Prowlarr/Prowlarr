@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -45,6 +46,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new NebulanceParser(Settings);
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            return false;
         }
 
         protected override Task<HttpRequest> GetDownloadRequest(Uri link)
@@ -188,6 +194,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
+
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+            }
 
             var jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
 

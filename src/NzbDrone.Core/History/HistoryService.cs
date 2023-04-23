@@ -118,12 +118,14 @@ namespace NzbDrone.Core.History
 
         public void Handle(IndexerQueryEvent message)
         {
+            var response = message.QueryResult.Response;
+
             var history = new History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
                 EventType = message.Query.IsRssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
-                Successful = message.QueryResult.Response?.StatusCode == HttpStatusCode.OK
+                Successful = response?.StatusCode == HttpStatusCode.OK || (response is { Request: { SuppressHttpError: true, SuppressHttpErrorStatusCodes: not null } } && response.Request.SuppressHttpErrorStatusCodes.Contains(response.StatusCode))
             };
 
             if (message.Query is MovieSearchCriteria)

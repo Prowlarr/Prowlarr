@@ -508,7 +508,7 @@ namespace NzbDrone.Core.Indexers
             }
 
             // Throw common http errors here before we try to parse
-            if (response.HasHttpError)
+            if (response.HasHttpError && (request.HttpRequest.SuppressHttpErrorStatusCodes == null || !request.HttpRequest.SuppressHttpErrorStatusCodes.Contains(response.StatusCode)))
             {
                 if (response.Request.LogHttpError)
                 {

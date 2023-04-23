@@ -67,9 +67,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             _logger.Debug("Avistaz authentication succeeded.");
         }
 
-        protected override bool CheckIfLoginNeeded(HttpResponse response)
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.PreconditionFailed;
+            return httpResponse.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.PreconditionFailed;
         }
 
         protected override void ModifyRequest(IndexerRequest request)

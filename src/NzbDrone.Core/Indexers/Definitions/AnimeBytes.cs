@@ -359,7 +359,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     int? season = null;
                     int? episode = null;
 
-                    var releaseInfo = string.Empty;
+                    var releaseInfo = _settings.EnableSonarrCompatibility && categoryName == "Anime" ? "S01" : "";
                     var editionTitle = torrent.EditionData.EditionTitle;
 
                     if (editionTitle.IsNotNullOrWhiteSpace())
@@ -387,28 +387,19 @@ namespace NzbDrone.Core.Indexers.Definitions
                     if (_settings.EnableSonarrCompatibility && categoryName == "Anime")
                     {
                         season ??= ParseSeasonFromTitles(synonyms);
-
-                        // Default to S01
-                        season ??= 1;
                     }
 
-                    if (season is > 0 || episode is > 0)
+                    if (episode is > 0 && season == null)
                     {
-                        releaseInfo = string.Empty;
-
-                        if (_settings.EnableSonarrCompatibility && season is > 0)
-                        {
-                            releaseInfo = $"S{season:00}";
-
-                            if (episode is > 0)
-                            {
-                                releaseInfo += $"E{episode:00}";
-                            }
-                        }
+                        releaseInfo = $" - {episode:00}";
+                    }
+                    else if (_settings.EnableSonarrCompatibility && season is > 0)
+                    {
+                        releaseInfo = $"S{season:00}";
 
                         if (episode is > 0)
                         {
-                            releaseInfo += $" - {episode:00}";
+                            releaseInfo += $"E{episode:00} - {episode:00}";
                         }
                     }
 

@@ -366,6 +366,461 @@
           "UploadTime": "2023-04-03 03:14:35"
         }
       ]
+    },
+    {
+      "ID": 81926,
+      "CategoryName": "Anime",
+      "FullName": "Dr. STONE: NEW WORLD - TV Series&nbsp;&nbsp;[2023]",
+      "GroupName": "TV Series",
+      "SeriesID": "79217",
+      "SeriesName": "Dr. STONE: NEW WORLD",
+      "Artists": null,
+      "Year": "2023",
+      "Image": "https://mei.animebytes.tv/Tu0p0k56514.jpg",
+      "Synonymns": {
+        "0": "ドクターストーン NEW WORLD",
+        "2": "Dr. STONE S3, Dr. STONE Season 3, Dr.STONE 3rd Season"
+      },
+      "SynonymnsV2": {
+        "Japanese": "ドクターストーン NEW WORLD",
+        "Romaji": "",
+        "Alternative": "Dr. STONE S3, Dr. STONE Season 3, Dr.STONE 3rd Season"
+      },
+      "Snatched": 1870,
+      "Comments": 0,
+      "Links": {
+        "AniDB": "https://anidb.net/anime/17053",
+        "ANN": "https://www.animenewsnetwork.com/encyclopedia/anime.php?id=25068",
+        "Wikipedia": "https://en.wikipedia.org/wiki/Dr._Stone",
+        "MAL": "https://myanimelist.net/anime/48549"
+      },
+      "Votes": 0,
+      "AvgVote": 0,
+      "Associations": null,
+      "Description": "Third season of [i]Dr. STONE[/i].\r\n\r\nWith the Stone Wars over, the former members of Tsukasa's Empire of Might join forces with the Kingdom of Science to build a ship capable of sailing across the open ocean to seek answers to the mystery of global petrification. However, before they can begin their voyage Senku and his friends need to find some key resources and push some new scientific advancements to build the type of vessel they need.\r\n\r\n* Based on an adventure sci-fi shounen manga series written by Inagaki Riichirou and illustrated by Boichi.\r\n\r\n[i]Note: The first episode received an early screening at a special event on March 12, 2023 at Iino Hall in Tokyo. The regular TV broadcast started on April 6, 2023.[/i]",
+      "DescriptionHTML": "Third season of <em>Dr. STONE</em>.<br />\r\n<br />\r\nWith the Stone Wars over, the former members of Tsukasa&#039;s Empire of Might join forces with the Kingdom of Science to build a ship capable of sailing across the open ocean to seek answers to the mystery of global petrification. However, before they can begin their voyage Senku and his friends need to find some key resources and push some new scientific advancements to build the type of vessel they need.<br />\r\n<br />\r\n* Based on an adventure sci-fi shounen manga series written by Inagaki Riichirou and illustrated by Boichi.<br />\r\n<br />\r\n<em>Note: The first episode received an early screening at a special event on March 12, 2023 at Iino Hall in Tokyo. The regular TV broadcast started on April 6, 2023.</em>",
+      "EpCount": 0,
+      "StudioList": "TMS Entertainment///11",
+      "PastWeek": 6,
+      "Incomplete": false,
+      "Ongoing": false,
+      "Tags": [
+        "adventure",
+        "scifi",
+        "shounen",
+        "post.apocalyptic"
+      ],
+      "Torrents": [
+        {
+          "ID": 1041495,
+          "EditionData": {
+            "EditionTitle": "Episode 3"
+          },
+          "RawDownMultiplier": 0,
+          "RawUpMultiplier": 1,
+          "Link": "https://animebytes.tv/torrent/1041495/download/somepass",
+          "Property": "Web | MKV | h264 | 720p | AAC 2.0 | Softsubs (SubsPlease) | Episode 3 | Freeleech",
+          "Snatched": 165,
+          "Seeders": 137,
+          "Leechers": 3,
+          "Status": 0,
+          "Size": 748209543,
+          "FileCount": 1,
+          "FileList": [
+            {
+              "filename": "[SubsPlease] Dr. Stone S3 - 03 (720p) [DAC92E18].mkv",
+              "size": 748209543
+            }
+          ],
+          "UploadTime": "2023-04-20 14:32:29"
+        },
+        {
+          "ID": 1037731,
+          "EditionData": {
+            "EditionTitle": "Episode 2"
+          },
+          "RawDownMultiplier": 0,
+          "RawUpMultiplier": 1,
+          "Link": "https://animebytes.tv/torrent/1037731/download/somepass",
+          "Property": "Web | MKV | h264 | 720p | AAC 2.0 | Softsubs (SubsPlease) | Episode 2 | Freeleech",
+          "Snatched": 174,
+          "Seeders": 122,
+          "Leechers": 1,
+          "Status": 0,
+          "Size": 748808730,
+          "FileCount": 1,
+          "FileList": [
+            {
+              "filename": "[SubsPlease] Dr. Stone S3 - 02 (720p) [AE2DA9AB].mkv",
+              "size": 748808730
+            }
+          ],
+          "UploadTime": "2023-04-13 14:34:16"
+        }
+      ]
+    },
+    {
+      "ID": 69267,
+      "CategoryName": "Anime",
+      "FullName": "Dr. STONE: STONE WARS - TV Series&nbsp;&nbsp;[2021]",
+      "GroupName": "TV Series",
+      "SeriesID": "67161",
+      "SeriesName": "Dr. STONE: STONE WARS",
+      "Artists": null,
+      "Year": "2021",
+      "Image": "https://mei.animebytes.tv/6pqXEK82OfD.jpg",
+      "Synonymns": {
+        "0": "ドクターストーン STONE WARS",
+        "2": "Dr. STONE S2, Dr. STONE Season 2, Dr.STONE 2nd Season"
+      },
+      "SynonymnsV2": {
+        "Japanese": "ドクターストーン STONE WARS",
+        "Romaji": "",
+        "Alternative": "Dr. STONE S2, Dr. STONE Season 2, Dr.STONE 2nd Season"
+      },
+      "Snatched": 1181,
+      "Comments": 4,
+      "Links": {
+        "AniDB": "https://anidb.net/anime/15305",
+        "ANN": "https://www.animenewsnetwork.com/encyclopedia/anime.php?id=22942",
+        "Wikipedia": "https://en.wikipedia.org/wiki/Dr._Stone",
+        "MAL": "https://myanimelist.net/anime/40852/Dr_Stone__Stone_Wars"
+      },
+      "Votes": 23,
+      "AvgVote": 7.8,
+      "Associations": null,
+      "Description": "* Based on an adventure sci-fi shounen manga series written by Inagaki Riichirou and illustrated by Boichi.\r\n\r\nSenkuu, Chrome and the other villagers are in a battle of wits and brawn against the Tsukasa Empire after the revelation that Senkuu's father left behind a lasting message.\r\n\r\nWith a plan to build a phone that could be used to take down the bad guys from within, Senkuu will need to finally enlist the help of his friends who are a part of the Tsukasa Empire.",
+      "DescriptionHTML": "* Based on an adventure sci-fi shounen manga series written by Inagaki Riichirou and illustrated by Boichi.<br />\r\n<br />\r\nSenkuu, Chrome and the other villagers are in a battle of wits and brawn against the Tsukasa Empire after the revelation that Senkuu&#039;s father left behind a lasting message.<br />\r\n<br />\r\nWith a plan to build a phone that could be used to take down the bad guys from within, Senkuu will need to finally enlist the help of his friends who are a part of the Tsukasa Empire.",
+      "EpCount": 11,
+      "StudioList": "TMS Entertainment///11",
+      "PastWeek": 0,
+      "Incomplete": false,
+      "Ongoing": false,
+      "Tags": [
+        "adventure",
+        "scifi",
+        "shounen",
+        "post.apocalyptic"
+      ],
+      "Torrents": [
+        {
+          "ID": 944509,
+          "EditionData": {
+            "EditionTitle": ""
+          },
+          "RawDownMultiplier": 0,
+          "RawUpMultiplier": 1,
+          "Link": "https://animebytes.tv/torrent/944509/download/somepass",
+          "Property": "Web | MKV | h264 | 1080p | AAC 2.0 | Dual Audio | Softsubs (-ZR-) | Freeleech",
+          "Snatched": 188,
+          "Seeders": 31,
+          "Leechers": 1,
+          "Status": 0,
+          "Size": 16611719364,
+          "FileCount": 11,
+          "FileList": [
+            {
+              "filename": "Dr. Stone S02E01v2 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1512195256
+            },
+            {
+              "filename": "Dr. Stone S02E02 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1507917714
+            },
+            {
+              "filename": "Dr. Stone S02E03 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1510054199
+            },
+            {
+              "filename": "Dr. Stone S02E04 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1507100461
+            },
+            {
+              "filename": "Dr. Stone S02E05 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1507258273
+            },
+            {
+              "filename": "Dr. Stone S02E06 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1511039711
+            },
+            {
+              "filename": "Dr. Stone S02E07 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1507219047
+            },
+            {
+              "filename": "Dr. Stone S02E08 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1510996213
+            },
+            {
+              "filename": "Dr. Stone S02E09 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1512785600
+            },
+            {
+              "filename": "Dr. Stone S02E10 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1511889715
+            },
+            {
+              "filename": "Dr. Stone S02E11 2021 1080p WEB-DL AVC AAC 2.0 Dual Audio -ZR-.mkv",
+              "size": 1513263175
+            }
+          ],
+          "UploadTime": "2021-06-03 20:30:00"
+        }
+      ]
+    },
+    {
+      "ID": 60598,
+      "CategoryName": "Anime",
+      "FullName": "Dr. STONE - TV Series&nbsp;&nbsp;[2019]",
+      "GroupName": "TV Series",
+      "SeriesID": "56617",
+      "SeriesName": "Dr. STONE",
+      "Artists": null,
+      "Year": "2019",
+      "Image": "https://mei.animebytes.tv/SaFez5XG8T3.jpg",
+      "Synonymns": [
+        "Dr.STONE [ドクターストーン]"
+      ],
+      "SynonymnsV2": {
+        "Japanese": "Dr.STONE [ドクターストーン]",
+        "Romaji": "",
+        "Alternative": ""
+      },
+      "Snatched": 2174,
+      "Comments": 8,
+      "Links": {
+        "AniDB": "https://anidb.net/anime/14491",
+        "ANN": "https://www.animenewsnetwork.com/encyclopedia/anime.php?id=21703",
+        "Wikipedia": "https://en.wikipedia.org/wiki/Dr._Stone",
+        "MAL": "https://myanimelist.net/anime/38691"
+      },
+      "Votes": 68,
+      "AvgVote": 7.9,
+      "Associations": null,
+      "Description": "Several thousand years after a mysterious phenomenon that turns all of humanity to stone, the extraordinarily intelligent, science-driven boy, Senku Ishigami, awakens. Facing a world of stone and the total collapse of civilization, Senku makes up his mind to use science to rebuild the world. Starting with his super strong childhood friend Taiju Oki, who awakened at the same time, they will begin to rebuild civilization from nothing... Depicting two million years of scientific history from the Stone Age to present day, the unprecedented crafting adventure story is about to begin!\r\n\r\n* Based on an adventure sci-fi shounen manga series written by Inagaki Riichirou and illustrated by Boichi.",
+      "DescriptionHTML": "Several thousand years after a mysterious phenomenon that turns all of humanity to stone, the extraordinarily intelligent, science-driven boy, Senku Ishigami, awakens. Facing a world of stone and the total collapse of civilization, Senku makes up his mind to use science to rebuild the world. Starting with his super strong childhood friend Taiju Oki, who awakened at the same time, they will begin to rebuild civilization from nothing... Depicting two million years of scientific history from the Stone Age to present day, the unprecedented crafting adventure story is about to begin!<br />\r\n<br />\r\n* Based on an adventure sci-fi shounen manga series written by Inagaki Riichirou and illustrated by Boichi.",
+      "EpCount": 24,
+      "StudioList": "TMS Entertainment///11|8PAN///6344",
+      "PastWeek": 0,
+      "Incomplete": false,
+      "Ongoing": false,
+      "Tags": [
+        "adventure",
+        "comedy",
+        "scifi",
+        "shounen"
+      ],
+      "Torrents": [
+        {
+          "ID": 430074,
+          "EditionData": {
+            "EditionTitle": ""
+          },
+          "RawDownMultiplier": 1,
+          "RawUpMultiplier": 1,
+          "Link": "https://animebytes.tv/torrent/430074/download/somepass",
+          "Property": "Web | MKV | h264 | 720p | AAC 2.0 | Softsubs (HorribleSubs)",
+          "Snatched": 108,
+          "Seeders": 33,
+          "Leechers": 1,
+          "Status": 0,
+          "Size": 16366224176,
+          "FileCount": 24,
+          "FileList": [
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 01 [720p].mkv",
+              "size": 477027555
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 02 [720p].mkv",
+              "size": 489436551
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 03 [720p].mkv",
+              "size": 503786828
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 04 [720p].mkv",
+              "size": 442977598
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 05 [720p].mkv",
+              "size": 523531555
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 06 [720p].mkv",
+              "size": 506742468
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 07 [720p].mkv",
+              "size": 746577276
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 08 [720p].mkv",
+              "size": 745942485
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 09 [720p].mkv",
+              "size": 746035250
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 10 [720p].mkv",
+              "size": 746001386
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 11 [720p].mkv",
+              "size": 746155088
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 12 [720p].mkv",
+              "size": 746560710
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 13 [720p].mkv",
+              "size": 745880614
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 14 [720p].mkv",
+              "size": 744563919
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 15 [720p].mkv",
+              "size": 745303312
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 16 [720p].mkv",
+              "size": 746850910
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 17 [720p].mkv",
+              "size": 744188496
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 18 [720p].mkv",
+              "size": 746212236
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 19 [720p].mkv",
+              "size": 744840131
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 20 [720p].mkv",
+              "size": 746380081
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 21 [720p].mkv",
+              "size": 744975636
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 22 [720p].mkv",
+              "size": 746214757
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 23 [720p].mkv",
+              "size": 744924693
+            },
+            {
+              "filename": "[HorribleSubs] Dr. Stone - 24 [720p].mkv",
+              "size": 745114641
+            }
+          ],
+          "UploadTime": "2019-12-13 17:02:48"
+        }
+      ]
+    },
+    {
+      "ID": 41952,
+      "CategoryName": "Anime",
+      "FullName": "One Piece - TV Series&nbsp;&nbsp;[2019]",
+      "GroupName": "TV Series",
+      "SeriesID": "114",
+      "SeriesName": "One Piece",
+      "Artists": null,
+      "Year": "2019",
+      "Image": "https://mei.animebytes.tv/cQieN6oZ6Ft.jpg",
+      "Synonymns": {
+        "0": "ワンピース",
+        "2": "One Piece: The Great Gold Pirate"
+      },
+      "SynonymnsV2": {
+        "Japanese": "ワンピース",
+        "Romaji": "",
+        "Alternative": "One Piece: The Great Gold Pirate"
+      },
+      "Snatched": 100700,
+      "Comments": 3,
+      "Links": {
+        "AniDB": "https://anidb.net/anime/69",
+        "ANN": "https://www.animenewsnetwork.com/encyclopedia/anime.php?id=836",
+        "Wikipedia": "https://en.wikipedia.org/wiki/One_Piece",
+        "MAL": "https://myanimelist.net/anime/21/One_Piece"
+      },
+      "Votes": 89,
+      "AvgVote": 8.8,
+      "Associations": null,
+      "Description": "The 20th season of One Piece. This represents episode 892 to current.",
+      "DescriptionHTML": "The 20th season of One Piece. This represents episode 892 to current.",
+      "EpCount": 0,
+      "StudioList": null,
+      "PastWeek": 10,
+      "Incomplete": false,
+      "Ongoing": false,
+      "Tags": [
+        "adventure",
+        "fantasy",
+        "martial.arts",
+        "shounen",
+        "super.power",
+        "action"
+      ],
+      "Torrents": [
+        {
+          "ID": 1043925,
+          "EditionData": {
+            "EditionTitle": "Episode 1059"
+          },
+          "RawDownMultiplier": 0,
+          "RawUpMultiplier": 1,
+          "Link": "https://animebytes.tv/torrent/1043925/download/somepass",
+          "Property": "Web | MKV | h264 | 720p | AAC 2.0 | Softsubs (SubsPlease) | Episode 1059 | Freeleech",
+          "Snatched": 125,
+          "Seeders": 114,
+          "Leechers": 1,
+          "Status": 0,
+          "Size": 743629489,
+          "FileCount": 1,
+          "FileList": [
+            {
+              "filename": "[SubsPlease] One Piece - 1059 (720p) [B347D9DE].mkv",
+              "size": 743629489
+            }
+          ],
+          "UploadTime": "2023-04-23 02:06:08"
+        },
+        {
+          "ID": 1039046,
+          "EditionData": {
+            "EditionTitle": "Episode 1058"
+          },
+          "RawDownMultiplier": 0,
+          "RawUpMultiplier": 1,
+          "Link": "https://animebytes.tv/torrent/1039046/download/somepass",
+          "Property": "Web | MKV | h264 | 1080p | AAC 2.0 | Softsubs (SubsPlease) | Episode 1058 | Freeleech",
+          "Snatched": 290,
+          "Seeders": 232,
+          "Leechers": 2,
+          "Status": 0,
+          "Size": 1453835224,
+          "FileCount": 1,
+          "FileList": [
+            {
+              "filename": "[SubsPlease] One Piece - 1058 (1080p) [E4094B4A].mkv",
+              "size": 1453835224
+            }
+          ],
+          "UploadTime": "2023-04-16 02:07:42"
+        }
+      ]
     }
   ]
 }

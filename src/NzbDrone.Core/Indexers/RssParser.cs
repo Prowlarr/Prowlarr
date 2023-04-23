@@ -166,6 +166,7 @@ namespace NzbDrone.Core.Indexers
             releaseInfo.InfoUrl = GetInfoUrl(item);
             releaseInfo.CommentUrl = GetCommentUrl(item);
             releaseInfo.Categories = GetCategory(item);
+            releaseInfo.Languages = GetLanguages(item);
 
             try
             {
@@ -235,6 +236,11 @@ namespace NzbDrone.Core.Indexers
         protected virtual string GetCommentUrl(XElement item)
         {
             return ParseUrl((string)item.Element("comments"));
+        }
+
+        protected virtual List<string> GetLanguages(XElement item)
+        {
+            return new List<string>();
         }
 
         protected virtual long GetSize(XElement item)

@@ -125,6 +125,28 @@ namespace NzbDrone.Core.Indexers.Torznab
             return ParseUrl(item.TryGetValue("comments"));
         }
 
+        protected override List<string> GetLanguages(XElement item)
+        {
+            var languges = TryGetMultipleTorznabAttributes(item, "language");
+            var results = new List<string>();
+
+            // Try to find <language> elements for some indexers that suck at following the rules.
+            if (languges.Count == 0)
+            {
+                languges = item.Elements("language").Select(e => e.Value).ToList();
+            }
+
+            foreach (var language in languges)
+            {
+                if (language.IsNotNullOrWhiteSpace())
+                {
+                    results.Add(language);
+                }
+            }
+
+            return results;
+        }
+
         protected override long GetSize(XElement item)
         {
             long size;

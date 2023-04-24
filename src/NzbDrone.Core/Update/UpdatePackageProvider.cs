@@ -34,15 +34,20 @@ namespace NzbDrone.Core.Update
 
         public UpdatePackage GetLatestUpdate(string branch, Version currentVersion)
         {
+            if (BuildInfo.IsDebug)
+            {
+                return null;
+            }
+
             var request = _requestBuilder.Create()
-                                         .Resource("/update/{branch}")
-                                         .AddQueryParam("version", currentVersion)
-                                         .AddQueryParam("os", OsInfo.Os.ToString().ToLowerInvariant())
-                                         .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
-                                         .AddQueryParam("runtime", "netcore")
-                                         .AddQueryParam("runtimeVer", _platformInfo.Version)
-                                         .AddQueryParam("dbType", _mainDatabase.DatabaseType)
-                                         .SetSegment("branch", branch);
+                .Resource("/update/{branch}")
+                .AddQueryParam("version", currentVersion)
+                .AddQueryParam("os", OsInfo.Os.ToString().ToLowerInvariant())
+                .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
+                .AddQueryParam("runtime", "netcore")
+                .AddQueryParam("runtimeVer", _platformInfo.Version)
+                .AddQueryParam("dbType", _mainDatabase.DatabaseType)
+                .SetSegment("branch", branch);
 
             if (_analyticsService.IsEnabled)
             {
@@ -62,15 +67,20 @@ namespace NzbDrone.Core.Update
 
         public List<UpdatePackage> GetRecentUpdates(string branch, Version currentVersion, Version previousVersion)
         {
+            if (BuildInfo.IsDebug)
+            {
+                return new List<UpdatePackage>();
+            }
+
             var request = _requestBuilder.Create()
-                                         .Resource("/update/{branch}/changes")
-                                         .AddQueryParam("version", currentVersion)
-                                         .AddQueryParam("os", OsInfo.Os.ToString().ToLowerInvariant())
-                                         .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
-                                         .AddQueryParam("runtime", "netcore")
-                                         .AddQueryParam("runtimeVer", _platformInfo.Version)
-                                         .AddQueryParam("dbType", _mainDatabase.DatabaseType)
-                                         .SetSegment("branch", branch);
+                .Resource("/update/{branch}/changes")
+                .AddQueryParam("version", currentVersion)
+                .AddQueryParam("os", OsInfo.Os.ToString().ToLowerInvariant())
+                .AddQueryParam("arch", RuntimeInformation.OSArchitecture)
+                .AddQueryParam("runtime", "netcore")
+                .AddQueryParam("runtimeVer", _platformInfo.Version)
+                .AddQueryParam("dbType", _mainDatabase.DatabaseType)
+                .SetSegment("branch", branch);
 
             if (previousVersion != null && previousVersion != currentVersion)
             {

@@ -295,7 +295,10 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
             ) : null}
 
             {!error && isPopulated && !items.length ? (
-              <NoIndexer totalItems={totalItems} />
+              <NoIndexer
+                totalItems={totalItems}
+                onAddIndexerPress={onAddIndexerPress}
+              />
             ) : null}
           </PageContentBody>
           {isLoaded && !!jumpBarItems.order.length ? (

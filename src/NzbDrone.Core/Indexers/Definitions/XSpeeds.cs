@@ -123,6 +123,7 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
         caps.Categories.AddCategoryMapping(80, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
         caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Books, "Books Magazines");
         caps.Categories.AddCategoryMapping(68, NewznabStandardCategory.MoviesOther, "Cams/TS");
+        caps.Categories.AddCategoryMapping(140, NewznabStandardCategory.TVDocumentary, "Documentary");
         caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.MoviesDVD, "DVDR");
         caps.Categories.AddCategoryMapping(109, NewznabStandardCategory.MoviesBluRay, "Bluray Disc");
         caps.Categories.AddCategoryMapping(131, NewznabStandardCategory.TVSport, "Fighting");

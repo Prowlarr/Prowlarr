@@ -368,7 +368,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         if (_settings.EnableSonarrCompatibility)
                         {
-                            var simpleSeasonRegex = new Regex(@"Season (\d+)", RegexOptions.Compiled);
+                            var simpleSeasonRegex = new Regex(@"\bSeason (\d+)\b", RegexOptions.Compiled);
                             var simpleSeasonRegexMatch = simpleSeasonRegex.Match(releaseInfo);
                             if (simpleSeasonRegexMatch.Success)
                             {
@@ -376,7 +376,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             }
                         }
 
-                        var episodeRegex = new Regex(@"Episode (\d+)", RegexOptions.Compiled);
+                        var episodeRegex = new Regex(@"\bEpisode (\d+)\b", RegexOptions.Compiled);
                         var episodeRegexMatch = episodeRegex.Match(releaseInfo);
                         if (episodeRegexMatch.Success)
                         {
@@ -579,7 +579,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var advancedSeasonRegex = new Regex(@"(\d+)(st|nd|rd|th) Season", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var seasonCharactersRegex = new Regex(@"(I{2,})$", RegexOptions.Compiled);
-            var seasonNumberRegex = new Regex(@"\b([2-9])$", RegexOptions.Compiled);
+            var seasonNumberRegex = new Regex(@"\b(?:S)?([2-9])$", RegexOptions.Compiled);
 
             foreach (var title in titles)
             {

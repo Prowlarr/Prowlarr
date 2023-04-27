@@ -50,7 +50,7 @@ module.exports = (env) => {
         'node_modules'
       ],
       alias: {
-        jquery: 'jquery/src/jquery'
+        jquery: 'jquery/dist/jquery.min'
       },
       fallback: {
         buffer: false,

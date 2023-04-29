@@ -8,6 +8,7 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
@@ -56,7 +57,9 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<MovieSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            searchSpec.ImdbId = request.imdbid;
+            var imdbId = ParseUtil.GetImdbID(request.imdbid);
+
+            searchSpec.ImdbId = imdbId.HasValue ? imdbId.Value.ToString() : null;
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.DoubanId = request.doubanid;
@@ -84,10 +87,12 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
 
+            var imdbId = ParseUtil.GetImdbID(request.imdbid);
+
+            searchSpec.ImdbId = imdbId.HasValue ? imdbId.Value.ToString() : null;
             searchSpec.Season = request.season;
             searchSpec.Episode = request.ep;
             searchSpec.TvdbId = request.tvdbid;
-            searchSpec.ImdbId = request.imdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.DoubanId = request.doubanid;

@@ -141,7 +141,7 @@ namespace NzbDrone.Core.IndexerSearch
                 spec.Categories = Array.Empty<int>();
             }
 
-            spec.SearchTerm = query.q;
+            spec.SearchTerm = query.q?.Trim();
             spec.SearchType = query.t;
             spec.Limit = query.limit;
             spec.Offset = query.offset;

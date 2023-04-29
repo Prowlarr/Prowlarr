@@ -351,6 +351,11 @@ class HistoryRow extends Component {
                       `${data.elapsedTime}ms` :
                       null
                   }
+                  {
+                    data.cached === '1' ?
+                      ' (cached)' :
+                      null
+                  }
                 </TableRowCell>
               );
             }

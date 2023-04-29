@@ -170,7 +170,7 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Genre", ((BookSearchCriteria)message.Query).Genre ?? string.Empty);
             }
 
-            history.Data.Add("ElapsedTime", message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);
+            history.Data.Add("ElapsedTime", message.QueryResult.Cached ? "0" : message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);
             history.Data.Add("Query", message.Query.SearchTerm ?? string.Empty);
             history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
@@ -178,6 +178,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("Host", message.Query.Host ?? string.Empty);
             history.Data.Add("QueryResults", message.QueryResult.Releases?.Count.ToString() ?? string.Empty);
             history.Data.Add("Url", message.QueryResult.Response?.Request.Url.FullUri ?? string.Empty);
+            history.Data.Add("Cached", message.QueryResult.Cached ? "1" : "0");
 
             _historyRepository.Insert(history);
         }

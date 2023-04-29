@@ -29,6 +29,14 @@ namespace NzbDrone.Common
             return $"{mCrc:x8}";
         }
 
+        public static string ComputeSha256Hash(string rawData)
+        {
+            using var sha256Hash = SHA256.Create();
+            var hashBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+            return Convert.ToHexString(hashBytes);
+        }
+
         public static string CalculateMd5(string s)
         {
             // Use input string to calculate MD5 hash

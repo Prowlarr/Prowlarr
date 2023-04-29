@@ -38,7 +38,6 @@
     "ProxyCheckBadRequestMessage": "Proxy konnte nicht getestet werden. StatusCode: {0}",
     "ProxyCheckFailedToTestMessage": "Proxy konnte nicht getestet werden: {0}",
     "ProxyCheckResolveIpMessage": "Fehler beim Auflösen der IP-Adresse für den konfigurierten Proxy-Host {0}",
-    "PtpOldSettingsCheckMessage": "Die folgenden PassThePopcorn-Indexer haben veraltete Einstellungen und sollten aktualisiert werden: {0}",
     "Queue": "Warteschlange",
     "Refresh": "Aktualisieren",
     "ReleaseBranchCheckOfficialBranchMessage": "Zweig {0} ist kein gültiger Prowlarr-Release-Zweig. Sie erhalten keine Updates",

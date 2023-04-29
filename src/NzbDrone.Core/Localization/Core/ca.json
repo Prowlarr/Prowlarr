@@ -205,7 +205,6 @@
     "PackageVersion": "Versió del paquet",
     "ProxyCheckFailedToTestMessage": "No s'ha pogut provar el servidor intermediari: {0}",
     "ProxyCheckResolveIpMessage": "No s'ha pogut resoldre l'adreça IP de l'amfitrió intermediari configurat {0}",
-    "PtpOldSettingsCheckMessage": "Els següents indexadors de PassThePopcorn tenen configuracions obsoletes i s'han d'actualitzar: {0}",
     "Queued": "En cua",
     "ReadTheWikiForMoreInformation": "Llegiu el Wiki per a més informació",
     "RestartRequiredHelpTextWarning": "Cal reiniciar perquè tingui efecte",

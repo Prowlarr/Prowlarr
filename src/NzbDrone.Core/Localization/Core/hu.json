@@ -166,7 +166,6 @@
     "ProwlarrSupportsAnyIndexer": "A Prowlarr számos indexert támogat, minden olyan indexelő mellett, amely a Newznab / Torznab szabványt használja, valamint a 'Generic Newznab' (usenethez) vagy a 'Generic Torznab' (torrentekhez) használatával. Keresés és az alább felsorolt indexelők kiválasztása.",
     "ProwlarrSupportsAnyDownloadClient": "A Prowlarr minden olyan letöltési klienst támogat, amely a Newznab szabványt használja, valamint az alább felsorolt letöltési klienseket.",
     "Queue": "Várakozási sor",
-    "PtpOldSettingsCheckMessage": "A következő PassThePopcorn indexerek elavult beállításokkal rendelkeznek, és frissíteni kell őket: {0}",
     "ProxyUsernameHelpText": "Csak akkor kell megadnod felhasználónevet és jelszót, ha szükséges. Egyébként hagyd üresen.",
     "ProxyType": "Proxy Típusa",
     "ProxyPasswordHelpText": "Csak akkor kell megadnod felhasználónevet és jelszót, ha szükséges. Egyébként hagyd üresen.",

@@ -51,7 +51,6 @@
     "ReleaseBranchCheckOfficialBranchMessage": "Las versión {0} no es una versión válida de Prowlarr, no recibirás actualizaciones",
     "Refresh": "Actualizar",
     "Queue": "Cola",
-    "PtpOldSettingsCheckMessage": "Los siguientes indexers PassThePopcorn tienen configuraciones obsoletas y deben de ser actualizados: {0}",
     "ProxyCheckResolveIpMessage": "No se pudo resolver la dirección IP del Host Proxy configurado {0}",
     "ProxyCheckFailedToTestMessage": "Fallo al comprobar el proxy: {0}",
     "ProxyCheckBadRequestMessage": "Fallo al comprobar el proxy. StatusCode: {0}",

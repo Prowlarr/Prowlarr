@@ -60,7 +60,6 @@
     "ReleaseBranchCheckOfficialBranchMessage": "Gren {0} är inte en giltig gren av Prowlarr, du kommer ej erhålla uppdateringar",
     "Refresh": "Uppdatera",
     "Queue": "Kö",
-    "PtpOldSettingsCheckMessage": "Följande PassThePopcorn-indexerare har inaktuella inställningar och bör uppdateras: {0}",
     "ProxyCheckResolveIpMessage": "Misslyckades att slå upp IP-adressen till konfigurerad proxyvärd {0}",
     "ProxyCheckFailedToTestMessage": "Test av proxy misslyckades: {0}",
     "ProxyCheckBadRequestMessage": "Test av proxy misslyckades. Statuskod: {0}",

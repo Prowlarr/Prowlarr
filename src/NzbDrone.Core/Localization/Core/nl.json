@@ -54,7 +54,6 @@
     "UpdateCheckUINotWritableMessage": "Kan de update niet installeren omdat de UI map '{0}' niet schrijfbaar is voor de gebruiker '{1}'.",
     "UpdateCheckStartupTranslocationMessage": "Kan de update niet installeren omdat de map '{0}' zich in een 'App Translocation' map bevindt.",
     "UpdateCheckStartupNotWritableMessage": "Kan de update niet installeren omdat de map '{0}' niet schrijfbaar is voor de gebruiker '{1}'.",
-    "PtpOldSettingsCheckMessage": "De volgende PassThePopcorn indexeerders hebben verouderde instellingen en moeten worden bijgewerkt: {0}",
     "IndexerStatusCheckSingleClientMessage": "Indexeerders onbeschikbaar wegens fouten: {0}",
     "IndexerStatusCheckAllClientMessage": "Alle indexeerders zijn onbeschikbaar wegens fouten",
     "Updates": "Updates",

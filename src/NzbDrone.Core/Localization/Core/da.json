@@ -183,7 +183,6 @@
     "ProxyCheckResolveIpMessage": "Mislykkedes at løse IP-adressen til den konfigurerede proxyhost {0}",
     "ProxyPasswordHelpText": "Du skal kun indtaste et brugernavn og en adgangskode, hvis der kræves et. Lad dem være tomme ellers.",
     "ProxyUsernameHelpText": "Du skal kun indtaste et brugernavn og en adgangskode, hvis der kræves et. Lad dem være tomme ellers.",
-    "PtpOldSettingsCheckMessage": "Følgende PassThePopcorn-indeksatorer har forældede indstillinger og skal opdateres: {0}",
     "ReadTheWikiForMoreInformation": "Læs Wiki for mere information",
     "Reddit": "Reddit",
     "Refresh": "Opdater",

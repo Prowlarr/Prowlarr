@@ -162,7 +162,6 @@
     "PortNumber": "Номер порту",
     "Priority": "Пріоритет",
     "ProxyBypassFilterHelpText": "Використовуйте «,» як роздільник і «*». як символ підстановки для субдоменів",
-    "PtpOldSettingsCheckMessage": "Наведені нижче індексатори PassThePopcorn мають застарілі налаштування та їх потрібно оновити: {0}",
     "Queue": "Черга",
     "Queued": "У черзі",
     "ReadTheWikiForMoreInformation": "Читайте Wiki для отримання додаткової інформації",

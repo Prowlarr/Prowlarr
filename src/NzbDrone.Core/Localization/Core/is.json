@@ -282,7 +282,6 @@
     "ProxyCheckBadRequestMessage": "Mistókst að prófa umboðsmann. Stöðukóði: {0}",
     "ProxyCheckFailedToTestMessage": "Mistókst að prófa umboðsmann: {0}",
     "ProxyUsernameHelpText": "Þú þarft aðeins að slá inn notendanafn og lykilorð ef þess er krafist. Láttu þá vera auða annars.",
-    "PtpOldSettingsCheckMessage": "Eftirfarandi PassThePopcorn vísitölur hafa úrelt stillingar og ætti að uppfæra þær: {0}",
     "ReleaseStatus": "Sleppa stöðu",
     "RemovedFromTaskQueue": "Fjarlægð úr verkröð",
     "RemoveFilter": "Fjarlægðu síuna",

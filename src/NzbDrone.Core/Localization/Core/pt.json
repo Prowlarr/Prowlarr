@@ -55,7 +55,6 @@
     "ReleaseBranchCheckOfficialBranchMessage": "A ramificação {0} não é uma ramificação de versões válida do Prowlarr, você não receberá atualizações",
     "Refresh": "Atualizar",
     "Queue": "Fila",
-    "PtpOldSettingsCheckMessage": "As definições dos seguintes indexadores do PassThePopcorn são obsoletas e precisam ser atualizadas: {0}",
     "ProxyCheckResolveIpMessage": "Não é possível resolver o Endereço IP para o Anfitrião de proxy {0} definido",
     "ProxyCheckFailedToTestMessage": "Falha ao testar o proxy: {0}",
     "ProxyCheckBadRequestMessage": "Falha ao testar o proxy. Código de estado: {0}",

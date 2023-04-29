@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Parser.Model
 {
-    public class ReleaseInfo
+    public class ReleaseInfo : ICloneable
     {
         public ReleaseInfo()
         {
@@ -114,6 +113,11 @@ namespace NzbDrone.Core.Parser.Model
                 default:
                     return ToString();
             }
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

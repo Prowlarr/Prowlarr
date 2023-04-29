@@ -60,14 +60,19 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault(0);
 
+            // ID searches act as AND searches, so only one should be used at a time
             if (searchCriteria.TvdbId > 0)
             {
                 parameters.Tvdb = $"{searchCriteria.TvdbId}";
             }
-
-            if (searchCriteria.RId > 0)
+            else if (searchCriteria.RId > 0)
             {
                 parameters.Tvrage = $"{searchCriteria.RId}";
+            }
+            else
+            {
+                // If NOT an ID search, then use the search string
+                parameters.Search = searchString.Replace(" ", "%");
             }
 
             // If only the season/episode is searched for then change format to match expected format
@@ -101,8 +106,6 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             }
             else
             {
-                // Neither a season only search nor daily nor standard, fall back to query
-                parameters.Search = searchString.Replace(" ", "%");
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
 

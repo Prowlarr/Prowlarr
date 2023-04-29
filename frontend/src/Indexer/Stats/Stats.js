@@ -10,6 +10,7 @@ import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import { align, kinds } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
+import translate from 'Utilities/String/translate';
 import StatsFilterMenu from './StatsFilterMenu';
 import styles from './Stats.css';
 
@@ -188,53 +189,53 @@ function Stats(props) {
               <div className={styles.fullWidthChart}>
                 <BarChart
                   data={getAverageResponseTimeData(item.indexers)}
-                  title='Average Response Times (ms)'
+                  title={translate('AverageResponseTimesMs')}
                 />
               </div>
               <div className={styles.fullWidthChart}>
                 <BarChart
                   data={getFailureRateData(item.indexers)}
-                  title='Indexer Failure Rate'
+                  title={translate('IndexerFailureRate')}
                   kind={kinds.WARNING}
                 />
               </div>
               <div className={styles.halfWidthChart}>
                 <StackedBarChart
                   data={getTotalRequestsData(item.indexers)}
-                  title='Total Indexer Queries'
+                  title={translate('TotalIndexerQueries')}
                 />
               </div>
               <div className={styles.halfWidthChart}>
                 <BarChart
                   data={getNumberGrabsData(item.indexers)}
-                  title='Total Indexer Successful Grabs'
+                  title={translate('TotalIndexerSuccessfulGrabs')}
                 />
               </div>
               <div className={styles.halfWidthChart}>
                 <BarChart
                   data={getUserAgentQueryData(item.userAgents)}
-                  title='Total User Agent Queries'
+                  title={translate('TotalUserAgentQueries')}
                   horizontal={true}
                 />
               </div>
               <div className={styles.halfWidthChart}>
                 <BarChart
                   data={getUserAgentGrabsData(item.userAgents)}
-                  title='Total User Agent Grabs'
+                  title={translate('TotalUserAgentGrabs')}
                   horizontal={true}
                 />
               </div>
               <div className={styles.halfWidthChart}>
                 <DoughnutChart
                   data={getHostQueryData(item.hosts)}
-                  title='Total Host Queries'
+                  title={translate('TotalHostQueries')}
                   horizontal={true}
                 />
               </div>
               <div className={styles.halfWidthChart}>
                 <DoughnutChart
                   data={getHostGrabsData(item.hosts)}
-                  title='Total Host Grabs'
+                  title={translate('TotalHostGrabs')}
                   horizontal={true}
                 />
               </div>

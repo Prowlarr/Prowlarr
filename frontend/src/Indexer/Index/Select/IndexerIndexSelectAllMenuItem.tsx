@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { SelectActionType, useSelect } from 'App/SelectContext';
 import PageToolbarOverflowMenuItem from 'Components/Page/Toolbar/PageToolbarOverflowMenuItem';
 import { icons } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 
 interface IndexerIndexSelectAllMenuItemProps {
   label: string;
@@ -33,7 +34,7 @@ function IndexerIndexSelectAllMenuItem(
 
   return isSelectMode ? (
     <PageToolbarOverflowMenuItem
-      label={allSelected ? 'Unselect All' : 'Select All'}
+      label={allSelected ? translate('UnselectAll') : translate('SelectAll')}
       iconName={iconName}
       onPress={onPressWrapper}
     />

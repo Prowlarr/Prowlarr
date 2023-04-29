@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var parameters = new BroadcastheNetTorrentQuery();
 
-            var searchString = searchCriteria.SearchTerm ?? "";
+            var searchString = searchCriteria.SearchTerm ?? string.Empty;
 
             var btnResults = searchCriteria.Limit.GetValueOrDefault();
             if (btnResults == 0)
@@ -64,10 +64,13 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             {
                 parameters.Tvdb = $"{searchCriteria.TvdbId}";
             }
-
-            if (searchCriteria.RId > 0)
+            else if (searchCriteria.RId > 0)
             {
                 parameters.Tvrage = $"{searchCriteria.RId}";
+            }
+            else if (searchString.IsNotNullOrWhiteSpace())
+            {
+                parameters.Search = searchString.Replace(" ", "%");
             }
 
             // If only the season/episode is searched for then change format to match expected format
@@ -102,7 +105,6 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             else
             {
                 // Neither a season only search nor daily nor standard, fall back to query
-                parameters.Search = searchString.Replace(" ", "%");
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
 

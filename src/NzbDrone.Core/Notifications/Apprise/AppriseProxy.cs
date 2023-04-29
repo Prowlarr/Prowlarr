@@ -35,7 +35,7 @@ namespace NzbDrone.Core.Notifications.Apprise
                 Type = (AppriseNotificationType)settings.NotificationType
             };
 
-            var requestBuilder = new HttpRequestBuilder(settings.BaseUrl.TrimEnd('/', ' '))
+            var requestBuilder = new HttpRequestBuilder(settings.ServerUrl.TrimEnd('/', ' '))
                 .Post()
                 .Accept(HttpAccept.Json);
 

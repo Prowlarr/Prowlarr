@@ -42,7 +42,6 @@
     "ProxyPasswordHelpText": "Bạn chỉ cần nhập tên người dùng và mật khẩu nếu được yêu cầu. Nếu không, hãy để trống chúng.",
     "ProxyType": "Loại proxy",
     "ProxyUsernameHelpText": "Bạn chỉ cần nhập tên người dùng và mật khẩu nếu được yêu cầu. Nếu không, hãy để trống chúng.",
-    "PtpOldSettingsCheckMessage": "Các trình lập chỉ mục PassThePopcorn sau đây có cài đặt không được dùng nữa và sẽ được cập nhật: {0}",
     "Reddit": "Reddit",
     "Refresh": "Làm tươi",
     "ReleaseBranchCheckOfficialBranchMessage": "Nhánh {0} không phải là nhánh phát hành Prowlarr hợp lệ, bạn sẽ không nhận được cập nhật",

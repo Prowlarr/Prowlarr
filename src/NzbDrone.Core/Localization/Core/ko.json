@@ -258,7 +258,6 @@
     "PendingChangesStayReview": "변경 사항 유지 및 검토",
     "Presets": "사전 설정",
     "ProxyCheckResolveIpMessage": "구성된 프록시 호스트 {0}의 IP 주소를 확인하지 못했습니다.",
-    "PtpOldSettingsCheckMessage": "다음 PassThePopcorn 인덱서에는 더 이상 사용되지 않는 설정이 있으며 업데이트해야합니다. {0}",
     "Reddit": "레딧",
     "TagsSettingsSummary": "모든 태그와 사용 방법을 확인하십시오. 사용하지 않는 태그는 제거 할 수 있습니다.",
     "Yesterday": "어제",

@@ -216,7 +216,6 @@
     "ProxyCheckResolveIpMessage": "Falha ao resolver o endereço IP para o host proxy configurado {0}",
     "ProxyPasswordHelpText": "Você só precisa inserir um nome de usuário e uma senha se solicitado. Caso contrário, deixe em branco.",
     "ProxyType": "Tipo de proxy",
-    "PtpOldSettingsCheckMessage": "As configurações dos seguintes indexadores do PassThePopcorn são obsoletas e devem ser atualizadas: {0}",
     "Queue": "Fila",
     "ReadTheWikiForMoreInformation": "Leia a Wiki para saber mais",
     "Refresh": "Atualizar",

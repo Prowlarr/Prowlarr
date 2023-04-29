@@ -188,7 +188,6 @@
     "Add": "添加",
     "SettingsEnableColorImpairedModeHelpText": "改变样式，以允许有颜色障碍的用户更好地区分颜色编码信息",
     "SettingsEnableColorImpairedMode": "启用色障模式",
-    "PtpOldSettingsCheckMessage": "下列PassThePopcorn搜刮器有已启用的设置，请更新：{0}",
     "ProxyUsernameHelpText": "如果需要，您只需要输入用户名和密码。否则就让它们为空。",
     "ProxyType": "代理类型",
     "ProxyPasswordHelpText": "如果需要，您只需要输入用户名和密码，否则就让它们为空。",

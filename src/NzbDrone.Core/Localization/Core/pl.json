@@ -209,7 +209,6 @@
     "ProxyCheckResolveIpMessage": "Nie udało się rozwiązać adresu IP dla skonfigurowanego hosta proxy {0}",
     "ProxyPasswordHelpText": "Musisz tylko wprowadzić nazwę użytkownika i hasło, jeśli jest to wymagane. W przeciwnym razie pozostaw je puste.",
     "ProxyUsernameHelpText": "Musisz tylko wprowadzić nazwę użytkownika i hasło, jeśli jest to wymagane. W przeciwnym razie pozostaw je puste.",
-    "PtpOldSettingsCheckMessage": "Następujące indeksatory PassThePopcorn mają przestarzałe ustawienia i należy je zaktualizować: {0}",
     "Queue": "Kolejka",
     "Reddit": "Reddit",
     "RefreshMovie": "Odśwież film",

@@ -175,7 +175,6 @@
     "ProxyCheckResolveIpMessage": "פתרון כתובת ה- IP עבור מארח ה- Proxy המוגדר {0} נכשל",
     "ProxyPasswordHelpText": "עליך להזין שם משתמש וסיסמה רק אם נדרשים שם. השאר אותם ריקים אחרת.",
     "ProxyUsernameHelpText": "עליך להזין שם משתמש וסיסמה רק אם נדרשים שם. השאר אותם ריקים אחרת.",
-    "PtpOldSettingsCheckMessage": "האינדקסים הבאים של PassThePopcorn ביטלו את ההגדרות ויש לעדכן אותם: {0}",
     "Reddit": "רדיט",
     "ReleaseBranchCheckOfficialBranchMessage": "סניף {0} אינו סניף חוקי לשחרור Prowlarr, לא תקבל עדכונים",
     "ScriptPath": "נתיב סקריפט",

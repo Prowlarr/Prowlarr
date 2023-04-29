@@ -7,7 +7,6 @@
     "SelectAll": "Seleziona Tutto",
     "Scheduled": "Programmato",
     "ReleaseBranchCheckOfficialBranchMessage": "La versione {0} non è una versione valida per le release di Prowlarr, non riceverai aggiornamenti",
-    "PtpOldSettingsCheckMessage": "I seguenti indicizzatori di PassThePopcorn hanno delle impostazioni obsolete e devono essere aggiornati: {0}",
     "ProxyCheckResolveIpMessage": "Impossibile risolvere l'indirizzo IP per l'Host Configurato del Proxy {0}",
     "NoChanges": "Nessuna Modifica",
     "NoChange": "Nessuna Modifica",

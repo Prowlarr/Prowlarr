@@ -209,7 +209,6 @@
     "PriorityHelpText": "Birden çok İndirme İstemcisine öncelik verin. Round-Robin, aynı önceliğe sahip müşteriler için kullanılır.",
     "PrioritySettings": "Öncelik",
     "ProxyType": "Proxy Türü",
-    "PtpOldSettingsCheckMessage": "Aşağıdaki PassThePopcorn dizinleyicilerinin ayarları kullanımdan kaldırıldı ve güncellenmeleri gerekiyor: {0}",
     "ReadTheWikiForMoreInformation": "Daha fazla bilgi için Wiki'yi okuyun",
     "Reddit": "Reddit",
     "RefreshMovie": "Filmi yenile",

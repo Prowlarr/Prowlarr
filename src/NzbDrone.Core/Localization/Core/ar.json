@@ -54,7 +54,6 @@
     "ProxyCheckFailedToTestMessage": "فشل اختبار الوكيل: {0}",
     "ProxyPasswordHelpText": "ما عليك سوى إدخال اسم مستخدم وكلمة مرور إذا كان أحدهما مطلوبًا. اتركها فارغة وإلا.",
     "ProxyUsernameHelpText": "ما عليك سوى إدخال اسم مستخدم وكلمة مرور إذا كان أحدهما مطلوبًا. اتركها فارغة وإلا.",
-    "PtpOldSettingsCheckMessage": "مفهرسات PassThePopcorn التالية بها إعدادات مهملة ويجب تحديثها: {0}",
     "Queue": "طابور",
     "ReadTheWikiForMoreInformation": "اقرأ Wiki لمزيد من المعلومات",
     "Reddit": "رديت",

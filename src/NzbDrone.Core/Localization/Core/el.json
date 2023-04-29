@@ -176,7 +176,6 @@
     "Priority": "Προτεραιότητα",
     "ProxyCheckFailedToTestMessage": "Αποτυχία δοκιμής διακομιστή μεσολάβησης: {0}",
     "ProxyCheckResolveIpMessage": "Αποτυχία επίλυσης της διεύθυνσης IP για τον Διαμορφωμένο διακομιστή μεσολάβησης {0}",
-    "PtpOldSettingsCheckMessage": "Οι ακόλουθοι ευρετηριαστές PassThePopcorn έχουν καταργήσει τις ρυθμίσεις και πρέπει να ενημερωθούν: {0}",
     "Queue": "Ουρά",
     "ReadTheWikiForMoreInformation": "Διαβάστε το Wiki για περισσότερες πληροφορίες",
     "Refresh": "Φρεσκάρω",

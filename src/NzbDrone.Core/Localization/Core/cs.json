@@ -135,7 +135,6 @@
     "ProxyCheckResolveIpMessage": "Nepodařilo se vyřešit adresu IP konfigurovaného hostitele proxy {0}",
     "ProxyPasswordHelpText": "Musíte pouze zadat uživatelské jméno a heslo, pokud je požadováno. Jinak je nechte prázdné.",
     "ProxyUsernameHelpText": "Musíte pouze zadat uživatelské jméno a heslo, pokud je požadováno. Jinak je nechte prázdné.",
-    "PtpOldSettingsCheckMessage": "Následující indexovače PassThePopcorn mají zastaralá nastavení a měla by být aktualizována: {0}",
     "Queue": "Fronta",
     "ReadTheWikiForMoreInformation": "Další informace najdete na Wiki",
     "Refresh": "Obnovit",

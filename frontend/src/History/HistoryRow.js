@@ -6,6 +6,7 @@ import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
 import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
+import translate from 'Utilities/String/translate';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
 import HistoryRowParameter from './HistoryRowParameter';
@@ -193,7 +194,7 @@ class HistoryRow extends Component {
                   {
                     data.season ?
                       <HistoryRowParameter
-                        title='Season'
+                        title={translate('Season')}
                         value={data.season}
                       /> :
                       null
@@ -202,7 +203,7 @@ class HistoryRow extends Component {
                   {
                     data.episode ?
                       <HistoryRowParameter
-                        title='Episode'
+                        title={translate('Episode')}
                         value={data.episode}
                       /> :
                       null
@@ -211,7 +212,7 @@ class HistoryRow extends Component {
                   {
                     data.artist ?
                       <HistoryRowParameter
-                        title='Artist'
+                        title={translate('Artist')}
                         value={data.artist}
                       /> :
                       null
@@ -220,7 +221,7 @@ class HistoryRow extends Component {
                   {
                     data.album ?
                       <HistoryRowParameter
-                        title='Album'
+                        title={translate('Album')}
                         value={data.album}
                       /> :
                       null
@@ -229,7 +230,7 @@ class HistoryRow extends Component {
                   {
                     data.label ?
                       <HistoryRowParameter
-                        title='Label'
+                        title={translate('Label')}
                         value={data.label}
                       /> :
                       null
@@ -238,7 +239,7 @@ class HistoryRow extends Component {
                   {
                     data.track ?
                       <HistoryRowParameter
-                        title='Track'
+                        title={translate('Track')}
                         value={data.track}
                       /> :
                       null
@@ -247,7 +248,7 @@ class HistoryRow extends Component {
                   {
                     data.year ?
                       <HistoryRowParameter
-                        title='Year'
+                        title={translate('Year')}
                         value={data.year}
                       /> :
                       null
@@ -256,7 +257,7 @@ class HistoryRow extends Component {
                   {
                     data.genre ?
                       <HistoryRowParameter
-                        title='Genre'
+                        title={translate('Genre')}
                         value={data.genre}
                       /> :
                       null
@@ -265,7 +266,7 @@ class HistoryRow extends Component {
                   {
                     data.author ?
                       <HistoryRowParameter
-                        title='Author'
+                        title={translate('Author')}
                         value={data.author}
                       /> :
                       null
@@ -274,7 +275,7 @@ class HistoryRow extends Component {
                   {
                     data.bookTitle ?
                       <HistoryRowParameter
-                        title='Book'
+                        title={translate('Book')}
                         value={data.bookTitle}
                       /> :
                       null
@@ -283,7 +284,7 @@ class HistoryRow extends Component {
                   {
                     data.publisher ?
                       <HistoryRowParameter
-                        title='Publisher'
+                        title={translate('Publisher')}
                         value={data.publisher}
                       /> :
                       null
@@ -381,14 +382,14 @@ class HistoryRow extends Component {
                       <IconButton
                         name={icons.SEARCH}
                         onPress={this.onSearchPress}
-                        title='Repeat Search'
+                        title={translate('RepeatSearch')}
                       /> :
                       null
                   }
                   <IconButton
                     name={icons.INFO}
                     onPress={this.onDetailsPress}
-                    title='History Details'
+                    title={translate('HistoryDetails')}
                   />
                 </TableRowCell>
               );

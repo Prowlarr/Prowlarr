@@ -4,6 +4,7 @@ import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
+import translate from 'Utilities/String/translate';
 import selectTableOptions from './selectTableOptions';
 
 interface IndexerIndexTableOptionsProps {
@@ -32,13 +33,13 @@ function IndexerIndexTableOptions(props: IndexerIndexTableOptionsProps) {
   return (
     <Fragment>
       <FormGroup>
-        <FormLabel>Show Search</FormLabel>
+        <FormLabel>{translate('ShowSearch')}</FormLabel>
 
         <FormInputGroup
           type={inputTypes.CHECK}
           name="showSearchAction"
           value={showSearchAction}
-          helpText="Show search button on hover"
+          helpText={translate('ShowSearchActionHelpText')}
           onChange={onTableOptionChangeWrapper}
         />
       </FormGroup>

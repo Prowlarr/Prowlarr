@@ -222,7 +222,11 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
             <PageToolbarSeparator />
 
             <IndexerIndexSelectModeButton
-              label={isSelectMode ? 'Stop Selecting' : 'Select Indexer'}
+              label={
+                isSelectMode
+                  ? translate('StopSelecting')
+                  : translate('SelectIndexer')
+              }
               iconName={isSelectMode ? icons.SERIES_ENDED : icons.CHECK}
               isSelectMode={isSelectMode}
               overflowComponent={IndexerIndexSelectModeMenuItem}
@@ -230,7 +234,7 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
             />
 
             <IndexerIndexSelectAllButton
-              label="SelectAll"
+              label={translate('SelectAll')}
               isSelectMode={isSelectMode}
               overflowComponent={IndexerIndexSelectAllMenuItem}
             />
@@ -245,7 +249,10 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
               optionsComponent={IndexerIndexTableOptions}
               onTableOptionChange={onTableOptionChange}
             >
-              <PageToolbarButton label="Options" iconName={icons.TABLE} />
+              <PageToolbarButton
+                label={translate('Options')}
+                iconName={icons.TABLE}
+              />
             </TableOptionsModalWrapper>
 
             <PageToolbarSeparator />
@@ -276,7 +283,9 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
           >
             {isFetching && !isPopulated ? <LoadingIndicator /> : null}
 
-            {!isFetching && !!error ? <div>Unable to load indexers</div> : null}
+            {!isFetching && !!error ? (
+              <div>{translate('UnableToLoadIndexers')}</div>
+            ) : null}
 
             {isLoaded ? (
               <div className={styles.contentBodyContainer}>

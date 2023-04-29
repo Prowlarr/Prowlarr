@@ -14,6 +14,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds, sizes } from 'Helpers/Props';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createTagsSelector from 'Store/Selectors/createTagsSelector';
+import translate from 'Utilities/String/translate';
 import styles from './TagsModalContent.css';
 
 interface TagsModalContentProps {
@@ -70,7 +71,7 @@ function TagsModalContent(props: TagsModalContentProps) {
       <ModalBody>
         <Form>
           <FormGroup>
-            <FormLabel>Tags</FormLabel>
+            <FormLabel>{translate('Tags')}</FormLabel>
 
             <FormInputGroup
               type={inputTypes.TAG}
@@ -81,7 +82,7 @@ function TagsModalContent(props: TagsModalContentProps) {
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Apply Tags</FormLabel>
+            <FormLabel>{translate('ApplyTags')}</FormLabel>
 
             <FormInputGroup
               type={inputTypes.SELECT}
@@ -89,17 +90,17 @@ function TagsModalContent(props: TagsModalContentProps) {
               value={applyTags}
               values={applyTagsOptions}
               helpTexts={[
-                'How to apply tags to the selected series',
-                'Add: Add the tags the existing list of tags',
-                'Remove: Remove the entered tags',
-                'Replace: Replace the tags with the entered tags (enter no tags to clear all tags)',
+                translate('ApplyTagsHelpTexts1'),
+                translate('ApplyTagsHelpTexts2'),
+                translate('ApplyTagsHelpTexts3'),
+                translate('ApplyTagsHelpTexts4'),
               ]}
               onChange={onApplyTagsChange}
             />
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>Result</FormLabel>
+            <FormLabel>{translate('Result')}</FormLabel>
 
             <div className={styles.result}>
               {indexerTags.map((id) => {
@@ -116,7 +117,11 @@ function TagsModalContent(props: TagsModalContentProps) {
                 return (
                   <Label
                     key={tag.id}
-                    title={removeTag ? 'Removing tag' : 'Existing tag'}
+                    title={
+                      removeTag
+                        ? translate('RemoveTagRemovingTag')
+                        : translate('RemoveTagExistingTag')
+                    }
                     kind={removeTag ? kinds.INVERSE : kinds.INFO}
                     size={sizes.LARGE}
                   >
@@ -140,7 +145,7 @@ function TagsModalContent(props: TagsModalContentProps) {
                   return (
                     <Label
                       key={tag.id}
-                      title={'Adding tag'}
+                      title={translate('AddingTag')}
                       kind={kinds.SUCCESS}
                       size={sizes.LARGE}
                     >

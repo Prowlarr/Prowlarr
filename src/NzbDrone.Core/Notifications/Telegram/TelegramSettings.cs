@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Notifications.Telegram
         [FieldDefinition(0, Label = "Bot Token", Privacy = PrivacyLevel.ApiKey, HelpLink = "https://core.telegram.org/bots")]
         public string BotToken { get; set; }
 
-        [FieldDefinition(1, Label = "Chat ID", HelpLink = "http://stackoverflow.com/a/37396871/882971", HelpText = "You must start a conversation with the bot or add it to your group to receive messages")]
+        [FieldDefinition(1, Label = "Chat ID", HelpLink = "http://stackoverflow.com/a/37396871/882971", HelpText = "You must start a conversation with the bot or add it to your group to receive messages. For a group topic, append /topicID to the chat ID.")]
         public string ChatId { get; set; }
 
         [FieldDefinition(2, Label = "Send Silently", Type = FieldType.Checkbox, HelpText = "Sends the message silently. Users will receive a notification with no sound")]

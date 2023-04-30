@@ -74,9 +74,9 @@ module.exports = {
 
   defaultButtonTextColor: '#eee',
   defaultButtonBackgroundColor: '#333',
-  defaultBorderColor: '#eaeaea',
+  defaultBorderColor: '#393f45',
   defaultHoverBackgroundColor: '#444',
-  defaultHoverBorderColor: '#d6d6d6',
+  defaultHoverBorderColor: '#5a6265',
 
   primaryBackgroundColor: '#5d9cec',
   primaryBorderColor: '#5899eb',

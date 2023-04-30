@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         {
             var results = new List<ReleaseInfo>();
 
-            Rarbg.CheckResponseByStatusCode(indexerResponse);
+            Rarbg.CheckResponseByStatusCode(indexerResponse, _logger);
 
             var jsonResponse = new HttpResponse<RarbgResponse>(indexerResponse.HttpResponse);
 

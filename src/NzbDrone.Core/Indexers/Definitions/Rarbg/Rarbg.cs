@@ -45,15 +45,17 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
             return new RarbgParser(Capabilities, _logger);
         }
 
-        public static void CheckResponseByStatusCode(IndexerResponse response)
+        public static void CheckResponseByStatusCode(IndexerResponse response, Logger logger)
         {
             var responseCode = (int)response.HttpResponse.StatusCode;
 
             switch (responseCode)
             {
                 case (int)HttpStatusCode.TooManyRequests:
+                    logger.Warn("Indexer API limit reached.");
                     throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(2));
                 case 520:
+                    logger.Warn("Indexer API error, likely rate limited by origin server.");
                     throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(3));
                 case (int)HttpStatusCode.OK:
                     break;
@@ -116,7 +118,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         {
             var response = await base.FetchIndexerResponse(request);
 
-            CheckResponseByStatusCode(response);
+            CheckResponseByStatusCode(response, _logger);
 
             // try and recover from token errors
             var jsonResponse = new HttpResponse<RarbgResponse>(response.HttpResponse);

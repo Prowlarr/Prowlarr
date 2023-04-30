@@ -5,14 +5,19 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using NLog;
+using NzbDrone.Common;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Rarbg
@@ -28,11 +33,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(7);
         private readonly IRarbgTokenProvider _tokenProvider;
+        private readonly ICached<IndexerQueryResult> _queryResultCache;
 
-        public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public Rarbg(IRarbgTokenProvider tokenProvider, IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, ICacheManager cacheManager)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
             _tokenProvider = tokenProvider;
+            _queryResultCache = cacheManager.GetCache<IndexerQueryResult>(GetType(), "QueryResults");
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -43,6 +50,38 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         public override IParseIndexerResponse GetParser()
         {
             return new RarbgParser(Capabilities, _logger);
+        }
+
+        protected string BuildQueryResultCacheKey(IndexerRequest request)
+        {
+            return $"{request.HttpRequest.Url.FullUri}.{HashUtil.ComputeSha256Hash(Settings.ToJson())}";
+        }
+
+        protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
+        {
+            var cacheKey = BuildQueryResultCacheKey(request);
+            var queryResult = _queryResultCache.Find(cacheKey);
+
+            if (queryResult != null)
+            {
+                queryResult.Cached = true;
+
+                return queryResult;
+            }
+
+            _queryResultCache.ClearExpired();
+
+            queryResult = await base.FetchPage(request, parser);
+            _queryResultCache.Set(cacheKey, queryResult, TimeSpan.FromMinutes(10));
+
+            return queryResult;
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            return cleanReleases.Select(r => (ReleaseInfo)r.Clone()).ToList();
         }
 
         public static void CheckResponseByStatusCode(IndexerResponse response, Logger logger)

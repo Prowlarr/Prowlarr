@@ -58,6 +58,11 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.HasHttpError)
+            {
+                base.PreProcess(indexerResponse);
+            }
+
             var xdoc = LoadXmlDocument(indexerResponse);
 
             CheckError(xdoc, indexerResponse);

@@ -54,6 +54,11 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.HasHttpError)
+            {
+                base.PreProcess(indexerResponse);
+            }
+
             var xdoc = LoadXmlDocument(indexerResponse);
 
             CheckError(xdoc, indexerResponse);

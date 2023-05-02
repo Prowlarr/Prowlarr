@@ -423,5 +423,8 @@
     "EditSyncProfile": "Synchronisatieprofiel toevoegen",
     "Remove": "Verwijder",
     "Replace": "Vervangen",
-    "TheLatestVersionIsAlreadyInstalled": "De nieuwste versie van Prowlarr is al geïnstalleerd"
+    "TheLatestVersionIsAlreadyInstalled": "De nieuwste versie van Prowlarr is al geïnstalleerd",
+    "AddApplication": "Applicatie Toevoegen",
+    "Album": "Album",
+    "AddCustomFilter": "Aangepaste Filter Toevoegen"
 }

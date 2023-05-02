@@ -214,7 +214,7 @@ namespace NzbDrone.Core.Applications
                 return true;
             }
 
-            _logger.Info("Application {0} does not have any intersecting (matching) tags with {1} [{2}]. Indexer will neither be synced to nor removed from the application.", app.Name, indexer.Name, indexer.Id);
+            _logger.Debug("Application {0} does not have any intersecting (matching) tags with {1} [{2}]. Indexer will neither be synced to nor removed from the application.", app.Name, indexer.Name, indexer.Id);
             return false;
         }
 

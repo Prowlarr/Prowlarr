@@ -481,5 +481,12 @@
     "DisabledUntil": "禁用Until",
     "IndexerDisabled": "索引器已被禁用",
     "InitialFailure": "初始化失败",
-    "LastFailure": "最后一次失败"
+    "LastFailure": "最后一次失败",
+    "Episode": "片段",
+    "IndexerFailureRate": "Indexer失败率",
+    "Author": "作者",
+    "AverageResponseTimesMs": "平均响应时间(毫秒)",
+    "Book": "图书",
+    "Genre": "类型",
+    "HistoryDetails": "历史详情"
 }

@@ -39,7 +39,7 @@ function IndexerIndexTableOptions(props: IndexerIndexTableOptionsProps) {
           type={inputTypes.CHECK}
           name="showSearchAction"
           value={showSearchAction}
-          helpText={translate('ShowSearchActionHelpText')}
+          helpText={translate('ShowSearchHelpText')}
           onChange={onTableOptionChangeWrapper}
         />
       </FormGroup>

@@ -504,5 +504,7 @@
     "Theme": "Tema",
     "TotalHostGrabs": "Total de capturas do host",
     "TotalHostQueries": "Total de consultas do host",
-    "TotalIndexerQueries": "Total de consultas do indexador"
+    "TotalIndexerQueries": "Total de consultas do indexador",
+    "SelectIndexer": "Selecionar Indexador",
+    "StopSelecting": "Parar Seleção"
 }

@@ -484,6 +484,7 @@
   "UnsavedChanges": "Unsaved Changes",
   "UnselectAll": "Unselect All",
   "UpdateAutomaticallyHelpText": "Automatically download and install updates. You will still be able to install from System: Updates",
+  "UpdateAvailable": "New update is available",
   "UpdateCheckStartupNotWritableMessage": "Cannot install update because startup folder '{0}' is not writable by the user '{1}'.",
   "UpdateCheckStartupTranslocationMessage": "Cannot install update because startup folder '{0}' is in an App Translocation folder.",
   "UpdateCheckUINotWritableMessage": "Cannot install update because UI folder '{0}' is not writable by the user '{1}'.",

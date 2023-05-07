@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using NLog;
@@ -13,7 +12,6 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
@@ -84,25 +82,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
             return cleanReleases.Select(r => (ReleaseInfo)r.Clone()).ToList();
         }
 
-        public static void CheckResponseByStatusCode(IndexerResponse response, Logger logger)
-        {
-            var responseCode = (int)response.HttpResponse.StatusCode;
-
-            switch (responseCode)
-            {
-                case (int)HttpStatusCode.TooManyRequests:
-                    logger.Warn("Indexer API limit reached.");
-                    throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(2));
-                case 520:
-                    logger.Warn("Indexer API error, likely rate limited by origin server.");
-                    throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(3));
-                case (int)HttpStatusCode.OK:
-                    break;
-                default:
-                    throw new IndexerException(response, "Indexer API call returned an unexpected status code [{0}]", responseCode);
-            }
-        }
-
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -157,7 +136,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         {
             var response = await base.FetchIndexerResponse(request);
 
-            CheckResponseByStatusCode(response, _logger);
+            ((RarbgParser)GetParser()).CheckResponseByStatusCode(response);
 
             // try and recover from token errors
             var jsonResponse = new HttpResponse<RarbgResponse>(response.HttpResponse);

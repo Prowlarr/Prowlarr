@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text.RegularExpressions;
 using NLog;
 using NzbDrone.Common.EnvironmentInfo;
@@ -28,7 +29,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         {
             var results = new List<ReleaseInfo>();
 
-            Rarbg.CheckResponseByStatusCode(indexerResponse, _logger);
+            CheckResponseByStatusCode(indexerResponse);
 
             var jsonResponse = new HttpResponse<RarbgResponse>(indexerResponse.HttpResponse);
 
@@ -99,18 +100,30 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
             return results;
         }
 
-        private string GetGuid(RarbgTorrent torrent)
+        public void CheckResponseByStatusCode(IndexerResponse response)
+        {
+            var responseCode = (int)response.HttpResponse.StatusCode;
+
+            switch (responseCode)
+            {
+                case (int)HttpStatusCode.TooManyRequests:
+                    _logger.Warn("Indexer API limit reached.");
+                    throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(2));
+                case 520:
+                    _logger.Warn("Indexer API error, likely rate limited by origin server.");
+                    throw new TooManyRequestsException(response.HttpRequest, response.HttpResponse, TimeSpan.FromMinutes(3));
+                case (int)HttpStatusCode.OK:
+                    break;
+                default:
+                    throw new IndexerException(response, "Indexer API call returned an unexpected status code [{0}]", responseCode);
+            }
+        }
+
+        private static string GetGuid(RarbgTorrent torrent)
         {
             var match = RegexGuid.Match(torrent.download);
 
-            if (match.Success)
-            {
-                return string.Format("rarbg-{0}", match.Groups[1].Value);
-            }
-            else
-            {
-                return string.Format("rarbg-{0}", torrent.download);
-            }
+            return match.Success ? $"rarbg-{match.Groups[1].Value}" : $"rarbg-{torrent.download}";
         }
     }
 }

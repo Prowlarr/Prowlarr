@@ -20,6 +20,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
+[Obsolete("User Agent blocked")]
 public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 {
     public override string Name => "AudioBook Bay";

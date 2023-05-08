@@ -55,7 +55,11 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const vipExpiration =
     fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
 
-  const rssUrl = `${window.location.origin}${window.Prowlarr.urlBase}/${id}/api?t=search&extended=1&apikey=${window.Prowlarr.apiKey}`;
+  const rssUrl = `${window.location.origin}${
+    window.Prowlarr.urlBase
+  }/${id}/api?apikey=${encodeURIComponent(
+    window.Prowlarr.apiKey
+  )}&extended=1&t=search`;
 
   const [isEditIndexerModalOpen, setIsEditIndexerModalOpen] = useState(false);
   const [isDeleteIndexerModalOpen, setIsDeleteIndexerModalOpen] =

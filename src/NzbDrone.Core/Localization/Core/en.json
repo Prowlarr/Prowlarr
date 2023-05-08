@@ -23,6 +23,7 @@
   "Analytics": "Analytics",
   "AnalyticsEnabledHelpText": "Send anonymous usage and error information to Prowlarr's servers. This includes information on your browser, which Prowlarr WebUI pages you use, error reporting as well as OS and runtime version. We will use this information to prioritize features and bug fixes.",
   "ApiKey": "API Key",
+  "ApiKeyValidationHealthCheckMessage": "Please update your API key to be at least 20 characters long. You can do this via settings or the config file",
   "AppDataDirectory": "AppData directory",
   "AppDataLocationHealthCheckMessage": "Updating will not be possible to prevent deleting AppData on Update",
   "AppProfileDeleteConfirm": "Are you sure you want to delete {0}?",

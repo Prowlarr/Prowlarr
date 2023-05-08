@@ -5242,6 +5242,10 @@
             "type": "string",
             "nullable": true
           },
+          "applicationUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "updateAutomatically": {
             "type": "boolean"
           },
@@ -6017,6 +6021,9 @@
           "onHealthIssue": {
             "type": "boolean"
           },
+          "onHealthRestored": {
+            "type": "boolean"
+          },
           "onApplicationUpdate": {
             "type": "boolean"
           },
@@ -6027,6 +6034,9 @@
             "type": "boolean"
           },
           "supportsOnHealthIssue": {
+            "type": "boolean"
+          },
+          "supportsOnHealthRestored": {
             "type": "boolean"
           },
           "includeHealthWarnings": {

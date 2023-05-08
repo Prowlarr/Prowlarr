@@ -294,6 +294,8 @@
   "OnGrabHelpText": "On Release Grab",
   "OnHealthIssue": "On Health Issue",
   "OnHealthIssueHelpText": "On Health Issue",
+  "OnHealthRestored": "On Health Restored",
+  "OnHealthRestoredHelpText": "On Health Restored",
   "OpenBrowserOnStart": "Open browser on start",
   "OpenThisModal": "Open This Modal",
   "Options": "Options",

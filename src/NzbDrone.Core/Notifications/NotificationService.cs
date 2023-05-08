@@ -1,10 +1,8 @@
 using System;
-using System.Drawing.Drawing2D;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Indexers.Events;
-using NzbDrone.Core.Indexers.PassThePopcorn;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Update.History.Events;
@@ -13,6 +11,7 @@ namespace NzbDrone.Core.Notifications
 {
     public class NotificationService
         : IHandle<HealthCheckFailedEvent>,
+          IHandle<HealthCheckRestoredEvent>,
           IHandleAsync<HealthCheckCompleteEvent>,
           IHandle<UpdateInstalledEvent>,
           IHandle<IndexerDownloadEvent>
@@ -99,6 +98,29 @@ namespace NzbDrone.Core.Notifications
                 catch (Exception ex)
                 {
                     _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
+                }
+            }
+        }
+
+        public void Handle(HealthCheckRestoredEvent message)
+        {
+            if (message.IsInStartupGracePeriod)
+            {
+                return;
+            }
+
+            foreach (var notification in _notificationFactory.OnHealthRestoredEnabled())
+            {
+                try
+                {
+                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    {
+                        notification.OnHealthRestored(message.PreviousCheck);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warn(ex, "Unable to send OnHealthRestored notification to: " + notification.Definition.Name);
                 }
             }
         }

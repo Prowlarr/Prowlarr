@@ -51,6 +51,11 @@ namespace NzbDrone.Core.Test.NotificationTests
                 TestLogger.Info("OnHealthIssue was called");
             }
 
+            public override void OnHealthRestored(Core.HealthCheck.HealthCheck healthCheck)
+            {
+                TestLogger.Info("OnHealthRestored was called");
+            }
+
             public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
             {
                 TestLogger.Info("OnApplicationUpdate was called");
@@ -79,6 +84,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             var notification = new TestNotificationWithAllEvents();
 
             notification.SupportsOnHealthIssue.Should().BeTrue();
+            notification.SupportsOnHealthRestored.Should().BeTrue();
             notification.SupportsOnApplicationUpdate.Should().BeTrue();
             notification.SupportsOnGrab.Should().BeTrue();
         }
@@ -89,6 +95,7 @@ namespace NzbDrone.Core.Test.NotificationTests
             var notification = new TestNotificationWithNoEvents();
 
             notification.SupportsOnHealthIssue.Should().BeFalse();
+            notification.SupportsOnHealthRestored.Should().BeFalse();
             notification.SupportsOnApplicationUpdate.Should().BeFalse();
             notification.SupportsOnGrab.Should().BeFalse();
         }

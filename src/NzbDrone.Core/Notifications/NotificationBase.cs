@@ -10,10 +10,12 @@ namespace NzbDrone.Core.Notifications
     {
         protected const string RELEASE_GRABBED_TITLE = "Release Grabbed";
         protected const string HEALTH_ISSUE_TITLE = "Health Check Failure";
+        protected const string HEALTH_RESTORED_TITLE = "Health Check Restored";
         protected const string APPLICATION_UPDATE_TITLE = "Application Updated";
 
         protected const string RELEASE_GRABBED_TITLE_BRANDED = "Prowlarr - " + RELEASE_GRABBED_TITLE;
         protected const string HEALTH_ISSUE_TITLE_BRANDED = "Prowlarr - " + HEALTH_ISSUE_TITLE;
+        protected const string HEALTH_RESTORED_TITLE_BRANDED = "Prowlarr - " + HEALTH_RESTORED_TITLE;
         protected const string APPLICATION_UPDATE_TITLE_BRANDED = "Prowlarr - " + APPLICATION_UPDATE_TITLE;
 
         public abstract string Name { get; }
@@ -37,6 +39,10 @@ namespace NzbDrone.Core.Notifications
         {
         }
 
+        public virtual void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+        }
+
         public virtual void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
         }
@@ -47,6 +53,7 @@ namespace NzbDrone.Core.Notifications
 
         public bool SupportsOnGrab => HasConcreteImplementation("OnGrab");
         public bool SupportsOnHealthIssue => HasConcreteImplementation("OnHealthIssue");
+        public bool SupportsOnHealthRestored => HasConcreteImplementation("OnHealthRestored");
         public bool SupportsOnApplicationUpdate => HasConcreteImplementation("OnApplicationUpdate");
 
         protected TSettings Settings => (TSettings)Definition.Settings;

@@ -57,9 +57,11 @@ class Notification extends Component {
       name,
       onGrab,
       onHealthIssue,
+      onHealthRestored,
       onApplicationUpdate,
       supportsOnGrab,
       supportsOnHealthIssue,
+      supportsOnHealthRestored,
       supportsOnApplicationUpdate
     } = this.props;
 
@@ -74,17 +76,27 @@ class Notification extends Component {
         </div>
 
         {
-          supportsOnGrab && onGrab &&
+          supportsOnGrab && onGrab ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnGrab')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnHealthIssue && onHealthIssue &&
+          supportsOnHealthIssue && onHealthIssue ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnHealthIssue')}
-            </Label>
+            </Label> :
+            null
+        }
+
+        {
+          supportsOnHealthRestored && onHealthRestored ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnHealthRestored')}
+            </Label> :
+            null
         }
 
         {
@@ -96,7 +108,7 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onHealthIssue && !onApplicationUpdate ?
+          !onGrab && !onHealthIssue && !onHealthRestored && !onApplicationUpdate ?
             <Label
               kind={kinds.DISABLED}
               outline={true}
@@ -132,9 +144,11 @@ Notification.propTypes = {
   name: PropTypes.string.isRequired,
   onGrab: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
+  onHealthRestored: PropTypes.bool.isRequired,
   onApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
+  supportsOnHealthRestored: PropTypes.bool.isRequired,
   supportsOnApplicationUpdate: PropTypes.bool.isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };

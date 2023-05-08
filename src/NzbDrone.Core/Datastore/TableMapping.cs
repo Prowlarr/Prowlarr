@@ -69,6 +69,7 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(x => x.ImplementationName)
                   .Ignore(i => i.SupportsOnGrab)
                   .Ignore(i => i.SupportsOnHealthIssue)
+                  .Ignore(i => i.SupportsOnHealthRestored)
                   .Ignore(i => i.SupportsOnApplicationUpdate);
 
             Mapper.Entity<IndexerProxyDefinition>("IndexerProxies").RegisterModel()

@@ -17,10 +17,12 @@ function NotificationEventItems(props) {
   const {
     onGrab,
     onHealthIssue,
+    onHealthRestored,
     onApplicationUpdate,
     supportsOnGrab,
     includeManualGrabs,
     supportsOnHealthIssue,
+    supportsOnHealthRestored,
     includeHealthWarnings,
     supportsOnApplicationUpdate
   } = item;
@@ -70,8 +72,19 @@ function NotificationEventItems(props) {
             />
           </div>
 
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onHealthRestored"
+              helpText={translate('OnHealthRestoredHelpText')}
+              isDisabled={!supportsOnHealthRestored.value}
+              {...onHealthRestored}
+              onChange={onInputChange}
+            />
+          </div>
+
           {
-            onHealthIssue.value &&
+            (onHealthIssue.value || onHealthRestored.value) &&
               <div>
                 <FormInputGroup
                   type={inputTypes.CHECK}

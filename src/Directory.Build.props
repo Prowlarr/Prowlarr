@@ -3,7 +3,9 @@
   <PropertyGroup>
     <AnalysisLevel>6.0-all</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles> 
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <RuntimeIdentifiers>win-x64;win-x86;osx-x64;osx-arm64;linux-x64;linux-musl-x64;linux-musl-arm;linux-arm;linux-arm64;linux-musl-arm64</RuntimeIdentifiers>
@@ -24,7 +26,7 @@
     <ProwlarrProject Condition="$(MSBuildProjectName.StartsWith('Prowlarr'))">true</ProwlarrProject>
     <ProwlarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceInstall'))">true</ProwlarrProject>
     <ProwlarrProject Condition="$(MSBuildProjectName.StartsWith('ServiceUninstall'))">true</ProwlarrProject>
-    
+
     <!-- A test project gets the test sdk packages automatically added -->
     <TestProject>false</TestProject>
     <TestProject Condition="$(MSBuildProjectName.EndsWith('.Test'))">true</TestProject>
@@ -50,7 +52,7 @@
 
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  
+
   <!-- Test projects need bindingRedirects -->
   <PropertyGroup Condition="'$(ProwlarrOutputType)'=='Test'">
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -63,7 +65,7 @@
     <Product>Prowlarr</Product>
     <Company>prowlarr.com</Company>
     <Copyright>Copyright 2014-$([System.DateTime]::Now.ToString('yyyy')) prowlarr.com (GNU General Public v3)</Copyright>
-    
+
     <!-- Should be replaced by CI -->
     <AssemblyVersion>10.0.0.*</AssemblyVersion>
     <AssemblyConfiguration>$(Configuration)-dev</AssemblyConfiguration>
@@ -72,7 +74,7 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    
+
     <Deterministic Condition="$(AssemblyVersion.EndsWith('*'))">False</Deterministic>
 
     <PathMap>$(MSBuildProjectDirectory)=./$(MSBuildProjectName)/</PathMap>
@@ -94,7 +96,7 @@
     <!-- FXCop Built into Net5 SDK now as NETAnalyzers, Enabled by default on net5 projects -->
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
-  
+
   <!-- Standard testing packages -->
   <ItemGroup Condition="'$(TestProject)'=='true'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />

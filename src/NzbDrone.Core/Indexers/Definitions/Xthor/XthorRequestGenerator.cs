@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
@@ -13,10 +13,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
     {
         public XthorSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public XthorRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term,
             int[] categories,

@@ -70,10 +70,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public TorrentsCSVRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
             // search cannot be blank and needs at least 3 characters

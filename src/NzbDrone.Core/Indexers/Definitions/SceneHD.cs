@@ -93,10 +93,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerCapabilities Capabilities { get; set; }
         public string BaseUrl { get; set; }
 
-        public SceneHDRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
             var search = new[] { imdbId, term };

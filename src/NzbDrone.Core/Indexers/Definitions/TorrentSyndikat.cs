@@ -121,10 +121,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public TorrentSyndikatSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public TorrentSyndikatRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
             var searchString = term;

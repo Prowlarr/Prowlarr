@@ -73,10 +73,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public BeyondHDSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public BeyondHDRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int tmdbId = 0)
         {
             var body = new Dictionary<string, object>
@@ -258,10 +254,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class BeyondHDSettings : NoAuthTorrentBaseSettings
     {
         private static readonly BeyondHDSettingsValidator Validator = new ();
-
-        public BeyondHDSettings()
-        {
-        }
 
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }

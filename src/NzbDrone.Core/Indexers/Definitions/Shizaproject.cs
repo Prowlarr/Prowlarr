@@ -74,10 +74,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public NoAuthTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public ShizaprojectRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
         {
             var variables = new

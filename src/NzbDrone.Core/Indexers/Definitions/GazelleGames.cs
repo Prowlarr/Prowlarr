@@ -199,10 +199,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerCapabilities Capabilities { get; set; }
         public IIndexerHttpClient HttpClient { get; set; }
 
-        public GazelleGamesRequestGenerator()
-        {
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();

@@ -78,10 +78,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IndexerCapabilities Capabilities { get; set; }
         public BinSearchSettings Settings { get; set; }
 
-        public BinSearchRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, SearchCriteriaBase searchCriteria)
         {
             var qc = new NameValueCollection

@@ -93,10 +93,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public CookieTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        public BitHDTVRequestGenerator()
-        {
-        }
-
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
             var searchUrl = string.Format("{0}/torrents.php", Settings.BaseUrl.TrimEnd('/'));

@@ -322,7 +322,7 @@ namespace NzbDrone.Common.Http
                 _logger.Debug("Downloading [{0}] to [{1}]", url, fileName);
 
                 var stopWatch = Stopwatch.StartNew();
-                using (var fileStream = new FileStream(fileNamePart, FileMode.Create, FileAccess.ReadWrite))
+                await using (var fileStream = new FileStream(fileNamePart, FileMode.Create, FileAccess.ReadWrite))
                 {
                     var request = new HttpRequest(url);
                     request.AllowAutoRedirect = true;

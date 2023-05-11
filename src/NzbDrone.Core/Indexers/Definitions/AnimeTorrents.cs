@@ -279,7 +279,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var dom = parser.ParseDocument(indexerResponse.Content);
 
             var rows = dom.QuerySelectorAll("table tr");
-            foreach (var row in rows.Skip(1))
+            foreach (var (row, index) in rows.Skip(1).Select((v, i) => (v, i)))
             {
                 var downloadVolumeFactor = row.QuerySelector("img[alt=\"Gold Torrent\"]") != null ? 0 : row.QuerySelector("img[alt=\"Silver Torrent\"]") != null ? 0.5 : 1;
 
@@ -311,6 +311,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var categoryLink = row.QuerySelector("td:nth-of-type(1) a")?.GetAttribute("href") ?? string.Empty;
                 var categoryId = ParseUtil.GetArgumentFromQueryString(categoryLink, "cat");
 
+                var publishedDate = DateTime.ParseExact(row.QuerySelector("td:nth-of-type(5)").TextContent, "dd MMM yy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+
+                if (publishedDate.Date == DateTime.Today)
+                {
+                    publishedDate = publishedDate.Date + DateTime.Now.TimeOfDay - TimeSpan.FromMinutes(index);
+                }
+
                 var release = new TorrentInfo
                 {
                     Guid = infoUrl,
@@ -318,7 +325,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = downloadUrl,
                     Title = title,
                     Categories = _categories.MapTrackerCatToNewznab(categoryId),
-                    PublishDate = DateTime.ParseExact(row.QuerySelector("td:nth-of-type(5)").TextContent, "dd MMM yy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+                    PublishDate = publishedDate,
                     Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-of-type(6)").TextContent.Trim()),
                     Seeders = seeders,
                     Peers = ParseUtil.CoerceInt(connections[1]) + seeders,

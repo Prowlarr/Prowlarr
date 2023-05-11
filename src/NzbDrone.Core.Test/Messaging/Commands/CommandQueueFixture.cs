@@ -1,5 +1,4 @@
 using FizzWare.NBuilder;
-using FluentAssertions;
 using NUnit.Framework;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Test.Framework;

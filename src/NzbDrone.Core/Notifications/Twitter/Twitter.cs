@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Exceptions;
-using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Notifications.Twitter

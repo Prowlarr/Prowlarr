@@ -3,7 +3,6 @@ using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dapper;
-using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Datastore.Converters
 {

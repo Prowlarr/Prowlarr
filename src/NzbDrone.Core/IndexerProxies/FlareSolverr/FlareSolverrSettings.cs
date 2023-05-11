@@ -1,5 +1,4 @@
 using FluentValidation;
-using NLog.Config;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Validation;
 

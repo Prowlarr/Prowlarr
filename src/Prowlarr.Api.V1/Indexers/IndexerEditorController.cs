@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Messaging.Commands;
 using Prowlarr.Http;

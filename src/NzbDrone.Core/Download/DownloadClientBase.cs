@@ -11,7 +11,6 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
-using Org.BouncyCastle.Crypto.Tls;
 
 namespace NzbDrone.Core.Download
 {

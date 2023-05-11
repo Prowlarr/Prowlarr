@@ -1,4 +1,3 @@
-using System;
 using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;

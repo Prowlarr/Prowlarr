@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;

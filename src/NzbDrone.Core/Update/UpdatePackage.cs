@@ -1,5 +1,4 @@
-﻿using System;
-using NzbDrone.Common.EnvironmentInfo;
+using System;
 
 namespace NzbDrone.Core.Update
 {

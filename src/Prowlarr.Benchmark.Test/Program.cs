@@ -1,6 +1,3 @@
-using System;
-using System.Security.Cryptography;
-using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
 namespace NzbDrone.Benchmark.Test

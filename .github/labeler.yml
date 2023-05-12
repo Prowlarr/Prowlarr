@@ -1,0 +1,19 @@
+'Area: API':
+  - src/Prowlarr.Api.V1/**/*
+
+'Area: Db-migration':
+  - src/NzbDrone.Core/Datastore/Migration/*
+
+'Area: Download Clients':
+  - src/NzbDrone.Core/Download/Clients/**/*
+
+'Area: Indexer':
+  - src/NzbDrone.Core/Indexers/**/*
+
+'Area: Notifications':
+  - src/NzbDrone.Core/Notifications/**/*
+
+'Area: UI':
+  - frontend/**/*
+  - package.json
+  - yarn.lock

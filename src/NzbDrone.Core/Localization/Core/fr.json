@@ -504,5 +504,7 @@
     "TotalIndexerSuccessfulGrabs": "Total des saisies réussies de l'indexeur",
     "TotalUserAgentQueries": "Nombre total de requêtes d'agent utilisateur",
     "Track": "Piste",
-    "Year": "Année"
+    "Year": "Année",
+    "ApplicationURL": "URL de l'application",
+    "ApiKeyValidationHealthCheckMessage": "Merci de mettre à jour votre clé API afin qu'elle fasse plus de 20 caractères. Rendez vous dans les paramètres ou dans le fichier de configuration"
 }

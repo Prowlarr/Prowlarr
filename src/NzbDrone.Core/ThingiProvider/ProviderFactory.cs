@@ -177,7 +177,7 @@ namespace NzbDrone.Core.ThingiProvider
 
             foreach (var invalidDefinition in storedProvider.Where(def => GetImplementation(def) == null))
             {
-                _logger.Debug("Removing {0} ", invalidDefinition.Name);
+                _logger.Warn("Removing {0}", invalidDefinition.Name);
                 _providerRepository.Delete(invalidDefinition);
             }
         }

@@ -32,7 +32,7 @@ public class GazelleParser : IParseIndexerResponse
             // Remove cookie cache
             CookiesUpdater(null, null);
 
-            throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+            throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
         }
 
         if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
@@ -40,7 +40,7 @@ public class GazelleParser : IParseIndexerResponse
             // Remove cookie cache
             CookiesUpdater(null, null);
 
-            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
         }
 
         var jsonResponse = new HttpResponse<GazelleResponse>(indexerResponse.HttpResponse);

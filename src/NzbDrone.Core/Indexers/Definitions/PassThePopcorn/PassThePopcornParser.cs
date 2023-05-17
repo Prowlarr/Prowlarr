@@ -42,7 +42,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                     throw new RequestLimitReachedException(indexerResponse, "PTP Query Limit Reached. Please try again later.");
                 }
 
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
             if (indexerHttpResponse.Headers.ContentType != HttpAccept.Json.Value)
@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 }
 
                 // Remove cookie cache
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             var jsonResponse = STJson.Deserialize<PassThePopcornResponse>(indexerResponse.Content);

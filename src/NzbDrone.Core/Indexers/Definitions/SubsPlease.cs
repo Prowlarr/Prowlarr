@@ -172,7 +172,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
             // When there are no results, the API returns an empty array or empty response instead of an object

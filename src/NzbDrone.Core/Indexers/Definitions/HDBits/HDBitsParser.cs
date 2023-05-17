@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
             if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, "Unexpected response status {0} code from API request", indexerHttpResponse.StatusCode);
+                throw new IndexerException(indexerResponse, "Unexpected response status {0} code from indexer request", indexerHttpResponse.StatusCode);
             }
 
             var jsonResponse = JsonConvert.DeserializeObject<HDBitsResponse>(indexerResponse.Content);

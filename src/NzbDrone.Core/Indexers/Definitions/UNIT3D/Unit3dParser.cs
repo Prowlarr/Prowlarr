@@ -32,12 +32,12 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
             if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             var jsonResponse = new HttpResponse<Unit3dResponse>(indexerResponse.HttpResponse);

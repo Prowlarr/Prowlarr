@@ -182,12 +182,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             var indexerHttpResponse = indexerResponse.HttpResponse;
             if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerHttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerHttpResponse.StatusCode} code from indexer request");
             }
 
             if (!indexerHttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerHttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerHttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             if (indexerResponse.Content.ContainsIgnoreCase("Invalid API Key"))

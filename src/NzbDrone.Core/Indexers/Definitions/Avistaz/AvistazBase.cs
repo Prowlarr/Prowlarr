@@ -122,7 +122,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("pid", Settings.Pid.Trim())
-                .SetHeader("Content-Type", "application/json")
                 .Accept(HttpAccept.Json)
                 .Build();
 

@@ -151,8 +151,12 @@ public class GazelleParser : IParseIndexerResponse
         var url = new HttpUri(Settings.BaseUrl)
             .CombinePath("/torrents.php")
             .AddQueryParam("action", "download")
-            .AddQueryParam("usetoken", Settings.UseFreeleechToken ? "1" : "0")
             .AddQueryParam("id", torrentId);
+
+        if (Settings.UseFreeleechToken)
+        {
+            url = url.AddQueryParam("usetoken", "1");
+        }
 
         return url.FullUri;
     }

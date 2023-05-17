@@ -97,8 +97,8 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
                 || html.Contains("This torrent is too large.")
                 || html.Contains("You cannot use tokens here"))
             {
-                // download again with usetoken=0
-                var requestLinkNew = link.ToString().Replace("usetoken=1", "usetoken=0");
+                // download again without usetoken=1
+                var requestLinkNew = link.ToString().Replace("&usetoken=1", "");
 
                 response = await base.Download(new Uri(requestLinkNew));
             }

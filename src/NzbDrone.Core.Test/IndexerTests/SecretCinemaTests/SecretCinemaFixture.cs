@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "SecretCinema",
                 Settings = new GazelleSettings { Username = "somekey", Password = "somekey" }
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
 
             torrentInfo.Title.Should().Be("Singin' in the Rain (1952) 2160p");
             torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
-            torrentInfo.DownloadUrl.Should().Be("https://secret-cinema.pw/torrents.php?action=download&useToken=0&id=45068");
+            torrentInfo.DownloadUrl.Should().Be("https://secret-cinema.pw/torrents.php?action=download&id=45068");
             torrentInfo.InfoUrl.Should().Be("https://secret-cinema.pw/torrents.php?id=2497&torrentid=45068");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);

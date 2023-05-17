@@ -370,8 +370,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
-            // AuthKey is required but not checked, just pass in a dummy variable
-            // to avoid having to track authkey, which is randomly cycled
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/ajax.php")
                 .AddQueryParam("action", "download")

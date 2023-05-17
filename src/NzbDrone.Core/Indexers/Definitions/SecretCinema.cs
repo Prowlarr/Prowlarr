@@ -213,13 +213,17 @@ public class SecretCinemaParser : IParseIndexerResponse
         return category.Contains(NewznabStandardCategory.Movies) || NewznabStandardCategory.Movies.SubCategories.Any(subCat => category.Contains(subCat));
     }
 
-    protected virtual string GetDownloadUrl(int torrentId)
+    private string GetDownloadUrl(int torrentId)
     {
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/torrents.php")
             .AddQueryParam("action", "download")
-            .AddQueryParam("useToken", _settings.UseFreeleechToken ? "1" : "0")
             .AddQueryParam("id", torrentId);
+
+        if (_settings.UseFreeleechToken)
+        {
+            url = url.AddQueryParam("useToken", "1");
+        }
 
         return url.FullUri;
     }

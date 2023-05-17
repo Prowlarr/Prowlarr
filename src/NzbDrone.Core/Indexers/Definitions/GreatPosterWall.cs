@@ -215,8 +215,12 @@ public class GreatPosterWallParser : GazelleParser
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/torrents.php")
             .AddQueryParam("action", "download")
-            .AddQueryParam("usetoken", _settings.UseFreeleechToken && canUseToken ? "1" : "0")
             .AddQueryParam("id", torrentId);
+
+        if (_settings.UseFreeleechToken && canUseToken)
+        {
+            url = url.AddQueryParam("usetoken", "1");
+        }
 
         return url.FullUri;
     }

@@ -42,7 +42,7 @@ public class GreatPosterWall : GazelleBase<GreatPosterWallSettings>
 
     public override IParseIndexerResponse GetParser()
     {
-        return new GreatPosterWallParser(Settings, Capabilities);
+        return new GreatPosterWallParser(Settings, Capabilities, _logger);
     }
 
     protected override IndexerCapabilities SetCapabilities()
@@ -105,12 +105,15 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 public class GreatPosterWallParser : GazelleParser
 {
     private readonly GreatPosterWallSettings _settings;
+    private readonly Logger _logger;
+
     private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
 
-    public GreatPosterWallParser(GreatPosterWallSettings settings, IndexerCapabilities capabilities)
+    public GreatPosterWallParser(GreatPosterWallSettings settings, IndexerCapabilities capabilities, Logger logger)
         : base(settings, capabilities)
     {
         _settings = settings;
+        _logger = logger;
     }
 
     public override IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -121,22 +124,24 @@ public class GreatPosterWallParser : GazelleParser
         {
             if (indexerResponse.HttpResponse.HasHttpRedirect)
             {
-                if (indexerResponse.HttpResponse.RedirectUrl.ContainsIgnoreCase("login.php"))
+                _logger.Warn("Redirected to {0} from indexer request", indexerResponse.HttpResponse.RedirectUrl);
+
+                if (indexerResponse.HttpResponse.RedirectUrl.ContainsIgnoreCase("/login.php"))
                 {
                     // Remove cookie cache
                     CookiesUpdater(null, null);
                     throw new IndexerException(indexerResponse, "We are being redirected to the login page. Most likely your session expired or was killed. Recheck your cookie or credentials and try testing the indexer.");
                 }
 
-                throw new IndexerException(indexerResponse, $"Redirected to {indexerResponse.HttpResponse.RedirectUrl} from API request");
+                throw new IndexerException(indexerResponse, $"Redirected to {indexerResponse.HttpResponse.RedirectUrl} from indexer request");
             }
 
-            throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+            throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
         }
 
         if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
         {
-            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
         }
 
         var jsonResponse = new HttpResponse<GreatPosterWallResponse>(indexerResponse.HttpResponse);

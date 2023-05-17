@@ -175,7 +175,7 @@
     "LogLevel": "Nível do log",
     "LogLevelTraceHelpTextWarning": "O registro de rastreamento deve ser ativado apenas temporariamente",
     "Logs": "Registros",
-    "MaintenanceRelease": "Lançamento de manutenção: correções de bugs e outras melhorias. Veja o histórico de mudanças no github para mais detalhes",
+    "MaintenanceRelease": "Versão de manutenção: correções de bugs e outras melhorias. Veja Github Commit History para mais detalhes",
     "Manual": "Manual",
     "Mechanism": "Mecanismo",
     "Message": "Mensagem",

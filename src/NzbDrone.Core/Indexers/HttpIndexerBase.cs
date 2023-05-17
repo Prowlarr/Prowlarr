@@ -264,6 +264,7 @@ namespace NzbDrone.Core.Indexers
             var releases = new List<ReleaseInfo>();
             var result = new IndexerPageableQueryResult();
             var url = string.Empty;
+            var minimumBackoff = TimeSpan.FromHours(1);
 
             try
             {
@@ -317,8 +318,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (WebException webException)
             {
-                if (webException.Status == WebExceptionStatus.NameResolutionFailure ||
-                    webException.Status == WebExceptionStatus.ConnectFailure)
+                if (webException.Status is WebExceptionStatus.NameResolutionFailure or WebExceptionStatus.ConnectFailure)
                 {
                     _indexerStatusService.RecordConnectionFailure(Definition.Id);
                 }
@@ -341,7 +341,7 @@ namespace NzbDrone.Core.Indexers
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
 
-                var retryTime = ex.RetryAfter != TimeSpan.Zero ? ex.RetryAfter : TimeSpan.FromHours(1);
+                var retryTime = ex.RetryAfter != TimeSpan.Zero ? ex.RetryAfter : minimumBackoff;
 
                 _indexerStatusService.RecordFailure(Definition.Id, retryTime);
                 _logger.Warn("Request Limit reached for {0}. Disabled for {1}", this, retryTime);
@@ -350,13 +350,20 @@ namespace NzbDrone.Core.Indexers
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn("{0} {1}", this, ex.Message);
+                if (ex.Response.IsServerNotAvailable)
+                {
+                    _logger.Warn("Unable to connect to {0} at [{1}]. Indexer's server is unavailable. Try again later. {2}", this, url, ex.Message);
+                }
+                else
+                {
+                    _logger.Warn("{0} {1}", this, ex.Message);
+                }
             }
             catch (RequestLimitReachedException ex)
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response.HttpResponse });
-                _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
-                _logger.Warn("API Request Limit reached for {0}", this);
+                _indexerStatusService.RecordFailure(Definition.Id, minimumBackoff);
+                _logger.Warn("Request Limit reached for {0}. Disabled for {1}", this, minimumBackoff);
             }
             catch (IndexerAuthException ex)
             {
@@ -494,7 +501,7 @@ namespace NzbDrone.Core.Indexers
 
             var response = await _httpClient.ExecuteProxiedAsync(request.HttpRequest, Definition);
 
-            // Check reponse to see if auth is needed, if needed try again
+            // Check response to see if auth is needed, if needed try again
             if (CheckIfLoginNeeded(response))
             {
                 _logger.Trace("Attempting to re-auth based on indexer search response");
@@ -518,6 +525,11 @@ namespace NzbDrone.Core.Indexers
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
                     throw new TooManyRequestsException(request.HttpRequest, response);
+                }
+
+                if (response.IsServerNotAvailable)
+                {
+                    throw new HttpException(request.HttpRequest, response);
                 }
             }
 
@@ -594,9 +606,9 @@ namespace NzbDrone.Core.Indexers
             }
             catch (IndexerAuthException ex)
             {
-                _logger.Warn("Indexer returned result for RSS URL, Credentials appears to be invalid: " + ex.Message);
+                _logger.Warn("Indexer returned result for RSS URL, Credentials appears to be invalid. Site Response: " + ex.Message);
 
-                return new ValidationFailure("", ex.Message);
+                return new ValidationFailure("", "Indexer returned result for RSS URL, Credentials appears to be invalid. Site Response: " + ex.Message);
             }
             catch (RequestLimitReachedException ex)
             {
@@ -628,6 +640,10 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 _logger.Warn(ex, "Unable to connect to indexer");
+                if (ex.Response.IsServerNotAvailable)
+                {
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, indexer's server is unavailable. Try again later. " + ex.Message);
+                }
 
                 return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
             }
@@ -642,6 +658,21 @@ namespace NzbDrone.Core.Indexers
                 _logger.Warn(ex, "Unable to connect to indexer");
 
                 return new ValidationFailure(string.Empty, "Unable to connect to indexer, possibly due to a timeout. Try again or check your network settings. " + ex.Message);
+            }
+            catch (WebException webException)
+            {
+                _logger.Warn("Unable to connect to indexer.");
+
+                if (webException.Status is WebExceptionStatus.NameResolutionFailure or WebExceptionStatus.ConnectFailure)
+                {
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer connection failure. Check your connection to the indexer's server and DNS." + webException.Message);
+                }
+
+                if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
+                    webException.Message.Contains("504") || webException.Message.Contains("timed out"))
+                {
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, indexer's server is unavailable. Try again later. " + webException.Message);
+                }
             }
             catch (Exception ex)
             {

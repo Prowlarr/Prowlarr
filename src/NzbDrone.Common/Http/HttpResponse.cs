@@ -63,6 +63,12 @@ namespace NzbDrone.Common.Http
 
         public bool HasHttpError => (int)StatusCode >= 400;
 
+        public bool IsServerNotAvailable => StatusCode == HttpStatusCode.GatewayTimeout ||
+                                            StatusCode == HttpStatusCode.BadGateway ||
+                                            StatusCode == HttpStatusCode.ServiceUnavailable ||
+                                            (int)StatusCode == 522 ||
+                                            (int)StatusCode == 524;
+
         public bool HasHttpRedirect => StatusCode == HttpStatusCode.Moved ||
                                        StatusCode == HttpStatusCode.Found ||
                                        StatusCode == HttpStatusCode.SeeOther ||

@@ -45,6 +45,18 @@ public class GreatPosterWall : GazelleBase<GreatPosterWallSettings>
         return new GreatPosterWallParser(Settings, Capabilities, _logger);
     }
 
+    protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+    {
+        var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+        if (searchCriteria.IsRssSearch)
+        {
+            cleanReleases = cleanReleases.Take(50).ToList();
+        }
+
+        return cleanReleases;
+    }
+
     protected override IndexerCapabilities SetCapabilities()
     {
         var caps = new IndexerCapabilities

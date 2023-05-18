@@ -5,8 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Html;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using AngleSharp.Text;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -281,7 +284,15 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 foreach (var input in inputs)
                 {
                     var name = input.GetAttribute("name");
-                    if (name == null)
+
+                    if (name == null || input.IsDisabled())
+                    {
+                        continue;
+                    }
+
+                    if (input is IHtmlInputElement element &&
+                        element.Type.IsOneOf(InputTypeNames.Checkbox, InputTypeNames.Radio) &&
+                        !input.IsChecked())
                     {
                         continue;
                     }

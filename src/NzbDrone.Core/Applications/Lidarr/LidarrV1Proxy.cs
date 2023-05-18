@@ -23,8 +23,11 @@ namespace NzbDrone.Core.Applications.Lidarr
 
     public class LidarrV1Proxy : ILidarrV1Proxy
     {
+        private static Version MinimumApplicationVersion => new (1, 0, 2, 0);
+
         private const string AppApiRoute = "/api/v1";
         private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";
+
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
 
@@ -102,7 +105,17 @@ namespace NzbDrone.Core.Applications.Lidarr
 
             try
             {
-                Execute<LidarrIndexer>(request);
+                var applicationVersion = _httpClient.Post<LidarrIndexer>(request).Headers.GetSingleValue("X-Application-Version");
+
+                if (applicationVersion == null)
+                {
+                    return new ValidationFailure(string.Empty, "Failed to fetch Lidarr version");
+                }
+
+                if (new Version(applicationVersion) < MinimumApplicationVersion)
+                {
+                    return new ValidationFailure(string.Empty, $"Lidarr version should be at least {MinimumApplicationVersion.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
+                }
             }
             catch (HttpException ex)
             {

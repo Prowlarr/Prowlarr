@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using FluentValidation.Results;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -49,10 +48,10 @@ namespace NzbDrone.Core.Applications.Lidarr
             {
                 failures.AddIfNotNull(_lidarrV1Proxy.TestConnection(BuildLidarrIndexer(testIndexer, DownloadProtocol.Usenet), Settings));
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 _logger.Error(ex, "Unable to send test message");
-                failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Unable to complete application test, cannot connect to Lidarr"));
+                failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Lidarr. {ex.Message}"));
             }
 
             return new ValidationResult(failures);
@@ -61,7 +60,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         public override List<AppIndexerMap> GetIndexerMappings()
         {
             var indexers = _lidarrV1Proxy.GetIndexers(Settings)
-                .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
+                .Where(i => i.Implementation is "Newznab" or "Torznab");
 
             var mappings = new List<AppIndexerMap>();
 

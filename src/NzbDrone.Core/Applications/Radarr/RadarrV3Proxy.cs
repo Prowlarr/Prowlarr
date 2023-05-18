@@ -23,8 +23,12 @@ namespace NzbDrone.Core.Applications.Radarr
 
     public class RadarrV3Proxy : IRadarrV3Proxy
     {
+        private static Version MinimumApplicationV4Version => new (4, 0, 4, 0);
+        private static Version MinimumApplicationV3Version => new (3, 1, 1, 0);
+
         private const string AppApiRoute = "/api/v3";
         private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";
+
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;
 
@@ -102,7 +106,29 @@ namespace NzbDrone.Core.Applications.Radarr
 
             try
             {
-                Execute<RadarrIndexer>(request);
+                var applicationVersion = _httpClient.Post<RadarrIndexer>(request).Headers.GetSingleValue("X-Application-Version");
+
+                if (applicationVersion == null)
+                {
+                    return new ValidationFailure(string.Empty, "Failed to fetch Radarr version");
+                }
+
+                var version = new Version(applicationVersion);
+
+                if (version.Major == 3)
+                {
+                    if (version < MinimumApplicationV3Version)
+                    {
+                        return new ValidationFailure(string.Empty, $"Radarr version should be at least {MinimumApplicationV3Version.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
+                    }
+                }
+                else
+                {
+                    if (version < MinimumApplicationV4Version)
+                    {
+                        return new ValidationFailure(string.Empty, $"Radarr version should be at least {MinimumApplicationV4Version.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
+                    }
+                }
             }
             catch (HttpException ex)
             {

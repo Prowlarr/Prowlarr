@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -122,15 +121,16 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual bool PreProcess(IndexerResponse indexerResponse)
         {
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            // Server Down HTTP Errors are handled in HTTPIndexerBase so ignore them here
+            if (!indexerResponse.HttpResponse.IsServerNotAvailable)
             {
-                throw new IndexerException(indexerResponse, "Indexer API call resulted in an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
-            }
+                if (indexerResponse.HttpResponse.Headers.ContentType != null && indexerResponse.HttpResponse.Headers.ContentType.Contains("text/html") &&
+                    indexerResponse.HttpRequest.Headers.Accept != null && !indexerResponse.HttpRequest.Headers.Accept.Contains("text/html"))
+                {
+                    throw new IndexerException(indexerResponse, "Indexer responded with html content. Site is likely blocked or unavailable.");
+                }
 
-            if (indexerResponse.HttpResponse.Headers.ContentType != null && indexerResponse.HttpResponse.Headers.ContentType.Contains("text/html") &&
-                indexerResponse.HttpRequest.Headers.Accept != null && !indexerResponse.HttpRequest.Headers.Accept.Contains("text/html"))
-            {
-                throw new IndexerException(indexerResponse, "Indexer responded with html content. Site is likely blocked or unavailable.");
+                throw new IndexerException(indexerResponse, "Indexer API call resulted in an unexpected StatusCode [{0}]", indexerResponse.HttpResponse.StatusCode);
             }
 
             return true;

@@ -206,7 +206,7 @@ namespace NzbDrone.Core.Indexers
 
             if (dateString.IsNullOrWhiteSpace())
             {
-                throw new UnsupportedFeedException("Rss feed must have a pubDate element with a valid publish date.");
+                throw new UnsupportedFeedException("Each item in the RSS feed must have a pubDate element with a valid publish date.");
             }
 
             return XElementExtensions.ParseDate(dateString);
@@ -273,26 +273,26 @@ namespace NzbDrone.Core.Indexers
         protected virtual RssEnclosure[] GetEnclosures(XElement item)
         {
             var enclosures = item.Elements("enclosure")
-                                 .Select(v =>
-                                 {
-                                     try
-                                     {
-                                         return new RssEnclosure
-                                         {
-                                             Url = v.Attribute("url").Value,
-                                             Type = v.Attribute("type").Value,
-                                             Length = (long)v.Attribute("length")
-                                         };
-                                     }
-                                     catch (Exception e)
-                                     {
-                                         _logger.Warn(e, "Failed to get enclosure for: {0}", item.Title());
-                                     }
+                .Select(v =>
+                {
+                    try
+                    {
+                        return new RssEnclosure
+                        {
+                            Url = v.Attribute("url")?.Value,
+                            Type = v.Attribute("type")?.Value,
+                            Length = v.Attribute("length")?.Value?.ParseInt64() ?? 0
+                        };
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Warn(e, "Failed to get enclosure for: {0}", item.Title());
+                    }
 
-                                     return null;
-                                 })
-                                 .Where(v => v != null)
-                                 .ToArray();
+                    return null;
+                })
+                .Where(v => v != null)
+                .ToArray();
 
             return enclosures;
         }

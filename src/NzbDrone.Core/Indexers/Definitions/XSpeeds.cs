@@ -143,10 +143,14 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
         caps.Categories.AddCategoryMapping(107, NewznabStandardCategory.PCMac, "Games PC/Mac");
         caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.Movies, "Movie Boxsets");
         caps.Categories.AddCategoryMapping(118, NewznabStandardCategory.MoviesUHD, "Movie Boxsets/Boxset 4K");
+        caps.Categories.AddCategoryMapping(143, NewznabStandardCategory.MoviesHD, "Movie Boxsets/Boxset HD");
         caps.Categories.AddCategoryMapping(119, NewznabStandardCategory.MoviesHD, "Movie Boxsets/Boxset HEVC");
+        caps.Categories.AddCategoryMapping(144, NewznabStandardCategory.MoviesSD, "Movie Boxsets/Boxset SD");
         caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.Movies, "Movies");
         caps.Categories.AddCategoryMapping(117, NewznabStandardCategory.MoviesUHD, "Movies 4K");
+        caps.Categories.AddCategoryMapping(145, NewznabStandardCategory.MoviesHD, "Movies HD");
         caps.Categories.AddCategoryMapping(100, NewznabStandardCategory.MoviesHD, "Movies HEVC");
+        caps.Categories.AddCategoryMapping(146, NewznabStandardCategory.MoviesSD, "Movies SD");
         caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.Audio, "Music");
         caps.Categories.AddCategoryMapping(135, NewznabStandardCategory.AudioLossless, "Music/FLAC");
         caps.Categories.AddCategoryMapping(136, NewznabStandardCategory.Audio, "Music Boxset");
@@ -154,21 +158,25 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
         caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.Other, "Other");
         caps.Categories.AddCategoryMapping(125, NewznabStandardCategory.Other, "Other/Pictures");
         caps.Categories.AddCategoryMapping(54, NewznabStandardCategory.TVOther, "Soaps");
+        caps.Categories.AddCategoryMapping(83, NewznabStandardCategory.TVOther, "Specials");
+        caps.Categories.AddCategoryMapping(139, NewznabStandardCategory.TV, "TOTM (Freeleech)");
+        caps.Categories.AddCategoryMapping(138, NewznabStandardCategory.TV, "TOTW (x2 upload)");
+        caps.Categories.AddCategoryMapping(139, NewznabStandardCategory.Movies, "TOTM (Freeleech)");
+        caps.Categories.AddCategoryMapping(138, NewznabStandardCategory.Movies, "TOTW (x2 upload)");
         caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.TVSport, "Sports");
         caps.Categories.AddCategoryMapping(88, NewznabStandardCategory.TVSport, "Sports/Football");
         caps.Categories.AddCategoryMapping(86, NewznabStandardCategory.TVSport, "Sports/MotorSports");
         caps.Categories.AddCategoryMapping(89, NewznabStandardCategory.TVSport, "Sports/Olympics");
-        caps.Categories.AddCategoryMapping(83, NewznabStandardCategory.Movies, "TOTM");
-        caps.Categories.AddCategoryMapping(137, NewznabStandardCategory.Movies, "TOTW");
         caps.Categories.AddCategoryMapping(126, NewznabStandardCategory.TV, "TV");
         caps.Categories.AddCategoryMapping(127, NewznabStandardCategory.TVUHD, "TV 4K");
         caps.Categories.AddCategoryMapping(129, NewznabStandardCategory.TVHD, "TV HD");
         caps.Categories.AddCategoryMapping(130, NewznabStandardCategory.TVHD, "TV HEVC");
         caps.Categories.AddCategoryMapping(128, NewznabStandardCategory.TVSD, "TV SD");
         caps.Categories.AddCategoryMapping(21, NewznabStandardCategory.TVSD, "TV Boxsets");
-        caps.Categories.AddCategoryMapping(120, NewznabStandardCategory.TVUHD, "Boxset TV-4K");
-        caps.Categories.AddCategoryMapping(76, NewznabStandardCategory.TVHD, "Boxset TV-HD");
-        caps.Categories.AddCategoryMapping(97, NewznabStandardCategory.TVHD, "Boxset TV-HEVC");
+        caps.Categories.AddCategoryMapping(120, NewznabStandardCategory.TVUHD, "Boxset TV 4K");
+        caps.Categories.AddCategoryMapping(76, NewznabStandardCategory.TVHD, "Boxset TV HD");
+        caps.Categories.AddCategoryMapping(97, NewznabStandardCategory.TVHD, "Boxset TV HEVC");
+        caps.Categories.AddCategoryMapping(147, NewznabStandardCategory.TVSD, "Boxset TV SD");
 
         return caps;
     }

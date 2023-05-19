@@ -49,6 +49,7 @@ class Applications extends Component {
   render() {
     const {
       items,
+      tagList,
       onConfirmDeleteApplication,
       ...otherProps
     } = this.props;
@@ -71,6 +72,7 @@ class Applications extends Component {
                   <Application
                     key={item.id}
                     {...item}
+                    tagList={tagList}
                     onConfirmDeleteApplication={onConfirmDeleteApplication}
                   />
                 );
@@ -109,6 +111,7 @@ Applications.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   error: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onConfirmDeleteApplication: PropTypes.func.isRequired
 };
 

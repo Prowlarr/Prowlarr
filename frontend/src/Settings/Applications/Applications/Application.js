@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
+import TagList from 'Components/TagList';
 import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import EditApplicationModalConnector from './EditApplicationModalConnector';
@@ -55,7 +56,9 @@ class Application extends Component {
     const {
       id,
       name,
-      syncLevel
+      syncLevel,
+      tags,
+      tagList
     } = this.props;
 
     return (
@@ -92,6 +95,11 @@ class Application extends Component {
             </Label>
         }
 
+        <TagList
+          tags={tags}
+          tagList={tagList}
+        />
+
         <EditApplicationModalConnector
           id={id}
           isOpen={this.state.isEditApplicationModalOpen}
@@ -117,6 +125,8 @@ Application.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   syncLevel: PropTypes.string.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.number).isRequired,
+  tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onConfirmDeleteApplication: PropTypes.func
 };
 

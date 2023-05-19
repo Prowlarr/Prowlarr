@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 using NzbDrone.Http.REST.Attributes;
-using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1
@@ -76,10 +75,9 @@ namespace Prowlarr.Api.V1
 
         [RestPutById]
         [Produces("application/json")]
-        public ActionResult<TProviderResource> UpdateProvider(TProviderResource providerResource)
+        public ActionResult<TProviderResource> UpdateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
             var providerDefinition = GetDefinition(providerResource, true, false, false);
-            var forceSave = Request.GetBooleanQueryParameter("forceSave");
 
             // Only test existing definitions if it is enabled and forceSave isn't set.
             if (providerDefinition.Enable && !forceSave)

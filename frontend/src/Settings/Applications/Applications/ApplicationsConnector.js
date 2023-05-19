@@ -4,13 +4,20 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { deleteApplication, fetchApplications } from 'Store/Actions/settingsActions';
 import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
+import createTagsSelector from 'Store/Selectors/createTagsSelector';
 import sortByName from 'Utilities/Array/sortByName';
 import Applications from './Applications';
 
 function createMapStateToProps() {
   return createSelector(
     createSortedSectionSelector('settings.applications', sortByName),
-    (applications) => applications
+    createTagsSelector(),
+    (applications, tagList) => {
+      return {
+        ...applications,
+        tagList
+      };
+    }
   );
 }
 

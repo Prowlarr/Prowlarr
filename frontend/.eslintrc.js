@@ -12,6 +12,8 @@ const dirs = fs
   .join('|');
 
 module.exports = {
+  root: true,
+
   parser: '@babel/eslint-parser',
 
   env: {

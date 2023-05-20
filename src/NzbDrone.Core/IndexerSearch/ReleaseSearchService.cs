@@ -59,7 +59,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             var imdbId = ParseUtil.GetImdbID(request.imdbid);
 
-            searchSpec.ImdbId = imdbId.HasValue ? imdbId.Value.ToString() : null;
+            searchSpec.ImdbId = imdbId?.ToString("D7");
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.DoubanId = request.doubanid;
@@ -89,7 +89,7 @@ namespace NzbDrone.Core.IndexerSearch
 
             var imdbId = ParseUtil.GetImdbID(request.imdbid);
 
-            searchSpec.ImdbId = imdbId.HasValue ? imdbId.Value.ToString() : null;
+            searchSpec.ImdbId = imdbId?.ToString("D7");
             searchSpec.Season = request.season;
             searchSpec.Episode = request.ep;
             searchSpec.TvdbId = request.tvdbid;

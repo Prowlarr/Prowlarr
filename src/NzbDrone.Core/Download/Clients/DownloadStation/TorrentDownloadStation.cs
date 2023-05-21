@@ -109,11 +109,6 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             return torrent.Status == DownloadStationTaskStatus.Finished;
         }
 
-        protected bool IsCompleted(DownloadStationTask torrent)
-        {
-            return torrent.Status == DownloadStationTaskStatus.Seeding || IsFinished(torrent) || (torrent.Status == DownloadStationTaskStatus.Waiting && torrent.Size != 0 && GetRemainingSize(torrent) <= 0);
-        }
-
         protected string GetMessage(DownloadStationTask torrent)
         {
             if (torrent.StatusExtra != null)

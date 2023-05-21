@@ -209,7 +209,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // BHD can return crazy values for tmdb
                 var tmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.TmdbId.Split("/")[1], out var tmdbResult) ? tmdbResult : 0;
-                var imdbId = ParseUtil.GetImdbID(row.ImdbId).GetValueOrDefault();
+                var imdbId = ParseUtil.GetImdbId(row.ImdbId).GetValueOrDefault();
 
                 var release = new TorrentInfo
                 {

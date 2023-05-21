@@ -244,7 +244,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var downloadMultiplier = (double?)row["download-multiplier"] ?? 1;
                 var link = new Uri(_settings.BaseUrl + "download.php/" + torrentId + "/" + torrentId + ".torrent");
                 var publishDate = DateTimeUtil.UnixTimestampToDateTime((long)row.ctime).ToLocalTime();
-                var imdb = ParseUtil.GetImdbID(imdbId) ?? 0;
+                var imdb = ParseUtil.GetImdbId(imdbId) ?? 0;
 
                 var release = new TorrentInfo
                 {

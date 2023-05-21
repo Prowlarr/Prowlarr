@@ -262,7 +262,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Title = CleanTitle(torrent.Name),
                 Description = torrent.ShortDescription,
                 Size = torrent.Size,
-                ImdbId = ParseUtil.GetImdbID(torrent.ImdbId).GetValueOrDefault(),
+                ImdbId = ParseUtil.GetImdbId(torrent.ImdbId).GetValueOrDefault(),
                 DownloadUrl = $"{_settings.BaseUrl}api/torrent/{torrent.Id}/download",
                 PosterUrl = torrent.Poster,
                 InfoUrl = torrent.Url,

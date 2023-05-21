@@ -180,7 +180,7 @@ public class PixelHDParser : IParseIndexerResponse
             var groupName = group.QuerySelector("strong:has(a[title=\"View Torrent\"])")?.TextContent.Replace(" ]", "]");
 
             var imdbLink = group.QuerySelector("a[href*=\"imdb.com/title/tt\"]")?.GetAttribute("href");
-            var imdbId = ParseUtil.GetImdbID(imdbLink) ?? 0;
+            var imdbId = ParseUtil.GetImdbId(imdbLink) ?? 0;
 
             var rows = group.QuerySelectorAll("tr.group_torrent:has(a[href^=\"torrents.php?id=\"])");
             foreach (var row in rows)

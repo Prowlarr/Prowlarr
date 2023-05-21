@@ -328,7 +328,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 var imdbLink = row.QuerySelector("a[href*=\"www.imdb.com/title/\"]")?.GetAttribute("href");
-                var imdb = !string.IsNullOrWhiteSpace(imdbLink) ? ParseUtil.GetImdbID(imdbLink) : null;
+                var imdb = !string.IsNullOrWhiteSpace(imdbLink) ? ParseUtil.GetImdbId(imdbLink) : null;
 
                 var flags = new HashSet<IndexerFlag>();
 

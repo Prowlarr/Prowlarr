@@ -213,7 +213,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Files = item.Value<int>("numfiles"),
                     Seeders = item.Value<int>("seeders"),
                     Peers = item.Value<int>("leechers") + item.Value<int>("seeders"),
-                    ImdbId = ParseUtil.GetImdbID(item.Value<string>("imdbid")) ?? 0,
+                    ImdbId = ParseUtil.GetImdbId(item.Value<string>("imdbid")) ?? 0,
                     MinimumRatio = 1,
                     MinimumSeedTime = 0,
                     DownloadVolumeFactor = dlVolumeFactor,

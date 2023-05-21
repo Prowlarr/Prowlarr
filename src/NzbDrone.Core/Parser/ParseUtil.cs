@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Parser
 {
     public static class ParseUtil
     {
-        private static readonly Regex ImdbId = new Regex(@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
+        private static readonly Regex ImdbIdRegex = new (@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
 
         public static string NormalizeMultiSpaces(string s) =>
             new Regex(@"\s+").Replace(s.Trim(), " ");
@@ -85,14 +85,15 @@ namespace NzbDrone.Core.Parser
             return CoerceLong(extractedLong);
         }
 
-        public static int? GetImdbID(string imdbstr)
+        public static int? GetImdbId(string value)
         {
-            if (imdbstr == null)
+            if (value == null)
             {
                 return null;
             }
 
-            var match = ImdbId.Match(imdbstr);
+            var match = ImdbIdRegex.Match(value);
+
             if (!match.Success)
             {
                 return null;
@@ -101,17 +102,16 @@ namespace NzbDrone.Core.Parser
             return int.Parse(match.Groups[1].Value, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
-        public static string GetFullImdbId(string imdbstr)
+        public static string GetFullImdbId(string value)
         {
-            var imdbid = GetImdbID(imdbstr);
-            if (imdbid == null)
+            var imdbId = GetImdbId(value);
+
+            if (imdbId is null or 0)
             {
                 return null;
             }
 
-            var imdbLen = ((int)imdbid > 9999999) ? "D8" : "D7";
-
-            return "tt" + ((int)imdbid).ToString(imdbLen);
+            return $"tt{imdbId.GetValueOrDefault():D7}";
         }
 
         public static string GetArgumentFromQueryString(string url, string argument)

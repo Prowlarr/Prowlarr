@@ -313,7 +313,7 @@ public class NorBitsParser : IParseIndexerResponse
             }
 
             var imdbLink = row.QuerySelector("a[href*=\"imdb.com/title/tt\"]")?.GetAttribute("href");
-            release.ImdbId = ParseUtil.GetImdbID(imdbLink) ?? 0;
+            release.ImdbId = ParseUtil.GetImdbId(imdbLink) ?? 0;
 
             if (row.QuerySelector("img[title=\"100% freeleech\"]") != null)
             {

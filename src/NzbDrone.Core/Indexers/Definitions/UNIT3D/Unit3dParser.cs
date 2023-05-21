@@ -60,7 +60,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
                     Files = row.Attributes.Files,
                     Grabs = row.Attributes.Grabs,
                     Seeders = row.Attributes.Seeders,
-                    ImdbId = ParseUtil.GetImdbID(row.Attributes.ImdbId).GetValueOrDefault(),
+                    ImdbId = ParseUtil.GetImdbId(row.Attributes.ImdbId).GetValueOrDefault(),
                     TmdbId = row.Attributes.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.Attributes.TmdbId),
                     TvdbId = row.Attributes.TvdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.CoerceInt(row.Attributes.TvdbId),
                     Peers = row.Attributes.Leechers + row.Attributes.Seeders,

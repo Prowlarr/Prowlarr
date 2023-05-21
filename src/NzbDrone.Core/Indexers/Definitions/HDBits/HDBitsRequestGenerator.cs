@@ -20,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         {
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
-            var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
+            var imdbId = ParseUtil.GetImdbId(searchCriteria.ImdbId).GetValueOrDefault(0);
 
             if (searchCriteria.Categories?.Length > 0)
             {
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
             var tvdbId = searchCriteria.TvdbId.GetValueOrDefault(0);
-            var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
+            var imdbId = ParseUtil.GetImdbId(searchCriteria.ImdbId).GetValueOrDefault(0);
 
             if (searchCriteria.Categories?.Length > 0)
             {

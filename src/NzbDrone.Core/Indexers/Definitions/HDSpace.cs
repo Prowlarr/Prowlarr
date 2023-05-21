@@ -282,7 +282,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var imdbLink = row.QuerySelector("td:nth-child(2) a[href*=imdb]");
                 if (imdbLink != null)
                 {
-                    release.ImdbId = ParseUtil.GetImdbID(imdbLink.GetAttribute("href").Split('/').Last()).GetValueOrDefault();
+                    release.ImdbId = ParseUtil.GetImdbId(imdbLink.GetAttribute("href").Split('/').Last()).GetValueOrDefault();
                 }
 
                 //"July 11, 2015, 13:34:09", "Today|Yesterday at 20:04:23"

@@ -246,7 +246,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // TODO: TMDb is also available
                 var qImdb = row.QuerySelector("a[href^=\"https://www.imdb.com\"]");
-                var imdb = qImdb != null ? ParseUtil.GetImdbID(qImdb.GetAttribute("href").Split('/').Last()) : null;
+                var imdb = qImdb != null ? ParseUtil.GetImdbId(qImdb.GetAttribute("href").Split('/').Last()) : null;
 
                 var release = new TorrentInfo
                 {

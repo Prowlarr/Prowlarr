@@ -57,7 +57,7 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<MovieSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            var imdbId = ParseUtil.GetImdbID(request.imdbid);
+            var imdbId = ParseUtil.GetImdbId(request.imdbid);
 
             searchSpec.ImdbId = imdbId?.ToString("D7");
             searchSpec.TmdbId = request.tmdbid;
@@ -87,7 +87,7 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            var imdbId = ParseUtil.GetImdbID(request.imdbid);
+            var imdbId = ParseUtil.GetImdbId(request.imdbid);
 
             searchSpec.ImdbId = imdbId?.ToString("D7");
             searchSpec.Season = request.season;

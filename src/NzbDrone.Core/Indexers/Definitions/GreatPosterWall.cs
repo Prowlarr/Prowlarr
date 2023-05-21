@@ -192,7 +192,7 @@ public class GreatPosterWallParser : GazelleParser
                     MinimumSeedTime = 172800 // 48 hours
                 };
 
-                var imdbId = ParseUtil.GetImdbID(result.ImdbId);
+                var imdbId = ParseUtil.GetImdbId(result.ImdbId);
                 if (imdbId != null)
                 {
                     release.ImdbId = (int)imdbId;

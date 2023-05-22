@@ -104,7 +104,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (!response.Content.Contains("id=\"logged-in-username\""))
             {
-                throw new IndexerAuthException("RuTracker Auth Failed");
+                var parser = new HtmlParser();
+                var document = await parser.ParseDocumentAsync(response.Content);
+                var errorMessage = document.QuerySelector("h4.warnColor1.tCenter.mrg_16, div.msg-main")?.TextContent.Trim();
+
+                throw new IndexerAuthException(errorMessage ?? "RuTracker Auth Failed");
             }
 
             cookies = response.GetCookies();

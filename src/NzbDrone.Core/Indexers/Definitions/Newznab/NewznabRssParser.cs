@@ -178,10 +178,8 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         protected override long GetSize(XElement item)
         {
-            long size;
-
             var sizeString = TryGetNewznabAttribute(item, "size");
-            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out size))
+            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out var size))
             {
                 return size;
             }
@@ -241,9 +239,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             foreach (var attr in attributes)
             {
                 var idString = TryGetNewznabAttribute(item, attr);
-                int idInt;
 
-                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out var idInt))
                 {
                     return idInt;
                 }
@@ -260,9 +257,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         protected virtual int GetImdbYear(XElement item)
         {
             var imdbYearString = TryGetNewznabAttribute(item, "imdbyear");
-            int imdbYear;
 
-            if (!imdbYearString.IsNullOrWhiteSpace() && int.TryParse(imdbYearString, out imdbYear))
+            if (!imdbYearString.IsNullOrWhiteSpace() && int.TryParse(imdbYearString, out var imdbYear))
             {
                 return imdbYear;
             }

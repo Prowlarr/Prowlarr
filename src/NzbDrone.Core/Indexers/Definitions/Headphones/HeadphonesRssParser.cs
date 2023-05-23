@@ -150,10 +150,8 @@ namespace NzbDrone.Core.Indexers.Headphones
 
         protected override long GetSize(XElement item)
         {
-            long size;
-
             var sizeString = TryGetNewznabAttribute(item, "size");
-            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out size))
+            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out var size))
             {
                 return size;
             }
@@ -189,9 +187,8 @@ namespace NzbDrone.Core.Indexers.Headphones
         protected virtual int GetImdbId(XElement item)
         {
             var imdbIdString = TryGetNewznabAttribute(item, "imdb");
-            int imdbId;
 
-            if (!imdbIdString.IsNullOrWhiteSpace() && int.TryParse(imdbIdString, out imdbId))
+            if (!imdbIdString.IsNullOrWhiteSpace() && int.TryParse(imdbIdString, out var imdbId))
             {
                 return imdbId;
             }
@@ -202,9 +199,8 @@ namespace NzbDrone.Core.Indexers.Headphones
         protected virtual int GetGrabs(XElement item)
         {
             var grabsString = TryGetNewznabAttribute(item, "grabs");
-            int grabs;
 
-            if (!grabsString.IsNullOrWhiteSpace() && int.TryParse(grabsString, out grabs))
+            if (!grabsString.IsNullOrWhiteSpace() && int.TryParse(grabsString, out var grabs))
             {
                 return grabs;
             }
@@ -215,9 +211,8 @@ namespace NzbDrone.Core.Indexers.Headphones
         protected virtual int GetFiles(XElement item)
         {
             var filesString = TryGetNewznabAttribute(item, "files");
-            int files;
 
-            if (!filesString.IsNullOrWhiteSpace() && int.TryParse(filesString, out files))
+            if (!filesString.IsNullOrWhiteSpace() && int.TryParse(filesString, out var files))
             {
                 return files;
             }
@@ -228,9 +223,8 @@ namespace NzbDrone.Core.Indexers.Headphones
         protected virtual int GetImdbYear(XElement item)
         {
             var imdbYearString = TryGetNewznabAttribute(item, "imdbyear");
-            int imdbYear;
 
-            if (!imdbYearString.IsNullOrWhiteSpace() && int.TryParse(imdbYearString, out imdbYear))
+            if (!imdbYearString.IsNullOrWhiteSpace() && int.TryParse(imdbYearString, out var imdbYear))
             {
                 return imdbYear;
             }

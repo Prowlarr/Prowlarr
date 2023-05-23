@@ -149,10 +149,8 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         protected override long GetSize(XElement item)
         {
-            long size;
-
             var sizeString = TryGetTorznabAttribute(item, "size");
-            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out size))
+            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out var size))
             {
                 return size;
             }
@@ -298,9 +296,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             var attr = TryGetTorznabAttribute(item, key, defaultValue.ToString());
 
-            float result = 0;
-
-            if (float.TryParse(attr, out result))
+            if (float.TryParse(attr, out var result))
             {
                 return result;
             }
@@ -330,9 +326,8 @@ namespace NzbDrone.Core.Indexers.Torznab
             foreach (var attr in attributes)
             {
                 var idString = TryGetTorznabAttribute(item, attr);
-                int idInt;
 
-                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out var idInt))
                 {
                     return idInt;
                 }

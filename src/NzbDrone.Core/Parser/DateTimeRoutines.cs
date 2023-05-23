@@ -111,9 +111,8 @@ namespace NzbDrone.Core.Parser
         {
             parsed_date_time = null;
 
-            ParsedDateTime parsed_date;
             ParsedDateTime parsed_time;
-            if (!TryParseDate(str, default_format, out parsed_date))
+            if (!TryParseDate(str, default_format, out var parsed_date))
             {
                 if (!TryParseTime(str, default_format, out parsed_time, null))
                 {
@@ -314,8 +313,7 @@ namespace NzbDrone.Core.Parser
             m = Regex.Match(str, @"(?<=^|[^\d])(?'year'\d{2}|\d{4})\s*(?'separator'[\-])\s*(?'month'\d{1,2})\s*\'separator'+\s*(?'day'\d{1,2})(?=$|[^\d])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             if (m.Success)
             {
-                DateTime date;
-                if (!ConvertToDate(int.Parse(m.Groups["year"].Value), int.Parse(m.Groups["month"].Value), int.Parse(m.Groups["day"].Value), out date))
+                if (!ConvertToDate(int.Parse(m.Groups["year"].Value), int.Parse(m.Groups["month"].Value), int.Parse(m.Groups["day"].Value), out var date))
                 {
                     return false;
                 }
@@ -417,8 +415,7 @@ namespace NzbDrone.Core.Parser
                     year = DefaultDate.Year;
                 }
 
-                DateTime date;
-                if (!ConvertToDate(year, month, int.Parse(m.Groups["day"].Value), out date))
+                if (!ConvertToDate(year, month, int.Parse(m.Groups["day"].Value), out var date))
                 {
                     return false;
                 }

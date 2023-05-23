@@ -210,8 +210,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var searchUrl = _settings.BaseUrl + "ajax/torrents_data.php";
 
-            // replace non-alphanumeric characters with % (wildcard)
-            var searchString = Regex.Replace(term.Trim(), "[^a-zA-Z0-9]+", "%");
+            // replace non-word characters with % (wildcard)
+            var searchString = Regex.Replace(term.Trim(), @"[\W]+", "%");
 
             var page = searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0 ? (int)(searchCriteria.Offset / searchCriteria.Limit) + 1 : 1;
 
@@ -242,7 +242,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             yield return new IndexerRequest(requestBuilder.Build());
         }
 
-        private IEnumerable<string> GetTrackerCategories(string term, SearchCriteriaBase searchCriteria)
+        private List<string> GetTrackerCategories(string term, SearchCriteriaBase searchCriteria)
         {
             var searchTerm = term.Trim();
 

@@ -293,7 +293,7 @@ namespace NzbDrone.Core.IndexerVersions
 
                 _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/package.zip", saveFile);
 
-                using (ZipArchive archive = ZipFile.OpenRead(saveFile))
+                using (var archive = ZipFile.OpenRead(saveFile))
                 {
                     archive.ExtractToDirectory(definitionsFolder, true);
                 }

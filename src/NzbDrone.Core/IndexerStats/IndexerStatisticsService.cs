@@ -54,7 +54,7 @@ namespace NzbDrone.Core.IndexerStats
                 var sortedEvents = indexer.OrderBy(v => v.Date)
                                           .ThenBy(v => v.Id)
                                           .ToArray();
-                int temp = 0;
+                var temp = 0;
 
                 var elapsedTimeEvents = sortedEvents.Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp))
                                                                     .Select(h => temp);

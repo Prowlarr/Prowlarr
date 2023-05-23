@@ -198,13 +198,13 @@ namespace NzbDrone.Common.Extensions
 
         public static string CleanFileName(this string name)
         {
-            string result = name;
+            var result = name;
             string[] badCharacters = { "\\", "/", "<", ">", "?", "*", ":", "|", "\"" };
             string[] goodCharacters = { "+", "+", "", "", "!", "-", "-", "", "" };
 
             result = result.Replace(": ", " - ");
 
-            for (int i = 0; i < badCharacters.Length; i++)
+            for (var i = 0; i < badCharacters.Length; i++)
             {
                 result = result.Replace(badCharacters[i], goodCharacters[i]);
             }

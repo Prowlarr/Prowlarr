@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -44,10 +44,10 @@ namespace NzbDrone.Test.Common
 
         private static string GetLogsString(IEnumerable<LogEventInfo> logs)
         {
-            string errors = "";
+            var errors = "";
             foreach (var log in logs)
             {
-                string exception = "";
+                var exception = "";
                 if (log.Exception != null)
                 {
                     exception = string.Format("[{0}: {1}]", log.Exception.GetType(), log.Exception.Message);

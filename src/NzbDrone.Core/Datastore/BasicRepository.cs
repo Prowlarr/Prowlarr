@@ -196,7 +196,7 @@ namespace NzbDrone.Core.Datastore
 
             using (var conn = _database.OpenConnection())
             {
-                using (IDbTransaction tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
                     foreach (var model in models)
                     {

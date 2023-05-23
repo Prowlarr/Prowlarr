@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Parser
                 DateTimeRoutines.DateTimeFormat.USDate;
 
             if (DateTimeRoutines.TryParseDateOrTime(
-                str, dtFormat, out DateTimeRoutines.ParsedDateTime dt))
+                str, dtFormat, out var dt))
             {
                 return dt.DateTime;
             }

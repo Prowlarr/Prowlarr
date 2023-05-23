@@ -127,7 +127,7 @@ namespace NzbDrone.Common.Http.Dispatchers
 
                 headers.Add(responseMessage.Content.Headers.ToNameValueCollection());
 
-                CookieContainer responseCookies = new CookieContainer();
+                var responseCookies = new CookieContainer();
 
                 if (responseMessage.Headers.TryGetValues("Set-Cookie", out var cookieHeaders))
                 {

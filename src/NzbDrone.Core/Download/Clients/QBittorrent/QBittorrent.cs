@@ -257,7 +257,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 return null;
             }
 
-            Dictionary<string, QBittorrentLabel> labels = Proxy.GetLabels(Settings);
+            var labels = Proxy.GetLabels(Settings);
 
             foreach (var category in Categories)
             {

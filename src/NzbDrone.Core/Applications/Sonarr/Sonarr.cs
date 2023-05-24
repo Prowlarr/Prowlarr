@@ -175,7 +175,13 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
+
+            if (id == 0)
+            {
+                // Ensuring backward compatibility with older versions on first sync
+                syncFields.AddRange(new List<string> { "animeStandardFormatSearch", "additionalParameters" });
+            }
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
             var torznab = schemas.First(i => i.Implementation == "Torznab");

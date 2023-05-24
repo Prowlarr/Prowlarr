@@ -173,7 +173,13 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
+
+            if (id == 0)
+            {
+                // Ensuring backward compatibility with older versions on first sync
+                syncFields.AddRange(new List<string> { "multiLanguages", "removeYear", "requiredFlags", "additionalParameters" });
+            }
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
             var torznab = schemas.First(i => i.Implementation == "Torznab");

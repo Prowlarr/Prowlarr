@@ -35,7 +35,7 @@ pr:
   paths:
     exclude:
     - src/NzbDrone.Core/Localization/Core
-    - src/Prowlarr.API.*/openapi.json
+    - src/Prowlarr.API.*/openapi1.json
 
 stages:
   - stage: Setup

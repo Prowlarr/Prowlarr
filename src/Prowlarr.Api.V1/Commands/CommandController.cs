@@ -112,7 +112,7 @@ namespace Prowlarr.Api.V1.Commands
                 {
                     BroadcastResourceChange(ModelAction.Updated, pendingUpdate);
 
-                    if (pendingUpdate.Name == typeof(MessagingCleanupCommand).Name.Replace("Command", "") &&
+                    if (pendingUpdate.Name == nameof(MessagingCleanupCommand).Replace("Command", "") &&
                         pendingUpdate.Status == CommandStatus.Completed)
                     {
                         BroadcastResourceChange(ModelAction.Sync);

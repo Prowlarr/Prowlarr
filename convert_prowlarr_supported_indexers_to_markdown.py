@@ -292,6 +292,7 @@ def get_language_name(language_code, indexer=None):
         try:
             _logger.debug("Trying to get Language: %s", split_lang[0])
             language = iso639.Language.match(split_lang[0])
+            language = language.name
             _logger.debug("Found Parsed Split Language Code: %s", language)
             try:
                 _logger.debug("Trying to get Country: %s", split_lang[1])

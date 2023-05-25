@@ -374,12 +374,13 @@ def build_markdown_table(indexers, privacy, protocol):
     logger.info("Building Markdown Table for %s, %s", privacy, protocol)
     for indexer in indexers:
         if indexer["privacy"] in privacy and indexer["protocol"] == protocol:
-            name = escape_markdown(indexer["name"]).strip().replace(".", '\.')
+            name = escape_markdown(
+                indexer["name"]).strip().replace(".", r'\\.')
             logger.debug("Name: %s", name)
             info_link = indexer["infoLink"].replace(WIKI_INFOLINK, "")
             logger.debug("Info Link: %s", info_link)
             description = escape_markdown(
-                indexer["description"]).strip('.').strip().replace(".", '\.')
+                indexer["description"]).strip('.').strip().replace(".", r'\\.')
             logger.debug("Description: %s", description)
             lang = get_language_name(indexer["language"], name)
             logger.debug("Language: %s", lang)

@@ -10,5 +10,11 @@
     "Apply": "Terapkan",
     "Authentication": "Autentikasi",
     "About": "Tentang",
-    "Add": "Tambah"
+    "Add": "Tambah",
+    "AppDataDirectory": "Direktori AppData",
+    "Automatic": "Otomatis",
+    "AutomaticSearch": "Penelusuran Otomatis",
+    "BackupNow": "Cadangkan Sekarang",
+    "Cancel": "Batal",
+    "ChangeHasNotBeenSavedYet": "Perubahan belum disimpan"
 }

@@ -1096,17 +1096,18 @@ stages:
     jobs:
     - job:
       displayName: Markdown creation
-      pool:
-        vmImage: 'windows-2019'
-      steps:
-        - task: PowerShell@2
-          continueOnError: true
-          displayName: "Run "
-        - powershell: | 
-            Set-PSRepository PSGallery -InstallationPolicy trusted
-            Install-Module FormatMarkdownTable -Confirm:$false -Force
-            .\Convert-ProwlarrSupportedIndexersToMarkdownTable.ps1 -Commit <Q/TA - will need help with this bit> -Build '$(prowlarrVersion)' -APIKey <Q/TA - will need help with this bit> -OutputFile "./supported-indexers.md" -BaseURL "http://prowlarr:8989"
-
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - checkout: self
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.x'
+          addToPath: true
+      - script: |
+          pip install -r requirements.txt
+          python convert_prowlarr_supported_indexers_to_markdown.py -c $(commit) -b $(PROWLARRVERSION) -k $(appapikey) -o $(outputfile) -u $(appbaseurl)
+ 
   - stage: Report_Out
     dependsOn:
     - Analyze

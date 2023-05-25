@@ -15,8 +15,6 @@ import pycountry
 
 # Constants
 API_VERSION = "v1"
-MARKDOWN_ESCAPE_REGEX = r"(\w)(\.|\[|\])(\w|\])"
-MARKDOWN_ESCAPE_REGEX_REP = r"\1\\\2\3"
 WIKI_1NEWLINE = "\n"
 WIKI_2NEWLINE = "\n\n"
 WIKI_ENCODING = "utf8"
@@ -375,12 +373,12 @@ def build_markdown_table(indexers, privacy, protocol):
     for indexer in indexers:
         if indexer["privacy"] in privacy and indexer["protocol"] == protocol:
             name = escape_markdown(
-                indexer["name"]).strip().replace(".", r'\\.')
+                indexer["name"]).strip().replace(".", r'\.')
             logger.debug("Name: %s", name)
             info_link = indexer["infoLink"].replace(WIKI_INFOLINK, "")
             logger.debug("Info Link: %s", info_link)
             description = escape_markdown(
-                indexer["description"]).strip('.').strip().replace(".", r'\\.')
+                indexer["description"]).strip('.').strip().replace(".", r'\.')
             logger.debug("Description: %s", description)
             lang = get_language_name(indexer["language"], name)
             logger.debug("Language: %s", lang)

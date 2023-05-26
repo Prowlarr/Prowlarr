@@ -254,6 +254,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in rows)
             {
+                var downloadVolumeFactor = row.QuerySelector("span.freeleech") != null ? 0 : 1;
+
+                // Skip non-freeleech results when freeleech only is set
+                if (_settings.FreeleechOnly && downloadVolumeFactor != 0)
+                {
+                    continue;
+                }
+
                 var qTitleLink = row.QuerySelector("a.title, a.alt_title");
                 if (qTitleLink == null)
                 {
@@ -357,7 +365,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         release.PublishDate = DateTime.ParseExact(dateStr, "dd MMM yy", CultureInfo.InvariantCulture);
                     }
 
-                    release.DownloadVolumeFactor = row.QuerySelector("span.freeleech") != null ? 0 : 1;
+                    release.DownloadVolumeFactor = downloadVolumeFactor;
                     release.UploadVolumeFactor = 1;
 
                     releaseInfos.Add(release);
@@ -400,13 +408,21 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BakaBTSettings : UserPassTorrentBaseSettings
     {
-        [FieldDefinition(4, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
+        public BakaBTSettings()
+        {
+            FreeleechOnly = false;
+        }
+
+        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+        public bool FreeleechOnly { get; set; }
+
+        [FieldDefinition(5, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]
         public bool AddRomajiTitle { get; set; }
 
-        [FieldDefinition(5, Label = "Append Season", Type = FieldType.Checkbox, HelpText = "Append Season for Sonarr Compatibility")]
+        [FieldDefinition(6, Label = "Append Season", Type = FieldType.Checkbox, HelpText = "Append Season for Sonarr Compatibility")]
         public bool AppendSeason { get; set; }
 
-        [FieldDefinition(6, Label = "Adult Content", Type = FieldType.Checkbox, HelpText = "Allow Adult Content (Must be enabled in BakaBT settings)")]
+        [FieldDefinition(7, Label = "Adult Content", Type = FieldType.Checkbox, HelpText = "Allow Adult Content (Must be enabled in BakaBT settings)")]
         public bool AdultContent { get; set; }
     }
 }

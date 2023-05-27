@@ -418,7 +418,7 @@ namespace NzbDrone.Core.Indexers
 
                 if (releases.Count == 0)
                 {
-                    _logger.Trace(response.Content);
+                    _logger.Trace("No releases found. Response: {0}", response.Content);
                 }
 
                 return new IndexerQueryResult

@@ -161,7 +161,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
 
-            if (queryCats.Any())
+            if (queryCats.Any() && _capabilities.Categories.GetTrackerCategories().Except(queryCats).Any())
             {
                 searchUrl += "&id=" + string.Join(",", queryCats);
             }

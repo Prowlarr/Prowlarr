@@ -183,7 +183,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2220, NewznabStandardCategory.MoviesDVD, "|- Индийское кино (DVD Video)");
             caps.Categories.AddCategoryMapping(1670, NewznabStandardCategory.MoviesDVD, "|- Грайндхаус (DVD Video)");
             caps.Categories.AddCategoryMapping(2198, NewznabStandardCategory.MoviesHD, "HD Video");
-            caps.Categories.AddCategoryMapping(1457, NewznabStandardCategory.MoviesUHD, "|- UHD Video");
             caps.Categories.AddCategoryMapping(2199, NewznabStandardCategory.MoviesHD, "|- Классика мирового кинематографа (HD Video)");
             caps.Categories.AddCategoryMapping(313, NewznabStandardCategory.MoviesHD, "|- Зарубежное кино (HD Video)");
             caps.Categories.AddCategoryMapping(312, NewznabStandardCategory.MoviesHD, "|- Наше кино (HD Video)");
@@ -192,6 +191,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(2339, NewznabStandardCategory.MoviesHD, "|- Арт-хаус и авторское кино (HD Video)");
             caps.Categories.AddCategoryMapping(140, NewznabStandardCategory.MoviesHD, "|- Индийское кино (HD Video)");
             caps.Categories.AddCategoryMapping(194, NewznabStandardCategory.MoviesHD, "|- Грайндхаус (HD Video)");
+            caps.Categories.AddCategoryMapping(718, NewznabStandardCategory.MoviesUHD, "UHD Video");
+            caps.Categories.AddCategoryMapping(775, NewznabStandardCategory.MoviesUHD, "|- Классика мирового кинематографа (UHD Video)");
+            caps.Categories.AddCategoryMapping(1457, NewznabStandardCategory.MoviesUHD, "|- Зарубежное кино (UHD Video)");
+            caps.Categories.AddCategoryMapping(1940, NewznabStandardCategory.MoviesUHD, "|- Наше кино (UHD Video)");
+            caps.Categories.AddCategoryMapping(272, NewznabStandardCategory.MoviesUHD, "|- Азиатские фильмы (UHD Video)");
+            caps.Categories.AddCategoryMapping(271, NewznabStandardCategory.MoviesUHD, "|- Арт-хаус и авторское кино (UHD Video)");
             caps.Categories.AddCategoryMapping(352, NewznabStandardCategory.Movies3D, "3D/Стерео Кино, Видео, TV и Спорт");
             caps.Categories.AddCategoryMapping(549, NewznabStandardCategory.Movies3D, "|- 3D Кинофильмы");
             caps.Categories.AddCategoryMapping(1213, NewznabStandardCategory.Movies3D, "|- 3D Мультфильмы");
@@ -216,6 +221,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(815, NewznabStandardCategory.TVSD, "|- Мультсериалы (SD Video)");
             caps.Categories.AddCategoryMapping(816, NewznabStandardCategory.TVHD, "|- Мультсериалы (DVD Video)");
             caps.Categories.AddCategoryMapping(1460, NewznabStandardCategory.TVHD, "|- Мультсериалы (HD Video)");
+            caps.Categories.AddCategoryMapping(498, NewznabStandardCategory.TVUHD, "|- Мультсериалы (UHD Video)");
             caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.TVAnime, "Аниме");
             caps.Categories.AddCategoryMapping(1106, NewznabStandardCategory.TVAnime, "|- Онгоинги (HD Video)");
             caps.Categories.AddCategoryMapping(1105, NewznabStandardCategory.TVAnime, "|- Аниме (HD Video)");
@@ -295,7 +301,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1949, NewznabStandardCategory.TVHD, "|- Черное зеркало / Black Mirror (HD Video)");
             caps.Categories.AddCategoryMapping(1498, NewznabStandardCategory.TVHD, "|- Для некондиционных раздач (HD Video)");
             caps.Categories.AddCategoryMapping(911, NewznabStandardCategory.TVForeign, "Сериалы Латинской Америки, Турции и Индии");
-            caps.Categories.AddCategoryMapping(1493, NewznabStandardCategory.TVForeign, "|- Актёры и актрисы латиноамериканских сериалов");
             caps.Categories.AddCategoryMapping(325, NewznabStandardCategory.TVForeign, "|- Сериалы Аргентины");
             caps.Categories.AddCategoryMapping(534, NewznabStandardCategory.TVForeign, "|- Сериалы Бразилии");
             caps.Categories.AddCategoryMapping(594, NewznabStandardCategory.TVForeign, "|- Сериалы Венесуэлы");
@@ -303,11 +308,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(607, NewznabStandardCategory.TVForeign, "|- Сериалы Колумбии");
             caps.Categories.AddCategoryMapping(1574, NewznabStandardCategory.TVForeign, "|- Сериалы Латинской Америки с озвучкой (раздачи папками)");
             caps.Categories.AddCategoryMapping(1539, NewznabStandardCategory.TVForeign, "|- Сериалы Латинской Америки с субтитрами");
-            caps.Categories.AddCategoryMapping(1940, NewznabStandardCategory.TVForeign, "|- Официальные краткие версии сериалов Латинской Америки");
             caps.Categories.AddCategoryMapping(694, NewznabStandardCategory.TVForeign, "|- Сериалы Мексики");
-            caps.Categories.AddCategoryMapping(775, NewznabStandardCategory.TVForeign, "|- Сериалы Перу, Сальвадора, Чили и других стран");
             caps.Categories.AddCategoryMapping(781, NewznabStandardCategory.TVForeign, "|- Сериалы совместного производства");
-            caps.Categories.AddCategoryMapping(718, NewznabStandardCategory.TVForeign, "|- Сериалы США (латиноамериканские)");
             caps.Categories.AddCategoryMapping(704, NewznabStandardCategory.TVForeign, "|- Сериалы Турции");
             caps.Categories.AddCategoryMapping(1537, NewznabStandardCategory.TVForeign, "|- Для некондиционных раздач");
             caps.Categories.AddCategoryMapping(2100, NewznabStandardCategory.TVForeign, "Азиатские сериалы");
@@ -445,7 +447,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1229, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2022 (финальный турнир)");
             caps.Categories.AddCategoryMapping(1693, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2022 (отбор)");
             caps.Categories.AddCategoryMapping(2532, NewznabStandardCategory.TVSport, "|- Чемпионат Европы 2020 [2021] (финальный турнир)");
-            caps.Categories.AddCategoryMapping(136, NewznabStandardCategory.TVSport, "|- Чемпионат Европы 2020 [2021] (отбор)");
+            caps.Categories.AddCategoryMapping(136, NewznabStandardCategory.TVSport, "|- Чемпионат Европы 2024 (отбор)");
             caps.Categories.AddCategoryMapping(592, NewznabStandardCategory.TVSport, "|- Лига Наций");
             caps.Categories.AddCategoryMapping(2533, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2018 (игры)");
             caps.Categories.AddCategoryMapping(1952, NewznabStandardCategory.TVSport, "|- Чемпионат Мира 2018 (обзорные передачи, документалистика)");
@@ -491,8 +493,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1527, NewznabStandardCategory.TVSport, "|- International Wrestling");
             caps.Categories.AddCategoryMapping(2069, NewznabStandardCategory.TVSport, "|- Oldschool Wrestling");
             caps.Categories.AddCategoryMapping(1323, NewznabStandardCategory.TVSport, "|- Documentary Wrestling");
-            caps.Categories.AddCategoryMapping(1346, NewznabStandardCategory.TVSport, "Для дооформления раздач");
-            caps.Categories.AddCategoryMapping(1411, NewznabStandardCategory.TVSport, "|- Сканирование, обработка сканов");
+            caps.Categories.AddCategoryMapping(1411, NewznabStandardCategory.Books, "|- Сканирование, обработка сканов");
             caps.Categories.AddCategoryMapping(21, NewznabStandardCategory.Books, "Книги и журналы (общий раздел)");
             caps.Categories.AddCategoryMapping(2157, NewznabStandardCategory.Books, "|- Кино, театр, ТВ, мультипликация, цирк");
             caps.Categories.AddCategoryMapping(765, NewznabStandardCategory.Books, "|- Рисунок, графический дизайн");

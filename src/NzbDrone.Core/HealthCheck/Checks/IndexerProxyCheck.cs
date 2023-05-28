@@ -22,16 +22,18 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
         public override HealthCheck Check()
         {
-            var enabledProviders = _proxyFactory.GetAvailableProviders();
+            var enabledProxies = _proxyFactory.GetAvailableProviders()
+                .Where(n => ((IndexerProxyDefinition)n.Definition).Enable)
+                .ToList();
 
-            var badProxies = enabledProviders.Where(p => p.Test().IsValid == false).ToList();
+            var badProxies = enabledProxies.Where(p => p.Test().IsValid == false).ToList();
 
-            if (enabledProviders.Empty() || badProxies.Count == 0)
+            if (enabledProxies.Empty() || badProxies.Count == 0)
             {
                 return new HealthCheck(GetType());
             }
 
-            if (badProxies.Count == enabledProviders.Count)
+            if (badProxies.Count == enabledProxies.Count)
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,

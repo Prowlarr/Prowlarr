@@ -31,8 +31,8 @@ namespace NzbDrone.Core.IndexerProxies
             var failures = new List<ValidationFailure>();
 
             var request = PreRequest(_cloudRequestBuilder.Create()
-                                              .Resource("/ping")
-                                              .Build());
+                .Resource("/ping")
+                .Build());
 
             try
             {

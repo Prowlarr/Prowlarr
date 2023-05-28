@@ -1465,7 +1465,54 @@ namespace NzbDrone.Core.Indexers.Definitions
             _capabilities = capabilities;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int season = 0)
+        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        {
+            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.Season ?? 0);
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        }
+
+        private IndexerPageableRequestChain GetPageableRequests(string searchTerm, int[] categories, int season = 0)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            if (categories is { Length: > 0 })
+            {
+                var trackerCategories = _capabilities.Categories.MapTorznabCapsToTrackers(categories).Distinct().ToList();
+
+                // RuTracker supports maximum 200 categories in one search
+                foreach (var trackerCategoriesChunk in trackerCategories.Chunk(200))
+                {
+                    pageableRequests.Add(GetPagedRequests(searchTerm, trackerCategoriesChunk, season));
+                }
+            }
+            else
+            {
+                pageableRequests.Add(GetPagedRequests(searchTerm, null, season));
+            }
+
+            return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, string[] trackerCategories, int season = 0)
         {
             var parameters = new NameValueCollection();
 
@@ -1488,9 +1535,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("nm", searchString);
             }
 
-            if (categories != null && categories.Length > 0)
+            if (trackerCategories is { Length: > 0 })
             {
-                parameters.Set("f", string.Join(",", _capabilities.Categories.MapTorznabCapsToTrackers(categories)));
+                parameters.Set("f", string.Join(",", trackerCategories));
             }
 
             var searchUrl = $"{_settings.BaseUrl}forum/tracker.php";
@@ -1509,56 +1556,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             yield return request;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            if (searchCriteria.Season == null)
-            {
-                searchCriteria.Season = 0;
-            }
-
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
-        }
-
-        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
-        {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
-
-            return pageableRequests;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -1580,7 +1577,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<ReleaseInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
             var doc = parser.ParseDocument(indexerResponse.Content);
@@ -1591,11 +1588,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var release = ParseReleaseRow(row);
                 if (release != null)
                 {
-                    torrentInfos.Add(release);
+                    releaseInfos.Add(release);
                 }
             }
 
-            return torrentInfos.ToArray();
+            return releaseInfos
+                .OrderByDescending(o => o.PublishDate)
+                .ToArray();
         }
 
         private TorrentInfo ParseReleaseRow(IElement row)

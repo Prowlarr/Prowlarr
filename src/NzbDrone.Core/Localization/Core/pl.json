@@ -174,7 +174,7 @@
     "IndexerStatusCheckSingleClientMessage": "Indeksatory niedostępne z powodu błędów: {0}",
     "Info": "Informacje",
     "Interval": "Interwał",
-    "Language": "Język",
+    "Language": "",
     "LogLevel": "Poziom dziennika",
     "LogLevelTraceHelpTextWarning": "Rejestrowanie śledzenia powinno być włączone tylko tymczasowo",
     "Logs": "Dzienniki",

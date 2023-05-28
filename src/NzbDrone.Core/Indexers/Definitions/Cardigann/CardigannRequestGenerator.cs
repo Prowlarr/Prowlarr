@@ -1044,8 +1044,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 mappedCategories = _defaultCategories;
             }
 
-            variables[".Categories"] = mappedCategories;
-
             var keywordTokens = new List<string>();
             var keywordTokenKeys = new List<string> { "Q", "Series", "Movie", "Year" };
             foreach (var key in keywordTokenKeys)
@@ -1069,20 +1067,26 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             var searchPaths = search.Paths;
             foreach (var searchPath in searchPaths)
             {
+                variables[".Categories"] = mappedCategories;
+
                 // skip path if categories don't match
                 if (searchPath.Categories != null && mappedCategories.Count > 0)
                 {
-                    var invertMatch = searchPath.Categories[0] == "!";
                     var hasIntersect = mappedCategories.Intersect(searchPath.Categories).Any();
-                    if (invertMatch)
+
+                    if (searchPath.Categories[0] == "!")
                     {
                         hasIntersect = !hasIntersect;
                     }
 
                     if (!hasIntersect)
                     {
+                        variables[".Categories"] = mappedCategories.Except(searchPath.Categories).ToList();
+
                         continue;
                     }
+
+                    variables[".Categories"] = mappedCategories.Intersect(searchPath.Categories).ToList();
                 }
 
                 // build search URL

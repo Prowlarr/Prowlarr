@@ -116,7 +116,18 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                 foreach (var row in rowsArray)
                 {
-                    var selObj = search.Rows.Attribute != null ? row.SelectToken(search.Rows.Attribute).Value<JToken>() : row;
+                    var selObj = row;
+
+                    if (search.Rows.Attribute != null)
+                    {
+                        selObj = row.SelectToken(search.Rows.Attribute)?.Value<JToken>();
+
+                        if (selObj == null && search.Rows.MissingAttributeEqualsNoResults)
+                        {
+                            continue;
+                        }
+                    }
+
                     var mulRows = search.Rows.Multiple ? selObj.Values<JObject>() : new List<JObject> { selObj.Value<JObject>() };
 
                     foreach (var mulRow in mulRows)

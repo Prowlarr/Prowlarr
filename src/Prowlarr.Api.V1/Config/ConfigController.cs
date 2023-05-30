@@ -33,6 +33,7 @@ namespace Prowlarr.Api.V1.Config
         }
 
         [RestPutById]
+        [Consumes("application/json")]
         [Produces("application/json")]
         public virtual ActionResult<TResource> SaveConfig(TResource resource)
         {

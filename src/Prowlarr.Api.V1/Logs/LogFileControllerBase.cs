@@ -26,6 +26,7 @@ namespace Prowlarr.Api.V1.Logs
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<LogFileResource> GetLogFilesResponse()
         {
             var result = new List<LogFileResource>();
@@ -51,6 +52,8 @@ namespace Prowlarr.Api.V1.Logs
         }
 
         [HttpGet(@"{filename:regex([[-.a-zA-Z0-9]]+?\.txt)}")]
+        [Produces("text/plain")]
+        [ProducesResponseType(typeof(IActionResult), 200)]
         public IActionResult GetLogFileResponse(string filename)
         {
             LogManager.Flush();

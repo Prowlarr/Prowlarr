@@ -48,6 +48,7 @@ namespace Prowlarr.Api.V1.Commands
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         [Produces("application/json")]
         public ActionResult<CommandResource> StartCommand(CommandResource commandResource)
         {

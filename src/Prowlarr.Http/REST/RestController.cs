@@ -46,6 +46,7 @@ namespace Prowlarr.Http.REST
         }
 
         [RestGetById]
+        [Produces("application/json")]
         public abstract TResource GetResourceById(int id);
 
         public override void OnActionExecuting(ActionExecutingContext context)

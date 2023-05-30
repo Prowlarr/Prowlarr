@@ -23,12 +23,14 @@ namespace Prowlarr.Api.V1.Indexers
             _indexerStatusService = indexerStatusService;
         }
 
+        [NonAction]
         public override IndexerStatusResource GetResourceById(int id)
         {
             throw new NotImplementedException();
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<IndexerStatusResource> GetAll()
         {
             return _indexerStatusService.GetBlockedProviders().ToResource();

@@ -19,6 +19,8 @@ namespace Prowlarr.Api.V1.Config
         }
 
         [RestPutById]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public override ActionResult<UiConfigResource> SaveConfig(UiConfigResource resource)
         {
             var dictionary = resource.GetType()

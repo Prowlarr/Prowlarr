@@ -22,6 +22,7 @@ namespace Prowlarr.Api.V1.Tags
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<TagDetailsResource> GetAll()
         {
             return _tagService.Details().ToResource();

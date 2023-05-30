@@ -32,6 +32,7 @@ namespace Prowlarr.Api.V1.System.Backup
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<BackupResource> GetBackupFiles()
         {
             var backups = _backupService.GetBackups();

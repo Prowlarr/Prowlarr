@@ -23,6 +23,7 @@ namespace Prowlarr.Api.V1.System.Tasks
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<TaskResource> GetAll()
         {
             return _taskManager.GetAll()

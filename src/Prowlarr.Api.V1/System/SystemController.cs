@@ -54,6 +54,7 @@ namespace Prowlarr.Api.V1.System
         }
 
         [HttpGet("status")]
+        [Produces("application/json")]
         public SystemResource GetStatus()
         {
             return new SystemResource
@@ -93,6 +94,7 @@ namespace Prowlarr.Api.V1.System
         }
 
         [HttpGet("routes")]
+        [Produces("application/json")]
         public IActionResult GetRoutes()
         {
             using (var sw = new StringWriter())
@@ -104,6 +106,7 @@ namespace Prowlarr.Api.V1.System
         }
 
         [HttpGet("routes/duplicate")]
+        [Produces("application/json")]
         public object DuplicateRoutes()
         {
             return _detector.GetDuplicateEndpoints(_endpointData);

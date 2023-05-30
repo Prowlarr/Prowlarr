@@ -45,12 +45,15 @@ namespace Prowlarr.Api.V1.Search
             _remoteReleaseCache = cacheManager.GetCache<ReleaseInfo>(GetType(), "remoteReleases");
         }
 
+        [NonAction]
         public override ReleaseResource GetResourceById(int id)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<ReleaseResource> GrabRelease(ReleaseResource release)
         {
             ValidateResource(release);
@@ -82,6 +85,8 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpPost("bulk")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<ReleaseResource> GrabReleases(List<ReleaseResource> releases)
         {
             var source = Request.GetSource();
@@ -114,6 +119,7 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public Task<List<ReleaseResource>> GetAll([FromQuery] SearchResource payload)
         {
             return GetSearchReleases(payload);

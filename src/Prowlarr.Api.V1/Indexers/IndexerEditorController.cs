@@ -22,6 +22,7 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpPut]
+        [Consumes("application/json")]
         public IActionResult SaveAll(IndexerEditorResource resource)
         {
             var indexersToUpdate = _indexerFactory.AllProviders(false).Select(x => (IndexerDefinition)x.Definition).Where(d => resource.IndexerIds.Contains(d.Id));
@@ -71,6 +72,7 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpDelete]
+        [Consumes("application/json")]
         public object DeleteIndexers([FromBody] IndexerEditorResource resource)
         {
             _indexerFactory.Delete(resource.IndexerIds);

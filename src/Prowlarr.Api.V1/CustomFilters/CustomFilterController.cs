@@ -30,6 +30,7 @@ namespace Prowlarr.Api.V1.CustomFilters
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         [Produces("application/json")]
         public ActionResult<CustomFilterResource> AddCustomFilter(CustomFilterResource resource)
         {
@@ -39,6 +40,7 @@ namespace Prowlarr.Api.V1.CustomFilters
         }
 
         [RestPutById]
+        [Consumes("application/json")]
         [Produces("application/json")]
         public ActionResult<CustomFilterResource> UpdateCustomFilter(CustomFilterResource resource)
         {

@@ -8,10 +8,9 @@ namespace NzbDrone.Core.Indexers
 {
     public static class MagnetLinkBuilder
     {
-        private static readonly List<string> _trackers = new List<string>
+        private static readonly List<string> Trackers = new ()
         {
             "udp://tracker.opentrackr.org:1337/announce",
-            "udp://9.rarbg.com:2810/announce",
             "udp://tracker.openbittorrent.com:6969/announce",
             "http://tracker.openbittorrent.com:80/announce",
             "udp://opentracker.i2p.rocks:6969/announce",
@@ -34,7 +33,7 @@ namespace NzbDrone.Core.Indexers
 
         public static string BuildPublicMagnetLink(string infoHash, string releaseTitle)
         {
-            return new MagnetLink(InfoHash.FromHex(infoHash), releaseTitle, _trackers).ToV1String();
+            return new MagnetLink(InfoHash.FromHex(infoHash), releaseTitle, Trackers).ToV1String();
         }
 
         public static string GetInfoHashFromMagnet(string magnet)

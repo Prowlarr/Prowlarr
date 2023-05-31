@@ -14,7 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
-using Microsoft.Extensions.Logging;
 using NLog;
 using Npgsql;
 using NzbDrone.Common.Composition.Extensions;
@@ -25,7 +24,6 @@ using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore.Extensions;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using PostgresOptions = NzbDrone.Core.Datastore.PostgresOptions;
 
 namespace NzbDrone.Host
@@ -143,10 +141,6 @@ namespace NzbDrone.Host
             return new HostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseServiceProviderFactory(new DryIocServiceProviderFactory(new Container(rules => rules.WithNzbDroneRules())))
-                .ConfigureLogging(logging =>
-                {
-                    logging.AddFilter("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware", LogLevel.None);
-                })
                 .ConfigureContainer<IContainer>(c =>
                 {
                     c.AutoAddServices(Bootstrap.ASSEMBLIES)

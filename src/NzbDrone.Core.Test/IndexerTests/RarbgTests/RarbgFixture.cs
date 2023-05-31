@@ -17,6 +17,7 @@ using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
 {
+    [Obsolete("Rarbg has shutdown 2023-05-31")]
     [TestFixture]
     public class RarbgFixture : CoreTest<Rarbg>
     {

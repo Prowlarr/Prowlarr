@@ -20,6 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
+    [Obsolete("Rarbg has shutdown 2023-05-31")]
     public class Rarbg : TorrentIndexerBase<RarbgSettings>
     {
         public override string Name => "Rarbg";

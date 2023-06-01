@@ -96,6 +96,14 @@ namespace NzbDrone.Core.Applications.Readarr
             var readarrIndexer = BuildReadarrIndexer(indexer, indexer.Protocol);
 
             var remoteIndexer = _readarrV1Proxy.AddIndexer(readarrIndexer, Settings);
+
+            if (remoteIndexer == null)
+            {
+                _logger.Debug("Failed to add {0} [{1}]", indexer.Name, indexer.Id);
+
+                return;
+            }
+
             _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
         }
 

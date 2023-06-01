@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { SelectActionType, useSelect } from 'App/SelectContext';
+import { useSelect } from 'App/SelectContext';
 import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
@@ -90,7 +90,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const onSelectedChange = useCallback(
     ({ id, value, shiftKey }) => {
       selectDispatch({
-        type: SelectActionType.ToggleSelected,
+        type: 'toggleSelected',
         id,
         isSelected: value,
         shiftKey,

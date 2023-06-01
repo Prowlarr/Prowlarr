@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.5.4" />
-    <PackageReference Include="NLog" Version="5.1.0" />
+    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Core\Prowlarr.Core.csproj" />

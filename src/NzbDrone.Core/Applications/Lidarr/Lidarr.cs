@@ -95,6 +95,14 @@ namespace NzbDrone.Core.Applications.Lidarr
             var lidarrIndexer = BuildLidarrIndexer(indexer, indexer.Protocol);
 
             var remoteIndexer = _lidarrV1Proxy.AddIndexer(lidarrIndexer, Settings);
+
+            if (remoteIndexer == null)
+            {
+                _logger.Debug("Failed to add {0} [{1}]", indexer.Name, indexer.Id);
+
+                return;
+            }
+
             _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
         }
 

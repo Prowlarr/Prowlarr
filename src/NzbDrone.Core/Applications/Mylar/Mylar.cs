@@ -78,6 +78,14 @@ namespace NzbDrone.Core.Applications.Mylar
             var mylarIndexer = BuildMylarIndexer(indexer, indexer.Protocol);
 
             var remoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
+
+            if (remoteIndexer == null)
+            {
+                _logger.Debug("Failed to add {0} [{1}]", indexer.Name, indexer.Id);
+
+                return;
+            }
+
             _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
         }
 

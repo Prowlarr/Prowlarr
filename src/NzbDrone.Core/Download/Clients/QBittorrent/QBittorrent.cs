@@ -41,7 +41,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
         private IQBittorrentProxy Proxy => _proxySelector.GetProxy(Settings);
         private Version ProxyApiVersion => _proxySelector.GetApiVersion(Settings);
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             if (!Proxy.GetConfig(Settings).DhtEnabled && !magnetLink.Contains("&tr="))
             {
@@ -95,7 +95,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             return hash;
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             //var setShareLimits = release.SeedConfiguration != null && (release.SeedConfiguration.Ratio.HasValue || release.SeedConfiguration.SeedTime.HasValue);
             //var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
@@ -450,7 +450,7 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             torrent.SeedingTime = torrentProperties.SeedingTime;
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             throw new NotImplementedException();
         }

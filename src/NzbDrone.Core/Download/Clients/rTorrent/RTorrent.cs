@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             _rTorrentDirectoryValidator = rTorrentDirectoryValidator;
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             var priority = (RTorrentPriority)Settings.Priority;
 
@@ -54,7 +54,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             return hash;
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             var priority = (RTorrentPriority)Settings.Priority;
 
@@ -157,7 +157,7 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
             return false;
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             throw new NotImplementedException();
         }

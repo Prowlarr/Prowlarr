@@ -1,4 +1,5 @@
 using System.Text;
+using NzbDrone.Core.Download.Clients;
 
 namespace NzbDrone.Core.Parser.Model
 {
@@ -12,6 +13,8 @@ namespace NzbDrone.Core.Parser.Model
         public long? MinimumSeedTime { get; set; }
         public double? DownloadVolumeFactor { get; set; }
         public double? UploadVolumeFactor { get; set; }
+
+        public TorrentSeedConfiguration SeedConfiguration { get; set; }
 
         public static int? GetSeeders(ReleaseInfo release)
         {

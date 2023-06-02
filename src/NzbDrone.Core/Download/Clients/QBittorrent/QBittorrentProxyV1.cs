@@ -97,6 +97,23 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             return response;
         }
 
+        public bool IsTorrentLoaded(string hash, QBittorrentSettings settings)
+        {
+            var request = BuildRequest(settings).Resource($"/query/propertiesGeneral/{hash}");
+            request.LogHttpError = false;
+
+            try
+            {
+                ProcessRequest(request, settings);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public QBittorrentTorrentProperties GetTorrentProperties(string hash, QBittorrentSettings settings)
         {
             var request = BuildRequest(settings).Resource($"/query/propertiesGeneral/{hash}");
@@ -295,15 +312,14 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
             var request = requestBuilder.Build();
             request.LogResponseContent = true;
+            request.SuppressHttpErrorStatusCodes = new[] { HttpStatusCode.Forbidden };
 
             HttpResponse response;
             try
             {
                 response = _httpClient.Execute(request);
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.Forbidden)
+
+                if (response.StatusCode == HttpStatusCode.Forbidden)
                 {
                     _logger.Debug("Authentication required, logging in.");
 
@@ -313,10 +329,10 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
                     response = _httpClient.Execute(request);
                 }
-                else
-                {
-                    throw new DownloadClientException("Failed to connect to qBittorrent, check your settings.", ex);
-                }
+            }
+            catch (HttpException ex)
+            {
+                throw new DownloadClientException("Failed to connect to qBittorrent, check your settings.", ex);
             }
             catch (WebException ex)
             {
@@ -367,9 +383,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                     throw new DownloadClientUnavailableException("Failed to connect to qBittorrent, please check your settings.", ex);
                 }
 
-                // returns "Fails." on bad login
                 if (response.Content != "Ok.")
                 {
+                    // returns "Fails." on bad login
                     _logger.Debug("qbitTorrent authentication failed.");
                     throw new DownloadClientAuthenticationException("Failed to authenticate with qBittorrent.");
                 }

@@ -410,7 +410,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             StripRussianLetters = false;
         }
 
-        [FieldDefinition(4, Label = "Strip Russian Letters", HelpLink = "Strip Cyrillic letters from release names", Type = FieldType.Checkbox)]
+        [FieldDefinition(4, Label = "Strip Russian Letters", HelpText = "Strip Cyrillic letters from release names", Type = FieldType.Checkbox)]
         public bool StripRussianLetters { get; set; }
     }
 }

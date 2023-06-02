@@ -48,26 +48,34 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 throw new NotSupportedException("Magnet Links without trackers not supported if DHT is disabled");
             }
 
-            //var setShareLimits = release.SeedConfiguration != null && (release.SeedConfiguration.Ratio.HasValue || release.SeedConfiguration.SeedTime.HasValue);
-            //var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
-            var itemToTop = Settings.Priority == (int)QBittorrentPriority.First;
+            var setShareLimits = release.SeedConfiguration != null && (release.SeedConfiguration.Ratio.HasValue || release.SeedConfiguration.SeedTime.HasValue);
+            var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
+            var moveToTop = Settings.Priority == (int)QBittorrentPriority.First;
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
             var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            Proxy.AddTorrentFromUrl(magnetLink, null, Settings, category);
+            Proxy.AddTorrentFromUrl(magnetLink, addHasSetShareLimits && setShareLimits ? release.SeedConfiguration : null, Settings, category);
 
-            if (itemToTop || forceStart)
+            if ((!addHasSetShareLimits && setShareLimits) || moveToTop || forceStart)
             {
                 if (!WaitForTorrent(hash))
                 {
                     return hash;
                 }
 
-                //if (!addHasSetShareLimits && setShareLimits)
-                //{
-                //    Proxy.SetTorrentSeedingConfiguration(hash.ToLower(), release.SeedConfiguration, Settings);
-                //}
-                if (itemToTop)
+                if (!addHasSetShareLimits && setShareLimits)
+                {
+                    try
+                    {
+                        Proxy.SetTorrentSeedingConfiguration(hash.ToLower(), release.SeedConfiguration, Settings);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn(ex, "Failed to set the torrent seed criteria for {0}.", hash);
+                    }
+                }
+
+                if (moveToTop)
                 {
                     try
                     {
@@ -97,26 +105,34 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
         protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
-            //var setShareLimits = release.SeedConfiguration != null && (release.SeedConfiguration.Ratio.HasValue || release.SeedConfiguration.SeedTime.HasValue);
-            //var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
-            var itemToTop = Settings.Priority == (int)QBittorrentPriority.First;
+            var setShareLimits = release.SeedConfiguration != null && (release.SeedConfiguration.Ratio.HasValue || release.SeedConfiguration.SeedTime.HasValue);
+            var addHasSetShareLimits = setShareLimits && ProxyApiVersion >= new Version(2, 8, 1);
+            var moveToTop = Settings.Priority == (int)QBittorrentPriority.First;
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
             var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            Proxy.AddTorrentFromFile(filename, fileContent, null, Settings, category);
+            Proxy.AddTorrentFromFile(filename, fileContent, addHasSetShareLimits ? release.SeedConfiguration : null, Settings, category);
 
-            if (itemToTop || forceStart)
+            if ((!addHasSetShareLimits && setShareLimits) || moveToTop || forceStart)
             {
                 if (!WaitForTorrent(hash))
                 {
                     return hash;
                 }
 
-                //if (!addHasSetShareLimits && setShareLimits)
-                //{
-                //    Proxy.SetTorrentSeedingConfiguration(hash.ToLower(), release.SeedConfiguration, Settings);
-                //}
-                if (itemToTop)
+                if (!addHasSetShareLimits && setShareLimits)
+                {
+                    try
+                    {
+                        Proxy.SetTorrentSeedingConfiguration(hash.ToLower(), release.SeedConfiguration, Settings);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn(ex, "Failed to set the torrent seed criteria for {0}.", hash);
+                    }
+                }
+
+                if (moveToTop)
                 {
                     try
                     {
@@ -146,14 +162,16 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
         protected bool WaitForTorrent(string hash)
         {
-            var count = 5;
+            var count = 10;
 
             while (count != 0)
             {
                 try
                 {
-                    Proxy.GetTorrentProperties(hash.ToLower(), Settings);
-                    return true;
+                    if (Proxy.IsTorrentLoaded(hash.ToLower(), Settings))
+                    {
+                        return true;
+                    }
                 }
                 catch
                 {
@@ -235,9 +253,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                 _logger.Error(ex, "Unable to test qBittorrent");
 
                 return new NzbDroneValidationFailure("Host", "Unable to connect to qBittorrent")
-                       {
-                           DetailedDescription = ex.Message
-                       };
+                {
+                    DetailedDescription = ex.Message
+                };
             }
 
             return null;
@@ -296,11 +314,6 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
         private ValidationFailure TestPrioritySupport()
         {
             var recentPriorityDefault = Settings.Priority == (int)QBittorrentPriority.Last;
-
-            if (recentPriorityDefault)
-            {
-                return null;
-            }
 
             try
             {

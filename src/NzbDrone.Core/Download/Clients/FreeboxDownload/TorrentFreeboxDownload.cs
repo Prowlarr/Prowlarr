@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
             return _proxy.GetTasks(Settings).Where(v => v.Type.ToLower() == FreeboxDownloadTaskType.Bt.ToString().ToLower());
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             return _proxy.AddTaskFromUrl(magnetLink,
                                          GetDownloadDirectory(release).EncodeBase64(),
@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
                                          Settings);
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             return _proxy.AddTaskFromFile(filename,
                                           fileContent,
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
                                           Settings);
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             return _proxy.AddTaskFromUrl(torrentLink,
                                          GetDownloadDirectory(release).EncodeBase64(),

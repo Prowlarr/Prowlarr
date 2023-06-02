@@ -36,9 +36,9 @@ namespace NzbDrone.Core.Download
 
         public virtual bool PreferTorrentFile => false;
 
-        protected abstract string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink);
-        protected abstract string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent);
-        protected abstract string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink);
+        protected abstract string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink);
+        protected abstract string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent);
+        protected abstract string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink);
 
         public override async Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer)
         {
@@ -142,7 +142,7 @@ namespace NzbDrone.Core.Download
 
             var filename = string.Format("{0}.torrent", StringUtil.CleanFileName(release.Title));
             var hash = _torrentFileInfoReader.GetHashFromTorrentFile(torrentFile);
-            var actualHash = AddFromTorrentFile(release, hash, filename, torrentFile);
+            var actualHash = AddFromTorrentFile((TorrentInfo)release, hash, filename, torrentFile);
 
             if (actualHash.IsNotNullOrWhiteSpace() && hash != actualHash)
             {
@@ -173,7 +173,7 @@ namespace NzbDrone.Core.Download
 
             if (hash != null)
             {
-                actualHash = AddFromMagnetLink(release, hash, magnetUrl);
+                actualHash = AddFromMagnetLink((TorrentInfo)release, hash, magnetUrl);
             }
 
             if (actualHash.IsNotNullOrWhiteSpace() && hash != actualHash)

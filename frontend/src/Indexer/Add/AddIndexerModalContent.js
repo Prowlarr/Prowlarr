@@ -226,7 +226,7 @@ class AddIndexerModalContent extends Component {
                     {
                       filteredIndexers.map((indexer) => (
                         <SelectIndexerRowConnector
-                          key={indexer.name}
+                          key={`${indexer.implementation}-${indexer.name}`}
                           implementation={indexer.implementation}
                           {...indexer}
                           onIndexerSelect={onIndexerSelect}

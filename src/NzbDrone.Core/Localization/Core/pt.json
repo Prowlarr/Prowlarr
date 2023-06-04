@@ -1,6 +1,6 @@
 {
     "Peers": "Elementos",
-    "AppDataLocationHealthCheckMessage": "Não será possível atualizar para evitar a exclusão da pasta AppData durante a atualização",
+    "AppDataLocationHealthCheckMessage": "Não foi possivél actualizar para prevenir apagar a AppData durante a actualização",
     "Warn": "Avisar",
     "View": "Ver",
     "Updates": "Atualizações",
@@ -420,5 +420,6 @@
     "TheLatestVersionIsAlreadyInstalled": "A versão mais recente do Prowlarr já está instalada",
     "AddSyncProfile": "Adicionar Perfil de Sincronização",
     "AddApplication": "Adicionar Aplicação",
-    "AddCustomFilter": "Adicionar Filtro customizado"
+    "AddCustomFilter": "Adicionar Filtro customizado",
+    "ApiKeyValidationHealthCheckMessage": "Por favor, actualize a sua API Key para ter no minimo {0} caracteres. Pode fazer através das definições ou do ficheiro de configuração"
 }

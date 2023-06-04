@@ -22,7 +22,7 @@
     "Clear": "Effacer",
     "BackupNow": "Sauvegarder maintenant",
     "Backup": "Sauvegarde",
-    "AppDataLocationHealthCheckMessage": "Mettre à jour ne sera pas possible afin d'éviter de supprimer le dossier AppData lors de la mise à jour",
+    "AppDataLocationHealthCheckMessage": "La mise à jour ne sera pas possible pour empêcher la suppression de AppData lors de la mise à jour",
     "Analytics": "Analytique",
     "All": "Tout",
     "About": "À propos",
@@ -80,7 +80,7 @@
     "EventType": "Type d'événement",
     "Details": "Détails",
     "ConnectSettingsSummary": "Notifications et scripts personnalisés",
-    "Added": "Ajoutée",
+    "Added": "Ajouter",
     "Actions": "Actions",
     "Info": "Info",
     "Error": "Erreur",
@@ -506,5 +506,5 @@
     "Track": "Piste",
     "Year": "Année",
     "ApplicationURL": "URL de l'application",
-    "ApiKeyValidationHealthCheckMessage": "Merci de mettre à jour votre clé API afin qu'elle fasse plus de 20 caractères. Rendez vous dans les paramètres ou dans le fichier de configuration"
+    "ApiKeyValidationHealthCheckMessage": "Veuillez mettre à jour votre clé API pour qu'elle contienne au moins {0} caractères. Vous pouvez le faire via les paramètres ou le fichier de configuration"
 }

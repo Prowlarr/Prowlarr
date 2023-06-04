@@ -52,23 +52,14 @@ namespace NzbDrone.Core.Indexers
 
         private IIndexerProxy GetProxy(ProviderDefinition definition)
         {
-            //Skip DB call if no tags on the indexers
+            // Skip DB call if no tags on the indexers
             if (definition.Tags.Count == 0 && definition.Id > 0)
             {
                 return null;
             }
 
             var proxies = _indexerProxyFactory.GetAvailableProviders();
-            IIndexerProxy selectedProxy = null;
-
-            foreach (var proxy in proxies)
-            {
-                if (definition.Tags.Intersect(proxy.Definition.Tags).Any())
-                {
-                    selectedProxy = proxy;
-                    break;
-                }
-            }
+            var selectedProxy = proxies.FirstOrDefault(proxy => definition.Tags.Intersect(proxy.Definition.Tags).Any());
 
             if (selectedProxy == null && definition.Id == 0)
             {

@@ -9,6 +9,7 @@
 #define BaseVersion GetEnv('MAJORVERSION')
 #define BuildNumber GetEnv('MINORVERSION')
 #define BuildVersion GetEnv('PROWLARRVERSION')
+#define MajorBaseVersion Copy(BaseVersion, 1, Pos('.', BaseVersion)-1)
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -16,7 +17,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2B42F178-4D5F-472A-8D31-EC08376F01B4}
 AppName={#AppName}
-AppVersion={#BaseVersion}
+AppVersion={#MajorBaseVersion}
 AppPublisher={#AppPublisher}
 AppPublisherURL={#AppURL}
 AppSupportURL={#ForumsURL}
@@ -34,9 +35,10 @@ DisableReadyPage=True
 CompressionThreads=2
 Compression=lzma2/normal
 AppContact={#ForumsURL}
-VersionInfoVersion={#BaseVersion}.{#BuildNumber}
+VersionInfoVersion={#MajorBaseVersion}
 SetupLogging=yes
 OutputDir=output
+AppVerName={#AppName}
 WizardStyle=modern
 
 [Languages]

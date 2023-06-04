@@ -8,8 +8,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
@@ -69,6 +71,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
+
+            if (response.Content != null && !response.Content.ContainsIgnoreCase("If your browser doesn't have javascript enabled"))
+            {
+                var parser = new HtmlParser();
+                var dom = parser.ParseDocument(response.Content);
+
+                var errorMessage = dom.QuerySelector("div > font[color=\"#FF0000\"]")?.TextContent.Trim();
+
+                throw new IndexerAuthException(errorMessage ?? "Couldn't login");
+            }
 
             UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 

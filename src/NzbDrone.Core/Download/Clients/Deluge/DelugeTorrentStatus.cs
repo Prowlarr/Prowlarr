@@ -1,6 +1,6 @@
-﻿namespace NzbDrone.Core.Download.Clients.Deluge
+namespace NzbDrone.Core.Download.Clients.Deluge
 {
-    internal class DelugeTorrentStatus
+    public class DelugeTorrentStatus
     {
         public const string Paused = "Paused";
         public const string Queued = "Queued";

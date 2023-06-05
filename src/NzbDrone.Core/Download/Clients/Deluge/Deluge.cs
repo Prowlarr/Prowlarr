@@ -38,8 +38,10 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 throw new DownloadClientException("Deluge failed to add magnet " + magnetLink);
             }
 
-            // _proxy.SetTorrentSeedingConfiguration(actualHash, remoteMovie.SeedConfiguration, Settings);
+            _proxy.SetTorrentSeedingConfiguration(actualHash, release.SeedConfiguration, Settings);
+
             var category = GetCategoryForRelease(release) ?? Settings.Category;
+
             if (category.IsNotNullOrWhiteSpace())
             {
                 _proxy.SetTorrentLabel(actualHash, category, Settings);
@@ -62,8 +64,10 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 throw new DownloadClientException("Deluge failed to add torrent " + filename);
             }
 
-            // _proxy.SetTorrentSeedingConfiguration(actualHash, release.SeedConfiguration, Settings);
+            _proxy.SetTorrentSeedingConfiguration(actualHash, release.SeedConfiguration, Settings);
+
             var category = GetCategoryForRelease(release) ?? Settings.Category;
+
             if (category.IsNotNullOrWhiteSpace())
             {
                 _proxy.SetTorrentLabel(actualHash, category, Settings);
@@ -117,12 +121,12 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                     case WebExceptionStatus.ConnectionClosed:
                         return new NzbDroneValidationFailure("UseSsl", "Verify SSL settings")
                         {
-                            DetailedDescription = "Please verify your SSL configuration on both Deluge and NzbDrone."
+                            DetailedDescription = "Please verify your SSL configuration on both Deluge and Prowlarr."
                         };
                     case WebExceptionStatus.SecureChannelFailure:
                         return new NzbDroneValidationFailure("UseSsl", "Unable to connect through SSL")
                         {
-                            DetailedDescription = "Drone is unable to connect to Deluge using SSL. This problem could be computer related. Please try to configure both drone and Deluge to not use SSL."
+                            DetailedDescription = "Prowlarr is unable to connect to Deluge using SSL. This problem could be computer related. Please try to configure both Prowlarr and Deluge to not use SSL."
                         };
                     default:
                         return new NzbDroneValidationFailure(string.Empty, "Unknown exception: " + ex.Message);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -16,10 +15,8 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
     public class UTorrent : TorrentClientBase<UTorrentSettings>
     {
         private readonly IUTorrentProxy _proxy;
-        private readonly ICached<UTorrentTorrentCache> _torrentCache;
 
         public UTorrent(IUTorrentProxy proxy,
-                        ICacheManager cacheManager,
                         ITorrentFileInfoReader torrentFileInfoReader,
                         IHttpClient httpClient,
                         IConfigService configService,
@@ -28,17 +25,16 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
             : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
         {
             _proxy = proxy;
-
-            _torrentCache = cacheManager.GetCache<UTorrentTorrentCache>(GetType(), "differentialTorrents");
         }
 
         protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             _proxy.AddTorrentFromUrl(magnetLink, Settings);
+            _proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
 
-            //_proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
             var category = GetCategoryForRelease(release) ?? Settings.Category;
-            if (GetCategoryForRelease(release).IsNotNullOrWhiteSpace())
+
+            if (category.IsNotNullOrWhiteSpace())
             {
                 _proxy.SetTorrentLabel(hash, category, Settings);
             }
@@ -56,9 +52,10 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
         protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             _proxy.AddTorrentFromFile(filename, fileContent, Settings);
+            _proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
 
-            //_proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
             var category = GetCategoryForRelease(release) ?? Settings.Category;
+
             if (category.IsNotNullOrWhiteSpace())
             {
                 _proxy.SetTorrentLabel(hash, category, Settings);
@@ -125,9 +122,9 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
                 _logger.Error(ex, "Failed to test uTorrent");
 
                 return new NzbDroneValidationFailure("Host", "Unable to connect to uTorrent")
-                       {
-                           DetailedDescription = ex.Message
-                       };
+                {
+                    DetailedDescription = ex.Message
+                };
             }
 
             return null;

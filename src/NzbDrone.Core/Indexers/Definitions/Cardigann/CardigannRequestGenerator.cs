@@ -501,10 +501,14 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             else if (login.Method == "get")
             {
                 var queryCollection = new NameValueCollection();
-                foreach (var input in login.Inputs)
+
+                if (login.Inputs != null && login.Inputs.Any())
                 {
-                    var value = ApplyGoTemplateText(input.Value);
-                    queryCollection.Add(input.Key, value);
+                    foreach (var input in login.Inputs)
+                    {
+                        var value = ApplyGoTemplateText(input.Value);
+                        queryCollection.Add(input.Key, value);
+                    }
                 }
 
                 var loginUrl = ResolvePath(login.Path + "?" + queryCollection.GetQueryString()).ToString();

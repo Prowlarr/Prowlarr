@@ -6,6 +6,7 @@ using System.Net;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using AngleSharp.Xml.Parser;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -64,7 +65,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             var searchUrlUri = new Uri(request.Url.FullUri);
 
-            if (request.SearchPath.Response != null && request.SearchPath.Response.Type.Equals("json"))
+            if (request.SearchPath.Response is { Type: "json" })
             {
                 if (request.SearchPath.Response != null &&
                     request.SearchPath.Response.NoResultsMessage != null &&
@@ -73,7 +74,18 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     return releases;
                 }
 
-                var parsedJson = JToken.Parse(results);
+                JToken parsedJson;
+
+                try
+                {
+                    parsedJson = JToken.Parse(results);
+                }
+                catch (JsonReaderException ex)
+                {
+                    _logger.Error(ex, "Unable to parse JSON response from indexer");
+
+                    throw new IndexerException(indexerResponse, "Error Parsing Json Response");
+                }
 
                 if (parsedJson == null)
                 {

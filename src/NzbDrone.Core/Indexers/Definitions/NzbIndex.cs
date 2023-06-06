@@ -10,6 +10,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Download;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
@@ -19,7 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class NzbIndex : TorrentIndexerBase<NzbIndexSettings>
+    public class NzbIndex : UsenetIndexerBase<NzbIndexSettings>
     {
         public override string Name => "NZBIndex";
         public override string[] IndexerUrls => new[] { "https://nzbindex.com/" };
@@ -29,8 +30,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public NzbIndex(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
-            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        public NzbIndex(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, nzbValidationService, logger)
         {
         }
 

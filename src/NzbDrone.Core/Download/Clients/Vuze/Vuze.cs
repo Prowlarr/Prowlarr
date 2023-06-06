@@ -1,9 +1,9 @@
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.Transmission;
+using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Download.Clients.Vuze
 {
@@ -13,11 +13,11 @@ namespace NzbDrone.Core.Download.Clients.Vuze
 
         public Vuze(ITransmissionProxy proxy,
                     ITorrentFileInfoReader torrentFileInfoReader,
-                    IHttpClient httpClient,
+                    ISeedConfigProvider seedConfigProvider,
                     IConfigService configService,
                     IDiskProvider diskProvider,
                     Logger logger)
-            : base(proxy, torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(proxy, torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
         }
 

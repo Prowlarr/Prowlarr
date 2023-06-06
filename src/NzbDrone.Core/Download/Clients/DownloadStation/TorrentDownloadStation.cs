@@ -7,9 +7,9 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -30,11 +30,11 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                                       IDownloadStationInfoProxy dsInfoProxy,
                                       IDownloadStationTaskProxy dsTaskProxy,
                                       ITorrentFileInfoReader torrentFileInfoReader,
-                                      IHttpClient httpClient,
+                                      ISeedConfigProvider seedConfigProvider,
                                       IConfigService configService,
                                       IDiskProvider diskProvider,
                                       Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _dsInfoProxy = dsInfoProxy;
             _dsTaskProxy = dsTaskProxy;

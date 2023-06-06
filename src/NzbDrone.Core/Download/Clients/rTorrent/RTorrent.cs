@@ -6,10 +6,10 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.rTorrent;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -23,12 +23,12 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
 
         public RTorrent(IRTorrentProxy proxy,
                         ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
+                        ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         IRTorrentDirectoryValidator rTorrentDirectoryValidator,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
             _rTorrentDirectoryValidator = rTorrentDirectoryValidator;

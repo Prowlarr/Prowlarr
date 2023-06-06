@@ -5,8 +5,8 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -18,11 +18,11 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
 
         public UTorrent(IUTorrentProxy proxy,
                         ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
+                        ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }

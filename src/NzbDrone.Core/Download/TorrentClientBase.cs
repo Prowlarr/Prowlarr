@@ -5,7 +5,6 @@ using MonoTorrent;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
@@ -18,18 +17,18 @@ namespace NzbDrone.Core.Download
     public abstract class TorrentClientBase<TSettings> : DownloadClientBase<TSettings>
         where TSettings : IProviderConfig, new()
     {
-        protected readonly IHttpClient _httpClient;
-        protected readonly ITorrentFileInfoReader _torrentFileInfoReader;
+        private readonly ITorrentFileInfoReader _torrentFileInfoReader;
+        private readonly ISeedConfigProvider _seedConfigProvider;
 
         protected TorrentClientBase(ITorrentFileInfoReader torrentFileInfoReader,
-                                    IHttpClient httpClient,
+                                    ISeedConfigProvider seedConfigProvider,
                                     IConfigService configService,
                                     IDiskProvider diskProvider,
                                     Logger logger)
             : base(configService, diskProvider, logger)
         {
-            _httpClient = httpClient;
             _torrentFileInfoReader = torrentFileInfoReader;
+            _seedConfigProvider = seedConfigProvider;
         }
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
@@ -43,6 +42,12 @@ namespace NzbDrone.Core.Download
         public override async Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer)
         {
             var torrentInfo = release as TorrentInfo;
+
+            if (torrentInfo != null)
+            {
+                // Get the seed configuration for this release.
+                torrentInfo.SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
+            }
 
             string magnetUrl = null;
             string torrentUrl = null;
@@ -67,7 +72,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return await DownloadFromWebUrl(release, indexer, torrentUrl);
+                        return await DownloadFromWebUrl(torrentInfo, indexer, torrentUrl);
                     }
                     catch (Exception ex)
                     {
@@ -84,7 +89,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return DownloadFromMagnetUrl(release, magnetUrl);
+                        return DownloadFromMagnetUrl(torrentInfo, magnetUrl);
                     }
                     catch (NotSupportedException ex)
                     {
@@ -98,7 +103,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return DownloadFromMagnetUrl(release, magnetUrl);
+                        return DownloadFromMagnetUrl(torrentInfo, magnetUrl);
                     }
                     catch (NotSupportedException ex)
                     {
@@ -113,14 +118,14 @@ namespace NzbDrone.Core.Download
 
                 if (torrentUrl.IsNotNullOrWhiteSpace())
                 {
-                    return await DownloadFromWebUrl(release, indexer, torrentUrl);
+                    return await DownloadFromWebUrl(torrentInfo, indexer, torrentUrl);
                 }
             }
 
             return null;
         }
 
-        private async Task<string> DownloadFromWebUrl(ReleaseInfo release, IIndexer indexer, string torrentUrl)
+        private async Task<string> DownloadFromWebUrl(TorrentInfo release, IIndexer indexer, string torrentUrl)
         {
             byte[] torrentFile = null;
 
@@ -142,7 +147,7 @@ namespace NzbDrone.Core.Download
 
             var filename = string.Format("{0}.torrent", StringUtil.CleanFileName(release.Title));
             var hash = _torrentFileInfoReader.GetHashFromTorrentFile(torrentFile);
-            var actualHash = AddFromTorrentFile((TorrentInfo)release, hash, filename, torrentFile);
+            var actualHash = AddFromTorrentFile(release, hash, filename, torrentFile);
 
             if (actualHash.IsNotNullOrWhiteSpace() && hash != actualHash)
             {
@@ -155,7 +160,7 @@ namespace NzbDrone.Core.Download
             return actualHash;
         }
 
-        private string DownloadFromMagnetUrl(ReleaseInfo release, string magnetUrl)
+        private string DownloadFromMagnetUrl(TorrentInfo release, string magnetUrl)
         {
             string hash = null;
             string actualHash = null;
@@ -173,7 +178,7 @@ namespace NzbDrone.Core.Download
 
             if (hash != null)
             {
-                actualHash = AddFromMagnetLink((TorrentInfo)release, hash, magnetUrl);
+                actualHash = AddFromMagnetLink(release, hash, magnetUrl);
             }
 
             if (actualHash.IsNotNullOrWhiteSpace() && hash != actualHash)

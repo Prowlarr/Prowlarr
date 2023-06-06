@@ -4,9 +4,9 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.Flood.Models;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -18,11 +18,11 @@ namespace NzbDrone.Core.Download.Clients.Flood
 
         public Flood(IFloodProxy proxy,
                         ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
+                        ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }

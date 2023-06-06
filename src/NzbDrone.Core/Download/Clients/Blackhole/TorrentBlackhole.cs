@@ -6,8 +6,8 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download.Clients.Blackhole
@@ -17,11 +17,11 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
         public override bool PreferTorrentFile => true;
 
         public TorrentBlackhole(ITorrentFileInfoReader torrentFileInfoReader,
-                                IHttpClient httpClient,
+                                ISeedConfigProvider seedConfigProvider,
                                 IConfigService configService,
                                 IDiskProvider diskProvider,
                                 Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
         }
 

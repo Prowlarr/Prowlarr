@@ -29,7 +29,6 @@ namespace NzbDrone.Core.Download
         private readonly IIndexerStatusService _indexerStatusService;
         private readonly IRateLimitService _rateLimitService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly ISeedConfigProvider _seedConfigProvider;
         private readonly Logger _logger;
 
         public DownloadService(IProvideDownloadClient downloadClientProvider,
@@ -38,7 +37,6 @@ namespace NzbDrone.Core.Download
                                IIndexerStatusService indexerStatusService,
                                IRateLimitService rateLimitService,
                                IEventAggregator eventAggregator,
-                               ISeedConfigProvider seedConfigProvider,
                                Logger logger)
         {
             _downloadClientProvider = downloadClientProvider;
@@ -47,7 +45,6 @@ namespace NzbDrone.Core.Download
             _indexerStatusService = indexerStatusService;
             _rateLimitService = rateLimitService;
             _eventAggregator = eventAggregator;
-            _seedConfigProvider = seedConfigProvider;
             _logger = logger;
         }
 
@@ -59,14 +56,6 @@ namespace NzbDrone.Core.Download
             if (downloadClient == null)
             {
                 throw new DownloadClientUnavailableException($"{release.DownloadProtocol} Download client isn't configured yet");
-            }
-
-            // Get the seed configuration for this release.
-            var seedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
-
-            if (seedConfiguration != null)
-            {
-                ((TorrentInfo)release).SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
             }
 
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(release.IndexerId));

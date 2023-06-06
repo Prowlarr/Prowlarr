@@ -6,8 +6,8 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -26,12 +26,12 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
 
         public QBittorrent(IQBittorrentProxySelector proxySelector,
                            ITorrentFileInfoReader torrentFileInfoReader,
-                           IHttpClient httpClient,
+                           ISeedConfigProvider seedConfigProvider,
                            IConfigService configService,
                            IDiskProvider diskProvider,
                            ICacheManager cacheManager,
                            Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxySelector = proxySelector;
 

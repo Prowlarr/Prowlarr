@@ -203,10 +203,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             {
                 var pairs = new Dictionary<string, string>();
 
-                foreach (var input in login.Inputs)
+                if (login.Inputs != null && login.Inputs.Any())
                 {
-                    var value = ApplyGoTemplateText(input.Value);
-                    pairs.Add(input.Key, value);
+                    foreach (var input in login.Inputs)
+                    {
+                        var value = ApplyGoTemplateText(input.Value);
+                        pairs.Add(input.Key, value);
+                    }
                 }
 
                 var loginUrl = ResolvePath(login.Path).ToString();
@@ -302,22 +305,25 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     pairs[name] = value;
                 }
 
-                foreach (var input in login.Inputs)
+                if (login.Inputs != null && login.Inputs.Any())
                 {
-                    var value = ApplyGoTemplateText(input.Value);
-                    var inputKey = input.Key;
-                    if (login.Selectors)
+                    foreach (var input in login.Inputs)
                     {
-                        var inputElement = landingResultDocument.QuerySelector(input.Key);
-                        if (inputElement == null)
+                        var value = ApplyGoTemplateText(input.Value);
+                        var inputKey = input.Key;
+                        if (login.Selectors)
                         {
-                            throw new CardigannConfigException(_definition, string.Format("Login failed: No input found using selector {0}", input.Key));
+                            var inputElement = landingResultDocument.QuerySelector(input.Key);
+                            if (inputElement == null)
+                            {
+                                throw new CardigannConfigException(_definition, string.Format("Login failed: No input found using selector {0}", input.Key));
+                            }
+
+                            inputKey = inputElement.GetAttribute("name");
                         }
 
-                        inputKey = inputElement.GetAttribute("name");
+                        pairs[inputKey] = value;
                     }
-
-                    pairs[inputKey] = value;
                 }
 
                 // selector inputs

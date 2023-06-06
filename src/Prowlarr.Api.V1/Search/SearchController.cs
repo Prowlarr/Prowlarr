@@ -57,6 +57,13 @@ namespace Prowlarr.Api.V1.Search
 
             var releaseInfo = _remoteReleaseCache.Find(GetCacheKey(release));
 
+            if (releaseInfo == null)
+            {
+                _logger.Debug("Couldn't find requested release in cache, cache timeout probably expired.");
+
+                throw new NzbDroneClientException(HttpStatusCode.NotFound, "Couldn't find requested release in cache, try searching again");
+            }
+
             var indexerDef = _indexerFactory.Get(release.IndexerId);
             var source = Request.GetSource();
             var host = Request.GetHostName();

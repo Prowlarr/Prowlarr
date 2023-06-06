@@ -43,14 +43,14 @@ namespace Prowlarr.Api.V1.Search
         {
             get
             {
-                var extension = "torrent";
-
-                if (Protocol == DownloadProtocol.Usenet)
+                var extension = Protocol switch
                 {
-                    extension = "nzb";
-                }
+                    DownloadProtocol.Torrent => ".torrent",
+                    DownloadProtocol.Usenet => ".nzb",
+                    _ => string.Empty
+                };
 
-                return $"{Title}.{extension}";
+                return $"{Title}{extension}";
             }
         }
     }

@@ -62,7 +62,12 @@ namespace NzbDrone.Core.Download
             }
 
             // Get the seed configuration for this release.
-            ((TorrentInfo)release).SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
+            var seedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
+
+            if (seedConfiguration != null)
+            {
+                ((TorrentInfo)release).SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
+            }
 
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(release.IndexerId));
 

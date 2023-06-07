@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
         [FieldDefinition(0, Label = "Full RSS Feed URL", HelpTextWarning = "To sync to your apps you will need to include the 8000(Other) in the Sync Categories", HelpLink = "https://wiki.servarr.com/en/prowlarr/faq#can-i-add-any-generic-torrent-rss-feed")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "Cookie", HelpText = "If your site requires a login cookie to access the RSS, you'll have to retrieve it via a browser.")]
+        [FieldDefinition(1, Label = "Cookie", HelpText = "If your site requires a login cookie to access the RSS, you'll have to retrieve it via a browser.", HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies")]
         public string Cookie { get; set; }
 
         [FieldDefinition(2, Type = FieldType.Checkbox, Label = "Allow Zero Size", HelpText="Enabling this will allow you to use feeds that don't specify release size, but be careful, size related checks will not be performed.")]

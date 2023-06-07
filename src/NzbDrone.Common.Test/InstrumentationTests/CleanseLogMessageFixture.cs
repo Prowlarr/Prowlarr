@@ -79,6 +79,7 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // Deluge
         [TestCase(@",{""download_location"": ""C:\Users\\mySecret mySecret\\Downloads""}")]
         [TestCase(@",{""download_location"": ""/home/mySecret/Downloads""}")]
+        [TestCase(@",{""download_location"": ""/Users/mySecret/Downloads""}")]
         [TestCase(@"auth.login(""mySecret"")")]
 
         // Download Station

@@ -79,10 +79,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 
         private IndexerCapabilities SetCapabilities()
         {
-            var caps = new IndexerCapabilities
-            {
-                SearchParams = new List<SearchParam>(),
-            };
+            var caps = new IndexerCapabilities();
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Other);
 

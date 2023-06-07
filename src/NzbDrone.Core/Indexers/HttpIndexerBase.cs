@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Indexers
 
         public override Task<IndexerPageableQueryResult> Fetch(MovieSearchCriteria searchCriteria)
         {
-            if (!SupportsSearch)
+            if (!SupportsSearch && !SupportsRss)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Indexers
 
         public override Task<IndexerPageableQueryResult> Fetch(MusicSearchCriteria searchCriteria)
         {
-            if (!SupportsSearch)
+            if (!SupportsSearch && !SupportsRss)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
@@ -86,7 +86,7 @@ namespace NzbDrone.Core.Indexers
 
         public override Task<IndexerPageableQueryResult> Fetch(TvSearchCriteria searchCriteria)
         {
-            if (!SupportsSearch)
+            if (!SupportsSearch && !SupportsRss)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
@@ -101,7 +101,7 @@ namespace NzbDrone.Core.Indexers
 
         public override Task<IndexerPageableQueryResult> Fetch(BookSearchCriteria searchCriteria)
         {
-            if (!SupportsSearch)
+            if (!SupportsSearch && !SupportsRss)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
@@ -116,7 +116,7 @@ namespace NzbDrone.Core.Indexers
 
         public override Task<IndexerPageableQueryResult> Fetch(BasicSearchCriteria searchCriteria)
         {
-            if (!SupportsSearch)
+            if (!SupportsSearch && !SupportsRss)
             {
                 return Task.FromResult(new IndexerPageableQueryResult());
             }

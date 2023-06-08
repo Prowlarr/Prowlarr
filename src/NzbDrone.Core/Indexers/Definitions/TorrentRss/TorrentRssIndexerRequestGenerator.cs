@@ -12,25 +12,30 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 
         public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return BuildPageableRssRequests(searchCriteria);
         }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return BuildPageableRssRequests(searchCriteria);
         }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return BuildPageableRssRequests(searchCriteria);
         }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            return BuildPageableRssRequests(searchCriteria);
         }
 
         public virtual IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            return BuildPageableRssRequests(searchCriteria);
+        }
+
+        private IndexerPageableRequestChain BuildPageableRssRequests(SearchCriteriaBase searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 

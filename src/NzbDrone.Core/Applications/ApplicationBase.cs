@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Applications
                 yield return new ApplicationDefinition
                 {
                     Name = GetType().Name,
-                    SyncLevel = ApplicationSyncLevel.AddOnly,
+                    SyncLevel = ApplicationSyncLevel.FullSync,
                     Implementation = GetType().Name,
                     Settings = config
                 };

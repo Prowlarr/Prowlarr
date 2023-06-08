@@ -6,6 +6,6 @@ namespace NzbDrone.Core.Applications
     {
         public ApplicationSyncLevel SyncLevel { get; set; }
 
-        public override bool Enable => SyncLevel == ApplicationSyncLevel.AddOnly || SyncLevel == ApplicationSyncLevel.FullSync;
+        public override bool Enable => SyncLevel is ApplicationSyncLevel.AddOnly or ApplicationSyncLevel.FullSync;
     }
 }

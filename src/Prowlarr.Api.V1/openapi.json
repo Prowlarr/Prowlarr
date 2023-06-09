@@ -66,17 +66,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApplicationResource"
                 }
@@ -110,16 +100,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
@@ -202,16 +182,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
             }
           }
         },
@@ -262,16 +232,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
             }
           }
         },
@@ -315,16 +275,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
             }
           }
         },
@@ -343,16 +293,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/AppProfileResource"
               }
@@ -432,16 +372,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/AppProfileResource"
               }
@@ -589,23 +519,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BackupResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BackupResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -696,17 +610,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommandResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommandResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CommandResource"
                 }
@@ -745,16 +649,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CommandResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CommandResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CommandResource"
               }
@@ -815,17 +709,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomFilterResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomFilterResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomFilterResource"
                 }
@@ -851,16 +735,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CustomFilterResource"
               }
@@ -933,16 +807,6 @@
               "schema": {
                 "$ref": "#/components/schemas/CustomFilterResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
             }
           }
         },
@@ -981,16 +845,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DevelopmentConfigResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DevelopmentConfigResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DevelopmentConfigResource"
-              }
             }
           }
         },
@@ -1026,17 +880,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DevelopmentConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DevelopmentConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DevelopmentConfigResource"
                 }
@@ -1085,17 +929,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DownloadClientResource"
                 }
@@ -1129,16 +963,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
@@ -1221,16 +1045,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
             }
           }
         },
@@ -1281,16 +1095,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
             }
           }
         },
@@ -1334,16 +1138,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
             }
           }
         },
@@ -1374,17 +1168,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DownloadClientConfigResource"
                 }
@@ -1410,16 +1194,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientConfigResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientConfigResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientConfigResource"
               }
@@ -1513,46 +1287,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v1/health/{id}": {
-      "get": {
-        "tags": [
-          "Health"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResource"
-                }
-              }
-            }
           }
         }
       }
@@ -1696,17 +1430,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HostConfigResource"
                 }
@@ -1735,16 +1459,6 @@
               "schema": {
                 "$ref": "#/components/schemas/HostConfigResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HostConfigResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/HostConfigResource"
-              }
             }
           }
         },
@@ -1752,17 +1466,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HostConfigResource"
                 }
@@ -1781,17 +1485,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HostConfigResource"
                 }
@@ -1821,17 +1515,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IndexerResource"
                 }
@@ -1865,16 +1549,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
@@ -1957,16 +1631,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
             }
           }
         },
@@ -2017,16 +1681,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
             }
           }
         },
@@ -2070,16 +1724,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
             }
           }
         },
@@ -2099,23 +1743,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerCategory"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerCategory"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -2139,16 +1767,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerEditorResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
             }
           }
         },
@@ -2165,16 +1783,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerEditorResource"
               }
@@ -2208,17 +1816,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerProxyResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerProxyResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IndexerProxyResource"
                 }
@@ -2252,16 +1850,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
@@ -2344,16 +1932,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
             }
           }
         },
@@ -2404,16 +1982,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
             }
           }
         },
@@ -2457,16 +2025,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
             }
           }
         },
@@ -2504,59 +2062,9 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatsResource"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IndexerStatsResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatsResource"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/indexerstatus/{id}": {
-      "get": {
-        "tags": [
-          "IndexerStatus"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatusResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatusResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatusResource"
                 }
               }
             }
@@ -2573,23 +2081,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerStatusResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerStatusResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -2657,17 +2149,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogResourcePagingResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogResourcePagingResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LogResourcePagingResource"
                 }
@@ -2686,23 +2168,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -2733,7 +2199,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IActionResult"
+                }
+              }
+            }
           }
         }
       }
@@ -3290,17 +2763,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotificationResource"
                 }
@@ -3334,16 +2797,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
@@ -3426,16 +2879,6 @@
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
             }
           }
         },
@@ -3486,16 +2929,6 @@
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
             }
           }
         },
@@ -3539,16 +2972,6 @@
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
             }
           }
         },
@@ -3587,59 +3010,9 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppProfileResource"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AppProfileResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppProfileResource"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/search/{id}": {
-      "get": {
-        "tags": [
-          "Search"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             }
@@ -3658,16 +3031,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ReleaseResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseResource"
-              }
             }
           }
         },
@@ -3675,17 +3038,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReleaseResource"
                 }
@@ -3756,23 +3109,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReleaseResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReleaseResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -3799,22 +3136,6 @@
                   "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              }
             }
           }
         },
@@ -3822,17 +3143,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReleaseResource"
                 }
@@ -3919,17 +3230,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SystemResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SystemResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SystemResource"
                 }
@@ -4007,17 +3308,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagResource"
                 }
@@ -4046,16 +3337,6 @@
               "schema": {
                 "$ref": "#/components/schemas/TagResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
             }
           }
         },
@@ -4063,17 +3344,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagResource"
                 }
@@ -4113,23 +3384,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4151,16 +3406,6 @@
               "schema": {
                 "$ref": "#/components/schemas/TagResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
             }
           }
         },
@@ -4168,17 +3413,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagResource"
                 }
@@ -4208,17 +3443,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagDetailsResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagDetailsResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagDetailsResource"
                 }
@@ -4237,23 +3462,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagDetailsResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagDetailsResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4275,23 +3484,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TaskResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TaskResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4324,17 +3517,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskResource"
                 }
@@ -4362,16 +3545,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UiConfigResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UiConfigResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UiConfigResource"
               }
@@ -4410,17 +3583,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UiConfigResource"
                 }
@@ -4458,23 +3621,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UpdateResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UpdateResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4496,23 +3643,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4543,7 +3674,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IActionResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5459,6 +4597,10 @@
             "readOnly": true
           }
         },
+        "additionalProperties": false
+      },
+      "IActionResult": {
+        "type": "object",
         "additionalProperties": false
       },
       "IndexerCapabilityResource": {

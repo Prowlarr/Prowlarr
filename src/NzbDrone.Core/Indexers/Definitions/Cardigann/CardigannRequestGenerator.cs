@@ -1028,6 +1028,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 return true;
             }
 
+            if (_definition.Login.Test?.Contains != null && _definition.Login.Test.Contains.IsNotNullOrWhiteSpace())
+            {
+                if (_definition.Login.Test.Contains[0] == '!')
+                {
+                    return response.Content.Contains(_definition.Login.Test.Contains[1..]);
+                }
+
+                return !response.Content.Contains(_definition.Login.Test.Contains);
+            }
+
             // Only run html test selector on html responses
             if (_definition.Login.Test?.Selector != null && (response.Headers.ContentType?.Contains("text/html") ?? true))
             {

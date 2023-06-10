@@ -28,8 +28,8 @@ namespace NzbDrone.Core.IndexerVersions
     {
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
 
-        private const string DEFINITION_BRANCH = "master";
-        private const int DEFINITION_VERSION = 9;
+        private const string DEFINITION_BRANCH = "cardigann-contains";
+        private const int DEFINITION_VERSION = 10;
 
         // Used when moving yml to C#
         private readonly List<string> _definitionBlocklist = new ()

@@ -134,6 +134,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
     {
         public string Path { get; set; }
         public string Selector { get; set; }
+        public string Contains { get; set; }
     }
 
     public class RatioBlock : SelectorBlock

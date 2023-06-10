@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Download.Clients.FreeboxDownload.Responses;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 
@@ -28,13 +26,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
         }
 
         public override string Name => "Freebox Download";
-
         public override bool SupportsCategories => true;
-
-        protected IEnumerable<FreeboxDownloadTask> GetTorrents()
-        {
-            return _proxy.GetTasks(Settings).Where(v => v.Type.ToLower() == FreeboxDownloadTaskType.Bt.ToString().ToLower());
-        }
 
         protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
@@ -42,6 +34,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
                                          GetDownloadDirectory(release).EncodeBase64(),
                                          ToBePaused(),
                                          ToBeQueuedFirst(),
+                                         GetSeedRatio(release),
                                          Settings);
         }
 
@@ -52,6 +45,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
                                           GetDownloadDirectory(release).EncodeBase64(),
                                           ToBePaused(),
                                           ToBeQueuedFirst(),
+                                          GetSeedRatio(release),
                                           Settings);
         }
 
@@ -61,6 +55,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
                                          GetDownloadDirectory(release).EncodeBase64(),
                                          ToBePaused(),
                                          ToBeQueuedFirst(),
+                                         GetSeedRatio(release),
                                          Settings);
         }
 
@@ -108,14 +103,19 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
 
             var destDir = _proxy.GetDownloadConfiguration(Settings).DecodedDownloadDirectory.TrimEnd('/');
 
-            if (Settings.Category.IsNotNullOrWhiteSpace())
-            {
-                var category = GetCategoryForRelease(release) ?? Settings.Category;
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
 
+            if (category.IsNotNullOrWhiteSpace())
+            {
                 destDir = $"{destDir}/{category}";
             }
 
             return destDir;
+        }
+
+        private bool ToBePaused()
+        {
+            return Settings.AddPaused;
         }
 
         private bool ToBeQueuedFirst()
@@ -128,9 +128,14 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
             return false;
         }
 
-        private bool ToBePaused()
+        private double? GetSeedRatio(TorrentInfo release)
         {
-            return Settings.AddPaused;
+            if (release.SeedConfiguration == null || release.SeedConfiguration.Ratio == null)
+            {
+                return null;
+            }
+
+            return release.SeedConfiguration.Ratio.Value * 100;
         }
     }
 }

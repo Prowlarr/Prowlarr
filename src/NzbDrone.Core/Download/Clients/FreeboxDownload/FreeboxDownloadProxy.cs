@@ -14,8 +14,8 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
     public interface IFreeboxDownloadProxy
     {
         void Authenticate(FreeboxDownloadSettings settings);
-        string AddTaskFromUrl(string url, string directory, bool addPaused, bool addFirst, FreeboxDownloadSettings settings);
-        string AddTaskFromFile(string fileName, byte[] fileContent, string directory, bool addPaused, bool addFirst, FreeboxDownloadSettings settings);
+        string AddTaskFromUrl(string url, string directory, bool addPaused, bool addFirst, double? seedRatio, FreeboxDownloadSettings settings);
+        string AddTaskFromFile(string fileName, byte[] fileContent, string directory, bool addPaused, bool addFirst, double? seedRatio, FreeboxDownloadSettings settings);
         void DeleteTask(string id, bool deleteData, FreeboxDownloadSettings settings);
         FreeboxDownloadConfiguration GetDownloadConfiguration(FreeboxDownloadSettings settings);
         List<FreeboxDownloadTask> GetTasks(FreeboxDownloadSettings settings);
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
             }
         }
 
-        public string AddTaskFromUrl(string url, string directory, bool addPaused, bool addFirst, FreeboxDownloadSettings settings)
+        public string AddTaskFromUrl(string url, string directory, bool addPaused, bool addFirst, double? seedRatio, FreeboxDownloadSettings settings)
         {
             var request = BuildRequest(settings).Resource("/downloads/add").Post();
             request.Headers.ContentType = "application/x-www-form-urlencoded";
@@ -60,12 +60,12 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
 
             var response = ProcessRequest<FreeboxDownloadTask>(request.Build(), settings);
 
-            SetTorrentSettings(response.Result.Id, addPaused, addFirst, settings);
+            SetTorrentSettings(response.Result.Id, addPaused, addFirst, seedRatio, settings);
 
             return response.Result.Id;
         }
 
-        public string AddTaskFromFile(string fileName, byte[] fileContent, string directory, bool addPaused, bool addFirst, FreeboxDownloadSettings settings)
+        public string AddTaskFromFile(string fileName, byte[] fileContent, string directory, bool addPaused, bool addFirst, double? seedRatio, FreeboxDownloadSettings settings)
         {
             var request = BuildRequest(settings).Resource("/downloads/add").Post();
 
@@ -78,7 +78,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
 
             var response = ProcessRequest<FreeboxDownloadTask>(request.Build(), settings);
 
-            SetTorrentSettings(response.Result.Id, addPaused, addFirst, settings);
+            SetTorrentSettings(response.Result.Id, addPaused, addFirst, seedRatio, settings);
 
             return response.Result.Id;
         }
@@ -118,7 +118,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
             return $"{settings.Host}:{settings.AppId}:{settings.AppToken}";
         }
 
-        private void SetTorrentSettings(string id, bool addPaused, bool addFirst, FreeboxDownloadSettings settings)
+        private void SetTorrentSettings(string id, bool addPaused, bool addFirst, double? seedRatio, FreeboxDownloadSettings settings)
         {
             var request = BuildRequest(settings).Resource("/downloads/" + id).Build();
 
@@ -134,6 +134,12 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
             if (addFirst)
             {
                 body.Add("queue_pos", "1");
+            }
+
+            if (seedRatio != null)
+            {
+                // 0 means unlimited seeding
+                body.Add("stop_ratio", seedRatio);
             }
 
             if (body.Count == 0)

@@ -91,6 +91,7 @@ namespace NzbDrone.Common.Http
                     {
                         request.Method = HttpMethod.Get;
                         request.ContentData = null;
+                        request.ContentSummary = null;
                     }
 
                     // Save to add to final response

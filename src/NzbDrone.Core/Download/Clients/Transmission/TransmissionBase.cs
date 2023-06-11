@@ -26,51 +26,11 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             _proxy = proxy;
         }
 
-        protected bool HasReachedSeedLimit(TransmissionTorrent torrent, double? ratio, Lazy<TransmissionConfig> config)
-        {
-            var isStopped = torrent.Status == TransmissionTorrentStatus.Stopped;
-            var isSeeding = torrent.Status == TransmissionTorrentStatus.Seeding;
-
-            if (torrent.SeedRatioMode == 1)
-            {
-                if (isStopped && ratio.HasValue && ratio >= torrent.SeedRatioLimit)
-                {
-                    return true;
-                }
-            }
-            else if (torrent.SeedRatioMode == 0)
-            {
-                if (isStopped && config.Value.SeedRatioLimited && ratio >= config.Value.SeedRatioLimit)
-                {
-                    return true;
-                }
-            }
-
-            // Transmission doesn't support SeedTimeLimit, use/abuse seed idle limit, but only if it was set per-torrent.
-            if (torrent.SeedIdleMode == 1)
-            {
-                if ((isStopped || isSeeding) && torrent.SecondsSeeding > torrent.SeedIdleLimit * 60)
-                {
-                    return true;
-                }
-            }
-            else if (torrent.SeedIdleMode == 0)
-            {
-                // The global idle limit is a real idle limit, if it's configured then 'Stopped' is enough.
-                if (isStopped && config.Value.IdleSeedingLimitEnabled)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             _proxy.AddTorrentFromUrl(magnetLink, GetDownloadDirectory(), Settings);
+            _proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
 
-            //_proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
             if (Settings.Priority == (int)TransmissionPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);
@@ -82,8 +42,8 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             _proxy.AddTorrentFromData(fileContent, GetDownloadDirectory(), Settings);
+            _proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
 
-            //_proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
             if (Settings.Priority == (int)TransmissionPriority.First)
             {
                 _proxy.MoveTorrentToTopInQueue(hash, Settings);

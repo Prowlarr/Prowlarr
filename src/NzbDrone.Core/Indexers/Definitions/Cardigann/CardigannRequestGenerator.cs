@@ -1073,9 +1073,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.Keywords"] = string.Join(" ", keywordTokens);
             variables[".Keywords"] = ApplyFilters((string)variables[".Query.Keywords"], search.Keywordsfilters, variables);
 
-            // TODO: prepare queries first and then send them parallel
-            var searchPaths = search.Paths;
-            foreach (var searchPath in searchPaths)
+            var searchUrls = new List<string>();
+
+            foreach (var searchPath in search.Paths)
             {
                 variables[".Categories"] = mappedCategories;
 
@@ -1158,13 +1158,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
                 }
 
-                if (method == HttpMethod.Get)
+                if (method == HttpMethod.Get && queryCollection.Count > 0)
                 {
-                    if (queryCollection.Count > 0)
-                    {
-                        searchUrl += "?" + queryCollection.GetQueryString(_encoding);
-                    }
+                    searchUrl += "?" + queryCollection.GetQueryString(_encoding);
                 }
+
+                if (method == HttpMethod.Get && searchUrls.Contains(searchUrl))
+                {
+                    _logger.Trace("Skip duplicated request {0}", searchUrl);
+
+                    continue;
+                }
+
+                searchUrls.Add(searchUrl);
 
                 _logger.Debug($"Adding request: {searchUrl}");
 

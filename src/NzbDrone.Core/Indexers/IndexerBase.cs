@@ -128,6 +128,7 @@ namespace NzbDrone.Core.Indexers
                 c.IndexerId = Definition.Id;
                 c.Indexer = Definition.Name;
                 c.DownloadProtocol = Protocol;
+                c.IndexerPrivacy = ((IndexerDefinition)Definition).Privacy;
                 c.IndexerPriority = ((IndexerDefinition)Definition).Priority;
 
                 if (Protocol == DownloadProtocol.Torrent)

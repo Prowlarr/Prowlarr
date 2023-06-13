@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Parser.Model
         public int IndexerId { get; set; }
         public string Indexer { get; set; }
         public int IndexerPriority { get; set; }
+        public IndexerPrivacy IndexerPrivacy { get; set; }
         public DownloadProtocol DownloadProtocol { get; set; }
         public int? Grabs { get; set; }
         public int? Files { get; set; }

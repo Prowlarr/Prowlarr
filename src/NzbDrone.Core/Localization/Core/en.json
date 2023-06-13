@@ -201,6 +201,7 @@
   "Indexer": "Indexer",
   "IndexerAlreadySetup": "At least one instance of indexer is already setup",
   "IndexerAuth": "Indexer Auth",
+  "IndexerCategories": "Indexer Categories",
   "IndexerDetails": "Indexer Details",
   "IndexerDisabled": "Indexer Disabled",
   "IndexerFailureRate": "Indexer Failure Rate",

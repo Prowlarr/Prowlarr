@@ -40,6 +40,7 @@
   flex: 1;
   flex-direction: column;
   margin-right: 12px;
+  max-width: 50%;
 }
 
 .filterContainer:last-child {

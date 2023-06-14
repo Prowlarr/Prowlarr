@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Alert from 'Components/Alert';
 import EnhancedSelectInput from 'Components/Form/EnhancedSelectInput';
+import NewznabCategorySelectInputConnector from 'Components/Form/NewznabCategorySelectInputConnector';
 import TextInput from 'Components/Form/TextInput';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
@@ -89,7 +90,8 @@ class AddIndexerModalContent extends Component {
       filter: '',
       filterProtocols: [],
       filterLanguages: [],
-      filterPrivacyLevels: []
+      filterPrivacyLevels: [],
+      filterCategories: []
     };
   }
 
@@ -121,7 +123,13 @@ class AddIndexerModalContent extends Component {
       .map((language) => ({ key: language, value: language }));
 
     const filteredIndexers = indexers.filter((indexer) => {
-      const { filter, filterProtocols, filterLanguages, filterPrivacyLevels } = this.state;
+      const {
+        filter,
+        filterProtocols,
+        filterLanguages,
+        filterPrivacyLevels,
+        filterCategories
+      } = this.state;
 
       if (!indexer.name.toLowerCase().includes(filter.toLocaleLowerCase()) && !indexer.description.toLowerCase().includes(filter.toLocaleLowerCase())) {
         return false;
@@ -137,6 +145,18 @@ class AddIndexerModalContent extends Component {
 
       if (filterPrivacyLevels.length && !filterPrivacyLevels.includes(indexer.privacy)) {
         return false;
+      }
+
+      if (filterCategories.length) {
+        const { categories = [] } = indexer.capabilities || {};
+        const flat = ({ id, subCategories = [] }) => [id, ...subCategories.flatMap(flat)];
+        const flatCategories = categories
+          .filter((item) => item.id < 100000)
+          .flatMap(flat);
+
+        if (!filterCategories.every((item) => flatCategories.includes(item))) {
+          return false;
+        }
       }
 
       return true;
@@ -165,7 +185,7 @@ class AddIndexerModalContent extends Component {
 
           <div className={styles.filterRow}>
             <div className={styles.filterContainer}>
-              <label className={styles.filterLabel}>Protocol</label>
+              <label className={styles.filterLabel}>{translate('Protocol')}</label>
               <EnhancedSelectInput
                 name="indexerProtocols"
                 value={this.state.filterProtocols}
@@ -175,7 +195,7 @@ class AddIndexerModalContent extends Component {
             </div>
 
             <div className={styles.filterContainer}>
-              <label className={styles.filterLabel}>Language</label>
+              <label className={styles.filterLabel}>{translate('Language')}</label>
               <EnhancedSelectInput
                 name="indexerLanguages"
                 value={this.state.filterLanguages}
@@ -185,12 +205,21 @@ class AddIndexerModalContent extends Component {
             </div>
 
             <div className={styles.filterContainer}>
-              <label className={styles.filterLabel}>Privacy</label>
+              <label className={styles.filterLabel}>{translate('Privacy')}</label>
               <EnhancedSelectInput
                 name="indexerPrivacyLevels"
                 value={this.state.filterPrivacyLevels}
                 values={privacyLevels}
                 onChange={({ value }) => this.setState({ filterPrivacyLevels: value })}
+              />
+            </div>
+
+            <div className={styles.filterContainer}>
+              <label className={styles.filterLabel}>{translate('Categories')}</label>
+              <NewznabCategorySelectInputConnector
+                name="indexerCategories"
+                value={this.state.filterCategories}
+                onChange={({ value }) => this.setState({ filterCategories: value })}
               />
             </div>
           </div>
@@ -212,7 +241,7 @@ class AddIndexerModalContent extends Component {
               isFetching ? <LoadingIndicator /> : null
             }
             {
-              error ? <div>{errorMessage}</div> : null
+              error ? <Alert kind={kinds.DANGER}>{errorMessage}</Alert> : null
             }
             {
               isPopulated && !!indexers.length ?
@@ -235,6 +264,15 @@ class AddIndexerModalContent extends Component {
                     }
                   </TableBody>
                 </Table> :
+                null
+            }
+            {
+              isPopulated && !!indexers.length && !filteredIndexers.length ?
+                <Alert
+                  kind={kinds.WARNING}
+                >
+                  {translate('NoIndexersFound')}
+                </Alert> :
                 null
             }
           </Scroller>

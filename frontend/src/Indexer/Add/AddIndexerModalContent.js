@@ -26,7 +26,7 @@ const columns = [
     isVisible: true
   },
   {
-    name: 'name',
+    name: 'sortName',
     label: translate('Name'),
     isSortable: true,
     isVisible: true

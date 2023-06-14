@@ -41,7 +41,7 @@ export const defaultState = {
     isFetching: false,
     isPopulated: false,
     error: null,
-    sortKey: 'name',
+    sortKey: 'sortName',
     sortDirection: sortDirections.ASCENDING,
     items: []
   }

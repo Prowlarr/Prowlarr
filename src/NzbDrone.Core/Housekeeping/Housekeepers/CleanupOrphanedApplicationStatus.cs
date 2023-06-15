@@ -14,14 +14,13 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         public void Clean()
         {
-            var mapper = _database.OpenConnection();
-
+            using var mapper = _database.OpenConnection();
             mapper.Execute(@"DELETE FROM ""ApplicationStatus""
-                                     WHERE ""Id"" IN (
-                                     SELECT ""ApplicationStatus"".""Id"" FROM ""ApplicationStatus""
-                                     LEFT OUTER JOIN ""Applications""
-                                     ON ""ApplicationStatus"".""ProviderId"" = ""Applications"".""Id""
-                                     WHERE ""Applications"".""Id"" IS NULL)");
+                             WHERE ""Id"" IN (
+                             SELECT ""ApplicationStatus"".""Id"" FROM ""ApplicationStatus""
+                             LEFT OUTER JOIN ""Applications""
+                             ON ""ApplicationStatus"".""ProviderId"" = ""Applications"".""Id""
+                             WHERE ""Applications"".""Id"" IS NULL)");
         }
     }
 }

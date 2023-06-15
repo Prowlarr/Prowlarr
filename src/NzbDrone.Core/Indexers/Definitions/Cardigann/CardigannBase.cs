@@ -169,7 +169,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (selection.Matches(@case.Key) || QuerySelector(selection, @case.Key) != null)
                     {
-                        value = @case.Value;
+                        value = ApplyGoTemplateText(@case.Value, variables);
                         break;
                     }
                 }
@@ -178,7 +178,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), selection.ToHtmlPretty()));
+                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {selection.ToHtmlPretty()}");
                     }
 
                     return null;
@@ -249,11 +249,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             if (selector.Case != null)
             {
-                foreach (var jcase in selector.Case)
+                foreach (var @case in selector.Case)
                 {
-                    if (value.Equals(jcase.Key) || jcase.Key.Equals("*"))
+                    if ((value != null && value.Equals(@case.Key)) || @case.Key.Equals("*"))
                     {
-                        value = jcase.Value;
+                        value = ApplyGoTemplateText(@case.Value, variables);
                         break;
                     }
                 }
@@ -262,7 +262,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), parentObj.ToString()));
+                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {parentObj}");
                     }
 
                     return null;

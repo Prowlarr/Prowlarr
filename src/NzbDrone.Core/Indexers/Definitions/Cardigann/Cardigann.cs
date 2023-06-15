@@ -166,7 +166,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
                 SupportsPagination = SupportsPagination,
-                Capabilities = new IndexerCapabilities(),
+                Capabilities = ParseCardigannCapabilities(definition),
                 ExtraFields = settings
             };
         }
@@ -237,6 +237,56 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             }
 
             return null;
+        }
+
+        private IndexerCapabilities ParseCardigannCapabilities(CardigannMetaDefinition definition)
+        {
+            var capabilities = new IndexerCapabilities();
+
+            if (definition.Caps == null)
+            {
+                return capabilities;
+            }
+
+            capabilities.ParseCardigannSearchModes(definition.Caps.Modes);
+            capabilities.SupportsRawSearch = definition.Caps.Allowrawsearch;
+
+            if (definition.Caps.Categories != null)
+            {
+                foreach (var category in definition.Caps.Categories)
+                {
+                    var cat = NewznabStandardCategory.GetCatByName(category.Value);
+
+                    if (cat == null)
+                    {
+                        continue;
+                    }
+
+                    capabilities.Categories.AddCategoryMapping(category.Key, cat);
+                }
+            }
+
+            if (definition.Caps.Categorymappings != null)
+            {
+                foreach (var categoryMapping in definition.Caps.Categorymappings)
+                {
+                    IndexerCategory torznabCat = null;
+
+                    if (categoryMapping.cat != null)
+                    {
+                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.cat);
+
+                        if (torznabCat == null)
+                        {
+                            continue;
+                        }
+                    }
+
+                    capabilities.Categories.AddCategoryMapping(categoryMapping.id, torznabCat, categoryMapping.desc);
+                }
+            }
+
+            return capabilities;
         }
     }
 }

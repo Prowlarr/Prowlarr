@@ -644,6 +644,14 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     release.Year = ParseUtil.CoerceInt(value);
                     value = release.Year.ToString();
                     break;
+                case "season":
+                    release.Season = ParseUtil.CoerceInt(value);
+                    value = release.Season.ToString();
+                    break;
+                case "episode":
+                    release.Episode = value;
+                    value = release.Episode;
+                    break;
                 case "author":
                     release.Author = value;
                     break;

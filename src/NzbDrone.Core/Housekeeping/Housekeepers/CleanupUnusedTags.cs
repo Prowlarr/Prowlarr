@@ -17,23 +17,21 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         public void Clean()
         {
-            using (var mapper = _database.OpenConnection())
+            using var mapper = _database.OpenConnection();
+            var usedTags = new[] { "Notifications", "IndexerProxies", "Indexers", "Applications" }
+                .SelectMany(v => GetUsedTags(v, mapper))
+                .Distinct()
+                .ToArray();
+
+            if (usedTags.Length > 0)
             {
-                var usedTags = new[] { "Notifications", "IndexerProxies", "Indexers", "Applications" }
-                    .SelectMany(v => GetUsedTags(v, mapper))
-                    .Distinct()
-                    .ToArray();
+                var usedTagsList = string.Join(",", usedTags.Select(d => d.ToString()).ToArray());
 
-                if (usedTags.Length > 0)
-                {
-                    var usedTagsList = string.Join(",", usedTags.Select(d => d.ToString()).ToArray());
-
-                    mapper.Execute($"DELETE FROM \"Tags\" WHERE NOT \"Id\" IN ({usedTagsList})");
-                }
-                else
-                {
-                    mapper.Execute($"DELETE FROM \"Tags\"");
-                }
+                mapper.Execute($"DELETE FROM \"Tags\" WHERE NOT \"Id\" IN ({usedTagsList})");
+            }
+            else
+            {
+                mapper.Execute("DELETE FROM \"Tags\"");
             }
         }
 

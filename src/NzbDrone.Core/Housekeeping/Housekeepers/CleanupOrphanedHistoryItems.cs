@@ -19,15 +19,13 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
 
         private void CleanupOrphanedByIndexer()
         {
-            using (var mapper = _database.OpenConnection())
-            {
-                mapper.Execute(@"DELETE FROM ""History""
-                                     WHERE ""Id"" IN (
-                                     SELECT ""History"".""Id"" FROM ""History""
-                                     LEFT OUTER JOIN ""Indexers""
-                                     ON ""History"".""IndexerId"" = ""Indexers"".""Id""
-                                     WHERE ""Indexers"".""Id"" IS NULL)");
-            }
+            using var mapper = _database.OpenConnection();
+            mapper.Execute(@"DELETE FROM ""History""
+                             WHERE ""Id"" IN (
+                             SELECT ""History"".""Id"" FROM ""History""
+                             LEFT OUTER JOIN ""Indexers""
+                             ON ""History"".""IndexerId"" = ""Indexers"".""Id""
+                             WHERE ""Indexers"".""Id"" IS NULL)");
         }
     }
 }

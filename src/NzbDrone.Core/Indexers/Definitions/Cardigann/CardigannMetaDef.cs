@@ -19,7 +19,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         public List<string> Links { get; set; }
         public List<string> Legacylinks { get; set; }
         public List<SettingsField> Settings { get; set; }
-        public string Sha { get; set; }
         public LoginBlock Login { get; set; }
+        public CapabilitiesBlock Caps { get; set; }
+        public string Sha { get; set; }
     }
 }

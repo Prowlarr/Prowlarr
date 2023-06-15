@@ -38,6 +38,10 @@ namespace NzbDrone.Core.Applications.Sonarr
             var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var apiPathCompare = apiPath.Equals(otherApiPath);
 
+            var animeStandardFormatSearch = Fields.FirstOrDefault(x => x.Name == "animeStandardFormatSearch")?.Value == null ? null : (bool?)Convert.ToBoolean(Fields.FirstOrDefault(x => x.Name == "animeStandardFormatSearch").Value);
+            var otherAnimeStandardFormatSearch = other.Fields.FirstOrDefault(x => x.Name == "animeStandardFormatSearch")?.Value == null ? null : (bool?)Convert.ToBoolean(other.Fields.FirstOrDefault(x => x.Name == "animeStandardFormatSearch").Value);
+            var animeStandardFormatSearchCompare = animeStandardFormatSearch == otherAnimeStandardFormatSearch;
+
             var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var minimumSeedersCompare = minimumSeeders == otherMinimumSeeders;
@@ -61,7 +65,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKey && apiPathCompare && baseUrl && cats && animeCats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare;
+                apiKey && apiPathCompare && baseUrl && cats && animeCats && animeStandardFormatSearchCompare && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare;
         }
     }
 }

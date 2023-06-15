@@ -183,12 +183,12 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "animeStandardFormatSearch", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
 
             if (id == 0)
             {
                 // Ensuring backward compatibility with older versions on first sync
-                syncFields.AddRange(new List<string> { "animeStandardFormatSearch", "additionalParameters" });
+                syncFields.AddRange(new List<string> { "additionalParameters" });
             }
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
@@ -217,6 +217,11 @@ namespace NzbDrone.Core.Applications.Sonarr
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "animeCategories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()));
+
+            if (sonarrIndexer.Fields.Any(x => x.Name == "animeStandardFormatSearch"))
+            {
+                sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "animeStandardFormatSearch").Value = Settings.SyncAnimeStandardFormatSearch;
+            }
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

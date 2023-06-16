@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Alert from 'Components/Alert';
 import BarChart from 'Components/Chart/BarChart';
 import DoughnutChart from 'Components/Chart/DoughnutChart';
 import StackedBarChart from 'Components/Chart/StackedBarChart';
@@ -178,9 +179,9 @@ function Stats(props) {
 
         {
           !isFetching && !!error &&
-            <div className={styles.errorMessage}>
+            <Alert kind={kinds.DANGER}>
               {getErrorMessage(error, 'Failed to load indexer stats from API')}
-            </div>
+            </Alert>
         }
 
         {

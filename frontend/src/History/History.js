@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import FilterMenu from 'Components/Menu/FilterMenu';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
@@ -121,9 +122,9 @@ class History extends Component {
 
           {
             !isFetchingAny && hasError &&
-              <div>
+              <Alert kind={kinds.DANGER}>
                 {translate('UnableToLoadHistory')}
-              </div>
+              </Alert>
           }
 
           {
@@ -131,9 +132,9 @@ class History extends Component {
             // wait for the episodes to populate because they are never coming.
 
             isPopulated && !hasError && !items.length &&
-              <div>
-                No history found
-              </div>
+              <Alert kind={kinds.INFO}>
+                {translate('NoHistoryFound')}
+              </Alert>
           }
 
           {

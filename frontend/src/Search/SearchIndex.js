@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
@@ -10,7 +11,7 @@ import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
-import { align, icons, sortDirections } from 'Helpers/Props';
+import { align, icons, kinds, sortDirections } from 'Helpers/Props';
 import NoIndexer from 'Indexer/NoIndexer';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
@@ -309,9 +310,9 @@ class SearchIndex extends Component {
 
             {
               !isFetching && !!error &&
-                <div className={styles.errorMessage}>
+                <Alert kind={kinds.DANGER}>
                   {getErrorMessage(error, 'Failed to load search results from API')}
-                </div>
+                </Alert>
             }
 
             {

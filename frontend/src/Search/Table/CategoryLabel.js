@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Label from 'Components/Label';
+import Tooltip from 'Components/Tooltip/Tooltip';
 import { kinds, tooltipPositions } from 'Helpers/Props';
-import Tooltip from '../../Components/Tooltip/Tooltip';
 
 function CategoryLabel({ categories }) {
   const sortedCategories = categories.filter((cat) => cat.name !== undefined).sort((c) => c.id);

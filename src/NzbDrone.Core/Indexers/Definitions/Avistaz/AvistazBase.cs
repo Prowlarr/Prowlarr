@@ -93,12 +93,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     var jsonResponse = new HttpResponse<AvistazErrorResponse>(ex.Response);
                     return new ValidationFailure(string.Empty, jsonResponse.Resource?.Message ?? "Unauthorized request to indexer");
                 }
-                else
-                {
-                    _logger.Warn(ex, "Unable to connect to indexer");
 
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
-                }
+                _logger.Warn(ex, "Unable to connect to indexer");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
             }
             catch (Exception ex)
             {
@@ -107,7 +105,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details");
             }
 
-            return null;
+            return await base.TestConnection();
         }
 
         private async Task<string> GetToken()

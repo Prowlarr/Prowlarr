@@ -43,7 +43,7 @@ function IndexerStatusCell(props: IndexerStatusCellProps) {
           className={styles.statusIcon}
           kind={enabled ? enableKind : kinds.DEFAULT}
           name={enabled ? enableIcon : icons.BLOCKLIST}
-          title={enabled ? enableTitle : translate('EnabledIndexerIsDisabled')}
+          title={enabled ? enableTitle : translate('Disabled')}
         />
       }
       {status ? (

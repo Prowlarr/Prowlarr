@@ -36,7 +36,7 @@ export const defaultState = {
   columns: [
     {
       name: 'status',
-      columnLabel: translate('ReleaseStatus'),
+      columnLabel: translate('IndexerStatus'),
       isSortable: true,
       isVisible: true,
       isModifiable: false

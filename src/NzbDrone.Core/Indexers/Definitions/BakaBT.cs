@@ -413,7 +413,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             FreeleechOnly = false;
         }
 
-        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Show freeleech torrents only")]
         public bool FreeleechOnly { get; set; }
 
         [FieldDefinition(5, Label = "Add Romaji Title", Type = FieldType.Checkbox, HelpText = "Add releases for Romaji Title")]

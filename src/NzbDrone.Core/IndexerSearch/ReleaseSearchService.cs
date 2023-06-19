@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -157,15 +158,22 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var indexers = _indexerFactory.Enabled();
 
-            if (criteriaBase.IndexerIds != null && criteriaBase.IndexerIds.Count > 0)
+            if (criteriaBase.IndexerIds is { Count: > 0 })
             {
                 indexers = indexers.Where(i => criteriaBase.IndexerIds.Contains(i.Definition.Id) ||
                     (criteriaBase.IndexerIds.Contains(-1) && i.Protocol == DownloadProtocol.Usenet) ||
                     (criteriaBase.IndexerIds.Contains(-2) && i.Protocol == DownloadProtocol.Torrent))
                     .ToList();
+
+                if (indexers.Count == 0)
+                {
+                    _logger.Debug("Search failed due to all selected indexers being unavailable: {0}", string.Join(", ", criteriaBase.IndexerIds));
+
+                    throw new SearchFailedException("Search failed due to all selected indexers being unavailable");
+                }
             }
 
-            if (criteriaBase.Categories != null && criteriaBase.Categories.Length > 0)
+            if (criteriaBase.Categories is { Length: > 0 })
             {
                 //Only query supported indexers
                 indexers = indexers.Where(i => ((IndexerDefinition)i.Definition).Capabilities.Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
@@ -173,6 +181,7 @@ namespace NzbDrone.Core.IndexerSearch
                 if (indexers.Count == 0)
                 {
                     _logger.Debug("All provided categories are unsupported by selected indexers: {0}", string.Join(", ", criteriaBase.Categories));
+
                     return Array.Empty<ReleaseInfo>();
                 }
             }

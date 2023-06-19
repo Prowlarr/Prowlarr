@@ -27,7 +27,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
         public override string[] IndexerUrls => new[] { "https://torrentapi.org/" };
         public override string[] LegacyUrls => new[] { "https://torrentapi.org" };
         public override string Description => "RARBG is a Public torrent site for MOVIES / TV / GENERAL";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(7);

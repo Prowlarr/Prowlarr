@@ -29,7 +29,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private string LoginUrl => Settings.BaseUrl + "api/login";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();

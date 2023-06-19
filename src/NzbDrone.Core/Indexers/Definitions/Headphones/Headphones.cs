@@ -14,8 +14,6 @@ namespace NzbDrone.Core.Indexers.Headphones
     public class Headphones : UsenetIndexerBase<HeadphonesSettings>
     {
         public override string Name => "Headphones VIP";
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override string[] IndexerUrls => new string[] { "https://indexer.codeshy.com" };
         public override string Description => "A Private Usenet indexer for music";

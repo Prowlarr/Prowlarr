@@ -23,12 +23,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
         public override bool SupportsPagination => true;
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-
         public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
-
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
 
         public override IIndexerRequestGenerator GetRequestGenerator()

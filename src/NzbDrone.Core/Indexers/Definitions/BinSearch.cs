@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "The binary Usenet search engine";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override bool SupportsRss => false;
         public override bool SupportsPagination => true;

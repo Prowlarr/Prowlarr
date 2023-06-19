@@ -59,7 +59,6 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     };
     public override string Description => "AudioBook Bay (ABB) is a public Torrent Tracker for AUDIOBOOKS";
     public override string Language => "en-US";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
     public override int PageSize => 15;
     public override IndexerCapabilities Capabilities => SetCapabilities();

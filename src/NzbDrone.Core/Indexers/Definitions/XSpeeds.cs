@@ -24,7 +24,6 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
     public override string Name => "XSpeeds";
     public override string[] IndexerUrls => new[] { "https://www.xspeeds.eu/" };
     public override string Description => "XSpeeds (XS) is a Private Torrent Tracker for MOVIES / TV / GENERAL";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
     private string LandingUrl => Settings.BaseUrl + "login.php";

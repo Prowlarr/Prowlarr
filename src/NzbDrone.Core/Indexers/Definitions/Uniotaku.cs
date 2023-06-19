@@ -25,7 +25,6 @@ public class Uniotaku : TorrentIndexerBase<UniotakuSettings>
     public override string[] IndexerUrls => new[] { "https://tracker.uniotaku.com/" };
     public override string Description => "UniOtaku is a BRAZILIAN Semi-Private Torrent Tracker for ANIME";
     public override string Language => "pt-BR";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 

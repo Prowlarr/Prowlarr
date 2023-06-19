@@ -29,7 +29,6 @@ public class PreToMe : TorrentIndexerBase<PreToMeSettings>
     public override string Description => "PreToMe is a ratioless 0Day/General tracker.";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 

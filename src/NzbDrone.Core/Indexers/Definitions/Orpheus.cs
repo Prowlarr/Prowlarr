@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Orpheus";
         public override string[] IndexerUrls => new[] { "https://orpheus.network/" };
         public override string Description => "Orpheus (APOLLO) is a Private Torrent Tracker for MUSIC";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;

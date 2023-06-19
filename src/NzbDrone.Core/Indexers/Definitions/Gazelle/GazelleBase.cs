@@ -13,7 +13,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Gazelle;
 public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         where TSettings : GazelleSettings, new()
 {
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override string[] IndexerUrls => new[] { "" };
     protected virtual string LoginUrl => Settings.BaseUrl + "login.php";
     public override bool SupportsRss => true;

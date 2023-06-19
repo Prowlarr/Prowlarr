@@ -25,7 +25,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "NZBIndex";
         public override string[] IndexerUrls => new[] { "https://nzbindex.com/" };
         public override string Description => "A Usenet Indexer";
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();

@@ -24,7 +24,6 @@ namespace NzbDrone.Core.Indexers.Torznab
         public override bool SupportsRedirect => true;
         public override bool SupportsPagination => true;
 
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;

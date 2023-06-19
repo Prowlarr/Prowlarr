@@ -28,7 +28,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "PornoLab is a Semi-Private Russian site for Adult content";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

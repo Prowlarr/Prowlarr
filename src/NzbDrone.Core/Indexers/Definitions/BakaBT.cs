@@ -28,7 +28,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override string[] IndexerUrls => new[] { "https://bakabt.me/" };
         public override string Description => "Anime Community";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

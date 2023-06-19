@@ -26,7 +26,6 @@ public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
     public override string Description => "FunFile is a general tracker";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 

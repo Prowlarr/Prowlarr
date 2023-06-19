@@ -10,6 +10,8 @@ namespace NzbDrone.Core.Indexers
     {
         private readonly IValidateNzbs _nzbValidationService;
 
+        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+
         protected UsenetIndexerBase(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {

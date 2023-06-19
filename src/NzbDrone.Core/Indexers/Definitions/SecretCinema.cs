@@ -20,7 +20,6 @@ public class SecretCinema : GazelleBase<GazelleSettings>
     public override string Name => "Secret Cinema";
     public override string[] IndexerUrls => new[] { "https://secret-cinema.pw/" };
     public override string Description => "A tracker for rare movies.";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 

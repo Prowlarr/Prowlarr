@@ -13,7 +13,6 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
         public override string Name => "Torrent RSS Feed";
         public override string[] IndexerUrls => new[] { "" };
         public override string Description => "Generic RSS Feed containing torrents";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => false;

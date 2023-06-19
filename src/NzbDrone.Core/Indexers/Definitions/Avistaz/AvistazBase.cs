@@ -12,7 +12,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
     public abstract class AvistazBase : TorrentIndexerBase<AvistazSettings>
     {
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override bool SupportsPagination => true;

@@ -24,8 +24,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         public override string Name => "Cardigann";
         public override string[] IndexerUrls => new string[] { "" };
         public override string Description => "";
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic

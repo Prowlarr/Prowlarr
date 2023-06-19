@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new[] { "https://revolutiontt.me/" };
         public override string Description => "The Revolution has begun";
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

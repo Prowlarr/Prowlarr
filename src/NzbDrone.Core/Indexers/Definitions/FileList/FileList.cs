@@ -15,7 +15,6 @@ public class FileList : TorrentIndexerBase<FileListSettings>
     };
     public override string[] LegacyUrls => new[] { "https://filelist.io" };
     public override string Description => "FileList (FL) is a ROMANIAN Private Torrent Tracker for 0DAY / GENERAL";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override bool SupportsRss => true;
     public override bool SupportsSearch => true;

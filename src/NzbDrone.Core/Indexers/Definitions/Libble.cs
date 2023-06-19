@@ -31,7 +31,6 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
     private string LoginUrl => Settings.BaseUrl + "login.php";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.UTF8;
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override bool SupportsPagination => true;
     public override int PageSize => 50;

@@ -22,7 +22,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Language => "en-US";
         public override string Description => "Torrents.csv is a self-hostable open source torrent search engine and database";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRss => false;

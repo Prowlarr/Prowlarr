@@ -32,7 +32,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://hd-torrents.me/",
         };
         public override string Description => "HD-Torrents is a private torrent website with HD torrents and strict rules on their content.";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

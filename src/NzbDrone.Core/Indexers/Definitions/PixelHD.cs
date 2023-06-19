@@ -28,7 +28,6 @@ public class PixelHD : TorrentIndexerBase<PixelHDSettings>
     public override string Description => "PixelHD (PxHD) is a ratioless Private Torrent Tracker for HD .MP4 MOVIES / TV";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.UTF8;
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 

@@ -24,7 +24,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "AnimeTorrents";
         public override string[] IndexerUrls => new[] { "https://animetorrents.me/" };
         public override string Description => "Definitive source for anime and manga";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsPagination => true;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);

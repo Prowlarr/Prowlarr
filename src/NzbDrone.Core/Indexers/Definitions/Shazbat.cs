@@ -30,7 +30,6 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
     public override string Description => "Shazbat is a PRIVATE Torrent Tracker with highly curated TV content";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.UTF8;
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
     public override TimeSpan RateLimit => TimeSpan.FromSeconds(5.1);

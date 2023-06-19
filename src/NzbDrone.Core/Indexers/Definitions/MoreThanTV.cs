@@ -26,7 +26,6 @@ public class MoreThanTV : TorrentIndexerBase<CookieTorrentBaseSettings>
     public override string Name => "MoreThanTV";
     public override string[] IndexerUrls => new[] { "https://www.morethantv.me/" };
     public override string Description => "Private torrent tracker for TV / MOVIES";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
     public override bool FollowRedirect => true;

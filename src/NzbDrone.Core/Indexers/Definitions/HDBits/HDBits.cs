@@ -11,7 +11,6 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         public override string[] IndexerUrls => new[] { "https://hdbits.org/" };
         public override string[] LegacyUrls => new[] { "https://hdbits.org" };
         public override string Description => "Best HD Tracker";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;

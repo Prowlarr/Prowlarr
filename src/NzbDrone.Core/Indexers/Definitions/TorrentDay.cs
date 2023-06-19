@@ -32,7 +32,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://td.workisboring.net/"
         };
         public override string Description => "TorrentDay (TD) is a Private site for TV / MOVIES / GENERAL";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

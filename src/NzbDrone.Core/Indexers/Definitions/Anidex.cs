@@ -27,7 +27,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Anidex is a Public torrent tracker and indexer, primarily for English fansub groups of anime";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

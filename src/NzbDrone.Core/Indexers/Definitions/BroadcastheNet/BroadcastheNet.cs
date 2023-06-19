@@ -11,7 +11,6 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override string Name => "BroadcasTheNet";
 
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
         public override bool SupportsPagination => true;

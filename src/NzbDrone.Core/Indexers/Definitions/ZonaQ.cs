@@ -34,7 +34,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "ZonaQ is a SPANISH Private Torrent Tracker for MOVIES / TV";
         public override string Language => "es-ES";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 

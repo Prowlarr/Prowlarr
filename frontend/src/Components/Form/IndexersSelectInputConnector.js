@@ -12,7 +12,7 @@ function createMapStateToProps() {
     (state) => state.indexers,
     (value, indexers) => {
       const values = [];
-      const groupedIndexers = _(indexers.items).groupBy((x) => x.protocol).map((val, key) => ({ protocol: key, indexers: val })).value();
+      const groupedIndexers = _.map(_.groupBy(indexers.items, 'protocol'), (val, key) => ({ protocol: key, indexers: val }));
 
       groupedIndexers.forEach((element) => {
         values.push({
@@ -21,10 +21,11 @@ function createMapStateToProps() {
         });
 
         if (element.indexers && element.indexers.length > 0) {
-          element.indexers.forEach((subCat) => {
+          element.indexers.forEach((indexer) => {
             values.push({
-              key: subCat.id,
-              value: subCat.name,
+              key: indexer.id,
+              value: indexer.name,
+              isDisabled: !indexer.enable,
               parentKey: element.protocol === 'usenet' ? -1 : -2
             });
           });

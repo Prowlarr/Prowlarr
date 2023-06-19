@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Indexers
                     catch
                     {
                         // Skip indexer if we fail in Cardigann mapping
-                        _logger.Debug("Indexer {0} has no definition", definition.Name);
+                        _logger.Debug("Indexer '{0}' has no definition", definition.Name);
                     }
                 }
 
@@ -127,7 +127,7 @@ namespace NzbDrone.Core.Indexers
 
         private void MapCardigannCategories(IndexerDefinition def, CardigannDefinition defFile)
         {
-            if (defFile.Caps.Categories != null)
+            if (defFile.Caps.Categories != null && defFile.Caps.Categories.Any())
             {
                 foreach (var category in defFile.Caps.Categories)
                 {
@@ -142,27 +142,23 @@ namespace NzbDrone.Core.Indexers
                 }
             }
 
-            if (defFile.Caps.Categorymappings != null)
+            if (defFile.Caps.Categorymappings != null && defFile.Caps.Categorymappings.Any())
             {
-                foreach (var categorymapping in defFile.Caps.Categorymappings)
+                foreach (var categoryMapping in defFile.Caps.Categorymappings)
                 {
                     IndexerCategory torznabCat = null;
 
-                    if (categorymapping.cat != null)
+                    if (categoryMapping.Cat != null)
                     {
-                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
+                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.Cat);
+
                         if (torznabCat == null)
                         {
                             continue;
                         }
                     }
 
-                    def.Capabilities.Categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
-
-                    //if (categorymapping.Default)
-                    //{
-                    //    DefaultCategories.Add(categorymapping.id);
-                    //}
+                    def.Capabilities.Categories.AddCategoryMapping(categoryMapping.Id, torznabCat, categoryMapping.Desc);
                 }
             }
         }

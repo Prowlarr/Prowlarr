@@ -272,9 +272,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     IndexerCategory torznabCat = null;
 
-                    if (categoryMapping.cat != null)
+                    if (categoryMapping.Cat != null)
                     {
-                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.cat);
+                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.Cat);
 
                         if (torznabCat == null)
                         {
@@ -282,7 +282,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                         }
                     }
 
-                    capabilities.Categories.AddCategoryMapping(categoryMapping.id, torznabCat, categoryMapping.desc);
+                    capabilities.Categories.AddCategoryMapping(categoryMapping.Id, torznabCat, categoryMapping.Desc);
                 }
             }
 

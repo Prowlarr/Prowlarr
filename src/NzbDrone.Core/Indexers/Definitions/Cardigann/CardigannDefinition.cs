@@ -66,9 +66,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
     public class CategorymappingBlock
     {
-        public string id { get; set; }
-        public string cat { get; set; }
-        public string desc { get; set; }
+        public string Id { get; set; }
+        public string Cat { get; set; }
+        public string Desc { get; set; }
         public bool Default { get; set; }
     }
 

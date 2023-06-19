@@ -26,8 +26,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         protected virtual string SiteLink { get; private set; }
 
-        protected readonly IndexerCapabilitiesCategories _categories = new IndexerCapabilitiesCategories();
-        protected readonly List<string> _defaultCategories = new List<string>();
+        protected readonly IndexerCapabilitiesCategories _categories = new ();
+        protected readonly List<string> _defaultCategories = new ();
 
         protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "tmdbid", "rageid", "tvdbid", "tvmazeid", "traktid", "doubanid", "poster", "banner", "description", "genre" };
 
@@ -65,14 +65,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             SiteLink = definition.Links.First();
 
-            if (_definition.Caps.Categories != null)
+            if (_definition.Caps.Categories != null && _definition.Caps.Categories.Any())
             {
                 foreach (var category in _definition.Caps.Categories)
                 {
                     var cat = NewznabStandardCategory.GetCatByName(category.Value);
+
                     if (cat == null)
                     {
-                        _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value));
+                        _logger.Error("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value);
+
                         continue;
                     }
 
@@ -80,27 +82,29 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 }
             }
 
-            if (_definition.Caps.Categorymappings != null)
+            if (_definition.Caps.Categorymappings != null && _definition.Caps.Categorymappings.Any())
             {
-                foreach (var categorymapping in _definition.Caps.Categorymappings)
+                foreach (var categoryMapping in _definition.Caps.Categorymappings)
                 {
                     IndexerCategory torznabCat = null;
 
-                    if (categorymapping.cat != null)
+                    if (categoryMapping.Cat != null)
                     {
-                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
+                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.Cat);
+
                         if (torznabCat == null)
                         {
-                            _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, categorymapping.id, categorymapping.cat));
+                            _logger.Error("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, categoryMapping.Id, categoryMapping.Cat);
+
                             continue;
                         }
                     }
 
-                    _categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
+                    _categories.AddCategoryMapping(categoryMapping.Id, torznabCat, categoryMapping.Desc);
 
-                    if (categorymapping.Default)
+                    if (categoryMapping.Default)
                     {
-                        _defaultCategories.Add(categorymapping.id);
+                        _defaultCategories.Add(categoryMapping.Id);
                     }
                 }
             }

@@ -4,38 +4,28 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Settings
 {
-    public class CookieBaseSettingsValidator : AbstractValidator<CookieTorrentBaseSettings>
+    public class CookieBaseSettingsValidator<T> : NoAuthSettingsValidator<T>
+        where T : CookieTorrentBaseSettings
     {
         public CookieBaseSettingsValidator()
         {
             RuleFor(c => c.Cookie).NotEmpty();
-            RuleFor(x => x.BaseSettings).SetValidator(new IndexerCommonSettingsValidator());
-            RuleFor(x => x.TorrentBaseSettings).SetValidator(new IndexerTorrentSettingsValidator());
         }
     }
 
-    public class CookieTorrentBaseSettings : ITorrentIndexerSettings
+    public class CookieTorrentBaseSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly CookieBaseSettingsValidator Validator = new ();
+        private static readonly CookieBaseSettingsValidator<CookieTorrentBaseSettings> Validator = new ();
 
         public CookieTorrentBaseSettings()
         {
             Cookie = "";
         }
 
-        [FieldDefinition(1, Label = "Base Url", HelpText = "Select which baseurl Prowlarr will use for requests to the site", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls")]
-        public string BaseUrl { get; set; }
-
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
+        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie", HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies", Privacy = PrivacyLevel.Password)]
         public string Cookie { get; set; }
 
-        [FieldDefinition(10)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
-
-        [FieldDefinition(11)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
-
-        public virtual NzbDroneValidationResult Validate()
+        public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }

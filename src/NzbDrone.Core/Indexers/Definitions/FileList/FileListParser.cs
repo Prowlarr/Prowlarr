@@ -25,12 +25,12 @@ public class FileListParser : IParseIndexerResponse
     {
         if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
         {
-            throw new IndexerException(indexerResponse, "Unexpected response status {0} code from API request", indexerResponse.HttpResponse.StatusCode);
+            throw new IndexerException(indexerResponse, "Unexpected response status {0} code from indexer request", indexerResponse.HttpResponse.StatusCode);
         }
 
         if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
         {
-            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
         }
 
         var releaseInfos = new List<ReleaseInfo>();
@@ -72,7 +72,7 @@ public class FileListParser : IParseIndexerResponse
                 InfoUrl = GetInfoUrl(id),
                 Seeders = row.Seeders,
                 Peers = row.Leechers + row.Seeders,
-                PublishDate = DateTime.Parse(row.UploadDate + " +0200", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                PublishDate = DateTime.Parse(row.UploadDate + " +0300", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                 Description = row.SmallDescription,
                 Genres = row.SmallDescription.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList(),
                 ImdbId = imdbId,

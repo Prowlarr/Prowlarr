@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "A German general tracker";
         public override string Language => "de-DE";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -120,10 +119,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public TorrentSyndikatSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public TorrentSyndikatRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {

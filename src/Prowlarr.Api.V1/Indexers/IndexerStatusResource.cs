@@ -10,6 +10,8 @@ namespace Prowlarr.Api.V1.Indexers
     {
         public int IndexerId { get; set; }
         public DateTime? DisabledTill { get; set; }
+        public DateTime? MostRecentFailure { get; set; }
+        public DateTime? InitialFailure { get; set; }
     }
 
     public static class IndexerStatusResourceMapper
@@ -24,7 +26,9 @@ namespace Prowlarr.Api.V1.Indexers
             return new IndexerStatusResource
             {
                 IndexerId = model.ProviderId,
-                DisabledTill = model.DisabledTill
+                DisabledTill = model.DisabledTill,
+                MostRecentFailure = model.MostRecentFailure,
+                InitialFailure = model.InitialFailure,
             };
         }
 

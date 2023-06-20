@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using NzbDrone.Common.Extensions;
@@ -8,7 +9,7 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace NzbDrone.Core.Indexers.Definitions.HDBits
 {
     public class HDBitsRequestGenerator : IIndexerRequestGenerator
     {
@@ -19,7 +20,7 @@ namespace NzbDrone.Core.Indexers.HDBits
         {
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
-            var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
+            var imdbId = ParseUtil.GetImdbId(searchCriteria.ImdbId).GetValueOrDefault(0);
 
             if (searchCriteria.Categories?.Length > 0)
             {
@@ -33,7 +34,7 @@ namespace NzbDrone.Core.Indexers.HDBits
 
             if (imdbId != 0)
             {
-                query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
+                query.ImdbInfo ??= new ImdbInfo();
                 query.ImdbInfo.Id = imdbId;
             }
 
@@ -77,7 +78,7 @@ namespace NzbDrone.Core.Indexers.HDBits
             var pageableRequests = new IndexerPageableRequestChain();
             var query = new TorrentQuery();
             var tvdbId = searchCriteria.TvdbId.GetValueOrDefault(0);
-            var imdbId = ParseUtil.GetImdbID(searchCriteria.ImdbId).GetValueOrDefault(0);
+            var imdbId = ParseUtil.GetImdbId(searchCriteria.ImdbId).GetValueOrDefault(0);
 
             if (searchCriteria.Categories?.Length > 0)
             {
@@ -91,15 +92,23 @@ namespace NzbDrone.Core.Indexers.HDBits
 
             if (tvdbId != 0)
             {
-                query.TvdbInfo = query.TvdbInfo ?? new TvdbInfo();
+                query.TvdbInfo ??= new TvdbInfo();
                 query.TvdbInfo.Id = tvdbId;
-                query.TvdbInfo.Season = searchCriteria.Season;
-                query.TvdbInfo.Episode = searchCriteria.Episode;
+
+                if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
+                {
+                    query.Search = showDate.ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    query.TvdbInfo.Season = searchCriteria.Season;
+                    query.TvdbInfo.Episode = searchCriteria.Episode;
+                }
             }
 
             if (imdbId != 0)
             {
-                query.ImdbInfo = query.ImdbInfo ?? new ImdbInfo();
+                query.ImdbInfo ??= new ImdbInfo();
                 query.ImdbInfo.Id = imdbId;
             }
 

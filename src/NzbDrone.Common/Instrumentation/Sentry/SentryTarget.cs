@@ -12,7 +12,6 @@ using Npgsql;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
 using Sentry;
-using Sentry.Protocol;
 
 namespace NzbDrone.Common.Instrumentation.Sentry
 {

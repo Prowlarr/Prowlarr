@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using FluentValidation.Results;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -49,10 +48,10 @@ namespace NzbDrone.Core.Applications.Sonarr
             {
                 failures.AddIfNotNull(_sonarrV3Proxy.TestConnection(BuildSonarrIndexer(testIndexer, DownloadProtocol.Usenet), Settings));
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 _logger.Error(ex, "Unable to send test message");
-                failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Unable to complete application test, cannot connect to Sonarr"));
+                failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Sonarr. {ex.Message}"));
             }
 
             return new ValidationResult(failures);
@@ -61,7 +60,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         public override List<AppIndexerMap> GetIndexerMappings()
         {
             var indexers = _sonarrV3Proxy.GetIndexers(Settings)
-                                         .Where(i => i.Implementation == "Newznab" || i.Implementation == "Torznab");
+                .Where(i => i.Implementation is "Newznab" or "Torznab");
 
             var mappings = new List<AppIndexerMap>();
 
@@ -73,8 +72,8 @@ namespace NzbDrone.Core.Applications.Sonarr
 
                     if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                     {
-                        //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
-                        mappings.Add(new AppIndexerMap { RemoteIndexerId = indexer.Id, IndexerId = indexerId });
+                        // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                        mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerId = indexer.Id });
                     }
                 }
             }
@@ -84,15 +83,28 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
+            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty() &&
+                indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Empty())
             {
-                var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol);
+                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
-                var remoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
+                return;
             }
 
-            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+            _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
+
+            var sonarrIndexer = BuildSonarrIndexer(indexer, indexer.Protocol);
+
+            var remoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
+
+            if (remoteIndexer == null)
+            {
+                _logger.Debug("Failed to add {0} [{1}]", indexer.Name, indexer.Id);
+
+                return;
+            }
+
+            _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = remoteIndexer.Id });
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -129,7 +141,10 @@ namespace NzbDrone.Core.Applications.Sonarr
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
-                        sonarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => !sonarrIndexer.Fields.Any(s => s.Name == f.Name)));
+                        sonarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => sonarrIndexer.Fields.All(s => s.Name != f.Name)));
+
+                        // Retain user tags not-affiliated with Prowlarr
+                        sonarrIndexer.Tags.UnionWith(remoteIndexer.Tags);
 
                         // Retain user settings not-affiliated with Prowlarr
                         sonarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
@@ -152,14 +167,14 @@ namespace NzbDrone.Core.Applications.Sonarr
 
                 if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
                 {
-                    _logger.Debug("Remote indexer not found, re-adding {0} to Sonarr", indexer.Name);
+                    _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Sonarr", indexer.Name, indexer.Id);
                     sonarrIndexer.Id = 0;
                     var newRemoteIndexer = _sonarrV3Proxy.AddIndexer(sonarrIndexer, Settings);
                     _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
                 }
                 else
                 {
-                    _logger.Debug("Remote indexer not found for {0}, skipping re-add to Sonarr due to indexer capabilities", indexer.Name);
+                    _logger.Debug("Remote indexer not found for {0} [{1}], skipping re-add to Sonarr due to indexer capabilities", indexer.Name, indexer.Id);
                 }
             }
         }
@@ -168,10 +183,16 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _sonarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new string[] { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "animeCategories", "animeStandardFormatSearch", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime" };
 
-            var newznab = schemas.Where(i => i.Implementation == "Newznab").First();
-            var torznab = schemas.Where(i => i.Implementation == "Torznab").First();
+            if (id == 0)
+            {
+                // Ensuring backward compatibility with older versions on first sync
+                syncFields.AddRange(new List<string> { "additionalParameters" });
+            }
+
+            var newznab = schemas.First(i => i.Implementation == "Newznab");
+            var torznab = schemas.First(i => i.Implementation == "Torznab");
 
             var schema = protocol == DownloadProtocol.Usenet ? newznab : torznab;
 
@@ -185,7 +206,8 @@ namespace NzbDrone.Core.Applications.Sonarr
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
-                Fields = new List<SonarrField>()
+                Fields = new List<SonarrField>(),
+                Tags = new HashSet<int>()
             };
 
             sonarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
@@ -195,6 +217,11 @@ namespace NzbDrone.Core.Applications.Sonarr
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
             sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "animeCategories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()));
+
+            if (sonarrIndexer.Fields.Any(x => x.Name == "animeStandardFormatSearch"))
+            {
+                sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "animeStandardFormatSearch").Value = Settings.SyncAnimeStandardFormatSearch;
+            }
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

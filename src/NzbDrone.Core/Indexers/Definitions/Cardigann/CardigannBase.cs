@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -14,7 +15,7 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     public class CardigannBase
     {
@@ -25,8 +26,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         protected virtual string SiteLink { get; private set; }
 
-        protected readonly IndexerCapabilitiesCategories _categories = new IndexerCapabilitiesCategories();
-        protected readonly List<string> _defaultCategories = new List<string>();
+        protected readonly IndexerCapabilitiesCategories _categories = new ();
+        protected readonly List<string> _defaultCategories = new ();
 
         protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "tmdbid", "rageid", "tvdbid", "tvmazeid", "traktid", "doubanid", "poster", "banner", "description", "genre" };
 
@@ -64,14 +65,16 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             SiteLink = definition.Links.First();
 
-            if (_definition.Caps.Categories != null)
+            if (_definition.Caps.Categories != null && _definition.Caps.Categories.Any())
             {
                 foreach (var category in _definition.Caps.Categories)
                 {
                     var cat = NewznabStandardCategory.GetCatByName(category.Value);
+
                     if (cat == null)
                     {
-                        _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value));
+                        _logger.Error("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, category.Key, category.Value);
+
                         continue;
                     }
 
@@ -79,27 +82,29 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
             }
 
-            if (_definition.Caps.Categorymappings != null)
+            if (_definition.Caps.Categorymappings != null && _definition.Caps.Categorymappings.Any())
             {
-                foreach (var categorymapping in _definition.Caps.Categorymappings)
+                foreach (var categoryMapping in _definition.Caps.Categorymappings)
                 {
                     IndexerCategory torznabCat = null;
 
-                    if (categorymapping.cat != null)
+                    if (categoryMapping.Cat != null)
                     {
-                        torznabCat = NewznabStandardCategory.GetCatByName(categorymapping.cat);
+                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.Cat);
+
                         if (torznabCat == null)
                         {
-                            _logger.Error(string.Format("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, categorymapping.id, categorymapping.cat));
+                            _logger.Error("CardigannIndexer ({0}): invalid Torznab category for id {1}: {2}", _definition.Id, categoryMapping.Id, categoryMapping.Cat);
+
                             continue;
                         }
                     }
 
-                    _categories.AddCategoryMapping(categorymapping.id, torznabCat, categorymapping.desc);
+                    _categories.AddCategoryMapping(categoryMapping.Id, torznabCat, categoryMapping.Desc);
 
-                    if (categorymapping.Default)
+                    if (categoryMapping.Default)
                     {
-                        _defaultCategories.Add(categorymapping.id);
+                        _defaultCategories.Add(categoryMapping.Id);
                     }
                 }
             }
@@ -168,7 +173,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     if (selection.Matches(@case.Key) || QuerySelector(selection, @case.Key) != null)
                     {
-                        value = @case.Value;
+                        value = ApplyGoTemplateText(@case.Value, variables);
                         break;
                     }
                 }
@@ -177,7 +182,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), selection.ToHtmlPretty()));
+                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {selection.ToHtmlPretty()}");
                     }
 
                     return null;
@@ -248,11 +253,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             if (selector.Case != null)
             {
-                foreach (var jcase in selector.Case)
+                foreach (var @case in selector.Case)
                 {
-                    if (value.Equals(jcase.Key) || jcase.Key.Equals("*"))
+                    if ((value != null && value.Equals(@case.Key)) || @case.Key.Equals("*"))
                     {
-                        value = jcase.Value;
+                        value = ApplyGoTemplateText(@case.Value, variables);
                         break;
                     }
                 }
@@ -261,7 +266,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("None of the case selectors \"{0}\" matched {1}", string.Join(",", selector.Case), parentObj.ToString()));
+                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {parentObj}");
                     }
 
                     return null;
@@ -300,7 +305,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else if (setting.Type == "checkbox")
                 {
-                    variables[name] = ((bool)value) ? ".True" : null;
+                    if (value is string stringValue && bool.TryParse(stringValue, out var result))
+                    {
+                        value = result;
+                    }
+
+                    variables[name] = (bool)value ? ".True" : null;
                 }
                 else if (setting.Type == "select")
                 {
@@ -328,12 +338,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 }
                 else
                 {
-                    throw new NotSupportedException();
+                    throw new NotSupportedException($"Type {setting.Type} is not supported.");
                 }
 
-                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging)
+                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging && variables.ContainsKey(name))
                 {
-                    _logger.Debug($"Setting {setting.Name} to {variables[name]}");
+                    _logger.Debug($"Setting {setting.Name} to {variables[name].ToJson()}");
                 }
             }
 
@@ -344,10 +354,12 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
         public string ApplyGoTemplateText(string template, Dictionary<string, object> variables = null, TemplateTextModifier modifier = null)
         {
-            if (variables == null)
+            if (template.IsNullOrWhiteSpace() || !template.Contains("{{"))
             {
-                variables = GetBaseTemplateVariables();
+                return template;
             }
+
+            variables ??= GetBaseTemplateVariables();
 
             // handle re_replace expression
             // Example: {{ re_replace .Query.Keywords "[^a-zA-Z0-9]+" "%" }}
@@ -606,10 +618,11 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     case "timeparse":
                     case "dateparse":
                         var layout = (string)filter.Args;
+
                         try
                         {
                             var date = DateTimeUtil.ParseDateTimeGoLang(data, layout);
-                            data = date.ToString(DateTimeUtil.Rfc1123ZPattern);
+                            data = date.ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         }
                         catch (InvalidDateException ex)
                         {
@@ -650,15 +663,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         break;
                     case "trim":
                         var cutset = (string)filter.Args;
-                        if (cutset != null)
-                        {
-                            data = data.Trim(cutset[0]);
-                        }
-                        else
-                        {
-                            data = data.Trim();
-                        }
-
+                        data = cutset != null ? data.Trim(cutset[0]) : data.Trim();
                         break;
                     case "prepend":
                         var prependstr = (string)filter.Args;
@@ -688,10 +693,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         break;
                     case "timeago":
                     case "reltime":
-                        data = DateTimeUtil.FromTimeAgo(data).ToString(DateTimeUtil.Rfc1123ZPattern);
+                        data = DateTimeUtil.FromTimeAgo(data).ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         break;
                     case "fuzzytime":
-                        data = DateTimeUtil.FromUnknown(data).ToString(DateTimeUtil.Rfc1123ZPattern);
+                        data = DateTimeUtil.FromUnknown(data).ToString(DateTimeUtil.Rfc1123ZPattern, CultureInfo.InvariantCulture);
                         break;
                     case "validfilename":
                         data = StringUtil.MakeValidFileName(data, '_', false);
@@ -739,18 +744,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         // for debugging
                         var debugData = data.Replace("\r", "\\r").Replace("\n", "\\n").Replace("\xA0", "\\xA0");
                         var strTag = (string)filter.Args;
-                        if (strTag != null)
-                        {
-                            strTag = string.Format("({0}):", strTag);
-                        }
-                        else
-                        {
-                            strTag = ":";
-                        }
+                        strTag = strTag != null ? $"({strTag}):" : ":";
 
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): strdump{1} {2}", _definition.Id, strTag, debugData));
+                        _logger.Debug($"CardigannIndexer ({_definition.Id}): strdump{strTag} {debugData}");
+                        break;
+                    case "validate":
+                        char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
+                        var args = (string)filter.Args;
+                        var argsList = args.ToLower().Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                        var validList = argsList.ToList();
+                        var validIntersect = validList.Intersect(data.ToLower().Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)).ToList();
+                        data = string.Join(", ", validIntersect);
                         break;
                     default:
+                        _logger.Error($"CardigannIndexer ({_definition.Id}): Unsupported field filter: {filter.Name}");
                         break;
                 }
             }
@@ -758,8 +765,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return data;
         }
 
-        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders,
-                                                      Dictionary<string, object> variables)
+        protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders, Dictionary<string, object> variables)
         {
             if (customHeaders == null)
             {
@@ -823,9 +829,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected JArray JsonParseRowsSelector(JToken parsedJson, string rowSelector)
         {
             var selector = rowSelector.Split(':')[0];
-            var rowsObj = parsedJson.SelectToken(selector).Value<JArray>();
-            return new JArray(rowsObj.Where(t =>
-                                                JsonParseFieldSelector(t.Value<JObject>(), rowSelector.Remove(0, selector.Length)) != null));
+
+            try
+            {
+                var rowsObj = parsedJson.SelectToken(selector).Value<JArray>();
+
+                return new JArray(rowsObj.Where(t => JsonParseFieldSelector(t.Value<JObject>(), rowSelector.Remove(0, selector.Length)) != null));
+            }
+            catch (Exception ex)
+            {
+                _logger.Trace(ex, "Failed to parse JSON rows for selector \"{0}\"", rowSelector);
+
+                return null;
+            }
         }
 
         private string JsonParseFieldSelector(JToken parsedJson, string rowSelector)

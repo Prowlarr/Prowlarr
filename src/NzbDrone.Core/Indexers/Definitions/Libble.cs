@@ -31,8 +31,8 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
     private string LoginUrl => Settings.BaseUrl + "login.php";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.UTF8;
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+    public override bool SupportsPagination => true;
     public override int PageSize => 50;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -58,11 +58,10 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var cookies = Cookies;
-
         Cookies = null;
+
         var authLoginRequest = requestBuilder
             .AddFormParameter("username", Settings.Username)
             .AddFormParameter("password", Settings.Password)
@@ -85,7 +84,7 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
         }
 
         cookies = response.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Authentication succeeded.");
     }
@@ -129,14 +128,17 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
         var pageableRequests = new IndexerPageableRequestChain();
         var parameters = new NameValueCollection();
 
-        if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+        if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
         {
             parameters.Set("artistname", searchCriteria.Artist);
         }
 
         if (searchCriteria.Album.IsNotNullOrWhiteSpace())
         {
-            parameters.Set("groupname", searchCriteria.Album);
+            // Remove year
+            var album = Regex.Replace(searchCriteria.Album, @"(.+)\b\d{4}$", "$1");
+
+            parameters.Set("groupname", album.Trim());
         }
 
         if (searchCriteria.Label.IsNotNullOrWhiteSpace())
@@ -189,9 +191,14 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
     {
         var term = searchCriteria.SanitizedSearchTerm.Trim();
 
+        parameters.Set("action", "advanced");
         parameters.Set("order_by", "time");
         parameters.Set("order_way", "desc");
-        parameters.Set("searchstr", term);
+
+        if (term.IsNotNullOrWhiteSpace())
+        {
+            parameters.Set("searchstr", term);
+        }
 
         var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
         if (queryCats.Any())
@@ -199,7 +206,7 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
             queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
         }
 
-        if (searchCriteria.Offset.HasValue && searchCriteria.Limit.HasValue && searchCriteria.Offset > 0 && searchCriteria.Limit > 0)
+        if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
         {
             var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
             parameters.Set("page", page.ToString());
@@ -277,7 +284,9 @@ public class LibbleParser : IParseIndexerResponse
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
                     DownloadUrl = downloadLink,
-                    Title = $"{releaseArtist} - {releaseAlbumName} {releaseAlbumYear} {releaseTags}".Trim(' ', '-'),
+                    Title = $"{releaseArtist} - {releaseAlbumName} {releaseAlbumYear.Value} {releaseTags}".Trim(' ', '-'),
+                    Artist = releaseArtist,
+                    Album = releaseAlbumName,
                     Categories = ParseCategories(group),
                     Description = releaseDescription,
                     Size = ParseUtil.GetBytes(row.QuerySelector("td:nth-child(4)").TextContent.Trim()),

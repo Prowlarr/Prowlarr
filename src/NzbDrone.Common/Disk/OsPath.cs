@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Common.Disk
@@ -162,7 +161,7 @@ namespace NzbDrone.Common.Disk
             }
         }
 
-        public bool IsValid => _path.IsPathValid();
+        public bool IsValid => _path.IsPathValid(PathValidationType.CurrentOs);
 
         private int GetFileNameIndex()
         {
@@ -256,7 +255,7 @@ namespace NzbDrone.Common.Disk
 
             var stringComparison = (Kind == OsPathKind.Windows || other.Kind == OsPathKind.Windows) ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
 
-            for (int i = 0; i < leftFragments.Length; i++)
+            for (var i = 0; i < leftFragments.Length; i++)
             {
                 if (!string.Equals(leftFragments[i], rightFragments[i], stringComparison))
                 {
@@ -373,12 +372,12 @@ namespace NzbDrone.Common.Disk
 
             var newFragments = new List<string>();
 
-            for (int j = i; j < rightFragments.Length; j++)
+            for (var j = i; j < rightFragments.Length; j++)
             {
                 newFragments.Add("..");
             }
 
-            for (int j = i; j < leftFragments.Length; j++)
+            for (var j = i; j < leftFragments.Length; j++)
             {
                 newFragments.Add(leftFragments[j]);
             }

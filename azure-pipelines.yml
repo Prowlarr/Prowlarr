@@ -9,13 +9,13 @@ variables:
   testsFolder: './_tests'
   yarnCacheFolder: $(Pipeline.Workspace)/.yarn
   nugetCacheFolder: $(Pipeline.Workspace)/.nuget/packages
-  majorVersion: '1.1.3'
+  majorVersion: '1.6.2'
   minorVersion: $[counter('minorVersion', 1)]
   prowlarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(prowlarrVersion)'
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
-  dotnetVersion: '6.0.405'
+  dotnetVersion: '6.0.408'
   innoVersion: '6.2.0'
   nodeVersion: '16.x'
   windowsImage: 'windows-2022'
@@ -1003,7 +1003,7 @@ stages:
           git add .
           if git status | grep -q modified
           then
-            git commit -am 'Automated API Docs update'
+            git commit -am 'Automated API Docs update [skip ci]'
             git push -f --set-upstream origin api-docs
             curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/prowlarr/prowlarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
           else

@@ -66,17 +66,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApplicationResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApplicationResource"
                 }
@@ -91,6 +81,14 @@
         ],
         "parameters": [
           {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -102,16 +100,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
@@ -178,19 +166,19 @@
         "tags": [
           "Application"
         ],
+        "parameters": [
+          {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
@@ -244,16 +232,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
             }
           }
         },
@@ -297,16 +275,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ApplicationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ApplicationResource"
-              }
             }
           }
         },
@@ -325,16 +293,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/AppProfileResource"
               }
@@ -414,16 +372,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AppProfileResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/AppProfileResource"
               }
@@ -571,23 +519,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BackupResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BackupResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -678,17 +610,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommandResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CommandResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CommandResource"
                 }
@@ -727,16 +649,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CommandResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CommandResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CommandResource"
               }
@@ -797,17 +709,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomFilterResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomFilterResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CustomFilterResource"
                 }
@@ -833,16 +735,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CustomFilterResource"
               }
@@ -915,16 +807,6 @@
               "schema": {
                 "$ref": "#/components/schemas/CustomFilterResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomFilterResource"
-              }
             }
           }
         },
@@ -963,16 +845,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DevelopmentConfigResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DevelopmentConfigResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DevelopmentConfigResource"
-              }
             }
           }
         },
@@ -1008,17 +880,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DevelopmentConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DevelopmentConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DevelopmentConfigResource"
                 }
@@ -1067,17 +929,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DownloadClientResource"
                 }
@@ -1092,6 +944,14 @@
         ],
         "parameters": [
           {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -1103,16 +963,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
@@ -1179,19 +1029,19 @@
         "tags": [
           "DownloadClient"
         ],
+        "parameters": [
+          {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
@@ -1245,16 +1095,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
             }
           }
         },
@@ -1298,16 +1138,6 @@
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientResource"
-              }
             }
           }
         },
@@ -1338,17 +1168,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DownloadClientConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DownloadClientConfigResource"
                 }
@@ -1374,16 +1194,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientConfigResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DownloadClientConfigResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/DownloadClientConfigResource"
               }
@@ -1477,46 +1287,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v1/health/{id}": {
-      "get": {
-        "tags": [
-          "Health"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResource"
-                }
-              }
-            }
           }
         }
       }
@@ -1660,17 +1430,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HostConfigResource"
                 }
@@ -1699,16 +1459,6 @@
               "schema": {
                 "$ref": "#/components/schemas/HostConfigResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HostConfigResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/HostConfigResource"
-              }
             }
           }
         },
@@ -1716,17 +1466,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HostConfigResource"
                 }
@@ -1745,17 +1485,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HostConfigResource"
                 }
@@ -1785,17 +1515,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IndexerResource"
                 }
@@ -1810,6 +1530,14 @@
         ],
         "parameters": [
           {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -1821,16 +1549,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
@@ -1897,19 +1615,19 @@
         "tags": [
           "Indexer"
         ],
+        "parameters": [
+          {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
@@ -1963,16 +1681,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
             }
           }
         },
@@ -2016,16 +1724,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerResource"
-              }
             }
           }
         },
@@ -2045,23 +1743,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerCategory"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerCategory"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -2085,16 +1767,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerEditorResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
             }
           }
         },
@@ -2111,16 +1783,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerEditorResource"
               }
@@ -2154,17 +1816,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerProxyResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerProxyResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IndexerProxyResource"
                 }
@@ -2179,6 +1831,14 @@
         ],
         "parameters": [
           {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -2190,16 +1850,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
@@ -2266,19 +1916,19 @@
         "tags": [
           "IndexerProxy"
         ],
+        "parameters": [
+          {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
@@ -2332,16 +1982,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
             }
           }
         },
@@ -2385,16 +2025,6 @@
               "schema": {
                 "$ref": "#/components/schemas/IndexerProxyResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerProxyResource"
-              }
             }
           }
         },
@@ -2432,59 +2062,9 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatsResource"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IndexerStatsResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatsResource"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/indexerstatus/{id}": {
-      "get": {
-        "tags": [
-          "IndexerStatus"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatusResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatusResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IndexerStatusResource"
                 }
               }
             }
@@ -2501,23 +2081,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerStatusResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IndexerStatusResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -2585,17 +2149,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogResourcePagingResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LogResourcePagingResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LogResourcePagingResource"
                 }
@@ -2614,23 +2168,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -2661,7 +2199,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IActionResult"
+                }
+              }
+            }
           }
         }
       }
@@ -3218,17 +2763,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotificationResource"
                 }
@@ -3243,6 +2778,14 @@
         ],
         "parameters": [
           {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -3254,16 +2797,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
@@ -3330,19 +2863,19 @@
         "tags": [
           "Notification"
         ],
+        "parameters": [
+          {
+            "name": "forceSave",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
@@ -3396,16 +2929,6 @@
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
             }
           }
         },
@@ -3449,22 +2972,31 @@
               "schema": {
                 "$ref": "#/components/schemas/NotificationResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NotificationResource"
-              }
             }
           }
         },
         "responses": {
           "200": {
             "description": "Success"
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags": [
+          "Ping"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PingResource"
+                }
+              }
+            }
           }
         }
       }
@@ -3478,59 +3010,9 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppProfileResource"
-                }
-              },
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AppProfileResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppProfileResource"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/search/{id}": {
-      "get": {
-        "tags": [
-          "Search"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
             }
@@ -3549,16 +3031,6 @@
               "schema": {
                 "$ref": "#/components/schemas/ReleaseResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReleaseResource"
-              }
             }
           }
         },
@@ -3566,17 +3038,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReleaseResource"
                 }
@@ -3647,23 +3109,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReleaseResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReleaseResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -3690,22 +3136,6 @@
                   "$ref": "#/components/schemas/ReleaseResource"
                 }
               }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              }
             }
           }
         },
@@ -3713,17 +3143,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReleaseResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReleaseResource"
                 }
@@ -3808,7 +3228,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemResource"
+                }
+              }
+            }
           }
         }
       }
@@ -3881,17 +3308,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagResource"
                 }
@@ -3920,16 +3337,6 @@
               "schema": {
                 "$ref": "#/components/schemas/TagResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
             }
           }
         },
@@ -3937,17 +3344,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagResource"
                 }
@@ -3987,23 +3384,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4025,16 +3406,6 @@
               "schema": {
                 "$ref": "#/components/schemas/TagResource"
               }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagResource"
-              }
             }
           }
         },
@@ -4042,17 +3413,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagResource"
                 }
@@ -4082,17 +3443,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagDetailsResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagDetailsResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TagDetailsResource"
                 }
@@ -4111,23 +3462,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagDetailsResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagDetailsResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4149,23 +3484,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TaskResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TaskResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4198,17 +3517,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TaskResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TaskResource"
                 }
@@ -4236,16 +3545,6 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UiConfigResource"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UiConfigResource"
-              }
-            },
-            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UiConfigResource"
               }
@@ -4284,17 +3583,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UiConfigResource"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UiConfigResource"
                 }
@@ -4332,23 +3621,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UpdateResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UpdateResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4370,23 +3643,7 @@
           "200": {
             "description": "Success",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LogFileResource"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -4417,7 +3674,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IActionResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4804,6 +4068,13 @@
         },
         "additionalProperties": false
       },
+      "DatabaseType": {
+        "enum": [
+          "sqLite",
+          "postgreSQL"
+        ],
+        "type": "string"
+      },
       "DevelopmentConfigResource": {
         "type": "object",
         "properties": {
@@ -4963,6 +4234,10 @@
             "nullable": true
           },
           "helpText": {
+            "type": "string",
+            "nullable": true
+          },
+          "helpTextWarning": {
             "type": "string",
             "nullable": true
           },
@@ -5199,6 +4474,10 @@
             "type": "string",
             "nullable": true
           },
+          "applicationUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "updateAutomatically": {
             "type": "boolean"
           },
@@ -5320,6 +4599,10 @@
         },
         "additionalProperties": false
       },
+      "IActionResult": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "IndexerCapabilityResource": {
         "type": "object",
         "properties": {
@@ -5423,7 +4706,7 @@
             "nullable": true
           },
           "enable": {
-            "type": "string",
+            "type": "boolean",
             "nullable": true
           },
           "appProfileId": {
@@ -5624,6 +4907,9 @@
           "supportsRedirect": {
             "type": "boolean"
           },
+          "supportsPagination": {
+            "type": "boolean"
+          },
           "appProfileId": {
             "type": "integer",
             "format": "int32"
@@ -5748,6 +5034,16 @@
             "format": "int32"
           },
           "disabledTill": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "mostRecentFailure": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "initialFailure": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -5955,13 +5251,28 @@
             "type": "string",
             "nullable": true
           },
+          "onGrab": {
+            "type": "boolean"
+          },
           "onHealthIssue": {
+            "type": "boolean"
+          },
+          "onHealthRestored": {
             "type": "boolean"
           },
           "onApplicationUpdate": {
             "type": "boolean"
           },
+          "supportsOnGrab": {
+            "type": "boolean"
+          },
+          "includeManualGrabs": {
+            "type": "boolean"
+          },
           "supportsOnHealthIssue": {
+            "type": "boolean"
+          },
+          "supportsOnHealthRestored": {
             "type": "boolean"
           },
           "includeHealthWarnings": {
@@ -5985,6 +5296,16 @@
             "nullable": true
           },
           "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PingResource": {
+        "type": "object",
+        "properties": {
+          "status": {
             "type": "string",
             "nullable": true
           }
@@ -6077,6 +5398,10 @@
             "type": "string",
             "nullable": true
           },
+          "sortTitle": {
+            "type": "string",
+            "nullable": true
+          },
           "approved": {
             "type": "boolean"
           },
@@ -6138,9 +5463,22 @@
           },
           "protocol": {
             "$ref": "#/components/schemas/DownloadProtocol"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
+      },
+      "RuntimeMode": {
+        "enum": [
+          "console",
+          "service",
+          "tray"
+        ],
+        "type": "string"
       },
       "SearchParam": {
         "enum": [
@@ -6183,6 +5521,121 @@
         ],
         "type": "string"
       },
+      "SystemResource": {
+        "type": "object",
+        "properties": {
+          "appName": {
+            "type": "string",
+            "nullable": true
+          },
+          "instanceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "buildTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDebug": {
+            "type": "boolean"
+          },
+          "isProduction": {
+            "type": "boolean"
+          },
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "isUserInteractive": {
+            "type": "boolean"
+          },
+          "startupPath": {
+            "type": "string",
+            "nullable": true
+          },
+          "appData": {
+            "type": "string",
+            "nullable": true
+          },
+          "osName": {
+            "type": "string",
+            "nullable": true
+          },
+          "osVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "isNetCore": {
+            "type": "boolean"
+          },
+          "isLinux": {
+            "type": "boolean"
+          },
+          "isOsx": {
+            "type": "boolean"
+          },
+          "isWindows": {
+            "type": "boolean"
+          },
+          "isDocker": {
+            "type": "boolean"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/RuntimeMode"
+          },
+          "branch": {
+            "type": "string",
+            "nullable": true
+          },
+          "databaseType": {
+            "$ref": "#/components/schemas/DatabaseType"
+          },
+          "databaseVersion": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "authentication": {
+            "$ref": "#/components/schemas/AuthenticationType"
+          },
+          "migrationVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "urlBase": {
+            "type": "string",
+            "nullable": true
+          },
+          "runtimeVersion": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "runtimeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "packageVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "packageAuthor": {
+            "type": "string",
+            "nullable": true
+          },
+          "packageUpdateMechanism": {
+            "$ref": "#/components/schemas/UpdateMechanism"
+          },
+          "packageUpdateMechanismMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TagDetailsResource": {
         "type": "object",
         "properties": {
@@ -6211,6 +5664,14 @@
             "nullable": true
           },
           "indexerProxyIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "applicationIds": {
             "type": "array",
             "items": {
               "type": "integer",

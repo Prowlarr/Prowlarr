@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -25,8 +27,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Nebulance (NBL) is a ratioless Private Torrent Tracker for TV";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsRedirect => true;
+        public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public Nebulance(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -44,6 +47,24 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new NebulanceParser(Settings);
         }
 
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            return false;
+        }
+
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            // Avoid using cookies to prevent redirects to login page
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            var request = requestBuilder.Build();
+
+            return Task.FromResult(request);
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -51,7 +72,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 TvSearchParams = new List<TvSearchParam>
                 {
                     TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.TvMazeId
-                }
+                },
+                SupportsRawSearch = true
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
@@ -104,7 +126,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedTvSearchString.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, @"[ -._]+", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedTvSearchString, "[\\W]+", "%").Trim() + "%";
             }
 
             if (searchCriteria.TvMazeId.HasValue)
@@ -113,7 +135,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]+", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, "[\\W]+", "%").Trim() + "%";
                 }
             }
             else if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.ImdbId, out var intImdb))
@@ -122,7 +144,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, @"[ -._]+", "%").Trim() + "%";
+                    queryParams.Name = "%" + Regex.Replace(searchCriteria.EpisodeSearchString, "[\\W]+", "%").Trim() + "%";
                 }
             }
 
@@ -147,7 +169,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.SanitizedSearchTerm.IsNotNullOrWhiteSpace())
             {
-                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, @"[ -._]+", "%").Trim() + "%";
+                queryParams.Name = "%" + Regex.Replace(searchCriteria.SanitizedSearchTerm, "[\\W]+", "%").Trim() + "%";
             }
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
@@ -171,6 +193,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
+
+            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
+            }
 
             var jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
 

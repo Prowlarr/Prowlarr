@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Instrumentation.Extensions;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
@@ -56,7 +58,9 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<MovieSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            searchSpec.ImdbId = request.imdbid;
+            var imdbId = ParseUtil.GetImdbId(request.imdbid);
+
+            searchSpec.ImdbId = imdbId?.ToString("D7");
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.DoubanId = request.doubanid;
@@ -84,10 +88,12 @@ namespace NzbDrone.Core.IndexerSearch
         {
             var searchSpec = Get<TvSearchCriteria>(request, indexerIds, interactiveSearch);
 
+            var imdbId = ParseUtil.GetImdbId(request.imdbid);
+
+            searchSpec.ImdbId = imdbId?.ToString("D7");
             searchSpec.Season = request.season;
             searchSpec.Episode = request.ep;
             searchSpec.TvdbId = request.tvdbid;
-            searchSpec.ImdbId = request.imdbid;
             searchSpec.TraktId = request.traktid;
             searchSpec.TmdbId = request.tmdbid;
             searchSpec.DoubanId = request.doubanid;
@@ -136,7 +142,7 @@ namespace NzbDrone.Core.IndexerSearch
                 spec.Categories = Array.Empty<int>();
             }
 
-            spec.SearchTerm = query.q;
+            spec.SearchTerm = query.q?.Trim();
             spec.SearchType = query.t;
             spec.Limit = query.limit;
             spec.Offset = query.offset;
@@ -148,19 +154,26 @@ namespace NzbDrone.Core.IndexerSearch
             return spec;
         }
 
-        private async Task<List<ReleaseInfo>> Dispatch(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, SearchCriteriaBase criteriaBase)
+        private async Task<IList<ReleaseInfo>> Dispatch(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, SearchCriteriaBase criteriaBase)
         {
             var indexers = _indexerFactory.Enabled();
 
-            if (criteriaBase.IndexerIds != null && criteriaBase.IndexerIds.Count > 0)
+            if (criteriaBase.IndexerIds is { Count: > 0 })
             {
                 indexers = indexers.Where(i => criteriaBase.IndexerIds.Contains(i.Definition.Id) ||
                     (criteriaBase.IndexerIds.Contains(-1) && i.Protocol == DownloadProtocol.Usenet) ||
                     (criteriaBase.IndexerIds.Contains(-2) && i.Protocol == DownloadProtocol.Torrent))
                     .ToList();
+
+                if (indexers.Count == 0)
+                {
+                    _logger.Debug("Search failed due to all selected indexers being unavailable: {0}", string.Join(", ", criteriaBase.IndexerIds));
+
+                    throw new SearchFailedException("Search failed due to all selected indexers being unavailable");
+                }
             }
 
-            if (criteriaBase.Categories != null && criteriaBase.Categories.Length > 0)
+            if (criteriaBase.Categories is { Length: > 0 })
             {
                 //Only query supported indexers
                 indexers = indexers.Where(i => ((IndexerDefinition)i.Definition).Capabilities.Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
@@ -168,7 +181,8 @@ namespace NzbDrone.Core.IndexerSearch
                 if (indexers.Count == 0)
                 {
                     _logger.Debug("All provided categories are unsupported by selected indexers: {0}", string.Join(", ", criteriaBase.Categories));
-                    return new List<ReleaseInfo>();
+
+                    return Array.Empty<ReleaseInfo>();
                 }
             }
 
@@ -189,7 +203,7 @@ namespace NzbDrone.Core.IndexerSearch
         {
             if (_indexerLimitService.AtQueryLimit((IndexerDefinition)indexer.Definition))
             {
-                return new List<ReleaseInfo>();
+                return Array.Empty<ReleaseInfo>();
             }
 
             try
@@ -224,7 +238,7 @@ namespace NzbDrone.Core.IndexerSearch
                 _logger.Error(e, "Error while searching for {0}", criteriaBase);
             }
 
-            return new List<ReleaseInfo>();
+            return Array.Empty<ReleaseInfo>();
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Messaging.Events;
@@ -23,12 +22,9 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override string Description => "Newznab is an API search specification for Usenet";
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
+        public override bool SupportsPagination => true;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-
         public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
-
         public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -111,7 +107,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("SimplyNZBs", GetSettings("https://simplynzbs.com"));
                 yield return GetDefinition("SpotNZB", GetSettings("https://spotnzb.xyz"));
                 yield return GetDefinition("Tabula Rasa", GetSettings("https://www.tabula-rasa.pw", apiPath: @"/api/v1/api"));
-                yield return GetDefinition("Usenet Crawler", GetSettings("https://www.usenet-crawler.com"));
+                yield return GetDefinition("VeryCouch LazyMuch", GetSettings("https://api.verycouch.com"));
                 yield return GetDefinition("Generic Newznab", GetSettings(""));
             }
         }
@@ -135,6 +131,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
+                SupportsPagination = SupportsPagination,
                 Capabilities = Capabilities
             };
         }
@@ -211,7 +208,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 _logger.Warn(ex, "Unable to connect to indexer: " + ex.Message);
 
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details");
             }
         }
     }

@@ -1,5 +1,5 @@
 const scrollPositions = {
-  movieIndex: 0
+  indexerIndex: 0
 };
 
 export default scrollPositions;

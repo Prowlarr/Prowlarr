@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
 
     public class FreeboxDownloadSettings : IProviderConfig
     {
-        private static readonly FreeboxDownloadSettingsValidator Validator = new FreeboxDownloadSettingsValidator();
+        private static readonly FreeboxDownloadSettingsValidator Validator = new ();
 
         public FreeboxDownloadSettings()
         {
@@ -73,7 +73,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
         [FieldDefinition(8, Label = "Priority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "Priority to use when grabbing")]
         public int Priority { get; set; }
 
-        [FieldDefinition(10, Label = "Add Paused", Type = FieldType.Checkbox)]
+        [FieldDefinition(9, Label = "Add Paused", Type = FieldType.Checkbox)]
         public bool AddPaused { get; set; }
 
         public NzbDroneValidationResult Validate()

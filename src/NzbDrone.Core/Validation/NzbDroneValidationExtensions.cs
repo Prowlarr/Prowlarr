@@ -24,18 +24,7 @@ namespace NzbDrone.Core.Validation
 
         public static bool HasErrors(this List<ValidationFailure> list)
         {
-            foreach (var item in list)
-            {
-                var extended = item as NzbDroneValidationFailure;
-                if (extended != null && extended.IsWarning)
-                {
-                    continue;
-                }
-
-                return true;
-            }
-
-            return false;
+            return list.Any(item => item is not NzbDroneValidationFailure { IsWarning: true });
         }
     }
 }

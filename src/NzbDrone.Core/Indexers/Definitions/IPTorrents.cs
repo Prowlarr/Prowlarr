@@ -4,16 +4,19 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AngleSharp.Html.Parser;
+using FluentValidation;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -35,8 +38,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://ipt.world/"
         };
         public override string Description => "IPTorrents (IPT) is a Private Torrent Tracker for 0DAY / GENERAL.";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public IPTorrents(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -52,6 +55,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new IPTorrentsParser(Settings, Capabilities.Categories);
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            if (!httpResponse.Content.Contains("lout.php"))
+            {
+                throw new IndexerAuthException("IPTorrents authentication with cookies failed.");
+            }
+
+            return false;
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -162,13 +175,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         public IPTorrentsSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int limit, int offset, string imdbId = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, SearchCriteriaBase searchCriteria, string imdbId = null)
         {
             var searchUrl = Settings.BaseUrl + "t";
 
             var qc = new NameValueCollection();
 
-            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(categories))
+            foreach (var cat in Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories))
             {
                 qc.Add(cat, string.Empty);
             }
@@ -191,9 +204,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("q", "+(" + term + ")");
             }
 
-            if (offset > 0 && limit > 0)
+            if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
             {
-                var page = (int)(offset / limit) + 1;
+                var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
                 qc.Add("p", page.ToString());
             }
 
@@ -216,7 +229,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SearchTerm}", searchCriteria, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -225,7 +238,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria));
 
             return pageableRequests;
         }
@@ -234,7 +247,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}", searchCriteria, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -243,7 +256,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria));
 
             return pageableRequests;
         }
@@ -252,7 +265,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.Limit ?? 100, searchCriteria.Offset ?? 0));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}", searchCriteria));
 
             return pageableRequests;
         }
@@ -274,7 +287,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<TorrentInfo>();
+            var torrentInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
             var doc = parser.ParseDocument(indexerResponse.Content);
@@ -366,12 +379,27 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
+    public class IPTorrentsValidator : CookieBaseSettingsValidator<IPTorrentsSettings>
+    {
+        public IPTorrentsValidator()
+        {
+            RuleFor(c => c.UserAgent).NotEmpty();
+        }
+    }
+
     public class IPTorrentsSettings : CookieTorrentBaseSettings
     {
+        private static readonly IPTorrentsValidator Validator = new ();
+
         [FieldDefinition(3, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
         public string UserAgent { get; set; }
 
-        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search Freeleech torrents only")]
+        [FieldDefinition(4, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search FreeLeech torrents only")]
         public bool FreeLeechOnly { get; set; }
+
+        public override NzbDroneValidationResult Validate()
+        {
+            return new NzbDroneValidationResult(Validator.Validate(this));
+        }
     }
 }

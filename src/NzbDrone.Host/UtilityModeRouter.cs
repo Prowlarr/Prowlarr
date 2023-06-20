@@ -1,6 +1,5 @@
 using NLog;
 using NzbDrone.Common;
-using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Processes;
 using NzbDrone.Host.AccessControl;
 using IServiceProvider = NzbDrone.Common.IServiceProvider;

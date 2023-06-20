@@ -55,5 +55,6 @@ namespace NzbDrone.Core.Configuration
         bool LogIndexerResponse { get; set; }
 
         CertificateValidationType CertificateValidation { get; }
+        string ApplicationUrl { get; }
     }
 }

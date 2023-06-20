@@ -16,6 +16,11 @@ function addApiKey(ajaxOptions) {
   ajaxOptions.headers['X-Api-Key'] = window.Prowlarr.apiKey;
 }
 
+function addUIHeader(ajaxOptions) {
+  ajaxOptions.headers = ajaxOptions.headers || {};
+  ajaxOptions.headers['X-Prowlarr-Client'] = true;
+}
+
 function addContentType(ajaxOptions) {
   if (
     ajaxOptions.contentType == null &&
@@ -42,6 +47,7 @@ export default function createAjaxRequest(originalAjaxOptions) {
   if (isRelative(ajaxOptions)) {
     addRootUrl(ajaxOptions);
     addApiKey(ajaxOptions);
+    addUIHeader(ajaxOptions);
     addContentType(ajaxOptions);
   }
 

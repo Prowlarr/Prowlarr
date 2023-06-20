@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -9,8 +8,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
-using FluentMigrator.Runner.Processors.Postgres;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +24,6 @@ using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Instrumentation.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore.Extensions;
-using NzbDrone.Host;
 using PostgresOptions = NzbDrone.Core.Datastore.PostgresOptions;
 
 namespace NzbDrone.Host
@@ -50,7 +46,7 @@ namespace NzbDrone.Host
             try
             {
                 Logger.Info("Starting Prowlarr - {0} - Version {1}",
-                            Process.GetCurrentProcess().MainModule.FileName,
+                            Environment.ProcessPath,
                             Assembly.GetExecutingAssembly().GetName().Version);
 
                 var startupContext = new StartupContext(args);
@@ -240,6 +236,8 @@ namespace NzbDrone.Host
             }
             catch (InvalidDataException ex)
             {
+                Logger.Error(ex, ex.Message);
+
                 throw new InvalidConfigFileException($"{configPath} is corrupt or invalid. Please delete the config file and Prowlarr will recreate it.", ex);
             }
         }

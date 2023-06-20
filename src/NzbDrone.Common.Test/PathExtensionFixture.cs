@@ -35,6 +35,7 @@ namespace NzbDrone.Common.Test
         [TestCase(@"\\Testserver\Test\file.ext", @"\\Testserver\Test\file.ext")]
         [TestCase(@"\\Testserver\Test\file.ext\\", @"\\Testserver\Test\file.ext")]
         [TestCase(@"\\Testserver\Test\file.ext   \\", @"\\Testserver\Test\file.ext")]
+        [TestCase(@"//CAPITAL//lower// ", @"\\CAPITAL\lower")]
         public void Clean_Path_Windows(string dirty, string clean)
         {
             WindowsOnly();
@@ -278,7 +279,7 @@ namespace NzbDrone.Common.Test
         [Test]
         public void GetUpdateClientExePath()
         {
-            GetIAppDirectoryInfo().GetUpdateClientExePath(PlatformType.DotNet).Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr.Update.exe".AsOsAgnostic());
+            GetIAppDirectoryInfo().GetUpdateClientExePath().Should().BeEquivalentTo(@"C:\Temp\prowlarr_update\Prowlarr.Update".AsOsAgnostic().ProcessNameToExe());
         }
 
         [Test]

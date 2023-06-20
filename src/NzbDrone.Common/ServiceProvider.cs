@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using NLog;
@@ -64,7 +63,7 @@ namespace NzbDrone.Common
 
             var args = $"create {serviceName} " +
                 $"DisplayName= \"{serviceName}\" " +
-                $"binpath= \"{Process.GetCurrentProcess().MainModule.FileName}\" " +
+                $"binpath= \"{Environment.ProcessPath}\" " +
                 "start= auto " +
                 "depend= EventLog/Tcpip/http " +
                 "obj= \"NT AUTHORITY\\LocalService\"";

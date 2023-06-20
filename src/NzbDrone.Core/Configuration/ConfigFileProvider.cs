@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Configuration
     {
         Dictionary<string, object> GetConfigDictionary();
         void SaveConfigDictionary(Dictionary<string, object> configValues);
+        void EnsureDefaultConfigFile();
 
         string BindAddress { get; }
         int Port { get; }
@@ -120,8 +121,7 @@ namespace NzbDrone.Core.Configuration
                     continue;
                 }
 
-                object currentValue;
-                allWithDefaults.TryGetValue(configValue.Key, out currentValue);
+                allWithDefaults.TryGetValue(configValue.Key, out var currentValue);
                 if (currentValue == null)
                 {
                     continue;
@@ -144,7 +144,7 @@ namespace NzbDrone.Core.Configuration
             {
                 const string defaultValue = "*";
 
-                string bindAddress = GetValue("BindAddress", defaultValue);
+                var bindAddress = GetValue("BindAddress", defaultValue);
                 if (string.IsNullOrWhiteSpace(bindAddress))
                 {
                     return defaultValue;
@@ -258,7 +258,7 @@ namespace NzbDrone.Core.Configuration
 
         public T GetValueEnum<T>(string key, T defaultValue, bool persist = true)
         {
-            return (T)Enum.Parse(typeof(T), GetValue(key, defaultValue), persist);
+            return (T)Enum.Parse(typeof(T), GetValue(key, defaultValue, persist), true);
         }
 
         public string GetValue(string key, object defaultValue, bool persist = true)
@@ -317,7 +317,7 @@ namespace NzbDrone.Core.Configuration
             SetValue(key, value.ToString().ToLower());
         }
 
-        private void EnsureDefaultConfigFile()
+        public void EnsureDefaultConfigFile()
         {
             if (!File.Exists(_configFile))
             {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -350,6 +349,26 @@ namespace NzbDrone.Common.Test.DiskTests
 
             Mocker.GetMock<IDiskProvider>()
                 .Verify(v => v.DeleteFile(_targetPath), Times.Once());
+        }
+
+        [Test]
+        public void should_not_rollback_move_on_partial_if_destination_already_exists()
+        {
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(v => v.MoveFile(_sourcePath, _targetPath, false))
+                .Callback(() =>
+                {
+                    WithExistingFile(_targetPath, true, 900);
+                });
+
+            Mocker.GetMock<IDiskProvider>()
+                .Setup(v => v.MoveFile(_sourcePath, _targetPath, false))
+                .Throws(new FileAlreadyExistsException("File already exists", _targetPath));
+
+            Assert.Throws<FileAlreadyExistsException>(() => Subject.TransferFile(_sourcePath, _targetPath, TransferMode.Move));
+
+            Mocker.GetMock<IDiskProvider>()
+                .Verify(v => v.DeleteFile(_targetPath), Times.Never());
         }
 
         [Test]

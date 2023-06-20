@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Datastore
         {
             if (!ids.Any())
             {
-                return new List<TModel>();
+                return Array.Empty<TModel>();
             }
 
             var result = Query(x => ids.Contains(x.Id));
@@ -196,7 +196,7 @@ namespace NzbDrone.Core.Datastore
 
             using (var conn = _database.OpenConnection())
             {
-                using (IDbTransaction tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
+                using (var tran = conn.BeginTransaction(IsolationLevel.ReadCommitted))
                 {
                     foreach (var model in models)
                     {

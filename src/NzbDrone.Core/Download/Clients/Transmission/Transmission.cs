@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Download.Clients.Transmission
 {
@@ -12,11 +12,11 @@ namespace NzbDrone.Core.Download.Clients.Transmission
     {
         public Transmission(ITransmissionProxy proxy,
                             ITorrentFileInfoReader torrentFileInfoReader,
-                            IHttpClient httpClient,
+                            ISeedConfigProvider seedConfigProvider,
                             IConfigService configService,
                             IDiskProvider diskProvider,
                             Logger logger)
-            : base(proxy, torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(proxy, torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
         }
 

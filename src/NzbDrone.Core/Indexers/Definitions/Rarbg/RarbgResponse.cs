@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
     public class RarbgResponse
     {

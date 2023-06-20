@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Gazelle;
 public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         where TSettings : GazelleSettings, new()
 {
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override string[] IndexerUrls => new[] { "" };
     protected virtual string LoginUrl => Settings.BaseUrl + "login.php";
     public override bool SupportsRss => true;
@@ -56,7 +56,7 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         CheckForLoginError(response);
 
         cookies = response.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Gazelle authentication succeeded.");
     }
@@ -68,7 +68,6 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
             LogResponseContent = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequestBuilder = requestBuilder
             .AddFormParameter("username", Settings.Username)
@@ -97,8 +96,8 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
                 || html.Contains("This torrent is too large.")
                 || html.Contains("You cannot use tokens here"))
             {
-                // download again with usetoken=0
-                var requestLinkNew = link.ToString().Replace("usetoken=1", "usetoken=0");
+                // download again without usetoken=1
+                var requestLinkNew = link.ToString().Replace("&usetoken=1", "");
 
                 response = await base.Download(new Uri(requestLinkNew));
             }
@@ -107,8 +106,23 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
         return response;
     }
 
+    protected override IDictionary<string, string> GetCookies()
+    {
+        if (Settings is GazelleUserPassOrCookieSettings cookieSettings && !string.IsNullOrWhiteSpace(cookieSettings.Cookie))
+        {
+            return CookieUtil.CookieHeaderToDictionary(cookieSettings.Cookie);
+        }
+
+        return base.GetCookies();
+    }
+
     protected override bool CheckIfLoginNeeded(HttpResponse response)
     {
+        if (Settings is GazelleUserPassOrCookieSettings cookieSettings && !string.IsNullOrWhiteSpace(cookieSettings.Cookie))
+        {
+            return false;
+        }
+
         var invalidResponses = new[] { "\"bad credentials\"", "\"groupName\":\"wrong-creds\"" };
 
         return response.HasHttpRedirect || (response.Content != null && invalidResponses.Any(response.Content.Contains));

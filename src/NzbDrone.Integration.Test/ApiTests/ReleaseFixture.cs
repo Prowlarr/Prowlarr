@@ -1,8 +1,4 @@
-using System.Linq;
-using System.Net;
-using FluentAssertions;
 using NUnit.Framework;
-using Prowlarr.Api.V1.Indexers;
 
 namespace NzbDrone.Integration.Test.ApiTests
 {

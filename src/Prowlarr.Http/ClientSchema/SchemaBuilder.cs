@@ -67,13 +67,12 @@ namespace Prowlarr.Http.ClientSchema
         {
             lock (_mappings)
             {
-                FieldMapping[] result;
-                if (!_mappings.TryGetValue(type, out result))
+                if (!_mappings.TryGetValue(type, out var result))
                 {
                     result = GetFieldMapping(type, "", v => v);
 
                     // Renumber al the field Orders since nested settings will have dupe Orders.
-                    for (int i = 0; i < result.Length; i++)
+                    for (var i = 0; i < result.Length; i++)
                     {
                         result[i].Field.Order = i;
                     }
@@ -100,6 +99,7 @@ namespace Prowlarr.Http.ClientSchema
                         Label = fieldAttribute.Label,
                         Unit = fieldAttribute.Unit,
                         HelpText = fieldAttribute.HelpText,
+                        HelpTextWarning = fieldAttribute.HelpTextWarning,
                         HelpLink = fieldAttribute.HelpLink,
                         Order = fieldAttribute.Order,
                         Advanced = fieldAttribute.Advanced,
@@ -226,7 +226,11 @@ namespace Prowlarr.Http.ClientSchema
             {
                 return fieldValue =>
                 {
-                    if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
+                    if (fieldValue == null)
+                    {
+                        return Enumerable.Empty<int>();
+                    }
+                    else if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
                     {
                         return e.EnumerateArray().Select(s => s.GetInt32());
                     }
@@ -240,13 +244,17 @@ namespace Prowlarr.Http.ClientSchema
             {
                 return fieldValue =>
                 {
-                    if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
+                    if (fieldValue == null)
+                    {
+                        return Enumerable.Empty<string>();
+                    }
+                    else if (fieldValue is JsonElement e && e.ValueKind == JsonValueKind.Array)
                     {
                         return e.EnumerateArray().Select(s => s.GetString());
                     }
                     else
                     {
-                        return fieldValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim());
+                        return fieldValue.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(v => v.Trim());
                     }
                 };
             }

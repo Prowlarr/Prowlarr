@@ -131,14 +131,7 @@ namespace NzbDrone.Common.Processes
                         var key = environmentVariable.Key.ToString();
                         var value = environmentVariable.Value?.ToString();
 
-                        if (startInfo.EnvironmentVariables.ContainsKey(key))
-                        {
-                            startInfo.EnvironmentVariables[key] = value;
-                        }
-                        else
-                        {
-                            startInfo.EnvironmentVariables.Add(key, value);
-                        }
+                        startInfo.EnvironmentVariables[key] = value;
                     }
                     catch (Exception e)
                     {
@@ -320,7 +313,7 @@ namespace NzbDrone.Common.Processes
                 processInfo = new ProcessInfo();
                 processInfo.Id = process.Id;
                 processInfo.Name = process.ProcessName;
-                processInfo.StartPath = GetExeFileName(process);
+                processInfo.StartPath = process.MainModule.FileName;
 
                 if (process.Id != GetCurrentProcessId() && process.HasExited)
                 {
@@ -335,28 +328,9 @@ namespace NzbDrone.Common.Processes
             return processInfo;
         }
 
-        private static string GetExeFileName(Process process)
-        {
-            if (process.MainModule.FileName != "mono.exe")
-            {
-                return process.MainModule.FileName;
-            }
-
-            return process.Modules.Cast<ProcessModule>().FirstOrDefault(module => module.ModuleName.ToLower().EndsWith(".exe")).FileName;
-        }
-
         private List<Process> GetProcessesByName(string name)
         {
-            //TODO: move this to an OS specific class
-            var monoProcesses = Process.GetProcessesByName("mono")
-                                       .Union(Process.GetProcessesByName("mono-sgen"))
-                                       .Where(process =>
-                                              process.Modules.Cast<ProcessModule>()
-                                                     .Any(module =>
-                                                          module.ModuleName.ToLower() == name.ToLower() + ".exe"));
-
-            var processes = Process.GetProcessesByName(name)
-                                   .Union(monoProcesses).ToList();
+            var processes = Process.GetProcessesByName(name).ToList();
 
             _logger.Debug("Found {0} processes with the name: {1}", processes.Count, name);
 

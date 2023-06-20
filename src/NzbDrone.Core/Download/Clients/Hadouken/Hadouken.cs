@@ -4,8 +4,8 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -17,11 +17,11 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
 
         public Hadouken(IHadoukenProxy proxy,
                         ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
+                        ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }
@@ -40,14 +40,14 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
             failures.AddIfNotNull(TestGetTorrents());
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             _proxy.AddTorrentUri(Settings, magnetLink, GetCategoryForRelease(release) ?? Settings.Category);
 
             return hash.ToUpper();
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             return _proxy.AddTorrentFile(Settings, fileContent, GetCategoryForRelease(release) ?? Settings.Category).ToUpper();
         }
@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Download.Clients.Hadouken
             return null;
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             throw new NotImplementedException();
         }

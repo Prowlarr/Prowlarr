@@ -1,7 +1,7 @@
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
 
-namespace NzbDrone.Core.Indexers.Rarbg
+namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
     public class RarbgSettings : NoAuthTorrentBaseSettings
     {

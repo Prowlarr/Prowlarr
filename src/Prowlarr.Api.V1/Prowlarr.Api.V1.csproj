@@ -3,8 +3,8 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="NLog" Version="5.1.0" />
+    <PackageReference Include="FluentValidation" Version="9.5.4" />
+    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Core\Prowlarr.Core.csproj" />

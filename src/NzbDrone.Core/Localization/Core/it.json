@@ -7,7 +7,6 @@
     "SelectAll": "Seleziona Tutto",
     "Scheduled": "Programmato",
     "ReleaseBranchCheckOfficialBranchMessage": "La versione {0} non è una versione valida per le release di Prowlarr, non riceverai aggiornamenti",
-    "PtpOldSettingsCheckMessage": "I seguenti indicizzatori di PassThePopcorn hanno delle impostazioni obsolete e devono essere aggiornati: {0}",
     "ProxyCheckResolveIpMessage": "Impossibile risolvere l'indirizzo IP per l'Host Configurato del Proxy {0}",
     "NoChanges": "Nessuna Modifica",
     "NoChange": "Nessuna Modifica",
@@ -93,7 +92,7 @@
     "Cancel": "Annulla",
     "BypassProxyForLocalAddresses": "Evita il Proxy per gli Indirizzi Locali",
     "Branch": "Ramo",
-    "BindAddressHelpText": "Indirizzo IP valido, localhost o '*' per tutte le interfacce",
+    "BindAddressHelpText": "Indirizzo IP valido, localhost o '*' per tutte le interfacce di rete",
     "BindAddress": "Indirizzo di Bind",
     "Backups": "I Backup",
     "BackupRetentionHelpText": "I backup automatici più vecchi del periodo di conservazione verranno eliminati automaticamente",
@@ -469,5 +468,8 @@
     "AuthenticationRequiredWarning": "Per impedire accessi remoti senza autenticazione, Prowlarr ora richiede che l'autenticazione venga attivata. Puoi disattivare l'autenticazione per indirizzi privati.",
     "DeleteClientCategory": "Cancella categoria del client di download",
     "DownloadClientCategory": "Categoria client di download",
-    "MappedCategories": "Categorie mappate"
+    "MappedCategories": "Categorie mappate",
+    "Remove": "Rimuovi",
+    "Replace": "Sostituire",
+    "TheLatestVersionIsAlreadyInstalled": "L'ultima versione di Prowlarr è già installata"
 }

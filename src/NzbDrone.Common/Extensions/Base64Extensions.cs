@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace NzbDrone.Common.Extensions
 {
@@ -13,5 +14,8 @@ namespace NzbDrone.Common.Extensions
         {
             return BitConverter.GetBytes(input).ToBase64();
         }
+
+        public static string FromBase64(string str) =>
+            Encoding.UTF8.GetString(Convert.FromBase64String(str));
     }
 }

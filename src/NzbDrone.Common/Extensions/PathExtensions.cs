@@ -29,12 +29,12 @@ namespace NzbDrone.Common.Extensions
         public static string CleanFilePath(this string path)
         {
             Ensure.That(path, () => path).IsNotNullOrWhiteSpace();
-            Ensure.That(path, () => path).IsValidPath();
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.AnyOs);
 
             var info = new FileInfo(path.Trim());
 
-            //UNC
-            if (OsInfo.IsWindows && info.FullName.StartsWith(@"\\"))
+            // UNC
+            if (!info.FullName.Contains('/') && info.FullName.StartsWith(@"\\"))
             {
                 return info.FullName.TrimEnd('/', '\\', ' ');
             }
@@ -136,24 +136,24 @@ namespace NzbDrone.Common.Extensions
 
         private static readonly Regex WindowsPathWithDriveRegex = new Regex(@"^[a-zA-Z]:\\", RegexOptions.Compiled);
 
-        public static bool IsPathValid(this string path)
+        public static bool IsPathValid(this string path, PathValidationType validationType)
         {
             if (path.ContainsInvalidPathChars() || string.IsNullOrWhiteSpace(path))
             {
                 return false;
             }
 
+            if (validationType == PathValidationType.AnyOs)
+            {
+                return IsPathValidForWindows(path) || IsPathValidForNonWindows(path);
+            }
+
             if (OsInfo.IsNotWindows)
             {
-                return path.StartsWith(Path.DirectorySeparatorChar.ToString());
+                return IsPathValidForNonWindows(path);
             }
 
-            if (path.StartsWith("\\") || WindowsPathWithDriveRegex.IsMatch(path))
-            {
-                return true;
-            }
-
-            return false;
+            return IsPathValidForWindows(path);
         }
 
         public static bool ContainsInvalidPathChars(this string text)
@@ -166,7 +166,7 @@ namespace NzbDrone.Common.Extensions
             var parentDirInfo = dirInfo.Parent;
             if (parentDirInfo == null)
             {
-                //Drive letter
+                // Drive letter
                 return dirInfo.Name.ToUpper();
             }
 
@@ -238,19 +238,14 @@ namespace NzbDrone.Common.Extensions
             return null;
         }
 
-        public static string ProcessNameToExe(this string processName, PlatformType runtime)
+        public static string ProcessNameToExe(this string processName)
         {
-            if (OsInfo.IsWindows || runtime != PlatformType.NetCore)
+            if (OsInfo.IsWindows)
             {
                 processName += ".exe";
             }
 
             return processName;
-        }
-
-        public static string ProcessNameToExe(this string processName)
-        {
-            return processName.ProcessNameToExe(PlatformInfo.Platform);
         }
 
         public static string GetAppDataPath(this IAppFolderInfo appFolderInfo)
@@ -318,9 +313,9 @@ namespace NzbDrone.Common.Extensions
             return Path.Combine(GetUpdatePackageFolder(appFolderInfo), UPDATE_CLIENT_FOLDER_NAME);
         }
 
-        public static string GetUpdateClientExePath(this IAppFolderInfo appFolderInfo, PlatformType runtime)
+        public static string GetUpdateClientExePath(this IAppFolderInfo appFolderInfo)
         {
-            return Path.Combine(GetUpdateSandboxFolder(appFolderInfo), UPDATE_CLIENT_EXE_NAME).ProcessNameToExe(runtime);
+            return Path.Combine(GetUpdateSandboxFolder(appFolderInfo), UPDATE_CLIENT_EXE_NAME).ProcessNameToExe();
         }
 
         public static string GetDatabase(this IAppFolderInfo appFolderInfo)
@@ -341,6 +336,16 @@ namespace NzbDrone.Common.Extensions
         public static string GetNlogConfigPath(this IAppFolderInfo appFolderInfo)
         {
             return Path.Combine(appFolderInfo.StartUpFolder, NLOG_CONFIG_FILE);
+        }
+
+        private static bool IsPathValidForWindows(string path)
+        {
+            return path.StartsWith("\\") || WindowsPathWithDriveRegex.IsMatch(path);
+        }
+
+        private static bool IsPathValidForNonWindows(string path)
+        {
+            return path.StartsWith("/");
         }
     }
 }

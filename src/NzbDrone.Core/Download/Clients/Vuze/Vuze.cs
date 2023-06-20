@@ -1,9 +1,9 @@
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.Transmission;
+using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Download.Clients.Vuze
 {
@@ -13,11 +13,11 @@ namespace NzbDrone.Core.Download.Clients.Vuze
 
         public Vuze(ITransmissionProxy proxy,
                     ITorrentFileInfoReader torrentFileInfoReader,
-                    IHttpClient httpClient,
+                    ISeedConfigProvider seedConfigProvider,
                     IConfigService configService,
                     IDiskProvider diskProvider,
                     Logger logger)
-            : base(proxy, torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(proxy, torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
         }
 
@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Download.Clients.Vuze
             // - A multi-file torrent is downloaded in a job folder and 'outputPath' points to that directory directly.
             // - A single-file torrent is downloaded in the root folder and 'outputPath' poinst to that root folder.
             // We have to make sure the return value points to the job folder OR file.
-            if (outputPath == default || outputPath.FileName == torrent.Name || torrent.FileCount > 1)
+            if (outputPath.FileName == torrent.Name || torrent.FileCount > 1)
             {
                 _logger.Trace("Vuze output directory: {0}", outputPath);
             }
@@ -46,8 +46,7 @@ namespace NzbDrone.Core.Download.Clients.Vuze
 
             _logger.Debug("Vuze protocol version information: {0}", versionString);
 
-            int version;
-            if (!int.TryParse(versionString, out version) || version < MINIMUM_SUPPORTED_PROTOCOL_VERSION)
+            if (!int.TryParse(versionString, out var version) || version < MINIMUM_SUPPORTED_PROTOCOL_VERSION)
             {
                 {
                     return new ValidationFailure(string.Empty, "Protocol version not supported, use Vuze 5.0.0.0 or higher with Vuze Web Remote plugin.");

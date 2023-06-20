@@ -28,7 +28,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "PornoLab is a Semi-Private Russian site for Adult content";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -60,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddFormParameter("login_username", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "Login")
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);
@@ -74,7 +73,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report");
             }
 
-            UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 
             _logger.Debug("Authentication succeeded");
         }
@@ -88,13 +87,17 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var caps = new IndexerCapabilities();
 
+            caps.Categories.AddCategoryMapping(1670, NewznabStandardCategory.XXX, "Эротическое видео / Erotic & Softcore");
             caps.Categories.AddCategoryMapping(1768, NewznabStandardCategory.XXX, "Эротические фильмы / Erotic Movies");
             caps.Categories.AddCategoryMapping(60, NewznabStandardCategory.XXX, "Документальные фильмы / Documentary & Reality");
+            caps.Categories.AddCategoryMapping(1671, NewznabStandardCategory.XXX, "Эротические ролики и сайтрипы / Erotic Clips & SiteRips");
             caps.Categories.AddCategoryMapping(1644, NewznabStandardCategory.XXX, "Нудизм-Натуризм / Nudity");
 
+            caps.Categories.AddCategoryMapping(1672, NewznabStandardCategory.XXX, "Зарубежные порнофильмы / Full Length Movies");
             caps.Categories.AddCategoryMapping(1111, NewznabStandardCategory.XXXPack, "Паки полных фильмов / Full Length Movies Packs");
             caps.Categories.AddCategoryMapping(508, NewznabStandardCategory.XXX, "Классические фильмы / Classic");
             caps.Categories.AddCategoryMapping(555, NewznabStandardCategory.XXX, "Фильмы с сюжетом / Feature & Vignettes");
+            caps.Categories.AddCategoryMapping(1845, NewznabStandardCategory.XXX, "Гонзо-фильмы 1991-2010 / Gonzo 1991-2010");
             caps.Categories.AddCategoryMapping(1673, NewznabStandardCategory.XXX, "Гонзо-фильмы 2011-2023 / Gonzo 2011-2023");
             caps.Categories.AddCategoryMapping(1112, NewznabStandardCategory.XXX, "Фильмы без сюжета 1991-2010 / All Sex & Amateur 1991-2010");
             caps.Categories.AddCategoryMapping(1718, NewznabStandardCategory.XXX, "Фильмы без сюжета 2011-2023 / All Sex & Amateur 2011-2023");
@@ -102,12 +105,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1143, NewznabStandardCategory.XXX, "Этнические фильмы / Ethnic-Themed");
             caps.Categories.AddCategoryMapping(1646, NewznabStandardCategory.XXX, "Видео для телефонов и КПК / Pocket РС & Phone Video");
 
-            caps.Categories.AddCategoryMapping(1712, NewznabStandardCategory.XXX, "Эротические и Документальные фильмы (DVD и HD) / EroticDocumentary & Reality (DVD & HD)");
-            caps.Categories.AddCategoryMapping(1713, NewznabStandardCategory.XXXDVD, "Фильмы с сюжетомКлассические (DVD) / Feature & Vignettes, Classic (DVD)");
-            caps.Categories.AddCategoryMapping(512, NewznabStandardCategory.XXXDVD, "ГонзоЛесбо и Фильмы без сюжета (DVD) / Gonzo, All Girl & Solo, All Sex (DVD)");
-            caps.Categories.AddCategoryMapping(1775, NewznabStandardCategory.XXX, "Фильмы с сюжетом (HD Video) / Feature & Vignettes (HD Video)");
-            caps.Categories.AddCategoryMapping(1450, NewznabStandardCategory.XXX, "ГонзоЛесбо и Фильмы без сюжета (HD Video) / Gonzo, All Girl & Solo, All Sex (HD Video)");
+            caps.Categories.AddCategoryMapping(1717, NewznabStandardCategory.XXX, "Зарубежные фильмы в высоком качестве (DVD&HD) / Full Length Movies High-Quality");
+            caps.Categories.AddCategoryMapping(1851, NewznabStandardCategory.XXXDVD, "Эротические и Документальные видео (DVD) / Erotic, Documentary & Reality (DVD)");
+            caps.Categories.AddCategoryMapping(1713, NewznabStandardCategory.XXXDVD, "Фильмы с сюжетом, Классические (DVD) / Feature & Vignetts, Classic (DVD)");
+            caps.Categories.AddCategoryMapping(512, NewznabStandardCategory.XXXDVD, "Гонзо, Лесбо и Фильмы без сюжета (DVD) / Gonzo, All Girl & Solo, All Sex (DVD)");
+            caps.Categories.AddCategoryMapping(1712, NewznabStandardCategory.XXX, "Эротические и Документальные видео (HD Video) / Erotic, Documentary & Reality (HD Video)");
+            caps.Categories.AddCategoryMapping(1775, NewznabStandardCategory.XXX, "Фильмы с сюжетом, Классические (HD Video) / Feature & Vignettes, Classic (HD Video)");
+            caps.Categories.AddCategoryMapping(1450, NewznabStandardCategory.XXX, "Гонзо, Лесбо и Фильмы без сюжета (HD Video) / Gonzo, All Girl & Solo, All Sex (HD Video)");
 
+            caps.Categories.AddCategoryMapping(1674, NewznabStandardCategory.XXX, "Русское порно / Russian Video");
             caps.Categories.AddCategoryMapping(902, NewznabStandardCategory.XXX, "Русские порнофильмы / Russian Full Length Movies");
             caps.Categories.AddCategoryMapping(1675, NewznabStandardCategory.XXXPack, "Паки русских порнороликов / Russian Clips Packs");
             caps.Categories.AddCategoryMapping(36, NewznabStandardCategory.XXX, "Сайтрипы с русскими актрисами 1991-2015 / Russian SiteRip's 1991-2015");
@@ -117,8 +123,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1741, NewznabStandardCategory.XXX, "Русские Порноролики Разное / Russian Clips (various)");
             caps.Categories.AddCategoryMapping(1676, NewznabStandardCategory.XXX, "Русское любительское видео / Russian Amateur Video");
 
+            caps.Categories.AddCategoryMapping(1677, NewznabStandardCategory.XXX, "Зарубежные порноролики / Clips");
             caps.Categories.AddCategoryMapping(1780, NewznabStandardCategory.XXXPack, "Паки сайтрипов (HD Video) / SiteRip's Packs (HD Video)");
-            caps.Categories.AddCategoryMapping(1110, NewznabStandardCategory.XXXPack, "Паки сайтрипов / SiteRip's Packs");
+            caps.Categories.AddCategoryMapping(1110, NewznabStandardCategory.XXXPack, "Паки сайтрипов (SD Video) / SiteRip's Packs (SD Video)");
             caps.Categories.AddCategoryMapping(1678, NewznabStandardCategory.XXXPack, "Паки порнороликов по актрисам / Actresses Clips Packs");
             caps.Categories.AddCategoryMapping(1124, NewznabStandardCategory.XXX, "Сайтрипы 1991-2010 (HD Video) / SiteRip's 1991-2010 (HD Video)");
             caps.Categories.AddCategoryMapping(1784, NewznabStandardCategory.XXX, "Сайтрипы 2011-2012 (HD Video) / SiteRip's 2011-2012 (HD Video)");
@@ -133,7 +140,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1846, NewznabStandardCategory.XXX, "Сайтрипы 2021 (HD Video) / SiteRip's 2021 (HD Video)");
             caps.Categories.AddCategoryMapping(1857, NewznabStandardCategory.XXX, "Сайтрипы 2022 (HD Video) / SiteRip's 2022 (HD Video)");
             caps.Categories.AddCategoryMapping(1861, NewznabStandardCategory.XXX, "Сайтрипы 2023 (HD Video) / SiteRip's 2023 (HD Video)");
-
             caps.Categories.AddCategoryMapping(1451, NewznabStandardCategory.XXX, "Сайтрипы 1991-2010 / SiteRip's 1991-2010");
             caps.Categories.AddCategoryMapping(1788, NewznabStandardCategory.XXX, "Сайтрипы 2011-2012 / SiteRip's 2011-2012");
             caps.Categories.AddCategoryMapping(1789, NewznabStandardCategory.XXX, "Сайтрипы 2013 / SiteRip's 2013");
@@ -147,18 +153,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1847, NewznabStandardCategory.XXX, "Сайтрипы 2021 / SiteRip's 2021");
             caps.Categories.AddCategoryMapping(1856, NewznabStandardCategory.XXX, "Сайтрипы 2022 / SiteRip's 2022");
             caps.Categories.AddCategoryMapping(1862, NewznabStandardCategory.XXX, "Сайтрипы 2023 / SiteRip's 2023");
-
-            caps.Categories.AddCategoryMapping(1707, NewznabStandardCategory.XXX, "Сцены из фильмов / Movie Scenes");
+            caps.Categories.AddCategoryMapping(1707, NewznabStandardCategory.XXX, "Сцены из фильмов / Movie Scenes (кроме SiteRip)");
             caps.Categories.AddCategoryMapping(284, NewznabStandardCategory.XXX, "Порноролики Разное / Clips (various)");
+            caps.Categories.AddCategoryMapping(1853, NewznabStandardCategory.XXX, "Компиляции и Музыкальные порно клипы / Compilations & Porn Music Video (PMV)");
             caps.Categories.AddCategoryMapping(1823, NewznabStandardCategory.XXX, "Порноролики в 3D и Virtual Reality (VR) / 3D & Virtual Reality Videos");
 
+            caps.Categories.AddCategoryMapping(1800, NewznabStandardCategory.XXX, "Японское и китайское порно / Japanese & Chinese Adult Video (JAV)");
             caps.Categories.AddCategoryMapping(1801, NewznabStandardCategory.XXXPack, "Паки японских фильмов и сайтрипов / Full Length Japanese Movies Packs & SiteRip's Packs");
             caps.Categories.AddCategoryMapping(1719, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы (DVD и HD Video) / Japanese Movies & SiteRip's (DVD & HD Video)");
             caps.Categories.AddCategoryMapping(997, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы 1991-2014 / Japanese Movies & SiteRip's 1991-2014");
             caps.Categories.AddCategoryMapping(1818, NewznabStandardCategory.XXX, "Японские фильмы и сайтрипы 2015-2023 / Japanese Movies & SiteRip's 2015-2023");
+            caps.Categories.AddCategoryMapping(1849, NewznabStandardCategory.XXX, "Китайские фильмы и сайтрипы (DVD и HD Video) / Chinese Movies & SiteRip's (DVD & HD Video)");
+            caps.Categories.AddCategoryMapping(1815, NewznabStandardCategory.XXX, "Архив (Японское и китайское порно)");
 
-            caps.Categories.AddCategoryMapping(1671, NewznabStandardCategory.XXX, "Эротические студии (видео) / Erotic Video Library");
-            caps.Categories.AddCategoryMapping(1726, NewznabStandardCategory.XXX, "Met-Art & MetModels");
+            caps.Categories.AddCategoryMapping(1723, NewznabStandardCategory.XXX, "Фото и журналы / Photos & Magazines");
+            caps.Categories.AddCategoryMapping(1726, NewznabStandardCategory.XXX, "MetArt & MetModels");
             caps.Categories.AddCategoryMapping(883, NewznabStandardCategory.XXXImageSet, "Эротические студии Разное / Erotic Picture Gallery (various)");
             caps.Categories.AddCategoryMapping(1759, NewznabStandardCategory.XXXImageSet, "Паки сайтрипов эротических студий / Erotic Picture SiteRip's Packs");
             caps.Categories.AddCategoryMapping(1728, NewznabStandardCategory.XXXImageSet, "Любительское фото / Amateur Picture Gallery");
@@ -167,7 +176,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1757, NewznabStandardCategory.XXXImageSet, "Подборки сетов / Picture Sets Packs");
             caps.Categories.AddCategoryMapping(1735, NewznabStandardCategory.XXXImageSet, "Тематическое и нетрадиционное фото / Misc & Special Interest Picture Packs");
             caps.Categories.AddCategoryMapping(1731, NewznabStandardCategory.XXXImageSet, "Журналы / Magazines");
+            caps.Categories.AddCategoryMapping(1802, NewznabStandardCategory.XXX, "Архив (Фото)");
 
+            caps.Categories.AddCategoryMapping(1745, NewznabStandardCategory.XXX, "Хентай и Манга, Мультфильмы и Комиксы, Рисунки / Hentai & Manga, Cartoons & Comics, Artwork");
             caps.Categories.AddCategoryMapping(1679, NewznabStandardCategory.XXX, "Хентай: основной подраздел / Hentai: main subsection");
             caps.Categories.AddCategoryMapping(1740, NewznabStandardCategory.XXX, "Хентай в высоком качестве (DVD и HD) / Hentai DVD & HD");
             caps.Categories.AddCategoryMapping(1834, NewznabStandardCategory.XXX, "Хентай: ролики 2D / Hentai: 2D video");
@@ -177,16 +188,18 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1711, NewznabStandardCategory.XXX, "Мультфильмы / Cartoons");
             caps.Categories.AddCategoryMapping(1296, NewznabStandardCategory.XXX, "Комиксы и рисунки / Comics & Artwork");
 
+            caps.Categories.AddCategoryMapping(1838, NewznabStandardCategory.XXX, "Игры / Games");
             caps.Categories.AddCategoryMapping(1750, NewznabStandardCategory.XXX, "Игры: основной подраздел / Games: main subsection");
             caps.Categories.AddCategoryMapping(1756, NewznabStandardCategory.XXX, "Игры: визуальные новеллы / Games: Visual Novels");
             caps.Categories.AddCategoryMapping(1785, NewznabStandardCategory.XXX, "Игры: ролевые / Games: role-playing (RPG Maker and WOLF RPG Editor)");
             caps.Categories.AddCategoryMapping(1790, NewznabStandardCategory.XXX, "Игры и Софт: Анимация / Software: Animation");
             caps.Categories.AddCategoryMapping(1827, NewznabStandardCategory.XXX, "Игры: В разработке и Демо (основной подраздел) / Games: In Progress and Demo (main subsection)");
             caps.Categories.AddCategoryMapping(1828, NewznabStandardCategory.XXX, "Игры: В разработке и Демо (ролевые) / Games: In Progress and Demo (role-playing - RPG Maker and WOLF RPG Editor)");
+            caps.Categories.AddCategoryMapping(1829, NewznabStandardCategory.XXX, "Обсуждение игр / Games Discussion");
 
+            caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.XXX, "Нетрадиционное порно / Special Interest Movies & Clips");
             caps.Categories.AddCategoryMapping(1715, NewznabStandardCategory.XXX, "Транссексуалы (DVD и HD) / Transsexual (DVD & HD)");
             caps.Categories.AddCategoryMapping(1680, NewznabStandardCategory.XXX, "Транссексуалы / Transsexual");
-
             caps.Categories.AddCategoryMapping(1758, NewznabStandardCategory.XXX, "Бисексуалы / Bisexual");
             caps.Categories.AddCategoryMapping(1682, NewznabStandardCategory.XXX, "БДСМ / BDSM");
             caps.Categories.AddCategoryMapping(1733, NewznabStandardCategory.XXX, "Женское доминирование и страпон / Femdom & Strapon");
@@ -197,34 +210,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1859, NewznabStandardCategory.XXX, "Гэнг-бэнг / GangBang");
             caps.Categories.AddCategoryMapping(1685, NewznabStandardCategory.XXX, "Мочеиспускание / Peeing");
             caps.Categories.AddCategoryMapping(1762, NewznabStandardCategory.XXX, "Фетиш / Fetish");
+            caps.Categories.AddCategoryMapping(1681, NewznabStandardCategory.XXX, "Дефекация / Scat");
 
+            caps.Categories.AddCategoryMapping(1683, NewznabStandardCategory.XXX, "Архив (общий)");
+
+            caps.Categories.AddCategoryMapping(1688, NewznabStandardCategory.XXX, "Гей-порно / Gay Forum");
             caps.Categories.AddCategoryMapping(903, NewznabStandardCategory.XXX, "Полнометражные гей-фильмы / Full Length Movies (Gay)");
-            caps.Categories.AddCategoryMapping(1765, NewznabStandardCategory.XXX, "Полнометражные азиатские гей-фильмы / Full-length Asian Films (Gay)");
+            caps.Categories.AddCategoryMapping(1765, NewznabStandardCategory.XXX, "Полнометражные азиатские гей-фильмы / Full-length Asian (Gay)");
             caps.Categories.AddCategoryMapping(1767, NewznabStandardCategory.XXX, "Классические гей-фильмы (до 1990 года) / Classic Gay Films (Pre-1990's)");
             caps.Categories.AddCategoryMapping(1755, NewznabStandardCategory.XXX, "Гей-фильмы в высоком качестве (DVD и HD) / High-Quality Full Length Movies (Gay DVD & HD)");
             caps.Categories.AddCategoryMapping(1787, NewznabStandardCategory.XXX, "Азиатские гей-фильмы в высоком качестве (DVD и HD) / High-Quality Full Length Asian Movies (Gay DVD & HD)");
             caps.Categories.AddCategoryMapping(1763, NewznabStandardCategory.XXXPack, "ПАКи гей-роликов и сайтрипов / Clip's & SiteRip's Packs (Gay)");
             caps.Categories.AddCategoryMapping(1777, NewznabStandardCategory.XXX, "Гей-ролики в высоком качестве (HD Video) / Gay Clips (HD Video)");
-            caps.Categories.AddCategoryMapping(1691, NewznabStandardCategory.XXX, "РоликиSiteRip'ы и сцены из гей-фильмов / Clips & Movie Scenes (Gay)");
-            caps.Categories.AddCategoryMapping(1692, NewznabStandardCategory.XXXImageSet, "Гей-журналыфото, разное / Magazines, Photo, Rest (Gay)");
-
-            caps.Categories.AddCategoryMapping(1817, NewznabStandardCategory.XXX, "Обход блокировки");
-            caps.Categories.AddCategoryMapping(1670, NewznabStandardCategory.XXX, "Эротическое видео / Erotic&Softcore");
-            caps.Categories.AddCategoryMapping(1672, NewznabStandardCategory.XXX, "Зарубежные порнофильмы / Full Length Movies");
-            caps.Categories.AddCategoryMapping(1717, NewznabStandardCategory.XXX, "Зарубежные фильмы в высоком качестве (DVD&HD) / Full Length ..");
-            caps.Categories.AddCategoryMapping(1674, NewznabStandardCategory.XXX, "Русское порно / Russian Video");
-            caps.Categories.AddCategoryMapping(1677, NewznabStandardCategory.XXX, "Зарубежные порноролики / Clips");
-            caps.Categories.AddCategoryMapping(1800, NewznabStandardCategory.XXX, "Японское порно / Japanese Adult Video (JAV)");
-            caps.Categories.AddCategoryMapping(1815, NewznabStandardCategory.XXX, "Архив (Японское порно)");
-            caps.Categories.AddCategoryMapping(1723, NewznabStandardCategory.XXX, "Эротические студиифото и журналы / Erotic Picture Gallery ..");
-            caps.Categories.AddCategoryMapping(1802, NewznabStandardCategory.XXX, "Архив (Фото)");
-            caps.Categories.AddCategoryMapping(1745, NewznabStandardCategory.XXX, "Хентай и МангаМультфильмы и Комиксы, Рисунки / Hentai&Ma..");
-            caps.Categories.AddCategoryMapping(1838, NewznabStandardCategory.XXX, "Игры / Games");
-            caps.Categories.AddCategoryMapping(1829, NewznabStandardCategory.XXX, "Обсуждение игр / Games Discussion");
-            caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.XXX, "Нетрадиционное порно / Special Interest Movies&Clips");
-            caps.Categories.AddCategoryMapping(1681, NewznabStandardCategory.XXX, "Дефекация / Scat");
-            caps.Categories.AddCategoryMapping(1683, NewznabStandardCategory.XXX, "Архив (общий)");
-            caps.Categories.AddCategoryMapping(1688, NewznabStandardCategory.XXX, "Гей-порно / Gay Forum");
+            caps.Categories.AddCategoryMapping(1691, NewznabStandardCategory.XXX, "Ролики, SiteRip'ы и сцены из гей-фильмов / Clips & Movie Scenes (Gay)");
+            caps.Categories.AddCategoryMapping(1692, NewznabStandardCategory.XXXImageSet, "Гей-журналы, фото, разное / Magazines, Photo, Rest (Gay)");
             caps.Categories.AddCategoryMapping(1720, NewznabStandardCategory.XXX, "Архив (Гей-порно)");
 
             return caps;
@@ -360,6 +359,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var seeders = string.IsNullOrWhiteSpace(seederString) ? 0 : ParseUtil.CoerceInt(seederString);
 
                     var forumid = ParseUtil.GetArgumentFromQueryString(qForumLink?.GetAttribute("href"), "f");
+                    var detailsId = ParseUtil.GetArgumentFromQueryString(qDetailsLink.GetAttribute("href"), "t");
+                    var downloadUrl = _settings.BaseUrl + "forum/dl.php?t=" + detailsId;
                     var title = _settings.StripRussianLetters
                         ? StripRussianRegex.Replace(qDetailsLink.TextContent, string.Empty)
                         : qDetailsLink.TextContent;
@@ -371,7 +372,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
-                        DownloadUrl = infoUrl,
+                        DownloadUrl = downloadUrl,
                         InfoUrl = infoUrl,
                         Title = title,
                         Description = qForumLink.TextContent,
@@ -408,7 +409,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             StripRussianLetters = false;
         }
 
-        [FieldDefinition(4, Label = "Strip Russian Letters", HelpLink = "Strip Cyrillic letters from release names", Type = FieldType.Checkbox)]
+        [FieldDefinition(4, Label = "Strip Russian Letters", HelpText = "Strip Cyrillic letters from release names", Type = FieldType.Checkbox)]
         public bool StripRussianLetters { get; set; }
     }
 }

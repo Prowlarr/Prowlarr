@@ -34,8 +34,8 @@ namespace NzbDrone.Core.HealthCheck
 
         private readonly ICached<HealthCheck> _healthCheckResults;
 
-        private bool _hasRunHealthChecksAfterGracePeriod = false;
-        private bool _isRunningHealthChecksAfterGracePeriod = false;
+        private bool _hasRunHealthChecksAfterGracePeriod;
+        private bool _isRunningHealthChecksAfterGracePeriod;
 
         public HealthCheckService(IEnumerable<IProvideHealthCheck> healthChecks,
                                   IServerSideNotificationService serverSideNotificationService,
@@ -55,7 +55,7 @@ namespace NzbDrone.Core.HealthCheck
             _startupHealthChecks = _healthChecks.Where(v => v.CheckOnStartup).ToArray();
             _scheduledHealthChecks = _healthChecks.Where(v => v.CheckOnSchedule).ToArray();
             _eventDrivenHealthChecks = GetEventDrivenHealthChecks();
-            _startupGracePeriodEndTime = runtimeInfo.StartTime + TimeSpan.FromMinutes(15);
+            _startupGracePeriodEndTime = runtimeInfo.StartTime.AddMinutes(15);
         }
 
         public List<HealthCheck> Results()
@@ -91,6 +91,13 @@ namespace NzbDrone.Core.HealthCheck
             {
                 if (result.Type == HealthCheckResult.Ok)
                 {
+                    var previous = _healthCheckResults.Find(result.Source.Name);
+
+                    if (previous != null)
+                    {
+                        _eventAggregator.PublishEvent(new HealthCheckRestoredEvent(previous, !_hasRunHealthChecksAfterGracePeriod));
+                    }
+
                     _healthCheckResults.Remove(result.Source.Name);
                 }
                 else
@@ -153,8 +160,7 @@ namespace NzbDrone.Core.HealthCheck
                 _isRunningHealthChecksAfterGracePeriod = false;
             }
 
-            IEventDrivenHealthCheck[] checks;
-            if (!_eventDrivenHealthChecks.TryGetValue(message.GetType(), out checks))
+            if (!_eventDrivenHealthChecks.TryGetValue(message.GetType(), out var checks))
             {
                 return;
             }

@@ -18,6 +18,6 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/label-actions@v2
+      - uses: dessant/label-actions@v3
         with:
           process-only: 'issues, prs'

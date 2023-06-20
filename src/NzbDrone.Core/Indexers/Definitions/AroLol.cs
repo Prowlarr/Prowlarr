@@ -29,7 +29,7 @@ public class AroLol : GazelleBase<AroLolSettings>
     protected override HttpRequestBuilder AuthLoginRequestBuilder()
     {
         return base.AuthLoginRequestBuilder()
-            .AddFormParameter("twofa", Settings.TwoFactorAuthCode.Trim());
+            .AddFormParameter("twofa", Settings.TwoFactorAuthCode?.Trim() ?? "");
     }
 
     protected override bool CheckForLoginError(HttpResponse response)

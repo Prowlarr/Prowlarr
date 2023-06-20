@@ -91,6 +91,7 @@ namespace NzbDrone.Common.Http
                     {
                         request.Method = HttpMethod.Get;
                         request.ContentData = null;
+                        request.ContentSummary = null;
                     }
 
                     // Save to add to final response
@@ -322,11 +323,12 @@ namespace NzbDrone.Common.Http
                 _logger.Debug("Downloading [{0}] to [{1}]", url, fileName);
 
                 var stopWatch = Stopwatch.StartNew();
-                using (var fileStream = new FileStream(fileNamePart, FileMode.Create, FileAccess.ReadWrite))
+                await using (var fileStream = new FileStream(fileNamePart, FileMode.Create, FileAccess.ReadWrite))
                 {
                     var request = new HttpRequest(url);
                     request.AllowAutoRedirect = true;
                     request.ResponseStream = fileStream;
+                    request.RequestTimeout = TimeSpan.FromSeconds(300);
                     var response = await GetAsync(request);
 
                     if (response.Headers.ContentType != null && response.Headers.ContentType.Contains("text/html"))

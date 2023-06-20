@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NzbDrone.Common.Http;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     public class CardigannRequest : IndexerRequest
     {

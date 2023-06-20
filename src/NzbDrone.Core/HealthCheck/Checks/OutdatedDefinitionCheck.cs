@@ -1,7 +1,7 @@
 using System.Linq;
 using NLog;
 using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.ThingiProvider.Events;

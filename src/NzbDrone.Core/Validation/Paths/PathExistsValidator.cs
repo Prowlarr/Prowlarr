@@ -8,10 +8,11 @@ namespace NzbDrone.Core.Validation.Paths
         private readonly IDiskProvider _diskProvider;
 
         public PathExistsValidator(IDiskProvider diskProvider)
-            : base("Path does not exist")
         {
             _diskProvider = diskProvider;
         }
+
+        protected override string GetDefaultMessageTemplate() => "Path '{path}' does not exist";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
@@ -19,6 +20,8 @@ namespace NzbDrone.Core.Validation.Paths
             {
                 return false;
             }
+
+            context.MessageFormatter.AppendArgument("path", context.PropertyValue.ToString());
 
             return _diskProvider.FolderExists(context.PropertyValue.ToString());
         }

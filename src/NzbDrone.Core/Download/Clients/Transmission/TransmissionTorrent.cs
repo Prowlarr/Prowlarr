@@ -1,4 +1,4 @@
-﻿namespace NzbDrone.Core.Download.Clients.Transmission
+namespace NzbDrone.Core.Download.Clients.Transmission
 {
     public class TransmissionTorrent
     {
@@ -9,7 +9,7 @@
         public long TotalSize { get; set; }
         public long LeftUntilDone { get; set; }
         public bool IsFinished { get; set; }
-        public int Eta { get; set; }
+        public long Eta { get; set; }
         public TransmissionTorrentStatus Status { get; set; }
         public int SecondsDownloading { get; set; }
         public int SecondsSeeding { get; set; }

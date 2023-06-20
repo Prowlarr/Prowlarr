@@ -16,6 +16,7 @@ namespace Prowlarr.Api.V1.Indexers
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public IndexerStatsResource GetAll(DateTime? startDate, DateTime? endDate)
         {
             var statsStartDate = startDate ?? DateTime.MinValue;

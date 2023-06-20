@@ -56,6 +56,7 @@ class EditIndexerModalConnector extends Component {
 }
 
 EditIndexerModalConnector.propTypes = {
+  ...EditIndexerModal.propTypes,
   onModalClose: PropTypes.func.isRequired,
   dispatchClearPendingChanges: PropTypes.func.isRequired,
   dispatchCancelTestIndexer: PropTypes.func.isRequired,

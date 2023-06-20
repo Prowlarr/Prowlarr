@@ -17,14 +17,24 @@ namespace NzbDrone.Core.Notifications.Apprise
             _proxy = proxy;
         }
 
+        public override void OnGrab(GrabMessage grabMessage)
+        {
+            _proxy.SendNotification(RELEASE_GRABBED_TITLE_BRANDED, grabMessage.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
-            _proxy.SendNotification(Settings, HEALTH_ISSUE_TITLE_BRANDED, $"{healthCheck.Message}");
+            _proxy.SendNotification(HEALTH_ISSUE_TITLE_BRANDED, healthCheck.Message, Settings);
+        }
+
+        public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+            _proxy.SendNotification(HEALTH_RESTORED_TITLE, $"The following issue is now resolved: {previousCheck.Message}", Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)
         {
-            _proxy.SendNotification(Settings, APPLICATION_UPDATE_TITLE_BRANDED, $"{updateMessage.Message}");
+            _proxy.SendNotification(APPLICATION_UPDATE_TITLE_BRANDED, updateMessage.Message, Settings);
         }
 
         public override ValidationResult Test()

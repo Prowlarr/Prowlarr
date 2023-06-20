@@ -1,6 +1,3 @@
-using Prowlarr.Api.V1.Indexers;
-using RestSharp;
-
 namespace NzbDrone.Integration.Test.Client
 {
     //public class ReleaseClient : ClientBase<ReleaseResource>

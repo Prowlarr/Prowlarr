@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "Orpheus",
                 Settings = new OrpheusSettings { Apikey = "somekey" }
@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
 
-            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 2000 } })).Releases;
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 3000 } })).Releases;
 
             releases.Should().HaveCount(65);
             releases.First().Should().BeOfType<GazelleInfo>();
@@ -56,6 +56,7 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
             torrentInfo.MagnetUrl.Should().Be(null);
             torrentInfo.Peers.Should().Be(0);
             torrentInfo.Seeders.Should().Be(0);
+            torrentInfo.Files.Should().Be(18);
             torrentInfo.ImdbId.Should().Be(0);
             torrentInfo.TmdbId.Should().Be(0);
             torrentInfo.TvdbId.Should().Be(0);

@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 
-function createIndexerStatusSelector() {
+function createIndexerStatusSelector(indexerId) {
   return createSelector(
-    (state, { indexerId }) => indexerId,
     (state) => state.indexerStatus.items,
-    (indexerId, indexerStatus) => {
+    (indexerStatus) => {
       return _.find(indexerStatus, { indexerId });
     }
   );

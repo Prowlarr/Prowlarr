@@ -3,7 +3,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.TorrentPotato
+namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
 {
     public class TorrentPotatoSettingsValidator : NoAuthSettingsValidator<TorrentPotatoSettings>
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NzbDrone.Core.Datastore;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Profiles;
 using NzbDrone.Core.ThingiProvider;
 
@@ -20,6 +20,7 @@ namespace NzbDrone.Core.Indexers
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public bool SupportsRedirect { get; set; }
+        public bool SupportsPagination { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public int Priority { get; set; } = 25;
         public bool Redirect { get; set; }

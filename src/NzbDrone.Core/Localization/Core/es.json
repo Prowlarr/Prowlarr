@@ -22,7 +22,7 @@
     "Clear": "Borrar",
     "BackupNow": "Hacer copia de seguridad",
     "Backup": "Backup",
-    "AppDataLocationHealthCheckMessage": "La actualización no será posible para evitar que se elimine AppData durante la actualización",
+    "AppDataLocationHealthCheckMessage": "No será posible actualizar para prevenir que AppData se borre durante la actualización",
     "Analytics": "Analíticas",
     "All": "Todas",
     "About": "Acerca",
@@ -51,7 +51,6 @@
     "ReleaseBranchCheckOfficialBranchMessage": "Las versión {0} no es una versión válida de Prowlarr, no recibirás actualizaciones",
     "Refresh": "Actualizar",
     "Queue": "Cola",
-    "PtpOldSettingsCheckMessage": "Los siguientes indexers PassThePopcorn tienen configuraciones obsoletas y deben de ser actualizados: {0}",
     "ProxyCheckResolveIpMessage": "No se pudo resolver la dirección IP del Host Proxy configurado {0}",
     "ProxyCheckFailedToTestMessage": "Fallo al comprobar el proxy: {0}",
     "ProxyCheckBadRequestMessage": "Fallo al comprobar el proxy. StatusCode: {0}",
@@ -373,5 +372,12 @@
     "ApplicationLongTermStatusCheckSingleClientMessage": "Indexers no disponible por errores durando más de 6 horas: {0}",
     "Ended": "Terminó",
     "NextExecution": "Siguiente ejecución",
-    "Started": "Iniciado"
+    "Started": "Iniciado",
+    "Remove": "Eliminar",
+    "Replace": "Reemplazar",
+    "TheLatestVersionIsAlreadyInstalled": "La última versión de Prowlarr ya está instalada",
+    "Apps": "Aplicaciones",
+    "AddApplication": "Añadir aplicación",
+    "AddCustomFilter": "Añadir filtro personalizado",
+    "Description": "Descripción"
 }

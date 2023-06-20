@@ -5,7 +5,6 @@ using MonoTorrent;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
@@ -18,31 +17,37 @@ namespace NzbDrone.Core.Download
     public abstract class TorrentClientBase<TSettings> : DownloadClientBase<TSettings>
         where TSettings : IProviderConfig, new()
     {
-        protected readonly IHttpClient _httpClient;
-        protected readonly ITorrentFileInfoReader _torrentFileInfoReader;
+        private readonly ITorrentFileInfoReader _torrentFileInfoReader;
+        private readonly ISeedConfigProvider _seedConfigProvider;
 
         protected TorrentClientBase(ITorrentFileInfoReader torrentFileInfoReader,
-                                    IHttpClient httpClient,
+                                    ISeedConfigProvider seedConfigProvider,
                                     IConfigService configService,
                                     IDiskProvider diskProvider,
                                     Logger logger)
             : base(configService, diskProvider, logger)
         {
-            _httpClient = httpClient;
             _torrentFileInfoReader = torrentFileInfoReader;
+            _seedConfigProvider = seedConfigProvider;
         }
 
         public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
 
         public virtual bool PreferTorrentFile => false;
 
-        protected abstract string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink);
-        protected abstract string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent);
-        protected abstract string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink);
+        protected abstract string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink);
+        protected abstract string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent);
+        protected abstract string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink);
 
         public override async Task<string> Download(ReleaseInfo release, bool redirect, IIndexer indexer)
         {
             var torrentInfo = release as TorrentInfo;
+
+            if (torrentInfo != null)
+            {
+                // Get the seed configuration for this release.
+                torrentInfo.SeedConfiguration = _seedConfigProvider.GetSeedConfiguration(release);
+            }
 
             string magnetUrl = null;
             string torrentUrl = null;
@@ -67,7 +72,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return await DownloadFromWebUrl(release, indexer, torrentUrl);
+                        return await DownloadFromWebUrl(torrentInfo, indexer, torrentUrl);
                     }
                     catch (Exception ex)
                     {
@@ -84,7 +89,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return DownloadFromMagnetUrl(release, magnetUrl);
+                        return DownloadFromMagnetUrl(torrentInfo, magnetUrl);
                     }
                     catch (NotSupportedException ex)
                     {
@@ -98,7 +103,7 @@ namespace NzbDrone.Core.Download
                 {
                     try
                     {
-                        return DownloadFromMagnetUrl(release, magnetUrl);
+                        return DownloadFromMagnetUrl(torrentInfo, magnetUrl);
                     }
                     catch (NotSupportedException ex)
                     {
@@ -113,14 +118,14 @@ namespace NzbDrone.Core.Download
 
                 if (torrentUrl.IsNotNullOrWhiteSpace())
                 {
-                    return await DownloadFromWebUrl(release, indexer, torrentUrl);
+                    return await DownloadFromWebUrl(torrentInfo, indexer, torrentUrl);
                 }
             }
 
             return null;
         }
 
-        private async Task<string> DownloadFromWebUrl(ReleaseInfo release, IIndexer indexer, string torrentUrl)
+        private async Task<string> DownloadFromWebUrl(TorrentInfo release, IIndexer indexer, string torrentUrl)
         {
             byte[] torrentFile = null;
 
@@ -155,7 +160,7 @@ namespace NzbDrone.Core.Download
             return actualHash;
         }
 
-        private string DownloadFromMagnetUrl(ReleaseInfo release, string magnetUrl)
+        private string DownloadFromMagnetUrl(TorrentInfo release, string magnetUrl)
         {
             string hash = null;
             string actualHash = null;

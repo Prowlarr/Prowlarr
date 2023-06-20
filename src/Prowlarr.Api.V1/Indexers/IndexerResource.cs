@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Parser;
 using Prowlarr.Http.ClientSchema;
@@ -25,6 +24,7 @@ namespace Prowlarr.Api.V1.Indexers
         public bool SupportsRss { get; set; }
         public bool SupportsSearch { get; set; }
         public bool SupportsRedirect { get; set; }
+        public bool SupportsPagination { get; set; }
         public int AppProfileId { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public IndexerPrivacy Privacy { get; set; }
@@ -57,9 +57,9 @@ namespace Prowlarr.Api.V1.Indexers
 
             var infoLinkName = definition.ImplementationName;
 
-            if (definition.Implementation == typeof(Cardigann).Name)
+            if (definition.Implementation == nameof(Cardigann))
             {
-                var extraFields = definition.ExtraFields?.Select((x, i) => MapField(x, i)).ToList() ?? new List<Field>();
+                var extraFields = definition.ExtraFields?.Select(MapField).ToList() ?? new List<Field>();
 
                 resource.Fields.AddRange(extraFields);
 
@@ -79,7 +79,7 @@ namespace Prowlarr.Api.V1.Indexers
                 infoLinkName = settings.DefinitionFile;
             }
 
-            resource.InfoLink = string.Format("https://wiki.servarr.com/prowlarr/supported-indexers#{0}", infoLinkName.ToLower().Replace(' ', '-'));
+            resource.InfoLink = $"https://wiki.servarr.com/prowlarr/supported-indexers#{infoLinkName.ToLower().Replace(' ', '-')}";
             resource.AppProfileId = definition.AppProfileId;
             resource.IndexerUrls = definition.IndexerUrls;
             resource.LegacyUrls = definition.LegacyUrls;
@@ -91,6 +91,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.SupportsRss = definition.SupportsRss;
             resource.SupportsSearch = definition.SupportsSearch;
             resource.SupportsRedirect = definition.SupportsRedirect;
+            resource.SupportsPagination = definition.SupportsPagination;
             resource.Capabilities = definition.Capabilities.ToResource();
             resource.Protocol = definition.Protocol;
             resource.Privacy = definition.Privacy;
@@ -110,7 +111,7 @@ namespace Prowlarr.Api.V1.Indexers
 
             var definition = base.ToModel(resource);
 
-            if (resource.Implementation == typeof(Cardigann).Name)
+            if (resource.Implementation == nameof(Cardigann))
             {
                 var standardFields = base.ToResource(definition).Fields.Select(x => x.Name).ToList();
 

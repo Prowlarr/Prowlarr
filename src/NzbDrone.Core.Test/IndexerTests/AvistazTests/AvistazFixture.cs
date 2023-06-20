@@ -22,10 +22,10 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "AvistaZ",
-                Settings = new AvistazSettings() { Username = "someuser", Password = "somepass", Pid = "somepid" }
+                Settings = new AvistazSettings { Username = "someuser", Password = "somepass", Pid = "somepid" }
             };
         }
 
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
 
-            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(100);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
             torrentInfo.InfoUrl.Should().Be("https://avistaz.to/torrent/187240-japan-sinks-people-of-hope-2021-s01e05-720p-nf-web-dl-ddp20-x264-seikel");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2021-11-14 22:26:21"));
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2021-11-14 21:26:21"));
             torrentInfo.Size.Should().Be(935127615);
             torrentInfo.InfoHash.Should().Be("a879261d4e6e792402f92401141a21de70d51bf2");
             torrentInfo.MagnetUrl.Should().Be(null);

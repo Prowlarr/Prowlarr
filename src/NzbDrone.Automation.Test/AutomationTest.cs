@@ -11,7 +11,6 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Test.Common;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
 
 namespace NzbDrone.Automation.Test
 {
@@ -68,7 +67,7 @@ namespace NzbDrone.Automation.Test
         {
             try
             {
-                Screenshot image = ((ITakesScreenshot)driver).GetScreenshot();
+                var image = ((ITakesScreenshot)driver).GetScreenshot();
                 image.SaveAsFile($"./{name}_test_screenshot.png", ScreenshotImageFormat.Png);
             }
             catch (Exception ex)

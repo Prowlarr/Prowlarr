@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
@@ -10,7 +11,7 @@ import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
-import { align, icons, sortDirections } from 'Helpers/Props';
+import { align, icons, kinds, sortDirections } from 'Helpers/Props';
 import AddIndexerModal from 'Indexer/Add/AddIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import NoIndexer from 'Indexer/NoIndexer';
@@ -44,6 +45,8 @@ class SearchIndex extends Component {
 
   constructor(props, context) {
     super(props, context);
+
+    this.scrollerRef = React.createRef();
 
     this.state = {
       scroller: null,
@@ -86,12 +89,12 @@ class SearchIndex extends Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.onKeyUp);
+  }
+
   //
   // Control
-
-  setScrollerRef = (ref) => {
-    this.setState({ scroller: ref });
-  };
 
   getSelectedIds = () => {
     if (this.state.allUnselected) {
@@ -214,7 +217,8 @@ class SearchIndex extends Component {
 
   onKeyUp = (event) => {
     const jumpBarItems = this.state.jumpBarItems.order;
-    if (event.path.length === 4) {
+
+    if (event.composedPath && event.composedPath().length === 4) {
       if (event.keyCode === keyCodes.HOME && event.ctrlKey) {
         this.setState({ jumpToCharacter: jumpBarItems[0] });
       }
@@ -256,7 +260,6 @@ class SearchIndex extends Component {
       customFilters,
       sortKey,
       sortDirection,
-      onScroll,
       onSortSelect,
       onFilterSelect,
       isSmallScreen,
@@ -265,7 +268,6 @@ class SearchIndex extends Component {
     } = this.props;
 
     const {
-      scroller,
       jumpBarItems,
       jumpToCharacter,
       selectedState,
@@ -278,7 +280,7 @@ class SearchIndex extends Component {
     const selectedIndexerIds = this.getSelectedIds();
 
     const ViewComponent = getViewComponent(isSmallScreen);
-    const isLoaded = !!(!error && isPopulated && items.length && scroller);
+    const isLoaded = !!(!error && isPopulated && items.length && this.scrollerRef.current);
     const hasNoIndexer = !totalItems;
 
     return (
@@ -319,10 +321,9 @@ class SearchIndex extends Component {
 
         <div className={styles.pageContentBodyWrapper}>
           <PageContentBody
-            registerScroller={this.setScrollerRef}
+            ref={this.scrollerRef}
             className={styles.contentBody}
             innerClassName={styles.tableInnerContentBody}
-            onScroll={onScroll}
           >
             {
               isFetching && !isPopulated &&
@@ -331,16 +332,16 @@ class SearchIndex extends Component {
 
             {
               !isFetching && !!error &&
-                <div className={styles.errorMessage}>
+                <Alert kind={kinds.DANGER}>
                   {getErrorMessage(error, 'Failed to load search results from API')}
-                </div>
+                </Alert>
             }
 
             {
               isLoaded &&
                 <div className={styles.contentBodyContainer}>
                   <ViewComponent
-                    scroller={scroller}
+                    scroller={this.scrollerRef.current}
                     items={items}
                     filters={filters}
                     sortKey={sortKey}
@@ -426,7 +427,6 @@ SearchIndex.propTypes = {
   onFilterSelect: PropTypes.func.isRequired,
   onSearchPress: PropTypes.func.isRequired,
   onBulkGrabPress: PropTypes.func.isRequired,
-  onScroll: PropTypes.func.isRequired,
   hasIndexers: PropTypes.bool.isRequired
 };
 

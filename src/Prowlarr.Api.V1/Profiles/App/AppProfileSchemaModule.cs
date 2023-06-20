@@ -15,9 +15,10 @@ namespace Prowlarr.Api.V1.Profiles.App
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public AppProfileResource GetSchema()
         {
-            AppSyncProfile qualityProfile = _profileService.GetDefaultProfile(string.Empty);
+            var qualityProfile = _profileService.GetDefaultProfile(string.Empty);
 
             return qualityProfile.ToResource();
         }

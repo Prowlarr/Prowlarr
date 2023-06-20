@@ -7,9 +7,9 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.DownloadStation.Proxies;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -30,11 +30,11 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
                                       IDownloadStationInfoProxy dsInfoProxy,
                                       IDownloadStationTaskProxy dsTaskProxy,
                                       ITorrentFileInfoReader torrentFileInfoReader,
-                                      IHttpClient httpClient,
+                                      ISeedConfigProvider seedConfigProvider,
                                       IConfigService configService,
                                       IDiskProvider diskProvider,
                                       Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _dsInfoProxy = dsInfoProxy;
             _dsTaskProxy = dsTaskProxy;
@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             return _dsTaskProxy.GetTasks(Settings).Where(v => v.Type.ToLower() == DownloadStationTaskType.BT.ToString().ToLower());
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             var hashedSerialNumber = _serialNumberProvider.GetSerialNumber(Settings);
 
@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             throw new DownloadClientException("Failed to add magnet task to Download Station");
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             var hashedSerialNumber = _serialNumberProvider.GetSerialNumber(Settings);
 
@@ -109,11 +109,6 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             return torrent.Status == DownloadStationTaskStatus.Finished;
         }
 
-        protected bool IsCompleted(DownloadStationTask torrent)
-        {
-            return torrent.Status == DownloadStationTaskStatus.Seeding || IsFinished(torrent) || (torrent.Status == DownloadStationTaskStatus.Waiting && torrent.Size != 0 && GetRemainingSize(torrent) <= 0);
-        }
-
         protected string GetMessage(DownloadStationTask torrent)
         {
             if (torrent.StatusExtra != null)
@@ -135,9 +130,8 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
         protected long GetRemainingSize(DownloadStationTask torrent)
         {
             var downloadedString = torrent.Additional.Transfer["size_downloaded"];
-            long downloadedSize;
 
-            if (downloadedString.IsNullOrWhiteSpace() || !long.TryParse(downloadedString, out downloadedSize))
+            if (downloadedString.IsNullOrWhiteSpace() || !long.TryParse(downloadedString, out var downloadedSize))
             {
                 _logger.Debug("Torrent {0} has invalid size_downloaded: {1}", torrent.Title, downloadedString);
                 downloadedSize = 0;
@@ -149,9 +143,8 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
         protected TimeSpan? GetRemainingTime(DownloadStationTask torrent)
         {
             var speedString = torrent.Additional.Transfer["speed_download"];
-            long downloadSpeed;
 
-            if (speedString.IsNullOrWhiteSpace() || !long.TryParse(speedString, out downloadSpeed))
+            if (speedString.IsNullOrWhiteSpace() || !long.TryParse(speedString, out var downloadSpeed))
             {
                 _logger.Debug("Torrent {0} has invalid speed_download: {1}", torrent.Title, speedString);
                 downloadSpeed = 0;
@@ -322,7 +315,7 @@ namespace NzbDrone.Core.Download.Clients.DownloadStation
             return null;
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             throw new NotImplementedException();
         }

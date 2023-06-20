@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -18,54 +19,58 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
     public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
     {
         var pageableRequests = new IndexerPageableRequestChain();
-        var parameters = GetDefaultParameters();
+        var parameters = new NameValueCollection();
 
         if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() || searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
         {
-            parameters.Add("action", "search-torrents");
+            parameters.Set("action", "search-torrents");
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                parameters.Add("type", "imdb");
-                parameters.Add("query", searchCriteria.FullImdbId);
+                parameters.Set("type", "imdb");
+                parameters.Set("query", searchCriteria.FullImdbId);
             }
             else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
             {
-                parameters.Add("type", "name");
-                parameters.Add("query", searchCriteria.SanitizedSearchTerm.Trim());
+                parameters.Set("type", "name");
+                parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
             }
 
             if (searchCriteria.Season.HasValue)
             {
-                parameters.Add("season", searchCriteria.Season.ToString());
-                parameters.Add("episode", searchCriteria.Episode);
+                parameters.Set("season", searchCriteria.Season.ToString());
+            }
+
+            if (searchCriteria.Episode.IsNotNullOrWhiteSpace())
+            {
+                parameters.Set("episode", searchCriteria.Episode);
             }
         }
 
-        pageableRequests.Add(GetRequest(searchCriteria, parameters));
+        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
         return pageableRequests;
     }
 
-    public virtual IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+    public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
         var pageableRequests = new IndexerPageableRequestChain();
-        var parameters = GetDefaultParameters();
+        var parameters = new NameValueCollection();
 
         if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
         {
-            parameters.Add("action", "search-torrents");
-            parameters.Add("type", "imdb");
-            parameters.Add("query", searchCriteria.FullImdbId);
+            parameters.Set("action", "search-torrents");
+            parameters.Set("type", "imdb");
+            parameters.Set("query", searchCriteria.FullImdbId);
         }
         else if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
         {
-            parameters.Add("action", "search-torrents");
-            parameters.Add("type", "name");
-            parameters.Add("query", searchCriteria.SanitizedSearchTerm.Trim());
+            parameters.Set("action", "search-torrents");
+            parameters.Set("type", "name");
+            parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetRequest(searchCriteria, parameters));
+        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
         return pageableRequests;
     }
@@ -73,16 +78,16 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
     public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
     {
         var pageableRequests = new IndexerPageableRequestChain();
-        var parameters = GetDefaultParameters();
+        var parameters = new NameValueCollection();
 
         if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
         {
-            parameters.Add("action", "search-torrents");
-            parameters.Add("type", "name");
-            parameters.Add("query", searchCriteria.SanitizedSearchTerm.Trim());
+            parameters.Set("action", "search-torrents");
+            parameters.Set("type", "name");
+            parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetRequest(searchCriteria, parameters));
+        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
         return pageableRequests;
     }
@@ -90,16 +95,16 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
     public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
     {
         var pageableRequests = new IndexerPageableRequestChain();
-        var parameters = GetDefaultParameters();
+        var parameters = new NameValueCollection();
 
         if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
         {
-            parameters.Add("action", "search-torrents");
-            parameters.Add("type", "name");
-            parameters.Add("query", searchCriteria.SanitizedSearchTerm.Trim());
+            parameters.Set("action", "search-torrents");
+            parameters.Set("type", "name");
+            parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetRequest(searchCriteria, parameters));
+        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
         return pageableRequests;
     }
@@ -107,47 +112,47 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
     public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
     {
         var pageableRequests = new IndexerPageableRequestChain();
-        var parameters = GetDefaultParameters();
+        var parameters = new NameValueCollection();
 
         if (searchCriteria.SearchTerm.IsNotNullOrWhiteSpace())
         {
-            parameters.Add("action", "search-torrents");
-            parameters.Add("type", "name");
-            parameters.Add("query", searchCriteria.SanitizedSearchTerm.Trim());
+            parameters.Set("action", "search-torrents");
+            parameters.Set("type", "name");
+            parameters.Set("query", searchCriteria.SanitizedSearchTerm.Trim());
         }
 
-        pageableRequests.Add(GetRequest(searchCriteria, parameters));
+        pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
         return pageableRequests;
     }
 
-    private IEnumerable<IndexerRequest> GetRequest(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
+    private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
     {
         if (parameters.Get("action") is null)
         {
-            parameters.Add("action", "latest-torrents");
+            parameters.Set("action", "latest-torrents");
         }
 
-        parameters.Add("category", string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories)));
-
-        var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/api.php?{parameters.GetQueryString()}";
-
-        yield return new IndexerRequest(searchUrl, HttpAccept.Json);
-    }
-
-    private NameValueCollection GetDefaultParameters()
-    {
-        var parameters = new NameValueCollection
+        if (searchCriteria.Categories != null && searchCriteria.Categories.Any())
         {
-            { "username", Settings.Username.Trim() },
-            { "passkey", Settings.Passkey.Trim() }
-        };
+            parameters.Set("category", string.Join(",", Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories)));
+        }
 
         if (Settings.FreeleechOnly)
         {
-            parameters.Add("freeleech", "1");
+            parameters.Set("freeleech", "1");
         }
 
-        return parameters;
+        var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/api.php?{parameters.GetQueryString()}";
+
+        var request = new IndexerRequest(searchUrl, HttpAccept.Json)
+        {
+            HttpRequest =
+            {
+                Credentials = new BasicNetworkCredential(Settings.Username.Trim(), Settings.Passkey.Trim())
+            }
+        };
+
+        yield return request;
     }
 }

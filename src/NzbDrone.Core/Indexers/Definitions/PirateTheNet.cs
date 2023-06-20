@@ -23,9 +23,9 @@ namespace NzbDrone.Core.Indexers.Definitions;
 public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
 {
     public override string Name => "PirateTheNet";
-    public override string[] IndexerUrls => new[] { "http://piratethenet.org/" };
+    public override string[] IndexerUrls => new[] { "https://piratethenet.org/" };
+    public override string[] LegacyUrls => new[] { "http://piratethenet.org/" };
     public override string Description => "PirateTheNet (PTN) is a ratioless movie tracker.";
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
     private string LoginUrl => Settings.BaseUrl + "takelogin.php";
@@ -65,7 +65,6 @@ public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequest = requestBuilder
             .SetCookies(captchaPage.GetCookies())
@@ -84,7 +83,7 @@ public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
         }
 
         var cookies = response.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Authentication succeeded.");
     }
@@ -276,7 +275,7 @@ public class PirateTheNetParser : IParseIndexerResponse
             }
             else if (added.StartsWith("Yesterday "))
             {
-                release.PublishDate = DateTime.Now.Date + DateTime.ParseExact(added.Split(" ", 2).Last(), "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay - TimeSpan.FromDays(1);
+                release.PublishDate = DateTime.Now.AddDays(-1).Date + DateTime.ParseExact(added.Split(" ", 2).Last(), "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
             }
             else
             {

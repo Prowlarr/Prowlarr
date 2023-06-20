@@ -39,11 +39,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public List<string> Tags { get; set; }
         public List<Director> Directors { get; set; }
         public string ImdbId { get; set; }
-        public int TotalLeechers { get; set; }
-        public int TotalSeeders { get; set; }
-        public int TotalSnatched { get; set; }
-        public long MaxSize { get; set; }
-        public string LastUploadTime { get; set; }
         public List<Torrent> Torrents { get; set; }
     }
 

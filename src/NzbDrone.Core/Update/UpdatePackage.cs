@@ -1,5 +1,4 @@
-﻿using System;
-using NzbDrone.Common.EnvironmentInfo;
+using System;
 
 namespace NzbDrone.Core.Update
 {
@@ -12,6 +11,5 @@ namespace NzbDrone.Core.Update
         public UpdateChanges Changes { get; set; }
         public string Hash { get; set; }
         public string Branch { get; set; }
-        public PlatformType Runtime { get; set; }
     }
 }

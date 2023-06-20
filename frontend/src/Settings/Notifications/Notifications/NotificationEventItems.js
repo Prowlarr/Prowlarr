@@ -15,9 +15,14 @@ function NotificationEventItems(props) {
   } = props;
 
   const {
+    onGrab,
     onHealthIssue,
+    onHealthRestored,
     onApplicationUpdate,
+    supportsOnGrab,
+    includeManualGrabs,
     supportsOnHealthIssue,
+    supportsOnHealthRestored,
     includeHealthWarnings,
     supportsOnApplicationUpdate
   } = item;
@@ -34,6 +39,31 @@ function NotificationEventItems(props) {
           <div>
             <FormInputGroup
               type={inputTypes.CHECK}
+              name="onGrab"
+              helpText={translate('OnGrabHelpText')}
+              isDisabled={!supportsOnGrab.value}
+              {...onGrab}
+              onChange={onInputChange}
+            />
+          </div>
+
+          {
+            onGrab.value &&
+              <div>
+                <FormInputGroup
+                  type={inputTypes.CHECK}
+                  name="includeManualGrabs"
+                  helpText={translate('IncludeManualGrabsHelpText')}
+                  isDisabled={!supportsOnGrab.value}
+                  {...includeManualGrabs}
+                  onChange={onInputChange}
+                />
+              </div>
+          }
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
               name="onHealthIssue"
               helpText={translate('OnHealthIssueHelpText')}
               isDisabled={!supportsOnHealthIssue.value}
@@ -42,8 +72,19 @@ function NotificationEventItems(props) {
             />
           </div>
 
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onHealthRestored"
+              helpText={translate('OnHealthRestoredHelpText')}
+              isDisabled={!supportsOnHealthRestored.value}
+              {...onHealthRestored}
+              onChange={onInputChange}
+            />
+          </div>
+
           {
-            onHealthIssue.value &&
+            (onHealthIssue.value || onHealthRestored.value) &&
               <div>
                 <FormInputGroup
                   type={inputTypes.CHECK}

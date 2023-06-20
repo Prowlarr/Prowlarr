@@ -28,7 +28,7 @@ class AddApplicationModalContent extends Component {
     return (
       <ModalContent onModalClose={onModalClose}>
         <ModalHeader>
-          Add Application
+          {translate('AddApplication')}
         </ModalHeader>
 
         <ModalBody>

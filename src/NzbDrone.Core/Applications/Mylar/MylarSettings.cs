@@ -19,10 +19,12 @@ namespace NzbDrone.Core.Applications.Mylar
 
     public class MylarSettings : IApplicationSettings
     {
-        private static readonly MylarSettingsValidator Validator = new MylarSettingsValidator();
+        private static readonly MylarSettingsValidator Validator = new ();
 
         public MylarSettings()
         {
+            ProwlarrUrl = "http://localhost:9696";
+            BaseUrl = "http://localhost:8090";
             SyncCategories = new[] { NewznabStandardCategory.BooksComics.Id };
         }
 

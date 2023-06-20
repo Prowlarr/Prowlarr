@@ -19,10 +19,12 @@ namespace NzbDrone.Core.Applications.Whisparr
 
     public class WhisparrSettings : IApplicationSettings
     {
-        private static readonly WhisparrSettingsValidator Validator = new WhisparrSettingsValidator();
+        private static readonly WhisparrSettingsValidator Validator = new ();
 
         public WhisparrSettings()
         {
+            ProwlarrUrl = "http://localhost:9696";
+            BaseUrl = "http://localhost:6969";
             SyncCategories = new[] { 6000, 6010, 6020, 6030, 6040, 6045, 6050, 6070, 6080, 6090 };
         }
 

@@ -26,7 +26,6 @@ public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
     public override string Description => "FunFile is a general tracker";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -57,7 +56,6 @@ public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
             AllowAutoRedirect = true,
             Method = HttpMethod.Post
         };
-        requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
         var authLoginRequest = requestBuilder
             .AddFormParameter("username", Settings.Username)
@@ -79,7 +77,7 @@ public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
         }
 
         var cookies = response.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Authentication succeeded.");
     }
@@ -289,11 +287,11 @@ public class FunFileParser : IParseIndexerResponse
                 throw new Exception("Download links not found. Make sure you can download from the website.");
             }
 
-            var link = _settings.BaseUrl + qDownloadLink.GetAttribute("href");
+            var downloadUrl = _settings.BaseUrl + qDownloadLink.GetAttribute("href");
 
             var qDetailsLink = row.QuerySelector("a[href^=\"details.php?id=\"]");
             var title = qDetailsLink?.GetAttribute("title")?.Trim();
-            var details = _settings.BaseUrl + qDetailsLink?.GetAttribute("href")?.Replace("&hit=1", "");
+            var infoUrl = _settings.BaseUrl + qDetailsLink?.GetAttribute("href")?.Replace("&hit=1", "");
 
             var categoryLink = row.QuerySelector("a[href^=\"browse.php?cat=\"]")?.GetAttribute("href");
             var cat = ParseUtil.GetArgumentFromQueryString(categoryLink, "cat");
@@ -303,9 +301,9 @@ public class FunFileParser : IParseIndexerResponse
 
             var release = new TorrentInfo
             {
-                Guid = link,
-                InfoUrl = link,
-                DownloadUrl = details,
+                Guid = infoUrl,
+                InfoUrl = infoUrl,
+                DownloadUrl = downloadUrl,
                 Title = title,
                 Categories = _categories.MapTrackerCatToNewznab(cat),
                 Size = ParseUtil.GetBytes(row.Children[7].TextContent),

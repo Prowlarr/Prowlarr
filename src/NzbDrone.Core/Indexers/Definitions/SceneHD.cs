@@ -28,7 +28,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "SceneHD is Private site for HD TV / MOVIES";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -92,10 +91,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public SceneHDSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
         public string BaseUrl { get; set; }
-
-        public SceneHDRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
@@ -217,7 +212,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Files = item.Value<int>("numfiles"),
                     Seeders = item.Value<int>("seeders"),
                     Peers = item.Value<int>("leechers") + item.Value<int>("seeders"),
-                    ImdbId = ParseUtil.GetImdbID(item.Value<string>("imdbid")) ?? 0,
+                    ImdbId = ParseUtil.GetImdbId(item.Value<string>("imdbid")) ?? 0,
                     MinimumRatio = 1,
                     MinimumSeedTime = 0,
                     DownloadVolumeFactor = dlVolumeFactor,

@@ -455,10 +455,10 @@ namespace NzbDrone.Core.Indexers
                 new XElement("caps",
                     new XElement("server",
                         new XAttribute("title", "Prowlarr")),
-                    LimitsMax != null || LimitsDefault != null ?
+                    LimitsDefault != null || LimitsMax != null ?
                         new XElement("limits",
-                            LimitsMax != null ? new XAttribute("max", LimitsMax) : null,
-                            LimitsDefault != null ? new XAttribute("default", LimitsDefault) : null)
+                            LimitsDefault != null ? new XAttribute("default", LimitsDefault) : null,
+                            LimitsMax != null ? new XAttribute("max", LimitsMax) : null)
                     : null,
                     new XElement("searching",
                         new XElement("search",

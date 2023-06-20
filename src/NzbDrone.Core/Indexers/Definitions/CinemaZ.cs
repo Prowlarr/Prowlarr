@@ -23,21 +23,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
         }
 
-        public override IIndexerRequestGenerator GetRequestGenerator()
-        {
-            return new AvistazRequestGenerator
-            {
-                Settings = Settings,
-                HttpClient = _httpClient,
-                Logger = _logger,
-                Capabilities = Capabilities
-            };
-        }
-
         protected override IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
+                LimitsDefault = PageSize,
+                LimitsMax = PageSize,
                 TvSearchParams = new List<TvSearchParam>
                 {
                     TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId, TvSearchParam.Genre

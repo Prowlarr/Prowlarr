@@ -48,6 +48,7 @@ namespace Prowlarr.Api.V1.Commands
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         [Produces("application/json")]
         public ActionResult<CommandResource> StartCommand(CommandResource commandResource)
         {
@@ -112,7 +113,7 @@ namespace Prowlarr.Api.V1.Commands
                 {
                     BroadcastResourceChange(ModelAction.Updated, pendingUpdate);
 
-                    if (pendingUpdate.Name == typeof(MessagingCleanupCommand).Name.Replace("Command", "") &&
+                    if (pendingUpdate.Name == nameof(MessagingCleanupCommand).Replace("Command", "") &&
                         pendingUpdate.Status == CommandStatus.Completed)
                     {
                         BroadcastResourceChange(ModelAction.Sync);

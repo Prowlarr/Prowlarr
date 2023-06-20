@@ -4,7 +4,7 @@ using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.HDBits
+namespace NzbDrone.Core.Indexers.Definitions.HDBits
 {
     public class HDBitsSettingsValidator : NoAuthSettingsValidator<HDBitsSettings>
     {

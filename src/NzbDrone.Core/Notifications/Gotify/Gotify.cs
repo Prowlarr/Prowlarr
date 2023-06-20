@@ -19,9 +19,19 @@ namespace NzbDrone.Core.Notifications.Gotify
         public override string Name => "Gotify";
         public override string Link => "https://gotify.net/";
 
+        public override void OnGrab(GrabMessage message)
+        {
+            _proxy.SendNotification(RELEASE_GRABBED_TITLE, message.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _proxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
+        }
+
+        public override void OnHealthRestored(HealthCheck.HealthCheck previousCheck)
+        {
+            _proxy.SendNotification(HEALTH_RESTORED_TITLE, $"The following issue is now resolved: {previousCheck.Message}", null);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)

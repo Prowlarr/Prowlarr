@@ -226,7 +226,7 @@ namespace NzbDrone.Common.OAuth
 #if WINRT
             return CultureInfo.InvariantCulture.CompareInfo.Compare(left, right, CompareOptions.IgnoreCase) == 0;
 #else
-            return string.Compare(left, right, StringComparison.InvariantCultureIgnoreCase) == 0;
+            return string.Equals(left, right, StringComparison.InvariantCultureIgnoreCase);
 #endif
         }
 

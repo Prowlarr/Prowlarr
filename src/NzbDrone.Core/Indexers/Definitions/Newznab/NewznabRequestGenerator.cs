@@ -129,7 +129,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.TmdbId.HasValue && capabilities.TvSearchTvdbAvailable)
             {
-                parameters.Set("tmdbid", searchCriteria.TvdbId.Value.ToString());
+                parameters.Set("tmdbid", searchCriteria.TmdbId.Value.ToString());
             }
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && capabilities.TvSearchImdbAvailable)

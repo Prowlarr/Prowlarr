@@ -1,6 +1,6 @@
 {
     "Peers": "Elementos",
-    "AppDataLocationHealthCheckMessage": "Não será possível atualizar para evitar a exclusão da pasta AppData durante a atualização",
+    "AppDataLocationHealthCheckMessage": "Não foi possivél actualizar para prevenir apagar a AppData durante a actualização",
     "Warn": "Avisar",
     "View": "Ver",
     "Updates": "Atualizações",
@@ -55,7 +55,6 @@
     "ReleaseBranchCheckOfficialBranchMessage": "A ramificação {0} não é uma ramificação de versões válida do Prowlarr, você não receberá atualizações",
     "Refresh": "Atualizar",
     "Queue": "Fila",
-    "PtpOldSettingsCheckMessage": "As definições dos seguintes indexadores do PassThePopcorn são obsoletas e precisam ser atualizadas: {0}",
     "ProxyCheckResolveIpMessage": "Não é possível resolver o Endereço IP para o Anfitrião de proxy {0} definido",
     "ProxyCheckFailedToTestMessage": "Falha ao testar o proxy: {0}",
     "ProxyCheckBadRequestMessage": "Falha ao testar o proxy. Código de estado: {0}",
@@ -130,7 +129,7 @@
     "Age": "Tempo de vida",
     "Added": "Adicionado",
     "Actions": "Ações",
-    "About": "Informações",
+    "About": "Sobre",
     "Automatic": "Automático",
     "AuthenticationMethodHelpText": "Solicitar nome de utilizador e palavra-passe para acessar ao Prowlarr",
     "Authentication": "Autenticação",
@@ -182,7 +181,7 @@
     "CertificateValidation": "Validação de certificado",
     "BypassProxyForLocalAddresses": "Ignorar proxy para endereços locais",
     "Branch": "Ramificação",
-    "BindAddressHelpText": "Endereço IP4 válido ou \"*\" para todas as interfaces",
+    "BindAddressHelpText": "Endereço de IP válido, localhost ou \"*\" para todas as interfaces",
     "BindAddress": "Endereço de vínculo",
     "Backups": "Cópias de segurança",
     "BackupFolderHelpText": "Caminhos relativos estarão na pasta AppData do Prowlarr",
@@ -415,5 +414,12 @@
     "Notifications": "Notificações",
     "Started": "Começado",
     "NextExecution": "Próxima execução",
-    "Queued": "Em fila"
+    "Queued": "Em fila",
+    "Remove": "Remover",
+    "Replace": "Substituir",
+    "TheLatestVersionIsAlreadyInstalled": "A versão mais recente do Prowlarr já está instalada",
+    "AddSyncProfile": "Adicionar Perfil de Sincronização",
+    "AddApplication": "Adicionar Aplicação",
+    "AddCustomFilter": "Adicionar Filtro customizado",
+    "ApiKeyValidationHealthCheckMessage": "Por favor, actualize a sua API Key para ter no minimo {0} caracteres. Pode fazer através das definições ou do ficheiro de configuração"
 }

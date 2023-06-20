@@ -18,10 +18,12 @@ namespace NzbDrone.Core.Applications.Sonarr
 
     public class SonarrSettings : IApplicationSettings
     {
-        private static readonly SonarrSettingsValidator Validator = new SonarrSettingsValidator();
+        private static readonly SonarrSettingsValidator Validator = new ();
 
         public SonarrSettings()
         {
+            ProwlarrUrl = "http://localhost:9696";
+            BaseUrl = "http://localhost:8989";
             SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050 };
             AnimeSyncCategories = new[] { 5070 };
         }
@@ -40,6 +42,9 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         [FieldDefinition(4, Label = "Anime Sync Categories", Type = FieldType.Select, SelectOptions = typeof(NewznabCategoryFieldConverter), Advanced = true, HelpText = "Only Indexers that support these categories will be synced")]
         public IEnumerable<int> AnimeSyncCategories { get; set; }
+
+        [FieldDefinition(5, Label = "Sync Anime Standard Format Search", Type = FieldType.Checkbox, Advanced = true, HelpText = "Sync also searching for anime using the standard numbering")]
+        public bool SyncAnimeStandardFormatSearch { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

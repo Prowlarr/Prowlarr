@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -35,6 +36,7 @@ namespace NzbDrone.Core.Indexers
         public abstract bool SupportsRss { get; }
         public abstract bool SupportsSearch { get; }
         public abstract bool SupportsRedirect { get; }
+        public abstract bool SupportsPagination { get; }
         public abstract IndexerCapabilities Capabilities { get; protected set; }
 
         public IndexerBase(IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -50,12 +52,7 @@ namespace NzbDrone.Core.Indexers
         {
             var attributes = GetType().GetCustomAttributes(false);
 
-            foreach (ObsoleteAttribute attribute in attributes.OfType<ObsoleteAttribute>())
-            {
-                return true;
-            }
-
-            return false;
+            return attributes.OfType<ObsoleteAttribute>().Any();
         }
 
         public virtual ProviderMessage Message => null;
@@ -104,7 +101,7 @@ namespace NzbDrone.Core.Indexers
 
         public abstract IndexerCapabilities GetCapabilities();
 
-        protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases)
+        protected virtual IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
         {
             var result = releases.ToList();
 
@@ -131,6 +128,7 @@ namespace NzbDrone.Core.Indexers
                 c.IndexerId = Definition.Id;
                 c.Indexer = Definition.Name;
                 c.DownloadProtocol = Protocol;
+                c.IndexerPrivacy = ((IndexerDefinition)Definition).Privacy;
                 c.IndexerPriority = ((IndexerDefinition)Definition).Priority;
 
                 if (Protocol == DownloadProtocol.Torrent)
@@ -144,6 +142,24 @@ namespace NzbDrone.Core.Indexers
             });
 
             return result.DistinctBy(v => v.Guid).ToList();
+        }
+
+        protected IEnumerable<ReleaseInfo> FilterReleasesByQuery(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var commonWords = new[] { "and", "the", "an", "of" };
+
+            if (!searchCriteria.IsRssSearch && !searchCriteria.IsIdSearch)
+            {
+                var splitRegex = new Regex("[^\\w]+");
+
+                // split search term to individual terms for less aggressive filtering, filter common terms
+                var terms = splitRegex.Split(searchCriteria.SearchTerm).Where(t => t.IsNotNullOrWhiteSpace() && t.Length > 1 && !commonWords.ContainsIgnoreCase(t));
+
+                // check in title and description for any term searched for
+                releases = releases.Where(r => terms.Any(t => (r.Title.IsNotNullOrWhiteSpace() && r.Title.ContainsIgnoreCase(t)) || (r.Description.IsNotNullOrWhiteSpace() && r.Description.ContainsIgnoreCase(t)))).ToList();
+            }
+
+            return releases;
         }
 
         protected virtual TSettings GetDefaultBaseUrl(TSettings settings)

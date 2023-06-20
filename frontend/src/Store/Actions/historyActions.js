@@ -50,11 +50,11 @@ export const defaultState = {
       name: 'parameters',
       label: translate('Parameters'),
       isSortable: false,
-      isVisible: false
+      isVisible: true
     },
     {
       name: 'grabTitle',
-      label: translate('Grab Title'),
+      label: translate('GrabTitle'),
       isSortable: false,
       isVisible: false
     },
@@ -78,7 +78,7 @@ export const defaultState = {
     },
     {
       name: 'elapsedTime',
-      label: translate('Elapsed Time'),
+      label: translate('ElapsedTime'),
       isSortable: false,
       isVisible: true
     },

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.EnvironmentInfo;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Update;
 using NzbDrone.Core.Update.History;
 using Prowlarr.Http;
@@ -22,6 +21,7 @@ namespace Prowlarr.Api.V1.Update
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<UpdateResource> GetRecentUpdates()
         {
             var resources = _recentUpdateProvider.GetRecentUpdatePackages()

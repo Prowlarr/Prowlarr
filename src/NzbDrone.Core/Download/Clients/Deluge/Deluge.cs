@@ -7,8 +7,8 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -20,16 +20,16 @@ namespace NzbDrone.Core.Download.Clients.Deluge
 
         public Deluge(IDelugeProxy proxy,
                       ITorrentFileInfoReader torrentFileInfoReader,
-                      IHttpClient httpClient,
+                      ISeedConfigProvider seedConfigProvider,
                       IConfigService configService,
                       IDiskProvider diskProvider,
                       Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             var actualHash = _proxy.AddTorrentFromMagnet(magnetLink, Settings);
 
@@ -38,8 +38,10 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 throw new DownloadClientException("Deluge failed to add magnet " + magnetLink);
             }
 
-            // _proxy.SetTorrentSeedingConfiguration(actualHash, remoteMovie.SeedConfiguration, Settings);
+            _proxy.SetTorrentSeedingConfiguration(actualHash, release.SeedConfiguration, Settings);
+
             var category = GetCategoryForRelease(release) ?? Settings.Category;
+
             if (category.IsNotNullOrWhiteSpace())
             {
                 _proxy.SetTorrentLabel(actualHash, category, Settings);
@@ -53,7 +55,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
             return actualHash.ToUpper();
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             var actualHash = _proxy.AddTorrentFromFile(filename, fileContent, Settings);
 
@@ -62,8 +64,10 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                 throw new DownloadClientException("Deluge failed to add torrent " + filename);
             }
 
-            // _proxy.SetTorrentSeedingConfiguration(actualHash, release.SeedConfiguration, Settings);
+            _proxy.SetTorrentSeedingConfiguration(actualHash, release.SeedConfiguration, Settings);
+
             var category = GetCategoryForRelease(release) ?? Settings.Category;
+
             if (category.IsNotNullOrWhiteSpace())
             {
                 _proxy.SetTorrentLabel(actualHash, category, Settings);
@@ -117,12 +121,12 @@ namespace NzbDrone.Core.Download.Clients.Deluge
                     case WebExceptionStatus.ConnectionClosed:
                         return new NzbDroneValidationFailure("UseSsl", "Verify SSL settings")
                         {
-                            DetailedDescription = "Please verify your SSL configuration on both Deluge and NzbDrone."
+                            DetailedDescription = "Please verify your SSL configuration on both Deluge and Prowlarr."
                         };
                     case WebExceptionStatus.SecureChannelFailure:
                         return new NzbDroneValidationFailure("UseSsl", "Unable to connect through SSL")
                         {
-                            DetailedDescription = "Drone is unable to connect to Deluge using SSL. This problem could be computer related. Please try to configure both drone and Deluge to not use SSL."
+                            DetailedDescription = "Prowlarr is unable to connect to Deluge using SSL. This problem could be computer related. Please try to configure both Prowlarr and Deluge to not use SSL."
                         };
                     default:
                         return new NzbDroneValidationFailure(string.Empty, "Unknown exception: " + ex.Message);
@@ -211,7 +215,7 @@ namespace NzbDrone.Core.Download.Clients.Deluge
             return null;
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             throw new NotImplementedException();
         }

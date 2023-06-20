@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Card from 'Components/Card';
 import Label from 'Components/Label';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
+import TagList from 'Components/TagList';
 import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import EditNotificationModalConnector from './EditNotificationModalConnector';
@@ -56,19 +57,15 @@ class Notification extends Component {
       id,
       name,
       onGrab,
-      onDownload,
-      onUpgrade,
-      onRename,
-      onDelete,
       onHealthIssue,
+      onHealthRestored,
       onApplicationUpdate,
       supportsOnGrab,
-      supportsOnDownload,
-      supportsOnUpgrade,
-      supportsOnRename,
-      supportsOnDelete,
       supportsOnHealthIssue,
-      supportsOnApplicationUpdate
+      supportsOnHealthRestored,
+      supportsOnApplicationUpdate,
+      tags,
+      tagList
     } = this.props;
 
     return (
@@ -82,45 +79,27 @@ class Notification extends Component {
         </div>
 
         {
-          supportsOnGrab && onGrab &&
+          supportsOnGrab && onGrab ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnGrab')}
-            </Label>
+            </Label> :
+            null
         }
 
         {
-          supportsOnDelete && onDelete &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnDelete')}
-            </Label>
-        }
-
-        {
-          supportsOnDownload && onDownload &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnImport')}
-            </Label>
-        }
-
-        {
-          supportsOnUpgrade && onDownload && onUpgrade &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnUpgrade')}
-            </Label>
-        }
-
-        {
-          supportsOnRename && onRename &&
-            <Label kind={kinds.SUCCESS}>
-              {translate('OnRename')}
-            </Label>
-        }
-
-        {
-          supportsOnHealthIssue && onHealthIssue &&
+          supportsOnHealthIssue && onHealthIssue ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnHealthIssue')}
-            </Label>
+            </Label> :
+            null
+        }
+
+        {
+          supportsOnHealthRestored && onHealthRestored ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnHealthRestored')}
+            </Label> :
+            null
         }
 
         {
@@ -132,7 +111,7 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onDownload && !onRename && !onHealthIssue && !onDelete && !onApplicationUpdate ?
+          !onGrab && !onHealthIssue && !onHealthRestored && !onApplicationUpdate ?
             <Label
               kind={kinds.DISABLED}
               outline={true}
@@ -141,6 +120,11 @@ class Notification extends Component {
             </Label> :
             null
         }
+
+        <TagList
+          tags={tags}
+          tagList={tagList}
+        />
 
         <EditNotificationModalConnector
           id={id}
@@ -167,19 +151,15 @@ Notification.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   onGrab: PropTypes.bool.isRequired,
-  onDownload: PropTypes.bool.isRequired,
-  onUpgrade: PropTypes.bool.isRequired,
-  onRename: PropTypes.bool.isRequired,
-  onDelete: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
+  onHealthRestored: PropTypes.bool.isRequired,
   onApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
-  supportsOnDownload: PropTypes.bool.isRequired,
-  supportsOnDelete: PropTypes.bool.isRequired,
-  supportsOnUpgrade: PropTypes.bool.isRequired,
-  supportsOnRename: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
+  supportsOnHealthRestored: PropTypes.bool.isRequired,
   supportsOnApplicationUpdate: PropTypes.bool.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.number).isRequired,
+  tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onConfirmDeleteNotification: PropTypes.func.isRequired
 };
 

@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.IndexerVersions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     public class Cardigann : TorrentIndexerBase<CardigannSettings>
     {
@@ -25,8 +24,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
         public override string Name => "Cardigann";
         public override string[] IndexerUrls => new string[] { "" };
         public override string Description => "";
-
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
@@ -53,7 +50,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
                 new CardigannRequestGenerator(_configService,
                     _definitionService.GetCachedDefinition(Settings.DefinitionFile),
-                    _logger)
+                    _logger,
+                    RateLimit)
                 {
                     HttpClient = _httpClient,
                     Definition = Definition,
@@ -77,6 +75,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 Settings = Settings
             };
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            if (_definitionService.GetCachedDefinition(Settings.DefinitionFile).Search?.Rows?.Filters?.Any(x => x.Name == "andmatch") ?? false)
+            {
+                cleanReleases = FilterReleasesByQuery(releases, searchCriteria).ToList();
+            }
+
+            return cleanReleases;
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -117,8 +127,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var defaultSettings = new List<SettingsField>
             {
-                new SettingsField { Name = "username", Label = "Username", Type = "text" },
-                new SettingsField { Name = "password", Label = "Password", Type = "password" }
+                new () { Name = "username", Label = "Username", Type = "text" },
+                new () { Name = "password", Label = "Password", Type = "password" }
             };
 
             var settings = definition.Settings ?? defaultSettings;
@@ -153,7 +163,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
-                Capabilities = new IndexerCapabilities(),
+                SupportsPagination = SupportsPagination,
+                Capabilities = ParseCardigannCapabilities(definition),
                 ExtraFields = settings
             };
         }
@@ -180,60 +191,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
             await generator.DoLogin();
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        protected override async Task<HttpRequest> GetDownloadRequest(Uri link)
         {
             var generator = (CardigannRequestGenerator)GetRequestGenerator();
 
             var request = await generator.DownloadRequest(link);
 
-            if (request.Url.Scheme == "magnet")
-            {
-                ValidateMagnet(request.Url.FullUri);
-                return Encoding.UTF8.GetBytes(request.Url.FullUri);
-            }
-
             request.AllowAutoRedirect = true;
 
-            var downloadBytes = Array.Empty<byte>();
-
-            try
-            {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                downloadBytes = response.ResponseData;
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Downloading torrent file for release failed since it no longer exists ({0})", request.Url.FullUri);
-                    throw new ReleaseUnavailableException("Downloading torrent failed", ex);
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
-                {
-                    _logger.Error("API Grab Limit reached for {0}", request.Url.FullUri);
-                }
-                else
-                {
-                    _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
-                }
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
-            }
-            catch (WebException ex)
-            {
-                _logger.Error(ex, "Downloading torrent file for release failed ({0})", request.Url.FullUri);
-
-                throw new ReleaseDownloadException("Downloading torrent failed", ex);
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Downloading torrent failed");
-                throw;
-            }
-
-            return downloadBytes;
+            return request;
         }
 
         protected override async Task Test(List<ValidationFailure> failures)
@@ -269,6 +235,56 @@ namespace NzbDrone.Core.Indexers.Cardigann
             }
 
             return null;
+        }
+
+        private IndexerCapabilities ParseCardigannCapabilities(CardigannMetaDefinition definition)
+        {
+            var capabilities = new IndexerCapabilities();
+
+            if (definition.Caps == null)
+            {
+                return capabilities;
+            }
+
+            capabilities.ParseCardigannSearchModes(definition.Caps.Modes);
+            capabilities.SupportsRawSearch = definition.Caps.Allowrawsearch;
+
+            if (definition.Caps.Categories != null && definition.Caps.Categories.Any())
+            {
+                foreach (var category in definition.Caps.Categories)
+                {
+                    var cat = NewznabStandardCategory.GetCatByName(category.Value);
+
+                    if (cat == null)
+                    {
+                        continue;
+                    }
+
+                    capabilities.Categories.AddCategoryMapping(category.Key, cat);
+                }
+            }
+
+            if (definition.Caps.Categorymappings != null && definition.Caps.Categorymappings.Any())
+            {
+                foreach (var categoryMapping in definition.Caps.Categorymappings)
+                {
+                    IndexerCategory torznabCat = null;
+
+                    if (categoryMapping.Cat != null)
+                    {
+                        torznabCat = NewznabStandardCategory.GetCatByName(categoryMapping.Cat);
+
+                        if (torznabCat == null)
+                        {
+                            continue;
+                        }
+                    }
+
+                    capabilities.Categories.AddCategoryMapping(categoryMapping.Id, torznabCat, categoryMapping.Desc);
+                }
+            }
+
+            return capabilities;
         }
     }
 }

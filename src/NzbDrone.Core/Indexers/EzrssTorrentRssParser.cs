@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Xml.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -16,6 +16,11 @@ namespace NzbDrone.Core.Indexers
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.HasHttpError)
+            {
+                base.PreProcess(indexerResponse);
+            }
+
             var document = LoadXmlDocument(indexerResponse);
             var items = GetItems(document).ToList();
 
@@ -24,7 +29,7 @@ namespace NzbDrone.Core.Indexers
                 throw new IndexerException(indexerResponse, "No results were found");
             }
 
-            return base.PreProcess(indexerResponse);
+            return true;
         }
 
         protected override long GetSize(XElement item)

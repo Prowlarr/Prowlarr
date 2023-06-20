@@ -22,10 +22,10 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "PrivateHD",
-                Settings = new AvistazSettings() { Username = "someuser", Password = "somepass", Pid = "somepid" }
+                Settings = new AvistazSettings { Username = "someuser", Password = "somepass", Pid = "somepid" }
             };
         }
 
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
 
-            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new int[] { 2000 } })).Releases;
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(100);
             releases.First().Should().BeOfType<TorrentInfo>();
@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
             torrentInfo.InfoUrl.Should().Be("https://privatehd.to/torrent/78506-godzilla-2014-2160p-uhd-bluray-remux-hdr-hevc-atmos-triton");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2021-03-21 05:24:49"));
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2021-03-21 04:24:49"));
             torrentInfo.Size.Should().Be(69914591044);
             torrentInfo.InfoHash.Should().Be("a879261d4e6e792402f92401141a21de70d51bf2");
             torrentInfo.MagnetUrl.Should().Be(null);

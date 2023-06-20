@@ -8,7 +8,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Indexers.Cardigann;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
@@ -29,13 +29,14 @@ namespace NzbDrone.Core.IndexerVersions
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
 
         private const string DEFINITION_BRANCH = "master";
-        private const int DEFINITION_VERSION = 8;
+        private const int DEFINITION_VERSION = 9;
 
-        //Used when moving yml to C#
-        private readonly List<string> _defintionBlocklist = new List<string>()
+        // Used when moving yml to C#
+        private readonly List<string> _definitionBlocklist = new ()
         {
             "aither",
             "animeworld",
+            "audiobookbay",
             "beyond-hd-oneurl",
             "beyond-hd",
             "blutopia",
@@ -89,7 +90,7 @@ namespace NzbDrone.Core.IndexerVersions
                 {
                     var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
                     var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
-                    indexerList = response.Resource.Where(i => !_defintionBlocklist.Contains(i.File)).ToList();
+                    indexerList = response.Resource.Where(i => !_definitionBlocklist.Contains(i.File)).ToList();
                 }
                 catch
                 {
@@ -125,7 +126,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         public List<string> GetBlocklist()
         {
-            return _defintionBlocklist;
+            return _definitionBlocklist;
         }
 
         private List<CardigannMetaDefinition> ReadDefinitionsFromDisk(List<CardigannMetaDefinition> defs, string path, SearchOption options = SearchOption.TopDirectoryOnly)
@@ -227,10 +228,10 @@ namespace NzbDrone.Core.IndexerVersions
             if (definition.Settings == null)
             {
                 definition.Settings = new List<SettingsField>
-                            {
-                                new SettingsField { Name = "username", Label = "Username", Type = "text" },
-                                new SettingsField { Name = "password", Label = "Password", Type = "password" }
-                            };
+                {
+                    new () { Name = "username", Label = "Username", Type = "text" },
+                    new () { Name = "password", Label = "Password", Type = "password" }
+                };
             }
 
             if (definition.Encoding == null)
@@ -292,7 +293,7 @@ namespace NzbDrone.Core.IndexerVersions
 
                 _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/package.zip", saveFile);
 
-                using (ZipArchive archive = ZipFile.OpenRead(saveFile))
+                using (var archive = ZipFile.OpenRead(saveFile))
                 {
                     archive.ExtractToDirectory(definitionsFolder, true);
                 }

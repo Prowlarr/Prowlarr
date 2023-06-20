@@ -27,6 +27,7 @@ namespace NzbDrone.Core.History
         List<History> Between(DateTime start, DateTime end);
         List<History> Since(DateTime date, HistoryEventType? eventType);
         int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
+        History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit);
     }
 
     public class HistoryService : IHistoryService,
@@ -117,12 +118,14 @@ namespace NzbDrone.Core.History
 
         public void Handle(IndexerQueryEvent message)
         {
+            var response = message.QueryResult.Response;
+
             var history = new History
             {
                 Date = DateTime.UtcNow,
                 IndexerId = message.IndexerId,
-                EventType = message.Query.RssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
-                Successful = message.QueryResult.Response?.StatusCode == HttpStatusCode.OK
+                EventType = message.Query.IsRssSearch ? HistoryEventType.IndexerRss : HistoryEventType.IndexerQuery,
+                Successful = response?.StatusCode == HttpStatusCode.OK || (response is { Request: { SuppressHttpError: true, SuppressHttpErrorStatusCodes: not null } } && response.Request.SuppressHttpErrorStatusCodes.Contains(response.StatusCode))
             };
 
             if (message.Query is MovieSearchCriteria)
@@ -167,14 +170,15 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Genre", ((BookSearchCriteria)message.Query).Genre ?? string.Empty);
             }
 
-            history.Data.Add("ElapsedTime", message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);
+            history.Data.Add("ElapsedTime", message.QueryResult.Cached ? "0" : message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);
             history.Data.Add("Query", message.Query.SearchTerm ?? string.Empty);
             history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
             history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Host", message.Query.Host ?? string.Empty);
-            history.Data.Add("QueryResults", message.QueryResult.Releases?.Count().ToString() ?? string.Empty);
+            history.Data.Add("QueryResults", message.QueryResult.Releases?.Count.ToString() ?? string.Empty);
             history.Data.Add("Url", message.QueryResult.Response?.Request.Url.FullUri ?? string.Empty);
+            history.Data.Add("Cached", message.QueryResult.Cached ? "1" : "0");
 
             _historyRepository.Insert(history);
         }
@@ -184,7 +188,7 @@ namespace NzbDrone.Core.History
             var history = new History
             {
                 Date = DateTime.UtcNow,
-                IndexerId = message.IndexerId,
+                IndexerId = message.Release.IndexerId,
                 EventType = HistoryEventType.ReleaseGrabbed,
                 Successful = message.Successful
             };
@@ -231,6 +235,11 @@ namespace NzbDrone.Core.History
         public int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes)
         {
             return _historyRepository.CountSince(indexerId, date, eventTypes);
+        }
+
+        public History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit)
+        {
+            return _historyRepository.FindFirstForIndexerSince(indexerId, date, eventTypes, limit);
         }
     }
 }

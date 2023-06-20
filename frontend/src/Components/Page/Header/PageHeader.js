@@ -56,6 +56,7 @@ class PageHeader extends Component {
             <img
               className={styles.logo}
               src={`${window.Prowlarr.urlBase}/Content/Images/logo.png`}
+              alt="Prowlarr Logo"
             />
           </Link>
         </div>
@@ -74,6 +75,7 @@ class PageHeader extends Component {
           <IconButton
             className={styles.donate}
             name={icons.HEART}
+            aria-label="Donate"
             to="https://prowlarr.com/donate"
             size={14}
           />

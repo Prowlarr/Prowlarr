@@ -26,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "Redacted";
         public override string[] IndexerUrls => new[] { "https://redacted.ch/" };
         public override string Description => "REDActed (Aka.PassTheHeadPhones) is one of the most well-known music trackers.";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
@@ -48,6 +47,20 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new RedactedParser(Settings, Capabilities.Categories);
+        }
+
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            var request = requestBuilder
+                .SetHeader("Authorization", Settings.Apikey)
+                .Build();
+
+            return Task.FromResult(request);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -74,28 +87,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return caps;
         }
-
-        public override async Task<byte[]> Download(Uri link)
-        {
-            var request = new HttpRequestBuilder(link.AbsoluteUri)
-                .SetHeader("Authorization", Settings.Apikey)
-                .Build();
-
-            var downloadBytes = Array.Empty<byte>();
-
-            try
-            {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                downloadBytes = response.ResponseData;
-            }
-            catch (Exception)
-            {
-                _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
-            }
-
-            return downloadBytes;
-        }
     }
 
     public class RedactedRequestGenerator : IIndexerRequestGenerator
@@ -117,22 +108,22 @@ namespace NzbDrone.Core.Indexers.Definitions
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
-            if (searchCriteria.Artist.IsNotNullOrWhiteSpace())
+            if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
             {
-                parameters.Add("artistname", searchCriteria.Artist);
+                parameters.Set("artistname", searchCriteria.Artist);
             }
 
             if (searchCriteria.Album.IsNotNullOrWhiteSpace())
             {
-                parameters.Add("groupname", searchCriteria.Album);
+                parameters.Set("groupname", searchCriteria.Album);
             }
 
             if (searchCriteria.Year.HasValue)
             {
-                parameters.Add("year", searchCriteria.Year.ToString());
+                parameters.Set("year", searchCriteria.Year.ToString());
             }
 
-            pageableRequests.Add(GetRequest(searchCriteria, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -142,7 +133,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
@@ -162,41 +153,36 @@ namespace NzbDrone.Core.Indexers.Definitions
             var pageableRequests = new IndexerPageableRequestChain();
             var parameters = new NameValueCollection();
 
-            pageableRequests.Add(GetRequest(searchCriteria, parameters));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, parameters));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, NameValueCollection parameters)
         {
             var term = searchCriteria.SanitizedSearchTerm.Trim();
 
-            parameters.Add("action", "browse");
-            parameters.Add("order_by", "time");
-            parameters.Add("order_way", "desc");
-            parameters.Add("searchstr", term);
+            parameters.Set("action", "browse");
+            parameters.Set("order_by", "time");
+            parameters.Set("order_way", "desc");
+
+            if (term.IsNotNullOrWhiteSpace())
+            {
+                parameters.Set("searchstr", term);
+            }
 
             var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
             if (queryCats.Any())
             {
-                foreach (var cat in queryCats)
-                {
-                    parameters.Add($"filter_cat[{cat}]", "1");
-                }
+                queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
             }
 
-            var request = RequestBuilder()
-                .Resource($"/ajax.php?{parameters.GetQueryString()}")
-                .Build();
+            var searchUrl = _settings.BaseUrl.TrimEnd('/') + $"/ajax.php?{parameters.GetQueryString()}";
 
-            yield return new IndexerRequest(request);
-        }
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+            request.HttpRequest.Headers.Set("Authorization", _settings.Apikey);
 
-        private HttpRequestBuilder RequestBuilder()
-        {
-            return new HttpRequestBuilder($"{_settings.BaseUrl.TrimEnd('/')}")
-                .Accept(HttpAccept.Json)
-                .SetHeader("Authorization", _settings.Apikey);
+            yield return request;
         }
     }
 
@@ -218,12 +204,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
             if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             var jsonResponse = new HttpResponse<GazelleResponse>(indexerResponse.HttpResponse);
@@ -248,17 +234,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                         var release = new GazelleInfo
                         {
                             Guid = infoUrl,
+                            InfoUrl = infoUrl,
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
                             Title = WebUtility.HtmlDecode(title),
+                            Artist = WebUtility.HtmlDecode(result.Artist),
+                            Album = WebUtility.HtmlDecode(result.GroupName),
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
-                            InfoUrl = infoUrl,
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.Time.ToUniversalTime(),
                             Scene = torrent.Scene,
-                            Freeleech = torrent.IsFreeLeech || torrent.IsPersonalFreeLeech,
                             Files = torrent.FileCount,
                             Grabs = torrent.Snatches,
                             DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
@@ -295,7 +282,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
-                        Freeleech = result.IsFreeLeech || result.IsPersonalFreeLeech,
                         Files = result.FileCount,
                         Grabs = result.Snatches,
                         DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
@@ -349,13 +335,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string GetDownloadUrl(int torrentId, bool canUseToken)
         {
-            // AuthKey is required but not checked, just pass in a dummy variable
-            // to avoid having to track authkey, which is randomly cycled
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/ajax.php")
                 .AddQueryParam("action", "download")
-                .AddQueryParam("id", torrentId)
-                .AddQueryParam("usetoken", (_settings.UseFreeleechToken && canUseToken) ? 1 : 0);
+                .AddQueryParam("id", torrentId);
+
+            if (_settings.UseFreeleechToken && canUseToken)
+            {
+                url = url.AddQueryParam("usetoken", "1");
+            }
 
             return url.FullUri;
         }

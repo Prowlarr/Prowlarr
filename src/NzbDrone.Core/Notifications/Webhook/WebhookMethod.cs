@@ -1,6 +1,3 @@
-using System.Net.Http;
-using NzbDrone.Common.Http;
-
 namespace NzbDrone.Core.Notifications.Webhook
 {
     public enum WebhookMethod

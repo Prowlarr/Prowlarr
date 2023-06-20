@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 
 namespace NzbDrone.Core.Http.CloudFlare
@@ -41,7 +42,7 @@ namespace NzbDrone.Core.Http.CloudFlare
 
             // detect Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands
             if (response.Headers.Vary == "Accept-Encoding,User-Agent" &&
-                response.Headers.ContentEncoding == "" &&
+                response.Headers.ContentEncoding.IsNullOrWhiteSpace() &&
                 response.Content.ToLower().Contains("ddos"))
             {
                 return true;

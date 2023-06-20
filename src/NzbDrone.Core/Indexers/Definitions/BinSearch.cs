@@ -26,9 +26,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "The binary Usenet search engine";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Usenet;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override bool SupportsRss => false;
+        public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public BinSearch(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, IValidateNzbs nzbValidationService, Logger logger)
@@ -76,10 +76,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public IndexerCapabilities Capabilities { get; set; }
         public BinSearchSettings Settings { get; set; }
-
-        public BinSearchRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, SearchCriteriaBase searchCriteria)
         {

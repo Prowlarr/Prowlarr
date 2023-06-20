@@ -22,7 +22,7 @@ namespace NzbDrone.Core.IndexerSearch
             @"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]",
             RegexOptions.Compiled);
 
-        public List<ReleaseInfo> Releases { get; set; }
+        public IList<ReleaseInfo> Releases { get; set; }
 
         private static string RemoveInvalidXMLChars(string text)
         {
@@ -76,8 +76,12 @@ namespace NzbDrone.Core.IndexerSearch
                         select new XElement("item",
                             new XElement("title", RemoveInvalidXMLChars(r.Title)),
                             new XElement("description", RemoveInvalidXMLChars(r.Description)),
-                            new XElement("guid", r.Guid),  // GUID and (Link or Magnet) are mandatory
-                            new XElement("prowlarrindexer", new XAttribute("id", r.IndexerId), r.Indexer),
+                            new XElement("guid", r.Guid), // GUID and (Link or Magnet) are mandatory
+                            new XElement(
+                                "prowlarrindexer",
+                                new XAttribute("id", r.IndexerId),
+                                new XAttribute("type", r.IndexerPrivacy switch { IndexerPrivacy.Private => "private", IndexerPrivacy.Public => "public", _ => "semi-private" }),
+                                r.Indexer),
                             r.InfoUrl == null ? null : new XElement("comments", r.InfoUrl),
                             r.PublishDate == DateTime.MinValue ? new XElement("pubDate", XmlDateFormat(DateTime.Now)) : new XElement("pubDate", XmlDateFormat(r.PublishDate)),
                             new XElement("size", r.Size),

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Download;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
@@ -46,20 +45,30 @@ namespace Prowlarr.Api.V1.Search
             _remoteReleaseCache = cacheManager.GetCache<ReleaseInfo>(GetType(), "remoteReleases");
         }
 
+        [NonAction]
         public override ReleaseResource GetResourceById(int id)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<ReleaseResource> GrabRelease(ReleaseResource release)
         {
             ValidateResource(release);
 
             var releaseInfo = _remoteReleaseCache.Find(GetCacheKey(release));
 
+            if (releaseInfo == null)
+            {
+                _logger.Debug("Couldn't find requested release in cache, cache timeout probably expired.");
+
+                throw new NzbDroneClientException(HttpStatusCode.NotFound, "Couldn't find requested release in cache, try searching again");
+            }
+
             var indexerDef = _indexerFactory.Get(release.IndexerId);
-            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var source = Request.GetSource();
             var host = Request.GetHostName();
 
             try
@@ -76,9 +85,11 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpPost("bulk")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public ActionResult<ReleaseResource> GrabReleases(List<ReleaseResource> releases)
         {
-            var source = UserAgentParser.ParseSource(Request.Headers["User-Agent"]);
+            var source = Request.GetSource();
             var host = Request.GetHostName();
 
             var groupedReleases = releases.GroupBy(r => r.IndexerId);
@@ -108,6 +119,7 @@ namespace Prowlarr.Api.V1.Search
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public Task<List<ReleaseResource>> GetAll([FromQuery] SearchResource payload)
         {
             return GetSearchReleases(payload);

@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.EnsureThat;
-using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Common.Cache
 {
@@ -48,8 +47,7 @@ namespace NzbDrone.Common.Cache
 
         public T Find(string key)
         {
-            CacheItem cacheItem;
-            if (!_store.TryGetValue(key, out cacheItem))
+            if (!_store.TryGetValue(key, out var cacheItem))
             {
                 return default(T);
             }
@@ -77,8 +75,7 @@ namespace NzbDrone.Common.Cache
 
         public void Remove(string key)
         {
-            CacheItem value;
-            _store.TryRemove(key, out value);
+            _store.TryRemove(key, out _);
         }
 
         public int Count => _store.Count;
@@ -89,9 +86,7 @@ namespace NzbDrone.Common.Cache
 
             lifeTime = lifeTime ?? _defaultLifeTime;
 
-            CacheItem cacheItem;
-
-            if (_store.TryGetValue(key, out cacheItem) && !cacheItem.IsExpired())
+            if (_store.TryGetValue(key, out var cacheItem) && !cacheItem.IsExpired())
             {
                 if (_rollingExpiry && lifeTime.HasValue)
                 {

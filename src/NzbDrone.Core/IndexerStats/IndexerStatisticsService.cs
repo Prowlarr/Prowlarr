@@ -54,12 +54,12 @@ namespace NzbDrone.Core.IndexerStats
                 var sortedEvents = indexer.OrderBy(v => v.Date)
                                           .ThenBy(v => v.Id)
                                           .ToArray();
-                int temp = 0;
+                var temp = 0;
 
                 var elapsedTimeEvents = sortedEvents.Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp))
                                                                     .Select(h => temp);
 
-                indexerStats.AverageResponseTime = elapsedTimeEvents.Count() > 0 ? (int)elapsedTimeEvents.Average() : 0;
+                indexerStats.AverageResponseTime = elapsedTimeEvents.Any() ? (int)elapsedTimeEvents.Average() : 0;
 
                 foreach (var historyEvent in sortedEvents)
                 {

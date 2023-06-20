@@ -12,7 +12,6 @@ using NzbDrone.Core.Indexers.Definitions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
 {

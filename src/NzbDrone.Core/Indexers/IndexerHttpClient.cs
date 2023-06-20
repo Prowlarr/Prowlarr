@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Dispatchers;
 using NzbDrone.Common.TPL;
 using NzbDrone.Core.IndexerProxies;
+using NzbDrone.Core.IndexerProxies.FlareSolverr;
 using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers
@@ -52,22 +52,18 @@ namespace NzbDrone.Core.Indexers
 
         private IIndexerProxy GetProxy(ProviderDefinition definition)
         {
-            //Skip DB call if no tags on the indexers
-            if (definition.Tags.Count == 0)
+            // Skip DB call if no tags on the indexers
+            if (definition.Tags.Count == 0 && definition.Id > 0)
             {
                 return null;
             }
 
             var proxies = _indexerProxyFactory.GetAvailableProviders();
-            IIndexerProxy selectedProxy = null;
+            var selectedProxy = proxies.FirstOrDefault(proxy => definition.Tags.Intersect(proxy.Definition.Tags).Any());
 
-            foreach (var proxy in proxies)
+            if (selectedProxy == null && definition.Id == 0)
             {
-                if (definition.Tags.Intersect(proxy.Definition.Tags).Any())
-                {
-                    selectedProxy = proxy;
-                    break;
-                }
+                selectedProxy = proxies.FirstOrDefault(p => p is FlareSolverr);
             }
 
             return selectedProxy;

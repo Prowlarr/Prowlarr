@@ -16,9 +16,19 @@ namespace NzbDrone.Core.Notifications.Prowl
         public override string Link => "https://www.prowlapp.com/";
         public override string Name => "Prowl";
 
+        public override void OnGrab(GrabMessage message)
+        {
+            _prowlProxy.SendNotification(RELEASE_GRABBED_TITLE, message.Message, Settings);
+        }
+
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
             _prowlProxy.SendNotification(HEALTH_ISSUE_TITLE, healthCheck.Message, Settings);
+        }
+
+        public override void OnHealthRestored(HealthCheck.HealthCheck previousMessage)
+        {
+            _prowlProxy.SendNotification(HEALTH_RESTORED_TITLE, $"The following issue is now resolved: {previousMessage.Message}", Settings);
         }
 
         public override void OnApplicationUpdate(ApplicationUpdateMessage updateMessage)

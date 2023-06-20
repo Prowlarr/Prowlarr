@@ -11,7 +11,7 @@
   flex: 0 0 90px;
 }
 
-.title {
+.sortTitle {
   composes: cell;
 
   flex: 4 0 110px;

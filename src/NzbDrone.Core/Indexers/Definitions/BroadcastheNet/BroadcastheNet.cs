@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
@@ -12,9 +11,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override string Name => "BroadcasTheNet";
 
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+        public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
@@ -36,10 +35,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             var releaseInfo = _indexerStatusService.GetLastRssSyncReleaseInfo(Definition.Id);
             if (releaseInfo != null)
             {
-                int torrentID;
-                if (int.TryParse(releaseInfo.Guid.Replace("BTN-", string.Empty), out torrentID))
+                if (int.TryParse(releaseInfo.Guid.Replace("BTN-", string.Empty), out var torrentId))
                 {
-                    requestGenerator.LastRecentTorrentID = torrentID;
+                    requestGenerator.LastRecentTorrentID = torrentId;
                 }
             }
 

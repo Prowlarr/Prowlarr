@@ -14,3 +14,10 @@
     for bug reports and feature requests. However, this issue appears
     to be a indexer request. Please use our Indexer request [site](https://requests.prowlarr.com/)
   close: true
+
+'Status: Logs Needed':
+  comment: >
+    :wave: @{issue-author}, in order to help you further we'll need to see logs.
+    You'll need to enable trace logging and replicate the problem that you encountered.
+    Guidance on how to enable trace logging can be found in
+    our [troubleshooting guide](https://wiki.servarr.com/prowlarr/troubleshooting#logging-and-log-files).

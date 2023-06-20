@@ -24,11 +24,11 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                pageableRequests.Add(GetRequest(searchCriteria.FullImdbId));
+                pageableRequests.Add(GetRequest(searchCriteria.FullImdbId, searchCriteria));
             }
             else
             {
-                pageableRequests.Add(GetRequest(string.Format("{0}", searchCriteria.SearchTerm)));
+                pageableRequests.Add(GetRequest($"{searchCriteria.SearchTerm}", searchCriteria));
             }
 
             return pageableRequests;
@@ -37,18 +37,25 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        private IEnumerable<IndexerRequest> GetRequest(string searchParameters)
+        private IEnumerable<IndexerRequest> GetRequest(string searchParameters, SearchCriteriaBase searchCriteria)
         {
             var queryParams = new NameValueCollection
             {
                 { "action", "advanced" },
                 { "json", "noredirect" },
+                { "grouping", "0" },
                 { "searchstr", searchParameters }
             };
 
+            if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
+            {
+                var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
+                queryParams.Set("page", page.ToString());
+            }
+
             if (Settings.FreeleechOnly)
             {
-                queryParams.Add("freetorrent", "1");
+                queryParams.Set("freetorrent", "1");
             }
 
             var request =
@@ -66,7 +73,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                     request.HttpRequest.Cookies[cookie.Key] = cookie.Value;
                 }
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
 
             yield return request;
@@ -91,7 +98,7 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest(string.Format("{0}", searchCriteria.SearchTerm)));
+            pageableRequests.Add(GetRequest($"{searchCriteria.SearchTerm}", searchCriteria));
 
             return pageableRequests;
         }

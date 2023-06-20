@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
@@ -32,8 +31,8 @@ namespace NzbDrone.Core.IndexerProxies
             var failures = new List<ValidationFailure>();
 
             var request = PreRequest(_cloudRequestBuilder.Create()
-                                              .Resource("/ping")
-                                              .Build());
+                .Resource("/ping")
+                .Build());
 
             try
             {

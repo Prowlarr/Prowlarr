@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace NzbDrone.Core.Parser.RomanNumerals
@@ -52,9 +52,7 @@ namespace NzbDrone.Core.Parser.RomanNumerals
         /// <param name="romanNumeral">The roman numeral.</param>
         public RomanNumeral(string romanNumeral)
         {
-            int value;
-
-            if (TryParse(romanNumeral, out value))
+            if (TryParse(romanNumeral, out var value))
             {
                 _value = value;
             }
@@ -97,9 +95,9 @@ namespace NzbDrone.Core.Parser.RomanNumerals
             }
 
             text = text.ToUpper();
-            int len = 0;
+            var len = 0;
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 if (text.StartsWith(Thousands[i]))
                 {
@@ -115,7 +113,7 @@ namespace NzbDrone.Core.Parser.RomanNumerals
                 len = 0;
             }
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
                 if (text.StartsWith(Hundreds[i]))
                 {
@@ -131,7 +129,7 @@ namespace NzbDrone.Core.Parser.RomanNumerals
                 len = 0;
             }
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
                 if (text.StartsWith(Tens[i]))
                 {
@@ -147,7 +145,7 @@ namespace NzbDrone.Core.Parser.RomanNumerals
                 len = 0;
             }
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
                 if (text.StartsWith(Units[i]))
                 {
@@ -209,7 +207,7 @@ namespace NzbDrone.Core.Parser.RomanNumerals
         /// Returns the Roman numeral that was passed in as either an Arabic numeral
         /// or a Roman numeral.
         /// </summary>
-        /// <returns>A <see cref="System.string" /> representing a Roman Numeral</returns>
+        /// <returns>A <see cref="string" /> representing a Roman Numeral</returns>
         public string ToRomanNumeral()
         {
             return ToString();
@@ -312,10 +310,9 @@ namespace NzbDrone.Core.Parser.RomanNumerals
             }
             else if (obj is string)
             {
-                int value;
                 var numeral = obj as string;
 
-                if (TryParse(numeral, out value))
+                if (TryParse(numeral, out var value))
                 {
                     return _value.CompareTo(value);
                 }
@@ -349,7 +346,7 @@ namespace NzbDrone.Core.Parser.RomanNumerals
         /// during creation.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.string" /> that represents a Roman Numeral.
+        /// A <see cref="string" /> that represents a Roman Numeral.
         /// </returns>
         public override string ToString()
         {

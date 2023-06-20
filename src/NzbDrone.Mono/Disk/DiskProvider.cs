@@ -40,7 +40,7 @@ namespace NzbDrone.Mono.Disk
 
         public override long? GetAvailableSpace(string path)
         {
-            Ensure.That(path, () => path).IsValidPath();
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
             var mount = GetMount(path);
 
@@ -168,14 +168,40 @@ namespace NzbDrone.Mono.Disk
 
         protected override List<IMount> GetAllMounts()
         {
-            return _procMountProvider.GetMounts()
-                                     .Concat(GetDriveInfoMounts()
-                                                 .Select(d => new DriveInfoMount(d, FindDriveType.Find(d.DriveFormat)))
-                                                 .Where(d => d.DriveType == DriveType.Fixed ||
-                                                             d.DriveType == DriveType.Network ||
-                                                             d.DriveType == DriveType.Removable))
-                                     .DistinctBy(v => v.RootDirectory)
-                                     .ToList();
+            var mounts = new List<IMount>();
+
+            try
+            {
+                mounts.AddRange(_procMountProvider.GetMounts());
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(e, $"Unable to get mounts: {e.Message}");
+            }
+
+            try
+            {
+                mounts.AddRange(GetDriveInfoMounts()
+                    .Select(d =>
+                    {
+                        try
+                        {
+                            return new DriveInfoMount(d, FindDriveType.Find(d.DriveFormat));
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception($"Failed to fetch drive info for mount point: {d.Name}", ex);
+                        }
+                    })
+                    .Where(d => d.DriveType is DriveType.Fixed or DriveType.Network or DriveType.Removable));
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(e, $"Unable to get drive mounts: {e.Message}");
+            }
+
+            return mounts.DistinctBy(v => v.RootDirectory)
+                         .ToList();
         }
 
         protected override bool IsSpecialMount(IMount mount)
@@ -199,7 +225,7 @@ namespace NzbDrone.Mono.Disk
 
         public override long? GetTotalSize(string path)
         {
-            Ensure.That(path, () => path).IsValidPath();
+            Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
             var mount = GetMount(path);
 
@@ -247,9 +273,7 @@ namespace NzbDrone.Mono.Disk
                     newFile.CreateSymbolicLinkTo(fullPath);
                 }
             }
-            else if (((PlatformInfo.Platform == PlatformType.Mono && PlatformInfo.GetVersion() >= new Version(6, 0)) ||
-                      PlatformInfo.Platform == PlatformType.NetCore) &&
-                     (!FileExists(destination) || overwrite))
+            else if (!FileExists(destination) || overwrite)
             {
                 TransferFilePatched(source, destination, overwrite, false);
             }
@@ -294,14 +318,9 @@ namespace NzbDrone.Mono.Disk
                     throw;
                 }
             }
-            else if ((PlatformInfo.Platform == PlatformType.Mono && PlatformInfo.GetVersion() >= new Version(6, 0)) ||
-                     PlatformInfo.Platform == PlatformType.NetCore)
-            {
-                TransferFilePatched(source, destination, false, true);
-            }
             else
             {
-                base.MoveFileInternal(source, destination);
+                TransferFilePatched(source, destination, false, true);
             }
         }
 
@@ -313,7 +332,7 @@ namespace NzbDrone.Mono.Disk
             // Catch the exception and attempt to handle these edgecases
 
             // Mono 6.x till 6.10 doesn't properly try use rename first.
-            if (move && (PlatformInfo.Platform == PlatformType.NetCore))
+            if (move)
             {
                 if (Syscall.lstat(source, out var sourcestat) == 0 &&
                     Syscall.lstat(destination, out var deststat) != 0 &&
@@ -341,7 +360,7 @@ namespace NzbDrone.Mono.Disk
                 var dstInfo = new FileInfo(destination);
                 var exists = dstInfo.Exists && srcInfo.Exists;
 
-                if (PlatformInfo.Platform == PlatformType.NetCore && exists && dstInfo.Length == srcInfo.Length)
+                if (exists && dstInfo.Length == srcInfo.Length)
                 {
                     // mono 6.0, mono 6.4 and netcore 3.1 bug: full length file since utime and chmod happens at the end
                     _logger.Debug("{3} failed to {2} file likely due to known {3} bug, attempting to {2} directly. '{0}' -> '{1}'", source, destination, move ? "move" : "copy", PlatformInfo.PlatformName);
@@ -455,9 +474,7 @@ namespace NzbDrone.Mono.Disk
                 return UNCHANGED_ID;
             }
 
-            uint userId;
-
-            if (uint.TryParse(user, out userId))
+            if (uint.TryParse(user, out var userId))
             {
                 return userId;
             }
@@ -479,9 +496,7 @@ namespace NzbDrone.Mono.Disk
                 return UNCHANGED_ID;
             }
 
-            uint groupId;
-
-            if (uint.TryParse(group, out groupId))
+            if (uint.TryParse(group, out var groupId))
             {
                 return groupId;
             }

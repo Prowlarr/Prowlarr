@@ -29,7 +29,6 @@ public class NorBits : TorrentIndexerBase<NorBitsSettings>
     public override string Description => "NorBits is a Norwegian Private site for MOVIES / TV / GENERAL";
     public override string Language => "nb-NO";
     public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
-    public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -95,7 +94,7 @@ public class NorBits : TorrentIndexerBase<NorBitsSettings>
         }
 
         var cookies = loginResponse.GetCookies();
-        UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+        UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
         _logger.Debug("Authentication succeeded.");
     }
@@ -313,7 +312,7 @@ public class NorBitsParser : IParseIndexerResponse
             }
 
             var imdbLink = row.QuerySelector("a[href*=\"imdb.com/title/tt\"]")?.GetAttribute("href");
-            release.ImdbId = ParseUtil.GetImdbID(imdbLink) ?? 0;
+            release.ImdbId = ParseUtil.GetImdbId(imdbLink) ?? 0;
 
             if (row.QuerySelector("img[title=\"100% freeleech\"]") != null)
             {

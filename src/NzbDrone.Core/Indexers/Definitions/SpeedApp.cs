@@ -1,15 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
     public class SpeedApp : SpeedAppBase
     {
         public override string Name => "SpeedApp.io";
-        public override string[] IndexerUrls => new string[] { "https://speedapp.io/" };
-        public override string[] LegacyUrls => new string[] { "https://speedapp.io" };
+        public override string[] IndexerUrls => new[] { "https://speedapp.io/" };
+        public override string[] LegacyUrls => new[] { "https://speedapp.io" };
         public override string Description => "SpeedApp is a ROMANIAN Private Torrent Tracker for MOVIES / TV / GENERAL";
         public override string Language => "ro-RO";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
@@ -17,6 +20,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         public SpeedApp(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, IIndexerRepository indexerRepository)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger, indexerRepository)
         {
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            return FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
         }
 
         protected override IndexerCapabilities SetCapabilities()
@@ -38,7 +48,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 BookSearchParams = new List<BookSearchParam>
                 {
                     BookSearchParam.Q,
-                },
+                }
             };
 
             caps.Categories.AddCategoryMapping(38, NewznabStandardCategory.Movies, "Movie Packs");

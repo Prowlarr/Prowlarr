@@ -12,10 +12,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
     public abstract class AvistazBase : TorrentIndexerBase<AvistazSettings>
     {
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
+        public override bool SupportsPagination => true;
         public override int PageSize => 50;
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
         public override IndexerCapabilities Capabilities => SetCapabilities();
         protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
         private IIndexerRepository _indexerRepository;
@@ -36,9 +37,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return new AvistazRequestGenerator
             {
                 Settings = Settings,
+                Capabilities = Capabilities,
+                PageSize = PageSize,
                 HttpClient = _httpClient,
-                Logger = _logger,
-                Capabilities = Capabilities
+                Logger = _logger
             };
         }
 
@@ -64,14 +66,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             _logger.Debug("Avistaz authentication succeeded.");
         }
 
-        protected override bool CheckIfLoginNeeded(HttpResponse response)
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.PreconditionFailed)
-            {
-                return true;
-            }
-
-            return false;
+            return httpResponse.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.PreconditionFailed;
         }
 
         protected override void ModifyRequest(IndexerRequest request)
@@ -95,38 +92,33 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     var jsonResponse = new HttpResponse<AvistazErrorResponse>(ex.Response);
                     return new ValidationFailure(string.Empty, jsonResponse.Resource?.Message ?? "Unauthorized request to indexer");
                 }
-                else
-                {
-                    _logger.Warn(ex, "Unable to connect to indexer");
 
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
-                }
+                _logger.Warn(ex, "Unable to connect to indexer");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.Warn(ex, "Unable to connect to indexer");
 
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log for more details");
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details");
             }
 
-            return null;
+            return await base.TestConnection();
         }
 
         private async Task<string> GetToken()
         {
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
-                LogResponseContent = true
+                LogResponseContent = true,
+                Method = HttpMethod.Post
             };
-
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("pid", Settings.Pid.Trim())
-                .SetHeader("Content-Type", "application/json")
                 .Accept(HttpAccept.Json)
                 .Build();
 

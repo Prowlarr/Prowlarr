@@ -48,8 +48,7 @@ namespace NzbDrone.Core.Applications
 
             foreach (var application in applications)
             {
-                ApplicationStatus blockedApplicationStatus;
-                if (blockedApplications.TryGetValue(application.Definition.Id, out blockedApplicationStatus))
+                if (blockedApplications.TryGetValue(application.Definition.Id, out var blockedApplicationStatus))
                 {
                     _logger.Debug("Temporarily ignoring application {0} till {1} due to recent failures.", application.Definition.Name, blockedApplicationStatus.DisabledTill.Value.ToLocalTime());
                     continue;

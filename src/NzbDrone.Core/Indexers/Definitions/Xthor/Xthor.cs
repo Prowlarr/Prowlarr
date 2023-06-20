@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NLog;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
@@ -16,7 +15,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
         public override string Language => "fr-FR";
         public override string Description => "Xthor is a general Private torrent site";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1252");
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(2.5);

@@ -28,6 +28,12 @@ namespace NzbDrone.Core.Indexers.Torznab
 
         protected override bool PreProcess(IndexerResponse indexerResponse)
         {
+            if (indexerResponse.HttpResponse.HasHttpError &&
+                (indexerResponse.HttpResponse.Headers.ContentType == null || !indexerResponse.HttpResponse.Headers.ContentType.Contains("xml")))
+            {
+                base.PreProcess(indexerResponse);
+            }
+
             var xdoc = LoadXmlDocument(indexerResponse);
             var error = xdoc.Descendants("error").FirstOrDefault();
 
@@ -119,12 +125,32 @@ namespace NzbDrone.Core.Indexers.Torznab
             return ParseUrl(item.TryGetValue("comments"));
         }
 
+        protected override List<string> GetLanguages(XElement item)
+        {
+            var languages = TryGetMultipleTorznabAttributes(item, "language");
+            var results = new List<string>();
+
+            // Try to find <language> elements for some indexers that suck at following the rules.
+            if (languages.Count == 0)
+            {
+                languages = item.Elements("language").Select(e => e.Value).ToList();
+            }
+
+            foreach (var language in languages)
+            {
+                if (language.IsNotNullOrWhiteSpace())
+                {
+                    results.Add(language);
+                }
+            }
+
+            return results;
+        }
+
         protected override long GetSize(XElement item)
         {
-            long size;
-
             var sizeString = TryGetTorznabAttribute(item, "size");
-            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out size))
+            if (!sizeString.IsNullOrWhiteSpace() && long.TryParse(sizeString, out var size))
             {
                 return size;
             }
@@ -270,9 +296,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             var attr = TryGetTorznabAttribute(item, key, defaultValue.ToString());
 
-            float result = 0;
-
-            if (float.TryParse(attr, out result))
+            if (float.TryParse(attr, out var result))
             {
                 return result;
             }
@@ -302,9 +326,8 @@ namespace NzbDrone.Core.Indexers.Torznab
             foreach (var attr in attributes)
             {
                 var idString = TryGetTorznabAttribute(item, attr);
-                int idInt;
 
-                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out idInt))
+                if (!idString.IsNullOrWhiteSpace() && int.TryParse(idString, out var idInt))
                 {
                     return idInt;
                 }

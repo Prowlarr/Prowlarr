@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
@@ -5,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = (env) => {
   const uiFolder = 'UI';
@@ -37,13 +39,18 @@ module.exports = (env) => {
     },
 
     resolve: {
+      extensions: [
+        '.ts',
+        '.tsx',
+        '.js'
+      ],
       modules: [
         srcFolder,
         path.join(srcFolder, 'Shims'),
         'node_modules'
       ],
       alias: {
-        jquery: 'jquery/src/jquery'
+        jquery: 'jquery/dist/jquery.min'
       },
       fallback: {
         buffer: false,
@@ -129,6 +136,8 @@ module.exports = (env) => {
         }
       }),
 
+      new ForkTsCheckerWebpackPlugin(),
+
       new LiveReloadPlugin()
     ],
 
@@ -142,8 +151,8 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
-          exclude: /[\\/]node_modules[\\/](?!(@sentry\/browser|@sentry\/integrations|chart.js|filesize|normalize.css)[\\/])/,
+          test: [/\.jsx?$/, /\.tsx?$/],
+          exclude: /[\\/]node_modules[\\/](?!(@sentry|chart\.js|filesize)[\\/])/,
           use: [
             {
               loader: 'babel-loader',
@@ -173,6 +182,7 @@ module.exports = (env) => {
           exclude: /(node_modules|globals.css)/,
           use: [
             { loader: MiniCssExtractPlugin.loader },
+            { loader: 'css-modules-typescript-loader' },
             {
               loader: 'css-loader',
               options: {
@@ -241,18 +251,19 @@ module.exports = (env) => {
     config.resolve.alias['react-dom$'] = 'react-dom/profiling';
     config.resolve.alias['scheduler/tracing'] = 'scheduler/tracing-profiling';
 
-    config.optimization.minimizer = [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true, // Must be set to true if using source-maps in production
-        terserOptions: {
-          mangle: false,
-          keep_classnames: true,
-          keep_fnames: true
-        }
-      })
-    ];
+    config.optimization = {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            sourceMap: true, // Must be set to true if using source-maps in production
+            mangle: false,
+            keep_classnames: true,
+            keep_fnames: true
+          }
+        })
+      ]
+    };
   }
 
   return config;

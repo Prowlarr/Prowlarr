@@ -3,11 +3,11 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp.Xml" Version="0.17.0" />
+    <PackageReference Include="AngleSharp.Xml" Version="1.0.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="MailKit" Version="3.4.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.13" />
+    <PackageReference Include="MailKit" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
     <PackageReference Include="Npgsql" Version="5.0.11" />
@@ -15,15 +15,14 @@
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
     <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />
-    <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="NLog" Version="5.1.0" />
-    <PackageReference Include="TinyTwitter" Version="1.1.2" />
+    <PackageReference Include="FluentValidation" Version="9.5.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.0" />
     <PackageReference Include="System.Data.SQLite.Core.Servarr" Version="1.0.115.5-18" />
     <PackageReference Include="System.Text.Json" Version="6.0.7" />
     <PackageReference Include="MonoTorrent" Version="2.0.7" />
-    <PackageReference Include="YamlDotNet" Version="12.3.1" />
-    <PackageReference Include="AngleSharp" Version="0.17.1" />
+    <PackageReference Include="YamlDotNet" Version="13.0.0" />
+    <PackageReference Include="AngleSharp" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Prowlarr.Common.csproj" />

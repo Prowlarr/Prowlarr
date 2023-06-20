@@ -4,21 +4,23 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Html;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using AngleSharp.Text;
 using Newtonsoft.Json.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.Indexers.Definitions.Cardigann.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.ThingiProvider;
 
-namespace NzbDrone.Core.Indexers.Cardigann
+namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 {
     public class CardigannRequestGenerator : CardigannBase, IIndexerRequestGenerator
     {
@@ -29,11 +31,15 @@ namespace NzbDrone.Core.Indexers.Cardigann
         protected IHtmlDocument landingResultDocument;
         protected override string SiteLink => ResolveSiteLink();
 
+        private readonly TimeSpan _rateLimit;
+
         public CardigannRequestGenerator(IConfigService configService,
                                          CardigannDefinition definition,
-                                         Logger logger)
+                                         Logger logger,
+                                         TimeSpan rateLimit)
         : base(configService, definition, logger)
         {
+            _rateLimit = rateLimit;
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -56,7 +62,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -76,7 +82,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.Track"] = searchCriteria.Track;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -104,7 +110,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -123,7 +129,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Publisher"] = searchCriteria.Publisher;
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -136,7 +142,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
-            pageableRequests.Add(GetRequest(variables));
+            pageableRequests.Add(GetRequest(variables, searchCriteria));
 
             return pageableRequests;
         }
@@ -190,14 +196,20 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var login = _definition.Login;
 
+            var variables = GetBaseTemplateVariables();
+            var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
+
             if (login.Method == "post")
             {
                 var pairs = new Dictionary<string, string>();
 
-                foreach (var input in login.Inputs)
+                if (login.Inputs != null && login.Inputs.Any())
                 {
-                    var value = ApplyGoTemplateText(input.Value);
-                    pairs.Add(input.Key, value);
+                    foreach (var input in login.Inputs)
+                    {
+                        var value = ApplyGoTemplateText(input.Value);
+                        pairs.Add(input.Key, value);
+                    }
                 }
 
                 var loginUrl = ResolvePath(login.Path).ToString();
@@ -218,15 +230,26 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     requestBuilder.AddFormParameter(pair.Key, pair.Value);
                 }
 
-                requestBuilder.Headers.Add("Referer", SiteLink);
+                Cookies = null;
+                if (login.Cookies != null)
+                {
+                    Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
+                }
 
-                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                var request = requestBuilder
+                    .SetCookies(Cookies ?? new Dictionary<string, string>())
+                    .SetHeaders(headers ?? new Dictionary<string, string>())
+                    .SetHeader("Referer", SiteLink)
+                    .WithRateLimit(_rateLimit.TotalSeconds)
+                    .Build();
+
+                var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                 Cookies = response.GetCookies();
 
                 CheckForError(response, login.Error);
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else if (login.Method == "form")
             {
@@ -235,13 +258,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var queryCollection = new NameValueCollection();
                 var pairs = new Dictionary<string, string>();
 
-                var formSelector = login.Form;
-                if (formSelector == null)
-                {
-                    formSelector = "form";
-                }
+                var formSelector = login.Form ?? "form";
 
-                // landingResultDocument might not be initiated if the login is caused by a relogin during a query
+                // landingResultDocument might not be initiated if the login is caused by a re-login during a query
                 if (landingResultDocument == null)
                 {
                     await GetConfigurationForSetup(true);
@@ -268,36 +287,43 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 foreach (var input in inputs)
                 {
                     var name = input.GetAttribute("name");
-                    if (name == null)
+
+                    if (name == null || input.IsDisabled())
                     {
                         continue;
                     }
 
-                    var value = input.GetAttribute("value");
-                    if (value == null)
+                    if (input is IHtmlInputElement element &&
+                        element.Type.IsOneOf(InputTypeNames.Checkbox, InputTypeNames.Radio) &&
+                        !input.IsChecked())
                     {
-                        value = "";
+                        continue;
                     }
+
+                    var value = input.GetAttribute("value") ?? "";
 
                     pairs[name] = value;
                 }
 
-                foreach (var input in login.Inputs)
+                if (login.Inputs != null && login.Inputs.Any())
                 {
-                    var value = ApplyGoTemplateText(input.Value);
-                    var inputKey = input.Key;
-                    if (login.Selectors)
+                    foreach (var input in login.Inputs)
                     {
-                        var inputElement = landingResultDocument.QuerySelector(input.Key);
-                        if (inputElement == null)
+                        var value = ApplyGoTemplateText(input.Value);
+                        var inputKey = input.Key;
+                        if (login.Selectors)
                         {
-                            throw new CardigannConfigException(_definition, string.Format("Login failed: No input found using selector {0}", input.Key));
+                            var inputElement = landingResultDocument.QuerySelector(input.Key);
+                            if (inputElement == null)
+                            {
+                                throw new CardigannConfigException(_definition, string.Format("Login failed: No input found using selector {0}", input.Key));
+                            }
+
+                            inputKey = inputElement.GetAttribute("name");
                         }
 
-                        inputKey = inputElement.GetAttribute("name");
+                        pairs[inputKey] = value;
                     }
-
-                    pairs[inputKey] = value;
                 }
 
                 // selector inputs
@@ -356,11 +382,14 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         Encoding = _encoding
                     };
 
-                    requestBuilder.SetCookies(Cookies);
+                    var request = requestBuilder
+                        .SetCookies(Cookies)
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
+                        .SetHeader("Referer", loginUrl)
+                        .WithRateLimit(_rateLimit.TotalSeconds)
+                        .Build();
 
-                    requestBuilder.Headers.Add("Referer", loginUrl);
-
-                    var simpleCaptchaResult = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                    var simpleCaptchaResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                     var simpleCaptchaJSON = JObject.Parse(simpleCaptchaResult.Content);
                     var captchaSelection = simpleCaptchaJSON["images"][0]["hash"].ToString();
@@ -398,7 +427,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 var enctype = form.GetAttribute("enctype");
                 if (enctype == "multipart/form-data")
                 {
-                    var headers = new Dictionary<string, string>();
                     var boundary = "---------------------------" + DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString().Replace(".", "");
                     var bodyParts = new List<string>();
 
@@ -424,21 +452,18 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         Encoding = _encoding
                     };
 
-                    requestBuilder.Headers.Add("Referer", SiteLink);
-
-                    requestBuilder.SetCookies(Cookies);
-
                     foreach (var pair in pairs)
                     {
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    foreach (var header in headers)
-                    {
-                        requestBuilder.SetHeader(header.Key, header.Value);
-                    }
+                    var request = requestBuilder
+                        .SetCookies(Cookies)
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
+                        .SetHeader("Referer", SiteLink)
+                        .WithRateLimit(_rateLimit.TotalSeconds)
+                        .Build();
 
-                    var request = requestBuilder.Build();
                     request.SetContent(body);
 
                     loginResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
@@ -454,34 +479,42 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         Encoding = _encoding
                     };
 
-                    requestBuilder.SetCookies(Cookies);
-                    requestBuilder.Headers.Add("Referer", loginUrl);
-
                     foreach (var pair in pairs)
                     {
                         requestBuilder.AddFormParameter(pair.Key, pair.Value);
                     }
 
-                    loginResult = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                    var request = requestBuilder
+                        .SetCookies(Cookies)
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
+                        .SetHeader("Referer", loginUrl)
+                        .WithRateLimit(_rateLimit.TotalSeconds)
+                        .Build();
+
+                    loginResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
                 }
 
                 Cookies = loginResult.GetCookies();
                 CheckForError(loginResult, login.Error);
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else if (login.Method == "cookie")
             {
                 CookiesUpdater(null, null);
                 Settings.ExtraFieldData.TryGetValue("cookie", out var cookies);
-                CookiesUpdater(CookieUtil.CookieHeaderToDictionary((string)cookies), DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(CookieUtil.CookieHeaderToDictionary((string)cookies), DateTime.Now.AddDays(30));
             }
             else if (login.Method == "get")
             {
                 var queryCollection = new NameValueCollection();
-                foreach (var input in login.Inputs)
+
+                if (login.Inputs != null && login.Inputs.Any())
                 {
-                    var value = ApplyGoTemplateText(input.Value);
-                    queryCollection.Add(input.Key, value);
+                    foreach (var input in login.Inputs)
+                    {
+                        var value = ApplyGoTemplateText(input.Value);
+                        queryCollection.Add(input.Key, value);
+                    }
                 }
 
                 var loginUrl = ResolvePath(login.Path + "?" + queryCollection.GetQueryString()).ToString();
@@ -496,15 +529,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     Encoding = _encoding
                 };
 
-                requestBuilder.Headers.Add("Referer", SiteLink);
+                var request = requestBuilder
+                    .SetHeaders(headers ?? new Dictionary<string, string>())
+                    .SetHeader("Referer", SiteLink)
+                    .WithRateLimit(_rateLimit.TotalSeconds)
+                    .Build();
 
-                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                 Cookies = response.GetCookies();
 
                 CheckForError(response, login.Error);
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else if (login.Method == "oneurl")
             {
@@ -521,19 +558,23 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     Encoding = _encoding
                 };
 
-                requestBuilder.Headers.Add("Referer", SiteLink);
+                var request = requestBuilder
+                    .SetHeaders(headers ?? new Dictionary<string, string>())
+                    .SetHeader("Referer", SiteLink)
+                    .WithRateLimit(_rateLimit.TotalSeconds)
+                    .Build();
 
-                var response = await HttpClient.ExecuteProxiedAsync(requestBuilder.Build(), Definition);
+                var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
                 Cookies = response.GetCookies();
 
                 CheckForError(response, login.Error);
 
-                CookiesUpdater(Cookies, DateTime.Now + TimeSpan.FromDays(30));
+                CookiesUpdater(Cookies, DateTime.Now.AddDays(30));
             }
             else
             {
-                throw new NotImplementedException("Login method " + login.Method + " not implemented");
+                throw new NotImplementedException($"Login method {login.Method} not implemented");
             }
         }
 
@@ -569,7 +610,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return true;
         }
 
-        public async Task<Captcha> GetConfigurationForSetup(bool automaticlogin)
+        public async Task<Captcha> GetConfigurationForSetup(bool automaticLogin)
         {
             var login = _definition.Login;
 
@@ -578,14 +619,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 return null;
             }
 
+            var variables = GetBaseTemplateVariables();
+            var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
+
             var loginUrl = ResolvePath(login.Path);
-
-            Cookies = null;
-
-            if (login.Cookies != null)
-            {
-                Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
-            }
 
             var requestBuilder = new HttpRequestBuilder(loginUrl.AbsoluteUri)
             {
@@ -594,24 +631,28 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 Encoding = _encoding
             };
 
-            requestBuilder.Headers.Add("Referer", SiteLink);
-
-            if (Cookies != null)
+            if (_definition.Followredirect)
             {
-                requestBuilder.SetCookies(Cookies);
+                requestBuilder.AllowAutoRedirect = true;
             }
 
-            var request = requestBuilder.Build();
+            Cookies = null;
+            if (login.Cookies != null)
+            {
+                Cookies = CookieUtil.CookieHeaderToDictionary(string.Join("; ", login.Cookies));
+            }
+
+            var request = requestBuilder
+                .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetHeaders(headers ?? new Dictionary<string, string>())
+                .SetHeader("Referer", SiteLink)
+                .WithRateLimit(_rateLimit.TotalSeconds)
+                .Build();
 
             landingResult = await HttpClient.ExecuteProxiedAsync(request, Definition);
 
             Cookies = landingResult.GetCookies();
 
-            // Some sites have a temporary redirect before the login page, we need to process it.
-            //if (_definition.Followredirect)
-            //{
-            //    await FollowIfRedirect(landingResult, loginUrl.AbsoluteUri, overrideCookies: landingResult.Cookies, accumulateCookies: true);
-            //}
             var htmlParser = new HtmlParser();
             landingResultDocument = htmlParser.ParseDocument(landingResult.Content);
 
@@ -622,7 +663,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 captcha = await GetCaptcha(login);
             }
 
-            if (captcha != null && automaticlogin)
+            if (captcha != null && automaticLogin)
             {
                 _logger.Error("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id);
             }
@@ -634,6 +675,9 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var captcha = login.Captcha;
 
+            var variables = GetBaseTemplateVariables();
+            var headers = ParseCustomHeaders(_definition.Login?.Headers ?? _definition.Search?.Headers, variables);
+
             if (captcha.Type == "image")
             {
                 var captchaElement = landingResultDocument.QuerySelector(captcha.Selector);
@@ -643,12 +687,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     var captchaUrl = ResolvePath(captchaElement.GetAttribute("src"), loginUrl);
 
                     var request = new HttpRequestBuilder(captchaUrl.ToString())
-                        .SetCookies(landingResult.GetCookies())
+                        .SetCookies(Cookies ?? new Dictionary<string, string>())
+                        .SetHeaders(headers ?? new Dictionary<string, string>())
                         .SetHeader("Referer", loginUrl.AbsoluteUri)
                         .SetEncoding(_encoding)
+                        .WithRateLimit(_rateLimit.TotalSeconds)
                         .Build();
 
                     var response = await HttpClient.ExecuteProxiedAsync(request, Definition);
+
+                    if (response.GetCookies().Any())
+                    {
+                        Cookies = response.GetCookies();
+                    }
 
                     return new Captcha
                     {
@@ -656,10 +707,8 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         ImageData = response.ResponseData
                     };
                 }
-                else
-                {
-                    _logger.Debug("CardigannIndexer ({0}): No captcha image found", _definition.Id);
-                }
+
+                _logger.Debug("CardigannIndexer ({0}): No captcha image found", _definition.Id);
             }
             else
             {
@@ -689,8 +738,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             var requestLinkStr = ResolvePath(ApplyGoTemplateText(request.Path, variables)).ToString();
 
-            _logger.Debug("CardigannIndexer ({0}): handleRequest() requestLinkStr= {1}", _definition.Id, requestLinkStr);
-
             Dictionary<string, string> pairs = null;
             var queryCollection = new NameValueCollection();
 
@@ -701,16 +748,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 pairs = new Dictionary<string, string>();
             }
 
-            foreach (var input in request.Inputs)
+            if (request.Inputs != null)
             {
-                var value = ApplyGoTemplateText(input.Value, variables);
-                if (method == HttpMethod.Get)
+                foreach (var input in request.Inputs)
                 {
-                    queryCollection.Add(input.Key, value);
-                }
-                else if (method == HttpMethod.Post)
-                {
-                    pairs.Add(input.Key, value);
+                    var value = ApplyGoTemplateText(input.Value, variables);
+                    if (method == HttpMethod.Get)
+                    {
+                        queryCollection.Add(input.Key, value);
+                    }
+                    else if (method == HttpMethod.Post)
+                    {
+                        pairs.Add(input.Key, value);
+                    }
                 }
             }
 
@@ -724,25 +774,36 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 requestLinkStr += queryCollection.GetQueryString(_encoding, separator: request.Queryseparator);
             }
 
-            var httpRequest = new HttpRequestBuilder(requestLinkStr)
-                .SetCookies(Cookies ?? new Dictionary<string, string>())
-                .SetEncoding(_encoding)
-                .SetHeader("Referer", referer);
-
-            httpRequest.Method = method;
+            var httpRequestBuilder = new HttpRequestBuilder(requestLinkStr)
+            {
+                Method = method,
+                Encoding = _encoding
+            };
 
             // Add form data for POST requests
             if (method == HttpMethod.Post)
             {
                 foreach (var param in pairs)
                 {
-                    httpRequest.AddFormParameter(param.Key, param.Value);
+                    httpRequestBuilder.AddFormParameter(param.Key, param.Value);
                 }
             }
 
-            var response = await HttpClient.ExecuteProxiedAsync(httpRequest.Build(), Definition);
+            var headers = ParseCustomHeaders(_definition.Download?.Headers ?? _definition.Search?.Headers, variables);
+
+            var httpRequest = httpRequestBuilder
+                .SetCookies(Cookies ?? new Dictionary<string, string>())
+                .SetHeaders(headers ?? new Dictionary<string, string>())
+                .SetHeader("Referer", referer)
+                .WithRateLimit(_rateLimit.TotalSeconds)
+                .Build();
+
+            _logger.Debug("CardigannIndexer ({0}): handleRequest() httpRequest={1}", _definition.Id, httpRequest);
+
+            var response = await HttpClient.ExecuteProxiedAsync(httpRequest, Definition);
 
             _logger.Debug("CardigannIndexer ({0}): handleRequest() remote server returned {1}", _definition.Id, response.StatusCode);
+
             return response;
         }
 
@@ -750,11 +811,10 @@ namespace NzbDrone.Core.Indexers.Cardigann
         {
             Cookies = GetCookies();
             var method = HttpMethod.Get;
-            var headers = new Dictionary<string, string>();
 
             var variables = GetBaseTemplateVariables();
             AddTemplateVariablesFromUri(variables, link, ".DownloadUri");
-            headers = ParseCustomHeaders(_definition.Search?.Headers, variables);
+            var headers = ParseCustomHeaders(_definition.Download?.Headers ?? _definition.Search?.Headers, variables);
 
             if (_definition.Download != null)
             {
@@ -766,6 +826,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                     .SetCookies(Cookies ?? new Dictionary<string, string>())
                     .SetHeaders(headers ?? new Dictionary<string, string>())
                     .SetEncoding(_encoding)
+                    .WithRateLimit(_rateLimit.TotalSeconds)
                     .Build();
 
                 request.AllowAutoRedirect = true;
@@ -791,7 +852,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 {
                     try
                     {
-                        if (!download.Infohash.UseBeforeResponse || download.Before == null || response == null)
+                        if (!download.Infohash.Usebeforeresponse || download.Before == null || response == null)
                         {
                             response = await HttpClient.ExecuteProxiedAsync(request, Definition);
                         }
@@ -799,13 +860,13 @@ namespace NzbDrone.Core.Indexers.Cardigann
                         var hash = MatchSelector(response, download.Infohash.Hash, variables);
                         if (hash == null)
                         {
-                            throw new CardigannException($"InfoHash selectors didn't match");
+                            throw new CardigannException("InfoHash selectors didn't match hash.");
                         }
 
                         var title = MatchSelector(response, download.Infohash.Title, variables);
                         if (title == null)
                         {
-                            throw new CardigannException($"InfoHash selectors didn't match");
+                            throw new CardigannException("InfoHash selectors didn't match title.");
                         }
 
                         var magnet = MagnetLinkBuilder.BuildPublicMagnetLink(hash, title);
@@ -837,7 +898,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
 
                         try
                         {
-                            if (!selector.UseBeforeResponse || download.Before == null || response == null)
+                            if (!selector.Usebeforeresponse || download.Before == null || response == null)
                             {
                                 response = await HttpClient.ExecuteProxiedAsync(request, Definition);
                             }
@@ -856,6 +917,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                     .SetCookies(Cookies ?? new Dictionary<string, string>())
                                     .SetHeaders(headers ?? new Dictionary<string, string>())
                                     .SetEncoding(_encoding)
+                                    .WithRateLimit(_rateLimit.TotalSeconds)
                                     .Build();
 
                                 response = await HttpClient.ExecuteProxiedAsync(testLinkRequest, Definition);
@@ -875,6 +937,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                 .SetCookies(Cookies ?? new Dictionary<string, string>())
                                 .SetHeaders(headers ?? new Dictionary<string, string>())
                                 .SetEncoding(_encoding)
+                                .WithRateLimit(_rateLimit.TotalSeconds)
                                 .Build();
 
                             selectorDownloadRequest.Method = method;
@@ -895,6 +958,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 .SetCookies(Cookies ?? new Dictionary<string, string>())
                 .SetHeaders(headers ?? new Dictionary<string, string>())
                 .SetEncoding(_encoding)
+                .WithRateLimit(_rateLimit.TotalSeconds)
                 .Build();
 
             downloadRequest.Method = method;
@@ -907,8 +971,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             var selectorText = ApplyGoTemplateText(selector.Selector, variables);
             var parser = new HtmlParser();
 
-            var results = response.Content;
-            var resultDocument = parser.ParseDocument(results);
+            var resultDocument = parser.ParseDocument(response.Content);
 
             var element = resultDocument.QuerySelector(selectorText);
             if (element == null)
@@ -981,7 +1044,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
             return false;
         }
 
-        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables)
+        private IEnumerable<IndexerRequest> GetRequest(Dictionary<string, object> variables, SearchCriteriaBase searchCriteria)
         {
             var search = _definition.Search;
 
@@ -990,8 +1053,6 @@ namespace NzbDrone.Core.Indexers.Cardigann
             {
                 mappedCategories = _defaultCategories;
             }
-
-            variables[".Categories"] = mappedCategories;
 
             var keywordTokens = new List<string>();
             var keywordTokenKeys = new List<string> { "Q", "Series", "Movie", "Year" };
@@ -1012,24 +1073,30 @@ namespace NzbDrone.Core.Indexers.Cardigann
             variables[".Query.Keywords"] = string.Join(" ", keywordTokens);
             variables[".Keywords"] = ApplyFilters((string)variables[".Query.Keywords"], search.Keywordsfilters, variables);
 
-            // TODO: prepare queries first and then send them parallel
-            var searchPaths = search.Paths;
-            foreach (var searchPath in searchPaths)
+            var searchUrls = new List<string>();
+
+            foreach (var searchPath in search.Paths)
             {
+                variables[".Categories"] = mappedCategories;
+
                 // skip path if categories don't match
                 if (searchPath.Categories != null && mappedCategories.Count > 0)
                 {
-                    var invertMatch = searchPath.Categories[0] == "!";
                     var hasIntersect = mappedCategories.Intersect(searchPath.Categories).Any();
-                    if (invertMatch)
+
+                    if (searchPath.Categories[0] == "!")
                     {
                         hasIntersect = !hasIntersect;
                     }
 
                     if (!hasIntersect)
                     {
+                        variables[".Categories"] = mappedCategories.Except(searchPath.Categories).ToList();
+
                         continue;
                     }
+
+                    variables[".Categories"] = mappedCategories.Intersect(searchPath.Categories).ToList();
                 }
 
                 // build search URL
@@ -1062,7 +1129,7 @@ namespace NzbDrone.Core.Indexers.Cardigann
                                 var rawStr = ApplyGoTemplateText(input.Value, variables, WebUtility.UrlEncode);
                                 foreach (var part in rawStr.Split('&'))
                                 {
-                                    var parts = part.Split(new char[] { '=' }, 2);
+                                    var parts = part.Split(new[] { '=' }, 2);
                                     var key = parts[0];
                                     if (key.Length == 0)
                                     {
@@ -1080,32 +1147,45 @@ namespace NzbDrone.Core.Indexers.Cardigann
                             }
                             else
                             {
-                                queryCollection.Add(input.Key, ApplyGoTemplateText(input.Value, variables));
+                                var inputValue = ApplyGoTemplateText(input.Value, variables);
+
+                                if (inputValue.IsNotNullOrWhiteSpace() || search.AllowEmptyInputs)
+                                {
+                                    queryCollection.Add(input.Key, inputValue);
+                                }
                             }
                         }
                     }
                 }
 
-                if (method == HttpMethod.Get)
+                if (method == HttpMethod.Get && queryCollection.Count > 0)
                 {
-                    if (queryCollection.Count > 0)
-                    {
-                        searchUrl += "?" + queryCollection.GetQueryString(_encoding);
-                    }
+                    searchUrl += "?" + queryCollection.GetQueryString(_encoding);
                 }
 
-                _logger.Info($"Adding request: {searchUrl}");
+                if (method == HttpMethod.Get && searchUrls.Contains(searchUrl))
+                {
+                    _logger.Trace("Skip duplicated request {0}", searchUrl);
 
-                var requestbuilder = new HttpRequestBuilder(searchUrl);
+                    continue;
+                }
 
-                requestbuilder.Method = method;
+                searchUrls.Add(searchUrl);
+
+                _logger.Debug($"Adding request: {searchUrl}");
+
+                var requestBuilder = new HttpRequestBuilder(searchUrl)
+                {
+                    Method = method,
+                    Encoding = _encoding
+                };
 
                 // Add FormData for searchs that POST
                 if (method == HttpMethod.Post)
                 {
                     foreach (var param in queryCollection)
                     {
-                        requestbuilder.AddFormParameter(param.Key, param.Value);
+                        requestBuilder.AddFormParameter(param.Key, param.Value);
                     }
                 }
 
@@ -1113,14 +1193,19 @@ namespace NzbDrone.Core.Indexers.Cardigann
                 if (search.Headers != null)
                 {
                     var headers = ParseCustomHeaders(search.Headers, variables);
-                    requestbuilder.SetHeaders(headers ?? new Dictionary<string, string>());
+                    requestBuilder.SetHeaders(headers ?? new Dictionary<string, string>());
                 }
 
-                var request = new CardigannRequest(requestbuilder.SetEncoding(_encoding).Build(), variables, searchPath);
+                if (searchPath.Followredirect)
+                {
+                    requestBuilder.AllowAutoRedirect = true;
+                }
 
-                request.HttpRequest.AllowAutoRedirect = searchPath.Followredirect;
+                var request = requestBuilder
+                    .WithRateLimit(_rateLimit.TotalSeconds)
+                    .Build();
 
-                yield return request;
+                yield return new CardigannRequest(request, variables, searchPath);
             }
         }
     }

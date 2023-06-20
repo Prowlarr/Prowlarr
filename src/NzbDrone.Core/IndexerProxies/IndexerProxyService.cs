@@ -1,7 +1,4 @@
-using System;
 using NLog;
-using NzbDrone.Core.HealthCheck;
-using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.IndexerProxies
 {

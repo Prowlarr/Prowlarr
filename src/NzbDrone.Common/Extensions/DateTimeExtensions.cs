@@ -36,14 +36,14 @@ namespace NzbDrone.Common.Extensions
 
         public static bool IsValidDate(this string dateTime)
         {
-            DateTime.TryParse(dateTime, out DateTime result);
+            DateTime.TryParse(dateTime, out var result);
 
             return !result.Equals(default(DateTime));
         }
 
         public static bool IsFutureDate(this string dateTime)
         {
-            DateTime.TryParse(dateTime, out DateTime result);
+            DateTime.TryParse(dateTime, out var result);
 
             return !result.Equals(default(DateTime)) && result.After(DateTime.Now);
         }

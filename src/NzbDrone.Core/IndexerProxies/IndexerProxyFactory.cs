@@ -17,5 +17,10 @@ namespace NzbDrone.Core.IndexerProxies
             : base(providerRepository, providers, container, eventAggregator, logger)
         {
         }
+
+        protected override List<IndexerProxyDefinition> Active()
+        {
+            return All().Where(c => c.Enable && c.Settings.Validate().IsValid).ToList();
+        }
     }
 }

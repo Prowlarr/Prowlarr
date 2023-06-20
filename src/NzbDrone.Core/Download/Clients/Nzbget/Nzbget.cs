@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
 
         protected IEnumerable<NzbgetCategory> GetCategories(Dictionary<string, string> config)
         {
-            for (int i = 1; i < 100; i++)
+            for (var i = 1; i < 100; i++)
             {
                 var name = config.GetValueOrDefault("Category" + i + ".Name");
 
@@ -169,8 +169,7 @@ namespace NzbDrone.Core.Download.Clients.Nzbget
             var config = _proxy.GetConfig(Settings);
 
             var keepHistory = config.GetValueOrDefault("KeepHistory", "7");
-            int value;
-            if (!int.TryParse(keepHistory, NumberStyles.None, CultureInfo.InvariantCulture, out value) || value == 0)
+            if (!int.TryParse(keepHistory, NumberStyles.None, CultureInfo.InvariantCulture, out var value) || value == 0)
             {
                 return new NzbDroneValidationFailure(string.Empty, "NzbGet setting KeepHistory should be greater than 0")
                 {

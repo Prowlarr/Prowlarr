@@ -18,16 +18,24 @@ function createMatchingIndexersSelector() {
 
 function createMatchingIndexerProxiesSelector() {
   return createSelector(
-    (state, { notificationIds }) => notificationIds,
-    (state) => state.settings.notifications.items,
+    (state, { indexerProxyIds }) => indexerProxyIds,
+    (state) => state.settings.indexerProxies.items,
     findMatchingItems
   );
 }
 
 function createMatchingNotificationsSelector() {
   return createSelector(
-    (state, { indexerProxyIds }) => indexerProxyIds,
-    (state) => state.settings.indexerProxies.items,
+    (state, { notificationIds }) => notificationIds,
+    (state) => state.settings.notifications.items,
+    findMatchingItems
+  );
+}
+
+function createMatchingApplicationsSelector() {
+  return createSelector(
+    (state, { applicationIds }) => applicationIds,
+    (state) => state.settings.applications.items,
     findMatchingItems
   );
 }
@@ -37,11 +45,13 @@ function createMapStateToProps() {
     createMatchingIndexersSelector(),
     createMatchingIndexerProxiesSelector(),
     createMatchingNotificationsSelector(),
-    (indexers, indexerProxies, notifications) => {
+    createMatchingApplicationsSelector(),
+    (indexers, indexerProxies, notifications, applications) => {
       return {
         indexers,
         indexerProxies,
-        notifications
+        notifications,
+        applications
       };
     }
   );

@@ -30,8 +30,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Name => "MyAnonamouse";
         public override string[] IndexerUrls => new[] { "https://www.myanonamouse.net/" };
         public override string Description => "MyAnonaMouse (MAM) is a large ebook and audiobook tracker.";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         private readonly ICacheManager _cacheManager;
@@ -361,7 +361,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Remove cookie cache
                 CookiesUpdater(null, null);
 
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from API request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
             if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
@@ -369,7 +369,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Remove cookie cache
                 CookiesUpdater(null, null);
 
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from API request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             var torrentInfos = new List<TorrentInfo>();
@@ -377,7 +377,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseResponse>(indexerResponse.Content);
 
             var error = jsonResponse.Error;
-            if (error != null && error == "Nothing returned, out of 0")
+            if (error is "Nothing returned, out of 0" or "Nothing returned, out of 1")
             {
                 return torrentInfos.ToArray();
             }

@@ -22,12 +22,11 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class TorrentBytes : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Torrent Bytes";
-        public override string[] IndexerUrls => new string[] { "https://www.torrentbytes.net/" };
+        public override string[] IndexerUrls => new[] { "https://www.torrentbytes.net/" };
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
         public override string Description => "A decade of TorrentBytes";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -38,7 +37,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TorrentBytesRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new TorrentBytesRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -51,29 +50,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
             var cookies = Cookies;
-
             Cookies = null;
+
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("returnto", "/")
                 .AddFormParameter("login", "Log in!")
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .SetHeader("Referer", LoginUrl)
                 .Build();
-
-            var headers = new NameValueCollection
-            {
-                { "Referer", LoginUrl }
-            };
-
-            authLoginRequest.Headers.Add(headers);
 
             var response = await ExecuteAuth(authLoginRequest);
 
@@ -81,25 +72,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var parser = new HtmlParser();
                 var dom = parser.ParseDocument(response.Content);
-                var errorMessage = dom.QuerySelector("td.embedded")?.TextContent.Trim() ?? response.Content;
+                var errorMessage = dom.QuerySelector("td.embedded")?.TextContent.Trim();
 
-                throw new IndexerAuthException(errorMessage);
+                throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
             }
 
             cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("TorrentBytes authentication succeeded.");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("my.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("my.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -107,17 +93,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId
-                       },
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
                 MusicSearchParams = new List<MusicSearchParam>
-                       {
-                           MusicSearchParam.Q
-                       }
+                {
+                    MusicSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.TVAnime, "Anime");
@@ -163,10 +149,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public TorrentBytesRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {

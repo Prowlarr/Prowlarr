@@ -8,6 +8,7 @@ namespace NzbDrone.Api.V1.Indexers
     public class IndexerDefaultCategoriesController : Controller
     {
         [HttpGet]
+        [Produces("application/json")]
         public IndexerCategory[] GetAll()
         {
             return NewznabStandardCategory.ParentCats;

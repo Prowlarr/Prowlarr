@@ -9,10 +9,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
-using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -20,18 +18,16 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
     public class Anidub : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "Anidub";
-        public override string[] IndexerUrls => new string[] { "https://tr.anidub.com/" };
-        public override string Description => "Anidub is russian anime voiceover group and eponymous anime tracker.";
+        public override string[] IndexerUrls => new[] { "https://tr.anidub.com/" };
+        public override string Description => "Anidub is RUSSIAN anime voiceover group and eponymous anime tracker.";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -42,31 +38,29 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AnidubRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new AnidubRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AnidubParser(Settings, Capabilities.Categories) { HttpClient = _httpClient, Logger = _logger };
+            return new AnidubParser(Settings, Capabilities.Categories, RateLimit, _httpClient, _logger);
         }
 
         protected override async Task DoLogin()
         {
             UpdateCookies(null, null);
 
+            var mainPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl));
+
             var requestBuilder = new HttpRequestBuilder(Settings.BaseUrl + "index.php")
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            var mainPage = await ExecuteAuth(new HttpRequest(Settings.BaseUrl));
-
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-            requestBuilder.SetCookies(mainPage.GetCookies());
-
             var authLoginRequest = requestBuilder
+                .SetCookies(mainPage.GetCookies())
                 .AddFormParameter("login_name", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "submit")
@@ -77,27 +71,22 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (response.Content != null && !CheckIfLoginNeeded(response))
             {
-                UpdateCookies(response.GetCookies(), DateTime.Now + TimeSpan.FromDays(30));
+                UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
                 _logger.Debug("Anidub authentication succeeded");
             }
             else
             {
-                const string ErrorSelector = "#content .berror .berror_c";
                 var parser = new HtmlParser();
                 var document = await parser.ParseDocumentAsync(response.Content);
-                var errorMessage = document.QuerySelector(ErrorSelector).TextContent.Trim();
-                throw new IndexerAuthException("Anidub authentication failed. Error: " + errorMessage);
+                var errorMessage = document.QuerySelector("#content .berror .berror_c")?.TextContent.Trim();
+
+                throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
             }
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.Content.Contains("index.php?action=logout"))
-            {
-                return false;
-            }
-
-            return true;
+            return !httpResponse.Content.Contains("index.php?action=logout");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -138,31 +127,32 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.BooksComics, "Манга");
             caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.Audio, "OST");
             caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.Audio, "Подкасты");
+
             return caps;
         }
     }
 
     public class AnidubRequestGenerator : IIndexerRequestGenerator
     {
-        public UserPassTorrentBaseSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly UserPassTorrentBaseSettings _settings;
 
-        public AnidubRequestGenerator()
+        public AnidubRequestGenerator(UserPassTorrentBaseSettings settings)
         {
+            _settings = settings;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
-            var requestUrl = string.Empty;
+            string requestUrl;
             var isSearch = !string.IsNullOrWhiteSpace(term);
 
             if (isSearch)
             {
-                requestUrl = string.Format("{0}/index.php?do=search", Settings.BaseUrl.TrimEnd('/'));
+                requestUrl = $"{_settings.BaseUrl.TrimEnd('/')}/index.php?do=search";
             }
             else
             {
-                requestUrl = Settings.BaseUrl;
+                requestUrl = _settings.BaseUrl;
             }
 
             var request = new IndexerRequest(requestUrl, HttpAccept.Html);
@@ -207,7 +197,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
 
             return pageableRequests;
         }
@@ -216,7 +206,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}"));
 
             return pageableRequests;
         }
@@ -225,7 +215,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
 
             return pageableRequests;
         }
@@ -234,7 +224,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
 
             return pageableRequests;
         }
@@ -243,7 +233,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedSearchTerm}"));
 
             return pageableRequests;
         }
@@ -256,33 +246,37 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        public IIndexerHttpClient HttpClient { get; set; }
-        public Logger Logger { get; set; }
+        private readonly TimeSpan _rateLimit;
+        private readonly IIndexerHttpClient _httpClient;
+        private readonly Logger _logger;
 
-        private static Dictionary<string, string> CategoriesMap => new Dictionary<string, string>
-            {
-                { "/anime_tv/full", "14" },
-                { "/anime_tv/anime_ongoing", "10" },
-                { "/anime_tv/shonen", "11" },
-                { "/anime_tv", "2" },
-                { "/xxx", "13" },
-                { "/manga", "15" },
-                { "/ost", "16" },
-                { "/podcast", "17" },
-                { "/anime_movie", "3" },
-                { "/anime_ova/anime_ona", "5" },
-                { "/anime_ova", "4" },
-                { "/dorama/japan_dorama", "6" },
-                { "/dorama/korea_dorama", "7" },
-                { "/dorama/china_dorama", "8" },
-                { "/dorama", "9" },
-                { "/anons_ongoing", "12" }
-            };
+        private static Dictionary<string, string> CategoriesMap => new ()
+        {
+            { "/anime_tv/full", "14" },
+            { "/anime_tv/anime_ongoing", "10" },
+            { "/anime_tv/shonen", "11" },
+            { "/anime_tv", "2" },
+            { "/xxx", "13" },
+            { "/manga", "15" },
+            { "/ost", "16" },
+            { "/podcast", "17" },
+            { "/anime_movie", "3" },
+            { "/anime_ova/anime_ona", "5" },
+            { "/anime_ova", "4" },
+            { "/dorama/japan_dorama", "6" },
+            { "/dorama/korea_dorama", "7" },
+            { "/dorama/china_dorama", "8" },
+            { "/dorama", "9" },
+            { "/anons_ongoing", "12" }
+        };
 
-        public AnidubParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        public AnidubParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
         {
             _settings = settings;
             _categories = categories;
+            _rateLimit = rateLimit;
+            _httpClient = httpClient;
+            _logger = logger;
         }
 
         private static string GetTitle(AngleSharp.Html.Dom.IHtmlDocument content, AngleSharp.Dom.IElement tabNode)
@@ -327,9 +321,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private static int GetReleaseLeechers(AngleSharp.Dom.IElement tabNode)
         {
-            const string LeechersSelector = ".list.down > .li_swing_m";
+            const string leechersSelector = ".list.down > .li_swing_m";
 
-            var leechersStr = tabNode.QuerySelector(LeechersSelector).TextContent;
+            var leechersStr = tabNode.QuerySelector(leechersSelector).TextContent;
             int.TryParse(leechersStr, out var leechers);
             return leechers;
         }
@@ -345,18 +339,18 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private static int GetReleaseGrabs(AngleSharp.Dom.IElement tabNode)
         {
-            const string GrabsSelector = ".list.down > .li_download_m";
+            const string grabsSelector = ".list.down > .li_download_m";
 
-            var grabsStr = tabNode.QuerySelector(GrabsSelector).TextContent;
+            var grabsStr = tabNode.QuerySelector(grabsSelector).TextContent;
             int.TryParse(grabsStr, out var grabs);
             return grabs;
         }
 
         private static string GetDateFromDocument(AngleSharp.Html.Dom.IHtmlDocument content)
         {
-            const string DateSelector = ".story_inf > li:nth-child(2)";
+            const string dateSelector = ".story_inf > li:nth-child(2)";
 
-            var domDate = content.QuerySelector(DateSelector).LastChild;
+            var domDate = content.QuerySelector(dateSelector).LastChild;
 
             if (domDate?.NodeName != "#text")
             {
@@ -397,16 +391,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return utcDate.AddHours(-russianStandardTimeDiff);
             }
 
-            Logger.Warn($"[AniDub] Date time couldn't be parsed on. Date text: {dateText}");
+            _logger.Warn($"[AniDub] Date time couldn't be parsed on. Date text: {dateText}");
 
             return DateTime.UtcNow;
         }
 
         private static long GetReleaseSize(AngleSharp.Dom.IElement tabNode)
         {
-            const string SizeSelector = ".list.down > .red";
+            const string sizeSelector = ".list.down > .red";
 
-            var sizeStr = tabNode.QuerySelector(SizeSelector).TextContent;
+            var sizeStr = tabNode.QuerySelector(sizeSelector).TextContent;
             return ParseUtil.GetBytes(sizeStr);
         }
 
@@ -446,11 +440,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var release = new TorrentInfo
                 {
                     Title = GetTitle(dom, t),
-                    InfoUrl = indexerResponse.Request.Url.ToString(),
+                    InfoUrl = indexerResponse.Request.Url.FullUri,
                     DownloadVolumeFactor = 0,
                     UploadVolumeFactor = 1,
 
-                    Guid = indexerResponse.Request.Url.ToString() + t.Id,
+                    Guid = indexerResponse.Request.Url.FullUri + t.Id,
                     Seeders = GetReleaseSeeders(t),
                     Peers = GetReleaseSeeders(t) + GetReleaseLeechers(t),
                     Grabs = GetReleaseGrabs(t),
@@ -472,36 +466,30 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var parser = new HtmlParser();
             var dom = parser.ParseDocument(indexerResponse.Content);
-            var domQuery = string.Empty;
 
-            if (indexerResponse.Request.Url.Query.Contains("do=search"))
-            {
-                domQuery = ".searchitem > h3 > a";
-            }
-            else
-            {
-                domQuery = "#dle-content > .story > .story_h > .lcol > h2 > a";
-            }
-
-            var links = dom.QuerySelectorAll(domQuery);
+            var links = dom.QuerySelectorAll(".searchitem > h3 > a[href], #dle-content > .story > .story_h > .lcol > h2 > a[href]");
             foreach (var link in links)
             {
                 var url = link.GetAttribute("href");
 
-                var releaseRequest = new IndexerRequest(url, HttpAccept.Html);
-                var releaseResponse = new IndexerResponse(releaseRequest, HttpClient.Execute(releaseRequest.HttpRequest));
+                var releaseRequest = new HttpRequestBuilder(url)
+                    .WithRateLimit(_rateLimit.TotalSeconds)
+                    .SetHeader("Referer", _settings.BaseUrl)
+                    .Accept(HttpAccept.Html)
+                    .Build();
+
+                var releaseIndexerRequest = new IndexerRequest(releaseRequest);
+                var releaseResponse = new IndexerResponse(releaseIndexerRequest, _httpClient.Execute(releaseIndexerRequest.HttpRequest));
 
                 // Throw common http errors here before we try to parse
                 if (releaseResponse.HttpResponse.HasHttpError)
                 {
                     if (releaseResponse.HttpResponse.StatusCode == HttpStatusCode.TooManyRequests)
                     {
-                        throw new TooManyRequestsException(releaseRequest.HttpRequest, releaseResponse.HttpResponse);
+                        throw new TooManyRequestsException(releaseResponse.HttpRequest, releaseResponse.HttpResponse);
                     }
-                    else
-                    {
-                        throw new IndexerException(releaseResponse, "Http error code: " + releaseResponse.HttpResponse.StatusCode);
-                    }
+
+                    throw new IndexerException(releaseResponse, $"HTTP Error - {releaseResponse.HttpResponse.StatusCode}. {url}");
                 }
 
                 torrentInfos.AddRange(ParseRelease(releaseResponse));

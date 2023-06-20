@@ -5,8 +5,8 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -22,16 +22,16 @@ namespace NzbDrone.Core.Download.Clients.Aria2
 
         public Aria2(IAria2Proxy proxy,
                         ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
+                        ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             var gid = _proxy.AddUri(Settings, magnetLink);
 
@@ -50,7 +50,7 @@ namespace NzbDrone.Core.Download.Clients.Aria2
             return hash;
         }
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             var gid = _proxy.AddTorrent(Settings, fileContent);
 
@@ -120,7 +120,7 @@ namespace NzbDrone.Core.Download.Clients.Aria2
             return null;
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             var gid = _proxy.AddUri(Settings, torrentLink);
 

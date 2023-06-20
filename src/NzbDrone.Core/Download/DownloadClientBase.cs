@@ -11,7 +11,6 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
-using Org.BouncyCastle.Crypto.Tls;
 
 namespace NzbDrone.Core.Download
 {
@@ -28,7 +27,20 @@ namespace NzbDrone.Core.Download
 
         public virtual ProviderMessage Message => null;
 
-        public IEnumerable<ProviderDefinition> DefaultDefinitions => new List<ProviderDefinition>();
+        public IEnumerable<ProviderDefinition> DefaultDefinitions
+        {
+            get
+            {
+                var config = (IProviderConfig)new TSettings();
+
+                yield return new DownloadClientDefinition
+                {
+                    Name = GetType().Name,
+                    Implementation = GetType().Name,
+                    Settings = config
+                };
+            }
+        }
 
         public ProviderDefinition Definition { get; set; }
 

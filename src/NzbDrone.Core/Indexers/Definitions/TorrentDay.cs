@@ -32,7 +32,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://td.workisboring.net/"
         };
         public override string Description => "TorrentDay (TD) is a Private site for TV / MOVIES / GENERAL";
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -244,7 +243,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var downloadMultiplier = (double?)row["download-multiplier"] ?? 1;
                 var link = new Uri(_settings.BaseUrl + "download.php/" + torrentId + "/" + torrentId + ".torrent");
                 var publishDate = DateTimeUtil.UnixTimestampToDateTime((long)row.ctime).ToLocalTime();
-                var imdb = ParseUtil.GetImdbID(imdbId) ?? 0;
+                var imdb = ParseUtil.GetImdbId(imdbId) ?? 0;
 
                 var release = new TorrentInfo
                 {

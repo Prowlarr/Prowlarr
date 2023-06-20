@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Parser.Model
 {
-    public class ReleaseInfo
+    public class ReleaseInfo : ICloneable
     {
         public ReleaseInfo()
         {
@@ -26,6 +25,7 @@ namespace NzbDrone.Core.Parser.Model
         public int IndexerId { get; set; }
         public string Indexer { get; set; }
         public int IndexerPriority { get; set; }
+        public IndexerPrivacy IndexerPrivacy { get; set; }
         public DownloadProtocol DownloadProtocol { get; set; }
         public int? Grabs { get; set; }
         public int? Files { get; set; }
@@ -114,6 +114,11 @@ namespace NzbDrone.Core.Parser.Model
                 default:
                     return ToString();
             }
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

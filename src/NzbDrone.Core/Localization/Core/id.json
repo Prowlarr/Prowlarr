@@ -1,0 +1,20 @@
+{
+    "ApplicationURL": "URL Aplikasi",
+    "ApplicationUrlHelpText": "URL eksternal aplikasi termasuk http(s)://, port, dan dasar URL",
+    "AddDownloadClient": "Tambahkan Klien Pengunduhan",
+    "Added": "Ditambahkan",
+    "AddIndexer": "Tambahkan Pengindeks",
+    "Age": "Usia",
+    "All": "Semua",
+    "Analytics": "Analitik",
+    "Apply": "Terapkan",
+    "Authentication": "Autentikasi",
+    "About": "Tentang",
+    "Add": "Tambah",
+    "AppDataDirectory": "Direktori AppData",
+    "Automatic": "Otomatis",
+    "AutomaticSearch": "Penelusuran Otomatis",
+    "BackupNow": "Cadangkan Sekarang",
+    "Cancel": "Batal",
+    "ChangeHasNotBeenSavedYet": "Perubahan belum disimpan"
+}

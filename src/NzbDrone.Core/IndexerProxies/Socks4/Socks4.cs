@@ -1,8 +1,6 @@
 using System;
-using System.Net;
 using NLog;
 using NzbDrone.Common.Cloud;
-using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Proxy;
 using NzbDrone.Core.Localization;

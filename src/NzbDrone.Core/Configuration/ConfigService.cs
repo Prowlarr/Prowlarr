@@ -53,8 +53,7 @@ namespace NzbDrone.Core.Configuration
 
             foreach (var configValue in configValues)
             {
-                object currentValue;
-                allWithDefaults.TryGetValue(configValue.Key, out currentValue);
+                allWithDefaults.TryGetValue(configValue.Key, out var currentValue);
                 if (currentValue == null || configValue.Value == null)
                 {
                     continue;
@@ -182,6 +181,8 @@ namespace NzbDrone.Core.Configuration
         public CertificateValidationType CertificateValidation =>
             GetValueEnum("CertificateValidation", CertificateValidationType.Enabled);
 
+        public string ApplicationUrl => GetValue("ApplicationUrl", string.Empty);
+
         private string GetValue(string key)
         {
             return GetValue(key, string.Empty);
@@ -209,9 +210,7 @@ namespace NzbDrone.Core.Configuration
 
             EnsureCache();
 
-            string dbValue;
-
-            if (_cache.TryGetValue(key, out dbValue) && dbValue != null && !string.IsNullOrEmpty(dbValue))
+            if (_cache.TryGetValue(key, out var dbValue) && dbValue != null && !string.IsNullOrEmpty(dbValue))
             {
                 return dbValue;
             }

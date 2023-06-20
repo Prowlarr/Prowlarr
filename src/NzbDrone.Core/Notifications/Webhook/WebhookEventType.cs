@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Notifications.Webhook
         Download,
         Rename,
         Health,
-        ApplicationUpdate
+        ApplicationUpdate,
+        HealthRestored
     }
 }

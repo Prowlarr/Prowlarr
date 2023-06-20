@@ -28,7 +28,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "A movies tracker";
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -52,29 +51,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true
+                AllowAutoRedirect = true,
+                Method = HttpMethod.Post
             };
 
-            requestBuilder.Method = HttpMethod.Post;
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
-
             var cookies = Cookies;
-
             Cookies = null;
+
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("keeplogged", "1")
                 .AddFormParameter("login", "Log+In!")
-                .SetHeader("Content-Type", "multipart/form-data")
+                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                .SetHeader("Referer", LoginUrl)
                 .Build();
-
-            var headers = new NameValueCollection
-            {
-                { "Referer", LoginUrl }
-            };
-
-            authLoginRequest.Headers.Add(headers);
 
             var response = await ExecuteAuth(authLoginRequest);
 
@@ -82,25 +73,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var parser = new HtmlParser();
                 var dom = parser.ParseDocument(response.Content);
-                var errorMessage = dom.QuerySelector("form#loginform").TextContent.Trim();
+                var errorMessage = dom.QuerySelector("form#loginform")?.TextContent.Trim();
 
-                throw new IndexerAuthException(errorMessage);
+                throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
             }
 
             cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("Anthelion authentication succeeded.");
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (!httpResponse.Content.Contains("logout.php"))
-            {
-                return true;
-            }
-
-            return false;
+            return !httpResponse.Content.Contains("logout.php");
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -108,13 +94,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
+                {
+                    MovieSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.Movies, "Film/Feature");
@@ -130,10 +116,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public AnthelionRequestGenerator()
-        {
-        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
         {
@@ -263,7 +245,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // TODO: TMDb is also available
                 var qImdb = row.QuerySelector("a[href^=\"https://www.imdb.com\"]");
-                var imdb = qImdb != null ? ParseUtil.GetImdbID(qImdb.GetAttribute("href").Split('/').Last()) : null;
+                var imdb = qImdb != null ? ParseUtil.GetImdbId(qImdb.GetAttribute("href").Split('/').Last()) : null;
 
                 var release = new TorrentInfo
                 {

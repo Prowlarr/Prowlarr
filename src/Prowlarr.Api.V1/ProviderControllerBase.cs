@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 using NzbDrone.Http.REST.Attributes;
-using Prowlarr.Http.Extensions;
 using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1
@@ -44,11 +43,11 @@ namespace Prowlarr.Api.V1
         [Produces("application/json")]
         public List<TProviderResource> GetAll()
         {
-            var providerDefinitions = _providerFactory.All().OrderBy(p => p.ImplementationName);
+            var providerDefinitions = _providerFactory.All();
 
-            var result = new List<TProviderResource>(providerDefinitions.Count());
+            var result = new List<TProviderResource>(providerDefinitions.Count);
 
-            foreach (var definition in providerDefinitions)
+            foreach (var definition in providerDefinitions.OrderBy(p => p.ImplementationName))
             {
                 _providerFactory.SetProviderCharacteristics(definition);
 
@@ -59,10 +58,11 @@ namespace Prowlarr.Api.V1
         }
 
         [RestPostById]
+        [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<TProviderResource> CreateProvider(TProviderResource providerResource)
+        public ActionResult<TProviderResource> CreateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
-            var providerDefinition = GetDefinition(providerResource, true, false, false);
+            var providerDefinition = GetDefinition(providerResource, true, !forceSave, false);
 
             if (providerDefinition.Enable)
             {
@@ -75,11 +75,11 @@ namespace Prowlarr.Api.V1
         }
 
         [RestPutById]
+        [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<TProviderResource> UpdateProvider(TProviderResource providerResource)
+        public ActionResult<TProviderResource> UpdateProvider([FromBody] TProviderResource providerResource, [FromQuery] bool forceSave = false)
         {
-            var providerDefinition = GetDefinition(providerResource, true, false, false);
-            var forceSave = Request.GetBooleanQueryParameter("forceSave");
+            var providerDefinition = GetDefinition(providerResource, true, !forceSave, false);
 
             // Only test existing definitions if it is enabled and forceSave isn't set.
             if (providerDefinition.Enable && !forceSave)
@@ -137,6 +137,7 @@ namespace Prowlarr.Api.V1
 
         [SkipValidation(true, false)]
         [HttpPost("test")]
+        [Consumes("application/json")]
         public object Test([FromBody] TProviderResource providerResource)
         {
             var providerDefinition = GetDefinition(providerResource, true, true, true);
@@ -170,6 +171,8 @@ namespace Prowlarr.Api.V1
 
         [SkipValidation]
         [HttpPost("action/{name}")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
         public IActionResult RequestAction(string name, [FromBody] TProviderResource resource)
         {
             var providerDefinition = GetDefinition(resource, false, false, false);
@@ -197,7 +200,7 @@ namespace Prowlarr.Api.V1
 
         protected void VerifyValidationResult(ValidationResult validationResult, bool includeWarnings)
         {
-            var result = new NzbDroneValidationResult(validationResult.Errors);
+            var result = validationResult as NzbDroneValidationResult ?? new NzbDroneValidationResult(validationResult.Errors);
 
             if (includeWarnings && (!result.IsValid || result.HasWarnings))
             {

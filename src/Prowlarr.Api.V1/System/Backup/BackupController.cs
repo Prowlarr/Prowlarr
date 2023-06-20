@@ -20,7 +20,7 @@ namespace Prowlarr.Api.V1.System.Backup
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly IDiskProvider _diskProvider;
 
-        private static readonly List<string> ValidExtensions = new List<string> { ".zip", ".db", ".xml" };
+        private static readonly List<string> ValidExtensions = new () { ".zip", ".db", ".xml" };
 
         public BackupController(IBackupService backupService,
                             IAppFolderInfo appFolderInfo,
@@ -32,27 +32,34 @@ namespace Prowlarr.Api.V1.System.Backup
         }
 
         [HttpGet]
+        [Produces("application/json")]
         public List<BackupResource> GetBackupFiles()
         {
             var backups = _backupService.GetBackups();
 
             return backups.Select(b => new BackupResource
-            {
-                Id = GetBackupId(b),
-                Name = b.Name,
-                Path = $"/backup/{b.Type.ToString().ToLower()}/{b.Name}",
-                Type = b.Type,
-                Size = b.Size,
-                Time = b.Time
-            })
-                                       .OrderByDescending(b => b.Time)
-                                       .ToList();
+                {
+                    Id = GetBackupId(b),
+                    Name = b.Name,
+                    Path = $"/backup/{b.Type.ToString().ToLower()}/{b.Name}",
+                    Type = b.Type,
+                    Size = b.Size,
+                    Time = b.Time
+                })
+                .OrderByDescending(b => b.Time)
+                .ToList();
         }
 
         [RestDeleteById]
         public void DeleteBackup(int id)
         {
             var backup = GetBackup(id);
+
+            if (backup == null)
+            {
+                throw new NotFoundException();
+            }
+
             var path = GetBackupPath(backup);
 
             if (!_diskProvider.FileExists(path))
@@ -93,7 +100,7 @@ namespace Prowlarr.Api.V1.System.Backup
                 throw new BadRequestException("file must be provided");
             }
 
-            var file = files.First();
+            var file = files[0];
             var extension = Path.GetExtension(file.FileName);
 
             if (!ValidExtensions.Contains(extension))

@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Security;
@@ -9,7 +8,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http.Proxy;
@@ -113,7 +111,7 @@ namespace NzbDrone.Common.Http.Dispatchers
                 {
                     if (request.ResponseStream != null && responseMessage.StatusCode == HttpStatusCode.OK)
                     {
-                        responseMessage.Content.CopyTo(request.ResponseStream, null, cts.Token);
+                        await responseMessage.Content.CopyToAsync(request.ResponseStream, null, cts.Token);
                     }
                     else
                     {
@@ -129,7 +127,7 @@ namespace NzbDrone.Common.Http.Dispatchers
 
                 headers.Add(responseMessage.Content.Headers.ToNameValueCollection());
 
-                CookieContainer responseCookies = new CookieContainer();
+                var responseCookies = new CookieContainer();
 
                 if (responseMessage.Headers.TryGetValues("Set-Cookie", out var cookieHeaders))
                 {
@@ -247,7 +245,7 @@ namespace NzbDrone.Common.Http.Dispatchers
             }
         }
 
-        private void AddContentHeader(HttpRequestMessage request, string header, string value)
+        private static void AddContentHeader(HttpRequestMessage request, string header, string value)
         {
             var headers = request.Content?.Headers;
             if (headers == null)

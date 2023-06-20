@@ -1,8 +1,5 @@
 .inputContainer {
-  top: -1px;
-  right: -1px;
-  bottom: -1px;
-  left: -1px;
+  inset: -1px;
   display: flex;
   align-items: start;
   flex-wrap: wrap;

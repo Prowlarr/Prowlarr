@@ -38,7 +38,7 @@ function ProgressBar(props) {
             {
               showText && width ?
                 <div
-                  className={styles.backTextContainer}
+                  className={classNames(styles.backTextContainer, styles[kind])}
                   style={{ width: actualWidth }}
                 >
                   <div className={styles.backText}>
@@ -56,7 +56,9 @@ function ProgressBar(props) {
                 styles[kind],
                 enableColorImpairedMode && 'colorImpaired'
               )}
-              aria-valuenow={progress}
+              role="meter"
+              aria-label={`Progress Bar at ${progress.toFixed(0)}%`}
+              aria-valuenow={progress.toFixed(0)}
               aria-valuemin="0"
               aria-valuemax="100"
               style={{ width: progressPercent }}
@@ -65,7 +67,7 @@ function ProgressBar(props) {
             {
               showText ?
                 <div
-                  className={styles.frontTextContainer}
+                  className={classNames(styles.frontTextContainer, styles[kind])}
                   style={{ width: progressPercent }}
                 >
                   <div

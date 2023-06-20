@@ -94,7 +94,7 @@ namespace NzbDrone.Common.Instrumentation
 
         private static void RegisterDebugger()
         {
-            DebuggerTarget target = new DebuggerTarget();
+            var target = new DebuggerTarget();
             target.Name = "debuggerLogger";
             target.Layout = "[${level}] [${threadid}] ${logger}: ${message} ${onexception:inner=${newline}${newline}[v${assembly-version}] ${exception:format=ToString}${newline}${exception:format=Data}${newline}}";
 
@@ -108,9 +108,10 @@ namespace NzbDrone.Common.Instrumentation
         {
             LogManager.Setup().LoadConfiguration(c =>
             {
+                c.ForLogger("System.*").WriteToNil(LogLevel.Warn);
+                c.ForLogger("Microsoft.*").WriteToNil(LogLevel.Warn);
                 c.ForLogger("Microsoft.Hosting.Lifetime*").WriteToNil(LogLevel.Info);
-                c.ForLogger("System*").WriteToNil(LogLevel.Warn);
-                c.ForLogger("Microsoft*").WriteToNil(LogLevel.Warn);
+                c.ForLogger("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware").WriteToNil(LogLevel.Fatal);
             });
         }
 

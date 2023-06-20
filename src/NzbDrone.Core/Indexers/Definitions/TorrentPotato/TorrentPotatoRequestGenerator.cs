@@ -4,15 +4,11 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
 
-namespace NzbDrone.Core.Indexers.TorrentPotato
+namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
 {
     public class TorrentPotatoRequestGenerator : IIndexerRequestGenerator
     {
         public TorrentPotatoSettings Settings { get; set; }
-
-        public TorrentPotatoRequestGenerator()
-        {
-        }
 
         public virtual IndexerPageableRequestChain GetRecentRequests()
         {

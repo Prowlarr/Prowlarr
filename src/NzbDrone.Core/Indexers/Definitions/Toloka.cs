@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -27,7 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Description => "Toloka.to is a Semi-Private Ukrainian torrent site with a thriving file-sharing community";
         public override string Language => "uk-UA";
         public override Encoding Encoding => Encoding.UTF8;
-        public override DownloadProtocol Protocol => DownloadProtocol.Torrent;
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -52,17 +50,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override async Task DoLogin()
         {
-            var loginUrl = Settings.BaseUrl + "login.php";
+            var loginUrl = $"{Settings.BaseUrl}login.php";
 
             var requestBuilder = new HttpRequestBuilder(loginUrl)
             {
                 LogResponseContent = true,
-                AllowAutoRedirect = true,
-                Method = HttpMethod.Post
+                AllowAutoRedirect = true
             };
-            requestBuilder.PostProcess += r => r.RequestTimeout = TimeSpan.FromSeconds(15);
 
-            var authLoginRequest = requestBuilder
+            var authLoginRequest = requestBuilder.Post()
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("autologin", "on")
@@ -77,8 +73,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (CheckIfLoginNeeded(response))
             {
-                _logger.Debug(response.Content);
-
                 var parser = new HtmlParser();
                 var dom = parser.ParseDocument(response.Content);
                 var errorMessage = dom.QuerySelector("table.forumline table span.gen")?.FirstChild?.TextContent;
@@ -87,7 +81,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now + TimeSpan.FromDays(30));
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("Toloka.to authentication succeeded.");
         }
@@ -328,17 +322,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "nm", term.IsNotNullOrWhiteSpace() ? term.Replace("-", " ") : "" }
             };
 
-            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
-
-            if (queryCats.Any())
+            if (_settings.FreeleechOnly)
             {
-                foreach (var cat in queryCats)
-                {
-                    parameters.Add("f[]", $"{cat}");
-                }
+                parameters.Add("sds", "1");
             }
 
-            var searchUrl = _settings.BaseUrl + "tracker.php";
+            var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            if (queryCats.Any())
+            {
+                queryCats.ForEach(cat => parameters.Add("f[]", $"{cat}"));
+            }
+
+            var searchUrl = $"{_settings.BaseUrl}tracker.php";
 
             if (parameters.Count > 0)
             {
@@ -358,6 +353,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly TolokaSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
+
+        private readonly TolokaTitleParser _titleParser = new ();
 
         public TolokaParser(TolokaSettings settings, IndexerCapabilitiesCategories categories)
         {
@@ -384,10 +381,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 var infoUrl = _settings.BaseUrl + row.QuerySelector("td:nth-child(3) > a")?.GetAttribute("href");
+                var title = row.QuerySelector("td:nth-child(3) > a")?.TextContent.Trim() ?? string.Empty;
 
-                var title = row.QuerySelector("td:nth-child(3) > a").TextContent.Trim();
-
-                var categoryLink = row.QuerySelector("td:nth-child(2) > a").GetAttribute("href");
+                var categoryLink = row.QuerySelector("td:nth-child(2) > a")?.GetAttribute("href") ?? string.Empty;
                 var cat = ParseUtil.GetArgumentFromQueryString(categoryLink, "f");
                 var categories = _categories.MapTrackerCatToNewznab(cat);
 
@@ -395,14 +391,15 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var peers = seeders + ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(11) > b")?.TextContent.Trim());
 
                 // 2023-01-21
-                var added = row.QuerySelector("td:nth-child(13)").TextContent.Trim();
+                var added = row.QuerySelector("td:nth-child(13)")?.TextContent.Trim() ?? string.Empty;
 
                 var release = new TorrentInfo
                 {
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
                     DownloadUrl = _settings.BaseUrl + downloadUrl,
-                    Title = CleanTitle(title, categories, _settings.StripCyrillicLetters),
+                    Title = _titleParser.Parse(title, categories, _settings.StripCyrillicLetters),
+                    Description = title,
                     Categories = categories,
                     Seeders = seeders,
                     Peers = peers,
@@ -415,33 +412,84 @@ namespace NzbDrone.Core.Indexers.Definitions
                     MinimumSeedTime = 0
                 };
 
+                if (row.QuerySelector("img[src=\"images/gold.gif\"], img[src=\"images/authors.gif\"]") != null)
+                {
+                    release.DownloadVolumeFactor = 0;
+                }
+                else if (row.QuerySelector("img[src=\"images/silver.gif\"]") != null)
+                {
+                    release.DownloadVolumeFactor = 0.5;
+                }
+                else if (row.QuerySelector("img[src=\"images/bronze.gif\"]") != null)
+                {
+                    release.DownloadVolumeFactor = 0.75;
+                }
+
                 releaseInfos.Add(release);
             }
 
             return releaseInfos.ToArray();
         }
 
-        private static bool IsAnyTvCategory(ICollection<IndexerCategory> category)
-        {
-            return category.Contains(NewznabStandardCategory.TV) || NewznabStandardCategory.TV.SubCategories.Any(subCategory => category.Contains(subCategory));
-        }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
 
-        private static string CleanTitle(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true)
+    public class TolokaTitleParser
+    {
+        private static readonly List<Regex> FindTagsInTitlesRegexList = new ()
         {
-            var tvShowTitleRegex = new Regex(".+\\/\\s([^а-яА-я\\/]+)\\s\\/.+Сезон\\s*[:]*\\s+(\\d+).+(?:Серії|Епізод)+\\s*[:]*\\s+(\\d+-*\\d*).+,\\s+(.+)\\]\\s(.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var stripCyrillicRegex = new Regex(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            new Regex(@"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)"),
+            new Regex(@"\[(?>\[(?<c>)|[^\[\]]+|\](?<-c>))*(?(c)(?!))\]")
+        };
 
+        private readonly Regex _tvTitleCommaRegex = new (@"\s(\d+),(\d+)", RegexOptions.Compiled);
+        private readonly Regex _tvTitleCyrillicXRegex = new (@"([\s-])Х+([\)\]])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private readonly Regex _tvTitleMultipleSeasonsRegex = new (@"(?:Сезон|Seasons?)\s*[:]*\s+(\d+-\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private readonly Regex _tvTitleUkrSeasonEpisodeOfRegex = new (@"Сезон\s*[:]*\s+(\d+).+(?:Серії|Серія|Серій|Епізод)+\s*[:]*\s+(\d+(?:-\d+)?)\s*з\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleUkrSeasonEpisodeRegex = new (@"Сезон\s*[:]*\s+(\d+).+(?:Серії|Серія|Серій|Епізод)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleUkrSeasonRegex = new (@"Сезон\s*[:]*\s+(\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleUkrEpisodeOfRegex = new (@"(?:Серії|Серія|Серій|Епізод)+\s*[:]*\s+(\d+(?:-\d+)?)\s*з\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleUkrEpisodeRegex = new (@"(?:Серії|Серія|Серій|Епізод)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private readonly Regex _tvTitleEngSeasonEpisodeOfRegex = new (@"Season\s*[:]*\s+(\d+).+(?:Episodes?)+\s*[:]*\s+(\d+(?:-\d+)?)\s*of\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleEngSeasonEpisodeRegex = new (@"Season\s*[:]*\s+(\d+).+(?:Episodes?)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleEngSeasonRegex = new (@"Season\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleEngEpisodeOfRegex = new (@"(?:Episodes?)+\s*[:]*\s+(\d+(?:-\d+)?)\s*of\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleEngEpisodeRegex = new (@"(?:Episodes?)+\s*[:]+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private readonly Regex _stripCyrillicRegex = new (@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true)
+        {
             // https://www.fileformat.info/info/unicode/category/Pd/list.htm
-            title = Regex.Replace(title, "\\p{Pd}", "-", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            title = Regex.Replace(title, @"\p{Pd}", "-", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             if (IsAnyTvCategory(categories))
             {
-                // extract season and episodes
-                title = tvShowTitleRegex.Replace(title, "$1 - S$2E$3 - rus $4 $5");
+                title = _tvTitleCommaRegex.Replace(title, " $1-$2");
+                title = _tvTitleCyrillicXRegex.Replace(title, "$1XX$2");
+
+                // special case for multiple seasons
+                title = _tvTitleMultipleSeasonsRegex.Replace(title, "S$1");
+
+                title = _tvTitleUkrSeasonEpisodeOfRegex.Replace(title, "S$1E$2 of $3");
+                title = _tvTitleUkrSeasonEpisodeRegex.Replace(title, "S$1E$2");
+                title = _tvTitleUkrSeasonRegex.Replace(title, "S$1");
+                title = _tvTitleUkrEpisodeOfRegex.Replace(title, "E$1 of $2");
+                title = _tvTitleUkrEpisodeRegex.Replace(title, "E$1");
+
+                title = _tvTitleEngSeasonEpisodeOfRegex.Replace(title, "S$1E$2 of $3");
+                title = _tvTitleEngSeasonEpisodeRegex.Replace(title, "S$1E$2");
+                title = _tvTitleEngSeasonRegex.Replace(title, "S$1");
+                title = _tvTitleEngEpisodeOfRegex.Replace(title, "E$1 of $2");
+                title = _tvTitleEngEpisodeRegex.Replace(title, "E$1");
             }
-            else if (stripCyrillicLetters)
+
+            if (stripCyrillicLetters)
             {
-                title = stripCyrillicRegex.Replace(title, string.Empty);
+                title = _stripCyrillicRegex.Replace(title, string.Empty).Trim(' ', '-');
             }
 
             title = Regex.Replace(title, @"\b-Rip\b", "Rip", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -450,10 +498,56 @@ namespace NzbDrone.Core.Indexers.Definitions
             title = Regex.Replace(title, @"\bWEBDLRip\b", "WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             title = Regex.Replace(title, @"\bWEBDL\b", "WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-            return title.Trim(' ', '.', '-', '_', '|', '/', '\'');
+            title = MoveFirstTagsToEndOfReleaseTitle(title);
+
+            title = Regex.Replace(title, @"\(\s*\/\s*", "(", RegexOptions.Compiled);
+            title = Regex.Replace(title, @"\s*\/\s*\)", ")", RegexOptions.Compiled);
+
+            title = Regex.Replace(title, @"[\[\(]\s*[\)\]]", "", RegexOptions.Compiled);
+
+            title = title.Trim(' ', '&', ',', '.', '!', '?', '+', '-', '_', '|', '/', '\\', ':');
+
+            // replace multiple spaces with a single space
+            title = Regex.Replace(title, @"\s+", " ");
+
+            return title.Trim();
         }
 
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+        private static bool IsAnyTvCategory(ICollection<IndexerCategory> category)
+        {
+            return category.Contains(NewznabStandardCategory.TV) || NewznabStandardCategory.TV.SubCategories.Any(subCategory => category.Contains(subCategory));
+        }
+
+        private static string MoveFirstTagsToEndOfReleaseTitle(string input)
+        {
+            var output = input;
+            foreach (var findTagsRegex in FindTagsInTitlesRegexList)
+            {
+                var expectedIndex = 0;
+                foreach (Match match in findTagsRegex.Matches(output))
+                {
+                    if (match.Index > expectedIndex)
+                    {
+                        var substring = output.Substring(expectedIndex, match.Index - expectedIndex);
+                        if (string.IsNullOrWhiteSpace(substring))
+                        {
+                            expectedIndex = match.Index;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    var tag = match.ToString();
+                    var regex = new Regex(Regex.Escape(tag));
+                    output = $"{regex.Replace(output, string.Empty, 1)} {tag}".Trim();
+                    expectedIndex += tag.Length;
+                }
+            }
+
+            return output.Trim();
+        }
     }
 
     public class TolokaSettings : UserPassTorrentBaseSettings
@@ -463,7 +557,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             StripCyrillicLetters = true;
         }
 
-        [FieldDefinition(4, Label = "Strip Cyrillic Letters", Type = FieldType.Checkbox)]
+        [FieldDefinition(4, Label = "Freeleech Only", HelpText = "Search Freeleech torrents only", Type = FieldType.Checkbox)]
+        public bool FreeleechOnly { get; set; }
+
+        [FieldDefinition(5, Label = "Strip Cyrillic Letters", Type = FieldType.Checkbox)]
         public bool StripCyrillicLetters { get; set; }
     }
 }

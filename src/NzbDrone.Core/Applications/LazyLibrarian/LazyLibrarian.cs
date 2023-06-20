@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using FluentValidation.Results;
 using NLog;
-using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
@@ -56,8 +55,8 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
                     if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                     {
-                        //Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
-                        mappings.Add(new AppIndexerMap { RemoteIndexerName = $"{indexer.Type},{indexer.Name}", IndexerId = indexerId });
+                        // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                        mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerName = $"{indexer.Type},{indexer.Name}" });
                     }
                 }
             }
@@ -67,15 +66,27 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
-                var lazyLibrarianIndexer = BuildLazyLibrarianIndexer(indexer, indexer.Protocol);
+                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
-                var remoteIndexer = _lazyLibrarianV1Proxy.AddIndexer(lazyLibrarianIndexer, Settings);
-                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
+                return;
             }
 
-            _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+            _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
+
+            var lazyLibrarianIndexer = BuildLazyLibrarianIndexer(indexer, indexer.Protocol);
+
+            var remoteIndexer = _lazyLibrarianV1Proxy.AddIndexer(lazyLibrarianIndexer, Settings);
+
+            if (remoteIndexer == null)
+            {
+                _logger.Debug("Failed to add {0} [{1}]", indexer.Name, indexer.Id);
+
+                return;
+            }
+
+            _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{remoteIndexer.Type},{remoteIndexer.Name}" });
         }
 
         public override void RemoveIndexer(int indexerId)
@@ -123,13 +134,13 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
                 if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
-                    _logger.Debug("Remote indexer not found, re-adding {0} to LazyLibrarian", indexer.Name);
+                    _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to LazyLibrarian", indexer.Name, indexer.Id);
                     var newRemoteIndexer = _lazyLibrarianV1Proxy.AddIndexer(lazyLibrarianIndexer, Settings);
                     _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerName = $"{newRemoteIndexer.Type},{newRemoteIndexer.Name}" });
                 }
                 else
                 {
-                    _logger.Debug("Remote indexer not found for {0}, skipping re-add to LazyLibrarian due to indexer capabilities", indexer.Name);
+                    _logger.Debug("Remote indexer not found for {0} [{1}], skipping re-add to LazyLibrarian due to indexer capabilities", indexer.Name, indexer.Id);
                 }
             }
         }

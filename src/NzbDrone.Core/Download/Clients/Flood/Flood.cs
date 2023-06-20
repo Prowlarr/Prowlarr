@@ -4,9 +4,9 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
-using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.Flood.Models;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -18,11 +18,11 @@ namespace NzbDrone.Core.Download.Clients.Flood
 
         public Flood(IFloodProxy proxy,
                         ITorrentFileInfoReader torrentFileInfoReader,
-                        IHttpClient httpClient,
+                        ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         Logger logger)
-            : base(torrentFileInfoReader, httpClient, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
         {
             _proxy = proxy;
         }
@@ -63,14 +63,14 @@ namespace NzbDrone.Core.Download.Clients.Flood
         public override bool SupportsCategories => true;
         public override ProviderMessage Message => new ProviderMessage("Prowlarr is unable to remove torrents that have finished seeding when using Flood", ProviderMessageType.Warning);
 
-        protected override string AddFromTorrentFile(ReleaseInfo release, string hash, string filename, byte[] fileContent)
+        protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
             _proxy.AddTorrentByFile(Convert.ToBase64String(fileContent), HandleTags(release, Settings, GetCategoryForRelease(release)), Settings);
 
             return hash;
         }
 
-        protected override string AddFromMagnetLink(ReleaseInfo release, string hash, string magnetLink)
+        protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
             _proxy.AddTorrentByUrl(magnetLink, HandleTags(release, Settings, GetCategoryForRelease(release)), Settings);
 
@@ -93,7 +93,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
             }
         }
 
-        protected override string AddFromTorrentLink(ReleaseInfo release, string hash, string torrentLink)
+        protected override string AddFromTorrentLink(TorrentInfo release, string hash, string torrentLink)
         {
             throw new NotImplementedException();
         }

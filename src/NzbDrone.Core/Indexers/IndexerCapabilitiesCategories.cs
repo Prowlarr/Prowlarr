@@ -93,7 +93,7 @@ namespace NzbDrone.Core.Indexers
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return new List<IndexerCategory>();
+                return Array.Empty<IndexerCategory>();
             }
 
             var cats = _categoryMapping
@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Indexers
         {
             if (string.IsNullOrWhiteSpace(trackerCategoryDesc))
             {
-                return new List<IndexerCategory>();
+                return Array.Empty<IndexerCategory>();
             }
 
             var cats = _categoryMapping

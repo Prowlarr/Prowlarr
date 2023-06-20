@@ -103,9 +103,6 @@ namespace NzbDrone.Core.Indexers
 
         public static readonly IndexerCategory[] AllCats =
         {
-            ZedOther,
-            ZedOtherHashed,
-            ZedOtherMisc,
             Console,
             ConsoleNDS,
             ConsolePSP,
@@ -176,7 +173,10 @@ namespace NzbDrone.Core.Indexers
             BooksForeign,
             Other,
             OtherMisc,
-            OtherHashed
+            OtherHashed,
+            ZedOther,
+            ZedOtherHashed,
+            ZedOtherMisc
         };
 
         static NewznabStandardCategory()

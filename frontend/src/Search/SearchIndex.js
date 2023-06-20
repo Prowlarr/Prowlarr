@@ -12,6 +12,8 @@ import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
 import PageToolbarSeparator from 'Components/Page/Toolbar/PageToolbarSeparator';
 import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptionsModalWrapper';
 import { align, icons, kinds, sortDirections } from 'Helpers/Props';
+import AddIndexerModal from 'Indexer/Add/AddIndexerModal';
+import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import NoIndexer from 'Indexer/NoIndexer';
 import * as keyCodes from 'Utilities/Constants/keyCodes';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
@@ -54,7 +56,9 @@ class SearchIndex extends Component {
       lastToggled: null,
       allSelected: false,
       allUnselected: false,
-      selectedState: {}
+      selectedState: {},
+      isAddIndexerModalOpen: false,
+      isEditIndexerModalOpen: false
     };
   }
 
@@ -181,6 +185,22 @@ class SearchIndex extends Component {
   //
   // Listeners
 
+  onAddIndexerPress = () => {
+    this.setState({ isAddIndexerModalOpen: true });
+  };
+
+  onAddIndexerModalClose = () => {
+    this.setState({ isAddIndexerModalOpen: false });
+  };
+
+  onAddIndexerSelectIndexer = () => {
+    this.setState({ isEditIndexerModalOpen: true });
+  };
+
+  onEditIndexerModalClose = () => {
+    this.setState({ isEditIndexerModalOpen: false });
+  };
+
   onJumpBarItemPress = (jumpToCharacter) => {
     this.setState({ jumpToCharacter });
   };
@@ -252,7 +272,9 @@ class SearchIndex extends Component {
       jumpToCharacter,
       selectedState,
       allSelected,
-      allUnselected
+      allUnselected,
+      isAddIndexerModalOpen,
+      isEditIndexerModalOpen
     } = this.state;
 
     const selectedIndexerIds = this.getSelectedIds();
@@ -348,6 +370,17 @@ class SearchIndex extends Component {
               !error && !isFetching && hasIndexers && !items.length &&
                 <NoSearchResults totalItems={totalItems} />
             }
+
+            <AddIndexerModal
+              isOpen={isAddIndexerModalOpen}
+              onModalClose={this.onAddIndexerModalClose}
+              onSelectIndexer={this.onAddIndexerSelectIndexer}
+            />
+
+            <EditIndexerModalConnector
+              isOpen={isEditIndexerModalOpen}
+              onModalClose={this.onEditIndexerModalClose}
+            />
           </PageContentBody>
 
           {

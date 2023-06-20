@@ -104,7 +104,7 @@ class AutoSuggestInput extends Component {
 
     const windowHeight = window.innerHeight;
 
-    if ((/^bottom/).test(data.placement)) {
+    if ((/^botton/).test(data.placement)) {
       data.styles.maxHeight = windowHeight - bottom;
     } else {
       data.styles.maxHeight = top;

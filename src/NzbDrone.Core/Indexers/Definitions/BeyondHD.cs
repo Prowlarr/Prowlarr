@@ -25,8 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class BeyondHD : TorrentIndexerBase<BeyondHDSettings>
     {
         public override string Name => "BeyondHD";
-
-        public override string[] IndexerUrls => new string[] { "https://beyond-hd.me/" };
+        public override string[] IndexerUrls => new[] { "https://beyond-hd.me/" };
         public override string Description => "BeyondHD (BHD) is a Private Torrent Tracker for HD MOVIES / TV";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
@@ -38,12 +37,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new BeyondHDRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new BeyondHDRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new BeyondHDParser(Settings, Capabilities.Categories);
+            return new BeyondHDParser(Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -51,13 +50,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
-                       },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                       {
-                           MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId
-                       }
+                {
+                    MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies, "Movies");
@@ -69,15 +68,21 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDRequestGenerator : IIndexerRequestGenerator
     {
-        public BeyondHDSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly BeyondHDSettings _settings;
+        private readonly IndexerCapabilities _capabilities;
+
+        public BeyondHDRequestGenerator(BeyondHDSettings settings, IndexerCapabilities capabilities)
+        {
+            _settings = settings;
+            _capabilities = capabilities;
+        }
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int tmdbId = 0)
         {
             var body = new Dictionary<string, object>
             {
                 { "action", "search" },
-                { "rsskey", Settings.RssKey }
+                { "rsskey", _settings.RssKey }
             };
 
             if (imdbId.IsNotNullOrWhiteSpace())
@@ -95,31 +100,34 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("search", term);
             }
 
-            var cats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            var cats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
 
             if (cats.Count > 0)
             {
                 body.Add("categories", string.Join(",", cats));
             }
 
-            var searchUrl = Settings.BaseUrl + "api/torrents/" + Settings.ApiKey;
+            var searchUrl = $"{_settings.BaseUrl}api/torrents/{_settings.ApiKey}";
 
-            var request = new HttpRequest(searchUrl, HttpAccept.Json);
-
-            request.Headers.ContentType = "application/json";
-            request.Method = HttpMethod.Post;
+            var request = new HttpRequest(searchUrl, HttpAccept.Json)
+            {
+                Headers =
+                {
+                    ContentType = "application/json"
+                },
+                Method = HttpMethod.Post
+            };
             request.SetContent(body.ToJson());
+            request.ContentSummary = body.ToJson(Formatting.None);
 
-            var indexerRequest = new IndexerRequest(request);
-
-            yield return indexerRequest;
+            yield return new IndexerRequest(request);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId.GetValueOrDefault()));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId.GetValueOrDefault()));
 
             return pageableRequests;
         }
@@ -128,7 +136,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -137,7 +145,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -146,7 +154,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -155,7 +163,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
 
             return pageableRequests;
         }
@@ -166,19 +174,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDParser : IParseIndexerResponse
     {
-        private readonly BeyondHDSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public BeyondHDParser(BeyondHDSettings settings, IndexerCapabilitiesCategories categories)
+        public BeyondHDParser(IndexerCapabilitiesCategories categories)
         {
-            _settings = settings;
             _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<TorrentInfo>();
             var indexerHttpResponse = indexerResponse.HttpResponse;
+
             if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerHttpResponse.StatusCode} code from indexer request");
@@ -200,6 +206,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 throw new IndexerException(indexerResponse, $"Indexer Error: {jsonResponse.Resource.StatusMessage}");
             }
+
+            var releaseInfos = new List<ReleaseInfo>();
 
             foreach (var row in jsonResponse.Resource.Results)
             {
@@ -231,11 +239,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                     MinimumSeedTime = 172800, // 120 hours
                 };
 
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
 
             // order by date
-            return torrentInfos.OrderByDescending(o => o.PublishDate).ToArray();
+            return releaseInfos
+                .OrderByDescending(o => o.PublishDate)
+                .ToArray();
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

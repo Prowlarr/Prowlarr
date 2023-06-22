@@ -890,11 +890,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                             download.Infohash.Title.Selector);
                     }
                 }
-                else if (download.Selectors != null)
+                else if (download.Selectors != null && download.Selectors.Any())
                 {
                     foreach (var selector in download.Selectors)
                     {
-                        var queryselector = ApplyGoTemplateText(selector.Selector, variables);
+                        var querySelector = ApplyGoTemplateText(selector.Selector, variables);
 
                         try
                         {
@@ -904,16 +904,21 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                             }
 
                             var href = MatchSelector(response, selector, variables, debugMatch: true);
+
                             if (href == null)
                             {
                                 continue;
                             }
 
                             var torrentLink = ResolvePath(href, link);
+
                             if (torrentLink.Scheme != "magnet" && _definition.TestLinkTorrent)
                             {
                                 // Test link
                                 var testLinkRequest = new HttpRequestBuilder(torrentLink.ToString())
+                                    {
+                                        AllowAutoRedirect = true
+                                    }
                                     .SetCookies(Cookies ?? new Dictionary<string, string>())
                                     .SetHeaders(headers ?? new Dictionary<string, string>())
                                     .SetEncoding(_encoding)
@@ -923,9 +928,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                                 response = await HttpClient.ExecuteProxiedAsync(testLinkRequest, Definition);
 
                                 var content = response.Content;
+
                                 if (content.Length >= 1 && content[0] != 'd')
                                 {
-                                    _logger.Debug("CardigannIndexer ({0}): Download selector {1}'s torrent file is invalid, retrying with next available selector", _definition.Id, queryselector);
+                                    _logger.Debug("CardigannIndexer ({0}): Download selector {1}'s torrent file is invalid, retrying with next available selector", _definition.Id, querySelector);
 
                                     continue;
                                 }
@@ -944,11 +950,15 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                             return selectorDownloadRequest;
                         }
+                        catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+                        {
+                            _logger.Debug("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", ex, _definition.Id, querySelector);
+                        }
                         catch (Exception e)
                         {
-                            _logger.Error("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", e, _definition.Id, queryselector);
+                            _logger.Error("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", e, _definition.Id, querySelector);
 
-                            throw new CardigannException(string.Format("An exception occurred while trying selector {0}", queryselector));
+                            throw new CardigannException($"An exception occurred while trying selector: {querySelector}");
                         }
                     }
                 }

@@ -164,7 +164,7 @@ namespace NzbDrone.Core.History
             if (message.Query is BookSearchCriteria bookSearchCriteria)
             {
                 history.Data.Add("Author", bookSearchCriteria.Author);
-                history.Data.Add("BookTitle", bookSearchCriteria.Title);
+                history.Data.Add("Title", bookSearchCriteria.Title);
                 history.Data.Add("Publisher", bookSearchCriteria.Publisher);
                 history.Data.Add("Year", bookSearchCriteria.Year?.ToString());
                 history.Data.Add("Genre", bookSearchCriteria.Genre);
@@ -199,7 +199,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("Source", message.Source ?? string.Empty);
             history.Data.Add("Host", message.Host ?? string.Empty);
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
-            history.Data.Add("Title", message.Title);
+            history.Data.Add("GrabTitle", message.Title);
             history.Data.Add("Url", message.Url ?? string.Empty);
 
             _historyRepository.Insert(history);

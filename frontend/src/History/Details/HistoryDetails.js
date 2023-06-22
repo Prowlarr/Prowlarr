@@ -76,7 +76,7 @@ function HistoryDetails(props) {
   if (eventType === 'releaseGrabbed') {
     const {
       source,
-      title,
+      grabTitle,
       url
     } = data;
 
@@ -101,8 +101,8 @@ function HistoryDetails(props) {
         {
           !!data &&
             <DescriptionListItem
-              title={translate('Title')}
-              data={title ? title : '-'}
+              title={translate('GrabTitle')}
+              data={grabTitle ? grabTitle : '-'}
             />
         }
 

@@ -48,8 +48,8 @@ class HistoryRowConnector extends Component {
   //
   // Listeners
 
-  onSearchPress = (term, indexerId, categories) => {
-    this.props.setSearchDefault({ searchQuery: term, searchIndexerIds: [indexerId], searchCategories: categories });
+  onSearchPress = (term, indexerId, categories, type) => {
+    this.props.setSearchDefault({ searchQuery: term, searchIndexerIds: [indexerId], searchCategories: categories, searchType: type });
     this.props.push(`${window.Prowlarr.urlBase}/search`);
   };
 

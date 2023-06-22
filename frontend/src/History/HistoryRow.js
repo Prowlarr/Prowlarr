@@ -8,9 +8,30 @@ import { icons } from 'Helpers/Props';
 import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
 import translate from 'Utilities/String/translate';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
+import * as historyDataTypes from './historyDataTypes';
 import HistoryEventTypeCell from './HistoryEventTypeCell';
 import HistoryRowParameter from './HistoryRowParameter';
 import styles from './HistoryRow.css';
+
+const historyParameters = [
+  { key: historyDataTypes.IMDB_ID, title: 'IMDb' },
+  { key: historyDataTypes.TMDB_ID, title: 'TMDb' },
+  { key: historyDataTypes.TVDB_ID, title: 'TVDb' },
+  { key: historyDataTypes.TRAKT_ID, title: 'Trakt' },
+  { key: historyDataTypes.R_ID, title: 'TvRage' },
+  { key: historyDataTypes.TVMAZE_ID, title: 'TvMaze' },
+  { key: historyDataTypes.SEASON, title: translate('Season') },
+  { key: historyDataTypes.EPISODE, title: translate('Episode') },
+  { key: historyDataTypes.ARTIST, title: translate('Artist') },
+  { key: historyDataTypes.ALBUM, title: translate('Album') },
+  { key: historyDataTypes.LABEL, title: translate('Label') },
+  { key: historyDataTypes.TRACK, title: translate('Track') },
+  { key: historyDataTypes.YEAR, title: translate('Year') },
+  { key: historyDataTypes.GENRE, title: translate('Genre') },
+  { key: historyDataTypes.AUTHOR, title: translate('Author') },
+  { key: historyDataTypes.TITLE, title: translate('Title') },
+  { key: historyDataTypes.PUBLISHER, title: translate('Publisher') }
+];
 
 class HistoryRow extends Component {
 
@@ -44,15 +65,52 @@ class HistoryRow extends Component {
       data
     } = this.props;
 
+    const { query, queryType } = data;
+
+    let searchQuery = query;
     let categories = [];
 
     if (data.categories) {
-      categories = data.categories.split(',').map((item) => {
-        return parseInt(item);
-      });
+      categories = data.categories.split(',').map((item) => parseInt(item));
     }
 
-    this.props.onSearchPress(data.query, indexer.id, categories);
+    const searchParams = [
+      historyDataTypes.IMDB_ID,
+      historyDataTypes.TMDB_ID,
+      historyDataTypes.TVDB_ID,
+      historyDataTypes.TRAKT_ID,
+      historyDataTypes.R_ID,
+      historyDataTypes.TVMAZE_ID,
+      historyDataTypes.SEASON,
+      historyDataTypes.EPISODE,
+      historyDataTypes.ARTIST,
+      historyDataTypes.ALBUM,
+      historyDataTypes.LABEL,
+      historyDataTypes.TRACK,
+      historyDataTypes.YEAR,
+      historyDataTypes.GENRE,
+      historyDataTypes.AUTHOR,
+      historyDataTypes.TITLE,
+      historyDataTypes.PUBLISHER
+    ]
+      .reduce((acc, key) => {
+        if (key in data && data[key].length > 0) {
+          const value = data[key];
+
+          acc.push({ key, value });
+        }
+
+        return acc;
+      }, [])
+      .map((item) => `{${item.key}:${item.value}}`)
+      .join('')
+    ;
+
+    if (searchParams.length > 0) {
+      searchQuery += `${searchParams}`;
+    }
+
+    this.props.onSearchPress(searchQuery, indexer.id, categories, queryType);
   };
 
   onDetailsPress = () => {
@@ -83,6 +141,8 @@ class HistoryRow extends Component {
     if (!indexer) {
       return null;
     }
+
+    const parameters = historyParameters.filter((parameter) => parameter.key in data && data[parameter.key]);
 
     return (
       <TableRow>
@@ -137,158 +197,16 @@ class HistoryRow extends Component {
                   key={name}
                   className={styles.parameters}
                 >
-                  {
-                    data.imdbId ?
+                  {parameters.map((parameter) => {
+                    return (
                       <HistoryRowParameter
-                        title='IMDb'
-                        value={data.imdbId}
-                      /> :
-                      null
+                        key={parameter.key}
+                        title={parameter.title}
+                        value={data[parameter.key]}
+                      />
+                    );
                   }
-
-                  {
-                    data.tmdbId ?
-                      <HistoryRowParameter
-                        title='TMDb'
-                        value={data.tmdbId}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.tvdbId ?
-                      <HistoryRowParameter
-                        title='TVDb'
-                        value={data.tvdbId}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.traktId ?
-                      <HistoryRowParameter
-                        title='Trakt'
-                        value={data.traktId}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.rId ?
-                      <HistoryRowParameter
-                        title='TvRage'
-                        value={data.rId}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.tvMazeId ?
-                      <HistoryRowParameter
-                        title='TvMaze'
-                        value={data.tvMazeId}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.season ?
-                      <HistoryRowParameter
-                        title={translate('Season')}
-                        value={data.season}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.episode ?
-                      <HistoryRowParameter
-                        title={translate('Episode')}
-                        value={data.episode}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.artist ?
-                      <HistoryRowParameter
-                        title={translate('Artist')}
-                        value={data.artist}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.album ?
-                      <HistoryRowParameter
-                        title={translate('Album')}
-                        value={data.album}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.label ?
-                      <HistoryRowParameter
-                        title={translate('Label')}
-                        value={data.label}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.track ?
-                      <HistoryRowParameter
-                        title={translate('Track')}
-                        value={data.track}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.year ?
-                      <HistoryRowParameter
-                        title={translate('Year')}
-                        value={data.year}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.genre ?
-                      <HistoryRowParameter
-                        title={translate('Genre')}
-                        value={data.genre}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.author ?
-                      <HistoryRowParameter
-                        title={translate('Author')}
-                        value={data.author}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.bookTitle ?
-                      <HistoryRowParameter
-                        title={translate('Book')}
-                        value={data.bookTitle}
-                      /> :
-                      null
-                  }
-
-                  {
-                    data.publisher ?
-                      <HistoryRowParameter
-                        title={translate('Publisher')}
-                        value={data.publisher}
-                      /> :
-                      null
-                  }
+                  )}
                 </TableRowCell>
               );
             }
@@ -300,8 +218,8 @@ class HistoryRow extends Component {
                   className={styles.indexer}
                 >
                   {
-                    data.title ?
-                      data.title :
+                    data.grabTitle ?
+                      data.grabTitle :
                       null
                   }
                 </TableRowCell>

@@ -1,13 +1,14 @@
 using System.Text.RegularExpressions;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Core.IndexerSearch
 {
     public class NewznabRequest
     {
-        private static readonly Regex TvRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:rid\:)(?<rid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex MovieRegex = new Regex(@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:traktid\:)(?<traktid>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex MusicRegex = new Regex(@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:track\:)(?<track>[^{]+)|(?:label\:)(?<label>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex BookRegex = new Regex(@"\{((?:author\:)(?<author>[^{]+)|(?:publisher\:)(?<publisher>[^{]+)|(?:title\:)(?<title>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TvRegex = new (@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:rid\:)(?<rid>[^{]+)|(?:tvdbid\:)(?<tvdbid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:season\:)(?<season>[^{]+)|(?:episode\:)(?<episode>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MovieRegex = new (@"\{((?:imdbid\:)(?<imdbid>[^{]+)|(?:doubanid\:)(?<doubanid>[^{]+)|(?:tmdbid\:)(?<tmdbid>[^{]+)|(?:traktid\:)(?<traktid>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MusicRegex = new (@"\{((?:artist\:)(?<artist>[^{]+)|(?:album\:)(?<album>[^{]+)|(?:track\:)(?<track>[^{]+)|(?:label\:)(?<label>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex BookRegex = new (@"\{((?:author\:)(?<author>[^{]+)|(?:publisher\:)(?<publisher>[^{]+)|(?:title\:)(?<title>[^{]+)|(?:year\:)(?<year>[^{]+)|(?:genre\:)(?<genre>[^{]+))\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string t { get; set; }
         public string q { get; set; }
@@ -40,6 +41,11 @@ namespace NzbDrone.Core.IndexerSearch
 
         public void QueryToParams()
         {
+            if (q.IsNullOrWhiteSpace())
+            {
+                return;
+            }
+
             if (t == "tvsearch")
             {
                 var matches = TvRegex.Matches(q);

@@ -128,52 +128,55 @@ namespace NzbDrone.Core.History
                 Successful = response?.StatusCode == HttpStatusCode.OK || (response is { Request: { SuppressHttpError: true, SuppressHttpErrorStatusCodes: not null } } && response.Request.SuppressHttpErrorStatusCodes.Contains(response.StatusCode))
             };
 
-            if (message.Query is MovieSearchCriteria)
+            if (message.Query is MovieSearchCriteria movieSearchCriteria)
             {
-                history.Data.Add("ImdbId", ((MovieSearchCriteria)message.Query).FullImdbId ?? string.Empty);
-                history.Data.Add("TmdbId", ((MovieSearchCriteria)message.Query).TmdbId?.ToString() ?? string.Empty);
-                history.Data.Add("TraktId", ((MovieSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
-                history.Data.Add("Year", ((MovieSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
-                history.Data.Add("Genre", ((MovieSearchCriteria)message.Query).Genre ?? string.Empty);
+                history.Data.Add("ImdbId", movieSearchCriteria.FullImdbId);
+                history.Data.Add("TmdbId", movieSearchCriteria.TmdbId?.ToString());
+                history.Data.Add("TraktId", movieSearchCriteria.TraktId?.ToString());
+                history.Data.Add("Year", movieSearchCriteria.Year?.ToString());
+                history.Data.Add("Genre", movieSearchCriteria.Genre);
             }
 
-            if (message.Query is TvSearchCriteria)
+            if (message.Query is TvSearchCriteria tvSearchCriteria)
             {
-                history.Data.Add("ImdbId", ((TvSearchCriteria)message.Query).FullImdbId ?? string.Empty);
-                history.Data.Add("TvdbId", ((TvSearchCriteria)message.Query).TvdbId?.ToString() ?? string.Empty);
-                history.Data.Add("TmdbId", ((TvSearchCriteria)message.Query).TmdbId?.ToString() ?? string.Empty);
-                history.Data.Add("TraktId", ((TvSearchCriteria)message.Query).TraktId?.ToString() ?? string.Empty);
-                history.Data.Add("RId", ((TvSearchCriteria)message.Query).RId?.ToString() ?? string.Empty);
-                history.Data.Add("TvMazeId", ((TvSearchCriteria)message.Query).TvMazeId?.ToString() ?? string.Empty);
-                history.Data.Add("Season", ((TvSearchCriteria)message.Query).Season?.ToString() ?? string.Empty);
-                history.Data.Add("Episode", ((TvSearchCriteria)message.Query).Episode ?? string.Empty);
-                history.Data.Add("Year", ((TvSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
-                history.Data.Add("Genre", ((TvSearchCriteria)message.Query).Genre ?? string.Empty);
+                history.Data.Add("ImdbId", tvSearchCriteria.FullImdbId);
+                history.Data.Add("TvdbId", tvSearchCriteria.TvdbId?.ToString());
+                history.Data.Add("TmdbId", tvSearchCriteria.TmdbId?.ToString());
+                history.Data.Add("TraktId", tvSearchCriteria.TraktId?.ToString());
+                history.Data.Add("RId", tvSearchCriteria.RId?.ToString());
+                history.Data.Add("TvMazeId", tvSearchCriteria.TvMazeId?.ToString());
+                history.Data.Add("Season", tvSearchCriteria.Season?.ToString());
+                history.Data.Add("Episode", tvSearchCriteria.Episode);
+                history.Data.Add("Year", tvSearchCriteria.Year?.ToString());
+                history.Data.Add("Genre", tvSearchCriteria.Genre);
             }
 
-            if (message.Query is MusicSearchCriteria)
+            if (message.Query is MusicSearchCriteria musicSearchCriteria)
             {
-                history.Data.Add("Artist", ((MusicSearchCriteria)message.Query).Artist ?? string.Empty);
-                history.Data.Add("Album", ((MusicSearchCriteria)message.Query).Album ?? string.Empty);
-                history.Data.Add("Track", ((MusicSearchCriteria)message.Query).Track ?? string.Empty);
-                history.Data.Add("Label", ((MusicSearchCriteria)message.Query).Label ?? string.Empty);
-                history.Data.Add("Year", ((MusicSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
-                history.Data.Add("Genre", ((MusicSearchCriteria)message.Query).Genre ?? string.Empty);
+                history.Data.Add("Artist", musicSearchCriteria.Artist);
+                history.Data.Add("Album", musicSearchCriteria.Album);
+                history.Data.Add("Track", musicSearchCriteria.Track);
+                history.Data.Add("Label", musicSearchCriteria.Label);
+                history.Data.Add("Year", musicSearchCriteria.Year?.ToString());
+                history.Data.Add("Genre", musicSearchCriteria.Genre);
             }
 
-            if (message.Query is BookSearchCriteria)
+            if (message.Query is BookSearchCriteria bookSearchCriteria)
             {
-                history.Data.Add("Author", ((BookSearchCriteria)message.Query).Author ?? string.Empty);
-                history.Data.Add("BookTitle", ((BookSearchCriteria)message.Query).Title ?? string.Empty);
-                history.Data.Add("Publisher", ((BookSearchCriteria)message.Query).Publisher ?? string.Empty);
-                history.Data.Add("Year", ((BookSearchCriteria)message.Query).Year?.ToString() ?? string.Empty);
-                history.Data.Add("Genre", ((BookSearchCriteria)message.Query).Genre ?? string.Empty);
+                history.Data.Add("Author", bookSearchCriteria.Author);
+                history.Data.Add("BookTitle", bookSearchCriteria.Title);
+                history.Data.Add("Publisher", bookSearchCriteria.Publisher);
+                history.Data.Add("Year", bookSearchCriteria.Year?.ToString());
+                history.Data.Add("Genre", bookSearchCriteria.Genre);
             }
+
+            // Clean empty data
+            history.Data = history.Data.Where(d => d.Value != null).ToDictionary(x => x.Key, x => x.Value);
 
             history.Data.Add("ElapsedTime", message.QueryResult.Cached ? "0" : message.QueryResult.Response?.ElapsedTime.ToString() ?? string.Empty);
             history.Data.Add("Query", message.Query.SearchTerm ?? string.Empty);
             history.Data.Add("QueryType", message.Query.SearchType ?? string.Empty);
-            history.Data.Add("Categories", string.Join(",", message.Query.Categories) ?? string.Empty);
+            history.Data.Add("Categories", string.Join(",", message.Query.Categories ?? Array.Empty<int>()));
             history.Data.Add("Source", message.Query.Source ?? string.Empty);
             history.Data.Add("Host", message.Query.Host ?? string.Empty);
             history.Data.Add("QueryResults", message.QueryResult.Releases?.Count.ToString() ?? string.Empty);

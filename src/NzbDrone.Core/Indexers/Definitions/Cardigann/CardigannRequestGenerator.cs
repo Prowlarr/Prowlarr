@@ -931,7 +931,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                                 if (content.Length >= 1 && content[0] != 'd')
                                 {
-                                    _logger.Debug("CardigannIndexer ({0}): Download selector {1}'s torrent file is invalid, retrying with next available selector", _definition.Id, querySelector);
+                                    _logger.Debug("{0}: Download selector {1}'s torrent file is invalid, retrying with next available selector", _definition.Id, querySelector);
 
                                     continue;
                                 }
@@ -950,17 +950,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                             return selectorDownloadRequest;
                         }
-                        catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+                        catch (Exception ex)
                         {
-                            _logger.Debug("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", ex, _definition.Id, querySelector);
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.Error("{0} CardigannIndexer ({1}): An exception occurred while trying selector {2}, retrying with next available selector", e, _definition.Id, querySelector);
-
-                            throw new CardigannException($"An exception occurred while trying selector: {querySelector}");
+                            _logger.Error(ex, "{0}: An exception occurred while trying selector {1}, retrying with next available selector.", _definition.Id, querySelector);
                         }
                     }
+
+                    throw new CardigannException($"Download selectors didn't match for {link}");
                 }
             }
 

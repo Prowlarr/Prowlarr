@@ -626,7 +626,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                         }
                         catch (InvalidDateException ex)
                         {
-                            _logger.Debug(ex.Message);
+                            _logger.Debug("{0}: {1}", _definition.Id, ex.Message);
                         }
 
                         break;

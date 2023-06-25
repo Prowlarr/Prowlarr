@@ -85,13 +85,23 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             request.SetContent(indexer.ToJson());
 
-            return ExecuteIndexerRequest(request);
+            try
+            {
+                return ExecuteIndexerRequest(request);
+            }
+            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                request.Url = request.Url.AddQueryParam("forceSave", "true");
+
+                return ExecuteIndexerRequest(request);
+            }
         }
 
         public SonarrIndexer UpdateIndexer(SonarrIndexer indexer, SonarrSettings settings)
         {
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexer.Id}", HttpMethod.Put);
 
+            request.Url = request.Url.AddQueryParam("forceSave", "true");
             request.SetContent(indexer.ToJson());
 
             return ExecuteIndexerRequest(request);
@@ -185,8 +195,10 @@ namespace NzbDrone.Core.Applications.Sonarr
                         break;
                     default:
                         _logger.Error(ex, "Unexpected response status code: {0}", ex.Response.StatusCode);
-                        throw;
+                        break;
                 }
+
+                throw;
             }
             catch (JsonReaderException ex)
             {
@@ -198,8 +210,6 @@ namespace NzbDrone.Core.Applications.Sonarr
                 _logger.Error(ex, "Unable to add or update indexer");
                 throw;
             }
-
-            return null;
         }
 
         private HttpRequest BuildRequest(SonarrSettings settings, string resource, HttpMethod method)

@@ -85,13 +85,23 @@ namespace NzbDrone.Core.Applications.Lidarr
 
             request.SetContent(indexer.ToJson());
 
-            return ExecuteIndexerRequest(request);
+            try
+            {
+                return ExecuteIndexerRequest(request);
+            }
+            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                request.Url = request.Url.AddQueryParam("forceSave", "true");
+
+                return ExecuteIndexerRequest(request);
+            }
         }
 
         public LidarrIndexer UpdateIndexer(LidarrIndexer indexer, LidarrSettings settings)
         {
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexer.Id}", HttpMethod.Put);
 
+            request.Url = request.Url.AddQueryParam("forceSave", "true");
             request.SetContent(indexer.ToJson());
 
             return ExecuteIndexerRequest(request);
@@ -179,8 +189,10 @@ namespace NzbDrone.Core.Applications.Lidarr
                         break;
                     default:
                         _logger.Error(ex, "Unexpected response status code: {0}", ex.Response.StatusCode);
-                        throw;
+                        break;
                 }
+
+                throw;
             }
             catch (JsonReaderException ex)
             {
@@ -192,8 +204,6 @@ namespace NzbDrone.Core.Applications.Lidarr
                 _logger.Error(ex, "Unable to add or update indexer");
                 throw;
             }
-
-            return null;
         }
 
         private HttpRequest BuildRequest(LidarrSettings settings, string resource, HttpMethod method)

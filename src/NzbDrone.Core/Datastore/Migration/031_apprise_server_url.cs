@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 using Dapper;
 using FluentMigrator;
@@ -17,33 +18,43 @@ namespace NzbDrone.Core.Datastore.Migration
 
         private void MigrateToServerUrl(IDbConnection conn, IDbTransaction tran)
         {
-            using var selectCommand = conn.CreateCommand();
-            selectCommand.Transaction = tran;
-            selectCommand.CommandText = "SELECT \"Id\", \"Settings\" FROM \"Notifications\" WHERE \"Implementation\" = 'Apprise'";
+            var updatedNotifications = new List<object>();
 
-            using var reader = selectCommand.ExecuteReader();
-
-            while (reader.Read())
+            using (var selectCommand = conn.CreateCommand())
             {
-                var id = reader.GetInt32(0);
-                var settings = reader.GetString(1);
+                selectCommand.Transaction = tran;
+                selectCommand.CommandText = "SELECT \"Id\", \"Settings\" FROM \"Notifications\" WHERE \"Implementation\" = 'Apprise'";
 
-                if (!string.IsNullOrWhiteSpace(settings))
+                using var reader = selectCommand.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    var jsonObject = Json.Deserialize<JObject>(settings);
+                    var id = reader.GetInt32(0);
+                    var settings = reader.GetString(1);
 
-                    if (jsonObject.ContainsKey("baseUrl"))
+                    if (!string.IsNullOrWhiteSpace(settings))
                     {
-                        jsonObject.Add("serverUrl", jsonObject.Value<string>("baseUrl"));
-                        jsonObject.Remove("baseUrl");
+                        var jsonObject = Json.Deserialize<JObject>(settings);
+
+                        if (jsonObject.ContainsKey("baseUrl"))
+                        {
+                            jsonObject.Add("serverUrl", jsonObject.Value<string>("baseUrl"));
+                            jsonObject.Remove("baseUrl");
+                        }
+
+                        settings = jsonObject.ToJson();
                     }
 
-                    settings = jsonObject.ToJson();
+                    updatedNotifications.Add(new
+                    {
+                        Id = id,
+                        Settings = settings
+                    });
                 }
-
-                var parameters = new { Settings = settings, Id = id };
-                conn.Execute("UPDATE Notifications SET Settings = @Settings WHERE Id = @Id", parameters, transaction: tran);
             }
+
+            var updateNotificationsSql = "UPDATE \"Notifications\" SET \"Settings\" = @Settings WHERE \"Id\" = @Id";
+            conn.Execute(updateNotificationsSql, updatedNotifications, transaction: tran);
         }
     }
 }

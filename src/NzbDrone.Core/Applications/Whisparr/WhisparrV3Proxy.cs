@@ -82,13 +82,23 @@ namespace NzbDrone.Core.Applications.Whisparr
 
             request.SetContent(indexer.ToJson());
 
-            return Execute<WhisparrIndexer>(request);
+            try
+            {
+                return ExecuteIndexerRequest(request);
+            }
+            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                request.Url = request.Url.AddQueryParam("forceSave", "true");
+
+                return ExecuteIndexerRequest(request);
+            }
         }
 
         public WhisparrIndexer UpdateIndexer(WhisparrIndexer indexer, WhisparrSettings settings)
         {
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexer.Id}", HttpMethod.Put);
 
+            request.Url = request.Url.AddQueryParam("forceSave", "true");
             request.SetContent(indexer.ToJson());
 
             return ExecuteIndexerRequest(request);
@@ -166,8 +176,10 @@ namespace NzbDrone.Core.Applications.Whisparr
                         break;
                     default:
                         _logger.Error(ex, "Unexpected response status code: {0}", ex.Response.StatusCode);
-                        throw;
+                        break;
                 }
+
+                throw;
             }
             catch (JsonReaderException ex)
             {
@@ -179,8 +191,6 @@ namespace NzbDrone.Core.Applications.Whisparr
                 _logger.Error(ex, "Unable to add or update indexer");
                 throw;
             }
-
-            return null;
         }
 
         private HttpRequest BuildRequest(WhisparrSettings settings, string resource, HttpMethod method)

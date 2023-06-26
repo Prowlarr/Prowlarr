@@ -91,6 +91,8 @@ namespace NzbDrone.Core.Applications.Sonarr
             }
             catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.BadRequest)
             {
+                _logger.Debug("Retrying to add indexer forcefully");
+
                 request.Url = request.Url.AddQueryParam("forceSave", "true");
 
                 return ExecuteIndexerRequest(request);
@@ -113,53 +115,16 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             request.SetContent(indexer.ToJson());
 
-            try
+            var applicationVersion = _httpClient.Post(request).Headers.GetSingleValue("X-Application-Version");
+
+            if (applicationVersion == null)
             {
-                var applicationVersion = _httpClient.Post<SonarrIndexer>(request).Headers.GetSingleValue("X-Application-Version");
-
-                if (applicationVersion == null)
-                {
-                    return new ValidationFailure(string.Empty, "Failed to fetch Sonarr version");
-                }
-
-                if (new Version(applicationVersion) < MinimumApplicationVersion)
-                {
-                    return new ValidationFailure(string.Empty, $"Sonarr version should be at least {MinimumApplicationVersion.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
-                }
+                return new ValidationFailure(string.Empty, "Failed to fetch Sonarr version");
             }
-            catch (HttpException ex)
+
+            if (new Version(applicationVersion) < MinimumApplicationVersion)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    _logger.Error(ex, "API Key is invalid");
-                    return new ValidationFailure("ApiKey", "API Key is invalid");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    _logger.Error(ex, "Prowlarr URL is invalid");
-                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Sonarr cannot connect to Prowlarr");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
-                {
-                    _logger.Error(ex, "Sonarr returned redirect and is invalid");
-                    return new ValidationFailure("BaseUrl", "Sonarr url is invalid, Prowlarr cannot connect to Sonarr - are you missing a url base?");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Sonarr not found");
-                    return new ValidationFailure("BaseUrl", "Sonarr url is invalid, Prowlarr cannot connect to Sonarr. Is Sonarr running and accessible? Sonarr v2 is not supported.");
-                }
-
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("BaseUrl", "Unable to complete application test");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("", "Unable to send test message");
+                return new ValidationFailure(string.Empty, $"Sonarr version should be at least {MinimumApplicationVersion.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
             }
 
             return null;
@@ -216,7 +181,9 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var baseUrl = settings.BaseUrl.TrimEnd('/');
 
-            var request = new HttpRequestBuilder(baseUrl).Resource(resource)
+            var request = new HttpRequestBuilder(baseUrl)
+                .Resource(resource)
+                .Accept(HttpAccept.Json)
                 .SetHeader("X-Api-Key", settings.ApiKey)
                 .Build();
 
@@ -233,9 +200,12 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var response = _httpClient.Execute(request);
 
-            var results = JsonConvert.DeserializeObject<TResource>(response.Content);
+            if ((int)response.StatusCode >= 300)
+            {
+                throw new HttpException(response);
+            }
 
-            return results;
+            return Json.Deserialize<TResource>(response.Content);
         }
     }
 }

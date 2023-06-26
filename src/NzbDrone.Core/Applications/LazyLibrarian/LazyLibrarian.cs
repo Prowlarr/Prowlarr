@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -32,10 +31,10 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
             {
                 failures.AddIfNotNull(_lazyLibrarianV1Proxy.TestConnection(Settings));
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to send test message");
-                failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Unable to complete application test, cannot connect to LazyLibrarian"));
+                _logger.Error(ex, "Unable to complete application test");
+                failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to LazyLibrarian. {ex.Message}"));
             }
 
             return new ValidationResult(failures);

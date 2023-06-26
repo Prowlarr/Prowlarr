@@ -110,38 +110,7 @@ namespace NzbDrone.Core.Applications.Whisparr
 
             request.SetContent(indexer.ToJson());
 
-            try
-            {
-                Execute<WhisparrIndexer>(request);
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    _logger.Error(ex, "API Key is invalid");
-                    return new ValidationFailure("ApiKey", "API Key is invalid");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    _logger.Error(ex, "Prowlarr URL is invalid");
-                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Whisparr cannot connect to Prowlarr");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
-                {
-                    _logger.Error(ex, "Whisparr returned redirect and is invalid");
-                    return new ValidationFailure("BaseUrl", "Whisparr url is invalid, Prowlarr cannot connect to Whisparr - are you missing a url base?");
-                }
-
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("BaseUrl", "Unable to complete application test");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("", "Unable to send test message");
-            }
+            _httpClient.Post(request);
 
             return null;
         }
@@ -197,7 +166,9 @@ namespace NzbDrone.Core.Applications.Whisparr
         {
             var baseUrl = settings.BaseUrl.TrimEnd('/');
 
-            var request = new HttpRequestBuilder(baseUrl).Resource(resource)
+            var request = new HttpRequestBuilder(baseUrl)
+                .Resource(resource)
+                .Accept(HttpAccept.Json)
                 .SetHeader("X-Api-Key", settings.ApiKey)
                 .Build();
 
@@ -214,9 +185,12 @@ namespace NzbDrone.Core.Applications.Whisparr
         {
             var response = _httpClient.Execute(request);
 
-            var results = JsonConvert.DeserializeObject<TResource>(response.Content);
+            if ((int)response.StatusCode >= 300)
+            {
+                throw new HttpException(response);
+            }
 
-            return results;
+            return Json.Deserialize<TResource>(response.Content);
         }
     }
 }

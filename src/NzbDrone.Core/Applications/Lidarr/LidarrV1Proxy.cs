@@ -91,6 +91,8 @@ namespace NzbDrone.Core.Applications.Lidarr
             }
             catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.BadRequest)
             {
+                _logger.Debug("Retrying to add indexer forcefully");
+
                 request.Url = request.Url.AddQueryParam("forceSave", "true");
 
                 return ExecuteIndexerRequest(request);
@@ -113,47 +115,16 @@ namespace NzbDrone.Core.Applications.Lidarr
 
             request.SetContent(indexer.ToJson());
 
-            try
+            var applicationVersion = _httpClient.Post(request).Headers.GetSingleValue("X-Application-Version");
+
+            if (applicationVersion == null)
             {
-                var applicationVersion = _httpClient.Post<LidarrIndexer>(request).Headers.GetSingleValue("X-Application-Version");
-
-                if (applicationVersion == null)
-                {
-                    return new ValidationFailure(string.Empty, "Failed to fetch Lidarr version");
-                }
-
-                if (new Version(applicationVersion) < MinimumApplicationVersion)
-                {
-                    return new ValidationFailure(string.Empty, $"Lidarr version should be at least {MinimumApplicationVersion.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
-                }
+                return new ValidationFailure(string.Empty, "Failed to fetch Lidarr version");
             }
-            catch (HttpException ex)
+
+            if (new Version(applicationVersion) < MinimumApplicationVersion)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    _logger.Error(ex, "API Key is invalid");
-                    return new ValidationFailure("ApiKey", "API Key is invalid");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.BadRequest)
-                {
-                    _logger.Error(ex, "Prowlarr URL is invalid");
-                    return new ValidationFailure("ProwlarrUrl", "Prowlarr url is invalid, Lidarr cannot connect to Prowlarr");
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.SeeOther)
-                {
-                    _logger.Error(ex, "Lidarr returned redirect and is invalid");
-                    return new ValidationFailure("BaseUrl", "Lidarr url is invalid, Prowlarr cannot connect to Lidarr - are you missing a url base?");
-                }
-
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("BaseUrl", "Unable to complete application test");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("", "Unable to send test message");
+                return new ValidationFailure(string.Empty, $"Lidarr version should be at least {MinimumApplicationVersion.ToString(3)}. Version reported is {applicationVersion}", applicationVersion);
             }
 
             return null;
@@ -210,7 +181,9 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var baseUrl = settings.BaseUrl.TrimEnd('/');
 
-            var request = new HttpRequestBuilder(baseUrl).Resource(resource)
+            var request = new HttpRequestBuilder(baseUrl)
+                .Resource(resource)
+                .Accept(HttpAccept.Json)
                 .SetHeader("X-Api-Key", settings.ApiKey)
                 .Build();
 
@@ -227,9 +200,12 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var response = _httpClient.Execute(request);
 
-            var results = JsonConvert.DeserializeObject<TResource>(response.Content);
+            if ((int)response.StatusCode >= 300)
+            {
+                throw new HttpException(response);
+            }
 
-            return results;
+            return Json.Deserialize<TResource>(response.Content);
         }
     }
 }

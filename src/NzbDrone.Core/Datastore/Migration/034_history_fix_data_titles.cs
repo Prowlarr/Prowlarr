@@ -50,6 +50,11 @@ namespace NzbDrone.Core.Datastore.Migration
 
                         data = jsonObject.ToJson();
 
+                        if (!jsonObject.ContainsKey("grabTitle") && !jsonObject.ContainsKey("title"))
+                        {
+                            continue;
+                        }
+
                         updatedHistory.Add(new
                         {
                             Id = id,

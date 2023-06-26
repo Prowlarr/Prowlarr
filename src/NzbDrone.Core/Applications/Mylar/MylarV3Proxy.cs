@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using FluentValidation.Results;
-using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Applications.Mylar
 {
@@ -135,11 +135,11 @@ namespace NzbDrone.Core.Applications.Mylar
                     return new ValidationFailure("ApiKey", status.Error.Message);
                 }
 
-                var indexers = GetIndexers(settings);
+                GetIndexers(settings);
             }
             catch (HttpException ex)
             {
-                _logger.Error(ex, "Unable to send test message");
+                _logger.Error(ex, "Unable to complete application test");
                 return new ValidationFailure("BaseUrl", "Unable to complete application test");
             }
             catch (MylarException ex)
@@ -149,8 +149,8 @@ namespace NzbDrone.Core.Applications.Mylar
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to send test message");
-                return new ValidationFailure("", "Unable to send test message");
+                _logger.Error(ex, "Unable to complete application test");
+                return new ValidationFailure("", $"Unable to send test message. {ex.Message}");
             }
 
             return null;
@@ -160,7 +160,9 @@ namespace NzbDrone.Core.Applications.Mylar
         {
             var baseUrl = settings.BaseUrl.TrimEnd('/');
 
-            var requestBuilder = new HttpRequestBuilder(baseUrl).Resource(resource)
+            var requestBuilder = new HttpRequestBuilder(baseUrl)
+                .Resource(resource)
+                .Accept(HttpAccept.Json)
                 .AddQueryParam("cmd", command)
                 .AddQueryParam("apikey", settings.ApiKey);
 
@@ -187,9 +189,12 @@ namespace NzbDrone.Core.Applications.Mylar
         {
             var response = _httpClient.Execute(request);
 
-            var results = JsonConvert.DeserializeObject<TResource>(response.Content);
+            if ((int)response.StatusCode >= 300)
+            {
+                throw new HttpException(response);
+            }
 
-            return results;
+            return Json.Deserialize<TResource>(response.Content);
         }
     }
 }

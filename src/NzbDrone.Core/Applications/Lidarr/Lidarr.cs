@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using FluentValidation.Results;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
 
@@ -48,9 +51,36 @@ namespace NzbDrone.Core.Applications.Lidarr
             {
                 failures.AddIfNotNull(_lidarrV1Proxy.TestConnection(BuildLidarrIndexer(testIndexer, DownloadProtocol.Usenet), Settings));
             }
+            catch (HttpException ex)
+            {
+                switch (ex.Response.StatusCode)
+                {
+                    case HttpStatusCode.Unauthorized:
+                        _logger.Error(ex, "API Key is invalid");
+                        failures.AddIfNotNull(new ValidationFailure("ApiKey", "API Key is invalid"));
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        _logger.Error(ex, "Prowlarr URL is invalid");
+                        failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Lidarr cannot connect to Prowlarr"));
+                        break;
+                    case HttpStatusCode.SeeOther:
+                        _logger.Error(ex, "Lidarr returned redirect and is invalid");
+                        failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Lidarr URL is invalid, Prowlarr cannot connect to Lidarr - are you missing a URL base?"));
+                        break;
+                    default:
+                        _logger.Error(ex, "Unable to complete application test");
+                        failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Lidarr. {ex.Message}"));
+                        break;
+                }
+            }
+            catch (JsonReaderException ex)
+            {
+                _logger.Error(ex, "Unable to parse JSON response from application");
+                failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to parse JSON response from application. {ex.Message}"));
+            }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to send test message");
+                _logger.Error(ex, "Unable to complete application test");
                 failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Lidarr. {ex.Message}"));
             }
 

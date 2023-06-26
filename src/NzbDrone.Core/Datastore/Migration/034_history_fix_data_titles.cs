@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Datastore.Migration
             using (var selectCommand = conn.CreateCommand())
             {
                 selectCommand.Transaction = tran;
-                selectCommand.CommandText = "SELECT \"Id\", \"Data\" FROM \"History\"";
+                selectCommand.CommandText = "SELECT \"Id\", \"Data\", \"EventType\" FROM \"History\"";
 
                 using var reader = selectCommand.ExecuteReader();
 
@@ -31,18 +31,19 @@ namespace NzbDrone.Core.Datastore.Migration
                 {
                     var id = reader.GetInt32(0);
                     var data = reader.GetString(1);
+                    var eventType = reader.GetInt32(2);
 
                     if (!string.IsNullOrWhiteSpace(data))
                     {
                         var jsonObject = Json.Deserialize<JObject>(data);
 
-                        if (jsonObject.ContainsKey("title"))
+                        if (eventType == 1 && jsonObject.ContainsKey("title"))
                         {
                             jsonObject.Add("grabTitle", jsonObject.Value<string>("title"));
                             jsonObject.Remove("title");
                         }
 
-                        if (jsonObject.ContainsKey("bookTitle"))
+                        if (eventType != 1 && jsonObject.ContainsKey("bookTitle"))
                         {
                             jsonObject.Add("title", jsonObject.Value<string>("bookTitle"));
                             jsonObject.Remove("bookTitle");

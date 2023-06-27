@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Datastore.Migration
             using (var selectCommand = conn.CreateCommand())
             {
                 selectCommand.Transaction = tran;
-                selectCommand.CommandText = "SELECT \"Id\", \"Data\", \"EventType\" FROM \"History\"";
+                selectCommand.CommandText = "SELECT \"Id\", \"Data\", \"EventType\" FROM \"History\" WHERE \"EventType\" != 3";
 
                 using var reader = selectCommand.ExecuteReader();
 

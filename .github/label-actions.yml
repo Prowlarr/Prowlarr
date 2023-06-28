@@ -7,6 +7,7 @@
     to be a support request. Please hop over onto our [Discord](https://prowlarr.com/discord) 
     or [Subreddit](https://reddit.com/r/prowlarr)
   close: true
+  close-reason: 'not planned'
 
 'Type: Indexer Request':
   comment: >
@@ -14,6 +15,7 @@
     for bug reports and feature requests. However, this issue appears
     to be a indexer request. Please use our Indexer request [site](https://requests.prowlarr.com/)
   close: true
+  close-reason: 'not planned'
 
 'Status: Logs Needed':
   comment: >

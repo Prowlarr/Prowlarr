@@ -6,7 +6,7 @@ interface CssExports {
   'details': string;
   'elapsedTime': string;
   'indexer': string;
-  'parameters': string;
+  'parametersContent': string;
   'query': string;
   'releaseGroup': string;
   'source': string;

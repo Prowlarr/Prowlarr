@@ -26,9 +26,7 @@
   width: 70px;
 }
 
-.parameters {
-  composes: cell from '~Components/Table/Cells/TableRowCell.css';
-
+.parametersContent {
   display: flex;
   flex-wrap: wrap;
 }

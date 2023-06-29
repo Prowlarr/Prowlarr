@@ -193,20 +193,19 @@ class HistoryRow extends Component {
 
             if (name === 'parameters') {
               return (
-                <TableRowCell
-                  key={name}
-                  className={styles.parameters}
-                >
-                  {parameters.map((parameter) => {
-                    return (
-                      <HistoryRowParameter
-                        key={parameter.key}
-                        title={parameter.title}
-                        value={data[parameter.key]}
-                      />
-                    );
-                  }
-                  )}
+                <TableRowCell key={name}>
+                  <div className={styles.parametersContent}>
+                    {parameters.map((parameter) => {
+                      return (
+                        <HistoryRowParameter
+                          key={parameter.key}
+                          title={parameter.title}
+                          value={data[parameter.key]}
+                        />
+                      );
+                    }
+                    )}
+                  </div>
                 </TableRowCell>
               );
             }

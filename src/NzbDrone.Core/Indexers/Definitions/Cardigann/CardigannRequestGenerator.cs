@@ -400,16 +400,18 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 if (login.Captcha != null)
                 {
                     var captcha = login.Captcha;
-                    Settings.ExtraFieldData.TryGetValue("CAPTCHA", out var captchaText);
-                    if (captchaText != null)
+
+                    if (Settings.ExtraFieldData.TryGetValue("CAPTCHA", out var captchaText) && ((string)captchaText).IsNotNullOrWhiteSpace())
                     {
                         var input = captcha.Input;
+
                         if (login.Selectors)
                         {
                             var inputElement = landingResultDocument.QuerySelector(captcha.Input);
+
                             if (inputElement == null)
                             {
-                                throw new CardigannConfigException(_definition, string.Format("Login failed: No captcha input found using {0}", captcha.Input));
+                                throw new CardigannConfigException(_definition, $"Login failed: No captcha input found using {captcha.Input}");
                             }
 
                             input = inputElement.GetAttribute("name");

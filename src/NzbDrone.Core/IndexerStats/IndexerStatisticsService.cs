@@ -52,12 +52,14 @@ namespace NzbDrone.Core.IndexerStats
                 };
 
                 var sortedEvents = indexer.OrderBy(v => v.Date)
-                                          .ThenBy(v => v.Id)
-                                          .ToArray();
-                var temp = 0;
+                    .ThenBy(v => v.Id)
+                    .ToArray();
 
-                var elapsedTimeEvents = sortedEvents.Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp))
-                                                                    .Select(h => temp);
+                var temp = 0;
+                var elapsedTimeEvents = sortedEvents
+                    .Where(h => int.TryParse(h.Data.GetValueOrDefault("elapsedTime"), out temp) && h.Data.GetValueOrDefault("cached") != "1")
+                    .Select(h => temp)
+                    .ToArray();
 
                 indexerStats.AverageResponseTime = elapsedTimeEvents.Any() ? (int)elapsedTimeEvents.Average() : 0;
 

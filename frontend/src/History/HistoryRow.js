@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Label from 'Components/Label';
 import IconButton from 'Components/Link/IconButton';
 import RelativeDateCellConnector from 'Components/Table/Cells/RelativeDateCellConnector';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRow from 'Components/Table/TableRow';
-import { icons } from 'Helpers/Props';
+import { icons, kinds } from 'Helpers/Props';
 import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
 import translate from 'Utilities/String/translate';
 import HistoryDetailsModal from './Details/HistoryDetailsModal';
@@ -219,6 +220,23 @@ class HistoryRow extends Component {
                   {
                     data.grabTitle ?
                       data.grabTitle :
+                      null
+                  }
+                </TableRowCell>
+              );
+            }
+
+            if (name === 'queryType') {
+              return (
+                <TableRowCell
+                  key={name}
+                  className={styles.query}
+                >
+                  {
+                    data.queryType ?
+                      <Label kind={kinds.INFO}>
+                        {data.queryType}
+                      </Label> :
                       null
                   }
                 </TableRowCell>

@@ -59,6 +59,12 @@ export const defaultState = {
       isVisible: false
     },
     {
+      name: 'queryType',
+      label: translate('QueryType'),
+      isSortable: false,
+      isVisible: false
+    },
+    {
       name: 'categories',
       label: translate('Categories'),
       isSortable: false,

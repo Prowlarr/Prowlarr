@@ -46,7 +46,11 @@ namespace NzbDrone.Common.Http.Dispatchers
 
         public async Task<HttpResponse> GetResponseAsync(HttpRequest request, CookieContainer cookies)
         {
-            var requestMessage = new HttpRequestMessage(request.Method, (Uri)request.Url);
+            var requestMessage = new HttpRequestMessage(request.Method, (Uri)request.Url)
+            {
+                Version = HttpVersion.Version20,
+                VersionPolicy = HttpVersionPolicy.RequestVersionOrLower
+            };
             requestMessage.Headers.UserAgent.ParseAdd(_userAgentBuilder.GetUserAgent(request.UseSimplifiedUserAgent));
             requestMessage.Headers.ConnectionClose = !request.ConnectionKeepAlive;
 
@@ -148,7 +152,7 @@ namespace NzbDrone.Common.Http.Dispatchers
 
                 sw.Stop();
 
-                return new HttpResponse(request, new HttpHeader(headers), cookieCollection, data, sw.ElapsedMilliseconds, responseMessage.StatusCode);
+                return new HttpResponse(request, new HttpHeader(headers), cookieCollection, data, sw.ElapsedMilliseconds, responseMessage.StatusCode, responseMessage.Version);
             }
         }
 
@@ -186,6 +190,8 @@ namespace NzbDrone.Common.Http.Dispatchers
 
             var client = new System.Net.Http.HttpClient(handler)
             {
+                DefaultRequestVersion = HttpVersion.Version20,
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower,
                 Timeout = Timeout.InfiniteTimeSpan
             };
 

@@ -9,9 +9,9 @@ namespace NzbDrone.Common.Http
 {
     public class HttpResponse
     {
-        private static readonly Regex RegexRefresh = new Regex("^(.*?url)=(.*?)(?:;|$)", RegexOptions.Compiled);
+        private static readonly Regex RegexRefresh = new ("^(.*?url)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK, Version version = null)
         {
             Request = request;
             Headers = headers;
@@ -19,9 +19,10 @@ namespace NzbDrone.Common.Http
             ResponseData = binaryData;
             StatusCode = statusCode;
             ElapsedTime = elapsedTime;
+            Version = version;
         }
 
-        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, string content, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK)
+        public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, string content, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK, Version version = null)
         {
             Request = request;
             Headers = headers;
@@ -30,6 +31,7 @@ namespace NzbDrone.Common.Http
             _content = content;
             StatusCode = statusCode;
             ElapsedTime = elapsedTime;
+            Version = version;
         }
 
         public HttpRequest Request { get; private set; }
@@ -37,6 +39,7 @@ namespace NzbDrone.Common.Http
         public CookieCollection Cookies { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
         public long ElapsedTime { get; private set; }
+        public Version Version { get; private set; }
         public byte[] ResponseData { get; private set; }
 
         private string _content;
@@ -121,7 +124,7 @@ namespace NzbDrone.Common.Http
 
         public override string ToString()
         {
-            var result = string.Format("Res: [{0}] {1}: {2}.{3} ({4} bytes)", Request.Method, Request.Url, (int)StatusCode, StatusCode, ResponseData?.Length ?? 0);
+            var result = $"Res: HTTP/{Version} [{Request.Method}] {Request.Url}: {(int)StatusCode}.{StatusCode} ({ResponseData?.Length ?? 0} bytes)";
 
             if (HasHttpError && Headers.ContentType.IsNotNullOrWhiteSpace() && !Headers.ContentType.Equals("text/html", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -136,7 +139,7 @@ namespace NzbDrone.Common.Http
         where T : new()
     {
         public HttpResponse(HttpResponse response)
-            : base(response.Request, response.Headers, response.Cookies, response.ResponseData, response.ElapsedTime, response.StatusCode)
+            : base(response.Request, response.Headers, response.Cookies, response.ResponseData, response.ElapsedTime, response.StatusCode, response.Version)
         {
             Resource = Json.Deserialize<T>(response.Content);
         }

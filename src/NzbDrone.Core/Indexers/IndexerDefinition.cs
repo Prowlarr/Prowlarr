@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Indexers
         public IndexerCapabilities Capabilities { get; set; }
         public int Priority { get; set; } = 25;
         public bool Redirect { get; set; }
+        public int DownloadClientId { get; set; }
         public DateTime Added { get; set; }
         public int AppProfileId { get; set; }
         public LazyLoaded<AppSyncProfile> AppProfile { get; set; }

@@ -73,7 +73,7 @@ namespace Prowlarr.Api.V1.Search
 
             try
             {
-                _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect);
+                _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null).GetAwaiter().GetResult();
             }
             catch (ReleaseDownloadException ex)
             {
@@ -106,7 +106,7 @@ namespace Prowlarr.Api.V1.Search
 
                     try
                     {
-                        _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect);
+                        _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null).GetAwaiter().GetResult();
                     }
                     catch (ReleaseDownloadException ex)
                     {

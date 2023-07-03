@@ -48,7 +48,9 @@ function EditIndexerModalContent(props) {
     appProfileId,
     tags,
     fields,
-    priority
+    priority,
+    protocol,
+    downloadClientId
   } = item;
 
   const indexerDisplayName = implementationName === definitionName ? implementationName : `${implementationName} (${definitionName})`;
@@ -152,6 +154,23 @@ function EditIndexerModalContent(props) {
                   min={1}
                   max={50}
                   {...priority}
+                  onChange={onInputChange}
+                />
+              </FormGroup>
+
+              <FormGroup
+                advancedSettings={advancedSettings}
+                isAdvanced={true}
+              >
+                <FormLabel>{translate('DownloadClient')}</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.DOWNLOAD_CLIENT_SELECT}
+                  name="downloadClientId"
+                  helpText={translate('IndexerDownloadClientHelpText')}
+                  {...downloadClientId}
+                  includeAny={true}
+                  protocol={protocol.value}
                   onChange={onInputChange}
                 />
               </FormGroup>

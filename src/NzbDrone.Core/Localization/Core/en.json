@@ -204,6 +204,7 @@
   "IndexerCategories": "Indexer Categories",
   "IndexerDetails": "Indexer Details",
   "IndexerDisabled": "Indexer Disabled",
+  "IndexerDownloadClientHelpText": "Specify which download client is used for grabs made within Prowlarr from this indexer",
   "IndexerFailureRate": "Indexer Failure Rate",
   "IndexerFlags": "Indexer Flags",
   "IndexerHealthCheckNoIndexers": "No indexers enabled, Prowlarr will not return search results",

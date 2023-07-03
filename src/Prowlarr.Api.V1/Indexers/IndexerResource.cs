@@ -30,6 +30,7 @@ namespace Prowlarr.Api.V1.Indexers
         public IndexerPrivacy Privacy { get; set; }
         public IndexerCapabilityResource Capabilities { get; set; }
         public int Priority { get; set; }
+        public int DownloadClientId { get; set; }
         public DateTime Added { get; set; }
         public IndexerStatusResource Status { get; set; }
         public string SortName { get; set; }
@@ -96,6 +97,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.Protocol = definition.Protocol;
             resource.Privacy = definition.Privacy;
             resource.Priority = definition.Priority;
+            resource.DownloadClientId = definition.DownloadClientId;
             resource.Added = definition.Added;
             resource.SortName = definition.Name.NormalizeTitle();
 
@@ -142,6 +144,7 @@ namespace Prowlarr.Api.V1.Indexers
             definition.IndexerUrls = resource.IndexerUrls;
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;
+            definition.DownloadClientId = resource.DownloadClientId;
             definition.Added = resource.Added;
 
             return definition;

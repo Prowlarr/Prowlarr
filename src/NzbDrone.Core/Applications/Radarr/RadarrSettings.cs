@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             ProwlarrUrl = "http://localhost:9696";
             BaseUrl = "http://localhost:7878";
-            SyncCategories = new[] { 2000, 2010, 2020, 2030, 2040, 2045, 2050, 2060, 2070, 2080 };
+            SyncCategories = new[] { 2000, 2010, 2020, 2030, 2040, 2045, 2050, 2060, 2070, 2080, 2090 };
         }
 
         [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Radarr sees it, including http(s)://, port, and urlbase if needed", Placeholder = "http://localhost:9696")]

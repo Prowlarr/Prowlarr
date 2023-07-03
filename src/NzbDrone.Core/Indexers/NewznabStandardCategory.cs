@@ -35,6 +35,7 @@ namespace NzbDrone.Core.Indexers
         public static readonly IndexerCategory Movies3D = new (2060, "Movies/3D");
         public static readonly IndexerCategory MoviesDVD = new (2070, "Movies/DVD");
         public static readonly IndexerCategory MoviesWEBDL = new (2080, "Movies/WEB-DL");
+        public static readonly IndexerCategory Moviesx265 = new (2090, "Movies/x265");
 
         public static readonly IndexerCategory Audio = new (3000, "Audio");
         public static readonly IndexerCategory AudioMP3 = new (3010, "Audio/MP3");
@@ -63,6 +64,7 @@ namespace NzbDrone.Core.Indexers
         public static readonly IndexerCategory TVSport = new (5060, "TV/Sport");
         public static readonly IndexerCategory TVAnime = new (5070, "TV/Anime");
         public static readonly IndexerCategory TVDocumentary = new (5080, "TV/Documentary");
+        public static readonly IndexerCategory TVx265 = new (5090, "TV/x265");
 
         public static readonly IndexerCategory XXX = new (6000, "XXX");
         public static readonly IndexerCategory XXXDVD = new (6010, "XXX/DVD");
@@ -128,6 +130,7 @@ namespace NzbDrone.Core.Indexers
             Movies3D,
             MoviesDVD,
             MoviesWEBDL,
+            Moviesx265,
             Audio,
             AudioMP3,
             AudioVideo,
@@ -153,6 +156,7 @@ namespace NzbDrone.Core.Indexers
             TVSport,
             TVAnime,
             TVDocumentary,
+            TVx265,
             XXX,
             XXXDVD,
             XXXWMV,
@@ -211,7 +215,8 @@ namespace NzbDrone.Core.Indexers
                     MoviesBluRay,
                     Movies3D,
                     MoviesDVD,
-                    MoviesWEBDL
+                    MoviesWEBDL,
+                    Moviesx265
                 });
             Audio.SubCategories.AddRange(
                 new List<IndexerCategory>
@@ -245,7 +250,8 @@ namespace NzbDrone.Core.Indexers
                     TVOther,
                     TVSport,
                     TVAnime,
-                    TVDocumentary
+                    TVDocumentary,
+                    TVx265
                 });
             XXX.SubCategories.AddRange(
                 new List<IndexerCategory>

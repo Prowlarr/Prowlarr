@@ -828,6 +828,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         protected JArray JsonParseRowsSelector(JToken parsedJson, string rowSelector)
         {
+            rowSelector = ApplyGoTemplateText(rowSelector);
             var selector = rowSelector.Split(':')[0];
 
             try

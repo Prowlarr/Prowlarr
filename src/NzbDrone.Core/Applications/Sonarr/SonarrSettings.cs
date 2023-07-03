@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             ProwlarrUrl = "http://localhost:9696";
             BaseUrl = "http://localhost:8989";
-            SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050 };
+            SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050, 5090 };
             AnimeSyncCategories = new[] { 5070 };
         }
 

@@ -77,7 +77,7 @@ namespace NzbDrone.Core.Configuration
 
         public int HistoryCleanupDays
         {
-            get { return GetValueInt("HistoryCleanupDays", 365); }
+            get { return GetValueInt("HistoryCleanupDays", 30); }
             set { SetValue("HistoryCleanupDays", value); }
         }
 

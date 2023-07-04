@@ -3,17 +3,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { saveIndexer, setIndexerFieldValue, setIndexerValue, testIndexer } from 'Store/Actions/indexerActions';
-import { toggleAdvancedSettings } from 'Store/Actions/settingsActions';
+import { fetchDownloadClients, toggleAdvancedSettings } from 'Store/Actions/settingsActions';
 import createIndexerSchemaSelector from 'Store/Selectors/createIndexerSchemaSelector';
 import EditIndexerModalContent from './EditIndexerModalContent';
 
 function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
+    (state) => state.settings.downloadClients,
     createIndexerSchemaSelector(),
-    (advancedSettings, indexer) => {
+    (advancedSettings, downloadClients, indexer) => {
+      const usenetDownloadClients = downloadClients.items.filter((downloadClient) => downloadClient.protocol === 'usenet');
+      const torrentDownloadClients = downloadClients.items.filter((downloadClient) => downloadClient.protocol === 'torrent');
+
       return {
         advancedSettings,
+        hasUsenetDownloadClients: usenetDownloadClients.length > 0,
+        hasTorrentDownloadClients: torrentDownloadClients.length > 0,
         ...indexer
       };
     }
@@ -25,13 +31,18 @@ const mapDispatchToProps = {
   setIndexerFieldValue,
   saveIndexer,
   testIndexer,
-  toggleAdvancedSettings
+  toggleAdvancedSettings,
+  dispatchFetchDownloadClients: fetchDownloadClients
 };
 
 class EditIndexerModalContentConnector extends Component {
 
   //
   // Lifecycle
+
+  componentDidMount() {
+    this.props.dispatchFetchDownloadClients();
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.isSaving && !this.props.isSaving && !this.props.saveError) {
@@ -90,7 +101,8 @@ EditIndexerModalContentConnector.propTypes = {
   toggleAdvancedSettings: PropTypes.func.isRequired,
   saveIndexer: PropTypes.func.isRequired,
   testIndexer: PropTypes.func.isRequired,
-  onModalClose: PropTypes.func.isRequired
+  onModalClose: PropTypes.func.isRequired,
+  dispatchFetchDownloadClients: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(EditIndexerModalContentConnector);

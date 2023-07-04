@@ -91,9 +91,19 @@ namespace NzbDrone.Core.ThingiProvider
             return Active().Select(GetInstance).ToList();
         }
 
+        public bool Exists(int id)
+        {
+            return _providerRepository.Find(id) != null;
+        }
+
         public virtual TProviderDefinition Get(int id)
         {
             return _providerRepository.Get(id);
+        }
+
+        public TProviderDefinition Find(int id)
+        {
+            return _providerRepository.Find(id);
         }
 
         public virtual TProviderDefinition Create(TProviderDefinition definition)

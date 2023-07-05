@@ -4927,6 +4927,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "downloadClientId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "added": {
             "type": "string",
             "format": "date-time"

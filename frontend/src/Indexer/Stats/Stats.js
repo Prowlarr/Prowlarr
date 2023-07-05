@@ -253,7 +253,6 @@ Stats.propTypes = {
   isPopulated: PropTypes.bool.isRequired,
   filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedFilterKey: PropTypes.string.isRequired,
-  customFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   onFilterSelect: PropTypes.func.isRequired,
   error: PropTypes.object,
   data: PropTypes.object

@@ -146,7 +146,7 @@ class SearchIndex extends Component {
     } = this.props;
 
     // Reset if not sorting by sortTitle
-    if (sortKey !== 'title') {
+    if (sortKey !== 'sortTitle') {
       this.setState({ jumpBarItems: { order: [] } });
       return;
     }

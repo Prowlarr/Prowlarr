@@ -31,9 +31,9 @@ export const defaultState = {
   error: null,
   grabError: null,
   items: [],
-  sortKey: 'title',
+  sortKey: 'age',
   sortDirection: sortDirections.ASCENDING,
-  secondarySortKey: 'title',
+  secondarySortKey: 'sortTitle',
   secondarySortDirection: sortDirections.ASCENDING,
 
   defaults: {

@@ -55,7 +55,9 @@ class SearchFooter extends Component {
       this.onSearchPress();
     }
 
-    this.props.bindShortcut('enter', this.onSearchPress, { isGlobal: true });
+    setTimeout(() => {
+      this.props.bindShortcut('enter', this.onSearchPress, { isGlobal: true });
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -120,7 +122,6 @@ class SearchFooter extends Component {
   };
 
   onSearchPress = () => {
-
     const {
       searchLimit,
       searchOffset,

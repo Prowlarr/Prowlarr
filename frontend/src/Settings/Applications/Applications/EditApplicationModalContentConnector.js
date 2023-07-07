@@ -2,7 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { saveApplication, setApplicationFieldValue, setApplicationValue, testApplication } from 'Store/Actions/settingsActions';
+import {
+  saveApplication,
+  setApplicationFieldValue,
+  setApplicationValue,
+  testApplication,
+  toggleAdvancedSettings
+} from 'Store/Actions/settingsActions';
 import createProviderSettingsSelector from 'Store/Selectors/createProviderSettingsSelector';
 import EditApplicationModalContent from './EditApplicationModalContent';
 
@@ -23,7 +29,8 @@ const mapDispatchToProps = {
   setApplicationValue,
   setApplicationFieldValue,
   saveApplication,
-  testApplication
+  testApplication,
+  toggleAdvancedSettings
 };
 
 class EditApplicationModalContentConnector extends Component {
@@ -56,6 +63,10 @@ class EditApplicationModalContentConnector extends Component {
     this.props.testApplication({ id: this.props.id });
   };
 
+  onAdvancedSettingsPress = () => {
+    this.props.toggleAdvancedSettings();
+  };
+
   //
   // Render
 
@@ -67,6 +78,7 @@ class EditApplicationModalContentConnector extends Component {
         onTestPress={this.onTestPress}
         onInputChange={this.onInputChange}
         onFieldChange={this.onFieldChange}
+        onAdvancedSettingsPress={this.onAdvancedSettingsPress}
       />
     );
   }
@@ -82,7 +94,8 @@ EditApplicationModalContentConnector.propTypes = {
   setApplicationFieldValue: PropTypes.func,
   saveApplication: PropTypes.func,
   testApplication: PropTypes.func,
-  onModalClose: PropTypes.func.isRequired
+  onModalClose: PropTypes.func.isRequired,
+  toggleAdvancedSettings: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(EditApplicationModalContentConnector);

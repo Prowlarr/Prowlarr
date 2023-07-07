@@ -14,6 +14,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import AdvancedSettingsButton from 'Settings/AdvancedSettingsButton';
 import translate from 'Utilities/String/translate';
 import styles from './EditApplicationModalContent.css';
 
@@ -38,6 +39,7 @@ function EditApplicationModalContent(props) {
     onSavePress,
     onTestPress,
     onDeleteApplicationPress,
+    onAdvancedSettingsPress,
     ...otherProps
   } = props;
 
@@ -149,6 +151,12 @@ function EditApplicationModalContent(props) {
             </Button>
         }
 
+        <AdvancedSettingsButton
+          advancedSettings={advancedSettings}
+          onAdvancedSettingsPress={onAdvancedSettingsPress}
+          showLabel={false}
+        />
+
         <SpinnerErrorButton
           isSpinning={isTesting}
           error={saveError}
@@ -188,7 +196,8 @@ EditApplicationModalContent.propTypes = {
   onModalClose: PropTypes.func.isRequired,
   onSavePress: PropTypes.func.isRequired,
   onTestPress: PropTypes.func.isRequired,
-  onDeleteApplicationPress: PropTypes.func
+  onDeleteApplicationPress: PropTypes.func,
+  onAdvancedSettingsPress: PropTypes.func.isRequired
 };
 
 export default EditApplicationModalContent;

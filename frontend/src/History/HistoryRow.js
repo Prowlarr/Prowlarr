@@ -66,7 +66,7 @@ class HistoryRow extends Component {
       data
     } = this.props;
 
-    const { query, queryType } = data;
+    const { query, queryType, limit, offset } = data;
 
     let searchQuery = query;
     let categories = [];
@@ -111,7 +111,7 @@ class HistoryRow extends Component {
       searchQuery += `${searchParams}`;
     }
 
-    this.props.onSearchPress(searchQuery, indexer.id, categories, queryType);
+    this.props.onSearchPress(searchQuery, indexer.id, categories, queryType, parseInt(limit), parseInt(offset));
   };
 
   onDetailsPress = () => {
@@ -312,6 +312,12 @@ class HistoryRow extends Component {
                   key={name}
                   className={styles.details}
                 >
+                  <IconButton
+                    name={icons.INFO}
+                    onPress={this.onDetailsPress}
+                    title={translate('HistoryDetails')}
+                  />
+
                   {
                     eventType === 'indexerQuery' ?
                       <IconButton
@@ -321,11 +327,6 @@ class HistoryRow extends Component {
                       /> :
                       null
                   }
-                  <IconButton
-                    name={icons.INFO}
-                    onPress={this.onDetailsPress}
-                    title={translate('HistoryDetails')}
-                  />
                 </TableRowCell>
               );
             }

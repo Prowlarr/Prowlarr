@@ -170,6 +170,9 @@ namespace NzbDrone.Core.History
                 history.Data.Add("Genre", bookSearchCriteria.Genre);
             }
 
+            history.Data.Add("Limit", message.Query.Limit?.ToString());
+            history.Data.Add("Offset", message.Query.Offset?.ToString());
+
             // Clean empty data
             history.Data = history.Data.Where(d => d.Value != null).ToDictionary(x => x.Key, x => x.Value);
 

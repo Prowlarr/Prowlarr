@@ -40,7 +40,9 @@ export const defaultState = {
     searchType: 'search',
     searchQuery: '',
     searchIndexerIds: [],
-    searchCategories: []
+    searchCategories: [],
+    searchLimit: 100,
+    searchOffset: 0
   },
 
   columns: [

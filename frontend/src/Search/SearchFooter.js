@@ -27,7 +27,9 @@ class SearchFooter extends Component {
       defaultIndexerIds,
       defaultCategories,
       defaultSearchQuery,
-      defaultSearchType
+      defaultSearchType,
+      defaultSearchLimit,
+      defaultSearchOffset
     } = props;
 
     this.state = {
@@ -38,8 +40,8 @@ class SearchFooter extends Component {
       searchQuery: defaultSearchQuery || '',
       searchIndexerIds: defaultIndexerIds,
       searchCategories: defaultCategories,
-      searchLimit: 100,
-      searchOffset: 0,
+      searchLimit: defaultSearchLimit,
+      searchOffset: defaultSearchOffset,
       newSearch: true
     };
   }
@@ -303,6 +305,8 @@ SearchFooter.propTypes = {
   defaultCategories: PropTypes.arrayOf(PropTypes.number).isRequired,
   defaultSearchQuery: PropTypes.string.isRequired,
   defaultSearchType: PropTypes.string.isRequired,
+  defaultSearchLimit: PropTypes.number.isRequired,
+  defaultSearchOffset: PropTypes.number.isRequired,
   selectedCount: PropTypes.number.isRequired,
   itemCount: PropTypes.number.isRequired,
   isFetching: PropTypes.bool.isRequired,

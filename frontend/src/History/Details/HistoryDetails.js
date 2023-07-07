@@ -18,6 +18,8 @@ function HistoryDetails(props) {
       query,
       queryResults,
       categories,
+      limit,
+      offset,
       source,
       url
     } = data;
@@ -31,43 +33,66 @@ function HistoryDetails(props) {
         />
 
         {
-          !!indexer &&
+          indexer ?
             <DescriptionListItem
               title={translate('Indexer')}
               data={indexer.name}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          data ?
             <DescriptionListItem
               title={translate('QueryResults')}
               data={queryResults ? queryResults : '-'}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          data ?
             <DescriptionListItem
               title={translate('Categories')}
               data={categories ? categories : '-'}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          limit ?
+            <DescriptionListItem
+              title={translate('Limit')}
+              data={limit}
+            /> :
+            null
+        }
+
+        {
+          offset ?
+            <DescriptionListItem
+              title={translate('Offset')}
+              data={offset}
+            /> :
+            null
+        }
+
+        {
+          data ?
             <DescriptionListItem
               title={translate('Source')}
               data={source}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          data ?
             <DescriptionListItem
               title={translate('Url')}
               data={url ? <Link to={url}>{translate('Link')}</Link> : '-'}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );
@@ -83,35 +108,39 @@ function HistoryDetails(props) {
     return (
       <DescriptionList>
         {
-          !!indexer &&
+          indexer ?
             <DescriptionListItem
               title={translate('Indexer')}
               data={indexer.name}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          data ?
             <DescriptionListItem
               title={translate('Source')}
               data={source ? source : '-'}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          data ?
             <DescriptionListItem
               title={translate('GrabTitle')}
               data={grabTitle ? grabTitle : '-'}
-            />
+            /> :
+            null
         }
 
         {
-          !!data &&
+          data ?
             <DescriptionListItem
               title={translate('Url')}
               data={url ? <Link to={url}>{translate('Link')}</Link> : '-'}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );
@@ -124,11 +153,12 @@ function HistoryDetails(props) {
         title={translate('Auth')}
       >
         {
-          !!indexer &&
+          indexer ?
             <DescriptionListItem
               title={translate('Indexer')}
               data={indexer.name}
-            />
+            /> :
+            null
         }
       </DescriptionList>
     );

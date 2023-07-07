@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -33,7 +34,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new TorrentsCSVRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new TorrentsCSVRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -46,13 +47,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
+                {
+                    MovieSearchParam.Q
+                }
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Other);
@@ -63,10 +64,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentsCSVRequestGenerator : IIndexerRequestGenerator
     {
-        public NoAuthTorrentBaseSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly NoAuthTorrentBaseSettings _settings;
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories)
+        public TorrentsCSVRequestGenerator(NoAuthTorrentBaseSettings settings)
+        {
+            _settings = settings;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
             // search cannot be blank and needs at least 3 characters
             if (term.IsNullOrWhiteSpace() || term.Length < 3)
@@ -80,18 +85,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "q", term }
             };
 
-            var searchUrl = string.Format("{0}/service/search?{1}", Settings.BaseUrl.TrimEnd('/'), qc.GetQueryString());
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/service/search?{qc.GetQueryString()}";
 
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-
-            yield return request;
+            yield return new IndexerRequest(searchUrl, HttpAccept.Json);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }
@@ -105,7 +108,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedTvSearchString));
 
             return pageableRequests;
         }
@@ -119,7 +122,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedSearchTerm), searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }
@@ -139,10 +142,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<ReleaseInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
 
-            var jsonStart = indexerResponse.Content;
-            var jsonContent = JArray.Parse(jsonStart);
+            var jsonContent = JArray.Parse(indexerResponse.Content);
 
             foreach (var torrent in jsonContent)
             {
@@ -151,21 +153,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                     continue;
                 }
 
+                var infoHash = torrent.Value<string>("infohash");
                 var title = torrent.Value<string>("name");
                 var size = torrent.Value<long>("size_bytes");
-                var seeders = torrent.Value<int>("seeders");
-                var leechers = torrent.Value<int>("leechers");
-                var grabs = ParseUtil.CoerceInt(torrent.Value<string>("completed") ?? "0");
-                var infoHash = torrent.Value<JToken>("infohash").ToString();
-
-                // convert unix timestamp to human readable date
-                var publishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                publishDate = publishDate.AddSeconds(torrent.Value<long>("created_unix"));
+                var seeders = torrent.Value<int?>("seeders") ?? 0;
+                var leechers = torrent.Value<int?>("leechers") ?? 0;
+                var grabs = torrent.Value<int?>("completed") ?? 0;
+                var publishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(torrent.Value<long>("created_unix"));
 
                 var release = new TorrentInfo
                 {
                     Title = title,
-                    InfoUrl = _settings.BaseUrl, // there is no details link
+                    InfoUrl = $"{_settings.BaseUrl.TrimEnd('/')}/search/{title}", // there is no details link
                     Guid = $"magnet:?xt=urn:btih:{infoHash}",
                     InfoHash = infoHash, // magnet link is auto generated from infohash
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Other },
@@ -178,10 +177,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     UploadVolumeFactor = 1
                 };
 
-                torrentInfos.Add(release);
+                releaseInfos.Add(release);
             }
 
-            return torrentInfos.ToArray();
+            return releaseInfos
+                .OrderByDescending(o => o.PublishDate)
+                .ToArray();
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

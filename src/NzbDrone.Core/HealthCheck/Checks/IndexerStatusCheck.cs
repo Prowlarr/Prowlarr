@@ -9,6 +9,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderDeletedEvent<IIndexer>))]
+    [CheckOn(typeof(ProviderBulkUpdatedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderBulkDeletedEvent<IIndexer>))]
     [CheckOn(typeof(ProviderStatusChangedEvent<IIndexer>))]
     public class IndexerStatusCheck : HealthCheckBase
@@ -27,13 +28,12 @@ namespace NzbDrone.Core.HealthCheck.Checks
         {
             var enabledProviders = _providerFactory.GetAvailableProviders();
             var backOffProviders = enabledProviders.Join(_providerStatusService.GetBlockedProviders(),
-                                                       i => i.Definition.Id,
-                                                       s => s.ProviderId,
-                                                       (i, s) => new { Provider = i, Status = s })
-                                                   .Where(p => p.Status.InitialFailure.HasValue &&
-                                                               p.Status.InitialFailure.Value.After(
-                                                                   DateTime.UtcNow.AddHours(-6)))
-                                                   .ToList();
+                    i => i.Definition.Id,
+                    s => s.ProviderId,
+                    (i, s) => new { Provider = i, Status = s })
+                .Where(p => p.Status.InitialFailure.HasValue &&
+                            p.Status.InitialFailure.Value.After(DateTime.UtcNow.AddHours(-6)))
+                .ToList();
 
             if (backOffProviders.Empty())
             {

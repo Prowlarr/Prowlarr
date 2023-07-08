@@ -92,11 +92,9 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
 
   const columns = useSelector(columnsSelector);
   const { showBanners } = useSelector(selectTableOptions);
-  const listRef: React.MutableRefObject<List> = useRef();
+  const listRef = useRef<List>(null);
   const [measureRef, bounds] = useMeasure();
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
 
   const rowHeight = useMemo(() => {
     return showBanners ? 70 : 38;
@@ -107,8 +105,8 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
 
     if (isSmallScreen) {
       setSize({
-        width: windowWidth,
-        height: windowHeight,
+        width: window.innerWidth,
+        height: window.innerHeight,
       });
 
       return;
@@ -121,14 +119,14 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
 
       setSize({
         width: width - padding * 2,
-        height: windowHeight,
+        height: window.innerHeight,
       });
     }
-  }, [isSmallScreen, windowWidth, windowHeight, scrollerRef, bounds]);
+  }, [isSmallScreen, scrollerRef, bounds]);
 
   useEffect(() => {
-    const currentScrollListener = isSmallScreen ? window : scrollerRef.current;
-    const currentScrollerRef = scrollerRef.current;
+    const currentScrollerRef = scrollerRef.current as HTMLElement;
+    const currentScrollListener = isSmallScreen ? window : currentScrollerRef;
 
     const handleScroll = throttle(() => {
       const { offsetTop = 0 } = currentScrollerRef;
@@ -137,7 +135,7 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
           ? getWindowScrollTopPosition()
           : currentScrollerRef.scrollTop) - offsetTop;
 
-      listRef.current.scrollTo(scrollTop);
+      listRef.current?.scrollTo(scrollTop);
     }, 10);
 
     currentScrollListener.addEventListener('scroll', handleScroll);
@@ -166,8 +164,8 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
           scrollTop += offset;
         }
 
-        listRef.current.scrollTo(scrollTop);
-        scrollerRef.current.scrollTo(0, scrollTop);
+        listRef.current?.scrollTo(scrollTop);
+        scrollerRef.current?.scrollTo(0, scrollTop);
       }
     }
   }, [jumpToCharacter, rowHeight, items, scrollerRef, listRef]);

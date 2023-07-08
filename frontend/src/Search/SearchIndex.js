@@ -154,7 +154,7 @@ class SearchIndex extends Component {
     const characters = _.reduce(items, (acc, item) => {
       let char = item.sortTitle.charAt(0);
 
-      if (!isNaN(char)) {
+      if (!isNaN(Number(char))) {
         char = '#';
       }
 

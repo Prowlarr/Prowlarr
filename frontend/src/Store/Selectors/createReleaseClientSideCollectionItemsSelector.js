@@ -9,13 +9,13 @@ function createUnoptimizedSelector(uiSection) {
       const items = releases.items.map((s) => {
         const {
           guid,
-          title,
+          sortTitle,
           indexerId
         } = s;
 
         return {
           guid,
-          sortTitle: title,
+          sortTitle,
           indexerId
         };
       });
@@ -40,7 +40,7 @@ const createMovieEqualSelector = createSelectorCreator(
 function createReleaseClientSideCollectionItemsSelector(uiSection) {
   return createMovieEqualSelector(
     createUnoptimizedSelector(uiSection),
-    (movies) => movies
+    (releases) => releases
   );
 }
 

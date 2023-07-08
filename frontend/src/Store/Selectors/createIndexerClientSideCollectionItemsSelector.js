@@ -9,12 +9,12 @@ function createUnoptimizedSelector(uiSection) {
       const items = indexers.items.map((s) => {
         const {
           id,
-          name
+          sortName
         } = s;
 
         return {
           id,
-          sortName: name
+          sortName
         };
       });
 

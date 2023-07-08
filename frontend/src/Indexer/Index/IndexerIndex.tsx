@@ -158,7 +158,7 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
     const characters = items.reduce((acc, item) => {
       let char = item.sortName.charAt(0);
 
-      if (!isNaN(char)) {
+      if (!isNaN(Number(char))) {
         char = '#';
       }
 

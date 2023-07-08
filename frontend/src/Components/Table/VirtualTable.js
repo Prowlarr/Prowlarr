@@ -39,7 +39,8 @@ class VirtualTable extends Component {
     super(props, context);
 
     this.state = {
-      width: 0
+      width: 0,
+      scrollRestored: false
     };
 
     this._grid = null;
@@ -48,18 +49,23 @@ class VirtualTable extends Component {
   componentDidUpdate(prevProps, prevState) {
     const {
       items,
-      scrollIndex
+      scrollIndex,
+      scrollTop
     } = this.props;
 
     const {
-      width
+      width,
+      scrollRestored
     } = this.state;
 
-    if (this._grid &&
-        (prevState.width !== width ||
-            hasDifferentItemsOrOrder(prevProps.items, items))) {
+    if (this._grid && (prevState.width !== width || hasDifferentItemsOrOrder(prevProps.items, items))) {
       // recomputeGridSize also forces Grid to discard its cache of rendered cells
       this._grid.recomputeGridSize();
+    }
+
+    if (this._grid && scrollTop !== undefined && scrollTop !== 0 && !scrollRestored) {
+      this.setState({ scrollRestored: true });
+      this._grid.scrollToPosition({ scrollTop });
     }
 
     if (scrollIndex != null && scrollIndex !== prevProps.scrollIndex) {
@@ -98,6 +104,7 @@ class VirtualTable extends Component {
       focusScroller,
       header,
       headerHeight,
+      rowHeight,
       rowRenderer,
       ...otherProps
     } = this.props;
@@ -141,6 +148,7 @@ class VirtualTable extends Component {
                 {header}
                 <div ref={registerChild}>
                   <Grid
+                    {...otherProps}
                     ref={this.setGridRef}
                     autoContainerWidth={true}
                     autoHeight={true}
@@ -148,7 +156,7 @@ class VirtualTable extends Component {
                     width={width}
                     height={height}
                     headerHeight={height - headerHeight}
-                    rowHeight={ROW_HEIGHT}
+                    rowHeight={rowHeight}
                     rowCount={items.length}
                     columnCount={1}
                     columnWidth={width}
@@ -162,7 +170,6 @@ class VirtualTable extends Component {
                     className={styles.tableBodyContainer}
                     style={gridStyle}
                     containerStyle={containerStyle}
-                    {...otherProps}
                   />
                 </div>
               </Scroller>
@@ -180,16 +187,19 @@ VirtualTable.propTypes = {
   className: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   scrollIndex: PropTypes.number,
+  scrollTop: PropTypes.number,
   scroller: PropTypes.instanceOf(Element).isRequired,
   focusScroller: PropTypes.bool.isRequired,
   header: PropTypes.node.isRequired,
   headerHeight: PropTypes.number.isRequired,
-  rowRenderer: PropTypes.func.isRequired
+  rowRenderer: PropTypes.func.isRequired,
+  rowHeight: PropTypes.number.isRequired
 };
 
 VirtualTable.defaultProps = {
   className: styles.tableContainer,
   headerHeight: 38,
+  rowHeight: ROW_HEIGHT,
   focusScroller: true
 };
 

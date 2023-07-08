@@ -7,6 +7,7 @@ namespace Prowlarr.Api.V1.Indexers
         public List<int> IndexerIds { get; set; }
         public bool? Enable { get; set; }
         public int? AppProfileId { get; set; }
+        public int? Priority { get; set; }
         public List<int> Tags { get; set; }
         public ApplyTags ApplyTags { get; set; }
     }

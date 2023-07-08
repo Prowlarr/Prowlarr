@@ -14,6 +14,7 @@ import styles from './EditIndexerModalContent.css';
 interface SavePayload {
   enable?: boolean;
   appProfileId?: number;
+  priority?: number;
 }
 
 interface EditIndexerModalContentProps {
@@ -35,6 +36,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
 
   const [enable, setEnable] = useState(NO_CHANGE);
   const [appProfileId, setAppProfileId] = useState<string | number>(NO_CHANGE);
+  const [priority, setPriority] = useState<null | string | number>(null);
 
   const save = useCallback(() => {
     let hasChanges = false;
@@ -50,12 +52,17 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
       payload.appProfileId = appProfileId as number;
     }
 
+    if (priority !== null) {
+      hasChanges = true;
+      payload.priority = priority as number;
+    }
+
     if (hasChanges) {
       onSavePress(payload);
     }
 
     onModalClose();
-  }, [enable, appProfileId, onSavePress, onModalClose]);
+  }, [enable, appProfileId, priority, onSavePress, onModalClose]);
 
   const onInputChange = useCallback(
     ({ name, value }) => {
@@ -65,6 +72,9 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
           break;
         case 'appProfileId':
           setAppProfileId(value);
+          break;
+        case 'priority':
+          setPriority(value);
           break;
         default:
           console.warn(`EditIndexersModalContent Unknown Input: '${name}'`);
@@ -105,6 +115,19 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
             value={appProfileId}
             includeNoChange={true}
             includeNoChangeDisabled={false}
+            onChange={onInputChange}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel>{translate('Priority')}</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.NUMBER}
+            name="priority"
+            value={priority}
+            min={1}
+            max={50}
             onChange={onInputChange}
           />
         </FormGroup>

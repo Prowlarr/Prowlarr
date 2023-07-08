@@ -39,6 +39,11 @@ namespace Prowlarr.Api.V1.Indexers
                     indexer.AppProfileId = resource.AppProfileId.Value;
                 }
 
+                if (resource.Priority.HasValue)
+                {
+                    indexer.Priority = resource.Priority.Value;
+                }
+
                 if (resource.Tags != null)
                 {
                     var newTags = resource.Tags;

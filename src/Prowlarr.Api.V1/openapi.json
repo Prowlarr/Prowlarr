@@ -4714,6 +4714,11 @@
             "format": "int32",
             "nullable": true
           },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "tags": {
             "type": "array",
             "items": {

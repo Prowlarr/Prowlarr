@@ -59,14 +59,14 @@ function TagsModalContent(props: TagsModalContentProps) {
   }, [tags, applyTags, onApplyTagsPress]);
 
   const applyTagsOptions = [
-    { key: 'add', value: 'Add' },
-    { key: 'remove', value: 'Remove' },
-    { key: 'replace', value: 'Replace' },
+    { key: 'add', value: translate('Add') },
+    { key: 'remove', value: translate('Remove') },
+    { key: 'replace', value: translate('Replace') },
   ];
 
   return (
     <ModalContent onModalClose={onModalClose}>
-      <ModalHeader>Tags</ModalHeader>
+      <ModalHeader>{translate('Tags')}</ModalHeader>
 
       <ModalBody>
         <Form>
@@ -119,8 +119,8 @@ function TagsModalContent(props: TagsModalContentProps) {
                     key={tag.id}
                     title={
                       removeTag
-                        ? translate('RemoveTagRemovingTag')
-                        : translate('RemoveTagExistingTag')
+                        ? translate('RemovingTag')
+                        : translate('ExistingTag')
                     }
                     kind={removeTag ? kinds.INVERSE : kinds.INFO}
                     size={sizes.LARGE}
@@ -159,10 +159,10 @@ function TagsModalContent(props: TagsModalContentProps) {
       </ModalBody>
 
       <ModalFooter>
-        <Button onPress={onModalClose}>Cancel</Button>
+        <Button onPress={onModalClose}>{translate('Cancel')}</Button>
 
         <Button kind={kinds.PRIMARY} onPress={onApplyPress}>
-          Apply
+          {translate('Apply')}
         </Button>
       </ModalFooter>
     </ModalContent>

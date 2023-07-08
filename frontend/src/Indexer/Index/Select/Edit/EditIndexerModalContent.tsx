@@ -67,7 +67,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
           setAppProfileId(value);
           break;
         default:
-          console.warn('EditIndexerModalContent Unknown Input');
+          console.warn(`EditIndexersModalContent Unknown Input: '${name}'`);
       }
     },
     [setEnable]
@@ -81,7 +81,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
 
   return (
     <ModalContent onModalClose={onModalClose}>
-      <ModalHeader>{translate('Edit Selected Indexer')}</ModalHeader>
+      <ModalHeader>{translate('EditSelectedIndexers')}</ModalHeader>
 
       <ModalBody>
         <FormGroup>
@@ -112,14 +112,14 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
 
       <ModalFooter className={styles.modalFooter}>
         <div className={styles.selected}>
-          {translate('{0} indexers selected', selectedCount.toString())}
+          {translate('CountIndexersSelected', [selectedCount])}
         </div>
 
         <div>
           <Button onPress={onModalClose}>{translate('Cancel')}</Button>
 
           <Button onPress={onSavePressWrapper}>
-            {translate('Apply Changes')}
+            {translate('ApplyChanges')}
           </Button>
         </div>
       </ModalFooter>

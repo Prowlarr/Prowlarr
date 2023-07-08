@@ -29,6 +29,8 @@ export const defaultState = {
   isFetching: false,
   isPopulated: false,
   error: null,
+  isDeleting: false,
+  deleteError: null,
   selectedSchema: {},
   isSaving: false,
   saveError: null,

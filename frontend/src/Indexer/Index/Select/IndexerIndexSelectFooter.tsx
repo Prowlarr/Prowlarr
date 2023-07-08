@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import { useSelect } from 'App/SelectContext';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
+import usePrevious from 'Helpers/Hooks/usePrevious';
 import { kinds } from 'Helpers/Props';
 import { saveIndexerEditor } from 'Store/Actions/indexerIndexActions';
 import translate from 'Utilities/String/translate';
@@ -13,7 +14,7 @@ import EditIndexerModal from './Edit/EditIndexerModal';
 import TagsModal from './Tags/TagsModal';
 import styles from './IndexerIndexSelectFooter.css';
 
-const seriesEditorSelector = createSelector(
+const indexersEditorSelector = createSelector(
   (state) => state.indexers,
   (indexers) => {
     const { isSaving, isDeleting, deleteError } = indexers;
@@ -27,8 +28,9 @@ const seriesEditorSelector = createSelector(
 );
 
 function IndexerIndexSelectFooter() {
-  const { isSaving, isDeleting, deleteError } =
-    useSelector(seriesEditorSelector);
+  const { isSaving, isDeleting, deleteError } = useSelector(
+    indexersEditorSelector
+  );
 
   const dispatch = useDispatch();
 
@@ -37,6 +39,7 @@ function IndexerIndexSelectFooter() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSavingIndexer, setIsSavingIndexer] = useState(false);
   const [isSavingTags, setIsSavingTags] = useState(false);
+  const previousIsDeleting = usePrevious(isDeleting);
 
   const [selectState, selectDispatch] = useSelect();
   const { selectedState } = selectState;
@@ -110,10 +113,10 @@ function IndexerIndexSelectFooter() {
   }, [isSaving]);
 
   useEffect(() => {
-    if (!isDeleting && !deleteError) {
+    if (previousIsDeleting && !isDeleting && !deleteError) {
       selectDispatch({ type: 'unselectAll' });
     }
-  }, [isDeleting, deleteError, selectDispatch]);
+  }, [previousIsDeleting, isDeleting, deleteError, selectDispatch]);
 
   const anySelected = selectedCount > 0;
 
@@ -134,7 +137,7 @@ function IndexerIndexSelectFooter() {
             isDisabled={!anySelected}
             onPress={onTagsPress}
           >
-            {translate('Set Tags')}
+            {translate('SetTags')}
           </SpinnerButton>
         </div>
 
@@ -151,7 +154,7 @@ function IndexerIndexSelectFooter() {
       </div>
 
       <div className={styles.selected}>
-        {translate('{0} indexers selected', selectedCount.toString())}
+        {translate('CountIndexersSelected', [selectedCount])}
       </div>
 
       <EditIndexerModal

@@ -9,6 +9,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
 import { bulkDeleteIndexers } from 'Store/Actions/indexerIndexActions';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
+import translate from 'Utilities/String/translate';
 import styles from './DeleteIndexerModalContent.css';
 
 interface DeleteIndexerModalContentProps {
@@ -19,16 +20,16 @@ interface DeleteIndexerModalContentProps {
 function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
   const { indexerIds, onModalClose } = props;
 
-  const allIndexer = useSelector(createAllIndexersSelector());
+  const allIndexers = useSelector(createAllIndexersSelector());
   const dispatch = useDispatch();
 
-  const indexers = useMemo(() => {
+  const selectedIndexers = useMemo(() => {
     const indexers = indexerIds.map((id) => {
-      return allIndexer.find((s) => s.id === id);
+      return allIndexers.find((s) => s.id === id);
     });
 
-    return orderBy(indexers, ['sortTitle']);
-  }, [indexerIds, allIndexer]);
+    return orderBy(indexers, ['sortName']);
+  }, [indexerIds, allIndexers]);
 
   const onDeleteIndexerConfirmed = useCallback(() => {
     dispatch(
@@ -42,17 +43,19 @@ function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
 
   return (
     <ModalContent onModalClose={onModalClose}>
-      <ModalHeader>Delete Selected Indexer</ModalHeader>
+      <ModalHeader>{translate('DeleteSelectedIndexers')}</ModalHeader>
 
       <ModalBody>
         <div className={styles.message}>
-          {`Are you sure you want to delete ${indexers.length} selected indexers?`}
+          {translate('DeleteSelectedIndexersMessageText', [
+            selectedIndexers.length,
+          ])}
         </div>
 
         <ul>
-          {indexers.map((s) => {
+          {selectedIndexers.map((s) => {
             return (
-              <li key={s.name}>
+              <li key={s.id}>
                 <span>{s.name}</span>
               </li>
             );
@@ -61,10 +64,10 @@ function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
       </ModalBody>
 
       <ModalFooter>
-        <Button onPress={onModalClose}>Cancel</Button>
+        <Button onPress={onModalClose}>{translate('Cancel')}</Button>
 
         <Button kind={kinds.DANGER} onPress={onDeleteIndexerConfirmed}>
-          Delete
+          {translate('Delete')}
         </Button>
       </ModalFooter>
     </ModalContent>

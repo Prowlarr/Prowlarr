@@ -148,15 +148,15 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
   );
 
   const jumpBarItems = useMemo(() => {
-    // Reset if not sorting by sortTitle
-    if (sortKey !== 'sortTitle') {
+    // Reset if not sorting by sortName
+    if (sortKey !== 'sortName') {
       return {
         order: [],
       };
     }
 
     const characters = items.reduce((acc, item) => {
-      let char = item.sortTitle.charAt(0);
+      let char = item.sortName.charAt(0);
 
       if (!isNaN(char)) {
         char = '#';
@@ -225,7 +225,7 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
               label={
                 isSelectMode
                   ? translate('StopSelecting')
-                  : translate('SelectIndexer')
+                  : translate('SelectIndexers')
               }
               iconName={isSelectMode ? icons.SERIES_ENDED : icons.CHECK}
               isSelectMode={isSelectMode}

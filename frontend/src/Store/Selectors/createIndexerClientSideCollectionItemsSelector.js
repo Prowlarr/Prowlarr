@@ -14,7 +14,7 @@ function createUnoptimizedSelector(uiSection) {
 
         return {
           id,
-          sortTitle: name
+          sortName: name
         };
       });
 
@@ -38,7 +38,7 @@ const createMovieEqualSelector = createSelectorCreator(
 function createIndexerClientSideCollectionItemsSelector(uiSection) {
   return createMovieEqualSelector(
     createUnoptimizedSelector(uiSection),
-    (movies) => movies
+    (indexers) => indexers
   );
 }
 

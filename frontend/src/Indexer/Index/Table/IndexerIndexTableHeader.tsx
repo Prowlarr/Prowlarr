@@ -14,6 +14,7 @@ import {
   setIndexerSort,
   setIndexerTableOption,
 } from 'Store/Actions/indexerIndexActions';
+import { SelectStateInputProps } from 'typings/props';
 import IndexerIndexTableOptions from './IndexerIndexTableOptions';
 import styles from './IndexerIndexTableHeader.css';
 
@@ -45,7 +46,7 @@ function IndexerIndexTableHeader(props: IndexerIndexTableHeaderProps) {
   );
 
   const onSelectAllChange = useCallback(
-    ({ value }) => {
+    ({ value }: SelectStateInputProps) => {
       selectDispatch({
         type: value ? 'selectAll' : 'unselectAll',
       });

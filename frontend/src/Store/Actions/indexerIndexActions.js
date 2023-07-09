@@ -1,10 +1,6 @@
 import { createAction } from 'redux-actions';
-import { batchActions } from 'redux-batched-actions';
 import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
-import { createThunk, handleThunks } from 'Store/thunks';
-import createAjaxRequest from 'Utilities/createAjaxRequest';
 import translate from 'Utilities/String/translate';
-import { removeItem, set, updateItem } from './baseActions';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionFilterReducer from './Creators/Reducers/createSetClientSideCollectionFilterReducer';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
@@ -89,6 +85,30 @@ export const defaultState = {
       label: translate('Categories'),
       isSortable: false,
       isVisible: true
+    },
+    {
+      name: 'minimumSeeders',
+      label: translate('MinimumSeeders'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'seedRatio',
+      label: translate('SeedRatio'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'seedTime',
+      label: translate('SeedTime'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
+      name: 'packSeedTime',
+      label: translate('PackSeedTime'),
+      isSortable: true,
+      isVisible: false
     },
     {
       name: 'tags',
@@ -186,8 +206,6 @@ export const SET_INDEXER_SORT = 'indexerIndex/setIndexerSort';
 export const SET_INDEXER_FILTER = 'indexerIndex/setIndexerFilter';
 export const SET_INDEXER_VIEW = 'indexerIndex/setIndexerView';
 export const SET_INDEXER_TABLE_OPTION = 'indexerIndex/setIndexerTableOption';
-export const SAVE_INDEXER_EDITOR = 'indexerIndex/saveIndexerEditor';
-export const BULK_DELETE_INDEXERS = 'indexerIndex/bulkDeleteIndexers';
 
 //
 // Action Creators
@@ -196,89 +214,6 @@ export const setIndexerSort = createAction(SET_INDEXER_SORT);
 export const setIndexerFilter = createAction(SET_INDEXER_FILTER);
 export const setIndexerView = createAction(SET_INDEXER_VIEW);
 export const setIndexerTableOption = createAction(SET_INDEXER_TABLE_OPTION);
-export const saveIndexerEditor = createThunk(SAVE_INDEXER_EDITOR);
-export const bulkDeleteIndexers = createThunk(BULK_DELETE_INDEXERS);
-
-//
-// Action Handlers
-
-export const actionHandlers = handleThunks({
-  [SAVE_INDEXER_EDITOR]: function(getState, payload, dispatch) {
-    dispatch(set({
-      section,
-      isSaving: true
-    }));
-
-    const promise = createAjaxRequest({
-      url: '/indexer/editor',
-      method: 'PUT',
-      data: JSON.stringify(payload),
-      dataType: 'json'
-    }).request;
-
-    promise.done((data) => {
-      dispatch(batchActions([
-        ...data.map((indexer) => {
-          return updateItem({
-            id: indexer.id,
-            section: 'indexers',
-            ...indexer
-          });
-        }),
-
-        set({
-          section,
-          isSaving: false,
-          saveError: null
-        })
-      ]));
-    });
-
-    promise.fail((xhr) => {
-      dispatch(set({
-        section,
-        isSaving: false,
-        saveError: xhr
-      }));
-    });
-  },
-
-  [BULK_DELETE_INDEXERS]: function(getState, payload, dispatch) {
-    dispatch(set({
-      section,
-      isDeleting: true
-    }));
-
-    const promise = createAjaxRequest({
-      url: '/indexer/editor',
-      method: 'DELETE',
-      data: JSON.stringify(payload),
-      dataType: 'json'
-    }).request;
-
-    promise.done(() => {
-      dispatch(batchActions([
-        ...payload.indexerIds.map((id) => {
-          return removeItem({ section: 'indexers', id });
-        }),
-
-        set({
-          section,
-          isDeleting: false,
-          deleteError: null
-        })
-      ]));
-    });
-
-    promise.fail((xhr) => {
-      dispatch(set({
-        section,
-        isDeleting: false,
-        deleteError: xhr
-      }));
-    });
-  }
-});
 
 //
 // Reducers

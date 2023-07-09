@@ -1,6 +1,6 @@
 using NzbDrone.Core.Applications;
 
-namespace Prowlarr.Api.V1.Application
+namespace Prowlarr.Api.V1.Applications
 {
     public class ApplicationResource : ProviderResource<ApplicationResource>
     {

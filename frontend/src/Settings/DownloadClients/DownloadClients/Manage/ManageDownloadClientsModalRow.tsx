@@ -1,0 +1,70 @@
+import React, { useCallback } from 'react';
+import Label from 'Components/Label';
+import TableRowCell from 'Components/Table/Cells/TableRowCell';
+import TableSelectCell from 'Components/Table/Cells/TableSelectCell';
+import Column from 'Components/Table/Column';
+import TableRow from 'Components/Table/TableRow';
+import { kinds } from 'Helpers/Props';
+import { SelectStateInputProps } from 'typings/props';
+import translate from 'Utilities/String/translate';
+import styles from './ManageDownloadClientsModalRow.css';
+
+interface ManageDownloadClientsModalRowProps {
+  id: number;
+  name: string;
+  enable: boolean;
+  priority: number;
+  implementation: string;
+  columns: Column[];
+  isSelected?: boolean;
+  onSelectedChange(result: SelectStateInputProps): void;
+}
+
+function ManageDownloadClientsModalRow(
+  props: ManageDownloadClientsModalRowProps
+) {
+  const {
+    id,
+    isSelected,
+    name,
+    enable,
+    priority,
+    implementation,
+    onSelectedChange,
+  } = props;
+
+  const onSelectedChangeWrapper = useCallback(
+    (result: SelectStateInputProps) => {
+      onSelectedChange({
+        ...result,
+      });
+    },
+    [onSelectedChange]
+  );
+
+  return (
+    <TableRow>
+      <TableSelectCell
+        id={id}
+        isSelected={isSelected}
+        onSelectedChange={onSelectedChangeWrapper}
+      />
+
+      <TableRowCell className={styles.name}>{name}</TableRowCell>
+
+      <TableRowCell className={styles.implementation}>
+        {implementation}
+      </TableRowCell>
+
+      <TableRowCell className={styles.enable}>
+        <Label kind={enable ? kinds.SUCCESS : kinds.DISABLED} outline={!enable}>
+          {enable ? translate('Yes') : translate('No')}
+        </Label>
+      </TableRowCell>
+
+      <TableRowCell className={styles.priority}>{priority}</TableRowCell>
+    </TableRow>
+  );
+}
+
+export default ManageDownloadClientsModalRow;

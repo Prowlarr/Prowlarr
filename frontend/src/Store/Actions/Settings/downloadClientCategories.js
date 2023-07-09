@@ -75,6 +75,8 @@ export default {
     selectedSchema: {},
     isSaving: false,
     saveError: null,
+    isDeleting: false,
+    deleteError: null,
     items: [],
     pendingChanges: {}
   },

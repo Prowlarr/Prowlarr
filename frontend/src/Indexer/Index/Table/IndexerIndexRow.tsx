@@ -55,6 +55,23 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const vipExpiration =
     fields.find((field) => field.name === 'vipExpiration')?.value ?? '';
 
+  const minimumSeeders =
+    fields.find(
+      (field) => field.name === 'torrentBaseSettings.appMinimumSeeders'
+    )?.value ?? undefined;
+
+  const seedRatio =
+    fields.find((field) => field.name === 'torrentBaseSettings.seedRatio')
+      ?.value ?? undefined;
+
+  const seedTime =
+    fields.find((field) => field.name === 'torrentBaseSettings.seedTime')
+      ?.value ?? undefined;
+
+  const packSeedTime =
+    fields.find((field) => field.name === 'torrentBaseSettings.packSeedTime')
+      ?.value ?? undefined;
+
   const rssUrl = `${window.location.origin}${
     window.Prowlarr.urlBase
   }/${id}/api?apikey=${encodeURIComponent(
@@ -209,6 +226,38 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
               <TagListConnector tags={tags} />
+            </VirtualTableRowCell>
+          );
+        }
+
+        if (name === 'minimumSeeders') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              {minimumSeeders}
+            </VirtualTableRowCell>
+          );
+        }
+
+        if (name === 'seedRatio') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              {seedRatio}
+            </VirtualTableRowCell>
+          );
+        }
+
+        if (name === 'seedTime') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              {seedTime}
+            </VirtualTableRowCell>
+          );
+        }
+
+        if (name === 'packSeedTime') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              {packSeedTime}
             </VirtualTableRowCell>
           );
         }

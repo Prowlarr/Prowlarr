@@ -9,8 +9,35 @@ import AppProfilesConnector from 'Settings/Profiles/App/AppProfilesConnector';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import translate from 'Utilities/String/translate';
 import ApplicationsConnector from './Applications/ApplicationsConnector';
+import ManageApplicationsModal from './Applications/Manage/ManageApplicationsModal';
 
 class ApplicationSettings extends Component {
+
+  //
+  // Lifecycle
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      isManageApplicationsOpen: false
+    };
+  }
+
+  //
+  // Listeners
+
+  onManageApplicationsPress = () => {
+    this.setState({ isManageApplicationsOpen: true });
+  };
+
+  onManageApplicationsModalClose = () => {
+    this.setState({ isManageApplicationsOpen: false });
+  };
+
+  //
+  // Render
+
   render() {
     const {
       isTestingAll,
@@ -18,6 +45,8 @@ class ApplicationSettings extends Component {
       onTestAllPress,
       onAppIndexerSyncPress
     } = this.props;
+
+    const { isManageApplicationsOpen } = this.state;
 
     return (
       <PageContent title={translate('Applications')}>
@@ -40,6 +69,12 @@ class ApplicationSettings extends Component {
                 isSpinning={isTestingAll}
                 onPress={onTestAllPress}
               />
+
+              <PageToolbarButton
+                label={translate('ManageApplications')}
+                iconName={icons.MANAGE}
+                onPress={this.onManageApplicationsPress}
+              />
             </Fragment>
           }
         />
@@ -47,6 +82,11 @@ class ApplicationSettings extends Component {
         <PageContentBody>
           <ApplicationsConnector />
           <AppProfilesConnector />
+
+          <ManageApplicationsModal
+            isOpen={isManageApplicationsOpen}
+            onModalClose={this.onManageApplicationsModalClose}
+          />
         </PageContentBody>
       </PageContent>
     );

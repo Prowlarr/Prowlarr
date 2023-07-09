@@ -8,9 +8,13 @@ interface CssExports {
   'cell': string;
   'checkInput': string;
   'externalLink': string;
+  'minimumSeeders': string;
+  'packSeedTime': string;
   'priority': string;
   'privacy': string;
   'protocol': string;
+  'seedRatio': string;
+  'seedTime': string;
   'sortName': string;
   'status': string;
   'tags': string;

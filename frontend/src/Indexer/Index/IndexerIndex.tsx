@@ -190,7 +190,7 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
 
   return (
     <SelectProvider items={items}>
-      <PageContent>
+      <PageContent title={translate('Indexers')}>
         <PageToolbar>
           <PageToolbarSection>
             <PageToolbarButton

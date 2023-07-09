@@ -12,9 +12,10 @@ namespace NzbDrone.Core.ThingiProvider
         bool Exists(int id);
         TProviderDefinition Find(int id);
         TProviderDefinition Get(int id);
+        IEnumerable<TProviderDefinition> Get(IEnumerable<int> ids);
         TProviderDefinition Create(TProviderDefinition definition);
         void Update(TProviderDefinition definition);
-        void Update(IEnumerable<TProviderDefinition> definitions);
+        IEnumerable<TProviderDefinition> Update(IEnumerable<TProviderDefinition> definitions);
         void Delete(int id);
         void Delete(IEnumerable<int> ids);
         IEnumerable<TProviderDefinition> GetDefaultDefinitions();

@@ -9,13 +9,13 @@ import FilterBuilderRowValue from './FilterBuilderRowValue';
 function createMapStateToProps() {
   return createSelector(
     (state) => state.indexers,
-    (qualityProfiles) => {
+    (indexers) => {
       const {
         isFetching,
         isPopulated,
         error,
         items
-      } = qualityProfiles;
+      } = indexers;
 
       const tagList = items.map((item) => {
         return {

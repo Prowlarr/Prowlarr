@@ -13,6 +13,8 @@ import dateFilterPredicate from 'Utilities/Date/dateFilterPredicate';
 import getSectionState from 'Utilities/State/getSectionState';
 import updateSectionState from 'Utilities/State/updateSectionState';
 import translate from 'Utilities/String/translate';
+import createBulkEditItemHandler from './Creators/createBulkEditItemHandler';
+import createBulkRemoveItemHandler from './Creators/createBulkRemoveItemHandler';
 import createHandleActions from './Creators/createHandleActions';
 import createSetClientSideCollectionSortReducer from './Creators/Reducers/createSetClientSideCollectionSortReducer';
 
@@ -95,6 +97,8 @@ export const DELETE_INDEXER = 'indexers/deleteIndexer';
 export const TEST_INDEXER = 'indexers/testIndexer';
 export const CANCEL_TEST_INDEXER = 'indexers/cancelTestIndexer';
 export const TEST_ALL_INDEXERS = 'indexers/testAllIndexers';
+export const BULK_EDIT_INDEXERS = 'indexers/bulkEditIndexers';
+export const BULK_DELETE_INDEXERS = 'indexers/bulkDeleteIndexers';
 
 //
 // Action Creators
@@ -111,6 +115,8 @@ export const deleteIndexer = createThunk(DELETE_INDEXER);
 export const testIndexer = createThunk(TEST_INDEXER);
 export const cancelTestIndexer = createThunk(CANCEL_TEST_INDEXER);
 export const testAllIndexers = createThunk(TEST_ALL_INDEXERS);
+export const bulkEditIndexers = createThunk(BULK_EDIT_INDEXERS);
+export const bulkDeleteIndexers = createThunk(BULK_DELETE_INDEXERS);
 
 export const setIndexerValue = createAction(SET_INDEXER_VALUE, (payload) => {
   return {
@@ -163,7 +169,9 @@ export const actionHandlers = handleThunks({
   [DELETE_INDEXER]: createRemoveItemHandler(section, '/indexer'),
   [TEST_INDEXER]: createTestProviderHandler(section, '/indexer'),
   [CANCEL_TEST_INDEXER]: createCancelTestProviderHandler(section),
-  [TEST_ALL_INDEXERS]: createTestAllProvidersHandler(section, '/indexer')
+  [TEST_ALL_INDEXERS]: createTestAllProvidersHandler(section, '/indexer'),
+  [BULK_EDIT_INDEXERS]: createBulkEditItemHandler(section, '/indexer/bulk'),
+  [BULK_DELETE_INDEXERS]: createBulkRemoveItemHandler(section, '/indexer/bulk')
 });
 
 //

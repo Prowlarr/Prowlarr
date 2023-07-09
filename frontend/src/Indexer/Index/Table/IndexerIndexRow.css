@@ -19,7 +19,11 @@
 
 .priority,
 .protocol,
-.privacy {
+.privacy,
+.minimumSeeders,
+.seedRatio,
+.seedTime,
+.packSeedTime {
   composes: cell;
 
   flex: 0 0 90px;

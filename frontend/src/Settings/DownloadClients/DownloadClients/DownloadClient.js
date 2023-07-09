@@ -89,7 +89,7 @@ class DownloadClient extends Component {
                 kind={kinds.DISABLED}
                 outline={true}
               >
-                {translate('PrioritySettings', [priority])}
+                {translate('Priority')}: {priority}
               </Label>
           }
         </div>

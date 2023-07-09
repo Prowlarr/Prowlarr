@@ -2,11 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useSelect } from 'App/SelectContext';
+import AppState from 'App/State/AppState';
 import SpinnerButton from 'Components/Link/SpinnerButton';
 import PageContentFooter from 'Components/Page/PageContentFooter';
 import usePrevious from 'Helpers/Hooks/usePrevious';
 import { kinds } from 'Helpers/Props';
-import { saveIndexerEditor } from 'Store/Actions/indexerIndexActions';
+import { bulkEditIndexers } from 'Store/Actions/indexerActions';
 import translate from 'Utilities/String/translate';
 import getSelectedIds from 'Utilities/Table/getSelectedIds';
 import DeleteIndexerModal from './Delete/DeleteIndexerModal';
@@ -15,7 +16,7 @@ import TagsModal from './Tags/TagsModal';
 import styles from './IndexerIndexSelectFooter.css';
 
 const indexersEditorSelector = createSelector(
-  (state) => state.indexers,
+  (state: AppState) => state.indexers,
   (indexers) => {
     const { isSaving, isDeleting, deleteError } = indexers;
 
@@ -64,9 +65,9 @@ function IndexerIndexSelectFooter() {
       setIsEditModalOpen(false);
 
       dispatch(
-        saveIndexerEditor({
+        bulkEditIndexers({
           ...payload,
-          indexerIds,
+          ids: indexerIds,
         })
       );
     },
@@ -87,8 +88,8 @@ function IndexerIndexSelectFooter() {
       setIsTagsModalOpen(false);
 
       dispatch(
-        saveIndexerEditor({
-          indexerIds,
+        bulkEditIndexers({
+          ids: indexerIds,
           tags,
           applyTags,
         })

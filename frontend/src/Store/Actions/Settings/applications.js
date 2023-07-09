@@ -1,4 +1,6 @@
 import { createAction } from 'redux-actions';
+import createBulkEditItemHandler from 'Store/Actions/Creators/createBulkEditItemHandler';
+import createBulkRemoveItemHandler from 'Store/Actions/Creators/createBulkRemoveItemHandler';
 import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
 import createFetchSchemaHandler from 'Store/Actions/Creators/createFetchSchemaHandler';
 import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHandler';
@@ -29,6 +31,8 @@ export const DELETE_APPLICATION = 'settings/applications/deleteApplication';
 export const TEST_APPLICATION = 'settings/applications/testApplication';
 export const CANCEL_TEST_APPLICATION = 'settings/applications/cancelTestApplication';
 export const TEST_ALL_APPLICATIONS = 'indexers/testAllApplications';
+export const BULK_EDIT_APPLICATIONS = 'settings/applications/bulkEditApplications';
+export const BULK_DELETE_APPLICATIONS = 'settings/applications/bulkDeleteApplications';
 
 //
 // Action Creators
@@ -43,6 +47,8 @@ export const deleteApplication = createThunk(DELETE_APPLICATION);
 export const testApplication = createThunk(TEST_APPLICATION);
 export const cancelTestApplication = createThunk(CANCEL_TEST_APPLICATION);
 export const testAllApplications = createThunk(TEST_ALL_APPLICATIONS);
+export const bulkEditApplications = createThunk(BULK_EDIT_APPLICATIONS);
+export const bulkDeleteApplications = createThunk(BULK_DELETE_APPLICATIONS);
 
 export const setApplicationValue = createAction(SET_APPLICATION_VALUE, (payload) => {
   return {
@@ -77,6 +83,8 @@ export default {
     selectedSchema: {},
     isSaving: false,
     saveError: null,
+    isDeleting: false,
+    deleteError: null,
     isTesting: false,
     isTestingAll: false,
     items: [],
@@ -95,7 +103,9 @@ export default {
     [DELETE_APPLICATION]: createRemoveItemHandler(section, '/applications'),
     [TEST_APPLICATION]: createTestProviderHandler(section, '/applications'),
     [CANCEL_TEST_APPLICATION]: createCancelTestProviderHandler(section),
-    [TEST_ALL_APPLICATIONS]: createTestAllProvidersHandler(section, '/applications')
+    [TEST_ALL_APPLICATIONS]: createTestAllProvidersHandler(section, '/applications'),
+    [BULK_EDIT_APPLICATIONS]: createBulkEditItemHandler(section, '/applications/bulk'),
+    [BULK_DELETE_APPLICATIONS]: createBulkRemoveItemHandler(section, '/applications/bulk')
   },
 
   //

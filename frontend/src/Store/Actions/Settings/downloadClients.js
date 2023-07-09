@@ -1,4 +1,6 @@
 import { createAction } from 'redux-actions';
+import createBulkEditItemHandler from 'Store/Actions/Creators/createBulkEditItemHandler';
+import createBulkRemoveItemHandler from 'Store/Actions/Creators/createBulkRemoveItemHandler';
 import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
 import createFetchSchemaHandler from 'Store/Actions/Creators/createFetchSchemaHandler';
 import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHandler';
@@ -30,6 +32,8 @@ export const DELETE_DOWNLOAD_CLIENT = 'settings/downloadClients/deleteDownloadCl
 export const TEST_DOWNLOAD_CLIENT = 'settings/downloadClients/testDownloadClient';
 export const CANCEL_TEST_DOWNLOAD_CLIENT = 'settings/downloadClients/cancelTestDownloadClient';
 export const TEST_ALL_DOWNLOAD_CLIENTS = 'settings/downloadClients/testAllDownloadClients';
+export const BULK_EDIT_DOWNLOAD_CLIENTS = 'settings/downloadClients/bulkEditDownloadClients';
+export const BULK_DELETE_DOWNLOAD_CLIENTS = 'settings/downloadClients/bulkDeleteDownloadClients';
 
 //
 // Action Creators
@@ -44,6 +48,8 @@ export const deleteDownloadClient = createThunk(DELETE_DOWNLOAD_CLIENT);
 export const testDownloadClient = createThunk(TEST_DOWNLOAD_CLIENT);
 export const cancelTestDownloadClient = createThunk(CANCEL_TEST_DOWNLOAD_CLIENT);
 export const testAllDownloadClients = createThunk(TEST_ALL_DOWNLOAD_CLIENTS);
+export const bulkEditDownloadClients = createThunk(BULK_EDIT_DOWNLOAD_CLIENTS);
+export const bulkDeleteDownloadClients = createThunk(BULK_DELETE_DOWNLOAD_CLIENTS);
 
 export const setDownloadClientValue = createAction(SET_DOWNLOAD_CLIENT_VALUE, (payload) => {
   return {
@@ -78,6 +84,8 @@ export default {
     selectedSchema: {},
     isSaving: false,
     saveError: null,
+    isDeleting: false,
+    deleteError: null,
     isTesting: false,
     isTestingAll: false,
     items: [],
@@ -120,7 +128,9 @@ export default {
     },
 
     [CANCEL_TEST_DOWNLOAD_CLIENT]: createCancelTestProviderHandler(section),
-    [TEST_ALL_DOWNLOAD_CLIENTS]: createTestAllProvidersHandler(section, '/downloadclient')
+    [TEST_ALL_DOWNLOAD_CLIENTS]: createTestAllProvidersHandler(section, '/downloadclient'),
+    [BULK_EDIT_DOWNLOAD_CLIENTS]: createBulkEditItemHandler(section, '/downloadclient/bulk'),
+    [BULK_DELETE_DOWNLOAD_CLIENTS]: createBulkRemoveItemHandler(section, '/downloadclient/bulk')
   },
 
   //

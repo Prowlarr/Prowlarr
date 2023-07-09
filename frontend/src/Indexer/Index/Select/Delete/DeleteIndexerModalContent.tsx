@@ -7,7 +7,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
-import { bulkDeleteIndexers } from 'Store/Actions/indexerIndexActions';
+import { bulkDeleteIndexers } from 'Store/Actions/indexerActions';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import translate from 'Utilities/String/translate';
 import styles from './DeleteIndexerModalContent.css';
@@ -34,7 +34,7 @@ function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
   const onDeleteIndexerConfirmed = useCallback(() => {
     dispatch(
       bulkDeleteIndexers({
-        indexerIds,
+        ids: indexerIds,
       })
     );
 

@@ -8,6 +8,7 @@ import { icons } from 'Helpers/Props';
 import SettingsToolbarConnector from 'Settings/SettingsToolbarConnector';
 import translate from 'Utilities/String/translate';
 import DownloadClientsConnector from './DownloadClients/DownloadClientsConnector';
+import ManageDownloadClientsModal from './DownloadClients/Manage/ManageDownloadClientsModal';
 
 class DownloadClientSettings extends Component {
 
@@ -21,7 +22,8 @@ class DownloadClientSettings extends Component {
 
     this.state = {
       isSaving: false,
-      hasPendingChanges: false
+      hasPendingChanges: false,
+      isManageDownloadClientsOpen: false
     };
   }
 
@@ -34,6 +36,14 @@ class DownloadClientSettings extends Component {
 
   onChildStateChange = (payload) => {
     this.setState(payload);
+  };
+
+  onManageDownloadClientsPress = () => {
+    this.setState({ isManageDownloadClientsOpen: true });
+  };
+
+  onManageDownloadClientsModalClose = () => {
+    this.setState({ isManageDownloadClientsOpen: false });
   };
 
   onSavePress = () => {
@@ -53,7 +63,8 @@ class DownloadClientSettings extends Component {
 
     const {
       isSaving,
-      hasPendingChanges
+      hasPendingChanges,
+      isManageDownloadClientsOpen
     } = this.state;
 
     return (
@@ -71,6 +82,12 @@ class DownloadClientSettings extends Component {
                 isSpinning={isTestingAll}
                 onPress={dispatchTestAllDownloadClients}
               />
+
+              <PageToolbarButton
+                label={translate('ManageDownloadClients')}
+                iconName={icons.MANAGE}
+                onPress={this.onManageDownloadClientsPress}
+              />
             </Fragment>
           }
           onSavePress={this.onSavePress}
@@ -78,6 +95,11 @@ class DownloadClientSettings extends Component {
 
         <PageContentBody>
           <DownloadClientsConnector />
+
+          <ManageDownloadClientsModal
+            isOpen={isManageDownloadClientsOpen}
+            onModalClose={this.onManageDownloadClientsModalClose}
+          />
         </PageContentBody>
       </PageContent>
     );

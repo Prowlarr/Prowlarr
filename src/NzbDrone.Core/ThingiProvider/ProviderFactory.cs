@@ -101,6 +101,11 @@ namespace NzbDrone.Core.ThingiProvider
             return _providerRepository.Get(id);
         }
 
+        public IEnumerable<TProviderDefinition> Get(IEnumerable<int> ids)
+        {
+            return _providerRepository.Get(ids);
+        }
+
         public TProviderDefinition Find(int id)
         {
             return _providerRepository.Find(id);
@@ -120,10 +125,12 @@ namespace NzbDrone.Core.ThingiProvider
             _eventAggregator.PublishEvent(new ProviderUpdatedEvent<TProvider>(updatedDef));
         }
 
-        public virtual void Update(IEnumerable<TProviderDefinition> definitions)
+        public virtual IEnumerable<TProviderDefinition> Update(IEnumerable<TProviderDefinition> definitions)
         {
             _providerRepository.UpdateMany(definitions.ToList());
             _eventAggregator.PublishEvent(new ProviderBulkUpdatedEvent<TProvider>(definitions));
+
+            return definitions;
         }
 
         public void Delete(int id)

@@ -39,6 +39,10 @@ namespace NzbDrone.Core.Applications.Lidarr
             var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var apiPathCompare = apiPath.Equals(otherApiPath);
 
+            var additionalParameters = Fields.FirstOrDefault(x => x.Name == "additionalParameters")?.Value == null ? null : Fields.FirstOrDefault(x => x.Name == "additionalParameters").Value;
+            var otherAdditionalParameters = other.Fields.FirstOrDefault(x => x.Name == "additionalParameters")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "additionalParameters").Value;
+            var additionalParametersCompare = additionalParameters.Equals(otherAdditionalParameters);
+
             var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
             var minimumSeedersCompare = minimumSeeders == otherMinimumSeeders;
@@ -62,7 +66,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKeyCompare && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && discographySeedTimeCompare;
+                apiKeyCompare && apiPathCompare && baseUrl && cats && additionalParametersCompare && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && discographySeedTimeCompare;
         }
     }
 }

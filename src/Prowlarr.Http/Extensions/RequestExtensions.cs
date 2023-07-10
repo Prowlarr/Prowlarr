@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using NzbDrone.Common.EnvironmentInfo;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 
 namespace Prowlarr.Http.Extensions
@@ -129,9 +130,15 @@ namespace Prowlarr.Http.Extensions
 
         public static string GetSource(this HttpRequest request)
         {
-            if (request.Headers.TryGetValue("X-Prowlarr-Client", out var source))
+            if (request.Headers.TryGetValue("X-Prowlarr-Client", out _))
             {
                 return "Prowlarr";
+            }
+
+            if (request.Query.TryGetValue("prowlarr-app-source", out var appSourceName) &&
+                appSourceName.ToString().IsNotNullOrWhiteSpace())
+            {
+                return $"{appSourceName.ToString().Trim()}";
             }
 
             return NzbDrone.Common.Http.UserAgentParser.ParseSource(request.Headers["User-Agent"]);

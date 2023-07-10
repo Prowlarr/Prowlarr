@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Web;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -218,12 +219,12 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _lidarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "additionalParameters", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
 
             if (id == 0)
             {
                 // Ensuring backward compatibility with older versions on first sync
-                syncFields.AddRange(new List<string> { "earlyReleaseLimit", "additionalParameters" });
+                syncFields.AddRange(new List<string> { "earlyReleaseLimit" });
             }
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
@@ -251,6 +252,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
+            lidarrIndexer.Fields.FirstOrDefault(x => x.Name == "additionalParameters").Value = $"&prowlarr-app-source={HttpUtility.UrlEncode(Definition.Name)}";
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Web;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -216,12 +217,12 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "additionalParameters", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
 
             if (id == 0)
             {
                 // Ensuring backward compatibility with older versions on first sync
-                syncFields.AddRange(new List<string> { "multiLanguages", "removeYear", "requiredFlags", "additionalParameters" });
+                syncFields.AddRange(new List<string> { "multiLanguages", "removeYear", "requiredFlags" });
             }
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
@@ -249,6 +250,7 @@ namespace NzbDrone.Core.Applications.Radarr
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
+            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "additionalParameters").Value = $"&prowlarr-app-source={HttpUtility.UrlEncode(Definition.Name)}";
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

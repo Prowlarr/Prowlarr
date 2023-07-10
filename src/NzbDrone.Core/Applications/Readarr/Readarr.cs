@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Web;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -215,7 +216,7 @@ namespace NzbDrone.Core.Applications.Readarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _readarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
+            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "additionalParameters", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime" };
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
             var torznab = schemas.First(i => i.Implementation == "Torznab");
@@ -242,6 +243,7 @@ namespace NzbDrone.Core.Applications.Readarr
             readarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             readarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             readarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
+            readarrIndexer.Fields.FirstOrDefault(x => x.Name == "additionalParameters").Value = $"&prowlarr-app-source={HttpUtility.UrlEncode(Definition.Name)}";
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

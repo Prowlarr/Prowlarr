@@ -199,6 +199,53 @@
         }
       }
     },
+    "/api/v1/applications/bulk": {
+      "put": {
+        "tags": [
+          "Application"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicationResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Application"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplicationBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/applications/schema": {
       "get": {
         "tags": [
@@ -1062,6 +1109,53 @@
         }
       }
     },
+    "/api/v1/downloadclient/bulk": {
+      "put": {
+        "tags": [
+          "DownloadClient"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DownloadClientBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadClientResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DownloadClient"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DownloadClientBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/downloadclient/schema": {
       "get": {
         "tags": [
@@ -1648,6 +1742,53 @@
         }
       }
     },
+    "/api/v1/indexer/bulk": {
+      "put": {
+        "tags": [
+          "Indexer"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexerBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexerResource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Indexer"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexerBulkResource"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/indexer/schema": {
       "get": {
         "tags": [
@@ -1752,46 +1893,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/v1/indexer/editor": {
-      "put": {
-        "tags": [
-          "IndexerEditor"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "IndexerEditor"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IndexerEditorResource"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
           }
         }
       }
@@ -3733,6 +3834,34 @@
         },
         "additionalProperties": false
       },
+      "ApplicationBulkResource": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "applyTags": {
+            "$ref": "#/components/schemas/ApplyTags"
+          },
+          "syncLevel": {
+            "$ref": "#/components/schemas/ApplicationSyncLevel"
+          }
+        },
+        "additionalProperties": false
+      },
       "ApplicationResource": {
         "type": "object",
         "properties": {
@@ -4098,6 +4227,40 @@
           },
           "filterSentryEvents": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DownloadClientBulkResource": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "applyTags": {
+            "$ref": "#/components/schemas/ApplyTags"
+          },
+          "enable": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4603,6 +4766,65 @@
         "type": "object",
         "additionalProperties": false
       },
+      "IndexerBulkResource": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "applyTags": {
+            "$ref": "#/components/schemas/ApplyTags"
+          },
+          "enable": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "appProfileId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "minimumSeeders": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "seedRatio": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "seedTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "packSeedTime": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "IndexerCapabilityResource": {
         "type": "object",
         "properties": {
@@ -4690,45 +4912,6 @@
             },
             "nullable": true,
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "IndexerEditorResource": {
-        "type": "object",
-        "properties": {
-          "indexerIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          },
-          "enable": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "appProfileId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "priority": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          },
-          "applyTags": {
-            "$ref": "#/components/schemas/ApplyTags"
           }
         },
         "additionalProperties": false

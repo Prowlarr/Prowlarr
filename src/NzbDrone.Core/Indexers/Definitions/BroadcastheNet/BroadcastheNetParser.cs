@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 {
     public class BroadcastheNetParser : IParseIndexerResponse
     {
-        private static readonly Regex RegexProtocol = new Regex("^https?:", RegexOptions.Compiled);
+        private static readonly Regex RegexProtocol = new ("^https?:", RegexOptions.Compiled);
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
@@ -67,7 +67,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 throw new IndexerException(indexerResponse, "Indexer API call returned an error [{0}]", jsonResponse.Error);
             }
 
-            if (jsonResponse.Result.Results == 0)
+            if (jsonResponse.Result.Results == 0 || jsonResponse.Result?.Torrents?.Values == null)
             {
                 return results;
             }

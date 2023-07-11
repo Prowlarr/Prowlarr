@@ -56,9 +56,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 LimitsDefault = 100,
                 LimitsMax = 1000,
                 TvSearchParams = new List<TvSearchParam>
-                       {
-                           TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId, TvSearchParam.RId
-                       }
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId, TvSearchParam.RId
+                }
             };
 
             caps.Categories.AddCategoryMapping("SD", NewznabStandardCategory.TVSD, "SD");

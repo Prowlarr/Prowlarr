@@ -106,6 +106,7 @@
   "CouldNotConnectSignalR": "Could not connect to SignalR, UI won't update",
   "CountApplicationsSelected": "{0} application(s) selected",
   "CountDownloadClientsSelected": "{0} download client(s) selected",
+  "CountIndexersAvailable": "{0} indexer(s) available",
   "CountIndexersSelected": "{0} indexer(s) selected",
   "Custom": "Custom",
   "CustomFilters": "Custom Filters",

@@ -278,12 +278,18 @@ class AddIndexerModalContent extends Component {
           </Scroller>
         </ModalBody>
 
-        <ModalFooter>
-          <Button
-            onPress={onModalClose}
-          >
-            {translate('Close')}
-          </Button>
+        <ModalFooter className={styles.modalFooter}>
+          <div className={styles.available}>
+            {
+              isPopulated ?
+                translate('CountIndexersAvailable', [filteredIndexers.length]) :
+                null
+            }
+          </div>
+
+          <div>
+            <Button onPress={onModalClose}>{translate('Close')}</Button>
+          </div>
         </ModalFooter>
       </ModalContent>
     );

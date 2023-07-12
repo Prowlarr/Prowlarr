@@ -28,11 +28,11 @@ function createMapStateToProps() {
       }
 
       if (params.indexerIds && !defaultIndexerIds.length) {
-        defaultSearchQueryParams.searchIndexerIds = params.indexerIds.split(',').filter(Boolean).map((id) => Number(id));
+        defaultSearchQueryParams.searchIndexerIds = params.indexerIds.split(',').map((id) => Number(id)).filter(Boolean);
       }
 
       if (params.categories && !defaultCategories.length) {
-        defaultSearchQueryParams.searchCategories = params.categories.split(',').filter(Boolean).map((id) => Number(id));
+        defaultSearchQueryParams.searchCategories = params.categories.split(',').map((id) => Number(id)).filter(Boolean);
       }
 
       if (params.type && defaultSearchType === 'search') {

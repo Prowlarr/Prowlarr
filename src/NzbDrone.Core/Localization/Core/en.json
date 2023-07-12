@@ -419,7 +419,7 @@
   "Seeders": "Seeders",
   "SelectAll": "Select All",
   "SelectIndexers": "Select Indexers",
-  "SelectedCountOfCountReleases": "Selected {0} of {0} releases",
+  "SelectedCountOfCountReleases": "Selected {0} of {1} releases",
   "SemiPrivate": "Semi-Private",
   "SendAnonymousUsageData": "Send Anonymous Usage Data",
   "SetTags": "Set Tags",

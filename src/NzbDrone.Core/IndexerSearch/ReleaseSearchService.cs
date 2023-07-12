@@ -165,7 +165,7 @@ namespace NzbDrone.Core.IndexerSearch
                     (criteriaBase.IndexerIds.Contains(-2) && i.Protocol == DownloadProtocol.Torrent))
                     .ToList();
 
-                if (indexers.Count == 0)
+                if (criteriaBase.InteractiveSearch && indexers.Count == 0)
                 {
                     _logger.Debug("Search failed due to all selected indexers being unavailable: {0}", string.Join(", ", criteriaBase.IndexerIds));
 

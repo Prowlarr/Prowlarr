@@ -56,15 +56,15 @@ namespace NzbDrone.Core.Applications.Radarr
                 switch (ex.Response.StatusCode)
                 {
                     case HttpStatusCode.Unauthorized:
-                        _logger.Error(ex, "API Key is invalid");
+                        _logger.Warn(ex, "API Key is invalid");
                         failures.AddIfNotNull(new ValidationFailure("ApiKey", "API Key is invalid"));
                         break;
                     case HttpStatusCode.BadRequest:
-                        _logger.Error(ex, "Prowlarr URL is invalid");
+                        _logger.Warn(ex, "Prowlarr URL is invalid");
                         failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Radarr cannot connect to Prowlarr"));
                         break;
                     case HttpStatusCode.SeeOther:
-                        _logger.Error(ex, "Radarr returned redirect and is invalid");
+                        _logger.Warn(ex, "Radarr returned redirect and is invalid");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Radarr URL is invalid, Prowlarr cannot connect to Radarr - are you missing a URL base?"));
                         break;
                     default:

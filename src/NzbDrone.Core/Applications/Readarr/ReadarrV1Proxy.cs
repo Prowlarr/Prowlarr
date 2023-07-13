@@ -128,22 +128,22 @@ namespace NzbDrone.Core.Applications.Readarr
                 switch (ex.Response.StatusCode)
                 {
                     case HttpStatusCode.Unauthorized:
-                        _logger.Error(ex, "API Key is invalid");
+                        _logger.Warn(ex, "API Key is invalid");
                         break;
                     case HttpStatusCode.BadRequest:
                         if (ex.Response.Content.Contains("Query successful, but no results in the configured categories were returned from your indexer.", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            _logger.Error(ex, "No Results in configured categories. See FAQ Entry: Prowlarr will not sync X Indexer to App");
+                            _logger.Warn(ex, "No Results in configured categories. See FAQ Entry: Prowlarr will not sync X Indexer to App");
                             break;
                         }
 
                         _logger.Error(ex, "Invalid Request");
                         break;
                     case HttpStatusCode.SeeOther:
-                        _logger.Error(ex, "App returned redirect and is invalid. Check App URL");
+                        _logger.Warn(ex, "App returned redirect and is invalid. Check App URL");
                         break;
                     case HttpStatusCode.NotFound:
-                        _logger.Error(ex, "Remote indexer not found");
+                        _logger.Warn(ex, "Remote indexer not found");
                         break;
                     default:
                         _logger.Error(ex, "Unexpected response status code: {0}", ex.Response.StatusCode);

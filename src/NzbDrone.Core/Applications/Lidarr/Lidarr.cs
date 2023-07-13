@@ -56,15 +56,15 @@ namespace NzbDrone.Core.Applications.Lidarr
                 switch (ex.Response.StatusCode)
                 {
                     case HttpStatusCode.Unauthorized:
-                        _logger.Error(ex, "API Key is invalid");
+                        _logger.Warn(ex, "API Key is invalid");
                         failures.AddIfNotNull(new ValidationFailure("ApiKey", "API Key is invalid"));
                         break;
                     case HttpStatusCode.BadRequest:
-                        _logger.Error(ex, "Prowlarr URL is invalid");
+                        _logger.Warn(ex, "Prowlarr URL is invalid");
                         failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Lidarr cannot connect to Prowlarr"));
                         break;
                     case HttpStatusCode.SeeOther:
-                        _logger.Error(ex, "Lidarr returned redirect and is invalid");
+                        _logger.Warn(ex, "Lidarr returned redirect and is invalid");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Lidarr URL is invalid, Prowlarr cannot connect to Lidarr - are you missing a URL base?"));
                         break;
                     default:

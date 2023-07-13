@@ -56,15 +56,15 @@ namespace NzbDrone.Core.Applications.Sonarr
                 switch (ex.Response.StatusCode)
                 {
                     case HttpStatusCode.Unauthorized:
-                        _logger.Error(ex, "API Key is invalid");
+                        _logger.Warn(ex, "API Key is invalid");
                         failures.AddIfNotNull(new ValidationFailure("ApiKey", "API Key is invalid"));
                         break;
                     case HttpStatusCode.BadRequest:
-                        _logger.Error(ex, "Prowlarr URL is invalid");
+                        _logger.Warn(ex, "Prowlarr URL is invalid");
                         failures.AddIfNotNull(new ValidationFailure("ProwlarrUrl", "Prowlarr URL is invalid, Sonarr cannot connect to Prowlarr"));
                         break;
                     case HttpStatusCode.SeeOther:
-                        _logger.Error(ex, "Sonarr returned redirect and is invalid");
+                        _logger.Warn(ex, "Sonarr returned redirect and is invalid");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Sonarr URL is invalid, Prowlarr cannot connect to Sonarr - are you missing a URL base?"));
                         break;
                     case HttpStatusCode.NotFound:

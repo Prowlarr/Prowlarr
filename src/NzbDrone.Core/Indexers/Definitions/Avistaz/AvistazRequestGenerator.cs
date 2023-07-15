@@ -105,7 +105,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             }
             else
             {
-                parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
+                parameters.Add("search", searchCriteria.SanitizedSearchTerm.Trim());
             }
 
             var pageableRequests = new IndexerPageableRequestChain();
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var parameters = GetBasicSearchParameters(searchCriteria);
 
-            parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
+            parameters.Add("search", searchCriteria.SanitizedSearchTerm.Trim());
 
             var pageableRequests = new IndexerPageableRequestChain();
             pageableRequests.Add(GetRequest(parameters));
@@ -131,16 +131,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
                 parameters.Add("imdb", searchCriteria.FullImdbId);
-                parameters.Add("search", GetSearchTerm(searchCriteria.EpisodeSearchString).Trim());
+                parameters.Add("search", GetEpisodeSearchTerm(searchCriteria).Trim());
             }
             else if (searchCriteria.TvdbId.HasValue)
             {
                 parameters.Add("tvdb", searchCriteria.TvdbId.Value.ToString());
-                parameters.Add("search", GetSearchTerm(searchCriteria.EpisodeSearchString).Trim());
+                parameters.Add("search", GetEpisodeSearchTerm(searchCriteria).Trim());
             }
             else
             {
-                parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedTvSearchString).Trim());
+                parameters.Add("search", $"{searchCriteria.SanitizedSearchTerm} {GetEpisodeSearchTerm(searchCriteria)}".Trim());
             }
 
             var pageableRequests = new IndexerPageableRequestChain();
@@ -153,18 +153,17 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return new IndexerPageableRequestChain();
         }
 
-        // hook to adjust the search term
-        protected virtual string GetSearchTerm(string term) => term;
-
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var parameters = GetBasicSearchParameters(searchCriteria);
 
-            parameters.Add("search", GetSearchTerm(searchCriteria.SanitizedSearchTerm).Trim());
+            parameters.Add("search", searchCriteria.SanitizedSearchTerm.Trim());
 
             var pageableRequests = new IndexerPageableRequestChain();
             pageableRequests.Add(GetRequest(parameters));
             return pageableRequests;
         }
+
+        protected virtual string GetEpisodeSearchTerm(TvSearchCriteria searchCriteria) => searchCriteria.EpisodeSearchString;
     }
 }

@@ -134,9 +134,11 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                   {baseUrl.replace(/(:\/\/)api\./, '$1')}
                 </Link>
               </DescriptionListItemDescription>
-              <DescriptionListItemTitle>{`${
-                protocol === 'usenet' ? 'Newznab' : 'Torznab'
-              } Url`}</DescriptionListItemTitle>
+              <DescriptionListItemTitle>
+                {protocol === 'usenet'
+                  ? translate('NewznabUrl')
+                  : translate('TorznabUrl')}
+              </DescriptionListItemTitle>
               <DescriptionListItemDescription>
                 {`${window.location.origin}${window.Prowlarr.urlBase}/${id}/api`}
               </DescriptionListItemDescription>

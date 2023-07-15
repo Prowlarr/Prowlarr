@@ -70,6 +70,7 @@
   "BackupNow": "Backup Now",
   "BackupRetentionHelpText": "Automatic backups older than the retention period will be cleaned up automatically",
   "Backups": "Backups",
+  "BasicSearch": "Basic Search",
   "BeforeUpdate": "Before update",
   "BindAddress": "Bind Address",
   "BindAddressHelpText": "Valid IP address, localhost or '*' for all interfaces",

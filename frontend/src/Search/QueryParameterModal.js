@@ -14,11 +14,11 @@ import QueryParameterOption from './QueryParameterOption';
 import styles from './QueryParameterModal.css';
 
 const searchOptions = [
-  { key: 'search', value: 'Basic Search' },
-  { key: 'tvsearch', value: 'TV Search' },
-  { key: 'movie', value: 'Movie Search' },
-  { key: 'music', value: 'Audio Search' },
-  { key: 'book', value: 'Book Search' }
+  { key: 'search', value: translate('BasicSearch') },
+  { key: 'tvsearch', value: translate('TvSearch') },
+  { key: 'movie', value: translate('MovieSearch') },
+  { key: 'music', value: translate( 'AudioSearch') },
+  { key: 'book', value: translate('BookSearch') }
 ];
 
 const seriesTokens = [
@@ -94,8 +94,8 @@ class QueryParameterModal extends Component {
       const newValue = `${start}${tokenValue}${end}`;
 
       onSearchInputChange({ name, value: newValue });
-      this._selectionStart = newValue.length - 1;
-      this._selectionEnd = newValue.length - 1;
+      this._selectionStart = newValue.length;
+      this._selectionEnd = newValue.length;
     }
   };
 

@@ -269,7 +269,6 @@
     "FilterPlaceHolder": "Buscar películas",
     "Exception": "Excepción",
     "ErrorLoadingContents": "Error al cargar los contenidos",
-    "ApplyTagsHelpTexts1": "Cómo añadir etiquetas a las películas seleccionadas",
     "UILanguageHelpTextWarning": "Recargar el Navegador",
     "UILanguageHelpText": "Lenguaje que Prowlarr usara para el UI",
     "UILanguage": "Lenguaje de UI",

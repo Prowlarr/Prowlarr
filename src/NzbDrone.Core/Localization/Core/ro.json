@@ -310,7 +310,6 @@
     "SuggestTranslationChange": "Sugerează modificarea traducerii",
     "ApplicationStatusCheckSingleClientMessage": "Aplicații indisponibile datorită erorilor: {0}",
     "ApplyTags": "Aplicați etichete",
-    "ApplyTagsHelpTexts4": "Înlocuire: înlocuiți etichetele cu etichetele introduse (nu introduceți etichete pentru a șterge toate etichetele)",
     "Automatic": "Automat",
     "DeleteApplicationMessageText": "Sigur doriți să ștergeți aplicația „{0}”?",
     "Exception": "Excepție",

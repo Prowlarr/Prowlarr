@@ -289,7 +289,6 @@
     "NoTagsHaveBeenAddedYet": "아직 추가 된 태그가 없습니다.",
     "PendingChangesDiscardChanges": "변경 사항을 취소하고 나가기",
     "Priority": "우선 순위",
-    "PrioritySettings": "우선 순위",
     "SetTags": "태그 설정",
     "System": "체계",
     "UpdateCheckUINotWritableMessage": "사용자 '{1}'이 (가) UI 폴더 '{0}'에 쓸 수 없기 때문에 업데이트를 설치할 수 없습니다.",

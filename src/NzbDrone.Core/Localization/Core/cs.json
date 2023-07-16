@@ -76,7 +76,6 @@
     "ApplicationStatusCheckAllClientMessage": "Všechny seznamy nejsou k dispozici z důvodu selhání",
     "ApplicationStatusCheckSingleClientMessage": "Seznamy nejsou k dispozici z důvodu selhání: {0}",
     "Apply": "Aplikovat",
-    "ApplyTagsHelpTexts1": "Jak použít značky na vybrané filmy",
     "Branch": "Větev",
     "BranchUpdate": "Pobočka, která se má použít k aktualizaci Prowlarr",
     "EditIndexer": "Upravit indexátor",

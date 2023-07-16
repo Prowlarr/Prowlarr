@@ -192,7 +192,6 @@
     "BranchUpdateMechanism": "Ramificação utilizada pelo mecanismo externo de atualização",
     "BranchUpdate": "Ramificação utilizada para atualizar o Prowlarr",
     "BeforeUpdate": "Antes de atualizar",
-    "ApplyTagsHelpTexts3": "Remover: eliminar as etiquetas adicionadas",
     "ApplyTagsHelpTexts1": "Como aplicar etiquetas aos indexadores selecionados",
     "AddingTag": "A adicionar etiqueta",
     "AutomaticSearch": "Pesquisa automática",

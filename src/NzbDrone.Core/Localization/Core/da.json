@@ -275,7 +275,6 @@
     "ApplicationStatusCheckAllClientMessage": "Alle lister er utilgængelige på grund af fejl",
     "ApplicationStatusCheckSingleClientMessage": "Lister utilgængelige på grund af fejl: {0}",
     "ApplyTags": "Anvend tags",
-    "ApplyTagsHelpTexts2": "Tilføj: Føj tags til den eksisterende liste over tags",
     "AreYouSureYouWantToResetYourAPIKey": "Er du sikker på, at du vil nulstille din API-nøgle?",
     "Authentication": "Godkendelse",
     "AuthenticationMethodHelpText": "Kræv brugernavn og adgangskode for at få adgang til Prowlarr",

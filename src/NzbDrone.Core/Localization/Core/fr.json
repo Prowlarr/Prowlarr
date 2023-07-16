@@ -173,7 +173,6 @@
     "BranchUpdateMechanism": "Branche utilisée par le mécanisme de mise à jour extérieur",
     "BranchUpdate": "Branche à utiliser pour mettre Prowlarr à jour",
     "BeforeUpdate": "Avant mise à jour",
-    "ApplyTagsHelpTexts3": "Retirer : Retire les étiquettes renseignées",
     "ApplyTagsHelpTexts1": "Comment appliquer des étiquettes aux indexeurs sélectionnés",
     "DeleteDownloadClientMessageText": "Êtes-vous sûr de vouloir supprimer le client de téléchargement '{0}' ?",
     "DeleteBackupMessageText": "Êtes-vous sûr de vouloir supprimer la sauvegarde '{0}' ?",

@@ -219,7 +219,6 @@
     "Time": "समय",
     "UpdateScriptPathHelpText": "एक कस्टम स्क्रिप्ट का पथ जो एक निकाला गया अद्यतन पैकेज लेता है और शेष अद्यतन प्रक्रिया को संभालता है",
     "ApplicationStatusCheckSingleClientMessage": "विफलताओं के कारण अनुपलब्ध सूची: {0}",
-    "ApplyTagsHelpTexts4": "प्रतिस्थापित करें: दर्ज किए गए टैगों के साथ टैग बदलें (सभी टैग्स को खाली करने के लिए कोई टैग दर्ज न करें)",
     "AreYouSureYouWantToResetYourAPIKey": "क्या आप वाकई अपनी API कुंजी को रीसेट करना चाहते हैं?",
     "AutomaticSearch": "स्वचालित खोज",
     "BackupFolderHelpText": "रिलेटिव पाथ रेडर के ऐपडाटा डायरेक्टरी के तहत होगा",

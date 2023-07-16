@@ -184,7 +184,6 @@
     "ApplicationStatusCheckSingleClientMessage": "Listar ekki tiltækir vegna bilana: {0}",
     "Apply": "Sækja um",
     "ApplyTags": "Notaðu merki",
-    "ApplyTagsHelpTexts4": "Skipta um: Skiptu um merkin með innsláttu merkjunum (sláðu inn engin merki til að hreinsa öll merki)",
     "Authentication": "Auðkenning",
     "AuthenticationMethodHelpText": "Krefjast notandanafns og lykilorðs til að fá aðgang að Prowlarr",
     "Automatic": "Sjálfskiptur",

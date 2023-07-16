@@ -114,7 +114,6 @@
     "Size": "ขนาด",
     "AppDataDirectory": "ไดเรกทอรี AppData",
     "ApplyTags": "ใช้แท็ก",
-    "ApplyTagsHelpTexts4": "แทนที่: แทนที่แท็กด้วยแท็กที่ป้อน (ป้อนไม่มีแท็กเพื่อล้างแท็กทั้งหมด)",
     "AreYouSureYouWantToResetYourAPIKey": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API",
     "Authentication": "การรับรองความถูกต้อง",
     "AuthenticationMethodHelpText": "ต้องการชื่อผู้ใช้และรหัสผ่านเพื่อเข้าถึงเรดาร์",

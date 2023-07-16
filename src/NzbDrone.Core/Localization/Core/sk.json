@@ -37,7 +37,6 @@
     "DeleteTagMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "AllIndexersHiddenDueToFilter": "Všetky filmy sú skryté kvôli použitému filtru.",
     "AnalyticsEnabledHelpText": "Odosielajte anonymné informácie o používaní a chybách na servery Prowlarru. To zahŕňa informácie o vašom prehliadači, ktoré stránky Prowlarr WebUI používate, hlásenia chýb a taktiež verziu operačného systému a spúšťacieho prostredia. Tieto informácie použijeme k uprednostňovaniu funkcií a oprav chýb.",
-    "ApplyTagsHelpTexts2": "Pridať: Pridajte značky do existujúceho zoznamu značiek",
     "AuthenticationMethodHelpText": "Vyžadovať používateľské meno a heslo pre prístup k Prowlarru",
     "BackupFolderHelpText": "Relatívne cesty budú v priečinku AppData Prowlarru",
     "BranchUpdate": "Vetva, ktorá sa má použiť k aktualizácií Prowlarru",

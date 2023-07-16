@@ -302,7 +302,6 @@
     "Yesterday": "Ahir",
     "ApplicationStatusCheckSingleClientMessage": "Llistes no disponibles a causa d'errors: {0}",
     "AnalyticsEnabledHelpText": "Envieu informació anònima d'ús i errors als servidors de Prowlarr. Això inclou informació sobre el vostre navegador, quines pàgines Prowlarr WebUI feu servir, informes d'errors, així com el sistema operatiu i la versió del temps d'execució. Utilitzarem aquesta informació per prioritzar les funcions i les correccions d'errors.",
-    "ApplyTagsHelpTexts2": "Afegeix: afegeix les etiquetes a la llista d'etiquetes existent",
     "ConnectionLostAutomaticMessage": "Prowlarr intentarà connectar-se automàticament, o podeu fer clic a recarregar.",
     "ConnectionLostMessage": "Prowlarr ha perdut la connexió amb el backend i s'haurà de tornar a carregar per restaurar la funcionalitat.",
     "HistoryCleanupDaysHelpTextWarning": "Els fitxers de la paperera de reciclatge més antics que el nombre de dies seleccionat es netejaran automàticament",

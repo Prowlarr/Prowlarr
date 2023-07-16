@@ -215,7 +215,6 @@
     "AnalyticsEnabledHelpText": "Skicka anonym användning och felinformation till Prowlarr's servrar. Detta inkluderar information i din webbläsare, vilka Prowlarr's WebUI-sidor du använder, felrapportering samt operativsystem och runtime-version. Vi kommer att använda denna information för att prioritera funktioner och buggfixar.",
     "AppDataDirectory": "AppData-katalog",
     "ApplicationStatusCheckSingleClientMessage": "Listor otillgängliga på grund av fel: {0}",
-    "ApplyTagsHelpTexts4": "Ersätt: Ersätt taggarna med de angivna taggarna (ange inga taggar för att rensa alla taggar)",
     "BindAddressHelpText": "Giltig IP4-adress eller '*' för alla gränssnitt",
     "BranchUpdate": "Gren att använda för att uppdatera Prowlarr",
     "BranchUpdateMechanism": "Gren som används av extern uppdateringsmekanism",

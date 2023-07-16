@@ -106,7 +106,6 @@
     "ApplicationStatusCheckAllClientMessage": "Wszystkie listy są niedostępne z powodu błędów",
     "ApplicationStatusCheckSingleClientMessage": "Listy niedostępne z powodu błędów: {0}",
     "Apply": "Zastosować",
-    "ApplyTagsHelpTexts2": "Dodaj: dodaj tagi do istniejącej listy tagów",
     "Authentication": "Poświadczenie",
     "AuthenticationMethodHelpText": "Wymagaj nazwy użytkownika i hasła, aby uzyskać dostęp do Prowlarr",
     "BackupFolderHelpText": "Względne ścieżki będą znajdować się w katalogu AppData Prowlarr",

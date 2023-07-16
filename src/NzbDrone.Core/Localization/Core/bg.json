@@ -16,7 +16,6 @@
     "AppDataDirectory": "Директория на AppData",
     "Authentication": "Удостоверяване",
     "Branch": "Клон",
-    "ApplyTagsHelpTexts3": "Премахване: Премахнете въведените тагове",
     "AppDataLocationHealthCheckMessage": "Актуализирането няма да е възможно, за да се предотврати изтриването на AppData при актуализация",
     "ApplyTags": "Прилагане на тагове",
     "Automatic": "Автоматично",

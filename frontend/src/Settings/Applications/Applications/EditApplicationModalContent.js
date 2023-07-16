@@ -102,7 +102,10 @@ function EditApplicationModalContent(props) {
                   type={inputTypes.SELECT}
                   values={syncLevelOptions}
                   name="syncLevel"
-                  helpText={`${translate('SyncLevelAddRemove')}<br>${translate('SyncLevelFull')}`}
+                  helpTexts={[
+                    translate('SyncLevelAddRemove'),
+                    translate('SyncLevelFull')
+                  ]}
                   {...syncLevel}
                   onChange={onInputChange}
                 />

@@ -82,9 +82,10 @@ function ManageApplicationsEditModalContent(
             name="syncLevel"
             value={syncLevel}
             values={syncLevelOptions}
-            helpText={`${translate('SyncLevelAddRemove')}<br>${translate(
-              'SyncLevelFull'
-            )}`}
+            helpTexts={[
+              translate('SyncLevelAddRemove'),
+              translate('SyncLevelFull'),
+            ]}
             onChange={onInputChange}
           />
         </FormGroup>

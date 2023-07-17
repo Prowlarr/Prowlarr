@@ -85,6 +85,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "rsskey", _settings.RssKey }
             };
 
+            if (_settings.FreeleechOnly)
+            {
+                body.Add("freeleech", 1);
+                body.Add("limited", 1);
+            }
+
             if (imdbId.IsNotNullOrWhiteSpace())
             {
                 body.Add("imdb_id", imdbId);
@@ -263,11 +269,19 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private static readonly BeyondHDSettingsValidator Validator = new ();
 
+        public BeyondHDSettings()
+        {
+            FreeleechOnly = false;
+        }
+
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from the Site (Found in My Security => RSS Key)", Privacy = PrivacyLevel.ApiKey)]
         public string RssKey { get; set; }
+
+        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only")]
+        public bool FreeleechOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

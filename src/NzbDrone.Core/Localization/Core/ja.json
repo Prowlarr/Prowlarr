@@ -332,5 +332,16 @@
     "Queued": "キューに入れられました",
     "Remove": "削除する",
     "Replace": "交換",
-    "TheLatestVersionIsAlreadyInstalled": "Prowlarrの最新バージョンはすでにインストールされています"
+    "TheLatestVersionIsAlreadyInstalled": "Prowlarrの最新バージョンはすでにインストールされています",
+    "Track": "痕跡",
+    "DeleteSelectedDownloadClients": "ダウンロードクライアントを削除する",
+    "Genre": "ジャンル",
+    "Year": "年",
+    "ApplyTagsHelpTextAdd": "追加：既存のタグリストにタグを追加します",
+    "ApplyTagsHelpTextReplace": "置換：タグを入力したタグに置き換えます（すべてのタグをクリアするには、タグを入力しないでください）",
+    "ApplyTagsHelpTextHowToApplyApplications": "選択した映画にタグを適用する方法",
+    "ApplyTagsHelpTextHowToApplyIndexers": "選択した映画にタグを適用する方法",
+    "ApplyTagsHelpTextRemove": "削除：入力したタグを削除します",
+    "DownloadClientPriorityHelpText": "複数のダウンロードクライアントに優先順位を付けます。ラウンドロビンは、同じ優先度のクライアントに使用されます。",
+    "More": "もっと"
 }

@@ -332,5 +332,17 @@
     "Queued": "Đã xếp hàng",
     "Remove": "Tẩy",
     "Replace": "Thay thế",
-    "TheLatestVersionIsAlreadyInstalled": "Phiên bản mới nhất của Prowlarr đã được cài đặt"
+    "TheLatestVersionIsAlreadyInstalled": "Phiên bản mới nhất của Prowlarr đã được cài đặt",
+    "ApplyChanges": "Áp dụng thay đổi",
+    "ApplyTagsHelpTextAdd": "Thêm: Thêm thẻ vào danh sách thẻ hiện có",
+    "ApplyTagsHelpTextHowToApplyApplications": "Cách áp dụng thẻ cho các phim đã chọn",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Cách áp dụng thẻ cho các phim đã chọn",
+    "ApplyTagsHelpTextReplace": "Thay thế: Thay thế các thẻ bằng các thẻ đã nhập (không nhập thẻ nào để xóa tất cả các thẻ)",
+    "DeleteSelectedDownloadClients": "Xóa ứng dụng khách tải xuống",
+    "DownloadClientPriorityHelpText": "Ưu tiên nhiều Khách hàng tải xuống. Round-Robin được sử dụng cho các khách hàng có cùng mức độ ưu tiên.",
+    "ApplyTagsHelpTextRemove": "Xóa: Xóa các thẻ đã nhập",
+    "More": "Hơn",
+    "Track": "Dấu vết",
+    "Year": "Năm",
+    "Genre": "Thể loại"
 }

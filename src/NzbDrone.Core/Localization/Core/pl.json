@@ -344,5 +344,22 @@
     "ApplicationLongTermStatusCheckAllClientMessage": "Wszystkie indeksatory są niedostępne z powodu awarii przez ponad 6 godzin",
     "Remove": "Usunąć",
     "Replace": "Zastąpić",
-    "TheLatestVersionIsAlreadyInstalled": "Najnowsza wersja Prowlarr jest już zainstalowana"
+    "TheLatestVersionIsAlreadyInstalled": "Najnowsza wersja Prowlarr jest już zainstalowana",
+    "ApplicationURL": "Link do aplikacji",
+    "ApplicationUrlHelpText": "Zewnętrzny URL tej aplikacji zawiera http(s)://, port i adres URL",
+    "ApplyTagsHelpTextAdd": "Dodaj: dodaj tagi do istniejącej listy tagów",
+    "ApplyTagsHelpTextHowToApplyApplications": "Jak zastosować tagi do wybranych filmów",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Jak zastosować tagi do wybranych filmów",
+    "DeleteSelectedApplicationsMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
+    "DeleteSelectedDownloadClients": "Usuń klienta pobierania",
+    "DeleteSelectedDownloadClientsMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
+    "Year": "Rok",
+    "More": "Jeszcze",
+    "ApplyTagsHelpTextRemove": "Usuń: usuń wprowadzone tagi",
+    "ApplyTagsHelpTextReplace": "Zastąp: Zastąp tagi wprowadzonymi tagami (nie wprowadzaj tagów, aby usunąć wszystkie tagi)",
+    "DeleteSelectedIndexersMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
+    "DownloadClientPriorityHelpText": "Nadaj priorytet wielu klientom pobierania. W przypadku klientów o tym samym priorytecie używane jest działanie okrężne.",
+    "Track": "Ślad",
+    "UpdateAvailable": "Dostępna jest aktualizacja",
+    "Genre": "Gatunki"
 }

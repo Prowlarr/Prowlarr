@@ -335,5 +335,16 @@
     "ApplicationLongTermStatusCheckSingleClientMessage": "6 saatten uzun süredir yaşanan arızalar nedeniyle dizinleyiciler kullanılamıyor: {0}",
     "Remove": "Kaldırmak",
     "Replace": "Değiştir",
-    "TheLatestVersionIsAlreadyInstalled": "Prowlarr'ın en son sürümü zaten kurulu"
+    "TheLatestVersionIsAlreadyInstalled": "Prowlarr'ın en son sürümü zaten kurulu",
+    "ApplyTagsHelpTextAdd": "Ekle: Etiketleri mevcut etiket listesine ekleyin",
+    "ApplyTagsHelpTextHowToApplyApplications": "Seçilen filmlere etiketler nasıl uygulanır",
+    "ApplyTagsHelpTextRemove": "Kaldır: Girilen etiketleri kaldırın",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Seçilen filmlere etiketler nasıl uygulanır",
+    "ApplyTagsHelpTextReplace": "Değiştir: Etiketleri girilen etiketlerle değiştirin (tüm etiketleri temizlemek için hiçbir etiket girmeyin)",
+    "DeleteSelectedDownloadClients": "İndirme İstemcisini Sil",
+    "DownloadClientPriorityHelpText": "Birden çok İndirme İstemcisine öncelik verin. Round-Robin, aynı önceliğe sahip müşteriler için kullanılır.",
+    "Genre": "Türler",
+    "Track": "İzleme",
+    "Year": "Yıl",
+    "More": "Daha"
 }

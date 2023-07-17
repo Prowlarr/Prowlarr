@@ -332,5 +332,16 @@
     "Queued": "На опашка",
     "Remove": "Премахване",
     "Replace": "Сменете",
-    "TheLatestVersionIsAlreadyInstalled": "Вече е инсталирана най-новата версия на {0}"
+    "TheLatestVersionIsAlreadyInstalled": "Вече е инсталирана най-новата версия на {0}",
+    "Genre": "Жанрове",
+    "ApplyTagsHelpTextRemove": "Премахване: Премахнете въведените тагове",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Как да приложите тагове към избраните филми",
+    "DeleteSelectedDownloadClients": "Изтриване на клиент за изтегляне",
+    "More": "| Повече ▼",
+    "ApplyTagsHelpTextAdd": "Добавяне: Добавете маркерите към съществуващия списък с маркери",
+    "ApplyTagsHelpTextHowToApplyApplications": "Как да приложите тагове към избраните филми",
+    "ApplyTagsHelpTextReplace": "Замяна: Заменете маркерите с въведените маркери (не въвеждайте маркери, за да изчистите всички маркери)",
+    "DownloadClientPriorityHelpText": "Приоритизирайте множество клиенти за изтегляне. Round-Robin се използва за клиенти със същия приоритет.",
+    "Track": "Проследяване",
+    "Year": "Година"
 }

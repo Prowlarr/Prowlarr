@@ -332,5 +332,16 @@
     "NextExecution": "Næsta framkvæmd",
     "Remove": "Fjarlægðu",
     "Replace": "Skipta um",
-    "TheLatestVersionIsAlreadyInstalled": "Nýjasta útgáfan af Prowlarr er þegar uppsett"
+    "TheLatestVersionIsAlreadyInstalled": "Nýjasta útgáfan af Prowlarr er þegar uppsett",
+    "ApplyTagsHelpTextAdd": "Bæta við: Bættu merkjum við núverandi lista yfir merki",
+    "ApplyTagsHelpTextHowToApplyApplications": "Hvernig á að setja merki á völdu kvikmyndirnar",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Hvernig á að setja merki á völdu kvikmyndirnar",
+    "ApplyTagsHelpTextReplace": "Skipta um: Skiptu um merkin með innsláttu merkjunum (sláðu inn engin merki til að hreinsa öll merki)",
+    "DeleteSelectedDownloadClients": "Eyða niðurhals viðskiptavinur",
+    "Genre": "Tegundir",
+    "More": "Meira",
+    "ApplyTagsHelpTextRemove": "Fjarlægja: Fjarlægðu innsláttarmerkin",
+    "DownloadClientPriorityHelpText": "Forgangsraðaðu mörgum niðurhal viðskiptavinum. Round-Robin er notað fyrir viðskiptavini með sömu forgang.",
+    "Track": "Spor",
+    "Year": "Ár"
 }

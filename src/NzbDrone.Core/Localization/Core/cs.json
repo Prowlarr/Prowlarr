@@ -332,5 +332,19 @@
     "Queued": "Ve frontě",
     "Remove": "Odstranit",
     "Replace": "Nahradit",
-    "TheLatestVersionIsAlreadyInstalled": "Nejnovější verze aplikace Prowlarr je již nainstalována"
+    "TheLatestVersionIsAlreadyInstalled": "Nejnovější verze aplikace Prowlarr je již nainstalována",
+    "More": "Více",
+    "ApplyTagsHelpTextAdd": "Přidat: Přidejte značky do existujícího seznamu značek",
+    "ApplyTagsHelpTextHowToApplyApplications": "Jak použít značky na vybrané filmy",
+    "DeleteSelectedDownloadClients": "Odstranit staženého klienta",
+    "DeleteSelectedIndexersMessageText": "Opravdu chcete odstranit indexer „{0}“?",
+    "DeleteSelectedApplicationsMessageText": "Opravdu chcete odstranit indexer „{0}“?",
+    "DeleteSelectedDownloadClientsMessageText": "Opravdu chcete odstranit indexer „{0}“?",
+    "Year": "Rok",
+    "ApplyTagsHelpTextRemove": "Odebrat: Odebere zadané značky",
+    "DownloadClientPriorityHelpText": "Upřednostněte více klientů pro stahování. Round-Robin se používá pro klienty se stejnou prioritou.",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Jak použít značky na vybrané filmy",
+    "ApplyTagsHelpTextReplace": "Nahradit: Nahradit tagy zadanými tagy (pro vymazání všech tagů zadejte žádné tagy)",
+    "Track": "Stopa",
+    "Genre": "Žánry"
 }

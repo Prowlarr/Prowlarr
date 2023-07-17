@@ -103,5 +103,15 @@
     "Queued": "Fronta",
     "RSS": "RSS",
     "Remove": "Odstrániť",
-    "Replace": "Nahradiť"
+    "Replace": "Nahradiť",
+    "ApplicationURL": "URL aplikácie",
+    "ApplicationUrlHelpText": "Externá URL tejto aplikácie vrátane http(s)://, portu a URL základu",
+    "Label": "Štítok",
+    "ApplyTagsHelpTextAdd": "Pridať: Pridajte značky do existujúceho zoznamu značiek",
+    "ApplyTagsHelpTextRemove": "Odobrať: Odoberie zadané značky",
+    "ApplyTagsHelpTextReplace": "Nahradiť: Nahradí značky zadanými značkami (pre vymazanie všetkých značiek, nezadávajte žiadne)",
+    "ApplyTagsHelpTextHowToApplyApplications": "Ako použiť značky na vybrané filmy",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Ako použiť značky na vybrané filmy",
+    "Season": "Séria",
+    "Publisher": "Vydavateľ"
 }

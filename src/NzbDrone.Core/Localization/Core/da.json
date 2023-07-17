@@ -344,5 +344,21 @@
     "Notification": "Notifikationer",
     "Remove": "Fjerne",
     "Replace": "erstat",
-    "TheLatestVersionIsAlreadyInstalled": "Den seneste version af Prowlarr er allerede installeret"
+    "TheLatestVersionIsAlreadyInstalled": "Den seneste version af Prowlarr er allerede installeret",
+    "Year": "År",
+    "ApplyTagsHelpTextAdd": "Tilføj: Føj tags til den eksisterende liste over tags",
+    "ApplyTagsHelpTextHowToApplyApplications": "Sådan anvendes tags på de valgte film",
+    "DeleteSelectedApplicationsMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
+    "DeleteSelectedDownloadClients": "Slet Download Client",
+    "DeleteSelectedDownloadClientsMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
+    "DeleteSelectedIndexersMessageText": "Er du sikker på, at du vil slette indeksøren '{0}'?",
+    "Genre": "Genrer",
+    "More": "Mere",
+    "Season": "Sæson",
+    "Label": "Etiket",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Sådan anvendes tags på de valgte film",
+    "ApplyTagsHelpTextRemove": "Fjern: Fjern de indtastede tags",
+    "ApplyTagsHelpTextReplace": "Erstat: Udskift tags med de indtastede tags (indtast ingen tags for at rydde alle tags)",
+    "DownloadClientPriorityHelpText": "Prioriter flere downloadklienter. Round-Robin bruges til klienter med samme prioritet.",
+    "Track": "Spor"
 }

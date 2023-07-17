@@ -332,5 +332,16 @@
     "Queued": "कतारबद्ध",
     "Remove": "हटाना",
     "TheLatestVersionIsAlreadyInstalled": "रेडर का नवीनतम संस्करण पहले से ही स्थापित है",
-    "Replace": "बदलने के"
+    "Replace": "बदलने के",
+    "More": "अधिक",
+    "DeleteSelectedDownloadClients": "डाउनलोड क्लाइंट हटाएं",
+    "Track": "निशान",
+    "ApplyTagsHelpTextHowToApplyApplications": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
+    "ApplyTagsHelpTextAdd": "जोड़ें: टैग की मौजूदा सूची में टैग जोड़ें",
+    "ApplyTagsHelpTextHowToApplyIndexers": "चयनित फिल्मों के लिए टैग कैसे लागू करें",
+    "ApplyTagsHelpTextRemove": "निकालें: दर्ज किए गए टैग निकालें",
+    "ApplyTagsHelpTextReplace": "प्रतिस्थापित करें: दर्ज किए गए टैगों के साथ टैग बदलें (सभी टैग्स को खाली करने के लिए कोई टैग दर्ज न करें)",
+    "DownloadClientPriorityHelpText": "एकाधिक डाउनलोड ग्राहकों को प्राथमिकता दें। राउंड-रॉबिन का उपयोग उसी प्राथमिकता वाले ग्राहकों के लिए किया जाता है।",
+    "Year": "साल",
+    "Genre": "शैलियां"
 }

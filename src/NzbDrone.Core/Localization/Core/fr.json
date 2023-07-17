@@ -498,5 +498,21 @@
     "Track": "Piste",
     "Year": "Année",
     "ApplicationURL": "URL de l'application",
-    "ApiKeyValidationHealthCheckMessage": "Veuillez mettre à jour votre clé API pour qu'elle contienne au moins {0} caractères. Vous pouvez le faire via les paramètres ou le fichier de configuration"
+    "ApiKeyValidationHealthCheckMessage": "Veuillez mettre à jour votre clé API pour qu'elle contienne au moins {0} caractères. Vous pouvez le faire via les paramètres ou le fichier de configuration",
+    "ApplicationUrlHelpText": "URL externe de cette application, y compris http(s)://, le port et l'URL de base",
+    "ApplyChanges": "Appliquer les modifications",
+    "ApplyTagsHelpTextAdd": "Ajouter : Ajouter les étiquettes à la liste des étiquettes existantes",
+    "ApplyTagsHelpTextHowToApplyApplications": "Comment appliquer des tags à l'auteur sélectionné",
+    "CountIndexersSelected": "{0} indexeur(s) sélectionné(s)",
+    "DeleteSelectedApplicationsMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
+    "DeleteSelectedIndexersMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
+    "DownloadClientPriorityHelpText": "Donnez la priorité à plusieurs clients de téléchargement. Le Round-Robin est utilisé pour les clients ayant la même priorité.",
+    "SelectIndexers": "Recherche indexeurs",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Comment appliquer des étiquettes aux indexeurs sélectionnés",
+    "ApplyTagsHelpTextRemove": "Retirer : Retire les étiquettes renseignées",
+    "ApplyTagsHelpTextReplace": "Remplacer : Remplace les tags par les tags renseignés (ne pas renseigner de tags pour effacer tous les tags)",
+    "DeleteSelectedDownloadClients": "Supprimer le client de téléchargement",
+    "DeleteSelectedDownloadClientsMessageText": "Voulez-vous vraiment supprimer l'indexeur '{0}' ?",
+    "StopSelecting": "Arrêtez la sélection",
+    "UpdateAvailable": "Une nouvelle mise à jour est disponible"
 }

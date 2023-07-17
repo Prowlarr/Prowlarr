@@ -332,5 +332,17 @@
     "Queued": "대기 중",
     "Replace": "바꾸다",
     "TheLatestVersionIsAlreadyInstalled": "최신 버전의 Whisparr가 이미 설치되어 있습니다.",
-    "Remove": "없애다"
+    "Remove": "없애다",
+    "Genre": "장르",
+    "ApplyTagsHelpTextAdd": "추가 : 기존 태그 목록에 태그를 추가합니다.",
+    "DeleteSelectedDownloadClients": "다운로드 클라이언트 삭제",
+    "DeleteSelectedApplicationsMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
+    "DeleteSelectedDownloadClientsMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
+    "ApplyTagsHelpTextHowToApplyApplications": "선택한 동영상에 태그를 적용하는 방법",
+    "ApplyTagsHelpTextHowToApplyIndexers": "선택한 동영상에 태그를 적용하는 방법",
+    "ApplyTagsHelpTextRemove": "제거 : 입력한 태그를 제거합니다.",
+    "ApplyTagsHelpTextReplace": "바꾸기 : 태그를 입력 한 태그로 바꿉니다 (모든 태그를 지우려면 태그를 입력하지 않음)",
+    "DeleteSelectedIndexersMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
+    "Track": "자취",
+    "Year": "년"
 }

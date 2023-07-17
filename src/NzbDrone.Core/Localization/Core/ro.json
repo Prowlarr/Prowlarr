@@ -380,5 +380,21 @@
     "Replace": "A inlocui",
     "TheLatestVersionIsAlreadyInstalled": "Cea mai recentă versiune a Prowlarr este deja instalată",
     "AddApplication": "Adaugă",
-    "AddCustomFilter": "Adaugă filtru personalizat"
+    "AddCustomFilter": "Adaugă filtru personalizat",
+    "Track": "Urmă",
+    "ApplyTagsHelpTextAdd": "Adăugare: adăugați etichetele la lista de etichete existentă",
+    "ApplyTagsHelpTextHowToApplyApplications": "Cum se aplică etichete filmelor selectate",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Cum se aplică etichete indexatoarelor selectate",
+    "ApplyTagsHelpTextRemove": "Eliminați: eliminați etichetele introduse",
+    "CountIndexersSelected": "{0} Indexatoare selectate",
+    "DeleteSelectedApplicationsMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
+    "DeleteSelectedDownloadClientsMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
+    "DeleteSelectedDownloadClients": "Ștergeți clientul de descărcare",
+    "DeleteSelectedIndexersMessageText": "Sigur doriți să ștergeți indexatorul „{0}”?",
+    "DownloadClientPriorityHelpText": "Prioritizați mai mulți clienți de descărcare. Round-Robin este utilizat pentru clienții cu aceeași prioritate.",
+    "Genre": "Genuri",
+    "Label": "Etichetă",
+    "More": "Mai mult",
+    "ApplyTagsHelpTextReplace": "Înlocuire: înlocuiți etichetele cu etichetele introduse (nu introduceți etichete pentru a șterge toate etichetele)",
+    "Year": "An"
 }

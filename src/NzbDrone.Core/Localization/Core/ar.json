@@ -332,5 +332,16 @@
     "Queued": "في قائمة الانتظار",
     "Remove": "إزالة",
     "Replace": "يحل محل",
-    "TheLatestVersionIsAlreadyInstalled": "تم بالفعل تثبيت أحدث إصدار من {0}"
+    "TheLatestVersionIsAlreadyInstalled": "تم بالفعل تثبيت أحدث إصدار من {0}",
+    "DownloadClientPriorityHelpText": "تحديد أولويات عملاء التنزيل المتعددين. يتم استخدام Round-Robin للعملاء الذين لديهم نفس الأولوية.",
+    "ApplyTagsHelpTextAdd": "إضافة: أضف العلامات إلى قائمة العلامات الموجودة",
+    "ApplyTagsHelpTextHowToApplyApplications": "كيفية تطبيق العلامات على الأفلام المختارة",
+    "ApplyTagsHelpTextHowToApplyIndexers": "كيفية تطبيق العلامات على الأفلام المختارة",
+    "ApplyTagsHelpTextRemove": "إزالة: قم بإزالة العلامات التي تم إدخالها",
+    "ApplyTagsHelpTextReplace": "استبدال: استبدل العلامات بالعلامات التي تم إدخالها (لا تدخل أي علامات لمسح جميع العلامات)",
+    "DeleteSelectedDownloadClients": "حذف Download Client",
+    "Genre": "الأنواع",
+    "More": "أكثر",
+    "Track": "أثر",
+    "Year": "عام"
 }

@@ -28,7 +28,10 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
         protected override string AddFromMagnetLink(TorrentInfo release, string hash, string magnetLink)
         {
-            _proxy.AddTorrentFromUrl(magnetLink, GetDownloadDirectory(), Settings);
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
+            var downloadDirectory = GetDownloadDirectory(category);
+
+            _proxy.AddTorrentFromUrl(magnetLink, downloadDirectory, Settings);
             _proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
 
             if (Settings.Priority == (int)TransmissionPriority.First)
@@ -41,7 +44,10 @@ namespace NzbDrone.Core.Download.Clients.Transmission
 
         protected override string AddFromTorrentFile(TorrentInfo release, string hash, string filename, byte[] fileContent)
         {
-            _proxy.AddTorrentFromData(fileContent, GetDownloadDirectory(), Settings);
+            var category = GetCategoryForRelease(release) ?? Settings.Category;
+            var downloadDirectory = GetDownloadDirectory(category);
+
+            _proxy.AddTorrentFromData(fileContent, downloadDirectory, Settings);
             _proxy.SetTorrentSeedingConfiguration(hash, release.SeedConfiguration, Settings);
 
             if (Settings.Priority == (int)TransmissionPriority.First)
@@ -73,14 +79,14 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             return outputPath + torrent.Name.Replace(":", "_");
         }
 
-        protected string GetDownloadDirectory()
+        protected string GetDownloadDirectory(string category)
         {
             if (Settings.Directory.IsNotNullOrWhiteSpace())
             {
                 return Settings.Directory;
             }
 
-            if (!Settings.Category.IsNotNullOrWhiteSpace())
+            if (category.IsNullOrWhiteSpace())
             {
                 return null;
             }
@@ -88,7 +94,7 @@ namespace NzbDrone.Core.Download.Clients.Transmission
             var config = _proxy.GetConfig(Settings);
             var destDir = config.DownloadDir;
 
-            return $"{destDir.TrimEnd('/')}/{Settings.Category}";
+            return $"{destDir.TrimEnd('/')}/{category}";
         }
 
         protected ValidationFailure TestConnection()

@@ -38,6 +38,6 @@ namespace NzbDrone.Core.Download.Clients.Transmission
         }
 
         public override string Name => "Transmission";
-        public override bool SupportsCategories => false;
+        public override bool SupportsCategories => true;
     }
 }

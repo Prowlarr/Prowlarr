@@ -89,8 +89,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 body.Add("imdb_id", imdbId);
             }
-
-            if (tmdbId > 0)
+            else if (tmdbId > 0)
             {
                 body.Add("tmdb_id", tmdbId);
             }

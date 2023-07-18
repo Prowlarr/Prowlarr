@@ -56,6 +56,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 MovieSearchParams = new List<MovieSearchParam>
                 {
                     MovieSearchParam.Q, MovieSearchParam.ImdbId, MovieSearchParam.TmdbId
+                },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.Internal
                 }
             };
 
@@ -237,6 +241,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var tmdbId = row.TmdbId.IsNullOrWhiteSpace() ? 0 : ParseUtil.TryCoerceInt(row.TmdbId.Split("/")[1], out var tmdbResult) ? tmdbResult : 0;
                 var imdbId = ParseUtil.GetImdbId(row.ImdbId).GetValueOrDefault();
 
+                var flags = new HashSet<IndexerFlag>();
+
+                if (row.Internal)
+                {
+                    flags.Add(IndexerFlag.Internal);
+                }
+
                 var release = new TorrentInfo
                 {
                     Title = row.Name,
@@ -246,6 +257,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Guid = details,
                     Categories = _categories.MapTrackerCatDescToNewznab(row.Category),
                     PublishDate = DateTime.Parse(row.CreatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
+                    IndexerFlags = flags,
                     Size = row.Size,
                     Grabs = row.Grabs,
                     Seeders = row.Seeders,
@@ -359,5 +371,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public bool Promo50 { get; set; }
         public bool Promo75 { get; set; }
         public bool Limited { get; set; }
+        public bool Internal { get; set; }
     }
 }

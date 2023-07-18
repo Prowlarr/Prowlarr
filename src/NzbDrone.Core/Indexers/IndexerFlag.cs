@@ -62,10 +62,10 @@ namespace NzbDrone.Core.Indexers
             return !Equals(left, right);
         }
 
-        public static IndexerFlag Internal => new IndexerFlag("internal", "Uploader is an internal release group");
-        public static IndexerFlag FreeLeech => new IndexerFlag("freeleech", "Release doesn't count torward ratio");
-        public static IndexerFlag HalfLeech => new IndexerFlag("halfleech", "Release counts 50% to ratio");
-        public static IndexerFlag Scene => new IndexerFlag("scene", "Uploader follows scene rules");
-        public static IndexerFlag DoubleUpload => new IndexerFlag("doubleupload", "Seeding counts double for release");
+        public static IndexerFlag Internal => new ("internal", "Uploader is an internal release group");
+        public static IndexerFlag FreeLeech => new ("freeleech", "Release doesn't count toward ratio");
+        public static IndexerFlag HalfLeech => new ("halfleech", "Release counts 50% to ratio");
+        public static IndexerFlag Scene => new ("scene", "Uploader follows scene rules");
+        public static IndexerFlag DoubleUpload => new ("doubleupload", "Seeding counts double for release");
     }
 }

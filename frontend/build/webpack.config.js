@@ -65,17 +65,13 @@ module.exports = (env) => {
     output: {
       path: distFolder,
       publicPath: '/',
-      filename: '[name].js',
+      filename: '[name]-[contenthash].js',
       sourceMapFilename: '[file].map'
     },
 
     optimization: {
       moduleIds: 'deterministic',
-      chunkIds: 'named',
-      splitChunks: {
-        chunks: 'initial',
-        name: 'vendors'
-      }
+      chunkIds: isProduction ? 'deterministic' : 'named'
     },
 
     performance: {

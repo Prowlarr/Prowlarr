@@ -132,6 +132,20 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("categories", string.Join(",", cats));
             }
 
+            if (_settings.SearchTypes.Any())
+            {
+                var searchTypes = _settings.SearchTypes
+                    .Cast<BeyondHDSearchType>()
+                    .Select(x => x.GetAttribute<FieldOptionAttribute>()?.Label)
+                    .Where(x => x != null)
+                    .ToHashSet();
+
+                if (searchTypes.Any())
+                {
+                    body.Add("types", string.Join(",", searchTypes));
+                }
+            }
+
             if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
             {
                 var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
@@ -309,6 +323,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             LimitedOnly = false;
             RefundOnly = false;
             RewindOnly = false;
+            SearchTypes = Array.Empty<int>();
         }
 
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
@@ -329,10 +344,70 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(7, Label = "Rewind Only", Type = FieldType.Checkbox, HelpText = "Search rewind only")]
         public bool RewindOnly { get; set; }
 
+        [FieldDefinition(8, Label = "Search Types", Type = FieldType.TagSelect, SelectOptions = typeof(BeyondHDSearchType), Advanced = true, HelpText = "Select the types of releases that you are interested in. If none selected, all options are used.")]
+        public IEnumerable<int> SearchTypes { get; set; }
+
         public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    public enum BeyondHDSearchType
+    {
+        [FieldOption(Label = "UHD 100")]
+        TypeUhd100,
+
+        [FieldOption(Label = "UHD 66")]
+        TypeUhd66,
+
+        [FieldOption(Label = "UHD 50")]
+        TypeUhd50,
+
+        [FieldOption(Label = "UHD Remux")]
+        TypeUhdRemux,
+
+        [FieldOption(Label = "BD 50")]
+        TypeBd50,
+
+        [FieldOption(Label = "BD 25")]
+        TypeBd25,
+
+        [FieldOption(Label = "BD Remux")]
+        TypeBdRemux,
+
+        [FieldOption(Label = "2160p")]
+        Type2160P,
+
+        [FieldOption(Label = "1080p")]
+        Type1080P,
+
+        [FieldOption(Label = "1080i")]
+        Type1080I,
+
+        [FieldOption(Label = "720p")]
+        Type720P,
+
+        [FieldOption(Label = "576p")]
+        Type576P,
+
+        [FieldOption(Label = "540p")]
+        Type540P,
+
+        [FieldOption(Label = "DVD 9")]
+        TypeDvd9,
+
+        [FieldOption(Label = "DVD 5")]
+        TypeDvd5,
+
+        [FieldOption(Label = "DVD Remux")]
+        TypeDvdRemux,
+
+        [FieldOption(Label = "480p")]
+        Type480P,
+
+        [FieldOption(Label = "Other")]
+        TypeOther,
     }
 
     public class BeyondHDResponse

@@ -102,6 +102,10 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
             TvSearchParams = new List<TvSearchParam>
             {
                 TvSearchParam.Q
+            },
+            Flags = new List<IndexerFlag>
+            {
+                IndexerFlag.Scene
             }
         };
 
@@ -335,6 +339,7 @@ public class ShazbatParser : IParseIndexerResponse
                 Seeders = seeders,
                 Peers = seeders + leechers,
                 PublishDate = publishDate,
+                IndexerFlags = new HashSet<IndexerFlag> { IndexerFlag.Scene },
                 Genres = row.QuerySelectorAll("label.label-tag").Select(t => t.TextContent.Trim()).ToList(),
                 DownloadVolumeFactor = hasGlobalFreeleech ? 0 : 1,
                 UploadVolumeFactor = 1,

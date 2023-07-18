@@ -88,7 +88,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (_settings.FreeleechOnly)
             {
                 body.Add("freeleech", 1);
+            }
+
+            if (_settings.LimitedOnly)
+            {
                 body.Add("limited", 1);
+            }
+
+            if (_settings.RefundOnly)
+            {
+                body.Add("refund", 1);
+            }
+
+            if (_settings.RewindOnly)
+            {
+                body.Add("rewind", 1);
             }
 
             if (imdbId.IsNotNullOrWhiteSpace())
@@ -272,6 +286,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public BeyondHDSettings()
         {
             FreeleechOnly = false;
+            LimitedOnly = false;
+            RefundOnly = false;
+            RewindOnly = false;
         }
 
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
@@ -282,6 +299,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only")]
         public bool FreeleechOnly { get; set; }
+
+        [FieldDefinition(5, Label = "Limited Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only (Limited UL)")]
+        public bool LimitedOnly { get; set; }
+
+        [FieldDefinition(6, Label = "Refund Only", Type = FieldType.Checkbox, HelpText = "Search refund only")]
+        public bool RefundOnly { get; set; }
+
+        [FieldDefinition(7, Label = "Rewind Only", Type = FieldType.Checkbox, HelpText = "Search rewind only")]
+        public bool RewindOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

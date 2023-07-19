@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
-import { saveDimensions, setIsSidebarVisible } from 'Store/Actions/appActions';
+import { fetchTranslations, saveDimensions, setIsSidebarVisible } from 'Store/Actions/appActions';
 import { fetchCustomFilters } from 'Store/Actions/customFilterActions';
 import { fetchIndexers } from 'Store/Actions/indexerActions';
 import { fetchIndexerStatus } from 'Store/Actions/indexerStatusActions';
@@ -54,6 +54,7 @@ const selectIsPopulated = createSelector(
   (state) => state.indexerStatus.isPopulated,
   (state) => state.settings.indexerCategories.isPopulated,
   (state) => state.system.status.isPopulated,
+  (state) => state.app.translations.isPopulated,
   (
     customFiltersIsPopulated,
     tagsIsPopulated,
@@ -63,7 +64,8 @@ const selectIsPopulated = createSelector(
     indexersIsPopulated,
     indexerStatusIsPopulated,
     indexerCategoriesIsPopulated,
-    systemStatusIsPopulated
+    systemStatusIsPopulated,
+    translationsIsPopulated
   ) => {
     return (
       customFiltersIsPopulated &&
@@ -74,7 +76,8 @@ const selectIsPopulated = createSelector(
       indexersIsPopulated &&
       indexerStatusIsPopulated &&
       indexerCategoriesIsPopulated &&
-      systemStatusIsPopulated
+      systemStatusIsPopulated &&
+      translationsIsPopulated
     );
   }
 );
@@ -89,6 +92,7 @@ const selectErrors = createSelector(
   (state) => state.indexerStatus.error,
   (state) => state.settings.indexerCategories.error,
   (state) => state.system.status.error,
+  (state) => state.app.translations.error,
   (
     customFiltersError,
     tagsError,
@@ -98,7 +102,8 @@ const selectErrors = createSelector(
     indexersError,
     indexerStatusError,
     indexerCategoriesError,
-    systemStatusError
+    systemStatusError,
+    translationsError
   ) => {
     const hasError = !!(
       customFiltersError ||
@@ -109,7 +114,8 @@ const selectErrors = createSelector(
       indexersError ||
       indexerStatusError ||
       indexerCategoriesError ||
-      systemStatusError
+      systemStatusError ||
+      translationsError
     );
 
     return {
@@ -122,7 +128,8 @@ const selectErrors = createSelector(
       indexersError,
       indexerStatusError,
       indexerCategoriesError,
-      systemStatusError
+      systemStatusError,
+      translationsError
     };
   }
 );
@@ -184,6 +191,9 @@ function createMapDispatchToProps(dispatch, props) {
     dispatchFetchStatus() {
       dispatch(fetchStatus());
     },
+    dispatchFetchTranslations() {
+      dispatch(fetchTranslations());
+    },
     onResize(dimensions) {
       dispatch(saveDimensions(dimensions));
     },
@@ -217,6 +227,7 @@ class PageConnector extends Component {
       this.props.dispatchFetchUISettings();
       this.props.dispatchFetchGeneralSettings();
       this.props.dispatchFetchStatus();
+      this.props.dispatchFetchTranslations();
     }
   }
 
@@ -232,7 +243,6 @@ class PageConnector extends Component {
 
   render() {
     const {
-      hasTranslationsError,
       isPopulated,
       hasError,
       dispatchFetchTags,
@@ -243,15 +253,15 @@ class PageConnector extends Component {
       dispatchFetchUISettings,
       dispatchFetchGeneralSettings,
       dispatchFetchStatus,
+      dispatchFetchTranslations,
       ...otherProps
     } = this.props;
 
-    if (hasTranslationsError || hasError || !this.state.isLocalStorageSupported) {
+    if (hasError || !this.state.isLocalStorageSupported) {
       return (
         <ErrorPage
           {...this.state}
           {...otherProps}
-          hasTranslationsError={hasTranslationsError}
         />
       );
     }
@@ -272,7 +282,6 @@ class PageConnector extends Component {
 }
 
 PageConnector.propTypes = {
-  hasTranslationsError: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   hasError: PropTypes.bool.isRequired,
   isSidebarVisible: PropTypes.bool.isRequired,
@@ -285,6 +294,7 @@ PageConnector.propTypes = {
   dispatchFetchUISettings: PropTypes.func.isRequired,
   dispatchFetchGeneralSettings: PropTypes.func.isRequired,
   dispatchFetchStatus: PropTypes.func.isRequired,
+  dispatchFetchTranslations: PropTypes.func.isRequired,
   onSidebarVisibleChange: PropTypes.func.isRequired
 };
 

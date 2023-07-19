@@ -43,6 +43,8 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // danish bytes response
         [TestCase(@",""rsskey"":""2b51db35e1910123321025a12b9933d2"",")]
         [TestCase(@",""passkey"":""2b51db35e1910123321025a12b9933d2"",")]
+        [TestCase(@"{""rsskey"":""2b51db35e1910123321025a12b9933d2""}")]
+        [TestCase(@"{""passkey"":""2b51db35e1910123321025a12b9933d2""}")]
 
         // nzbgeek & usenet response
         [TestCase(@"<guid isPermaLink=""true"">https://api.nzbgeek.info/api?t=details&amp;id=2b51db35e1910123321025a12b9933d2&amp;apikey=2b51db35e1910123321025a12b9933d2</guid>")]

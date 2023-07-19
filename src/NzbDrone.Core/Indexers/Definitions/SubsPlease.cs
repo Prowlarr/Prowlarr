@@ -23,6 +23,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new[]
         {
             "https://subsplease.org/",
+            "https://subsplease.mrunblock.bond/",
+            "https://subsplease.nocensor.click/"
+        };
+        public override string[] LegacyUrls => new[]
+        {
             "https://subsplease.nocensor.space/"
         };
         public override string Language => "en-US";

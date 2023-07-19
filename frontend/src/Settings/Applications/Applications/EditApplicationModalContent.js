@@ -45,6 +45,7 @@ function EditApplicationModalContent(props) {
 
   const {
     id,
+    implementationName,
     name,
     syncLevel,
     tags,
@@ -55,7 +56,7 @@ function EditApplicationModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? translate('Edit') : translate('Add')} ${translate('Application')}`}
+        {`${id ? translate('Edit') : translate('Add')} ${translate('Application')} - ${implementationName}`}
       </ModalHeader>
 
       <ModalBody>

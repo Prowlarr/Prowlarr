@@ -40,7 +40,6 @@
   flex: 1;
   flex-direction: column;
   margin-right: 12px;
-  max-width: 50%;
 }
 
 .filterContainer:last-child {
@@ -53,23 +52,34 @@
 }
 
 @media only screen and (max-width: $breakpointSmall) {
+  .filterInput {
+    margin-bottom: 5px;
+  }
+
   .alert {
     display: none;
   }
 
   .filterRow {
-    flex-direction: column;
+    display: block;
+    margin-bottom: 10px;
   }
 
   .filterContainer {
     margin-right: 0;
-    margin-bottom: 12px;
+    margin-bottom: 5px;
   }
 
   .scroller {
     margin-right: -30px;
     margin-bottom: -30px;
     margin-left: -30px;
+  }
+}
+
+@media only screen and (min-width: $breakpointSmall) {
+  .filterContainer {
+    max-width: 50%;
   }
 }
 
@@ -87,5 +97,9 @@
   .modalFooter {
     flex-direction: column;
     gap: 10px;
+  }
+
+  .available {
+    display: none;
   }
 }

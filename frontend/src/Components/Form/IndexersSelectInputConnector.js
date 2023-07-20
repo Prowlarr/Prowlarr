@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { groupBy, map } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -12,7 +12,7 @@ function createMapStateToProps() {
     (state) => state.indexers,
     (value, indexers) => {
       const values = [];
-      const groupedIndexers = _.map(_.groupBy(indexers.items, 'protocol'), (val, key) => ({ protocol: key, indexers: val }));
+      const groupedIndexers = map(groupBy(indexers.items, 'protocol'), (val, key) => ({ protocol: key, indexers: val }));
 
       groupedIndexers.forEach((element) => {
         values.push({
@@ -25,6 +25,7 @@ function createMapStateToProps() {
             values.push({
               key: indexer.id,
               value: indexer.name,
+              hint: `(${indexer.id})`,
               isDisabled: !indexer.enable,
               parentKey: element.protocol === 'usenet' ? -1 : -2
             });
@@ -50,7 +51,6 @@ class IndexersSelectInputConnector extends Component {
   // Render
 
   render() {
-
     return (
       <EnhancedSelectInput
         {...this.props}

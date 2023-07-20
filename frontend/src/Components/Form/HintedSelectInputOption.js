@@ -37,7 +37,7 @@ function HintedSelectInputOption(props) {
 
         {
           hint != null &&
-            <div className={styles.hintText}>
+            <div className={styles.hintText} title={hint}>
               {hint}
             </div>
         }

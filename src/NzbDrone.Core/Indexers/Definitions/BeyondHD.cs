@@ -28,6 +28,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new[] { "https://beyond-hd.me/" };
         public override string Description => "BeyondHD (BHD) is a Private Torrent Tracker for HD MOVIES / TV";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsPagination => true;
+        public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         public BeyondHD(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -81,7 +83,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             _capabilities = capabilities;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null, int tmdbId = 0)
+        private IEnumerable<IndexerRequest> GetPagedRequests(SearchCriteriaBase searchCriteria, string term, string imdbId = null, int tmdbId = 0)
         {
             var body = new Dictionary<string, object>
             {
@@ -123,11 +125,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                 body.Add("search", term);
             }
 
-            var cats = _capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            var cats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
 
             if (cats.Count > 0)
             {
                 body.Add("categories", string.Join(",", cats));
+            }
+
+            if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
+            {
+                var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
+                body.Add("page", page);
             }
 
             var searchUrl = $"{_settings.BaseUrl}api/torrents/{_settings.ApiKey}";
@@ -150,7 +158,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.FullImdbId, searchCriteria.TmdbId.GetValueOrDefault()));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, searchCriteria.SanitizedSearchTerm, searchCriteria.FullImdbId, searchCriteria.TmdbId.GetValueOrDefault()));
 
             return pageableRequests;
         }
@@ -159,7 +167,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }
@@ -168,7 +176,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, searchCriteria.SanitizedTvSearchString, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }
@@ -177,7 +185,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }
@@ -186,7 +194,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories));
+            pageableRequests.Add(GetPagedRequests(searchCriteria, searchCriteria.SanitizedSearchTerm));
 
             return pageableRequests;
         }

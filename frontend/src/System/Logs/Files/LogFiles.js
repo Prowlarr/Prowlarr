@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Alert from 'Components/Alert';
-import Link from 'Components/Link/Link';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import InlineMarkdown from 'Components/Markdown/InlineMarkdown';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
@@ -77,13 +77,15 @@ class LogFiles extends Component {
         <PageContentBody>
           <Alert>
             <div>
-              Log files are located in: {location}
+              {translate('LogFilesLocation', {
+                location
+              })}
             </div>
 
             {
               currentLogView === 'Log Files' &&
                 <div>
-                  The log level defaults to 'Info' and can be changed in <Link to="/settings/general">General Settings</Link>
+                  <InlineMarkdown data={translate('TheLogLevelDefault')} />
                 </div>
             }
           </Alert>

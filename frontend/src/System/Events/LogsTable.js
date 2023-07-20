@@ -84,7 +84,7 @@ function LogsTable(props) {
         {
           isPopulated && !error && !items.length &&
             <Alert kind={kinds.INFO}>
-              No events found
+              {translate('NoEventsFound')}
             </Alert>
         }
 

@@ -24,7 +24,8 @@
   flex-grow: 1;
 }
 
-.searchButton {
+.searchButton,
+.grabReleasesButton {
   composes: button from '~Components/Link/SpinnerButton.css';
 
   margin-left: 25px;
@@ -32,18 +33,20 @@
 }
 
 .selectedReleasesLabel {
-  margin-bottom: 3px;
+  margin-bottom: 5px;
   text-align: right;
   font-weight: bold;
 }
 
 @media only screen and (max-width: $breakpointSmall) {
-  .inputContainer {
+  .inputContainer,
+  .indexerContainer {
     margin-right: 0;
   }
 
   .buttonContainer {
     justify-content: flex-start;
+    margin-top: 10px;
   }
 
   .buttonContainerContent {
@@ -52,5 +55,20 @@
 
   .buttons {
     justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .grabReleasesButton,
+  .searchButton {
+    margin-left: 0;
+  }
+
+  .grabReleasesButton {
+    display: none;
+  }
+
+  .selectedReleasesLabel {
+    text-align: center;
   }
 }

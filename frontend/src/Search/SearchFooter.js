@@ -259,11 +259,10 @@ class SearchFooter extends Component {
             />
 
             <div className={styles.buttons}>
-
               {
                 isPopulated &&
                   <SpinnerButton
-                    className={styles.searchButton}
+                    className={styles.grabReleasesButton}
                     kind={kinds.SUCCESS}
                     isSpinning={isGrabbing}
                     isDisabled={isFetching || !hasIndexers || selectedCount === 0}

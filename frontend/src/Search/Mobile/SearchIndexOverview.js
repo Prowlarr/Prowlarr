@@ -12,6 +12,7 @@ import Peers from 'Search/Table/Peers';
 import dimensions from 'Styles/Variables/dimensions';
 import formatAge from 'Utilities/Number/formatAge';
 import formatBytes from 'Utilities/Number/formatBytes';
+import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import styles from './SearchIndexOverview.css';
 
@@ -78,6 +79,7 @@ class SearchIndexOverview extends Component {
       categories,
       seeders,
       leechers,
+      indexerFlags,
       size,
       age,
       ageHours,
@@ -107,7 +109,6 @@ class SearchIndexOverview extends Component {
                     text={title}
                   />
                 </Link>
-
               </div>
 
               <div className={styles.actions}>
@@ -155,6 +156,20 @@ class SearchIndexOverview extends Component {
               <CategoryLabel
                 categories={categories}
               />
+
+              {
+                indexerFlags.length ?
+                  indexerFlags
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((flag, index) => {
+                      return (
+                        <Label key={index} kind={kinds.INFO}>
+                          {titleCase(flag)}
+                        </Label>
+                      );
+                    }) :
+                  null
+              }
             </div>
           </div>
         </div>

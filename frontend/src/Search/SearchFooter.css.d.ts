@@ -4,6 +4,7 @@ interface CssExports {
   'buttonContainer': string;
   'buttonContainerContent': string;
   'buttons': string;
+  'grabReleasesButton': string;
   'indexerContainer': string;
   'inputContainer': string;
   'searchButton': string;

@@ -144,9 +144,9 @@ namespace Prowlarr.Api.V1.Search
                 request.QueryToParams();
 
                 var result = await _nzbSearhService.Search(request, payload.IndexerIds, true);
-                var decisions = result.Releases;
+                var releases = result.Releases;
 
-                return MapDecisions(decisions, Request.GetServerUrl());
+                return MapReleases(releases, Request.GetServerUrl());
             }
             catch (SearchFailedException ex)
             {
@@ -160,15 +160,15 @@ namespace Prowlarr.Api.V1.Search
             return new List<ReleaseResource>();
         }
 
-        protected virtual List<ReleaseResource> MapDecisions(IEnumerable<ReleaseInfo> releases, string serverUrl)
+        protected virtual List<ReleaseResource> MapReleases(IEnumerable<ReleaseInfo> releases, string serverUrl)
         {
             var result = new List<ReleaseResource>();
 
-            foreach (var downloadDecision in releases)
+            foreach (var releaseInfo in releases)
             {
-                var release = downloadDecision.ToResource();
+                var release = releaseInfo.ToResource();
 
-                _remoteReleaseCache.Set(GetCacheKey(release), downloadDecision, TimeSpan.FromMinutes(30));
+                _remoteReleaseCache.Set(GetCacheKey(release), releaseInfo, TimeSpan.FromMinutes(30));
                 release.DownloadUrl = release.DownloadUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(release.DownloadUrl), serverUrl, release.IndexerId, release.Title).AbsoluteUri : null;
                 release.MagnetUrl = release.MagnetUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(release.MagnetUrl), serverUrl, release.IndexerId, release.Title).AbsoluteUri : null;
 

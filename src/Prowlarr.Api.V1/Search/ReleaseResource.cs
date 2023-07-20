@@ -60,7 +60,7 @@ namespace Prowlarr.Api.V1.Search
         public static ReleaseResource ToResource(this ReleaseInfo model)
         {
             var releaseInfo = model;
-            var torrentInfo = (model as TorrentInfo) ?? new TorrentInfo();
+            var torrentInfo = model as TorrentInfo ?? new TorrentInfo();
             var indexerFlags = torrentInfo.IndexerFlags.Select(f => f.Name);
 
             // TODO: Clean this mess up. don't mix data from multiple classes, use sub-resources instead? (Got a huge Deja Vu, didn't we talk about this already once?)

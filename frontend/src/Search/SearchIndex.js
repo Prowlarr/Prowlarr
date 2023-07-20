@@ -326,15 +326,17 @@ class SearchIndex extends Component {
             innerClassName={styles.tableInnerContentBody}
           >
             {
-              isFetching && !isPopulated &&
-                <LoadingIndicator />
+              isFetching && !isPopulated ?
+                <LoadingIndicator /> :
+                null
             }
 
             {
-              !isFetching && !!error &&
+              !isFetching && !!error ?
                 <Alert kind={kinds.DANGER}>
                   {getErrorMessage(error, 'Failed to load search results from API')}
-                </Alert>
+                </Alert> :
+                null
             }
 
             {
@@ -359,16 +361,18 @@ class SearchIndex extends Component {
             }
 
             {
-              !error && !isFetching && !hasIndexers &&
+              !error && !isFetching && !hasIndexers ?
                 <NoIndexer
                   totalItems={0}
                   onAddIndexerPress={this.onAddIndexerPress}
-                />
+                /> :
+                null
             }
 
             {
-              !error && !isFetching && hasIndexers && !items.length &&
-                <NoSearchResults totalItems={totalItems} />
+              !error && !isFetching && isPopulated && hasIndexers && !items.length ?
+                <NoSearchResults totalItems={totalItems} /> :
+                null
             }
 
             <AddIndexerModal
@@ -384,11 +388,12 @@ class SearchIndex extends Component {
           </PageContentBody>
 
           {
-            isLoaded && !!jumpBarItems.order.length &&
+            isLoaded && !!jumpBarItems.order.length ?
               <PageJumpBar
                 items={jumpBarItems}
                 onItemPress={this.onJumpBarItemPress}
-              />
+              /> :
+              null
           }
         </div>
 

@@ -30,13 +30,7 @@ import SearchFooterConnector from './SearchFooterConnector';
 import SearchIndexTableConnector from './Table/SearchIndexTableConnector';
 import styles from './SearchIndex.css';
 
-function getViewComponent(isSmallScreen) {
-  if (isSmallScreen) {
-    return SearchIndexOverviewsConnector;
-  }
-
-  return SearchIndexTableConnector;
-}
+const getViewComponent = (isSmallScreen) => (isSmallScreen ? SearchIndexOverviewsConnector : SearchIndexTableConnector);
 
 class SearchIndex extends Component {
 
@@ -78,7 +72,7 @@ class SearchIndex extends Component {
 
     if (sortKey !== prevProps.sortKey ||
         sortDirection !== prevProps.sortDirection ||
-        hasDifferentItemsOrOrder(prevProps.items, items)
+        hasDifferentItemsOrOrder(prevProps.items, items, 'guid')
     ) {
       this.setJumpBarItems();
       this.setSelectedState();
@@ -100,7 +94,14 @@ class SearchIndex extends Component {
     if (this.state.allUnselected) {
       return [];
     }
-    return getSelectedIds(this.state.selectedState, { parseIds: false });
+
+    return _.reduce(this.state.selectedState, (result, value, id) => {
+      if (value) {
+        result.push(id);
+      }
+
+      return result;
+    }, []);
   };
 
   setSelectedState() {

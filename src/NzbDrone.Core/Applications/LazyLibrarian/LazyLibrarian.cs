@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
             }
         }
 
-        public override void UpdateIndexer(IndexerDefinition indexer)
+        public override void UpdateIndexer(IndexerDefinition indexer, bool forceSync = false)
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
@@ -118,10 +118,12 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
             if (remoteIndexer != null)
             {
-                _logger.Debug("Remote indexer found, syncing with current settings");
+                _logger.Debug("Remote indexer {0} found", remoteIndexer.Name);
 
-                if (!lazyLibrarianIndexer.Equals(remoteIndexer))
+                if (!lazyLibrarianIndexer.Equals(remoteIndexer) || forceSync)
                 {
+                    _logger.Debug("Syncing remote indexer with current settings");
+
                     _lazyLibrarianV1Proxy.UpdateIndexer(lazyLibrarianIndexer, Settings);
                     indexerMapping.RemoteIndexerName = $"{lazyLibrarianIndexer.Type},{lazyLibrarianIndexer.Altername}";
                     _appIndexerMapService.Update(indexerMapping);

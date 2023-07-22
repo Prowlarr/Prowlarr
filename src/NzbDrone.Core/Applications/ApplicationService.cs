@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Applications
 
             var indexers = _indexerFactory.AllProviders().Select(i => (IndexerDefinition)i.Definition).ToList();
 
-            SyncIndexers(enabledApps, indexers, true);
+            SyncIndexers(enabledApps, indexers, true, true);
         }
 
         public void HandleAsync(ProviderBulkUpdatedEvent<IIndexer> message)
@@ -122,10 +122,10 @@ namespace NzbDrone.Core.Applications
 
             var indexers = _indexerFactory.AllProviders().Select(i => (IndexerDefinition)i.Definition).ToList();
 
-            SyncIndexers(enabledApps, indexers, true);
+            SyncIndexers(enabledApps, indexers, true, message.ForceSync);
         }
 
-        private void SyncIndexers(List<IApplication> applications, List<IndexerDefinition> indexers, bool removeRemote = false)
+        private void SyncIndexers(List<IApplication> applications, List<IndexerDefinition> indexers, bool removeRemote = false, bool forceSync = false)
         {
             foreach (var app in applications)
             {
@@ -165,7 +165,7 @@ namespace NzbDrone.Core.Applications
                     {
                         if (((ApplicationDefinition)app.Definition).SyncLevel == ApplicationSyncLevel.FullSync && ShouldHandleIndexer(app.Definition, indexer))
                         {
-                            ExecuteAction(a => a.UpdateIndexer(definition), app);
+                            ExecuteAction(a => a.UpdateIndexer(definition, forceSync), app);
                         }
                     }
                     else

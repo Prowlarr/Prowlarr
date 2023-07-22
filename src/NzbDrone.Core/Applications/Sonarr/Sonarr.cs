@@ -100,15 +100,20 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             foreach (var indexer in indexers)
             {
-                if ((string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value == _configFileProvider.ApiKey)
-                {
-                    var match = AppIndexerRegex.Match((string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value);
+                var baseUrl = (string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl")?.Value ?? string.Empty;
 
-                    if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
-                    {
-                        // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
-                        mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerId = indexer.Id });
-                    }
+                if (!baseUrl.StartsWith(Settings.ProwlarrUrl.TrimEnd('/')) &&
+                    (string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value != _configFileProvider.ApiKey)
+                {
+                    continue;
+                }
+
+                var match = AppIndexerRegex.Match(baseUrl);
+
+                if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
+                {
+                    // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
+                    mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerId = indexer.Id });
                 }
             }
 
@@ -155,7 +160,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             }
         }
 
-        public override void UpdateIndexer(IndexerDefinition indexer)
+        public override void UpdateIndexer(IndexerDefinition indexer, bool forceSync = false)
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
@@ -168,10 +173,12 @@ namespace NzbDrone.Core.Applications.Sonarr
 
             if (remoteIndexer != null)
             {
-                _logger.Debug("Remote indexer found, syncing with current settings");
+                _logger.Debug("Remote indexer {0} [{1}] found", remoteIndexer.Name, remoteIndexer.Id);
 
-                if (!sonarrIndexer.Equals(remoteIndexer))
+                if (!sonarrIndexer.Equals(remoteIndexer) || forceSync)
                 {
+                    _logger.Debug("Syncing remote indexer with current settings");
+
                     if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexer.Capabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr

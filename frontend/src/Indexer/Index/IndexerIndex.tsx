@@ -45,9 +45,7 @@ import IndexerIndexTable from './Table/IndexerIndexTable';
 import IndexerIndexTableOptions from './Table/IndexerIndexTableOptions';
 import styles from './IndexerIndex.css';
 
-function getViewComponent() {
-  return IndexerIndexTable;
-}
+const getViewComponent = () => IndexerIndexTable;
 
 interface IndexerIndexProps {
   initialScrollTop?: number;
@@ -84,14 +82,6 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
   );
   const [isSelectMode, setIsSelectMode] = useState(false);
 
-  const onAppIndexerSyncPress = useCallback(() => {
-    dispatch(
-      executeCommand({
-        name: APP_INDEXER_SYNC,
-      })
-    );
-  }, [dispatch]);
-
   const onAddIndexerPress = useCallback(() => {
     setIsAddIndexerModalOpen(true);
   }, [setIsAddIndexerModalOpen]);
@@ -107,6 +97,15 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
   const onEditIndexerModalClose = useCallback(() => {
     setIsEditIndexerModalOpen(false);
   }, [setIsEditIndexerModalOpen]);
+
+  const onAppIndexerSyncPress = useCallback(() => {
+    dispatch(
+      executeCommand({
+        name: APP_INDEXER_SYNC,
+        forceSync: true,
+      })
+    );
+  }, [dispatch]);
 
   const onTestAllPress = useCallback(() => {
     dispatch(testAllIndexers());

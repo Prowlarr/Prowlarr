@@ -30,9 +30,12 @@ namespace NzbDrone.Core.Applications.Sonarr
             }
 
             var baseUrl = (string)Fields.FirstOrDefault(x => x.Name == "baseUrl").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value;
-            var apiKey = (string)Fields.FirstOrDefault(x => x.Name == "apiKey").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "apiKey").Value;
             var cats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "categories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "categories").Value);
             var animeCats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "animeCategories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "animeCategories").Value);
+
+            var apiKey = (string)Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value;
+            var otherApiKey = (string)other.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value;
+            var apiKeyCompare = apiKey == otherApiKey || otherApiKey == "********";
 
             var apiPath = Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
             var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
@@ -65,7 +68,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKey && apiPathCompare && baseUrl && cats && animeCats && animeStandardFormatSearchCompare && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare;
+                apiKeyCompare && apiPathCompare && baseUrl && cats && animeCats && animeStandardFormatSearchCompare && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare;
         }
     }
 }

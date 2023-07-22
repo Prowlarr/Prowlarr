@@ -103,7 +103,7 @@ namespace NzbDrone.Core.Applications.Mylar
             }
         }
 
-        public override void UpdateIndexer(IndexerDefinition indexer)
+        public override void UpdateIndexer(IndexerDefinition indexer, bool forceSync = false)
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
@@ -118,10 +118,12 @@ namespace NzbDrone.Core.Applications.Mylar
 
             if (remoteIndexer != null)
             {
-                _logger.Debug("Remote indexer found, syncing with current settings");
+                _logger.Debug("Remote indexer {0} found", remoteIndexer.Name);
 
-                if (!mylarIndexer.Equals(remoteIndexer))
+                if (!mylarIndexer.Equals(remoteIndexer) || forceSync)
                 {
+                    _logger.Debug("Syncing remote indexer with current settings");
+
                     _mylarV3Proxy.UpdateIndexer(mylarIndexer, Settings);
                     indexerMapping.RemoteIndexerName = $"{mylarIndexer.Type},{mylarIndexer.Altername}";
                     _appIndexerMapService.Update(indexerMapping);

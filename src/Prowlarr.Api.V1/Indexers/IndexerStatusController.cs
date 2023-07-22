@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Datastore.Events;
@@ -7,7 +8,6 @@ using NzbDrone.Core.ThingiProvider.Events;
 using NzbDrone.SignalR;
 using Prowlarr.Http;
 using Prowlarr.Http.REST;
-using NotImplementedException = System.NotImplementedException;
 
 namespace Prowlarr.Api.V1.Indexers
 {

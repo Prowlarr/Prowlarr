@@ -3,7 +3,9 @@
 interface CssExports {
   'application': string;
   'enabled': string;
+  'externalLink': string;
   'name': string;
+  'nameContainer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

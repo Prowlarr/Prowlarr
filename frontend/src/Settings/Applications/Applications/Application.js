@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Card from 'Components/Card';
 import Label from 'Components/Label';
+import IconButton from 'Components/Link/IconButton';
 import ConfirmModal from 'Components/Modal/ConfirmModal';
 import TagList from 'Components/TagList';
-import { kinds } from 'Helpers/Props';
+import { icons, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import EditApplicationModalConnector from './EditApplicationModalConnector';
 import styles from './Application.css';
@@ -57,9 +58,12 @@ class Application extends Component {
       id,
       name,
       syncLevel,
+      fields,
       tags,
       tagList
     } = this.props;
+
+    const applicationUrl = fields.find((field) => field.name === 'baseUrl')?.value;
 
     return (
       <Card
@@ -67,8 +71,20 @@ class Application extends Component {
         overlayContent={true}
         onPress={this.onEditApplicationPress}
       >
-        <div className={styles.name}>
-          {name}
+        <div className={styles.nameContainer}>
+          <div className={styles.name}>
+            {name}
+          </div>
+
+          {
+            applicationUrl ?
+              <IconButton
+                className={styles.externalLink}
+                name={icons.EXTERNAL_LINK}
+                title={translate('GoToApplication')}
+                to={`${applicationUrl}`}
+              /> : null
+          }
         </div>
 
         {
@@ -125,6 +141,7 @@ Application.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   syncLevel: PropTypes.string.isRequired,
+  fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   tagList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onConfirmDeleteApplication: PropTypes.func

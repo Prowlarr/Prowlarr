@@ -1,4 +1,5 @@
 import IndexerAppState, { IndexerIndexAppState } from './IndexerAppState';
+import IndexerStatsAppState from './IndexerStatsAppState';
 import SettingsAppState from './SettingsAppState';
 import TagsAppState from './TagsAppState';
 
@@ -36,6 +37,7 @@ export interface CustomFilter {
 
 interface AppState {
   indexerIndex: IndexerIndexAppState;
+  indexerStats: IndexerStatsAppState;
   indexers: IndexerAppState;
   settings: SettingsAppState;
   tags: TagsAppState;

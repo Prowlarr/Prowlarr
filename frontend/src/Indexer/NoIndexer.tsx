@@ -1,15 +1,16 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'Components/Link/Button';
 import { kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import styles from './NoIndexer.css';
 
-function NoIndexer(props) {
-  const {
-    totalItems,
-    onAddIndexerPress
-  } = props;
+interface NoIndexerProps {
+  totalItems: number;
+  onAddIndexerPress(): void;
+}
+
+function NoIndexer(props: NoIndexerProps) {
+  const { totalItems, onAddIndexerPress } = props;
 
   if (totalItems > 0) {
     return (
@@ -28,20 +29,12 @@ function NoIndexer(props) {
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button
-          onPress={onAddIndexerPress}
-          kind={kinds.PRIMARY}
-        >
+        <Button onPress={onAddIndexerPress} kind={kinds.PRIMARY}>
           {translate('AddNewIndexer')}
         </Button>
       </div>
     </div>
   );
 }
-
-NoIndexer.propTypes = {
-  totalItems: PropTypes.number.isRequired,
-  onAddIndexerPress: PropTypes.func.isRequired
-};
 
 export default NoIndexer;

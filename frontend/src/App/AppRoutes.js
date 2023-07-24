@@ -5,7 +5,7 @@ import NotFound from 'Components/NotFound';
 import Switch from 'Components/Router/Switch';
 import HistoryConnector from 'History/HistoryConnector';
 import IndexerIndex from 'Indexer/Index/IndexerIndex';
-import StatsConnector from 'Indexer/Stats/StatsConnector';
+import IndexerStats from 'Indexer/Stats/IndexerStats';
 import SearchIndexConnector from 'Search/SearchIndexConnector';
 import ApplicationSettingsConnector from 'Settings/Applications/ApplicationSettingsConnector';
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
@@ -60,7 +60,7 @@ function AppRoutes(props) {
 
       <Route
         path="/indexers/stats"
-        component={StatsConnector}
+        component={IndexerStats}
       />
 
       {/*

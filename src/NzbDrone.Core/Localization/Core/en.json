@@ -52,6 +52,7 @@
   "AppsMinimumSeeders": "Apps Minimum Seeders",
   "AppsMinimumSeedersHelpText": "Minimum seeders required by the Applications for the indexer to grab, empty is Sync profile's default",
   "AreYouSureYouWantToDeleteCategory": "Are you sure you want to delete mapped category?",
+  "AreYouSureYouWantToDeleteIndexer": "Are you sure you want to delete '{0}' from Prowlarr?",
   "AreYouSureYouWantToResetYourAPIKey": "Are you sure you want to reset your API Key?",
   "Artist": "Artist",
   "AudioSearch": "Audio Search",

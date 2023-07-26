@@ -27,20 +27,7 @@ namespace NzbDrone.Core.Download
 
         public virtual ProviderMessage Message => null;
 
-        public IEnumerable<ProviderDefinition> DefaultDefinitions
-        {
-            get
-            {
-                var config = (IProviderConfig)new TSettings();
-
-                yield return new DownloadClientDefinition
-                {
-                    Name = GetType().Name,
-                    Implementation = GetType().Name,
-                    Settings = config
-                };
-            }
-        }
+        public IEnumerable<ProviderDefinition> DefaultDefinitions => new List<ProviderDefinition>();
 
         public ProviderDefinition Definition { get; set; }
 

@@ -40,6 +40,10 @@ interface Indexer extends ModelBase {
   added: Date;
   enable: boolean;
   redirect: boolean;
+  supportsRss: boolean;
+  supportsSearch: boolean;
+  supportsRedirect: boolean;
+  supportsPagination: boolean;
   protocol: string;
   privacy: string;
   priority: number;
@@ -49,6 +53,7 @@ interface Indexer extends ModelBase {
   status: IndexerStatus;
   capabilities: IndexerCapabilities;
   indexerUrls: string[];
+  legacyUrls: string[];
 }
 
 export default Indexer;

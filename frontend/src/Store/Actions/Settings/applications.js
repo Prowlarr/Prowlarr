@@ -117,10 +117,7 @@ export default {
 
     [SELECT_APPLICATION_SCHEMA]: (state, { payload }) => {
       return selectProviderSchema(state, section, payload, (selectedSchema) => {
-        selectedSchema.onGrab = selectedSchema.supportsOnGrab;
-        selectedSchema.onDownload = selectedSchema.supportsOnDownload;
-        selectedSchema.onUpgrade = selectedSchema.supportsOnUpgrade;
-        selectedSchema.onRename = selectedSchema.supportsOnRename;
+        selectedSchema.name = selectedSchema.implementationName;
 
         return selectedSchema;
       });

@@ -13,6 +13,15 @@ export interface Field {
 interface Notification extends ModelBase {
   enable: boolean;
   name: string;
+  onGrab: boolean;
+  onHealthIssue: boolean;
+  onHealthRestored: boolean;
+  includeHealthWarnings: boolean;
+  onApplicationUpdate: boolean;
+  supportsOnGrab: boolean;
+  supportsOnHealthIssue: boolean;
+  supportsOnHealthRestored: boolean;
+  supportsOnApplicationUpdate: boolean;
   fields: Field[];
   implementationName: string;
   implementation: string;

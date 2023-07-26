@@ -14,20 +14,7 @@ namespace NzbDrone.Core.IndexerProxies
 
         public Type ConfigContract => typeof(TSettings);
 
-        public IEnumerable<ProviderDefinition> DefaultDefinitions
-        {
-            get
-            {
-                var config = (IProviderConfig)new TSettings();
-
-                yield return new IndexerProxyDefinition
-                {
-                    Name = GetType().Name,
-                    Implementation = GetType().Name,
-                    Settings = config
-                };
-            }
-        }
+        public IEnumerable<ProviderDefinition> DefaultDefinitions => new List<ProviderDefinition>();
 
         public ProviderDefinition Definition { get; set; }
         public abstract ValidationResult Test();

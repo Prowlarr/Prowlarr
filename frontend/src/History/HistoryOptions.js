@@ -62,6 +62,7 @@ class HistoryOptions extends Component {
           <FormInputGroup
             type={inputTypes.NUMBER}
             name="historyCleanupDays"
+            unit={translate('days')}
             value={historyCleanupDays}
             helpText={translate('HistoryCleanupDaysHelpText')}
             helpTextWarning={translate('HistoryCleanupDaysHelpTextWarning')}

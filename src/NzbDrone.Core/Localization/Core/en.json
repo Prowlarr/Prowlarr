@@ -556,5 +556,7 @@
   "Year": "Year",
   "Yes": "Yes",
   "YesCancel": "Yes, Cancel",
-  "Yesterday": "Yesterday"
+  "Yesterday": "Yesterday",
+  "days": "days",
+  "minutes": "minutes"
 }

@@ -266,16 +266,21 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     await GetConfigurationForSetup(true);
                 }
 
+                if (landingResultDocument == null)
+                {
+                    throw new CardigannConfigException(_definition, $"Login failed: Invalid document received from {loginUrl}");
+                }
+
                 var form = landingResultDocument.QuerySelector(formSelector);
                 if (form == null)
                 {
-                    throw new CardigannConfigException(_definition, string.Format("Login failed: No form found on {0} using form selector {1}", loginUrl, formSelector));
+                    throw new CardigannConfigException(_definition, $"Login failed: No form found on {loginUrl} using form selector {formSelector}");
                 }
 
                 var inputs = form.QuerySelectorAll("input");
                 if (inputs == null)
                 {
-                    throw new CardigannConfigException(_definition, string.Format("Login failed: No inputs found on {0} using form selector {1}", loginUrl, formSelector));
+                    throw new CardigannConfigException(_definition, $"Login failed: No inputs found on {loginUrl} using form selector {formSelector}");
                 }
 
                 var submitUrlstr = form.GetAttribute("action");
@@ -616,7 +621,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         {
             var login = _definition.Login;
 
-            if (login == null || login.Method != "form")
+            if (login is not { Method: "form" })
             {
                 return null;
             }
@@ -667,7 +672,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             if (captcha != null && automaticLogin)
             {
-                _logger.Error("CardigannIndexer ({0}): Found captcha during automatic login, aborting", _definition.Id);
+                throw new CardigannConfigException(_definition, "Found captcha during automatic login, aborting");
             }
 
             return captcha;

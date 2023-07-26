@@ -551,5 +551,10 @@
     "SeedTimeHelpText": "O tempo que um torrent deve ser propagado antes de parar, vazio é o padrão do aplicativo",
     "SelectedCountOfCountReleases": "{0} de {1} lançamentos selecionados",
     "NewznabUrl": "Url Newznab",
-    "TorznabUrl": "Url Torznab"
+    "TorznabUrl": "Url Torznab",
+    "GoToApplication": "Ir para o aplicativo",
+    "AreYouSureYouWantToDeleteIndexer": "Tem certeza de que deseja excluir '{0}' do Prowlarr?",
+    "AuthQueries": "Consultas de autenticação",
+    "RssQueries": "Consultas RSS",
+    "SearchQueries": "Consultas de pesquisa"
 }

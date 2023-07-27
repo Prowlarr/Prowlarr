@@ -35,7 +35,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://ipt.workisboring.net/",
             "https://ipt.lol/",
             "https://ipt.cool/",
-            "https://ipt.world/"
+            "https://ipt.world/",
+            "https://ipt.octopus.town/"
         };
         public override string Description => "IPTorrents (IPT) is a Private Torrent Tracker for 0DAY / GENERAL.";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

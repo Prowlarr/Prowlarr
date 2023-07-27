@@ -556,5 +556,7 @@
     "AreYouSureYouWantToDeleteIndexer": "Tem certeza de que deseja excluir '{0}' do Prowlarr?",
     "AuthQueries": "Consultas de autenticação",
     "RssQueries": "Consultas RSS",
-    "SearchQueries": "Consultas de pesquisa"
+    "SearchQueries": "Consultas de pesquisa",
+    "minutes": "minutos",
+    "days": "dias"
 }

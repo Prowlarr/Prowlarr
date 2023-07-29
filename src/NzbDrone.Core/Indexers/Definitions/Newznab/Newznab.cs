@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public override bool SupportsPagination => true;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities { get => GetCapabilitiesFromSettings(); protected set => base.Capabilities = value; }
-        public override int PageSize => _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.Value;
+        public override int PageSize => GetProviderPageSize();
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
@@ -207,6 +207,18 @@ namespace NzbDrone.Core.Indexers.Newznab
                 _logger.Warn(ex, "Unable to connect to indexer: " + ex.Message);
 
                 return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details");
+            }
+        }
+
+        private int GetProviderPageSize()
+        {
+            try
+            {
+                return _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.GetValueOrDefault(100);
+            }
+            catch
+            {
+                return 100;
             }
         }
     }

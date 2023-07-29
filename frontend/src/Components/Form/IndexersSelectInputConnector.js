@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import createSortedSectionSelector from 'Store/Selectors/createSortedSectionSelector';
+import sortByName from 'Utilities/Array/sortByName';
 import titleCase from 'Utilities/String/titleCase';
 import EnhancedSelectInput from './EnhancedSelectInput';
 
 function createMapStateToProps() {
   return createSelector(
     (state, { value }) => value,
-    (state) => state.indexers,
+    createSortedSectionSelector('indexers', sortByName),
     (value, indexers) => {
       const values = [];
       const groupedIndexers = map(groupBy(indexers.items, 'protocol'), (val, key) => ({ protocol: key, indexers: val }));

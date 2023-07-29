@@ -12,7 +12,7 @@ interface IndexerStatusCellProps {
   className: string;
   enabled: boolean;
   redirect: boolean;
-  status: IndexerStatus;
+  status?: IndexerStatus;
   longDateFormat: string;
   timeFormat: string;
   component?: React.ElementType;

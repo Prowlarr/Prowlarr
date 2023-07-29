@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 
 function createAllIndexersSelector() {
   return createSelector(
-    (state) => state.indexers,
+    (state: AppState) => state.indexers,
     (indexers) => {
       return indexers.items;
     }

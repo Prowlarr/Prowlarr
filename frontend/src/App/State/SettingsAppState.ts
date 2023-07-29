@@ -7,6 +7,11 @@ import DownloadClient from 'typings/DownloadClient';
 import Notification from 'typings/Notification';
 import { UiSettings } from 'typings/UiSettings';
 
+export interface AppProfileAppState
+  extends AppSectionState<Application>,
+    AppSectionDeleteState,
+    AppSectionSaveState {}
+
 export interface ApplicationAppState
   extends AppSectionState<Application>,
     AppSectionDeleteState,
@@ -24,6 +29,7 @@ export interface NotificationAppState
 export type UiSettingsAppState = AppSectionState<UiSettings>;
 
 interface SettingsAppState {
+  appProfiles: AppProfileAppState;
   applications: ApplicationAppState;
   downloadClients: DownloadClientAppState;
   notifications: NotificationAppState;

@@ -1,6 +1,6 @@
 import Column from 'Components/Table/Column';
 import SortDirection from 'Helpers/Props/SortDirection';
-import Indexer from 'Indexer/Indexer';
+import Indexer, { IndexerStatus } from 'Indexer/Indexer';
 import AppSectionState, {
   AppSectionDeleteState,
   AppSectionSaveState,
@@ -29,5 +29,7 @@ interface IndexerAppState
   extends AppSectionState<Indexer>,
     AppSectionDeleteState,
     AppSectionSaveState {}
+
+export type IndexerStatusAppState = AppSectionState<IndexerStatus>;
 
 export default IndexerAppState;

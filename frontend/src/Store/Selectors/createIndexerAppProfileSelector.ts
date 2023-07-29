@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 import { createIndexerSelectorForHook } from './createIndexerSelector';
 
-function createIndexerAppProfileSelector(indexerId) {
+function createIndexerAppProfileSelector(indexerId: number) {
   return createSelector(
-    (state) => state.settings.appProfiles.items,
+    (state: AppState) => state.settings.appProfiles.items,
     createIndexerSelectorForHook(indexerId),
     (appProfiles, indexer = {}) => {
       return appProfiles.find((profile) => {

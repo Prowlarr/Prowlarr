@@ -43,14 +43,12 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         public string[] GetBaseUrlFromSettings()
         {
-            var baseUrl = "";
-
-            if (Definition == null || Settings == null || Settings.Categories == null)
+            if (Definition == null || Settings?.Categories == null)
             {
-                return new string[] { baseUrl };
+                return new[] { "" };
             }
 
-            return new string[] { Settings.BaseUrl };
+            return new[] { Settings.BaseUrl };
         }
 
         protected override NewznabSettings GetDefaultBaseUrl(NewznabSettings settings)
@@ -62,7 +60,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             var caps = new IndexerCapabilities();
 
-            if (Definition == null || Settings == null || Settings.Categories == null)
+            if (Definition == null || Settings?.Categories == null)
             {
                 return caps;
             }

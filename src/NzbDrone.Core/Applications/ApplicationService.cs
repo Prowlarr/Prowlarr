@@ -67,10 +67,11 @@ namespace NzbDrone.Core.Applications
         public void HandleAsync(ProviderAddedEvent<IIndexer> message)
         {
             var enabledApps = _applicationsFactory.SyncEnabled();
+            var indexer = _indexerFactory.GetInstance((IndexerDefinition)message.Definition);
 
             foreach (var app in enabledApps)
             {
-                if (ShouldHandleIndexer(app.Definition, message.Definition))
+                if (ShouldHandleIndexer(app.Definition, indexer.Definition))
                 {
                     ExecuteAction(a => a.AddIndexer((IndexerDefinition)message.Definition), app);
                 }
@@ -92,8 +93,9 @@ namespace NzbDrone.Core.Applications
             var enabledApps = _applicationsFactory.SyncEnabled()
                 .Where(n => ((ApplicationDefinition)n.Definition).SyncLevel == ApplicationSyncLevel.FullSync)
                 .ToList();
+            var indexer = _indexerFactory.GetInstance((IndexerDefinition)message.Definition);
 
-            SyncIndexers(enabledApps, new List<IndexerDefinition> { (IndexerDefinition)message.Definition });
+            SyncIndexers(enabledApps, new List<IndexerDefinition> { (IndexerDefinition)indexer.Definition });
         }
 
         public void HandleAsync(ApiKeyChangedEvent message)

@@ -34,9 +34,8 @@ namespace NzbDrone.Core.Indexers.Newznab
         public IndexerCapabilities GetCapabilities(NewznabSettings indexerSettings, ProviderDefinition definition)
         {
             var key = indexerSettings.ToJson();
-            var capabilities = _capabilitiesCache.Get(key, () => FetchCapabilities(indexerSettings, definition), TimeSpan.FromDays(7));
 
-            return capabilities;
+            return _capabilitiesCache.Get(key, () => FetchCapabilities(indexerSettings, definition), TimeSpan.FromDays(7));
         }
 
         private IndexerCapabilities FetchCapabilities(NewznabSettings indexerSettings, ProviderDefinition definition)

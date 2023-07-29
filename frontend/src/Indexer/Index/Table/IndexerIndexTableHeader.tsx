@@ -103,7 +103,7 @@ function IndexerIndexTableHeader(props: IndexerIndexTableHeaderProps) {
             isSortable={isSortable}
             onSortPress={onSortPress}
           >
-            {label}
+            {typeof label === 'function' ? label() : label}
           </VirtualTableHeaderCell>
         );
       })}

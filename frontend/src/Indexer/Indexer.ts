@@ -25,11 +25,13 @@ export interface IndexerCapabilities extends ModelBase {
 }
 
 export interface IndexerField extends ModelBase {
+  order: number;
   name: string;
   label: string;
   advanced: boolean;
   type: string;
   value: string;
+  privacy: string;
 }
 
 interface Indexer extends ModelBase {
@@ -54,6 +56,11 @@ interface Indexer extends ModelBase {
   capabilities: IndexerCapabilities;
   indexerUrls: string[];
   legacyUrls: string[];
+  appProfileId: number;
+  implementationName: string;
+  implementation: string;
+  configContract: string;
+  infoLink: string;
 }
 
 export default Indexer;

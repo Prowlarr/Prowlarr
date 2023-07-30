@@ -1,5 +1,6 @@
 import AppSectionState, {
   AppSectionDeleteState,
+  AppSectionItemState,
   AppSectionSaveState,
 } from 'App/State/AppSectionState';
 import Application from 'typings/Application';
@@ -26,14 +27,14 @@ export interface NotificationAppState
   extends AppSectionState<Notification>,
     AppSectionDeleteState {}
 
-export type UiSettingsAppState = AppSectionState<UiSettings>;
+export type UiSettingsAppState = AppSectionItemState<UiSettings>;
 
 interface SettingsAppState {
   appProfiles: AppProfileAppState;
   applications: ApplicationAppState;
   downloadClients: DownloadClientAppState;
   notifications: NotificationAppState;
-  uiSettings: UiSettingsAppState;
+  ui: UiSettingsAppState;
 }
 
 export default SettingsAppState;

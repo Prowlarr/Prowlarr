@@ -6,6 +6,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { kinds } from 'Helpers/Props';
+import Indexer from 'Indexer/Indexer';
 import { deleteIndexer } from 'Store/Actions/indexerActions';
 import { createIndexerSelectorForHook } from 'Store/Selectors/createIndexerSelector';
 import translate from 'Utilities/String/translate';
@@ -18,7 +19,9 @@ interface DeleteIndexerModalContentProps {
 function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
   const { indexerId, onModalClose } = props;
 
-  const { name } = useSelector(createIndexerSelectorForHook(indexerId));
+  const { name } = useSelector(
+    createIndexerSelectorForHook(indexerId)
+  ) as Indexer;
   const dispatch = useDispatch();
 
   const onConfirmDelete = useCallback(() => {

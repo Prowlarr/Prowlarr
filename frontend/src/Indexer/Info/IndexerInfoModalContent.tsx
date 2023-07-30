@@ -29,7 +29,7 @@ import styles from './IndexerInfoModalContent.css';
 function createIndexerInfoItemSelector(indexerId: number) {
   return createSelector(
     createIndexerSelectorForHook(indexerId),
-    (indexer: Indexer) => {
+    (indexer?: Indexer) => {
       return {
         indexer,
       };
@@ -58,7 +58,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     tags,
     protocol,
     capabilities,
-  } = indexer;
+  } = indexer as Indexer;
 
   const { onModalClose } = props;
 

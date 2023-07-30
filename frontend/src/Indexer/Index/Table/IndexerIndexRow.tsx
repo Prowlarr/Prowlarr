@@ -12,6 +12,7 @@ import { icons } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import createIndexerIndexItemSelector from 'Indexer/Index/createIndexerIndexItemSelector';
+import Indexer from 'Indexer/Indexer';
 import IndexerTitleLink from 'Indexer/IndexerTitleLink';
 import { SelectStateInputProps } from 'typings/props';
 import firstCharToUpper from 'Utilities/String/firstCharToUpper';
@@ -47,7 +48,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
     fields,
     added,
     capabilities,
-  } = indexer;
+  } = indexer as Indexer;
 
   const baseUrl =
     fields.find((field) => field.name === 'baseUrl')?.value ??

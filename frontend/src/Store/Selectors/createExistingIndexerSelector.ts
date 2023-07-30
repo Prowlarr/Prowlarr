@@ -1,13 +1,15 @@
-import _ from 'lodash';
+import { some } from 'lodash';
 import { createSelector } from 'reselect';
+import AppState from 'App/State/AppState';
 import createAllIndexersSelector from './createAllIndexersSelector';
 
 function createExistingIndexerSelector() {
   return createSelector(
-    (state, { definitionName }) => definitionName,
+    (_: AppState, { definitionName }: { definitionName: string }) =>
+      definitionName,
     createAllIndexersSelector(),
     (definitionName, indexers) => {
-      return _.some(indexers, { definitionName });
+      return some(indexers, { definitionName });
     }
   );
 }

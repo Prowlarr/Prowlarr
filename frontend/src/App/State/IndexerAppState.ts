@@ -28,7 +28,9 @@ export interface IndexerIndexAppState {
 interface IndexerAppState
   extends AppSectionState<Indexer>,
     AppSectionDeleteState,
-    AppSectionSaveState {}
+    AppSectionSaveState {
+  itemMap: Record<number, number>;
+}
 
 export type IndexerStatusAppState = AppSectionState<IndexerStatus>;
 

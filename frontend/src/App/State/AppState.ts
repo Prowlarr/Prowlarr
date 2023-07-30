@@ -5,6 +5,7 @@ import IndexerAppState, {
 } from './IndexerAppState';
 import IndexerStatsAppState from './IndexerStatsAppState';
 import SettingsAppState from './SettingsAppState';
+import SystemAppState from './SystemAppState';
 import TagsAppState from './TagsAppState';
 
 interface FilterBuilderPropOption {
@@ -46,6 +47,7 @@ interface AppState {
   indexerStatus: IndexerStatusAppState;
   indexers: IndexerAppState;
   settings: SettingsAppState;
+  system: SystemAppState;
   tags: TagsAppState;
 }
 

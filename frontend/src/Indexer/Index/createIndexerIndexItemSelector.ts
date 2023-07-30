@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import Indexer from 'Indexer/Indexer';
 import createIndexerAppProfileSelector from 'Store/Selectors/createIndexerAppProfileSelector';
 import { createIndexerSelectorForHook } from 'Store/Selectors/createIndexerSelector';
 import createIndexerStatusSelector from 'Store/Selectors/createIndexerStatusSelector';
@@ -11,7 +10,7 @@ function createIndexerIndexItemSelector(indexerId: number) {
     createIndexerAppProfileSelector(indexerId),
     createIndexerStatusSelector(indexerId),
     createUISettingsSelector(),
-    (indexer: Indexer, appProfile, status, uiSettings) => {
+    (indexer, appProfile, status, uiSettings) => {
       return {
         indexer,
         appProfile,

@@ -104,10 +104,20 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexer.Id}", HttpMethod.Put);
 
-            request.Url = request.Url.AddQueryParam("forceSave", "true");
             request.SetContent(indexer.ToJson());
 
-            return ExecuteIndexerRequest(request);
+            try
+            {
+                return ExecuteIndexerRequest(request);
+            }
+            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                _logger.Debug("Retrying to update indexer forcefully");
+
+                request.Url = request.Url.AddQueryParam("forceSave", "true");
+
+                return ExecuteIndexerRequest(request);
+            }
         }
 
         public ValidationFailure TestConnection(RadarrIndexer indexer, RadarrSettings settings)

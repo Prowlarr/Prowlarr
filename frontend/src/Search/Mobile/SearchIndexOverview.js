@@ -76,6 +76,7 @@ class SearchIndexOverview extends Component {
       infoUrl,
       protocol,
       downloadUrl,
+      magnetUrl,
       categories,
       seeders,
       leechers,
@@ -121,12 +122,15 @@ class SearchIndexOverview extends Component {
                   onPress={this.onGrabPress}
                 />
 
-                <IconButton
-                  className={styles.downloadLink}
-                  name={icons.SAVE}
-                  title={translate('Save')}
-                  to={downloadUrl}
-                />
+                {
+                  downloadUrl || magnetUrl ?
+                    <IconButton
+                      name={icons.SAVE}
+                      title={translate('Save')}
+                      to={downloadUrl ?? magnetUrl}
+                    /> :
+                    null
+                }
               </div>
             </div>
             <div className={styles.indexerRow}>
@@ -188,7 +192,8 @@ SearchIndexOverview.propTypes = {
   publishDate: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   infoUrl: PropTypes.string.isRequired,
-  downloadUrl: PropTypes.string.isRequired,
+  downloadUrl: PropTypes.string,
+  magnetUrl: PropTypes.string,
   indexerId: PropTypes.number.isRequired,
   indexer: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired,

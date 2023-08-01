@@ -75,6 +75,7 @@ import {
   faListCheck as fasListCheck,
   faLocationArrow as fasLocationArrow,
   faLock as fasLock,
+  faMagnet as fasMagnet,
   faMedkit as fasMedkit,
   faMinus as fasMinus,
   faMusic as fasMusic,
@@ -181,6 +182,7 @@ export const INTERACTIVE = fasUser;
 export const KEYBOARD = farKeyboard;
 export const LOCK = fasLock;
 export const LOGOUT = fasSignOutAlt;
+export const MAGNET = fasMagnet;
 export const MANAGE = fasListCheck;
 export const MEDIA_INFO = farFileInvoice;
 export const MISSING = fasExclamationTriangle;

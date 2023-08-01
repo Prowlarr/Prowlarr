@@ -59,6 +59,7 @@
   margin: 0 2px;
   width: 22px;
   color: var(--textColor);
+  text-align: center;
 }
 
 .externalLinks {

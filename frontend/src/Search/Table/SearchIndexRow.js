@@ -91,6 +91,8 @@ class SearchIndexRow extends Component {
     const {
       guid,
       protocol,
+      downloadUrl,
+      magnetUrl,
       categories,
       age,
       ageHours,
@@ -308,12 +310,27 @@ class SearchIndexRow extends Component {
                     onPress={this.onGrabPress}
                   />
 
-                  <IconButton
-                    className={styles.downloadLink}
-                    name={icons.SAVE}
-                    title={translate('Save')}
-                    onPress={this.onSavePress}
-                  />
+                  {
+                    downloadUrl ?
+                      <IconButton
+                        className={styles.downloadLink}
+                        name={icons.SAVE}
+                        title={translate('Save')}
+                        onPress={this.onSavePress}
+                      /> :
+                      null
+                  }
+
+                  {
+                    magnetUrl ?
+                      <IconButton
+                        className={styles.downloadLink}
+                        name={icons.MAGNET}
+                        title={translate('Open')}
+                        to={magnetUrl}
+                      /> :
+                      null
+                  }
                 </VirtualTableRowCell>
               );
             }

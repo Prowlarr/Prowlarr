@@ -195,7 +195,7 @@ class SearchIndexOverviews extends Component {
 SearchIndexOverviews.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   sortKey: PropTypes.string,
-  scrollTop: PropTypes.number.isRequired,
+  scrollTop: PropTypes.number,
   jumpToCharacter: PropTypes.string,
   scroller: PropTypes.instanceOf(Element).isRequired,
   showRelativeDates: PropTypes.bool.isRequired,

@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers
         private IIndexerProxy GetProxy(ProviderDefinition definition)
         {
             // Skip DB call if no tags on the indexers
-            if (definition.Tags.Count == 0 && definition.Id > 0)
+            if (definition is { Id: > 0 } && definition.Tags.Count == 0)
             {
                 return null;
             }
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.Indexers
             var proxies = _indexerProxyFactory.GetAvailableProviders();
             var selectedProxy = proxies.FirstOrDefault(proxy => definition.Tags.Intersect(proxy.Definition.Tags).Any());
 
-            if (selectedProxy == null && definition.Id == 0)
+            if (selectedProxy == null && definition is not { Id: not 0 })
             {
                 selectedProxy = proxies.FirstOrDefault(p => p is FlareSolverr);
             }

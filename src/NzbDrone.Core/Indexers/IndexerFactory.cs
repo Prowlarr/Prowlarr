@@ -281,10 +281,10 @@ namespace NzbDrone.Core.Indexers
 
             SetProviderCharacteristics(provider, definition);
 
-            if (definition.Implementation is nameof(Newznab.Newznab) or nameof(Torznab.Torznab))
+            if (definition.Enable && definition.Implementation is nameof(Newznab.Newznab) or nameof(Torznab.Torznab))
             {
                 var settings = (NewznabSettings)definition.Settings;
-                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList();
             }
 
             if (definition.Implementation == nameof(Cardigann))
@@ -304,7 +304,7 @@ namespace NzbDrone.Core.Indexers
             if (definition.Enable && definition.Implementation is nameof(Newznab.Newznab) or nameof(Torznab.Torznab))
             {
                 var settings = (NewznabSettings)definition.Settings;
-                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList() ?? null;
+                settings.Categories = _newznabCapabilitiesProvider.GetCapabilities(settings, definition)?.Categories.GetTorznabCategoryList();
             }
 
             if (definition.Implementation == nameof(Cardigann))

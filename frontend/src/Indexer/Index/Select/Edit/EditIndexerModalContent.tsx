@@ -30,9 +30,25 @@ interface EditIndexerModalContentProps {
 const NO_CHANGE = 'noChange';
 
 const enableOptions = [
-  { key: NO_CHANGE, value: translate('NoChange'), disabled: true },
-  { key: 'true', value: translate('Enabled') },
-  { key: 'false', value: translate('Disabled') },
+  {
+    key: NO_CHANGE,
+    get value() {
+      return translate('NoChange');
+    },
+    disabled: true,
+  },
+  {
+    key: 'true',
+    get value() {
+      return translate('Enabled');
+    },
+  },
+  {
+    key: 'false',
+    get value() {
+      return translate('Disabled');
+    },
+  },
 ];
 
 function EditIndexerModalContent(props: EditIndexerModalContentProps) {

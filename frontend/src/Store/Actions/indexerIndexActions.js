@@ -32,93 +32,93 @@ export const defaultState = {
   columns: [
     {
       name: 'status',
-      columnLabel: translate('IndexerStatus'),
+      columnLabel: () => translate('IndexerStatus'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'sortName',
-      label: translate('IndexerName'),
+      label: () => translate('IndexerName'),
       isSortable: true,
       isVisible: true,
       isModifiable: false
     },
     {
       name: 'protocol',
-      label: translate('Protocol'),
+      label: () => translate('Protocol'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'privacy',
-      label: translate('Privacy'),
+      label: () => translate('Privacy'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'priority',
-      label: translate('Priority'),
+      label: () => translate('Priority'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'appProfileId',
-      label: translate('SyncProfile'),
+      label: () => translate('SyncProfile'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'added',
-      label: translate('Added'),
+      label: () => translate('Added'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'vipExpiration',
-      label: translate('VipExpiration'),
+      label: () => translate('VipExpiration'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'capabilities',
-      label: translate('Categories'),
+      label: () => translate('Categories'),
       isSortable: false,
       isVisible: true
     },
     {
       name: 'minimumSeeders',
-      label: translate('MinimumSeeders'),
+      label: () => translate('MinimumSeeders'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'seedRatio',
-      label: translate('SeedRatio'),
+      label: () => translate('SeedRatio'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'seedTime',
-      label: translate('SeedTime'),
+      label: () => translate('SeedTime'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'packSeedTime',
-      label: translate('PackSeedTime'),
+      label: () => translate('PackSeedTime'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       isSortable: false,
       isVisible: false
     },
     {
       name: 'actions',
-      columnLabel: translate('Actions'),
+      columnLabel: () => translate('Actions'),
       isVisible: true,
       isModifiable: false
     }
@@ -136,53 +136,53 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'name',
-      label: translate('IndexerName'),
+      label: () => translate('IndexerName'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'enable',
-      label: translate('Enabled'),
+      label: () => translate('Enabled'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.BOOL
     },
     {
       name: 'added',
-      label: translate('Added'),
+      label: () => translate('Added'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'vipExpiration',
-      label: translate('VipExpiration'),
+      label: () => translate('VipExpiration'),
       type: filterBuilderTypes.DATE,
       valueType: filterBuilderValueTypes.DATE
     },
     {
       name: 'priority',
-      label: translate('Priority'),
+      label: () => translate('Priority'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'protocol',
-      label: translate('Protocol'),
+      label: () => translate('Protocol'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.PROTOCOL
     },
     {
       name: 'privacy',
-      label: translate('Privacy'),
+      label: () => translate('Privacy'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.PRIVACY
     },
     {
       name: 'appProfileId',
-      label: translate('SyncProfile'),
+      label: () => translate('SyncProfile'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.APP_PROFILE
     },
     {
       name: 'tags',
-      label: translate('Tags'),
+      label: () => translate('Tags'),
       type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }

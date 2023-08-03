@@ -66,12 +66,12 @@ const columns = [
   },
   {
     name: 'message',
-    label: translate('Message'),
+    label: () => translate('Message'),
     isVisible: true
   },
   {
     name: 'actions',
-    label: translate('Actions'),
+    label: () => translate('Actions'),
     isVisible: true
   }
 ];

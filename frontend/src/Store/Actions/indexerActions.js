@@ -54,7 +54,7 @@ export const defaultState = {
 export const filters = [
   {
     key: 'all',
-    label: translate('All'),
+    label: () => translate('All'),
     filters: []
   }
 ];

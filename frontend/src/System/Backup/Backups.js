@@ -21,17 +21,17 @@ const columns = [
   },
   {
     name: 'name',
-    label: translate('Name'),
+    label: () => translate('Name'),
     isVisible: true
   },
   {
     name: 'size',
-    label: translate('Size'),
+    label: () => translate('Size'),
     isVisible: true
   },
   {
     name: 'time',
-    label: translate('Time'),
+    label: () => translate('Time'),
     isVisible: true
   },
   {

@@ -25,10 +25,31 @@ interface ManageApplicationsEditModalContentProps {
 const NO_CHANGE = 'noChange';
 
 const syncLevelOptions = [
-  { key: NO_CHANGE, value: translate('NoChange'), disabled: true },
-  { key: ApplicationSyncLevel.Disabled, value: translate('Disabled') },
-  { key: ApplicationSyncLevel.AddOnly, value: translate('AddOnly') },
-  { key: ApplicationSyncLevel.FullSync, value: translate('FullSync') },
+  {
+    key: NO_CHANGE,
+    get value() {
+      return translate('NoChange');
+    },
+    disabled: true,
+  },
+  {
+    key: ApplicationSyncLevel.Disabled,
+    get value() {
+      return translate('Disabled');
+    },
+  },
+  {
+    key: ApplicationSyncLevel.AddOnly,
+    get value() {
+      return translate('AddOnly');
+    },
+  },
+  {
+    key: ApplicationSyncLevel.FullSync,
+    get value() {
+      return translate('FullSync');
+    },
+  },
 ];
 
 function ManageApplicationsEditModalContent(

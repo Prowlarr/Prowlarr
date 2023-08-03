@@ -60,7 +60,7 @@ function showOAuthWindow(url, payload) {
       responseJSON: [
         {
           propertyName: payload.name,
-          errorMessage: translate('OAuthPopupMessage')
+          errorMessage: () => translate('OAuthPopupMessage')
         }
       ]
     };

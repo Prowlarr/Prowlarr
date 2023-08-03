@@ -22,31 +22,31 @@ import styles from './AddIndexerModalContent.css';
 const columns = [
   {
     name: 'protocol',
-    label: translate('Protocol'),
+    label: () => translate('Protocol'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'sortName',
-    label: translate('Name'),
+    label: () => translate('Name'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'language',
-    label: translate('Language'),
+    label: () => translate('Language'),
     isSortable: true,
     isVisible: true
   },
   {
     name: 'description',
-    label: translate('Description'),
+    label: () => translate('Description'),
     isSortable: false,
     isVisible: true
   },
   {
     name: 'privacy',
-    label: translate('Privacy'),
+    label: () => translate('Privacy'),
     isSortable: true,
     isVisible: true
   }
@@ -66,15 +66,21 @@ const protocols = [
 const privacyLevels = [
   {
     key: 'private',
-    value: translate('Private')
+    get value() {
+      return translate('Private');
+    }
   },
   {
     key: 'semiPrivate',
-    value: translate('SemiPrivate')
+    get value() {
+      return translate('SemiPrivate');
+    }
   },
   {
     key: 'public',
-    value: translate('Public')
+    get value() {
+      return translate('Public');
+    }
   }
 ];
 

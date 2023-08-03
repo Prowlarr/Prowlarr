@@ -20,12 +20,12 @@ const SIDEBAR_WIDTH = parseInt(dimensions.sidebarWidth);
 const links = [
   {
     iconName: icons.MOVIE_CONTINUING,
-    title: translate('Indexers'),
+    title: () => translate('Indexers'),
     to: '/',
     alias: '/indexers',
     children: [
       {
-        title: translate('Stats'),
+        title: () => translate('Stats'),
         to: '/indexers/stats'
       }
     ]
@@ -33,47 +33,47 @@ const links = [
 
   {
     iconName: icons.SEARCH,
-    title: translate('Search'),
+    title: () => translate('Search'),
     to: '/search'
   },
 
   {
     iconName: icons.ACTIVITY,
-    title: translate('History'),
+    title: () => translate('History'),
     to: '/history'
   },
 
   {
     iconName: icons.SETTINGS,
-    title: translate('Settings'),
+    title: () => translate('Settings'),
     to: '/settings',
     children: [
       {
-        title: translate('Indexers'),
+        title: () => translate('Indexers'),
         to: '/settings/indexers'
       },
       {
-        title: translate('Apps'),
+        title: () => translate('Apps'),
         to: '/settings/applications'
       },
       {
-        title: translate('DownloadClients'),
+        title: () => translate('DownloadClients'),
         to: '/settings/downloadclients'
       },
       {
-        title: translate('Connect'),
+        title: () => translate('Connect'),
         to: '/settings/connect'
       },
       {
-        title: translate('Tags'),
+        title: () => translate('Tags'),
         to: '/settings/tags'
       },
       {
-        title: translate('General'),
+        title: () => translate('General'),
         to: '/settings/general'
       },
       {
-        title: translate('UI'),
+        title: () => translate('UI'),
         to: '/settings/ui'
       }
     ]
@@ -81,32 +81,32 @@ const links = [
 
   {
     iconName: icons.SYSTEM,
-    title: translate('System'),
+    title: () => translate('System'),
     to: '/system/status',
     children: [
       {
-        title: translate('Status'),
+        title: () => translate('Status'),
         to: '/system/status',
         statusComponent: HealthStatusConnector
       },
       {
-        title: translate('Tasks'),
+        title: () => translate('Tasks'),
         to: '/system/tasks'
       },
       {
-        title: translate('Backup'),
+        title: () => translate('Backup'),
         to: '/system/backup'
       },
       {
-        title: translate('Updates'),
+        title: () => translate('Updates'),
         to: '/system/updates'
       },
       {
-        title: translate('Events'),
+        title: () => translate('Events'),
         to: '/system/events'
       },
       {
-        title: translate('LogFiles'),
+        title: () => translate('LogFiles'),
         to: '/system/logs/files'
       }
     ]

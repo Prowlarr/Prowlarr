@@ -56,55 +56,55 @@ export const defaultState = {
     },
     {
       name: 'protocol',
-      label: translate('Protocol'),
+      label: () => translate('Protocol'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'age',
-      label: translate('Age'),
+      label: () => translate('Age'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'sortTitle',
-      label: translate('Title'),
+      label: () => translate('Title'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'indexer',
-      label: translate('Indexer'),
+      label: () => translate('Indexer'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'size',
-      label: translate('Size'),
+      label: () => translate('Size'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'files',
-      label: translate('Files'),
+      label: () => translate('Files'),
       isSortable: true,
       isVisible: false
     },
     {
       name: 'grabs',
-      label: translate('Grabs'),
+      label: () => translate('Grabs'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'peers',
-      label: translate('Peers'),
+      label: () => translate('Peers'),
       isSortable: true,
       isVisible: true
     },
     {
       name: 'category',
-      label: translate('Category'),
+      label: () => translate('Category'),
       isSortable: true,
       isVisible: true
     },
@@ -116,7 +116,7 @@ export const defaultState = {
     },
     {
       name: 'actions',
-      columnLabel: translate('Actions'),
+      columnLabel: () => translate('Actions'),
       isVisible: true,
       isModifiable: false
     }
@@ -158,7 +158,7 @@ export const defaultState = {
   filters: [
     {
       key: 'all',
-      label: translate('All'),
+      label: () => translate('All'),
       filters: []
     }
   ],
@@ -166,50 +166,50 @@ export const defaultState = {
   filterBuilderProps: [
     {
       name: 'title',
-      label: translate('Title'),
+      label: () => translate('Title'),
       type: filterBuilderTypes.STRING
     },
     {
       name: 'age',
-      label: translate('Age'),
+      label: () => translate('Age'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'protocol',
-      label: translate('Protocol'),
+      label: () => translate('Protocol'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.PROTOCOL
     },
     {
       name: 'indexerId',
-      label: translate('Indexer'),
+      label: () => translate('Indexer'),
       type: filterBuilderTypes.EXACT,
       valueType: filterBuilderValueTypes.INDEXER
     },
     {
       name: 'size',
-      label: translate('Size'),
+      label: () => translate('Size'),
       type: filterBuilderTypes.NUMBER,
       valueType: filterBuilderValueTypes.BYTES
     },
     {
       name: 'files',
-      label: translate('Files'),
+      label: () => translate('Files'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'grabs',
-      label: translate('Grabs'),
+      label: () => translate('Grabs'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'seeders',
-      label: translate('Seeders'),
+      label: () => translate('Seeders'),
       type: filterBuilderTypes.NUMBER
     },
     {
       name: 'peers',
-      label: translate('Peers'),
+      label: () => translate('Peers'),
       type: filterBuilderTypes.NUMBER
     }
   ],

@@ -15,27 +15,27 @@ const columns = [
   },
   {
     name: 'commandName',
-    label: translate('Name'),
+    label: () => translate('Name'),
     isVisible: true
   },
   {
     name: 'queued',
-    label: translate('Queued'),
+    label: () => translate('Queued'),
     isVisible: true
   },
   {
     name: 'started',
-    label: translate('Started'),
+    label: () => translate('Started'),
     isVisible: true
   },
   {
     name: 'ended',
-    label: translate('Ended'),
+    label: () => translate('Ended'),
     isVisible: true
   },
   {
     name: 'duration',
-    label: translate('Duration'),
+    label: () => translate('Duration'),
     isVisible: true
   },
   {

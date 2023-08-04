@@ -127,5 +127,8 @@
     "Track": "spor",
     "Categories": "Kategorier",
     "Album": "album",
-    "Artist": "artist"
+    "Artist": "artist",
+    "ApplicationUrlHelpText": "Denne applikasjonens eksterne URL inkludert http(s)://, port og URL base",
+    "ApplyChanges": "Bekreft endringer",
+    "ApiKeyValidationHealthCheckMessage": "Vennligst oppdater din API-nøkkel til å være minst {0} tegn lang. Du kan gjøre dette via innstillinger eller konfigurasjonsfilen"
 }

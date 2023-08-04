@@ -229,6 +229,7 @@
   "IndexerCategories": "Indexer Categories",
   "IndexerDetails": "Indexer Details",
   "IndexerDisabled": "Indexer Disabled",
+  "IndexerDownloadClientHealthCheckMessage": "Indexers with invalid download clients: {0}.",
   "IndexerDownloadClientHelpText": "Specify which download client is used for grabs made within Prowlarr from this indexer",
   "IndexerFailureRate": "Indexer Failure Rate",
   "IndexerFlags": "Indexer Flags",

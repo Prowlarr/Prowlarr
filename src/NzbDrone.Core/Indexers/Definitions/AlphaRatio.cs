@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using NLog;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
@@ -27,6 +28,11 @@ public class AlphaRatio : GazelleBase<AlphaRatioSettings>
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
         return new AlphaRatioRequestGenerator(Settings, Capabilities, _httpClient, _logger);
+    }
+
+    public override IParseIndexerResponse GetParser()
+    {
+        return new AlphaRatioParser(Settings, Capabilities);
     }
 
     protected override IndexerCapabilities SetCapabilities()
@@ -107,6 +113,29 @@ public class AlphaRatioRequestGenerator : GazelleRequestGenerator
         }
 
         return parameters;
+    }
+}
+
+public class AlphaRatioParser : GazelleParser
+{
+    public AlphaRatioParser(AlphaRatioSettings settings, IndexerCapabilities capabilities)
+        : base(settings, capabilities)
+    {
+    }
+
+    protected override string GetDownloadUrl(int torrentId, bool canUseToken)
+    {
+        var url = new HttpUri(Settings.BaseUrl)
+            .CombinePath("/torrents.php")
+            .AddQueryParam("action", "download")
+            .AddQueryParam("id", torrentId);
+
+        if (Settings.UseFreeleechToken && canUseToken)
+        {
+            url = url.AddQueryParam("usetoken", "1");
+        }
+
+        return url.FullUri;
     }
 }
 

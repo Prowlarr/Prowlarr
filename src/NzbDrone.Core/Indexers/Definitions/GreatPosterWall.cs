@@ -227,7 +227,7 @@ public class GreatPosterWallParser : GazelleParser
             .ToArray();
     }
 
-    private string GetDownloadUrl(int torrentId, bool canUseToken)
+    protected override string GetDownloadUrl(int torrentId, bool canUseToken)
     {
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/torrents.php")

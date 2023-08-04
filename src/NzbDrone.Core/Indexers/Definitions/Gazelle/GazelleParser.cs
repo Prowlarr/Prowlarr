@@ -78,7 +78,7 @@ public class GazelleParser : IParseIndexerResponse
                         Grabs = torrent.Snatches,
                         Codec = torrent.Format,
                         Size = long.Parse(torrent.Size),
-                        DownloadUrl = GetDownloadUrl(id),
+                        DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(torrent.Seeders),
                         Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
@@ -113,7 +113,7 @@ public class GazelleParser : IParseIndexerResponse
                     Guid = infoUrl,
                     Title = groupName,
                     Size = long.Parse(result.Size),
-                    DownloadUrl = GetDownloadUrl(id),
+                    DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
                     InfoUrl = infoUrl,
                     Seeders = int.Parse(result.Seeders),
                     Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
@@ -146,7 +146,7 @@ public class GazelleParser : IParseIndexerResponse
                 .ToArray();
     }
 
-    protected virtual string GetDownloadUrl(int torrentId)
+    protected virtual string GetDownloadUrl(int torrentId, bool canUseToken)
     {
         var url = new HttpUri(Settings.BaseUrl)
             .CombinePath("/torrents.php")

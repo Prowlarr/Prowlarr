@@ -159,7 +159,7 @@ namespace NzbDrone.Common.EnvironmentInfo
 
         private void CleanupSqLiteRollbackFiles()
         {
-            _diskProvider.GetFiles(_appFolderInfo.AppDataFolder, SearchOption.TopDirectoryOnly)
+            _diskProvider.GetFiles(_appFolderInfo.AppDataFolder, false)
                          .Where(f => Path.GetFileName(f).StartsWith("nzbdrone.db"))
                          .ToList()
                          .ForEach(_diskProvider.DeleteFile);

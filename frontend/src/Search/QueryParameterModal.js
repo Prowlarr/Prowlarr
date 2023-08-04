@@ -14,11 +14,11 @@ import QueryParameterOption from './QueryParameterOption';
 import styles from './QueryParameterModal.css';
 
 const searchOptions = [
-  { key: 'search', value: translate('BasicSearch') },
-  { key: 'tvsearch', value: translate('TvSearch') },
-  { key: 'movie', value: translate('MovieSearch') },
-  { key: 'music', value: translate( 'AudioSearch') },
-  { key: 'book', value: translate('BookSearch') }
+  { key: 'search', value: () => translate('BasicSearch') },
+  { key: 'tvsearch', value: () => translate('TvSearch') },
+  { key: 'movie', value: () => translate('MovieSearch') },
+  { key: 'music', value: () => translate( 'AudioSearch') },
+  { key: 'book', value: () => translate('BookSearch') }
 ];
 
 const seriesTokens = [

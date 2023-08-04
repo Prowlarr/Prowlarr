@@ -19,9 +19,24 @@ import translate from 'Utilities/String/translate';
 import styles from './EditApplicationModalContent.css';
 
 const syncLevelOptions = [
-  { key: 'disabled', value: translate('Disabled') },
-  { key: 'addOnly', value: translate('AddRemoveOnly') },
-  { key: 'fullSync', value: translate('FullSync') }
+  {
+    key: 'disabled',
+    get value() {
+      return translate('Disabled');
+    }
+  },
+  {
+    key: 'addOnly',
+    get value() {
+      return translate('AddRemoveOnly');
+    }
+  },
+  {
+    key: 'fullSync',
+    get value() {
+      return translate('FullSync');
+    }
+  }
 ];
 
 function EditApplicationModalContent(props) {

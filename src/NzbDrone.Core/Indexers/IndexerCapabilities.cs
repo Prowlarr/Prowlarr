@@ -89,9 +89,9 @@ namespace NzbDrone.Core.Indexers
         public bool MovieSearchImdbAvailable => MovieSearchParams.Contains(MovieSearchParam.ImdbId);
         public bool MovieSearchTmdbAvailable => MovieSearchParams.Contains(MovieSearchParam.TmdbId);
         public bool MovieSearchTraktAvailable => MovieSearchParams.Contains(MovieSearchParam.TraktId);
+        public bool MovieSearchDoubanAvailable => MovieSearchParams.Contains(MovieSearchParam.DoubanId);
         public bool MovieSearchGenreAvailable => MovieSearchParams.Contains(MovieSearchParam.Genre);
         public bool MovieSearchYearAvailable => MovieSearchParams.Contains(MovieSearchParam.Year);
-        public bool MovieSearchDoubanAvailable => MovieSearchParams.Contains(MovieSearchParam.DoubanId);
 
         public List<MusicSearchParam> MusicSearchParams;
         public bool MusicSearchAvailable => MusicSearchParams.Count > 0;
@@ -99,16 +99,16 @@ namespace NzbDrone.Core.Indexers
         public bool MusicSearchArtistAvailable => MusicSearchParams.Contains(MusicSearchParam.Artist);
         public bool MusicSearchLabelAvailable => MusicSearchParams.Contains(MusicSearchParam.Label);
         public bool MusicSearchTrackAvailable => MusicSearchParams.Contains(MusicSearchParam.Track);
-        public bool MusicSearchYearAvailable => MusicSearchParams.Contains(MusicSearchParam.Year);
         public bool MusicSearchGenreAvailable => MusicSearchParams.Contains(MusicSearchParam.Genre);
+        public bool MusicSearchYearAvailable => MusicSearchParams.Contains(MusicSearchParam.Year);
 
         public List<BookSearchParam> BookSearchParams;
         public bool BookSearchAvailable => BookSearchParams.Count > 0;
         public bool BookSearchTitleAvailable => BookSearchParams.Contains(BookSearchParam.Title);
         public bool BookSearchAuthorAvailable => BookSearchParams.Contains(BookSearchParam.Author);
         public bool BookSearchPublisherAvailable => BookSearchParams.Contains(BookSearchParam.Publisher);
-        public bool BookSearchYearAvailable => BookSearchParams.Contains(BookSearchParam.Year);
         public bool BookSearchGenreAvailable => BookSearchParams.Contains(BookSearchParam.Genre);
+        public bool BookSearchYearAvailable => BookSearchParams.Contains(BookSearchParam.Year);
 
         public readonly IndexerCapabilitiesCategories Categories;
         public List<IndexerFlag> Flags;

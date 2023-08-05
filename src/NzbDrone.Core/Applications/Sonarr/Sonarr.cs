@@ -68,11 +68,11 @@ namespace NzbDrone.Core.Applications.Sonarr
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Sonarr URL is invalid, Prowlarr cannot connect to Sonarr - are you missing a URL base?"));
                         break;
                     case HttpStatusCode.NotFound:
-                        _logger.Error(ex, "Sonarr not found");
+                        _logger.Warn(ex, "Sonarr not found");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Sonarr URL is invalid, Prowlarr cannot connect to Sonarr. Is Sonarr running and accessible? Sonarr v2 is not supported."));
                         break;
                     default:
-                        _logger.Error(ex, "Unable to complete application test");
+                        _logger.Warn(ex, "Unable to complete application test");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Sonarr. {ex.Message}"));
                         break;
                 }
@@ -84,7 +84,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to complete application test");
+                _logger.Warn(ex, "Unable to complete application test");
                 failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Sonarr. {ex.Message}"));
             }
 

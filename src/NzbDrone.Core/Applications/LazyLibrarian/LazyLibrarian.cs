@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to complete application test");
+                _logger.Warn(ex, "Unable to complete application test");
                 failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to LazyLibrarian. {ex.Message}"));
             }
 

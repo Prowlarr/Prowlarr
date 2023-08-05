@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Applications.Radarr
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Radarr URL is invalid, Prowlarr cannot connect to Radarr - are you missing a URL base?"));
                         break;
                     default:
-                        _logger.Error(ex, "Unable to complete application test");
+                        _logger.Warn(ex, "Unable to complete application test");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Radarr. {ex.Message}"));
                         break;
                 }
@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Applications.Radarr
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to complete application test");
+                _logger.Warn(ex, "Unable to complete application test");
                 failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Radarr. {ex.Message}"));
             }
 

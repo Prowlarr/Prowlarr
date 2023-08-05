@@ -68,7 +68,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", "Lidarr URL is invalid, Prowlarr cannot connect to Lidarr - are you missing a URL base?"));
                         break;
                     default:
-                        _logger.Error(ex, "Unable to complete application test");
+                        _logger.Warn(ex, "Unable to complete application test");
                         failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Lidarr. {ex.Message}"));
                         break;
                 }
@@ -80,7 +80,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Unable to complete application test");
+                _logger.Warn(ex, "Unable to complete application test");
                 failures.AddIfNotNull(new ValidationFailure("BaseUrl", $"Unable to complete application test, cannot connect to Lidarr. {ex.Message}"));
             }
 

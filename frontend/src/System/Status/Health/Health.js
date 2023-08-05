@@ -16,6 +16,23 @@ import styles from './Health.css';
 
 function getInternalLink(source) {
   switch (source) {
+    case 'ApplicationStatusCheck':
+    case 'ApplicationLongTermStatusCheck':
+      return (
+        <IconButton
+          name={icons.SETTINGS}
+          title={translate('Settings')}
+          to="/settings/applications"
+        />
+      );
+    case 'DownloadClientStatusCheck':
+      return (
+        <IconButton
+          name={icons.SETTINGS}
+          title={translate('Settings')}
+          to="/settings/downloadclients"
+        />
+      );
     case 'IndexerRssCheck':
     case 'IndexerSearchCheck':
     case 'IndexerStatusCheck':

@@ -9,6 +9,8 @@ namespace NzbDrone.Core.HealthCheck.Checks
 {
     [CheckOn(typeof(ProviderUpdatedEvent<IApplication>))]
     [CheckOn(typeof(ProviderDeletedEvent<IApplication>))]
+    [CheckOn(typeof(ProviderBulkUpdatedEvent<IApplication>))]
+    [CheckOn(typeof(ProviderBulkDeletedEvent<IApplication>))]
     [CheckOn(typeof(ProviderStatusChangedEvent<IApplication>))]
     public class ApplicationLongTermStatusCheck : HealthCheckBase
     {

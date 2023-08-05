@@ -66,6 +66,20 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
+            var caps = GetCapabilities();
+
+            if ((searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && !caps.MovieSearchImdbAvailable) ||
+                (searchCriteria.TmdbId.HasValue && !caps.MovieSearchTmdbAvailable) ||
+                (searchCriteria.TraktId.HasValue && !caps.MovieSearchTraktAvailable) ||
+                (searchCriteria.DoubanId.HasValue && !caps.MovieSearchDoubanAvailable) ||
+                (searchCriteria.Genre.IsNotNullOrWhiteSpace() && !caps.MovieSearchGenreAvailable) ||
+                (searchCriteria.Year.HasValue && !caps.MovieSearchYearAvailable))
+            {
+                _logger.Debug("Movie search skipped due to unsupported capabilities used: {0}", Definition.Name);
+
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
@@ -78,6 +92,20 @@ namespace NzbDrone.Core.Indexers
 
             if (!SupportsPagination && searchCriteria.Offset is > 0)
             {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
+            var caps = GetCapabilities();
+
+            if ((searchCriteria.Album.IsNotNullOrWhiteSpace() && !caps.MusicSearchAlbumAvailable) ||
+                (searchCriteria.Artist.IsNotNullOrWhiteSpace() && !caps.MusicSearchArtistAvailable) ||
+                (searchCriteria.Label.IsNotNullOrWhiteSpace() && !caps.MusicSearchLabelAvailable) ||
+                (searchCriteria.Track.IsNotNullOrWhiteSpace() && !caps.MusicSearchTrackAvailable) ||
+                (searchCriteria.Genre.IsNotNullOrWhiteSpace() && !caps.MusicSearchGenreAvailable) ||
+                (searchCriteria.Year.HasValue && !caps.MusicSearchYearAvailable))
+            {
+                _logger.Debug("Music search skipped due to unsupported capabilities used: {0}", Definition.Name);
+
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
@@ -96,6 +124,23 @@ namespace NzbDrone.Core.Indexers
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 
+            var caps = GetCapabilities();
+
+            if ((searchCriteria.ImdbId.IsNotNullOrWhiteSpace() && !caps.TvSearchImdbAvailable) ||
+                (searchCriteria.TvdbId.HasValue && !caps.TvSearchTvdbAvailable) ||
+                (searchCriteria.RId.HasValue && !caps.TvSearchTvRageAvailable) ||
+                (searchCriteria.TvMazeId.HasValue && !caps.TvSearchTvMazeAvailable) ||
+                (searchCriteria.TraktId.HasValue && !caps.TvSearchTraktAvailable) ||
+                (searchCriteria.TmdbId.HasValue && !caps.TvSearchTmdbAvailable) ||
+                (searchCriteria.DoubanId.HasValue && !caps.TvSearchDoubanAvailable) ||
+                (searchCriteria.Genre.IsNotNullOrWhiteSpace() && !caps.TvSearchGenreAvailable) ||
+                (searchCriteria.Year.HasValue && !caps.TvSearchYearAvailable))
+            {
+                _logger.Debug("TV search skipped due to unsupported capabilities used: {0}", Definition.Name);
+
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
@@ -108,6 +153,19 @@ namespace NzbDrone.Core.Indexers
 
             if (!SupportsPagination && searchCriteria.Offset is > 0)
             {
+                return Task.FromResult(new IndexerPageableQueryResult());
+            }
+
+            var caps = GetCapabilities();
+
+            if ((searchCriteria.Title.IsNotNullOrWhiteSpace() && !caps.BookSearchTitleAvailable) ||
+                (searchCriteria.Author.IsNotNullOrWhiteSpace() && !caps.BookSearchAuthorAvailable) ||
+                (searchCriteria.Publisher.IsNotNullOrWhiteSpace() && !caps.BookSearchPublisherAvailable) ||
+                (searchCriteria.Genre.IsNotNullOrWhiteSpace() && !caps.BookSearchGenreAvailable) ||
+                (searchCriteria.Year.HasValue && !caps.BookSearchYearAvailable))
+            {
+                _logger.Debug("Book search skipped due to unsupported capabilities used: {0}", Definition.Name);
+
                 return Task.FromResult(new IndexerPageableQueryResult());
             }
 

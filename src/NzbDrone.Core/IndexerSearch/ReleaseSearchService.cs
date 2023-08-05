@@ -128,19 +128,12 @@ namespace NzbDrone.Core.IndexerSearch
         private TSpec Get<TSpec>(NewznabRequest query, List<int> indexerIds, bool interactiveSearch)
             where TSpec : SearchCriteriaBase, new()
         {
-            var spec = new TSpec()
+            var spec = new TSpec
             {
                 InteractiveSearch = interactiveSearch
             };
 
-            if (query.cat != null)
-            {
-                spec.Categories = query.cat.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => int.Parse(s)).ToArray();
-            }
-            else
-            {
-                spec.Categories = Array.Empty<int>();
-            }
+            spec.Categories = query.cat != null ? query.cat.Split(',').Where(s => !string.IsNullOrWhiteSpace(s)).Select(int.Parse).ToArray() : Array.Empty<int>();
 
             spec.SearchTerm = query.q?.Trim();
             spec.SearchType = query.t;

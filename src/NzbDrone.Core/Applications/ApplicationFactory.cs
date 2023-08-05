@@ -62,9 +62,18 @@ namespace NzbDrone.Core.Applications
         {
             var result = base.Test(definition);
 
-            if ((result == null || result.IsValid) && definition.Id != 0)
+            if (definition.Id == 0)
+            {
+                return result;
+            }
+
+            if (result == null || result.IsValid)
             {
                 _applicationStatusService.RecordSuccess(definition.Id);
+            }
+            else
+            {
+                _applicationStatusService.RecordFailure(definition.Id);
             }
 
             return result;

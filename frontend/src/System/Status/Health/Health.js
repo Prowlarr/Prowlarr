@@ -42,6 +42,25 @@ function getInternalLink(source) {
 
 function getTestLink(source, props) {
   switch (source) {
+    case 'ApplicationStatusCheck':
+    case 'ApplicationLongTermStatusCheck':
+      return (
+        <SpinnerIconButton
+          name={icons.TEST}
+          title={translate('TestAll')}
+          isSpinning={props.isTestingAllApplications}
+          onPress={props.dispatchTestAllApplications}
+        />
+      );
+    case 'DownloadClientStatusCheck':
+      return (
+        <SpinnerIconButton
+          name={icons.TEST}
+          title={translate('TestAll')}
+          isSpinning={props.isTestingAllDownloadClients}
+          onPress={props.dispatchTestAllDownloadClients}
+        />
+      );
     case 'IndexerStatusCheck':
     case 'IndexerLongTermStatusCheck':
       return (
@@ -52,7 +71,6 @@ function getTestLink(source, props) {
           onPress={props.dispatchTestAllIndexers}
         />
       );
-
     default:
       break;
   }
@@ -188,7 +206,11 @@ Health.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   isPopulated: PropTypes.bool.isRequired,
   items: PropTypes.array.isRequired,
+  isTestingAllApplications: PropTypes.bool.isRequired,
+  isTestingAllDownloadClients: PropTypes.bool.isRequired,
   isTestingAllIndexers: PropTypes.bool.isRequired,
+  dispatchTestAllApplications: PropTypes.func.isRequired,
+  dispatchTestAllDownloadClients: PropTypes.func.isRequired,
   dispatchTestAllIndexers: PropTypes.func.isRequired
 };
 

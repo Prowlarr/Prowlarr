@@ -42,6 +42,11 @@ namespace NzbDrone.Core.Applications
             return enabledClients.ToList();
         }
 
+        protected override List<ApplicationDefinition> Active()
+        {
+            return base.Active().Where(c => c.Enable).ToList();
+        }
+
         private IEnumerable<IApplication> FilterBlockedApplications(IEnumerable<IApplication> applications)
         {
             var blockedApplications = _applicationStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId, v => v);

@@ -41,7 +41,7 @@ const syncLevelOptions = [
   {
     key: ApplicationSyncLevel.AddOnly,
     get value() {
-      return translate('AddOnly');
+      return translate('AddRemoveOnly');
     },
   },
   {

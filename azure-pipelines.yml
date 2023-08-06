@@ -1067,6 +1067,8 @@ stages:
       - task: SonarCloudAnalyze@1
         condition: eq(variables['System.PullRequest.IsFork'], 'False')
         displayName: Publish SonarCloud Results
+        inputs:
+          jdkversion: 'JAVA_HOME_17_X64'
       - task: reportgenerator@4
         displayName: Generate Coverage Report
         inputs:

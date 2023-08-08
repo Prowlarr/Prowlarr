@@ -84,6 +84,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
+            request.ContentSummary = indexer.ToJson(Formatting.None);
 
             try
             {
@@ -104,6 +105,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexer.Id}", HttpMethod.Put);
 
             request.SetContent(indexer.ToJson());
+            request.ContentSummary = indexer.ToJson(Formatting.None);
 
             try
             {
@@ -124,6 +126,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}/test", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());
+            request.ContentSummary = indexer.ToJson(Formatting.None);
 
             var applicationVersion = _httpClient.Post(request).Headers.GetSingleValue("X-Application-Version");
 

@@ -105,8 +105,8 @@
     "AnalyticsEnabledHelpText": "Wysyłaj anonimowe informacje o użytkowaniu i błędach do serwerów Prowlarr. Obejmuje to informacje o Twojej przeglądarce, z których stron Prowlarr WebUI używasz, raportowanie błędów, a także wersję systemu operacyjnego i środowiska wykonawczego. Wykorzystamy te informacje, aby nadać priorytet funkcjom i poprawkom błędów.",
     "ApplicationStatusCheckAllClientMessage": "Wszystkie listy są niedostępne z powodu błędów",
     "ApplicationStatusCheckSingleClientMessage": "Listy niedostępne z powodu błędów: {0}",
-    "Apply": "Zastosować",
-    "Authentication": "Poświadczenie",
+    "Apply": "Zastosuj",
+    "Authentication": "Autoryzacja",
     "AuthenticationMethodHelpText": "Wymagaj nazwy użytkownika i hasła, aby uzyskać dostęp do Prowlarr",
     "BackupFolderHelpText": "Względne ścieżki będą znajdować się w katalogu AppData Prowlarr",
     "BackupRetentionHelpText": "Automatyczne kopie zapasowe starsze niż okres przechowywania zostaną automatycznie wyczyszczone",
@@ -346,10 +346,10 @@
     "Replace": "Zastąpić",
     "TheLatestVersionIsAlreadyInstalled": "Najnowsza wersja Prowlarr jest już zainstalowana",
     "ApplicationURL": "Link do aplikacji",
-    "ApplicationUrlHelpText": "Zewnętrzny URL tej aplikacji zawiera http(s)://, port i adres URL",
+    "ApplicationUrlHelpText": "Zewnętrzny URL tej aplikacji zawierający http(s)://, port i adres URL",
     "ApplyTagsHelpTextAdd": "Dodaj: dodaj tagi do istniejącej listy tagów",
     "ApplyTagsHelpTextHowToApplyApplications": "Jak zastosować tagi do wybranych filmów",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Jak zastosować tagi do wybranych filmów",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Jak zastosować tagi do wybranych indeksatorów",
     "DeleteSelectedApplicationsMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
     "DeleteSelectedDownloadClients": "Usuń klienta pobierania",
     "DeleteSelectedDownloadClientsMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
@@ -361,5 +361,7 @@
     "DownloadClientPriorityHelpText": "Nadaj priorytet wielu klientom pobierania. W przypadku klientów o tym samym priorytecie używane jest działanie okrężne.",
     "Track": "Ślad",
     "UpdateAvailable": "Dostępna jest aktualizacja",
-    "Genre": "Gatunki"
+    "Genre": "Gatunki",
+    "ApplyChanges": "Zastosuj zmiany",
+    "ApiKeyValidationHealthCheckMessage": "Zaktualizuj swój klucz API aby był długi na co najmniej {0} znaków. Możesz to zrobić poprzez ustawienia lub plik konfiguracyjny"
 }

@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
-    <PackageReference Include="Npgsql" Version="5.0.11" />
+    <PackageReference Include="Npgsql" Version="6.0.9" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />

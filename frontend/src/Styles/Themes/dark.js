@@ -37,8 +37,8 @@ module.exports = {
 
   // Links
   defaultLinkHoverColor: '#fff',
-  linkColor: '#rgb(230, 96, 0)',
-  linkHoverColor: '#rgb(230, 96, 0, .8)',
+  linkColor: '#5d9cec',
+  linkHoverColor: '#5d9cec',
 
   // Header
   pageHeaderBackgroundColor: '#2a2a2a',

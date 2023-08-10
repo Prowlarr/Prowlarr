@@ -182,6 +182,9 @@ namespace NzbDrone.Core.Applications.Whisparr
                         // Retain user tags not-affiliated with Prowlarr
                         whisparrIndexer.Tags.UnionWith(remoteIndexer.Tags);
 
+                        // Retain user settings not-affiliated with Prowlarr
+                        whisparrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
+
                         // Update the indexer if it still has categories that match
                         _whisparrV3Proxy.UpdateIndexer(whisparrIndexer, Settings);
                     }

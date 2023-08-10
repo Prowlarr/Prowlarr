@@ -182,6 +182,9 @@ namespace NzbDrone.Core.Applications.Readarr
                         // Retain user tags not-affiliated with Prowlarr
                         readarrIndexer.Tags.UnionWith(remoteIndexer.Tags);
 
+                        // Retain user settings not-affiliated with Prowlarr
+                        readarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
+
                         // Update the indexer if it still has categories that match
                         _readarrV1Proxy.UpdateIndexer(readarrIndexer, Settings);
                     }

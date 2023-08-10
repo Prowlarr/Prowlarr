@@ -138,7 +138,7 @@
     "AppDataDirectory": "Directorul AppData",
     "ApplicationStatusCheckAllClientMessage": "Toate aplicațiile sunt indisponibile datorită erorilor",
     "AreYouSureYouWantToResetYourAPIKey": "Sigur doriți să vă resetați cheia API?",
-    "Authentication": "Autentificare",
+    "Authentication": "",
     "AuthenticationMethodHelpText": "Solicitați numele de utilizator și parola pentru a accesa Prowlarr",
     "AutomaticSearch": "Căutare automată",
     "BackupFolderHelpText": "Căile relative vor fi în directorul AppData al lui Prowlarr",
@@ -427,5 +427,6 @@
     "IndexerCategories": "Categorii indexator",
     "Episode": "Episod",
     "Category": "Categorie",
-    "AddRemoveOnly": "Doar adaugă și șterge"
+    "AddRemoveOnly": "Doar adaugă și șterge",
+    "AuthenticationRequired": "Autentificare necesara"
 }

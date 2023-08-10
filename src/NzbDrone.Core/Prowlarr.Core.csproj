@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
-    <PackageReference Include="Npgsql" Version="6.0.9" />
+    <PackageReference Include="Npgsql" Version="7.0.4" />
     <PackageReference Include="Servarr.FluentMigrator.Runner" Version="3.3.2.9" />
     <PackageReference Include="Servarr.FluentMigrator.Runner.Postgres" Version="3.3.2.9" />
     <PackageReference Include="Servarr.FluentMigrator.Runner.SQLite" Version="3.3.2.9" />

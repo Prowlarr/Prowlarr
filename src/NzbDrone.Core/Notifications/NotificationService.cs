@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.HealthCheck;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Update.History.Events;
 
 namespace NzbDrone.Core.Notifications
@@ -185,7 +188,8 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleOnGrab(grabMessage, ((NotificationDefinition)notification.Definition).IncludeManualGrabs))
+                    if (ShouldHandleIndexer(notification.Definition, (IndexerDefinition)message.Indexer.Definition) &&
+                        ShouldHandleOnGrab(grabMessage, ((NotificationDefinition)notification.Definition).IncludeManualGrabs))
                     {
                         notification.OnGrab(grabMessage);
                     }
@@ -195,6 +199,27 @@ namespace NzbDrone.Core.Notifications
                     _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
                 }
             }
+        }
+
+        private bool ShouldHandleIndexer(ProviderDefinition definition, ProviderDefinition indexer)
+        {
+            if (definition.Tags.Empty())
+            {
+                _logger.Debug("No tags set for this notification.");
+
+                return true;
+            }
+
+            if (definition.Tags.Intersect(indexer.Tags).Any())
+            {
+                _logger.Debug("Notification and indexer have one or more intersecting tags.");
+
+                return true;
+            }
+
+            _logger.Debug("{0} does not have any intersecting tags with {1}. Notification will not be sent.", definition.Name, indexer.Name);
+
+            return false;
         }
     }
 }

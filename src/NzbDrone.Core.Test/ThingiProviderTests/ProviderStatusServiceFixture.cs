@@ -161,7 +161,7 @@ namespace NzbDrone.Core.Test.ThingiProviderTests
             status.Should().NotBeNull();
 
             origStatus.EscalationLevel.Should().Be(3);
-            status.DisabledTill.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(1), _disabledTillPrecision);
+            status.DisabledTill.Should().BeCloseTo(_epoch + TimeSpan.FromMinutes(5), _disabledTillPrecision);
         }
     }
 }

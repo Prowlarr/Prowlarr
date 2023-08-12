@@ -20,42 +20,34 @@ namespace NzbDrone.Core.Notifications
           IHandle<IndexerDownloadEvent>
     {
         private readonly INotificationFactory _notificationFactory;
+        private readonly INotificationStatusService _notificationStatusService;
         private readonly Logger _logger;
 
-        public NotificationService(INotificationFactory notificationFactory, Logger logger)
+        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, Logger logger)
         {
             _notificationFactory = notificationFactory;
+            _notificationStatusService = notificationStatusService;
             _logger = logger;
         }
 
         private bool ShouldHandleHealthFailure(HealthCheck.HealthCheck healthCheck, bool includeWarnings)
         {
-            if (healthCheck.Type == HealthCheckResult.Error)
+            return healthCheck.Type switch
             {
-                return true;
-            }
-
-            if (healthCheck.Type == HealthCheckResult.Warning && includeWarnings)
-            {
-                return true;
-            }
-
-            return false;
+                HealthCheckResult.Error => true,
+                HealthCheckResult.Warning when includeWarnings => true,
+                _ => false
+            };
         }
 
         private bool ShouldHandleOnGrab(GrabMessage message, bool includeManual)
         {
-            if (message.GrabTrigger == GrabTrigger.Api)
+            return message.GrabTrigger switch
             {
-                return true;
-            }
-
-            if (message.GrabTrigger == GrabTrigger.Manual && includeManual)
-            {
-                return true;
-            }
-
-            return false;
+                GrabTrigger.Api => true,
+                GrabTrigger.Manual when includeManual => true,
+                _ => false
+            };
         }
 
         private string GetMessage(ReleaseInfo release, GrabTrigger grabTrigger, string source, string downloadClient)
@@ -96,10 +88,12 @@ namespace NzbDrone.Core.Notifications
                     if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                     {
                         notification.OnHealthIssue(message.HealthCheck);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
                 }
             }
@@ -119,10 +113,12 @@ namespace NzbDrone.Core.Notifications
                     if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                     {
                         notification.OnHealthRestored(message.PreviousCheck);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnHealthRestored notification to: " + notification.Definition.Name);
                 }
             }
@@ -145,9 +141,11 @@ namespace NzbDrone.Core.Notifications
                 try
                 {
                     notification.OnApplicationUpdate(updateMessage);
+                    _notificationStatusService.RecordSuccess(notification.Definition.Id);
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Warn(ex, "Unable to send OnApplicationUpdate notification to: " + notification.Definition.Name);
                 }
             }
@@ -192,10 +190,12 @@ namespace NzbDrone.Core.Notifications
                         ShouldHandleOnGrab(grabMessage, ((NotificationDefinition)notification.Definition).IncludeManualGrabs))
                     {
                         notification.OnGrab(grabMessage);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
                 }
                 catch (Exception ex)
                 {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
                     _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
                 }
             }

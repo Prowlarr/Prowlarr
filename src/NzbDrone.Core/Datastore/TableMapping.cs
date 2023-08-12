@@ -91,10 +91,9 @@ namespace NzbDrone.Core.Datastore
                   .Ignore(c => c.Message);
 
             Mapper.Entity<IndexerStatus>("IndexerStatus").RegisterModel();
-
             Mapper.Entity<DownloadClientStatus>("DownloadClientStatus").RegisterModel();
-
             Mapper.Entity<ApplicationStatus>("ApplicationStatus").RegisterModel();
+            Mapper.Entity<NotificationStatus>("NotificationStatus").RegisterModel();
 
             Mapper.Entity<CustomFilter>("CustomFilters").RegisterModel();
             Mapper.Entity<UpdateHistory>("UpdateHistory").RegisterModel();

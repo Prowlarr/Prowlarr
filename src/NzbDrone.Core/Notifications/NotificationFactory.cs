@@ -9,37 +9,78 @@ namespace NzbDrone.Core.Notifications
 {
     public interface INotificationFactory : IProviderFactory<INotification, NotificationDefinition>
     {
-        List<INotification> OnGrabEnabled();
-        List<INotification> OnHealthIssueEnabled();
-        List<INotification> OnHealthRestoredEnabled();
-        List<INotification> OnApplicationUpdateEnabled();
+        List<INotification> OnGrabEnabled(bool filterBlockedNotifications = true);
+        List<INotification> OnHealthIssueEnabled(bool filterBlockedNotifications = true);
+        List<INotification> OnHealthRestoredEnabled(bool filterBlockedNotifications = true);
+        List<INotification> OnApplicationUpdateEnabled(bool filterBlockedNotifications = true);
     }
 
     public class NotificationFactory : ProviderFactory<INotification, NotificationDefinition>, INotificationFactory
     {
-        public NotificationFactory(INotificationRepository providerRepository, IEnumerable<INotification> providers, IServiceProvider container, IEventAggregator eventAggregator, Logger logger)
+        private readonly INotificationStatusService _notificationStatusService;
+        private readonly Logger _logger;
+
+        public NotificationFactory(INotificationStatusService notificationStatusService, INotificationRepository providerRepository, IEnumerable<INotification> providers, IServiceProvider container, IEventAggregator eventAggregator, Logger logger)
             : base(providerRepository, providers, container, eventAggregator, logger)
         {
+            _notificationStatusService = notificationStatusService;
+            _logger = logger;
         }
 
-        public List<INotification> OnGrabEnabled()
+        public List<INotification> OnGrabEnabled(bool filterBlockedNotifications = true)
         {
+            if (filterBlockedNotifications)
+            {
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnGrab)).ToList();
+            }
+
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnGrab).ToList();
         }
 
-        public List<INotification> OnHealthIssueEnabled()
+        public List<INotification> OnHealthIssueEnabled(bool filterBlockedNotifications = true)
         {
+            if (filterBlockedNotifications)
+            {
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthIssue)).ToList();
+            }
+
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthIssue).ToList();
         }
 
-        public List<INotification> OnHealthRestoredEnabled()
+        public List<INotification> OnHealthRestoredEnabled(bool filterBlockedNotifications = true)
         {
+            if (filterBlockedNotifications)
+            {
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthRestored)).ToList();
+            }
+
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthRestored).ToList();
         }
 
-        public List<INotification> OnApplicationUpdateEnabled()
+        public List<INotification> OnApplicationUpdateEnabled(bool filterBlockedNotifications = true)
         {
+            if (filterBlockedNotifications)
+            {
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnApplicationUpdate)).ToList();
+            }
+
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnApplicationUpdate).ToList();
+        }
+
+        private IEnumerable<INotification> FilterBlockedNotifications(IEnumerable<INotification> notifications)
+        {
+            var blockedNotifications = _notificationStatusService.GetBlockedProviders().ToDictionary(v => v.ProviderId, v => v);
+
+            foreach (var notification in notifications)
+            {
+                if (blockedNotifications.TryGetValue(notification.Definition.Id, out var notificationStatus))
+                {
+                    _logger.Debug("Temporarily ignoring notification {0} till {1} due to recent failures.", notification.Definition.Name, notificationStatus.DisabledTill.Value.ToLocalTime());
+                    continue;
+                }
+
+                yield return notification;
+            }
         }
 
         public override void SetProviderCharacteristics(INotification provider, NotificationDefinition definition)

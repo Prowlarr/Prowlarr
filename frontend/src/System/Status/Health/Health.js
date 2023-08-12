@@ -33,6 +33,14 @@ function getInternalLink(source) {
           to="/settings/downloadclients"
         />
       );
+    case 'NotificationStatusCheck':
+      return (
+        <IconButton
+          name={icons.SETTINGS}
+          title={translate('Settings')}
+          to="/settings/connect"
+        />
+      );
     case 'IndexerRssCheck':
     case 'IndexerSearchCheck':
     case 'IndexerStatusCheck':

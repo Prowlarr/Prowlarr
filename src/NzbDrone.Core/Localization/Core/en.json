@@ -333,6 +333,8 @@
   "NoUpdatesAreAvailable": "No updates are available",
   "NotSupported": "Not Supported",
   "Notification": "Notification",
+  "NotificationStatusAllClientHealthCheckMessage": "All notifications are unavailable due to failures",
+  "NotificationStatusSingleClientHealthCheckMessage": "Notifications unavailable due to failures: {0}",
   "NotificationTriggers": "Notification Triggers",
   "NotificationTriggersHelpText": "Select which events should trigger this notification",
   "Notifications": "Notifications",

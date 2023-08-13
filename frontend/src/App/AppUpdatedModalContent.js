@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import InlineMarkdown from 'Components/Markdown/InlineMarkdown';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
@@ -64,12 +65,12 @@ function AppUpdatedModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        Prowlarr Updated
+        {translate('AppUpdated', { appName: 'Prowlarr' })}
       </ModalHeader>
 
       <ModalBody>
         <div>
-          Version <span className={styles.version}>{version}</span> of Prowlarr has been installed, in order to get the latest changes you'll need to reload Prowlarr.
+          <InlineMarkdown data={translate('AppUpdatedVersion', { appName: 'Prowlarr', version })} blockClassName={styles.version} />
         </div>
 
         {
@@ -77,16 +78,14 @@ function AppUpdatedModalContent(props) {
             <div>
               {
                 !update.changes &&
-                  <div className={styles.maintenance}>
-                    {translate('MaintenanceRelease')}
-                  </div>
+                  <div className={styles.maintenance}>{translate('MaintenanceRelease')}</div>
               }
 
               {
                 !!update.changes &&
                   <div>
                     <div className={styles.changes}>
-                      What's new?
+                      {translate('WhatsNew')}
                     </div>
 
                     <UpdateChanges
@@ -113,14 +112,14 @@ function AppUpdatedModalContent(props) {
         <Button
           onPress={onSeeChangesPress}
         >
-          Recent Changes
+          {translate('RecentChanges')}
         </Button>
 
         <Button
           kind={kinds.PRIMARY}
           onPress={onModalClose}
         >
-          Reload
+          {translate('Reload')}
         </Button>
       </ModalFooter>
     </ModalContent>

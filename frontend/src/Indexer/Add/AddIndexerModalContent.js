@@ -288,7 +288,7 @@ class AddIndexerModalContent extends Component {
           <div className={styles.available}>
             {
               isPopulated ?
-                translate('CountIndexersAvailable', [filteredIndexers.length]) :
+                translate('CountIndexersAvailable', { count: filteredIndexers.length }) :
                 null
             }
           </div>

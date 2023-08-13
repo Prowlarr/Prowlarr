@@ -268,9 +268,9 @@ function ManageApplicationsModalContent(
         isOpen={isDeleteModalOpen}
         kind={kinds.DANGER}
         title={translate('DeleteSelectedApplications')}
-        message={translate('DeleteSelectedApplicationsMessageText', [
-          selectedIds.length,
-        ])}
+        message={translate('DeleteSelectedApplicationsMessageText', {
+          count: selectedIds.length,
+        })}
         confirmLabel={translate('Delete')}
         onConfirm={onConfirmDelete}
         onCancel={onDeleteModalClose}

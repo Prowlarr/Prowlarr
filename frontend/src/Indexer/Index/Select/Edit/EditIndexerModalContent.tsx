@@ -257,7 +257,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
 
       <ModalFooter className={styles.modalFooter}>
         <div className={styles.selected}>
-          {translate('CountIndexersSelected', [selectedCount])}
+          {translate('CountIndexersSelected', { count: selectedCount })}
         </div>
 
         <div>

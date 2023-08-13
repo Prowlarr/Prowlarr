@@ -147,7 +147,7 @@ class UISettings extends Component {
                     <FormInputGroup
                       type={inputTypes.SELECT}
                       name="theme"
-                      helpText={translate('ThemeHelpText', ['Theme.Park'])}
+                      helpText={translate('ThemeHelpText', { inspiredBy: 'Theme.Park' })}
                       values={themeOptions}
                       onChange={onInputChange}
                       {...settings.theme}

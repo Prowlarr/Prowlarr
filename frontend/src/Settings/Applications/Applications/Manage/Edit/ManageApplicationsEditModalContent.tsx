@@ -114,7 +114,7 @@ function ManageApplicationsEditModalContent(
 
       <ModalFooter className={styles.modalFooter}>
         <div className={styles.selected}>
-          {translate('CountApplicationsSelected', [selectedCount])}
+          {translate('CountApplicationsSelected', { count: selectedCount })}
         </div>
 
         <div>

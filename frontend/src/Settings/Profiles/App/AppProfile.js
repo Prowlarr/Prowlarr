@@ -130,7 +130,7 @@ class AppProfile extends Component {
           isOpen={this.state.isDeleteAppProfileModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteAppProfile')}
-          message={translate('AppProfileDeleteConfirm', [name])}
+          message={translate('DeleteAppProfileMessageText', { name })}
           confirmLabel={translate('Delete')}
           isSpinning={isDeleting}
           onConfirm={this.onConfirmDeleteAppProfile}

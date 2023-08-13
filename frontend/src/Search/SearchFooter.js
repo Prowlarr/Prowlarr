@@ -191,10 +191,10 @@ class SearchFooter extends Component {
         icon = icons.SEARCH;
     }
 
-    let footerLabel = searchIndexerIds.length === 0 ? translate('SearchAllIndexers') : translate('SearchCountIndexers', [searchIndexerIds.length]);
+    let footerLabel = searchIndexerIds.length === 0 ? translate('SearchAllIndexers') : translate('SearchCountIndexers', { count: searchIndexerIds.length });
 
     if (isPopulated) {
-      footerLabel = selectedCount === 0 ? translate('FoundCountReleases', [itemCount]) : translate('SelectedCountOfCountReleases', [selectedCount, itemCount]);
+      footerLabel = selectedCount === 0 ? translate('FoundCountReleases', { itemCount }) : translate('SelectedCountOfCountReleases', { selectedCount, itemCount });
     }
 
     return (

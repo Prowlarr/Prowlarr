@@ -129,7 +129,7 @@ function ManageDownloadClientsEditModalContent(
 
       <ModalFooter className={styles.modalFooter}>
         <div className={styles.selected}>
-          {translate('CountDownloadClientsSelected', [selectedCount])}
+          {translate('CountDownloadClientsSelected', { count: selectedCount })}
         </div>
 
         <div>

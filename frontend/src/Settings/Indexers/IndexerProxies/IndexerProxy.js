@@ -122,7 +122,7 @@ class IndexerProxy extends Component {
           isOpen={this.state.isDeleteIndexerProxyModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteIndexerProxy')}
-          message={translate('DeleteIndexerProxyMessageText', [name])}
+          message={translate('DeleteIndexerProxyMessageText', { name })}
           confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteIndexerProxy}
           onCancel={this.onDeleteIndexerProxyModalClose}

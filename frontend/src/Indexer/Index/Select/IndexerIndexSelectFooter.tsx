@@ -165,7 +165,7 @@ function IndexerIndexSelectFooter() {
       </div>
 
       <div className={styles.selected}>
-        {translate('CountIndexersSelected', [selectedCount])}
+        {translate('CountIndexersSelected', { count: selectedCount })}
       </div>
 
       <EditIndexerModal

@@ -48,7 +48,9 @@ function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
 
       <ModalBody>
         <div className={styles.message}>
-          {translate('DeleteSelectedIndexersMessageText', [indexers.length])}
+          {translate('DeleteSelectedIndexersMessageText', {
+            count: indexers.length,
+          })}
         </div>
 
         <ul>

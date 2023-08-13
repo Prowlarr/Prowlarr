@@ -127,7 +127,7 @@ class Application extends Component {
           isOpen={this.state.isDeleteApplicationModalOpen}
           kind={kinds.DANGER}
           title={translate('DeleteApplication')}
-          message={translate('DeleteApplicationMessageText', [name])}
+          message={translate('DeleteApplicationMessageText', { name })}
           confirmLabel={translate('Delete')}
           onConfirm={this.onConfirmDeleteApplication}
           onCancel={this.onDeleteApplicationModalClose}

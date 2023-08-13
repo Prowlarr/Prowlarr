@@ -37,7 +37,7 @@ function DeleteIndexerModalContent(props: DeleteIndexerModalContentProps) {
       </ModalHeader>
 
       <ModalBody>
-        {translate('AreYouSureYouWantToDeleteIndexer', [name])}
+        {translate('AreYouSureYouWantToDeleteIndexer', { name })}
       </ModalBody>
 
       <ModalFooter>

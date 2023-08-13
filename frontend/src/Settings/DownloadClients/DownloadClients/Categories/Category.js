@@ -88,7 +88,7 @@ class Category extends Component {
           message={
             <div>
               <div>
-                {translate('AreYouSureYouWantToDeleteCategory', [name])}
+                {translate('AreYouSureYouWantToDeleteCategory')}
               </div>
             </div>
           }

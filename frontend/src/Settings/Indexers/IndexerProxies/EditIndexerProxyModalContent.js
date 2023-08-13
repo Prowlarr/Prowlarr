@@ -47,7 +47,7 @@ function EditIndexerProxyModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? 'Edit' : 'Add'} Proxy - ${implementationName}`}
+        {id ? translate('EditIndexerProxyImplementation', { implementationName }) : translate('AddIndexerProxyImplementation', { implementationName })}
       </ModalHeader>
 
       <ModalBody>

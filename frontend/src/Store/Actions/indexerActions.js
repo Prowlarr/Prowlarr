@@ -184,6 +184,8 @@ export const reducers = createHandleActions({
 
   [SELECT_INDEXER_SCHEMA]: (state, { payload }) => {
     return selectSchema(state, payload, (selectedSchema) => {
+      selectedSchema.name = payload.name ?? payload.implementationName;
+      selectedSchema.implementationName = payload.implementationName;
       selectedSchema.enable = selectedSchema.supportsRss;
 
       return selectedSchema;

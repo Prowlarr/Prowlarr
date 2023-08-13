@@ -35,7 +35,7 @@ function AddCategoryModalContent(props) {
   return (
     <ModalContent onModalClose={onCancelPress}>
       <ModalHeader>
-        {`${id ? 'Edit' : 'Add'} Category`}
+        {id ? translate('EditCategory') : translate('AddCategory')}
       </ModalHeader>
 
       <ModalBody>

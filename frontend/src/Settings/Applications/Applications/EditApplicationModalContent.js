@@ -71,7 +71,7 @@ function EditApplicationModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? translate('Edit') : translate('Add')} ${translate('Application')} - ${implementationName}`}
+        {id ? translate('EditApplicationImplementation', { implementationName }) : translate('AddApplicationImplementation', { implementationName })}
       </ModalHeader>
 
       <ModalBody>

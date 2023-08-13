@@ -17,10 +17,11 @@ class SelectIndexerRow extends Component {
   onPress = () => {
     const {
       implementation,
+      implementationName,
       name
     } = this.props;
 
-    this.props.onIndexerSelect({ implementation, name });
+    this.props.onIndexerSelect({ implementation, implementationName, name });
   };
 
   //
@@ -81,6 +82,7 @@ SelectIndexerRow.propTypes = {
   language: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   implementation: PropTypes.string.isRequired,
+  implementationName: PropTypes.string.isRequired,
   onIndexerSelect: PropTypes.func.isRequired,
   isExistingIndexer: PropTypes.bool.isRequired
 };

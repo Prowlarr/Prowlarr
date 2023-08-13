@@ -16,10 +16,11 @@ class AddApplicationItem extends Component {
 
   onApplicationSelect = () => {
     const {
-      implementation
+      implementation,
+      implementationName
     } = this.props;
 
-    this.props.onApplicationSelect({ implementation });
+    this.props.onApplicationSelect({ implementation, implementationName });
   };
 
   //
@@ -77,6 +78,7 @@ class AddApplicationItem extends Component {
                               key={preset.name}
                               name={preset.name}
                               implementation={implementation}
+                              implementationName={implementationName}
                               onPress={onApplicationSelect}
                             />
                           );

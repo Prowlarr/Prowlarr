@@ -263,6 +263,7 @@ class AddIndexerModalContent extends Component {
                         <SelectIndexerRowConnector
                           key={`${indexer.implementation}-${indexer.name}`}
                           implementation={indexer.implementation}
+                          implementationName={indexer.implementationName}
                           {...indexer}
                           onIndexerSelect={onIndexerSelect}
                         />

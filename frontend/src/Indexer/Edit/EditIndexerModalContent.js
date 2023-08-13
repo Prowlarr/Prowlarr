@@ -61,7 +61,7 @@ function EditIndexerModalContent(props) {
   return (
     <ModalContent onModalClose={onModalClose}>
       <ModalHeader>
-        {`${id ? translate('EditIndexer') : translate('AddIndexer')} - ${indexerDisplayName}`}
+        {id ? translate('EditIndexerImplementation', { implementationName: indexerDisplayName }) : translate('AddIndexerImplementation', { implementationName: indexerDisplayName })}
       </ModalHeader>
 
       <ModalBody>

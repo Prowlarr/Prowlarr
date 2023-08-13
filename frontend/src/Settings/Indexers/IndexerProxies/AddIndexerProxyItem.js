@@ -16,10 +16,11 @@ class AddIndexerProxyItem extends Component {
 
   onIndexerProxySelect = () => {
     const {
-      implementation
+      implementation,
+      implementationName
     } = this.props;
 
-    this.props.onIndexerProxySelect({ implementation });
+    this.props.onIndexerProxySelect({ implementation, implementationName });
   };
 
   //
@@ -77,6 +78,7 @@ class AddIndexerProxyItem extends Component {
                               key={preset.name}
                               name={preset.name}
                               implementation={implementation}
+                              implementationName={implementationName}
                               onPress={onIndexerProxySelect}
                             />
                           );

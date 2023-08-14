@@ -78,7 +78,6 @@
     "ConnectSettings": "Connecties Instellingen",
     "ConnectSettingsSummary": "Meldingen en aangepaste scripts",
     "ConnectionLost": "Verbinding Onderbroken",
-    "ConnectionLostMessage": "Prowlarr heeft zijn verbinding met de backend verloren en zal moeten worden herladen om functionaliteit te herstellen.",
     "Connections": "Connecties",
     "CouldNotConnectSignalR": "Kan geen verbinding maken met SignalR, gebruikersinterface wordt niet bijgewerkt",
     "Custom": "Aangepast",

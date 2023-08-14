@@ -33,7 +33,6 @@
     "CustomFilters": "Bruger Tilpassede Filtere",
     "ConnectSettingsSummary": "Notifikationer, forbindelser til medieservere/-afspillere og brugerdefinerede scripts",
     "Connections": "Forbindelser",
-    "ConnectionLostAutomaticMessage": "Prowlarr vil prøve at tilslutte automatisk, eller du kan klikke genindlæs forneden.",
     "ConnectionLost": "Forbindelse Mistet",
     "Connect": "Notifikationer",
     "Component": "Komponent",

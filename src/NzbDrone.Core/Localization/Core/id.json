@@ -53,7 +53,6 @@
     "Indexers": "Pengindeks",
     "Name": "Nama",
     "NetCore": ".NET",
-    "ConnectionLostAutomaticMessage": "Radarr akan mencoba untuk menghubungi secara otomatis, atau klik muat ulang di bawah.",
     "Grabs": "Peroleh",
     "UILanguageHelpText": "Bahasa yang digunakan UI Sonarr",
     "Actions": "Tindakan",

@@ -89,7 +89,6 @@
     "ConnectSettings": "连接设置",
     "ConnectSettingsSummary": "通知和自定义脚本",
     "ConnectionLost": "连接丢失",
-    "ConnectionLostMessage": "Prowlarr 已与服务端断开链接，请尝试刷新来恢复使用。",
     "Connections": "连接",
     "CouldNotConnectSignalR": "无法连接至SignalR，不会升级UI",
     "Custom": "自定义",

@@ -107,7 +107,6 @@
     "Info": "Info",
     "HealthNoIssues": "Inga problem hittades med din konfiguration",
     "Error": "Fel",
-    "ConnectionLostAutomaticMessage": "Prowlarr kommer försöka ansluta automatiskt, du kan även klicka på ladda om nedan.",
     "ConnectionLost": "Anslutning saknas",
     "Component": "Komponent",
     "Columns": "Kolumner",

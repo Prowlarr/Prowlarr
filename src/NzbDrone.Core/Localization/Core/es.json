@@ -107,7 +107,6 @@
     "Info": "Info",
     "HealthNoIssues": "No hay problemas con tu configuración",
     "Error": "Error",
-    "ConnectionLostAutomaticMessage": "Prowlarr intentará conectarse automáticamente, o haz clic en el botón de recarga abajo.",
     "ConnectionLost": "Conexión perdida",
     "Component": "Componente",
     "Columns": "Columnas",

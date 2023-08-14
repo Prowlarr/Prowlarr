@@ -59,7 +59,6 @@
     "IndexerStatusCheckSingleClientMessage": "Indexatoare indisponibile datorită erorilor: {0}",
     "HealthNoIssues": "Nicio problemă de configurare",
     "Error": "Eroare",
-    "ConnectionLostAutomaticMessage": "Prowlarr va încerca să se conecteze automat, sau poți apăsa reîncarcă mai jos.",
     "ConnectionLost": "Conexiune Pierdută",
     "Component": "Componentă",
     "Columns": "Coloane",

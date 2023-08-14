@@ -77,7 +77,6 @@
     "ConnectSettings": "Eintellungen für Verbindungen",
     "ConnectSettingsSummary": "Benachrichtigungen und eigene Scripte",
     "ConnectionLost": "Verbindung unterbrochen",
-    "ConnectionLostMessage": "Prowlarr hat die Verbindung zum Backend verloren und muss neugeladen werden.",
     "Connections": "Verbindungen",
     "CouldNotConnectSignalR": "Es konnte keine Verbindung zu SignalR hergestellt werden, die Benutzeroberfläche wird nicht aktualisiert",
     "Custom": "Benutzerdefiniert",

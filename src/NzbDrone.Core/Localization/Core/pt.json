@@ -112,7 +112,6 @@
     "CustomFilters": "Filtros personalizados",
     "ConnectSettingsSummary": "Notificações, ligações para servidores/leitores de multimédia e scripts personalizados",
     "Connections": "Ligações",
-    "ConnectionLostAutomaticMessage": "O Prowlarr tentará ligar automaticamente, ou você pode clicar em Recarregar abaixo.",
     "ConnectionLost": "Ligação perdida",
     "Connect": "Conexões",
     "Component": "Componente",

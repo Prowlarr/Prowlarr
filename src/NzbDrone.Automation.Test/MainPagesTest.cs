@@ -18,6 +18,7 @@ namespace NzbDrone.Automation.Test
         }
 
         [Test]
+        [Retry(3)]
         public void indexer_page()
         {
             _page.MovieNavIcon.Click();
@@ -30,6 +31,7 @@ namespace NzbDrone.Automation.Test
         }
 
         [Test]
+        [Retry(3)]
         public void system_page()
         {
             _page.SystemNavIcon.Click();

@@ -344,5 +344,10 @@
     "DeleteSelectedDownloadClientsMessageText": "แน่ใจไหมว่าต้องการลบตัวสร้างดัชนี \"{0}\"",
     "Genre": "ประเภท",
     "Year": "ปี",
-    "More": "มากกว่า"
+    "More": "มากกว่า",
+    "ConnectionLostReconnect": "Radarr จะพยายามเชื่อมต่อโดยอัตโนมัติหรือคุณสามารถคลิกโหลดซ้ำด้านล่าง",
+    "DeleteAppProfileMessageText": "แน่ใจไหมว่าต้องการลบโปรไฟล์คุณภาพ {0}",
+    "minutes": "นาที",
+    "WhatsNew": "มีอะไรใหม่",
+    "RecentChanges": "การเปลี่ยนแปลงล่าสุด"
 }

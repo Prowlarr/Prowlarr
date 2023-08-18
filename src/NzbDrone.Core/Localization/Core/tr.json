@@ -344,5 +344,10 @@
     "Genre": "Türler",
     "Track": "İzleme",
     "Year": "Yıl",
-    "More": "Daha"
+    "More": "Daha",
+    "DeleteAppProfileMessageText": "Kalite profilini silmek istediğinizden emin misiniz {0}",
+    "RecentChanges": "Son değişiklikler",
+    "minutes": "Dakika",
+    "WhatsNew": "Ne var ne yok?",
+    "ConnectionLostReconnect": "Radarr otomatik olarak bağlanmayı deneyecek veya aşağıdan yeniden yükle'yi tıklayabilirsiniz."
 }

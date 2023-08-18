@@ -402,5 +402,13 @@
     "ManageDownloadClients": "Gestionar Clientes de Descarga",
     "ApiKeyValidationHealthCheckMessage": "Actualice su clave de API para que tenga al menos {0} carácteres. Puede hacerlo en los ajustes o en el archivo de configuración",
     "IndexerDownloadClientHealthCheckMessage": "Indexadores con clientes de descarga inválidos: {0}.",
-    "Episode": "Episodio"
+    "Episode": "Episodio",
+    "ConnectionLostReconnect": "Radarr intentará conectarse automáticamente, o haz clic en el botón de recarga abajo.",
+    "ConnectionLostToBackend": "Radarr ha perdido su conexión con el backend y tendrá que ser recargado para recuperar su funcionalidad.",
+    "RecentChanges": "Cambios recientes",
+    "WhatsNew": "¿Qué hay de nuevo?",
+    "minutes": "Minutos",
+    "Album": "álbum",
+    "Artist": "artista",
+    "DeleteAppProfileMessageText": "Seguro que quieres eliminar el perfil de calidad {0}"
 }

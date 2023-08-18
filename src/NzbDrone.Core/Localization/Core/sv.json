@@ -426,5 +426,10 @@
     "Artist": "Artist",
     "Author": "Författare",
     "Book": "Bok",
-    "Publisher": "Utgivare"
+    "Publisher": "Utgivare",
+    "ConnectionLostReconnect": "Radarr kommer försöka ansluta automatiskt, du kan även klicka på ladda om nedan.",
+    "DeleteAppProfileMessageText": "Är du säker på att du vill ta bort kvalitetsprofilen '{0}'?",
+    "RecentChanges": "Senaste ändringar",
+    "WhatsNew": "Vad är nytt?",
+    "minutes": "Minuter"
 }

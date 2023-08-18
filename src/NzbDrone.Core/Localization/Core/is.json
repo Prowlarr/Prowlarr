@@ -341,5 +341,10 @@
     "ApplyTagsHelpTextRemove": "Fjarlægja: Fjarlægðu innsláttarmerkin",
     "DownloadClientPriorityHelpText": "Forgangsraðaðu mörgum niðurhal viðskiptavinum. Round-Robin er notað fyrir viðskiptavini með sömu forgang.",
     "Track": "Spor",
-    "Year": "Ár"
+    "Year": "Ár",
+    "DeleteAppProfileMessageText": "Ertu viss um að þú viljir eyða gæðasniðinu {0}",
+    "RecentChanges": "Nýlegar breytingar",
+    "WhatsNew": "Hvað er nýtt?",
+    "ConnectionLostReconnect": "Radarr mun reyna að tengjast sjálfkrafa eða þú getur smellt á endurhlaða hér að neðan.",
+    "minutes": "Fundargerð"
 }

@@ -170,5 +170,6 @@
     "Priority": "Prioritet",
     "Url": "Url",
     "Result": "Rezultat",
-    "SaveChanges": "Spremi izmjene"
+    "SaveChanges": "Spremi izmjene",
+    "DeleteAppProfileMessageText": "Jeste li sigurni da želite obrisati ovaj profil odgode?"
 }

@@ -491,5 +491,11 @@
     "Album": "Album",
     "Artist": "Künstler",
     "Author": "Autor",
-    "Book": "Buch"
+    "Book": "Buch",
+    "ConnectionLostReconnect": "Radarr wird automatisch versuchen zu verbinden oder klicke unten auf neuladen.",
+    "ConnectionLostToBackend": "Radarr hat die Verbindung zum Backend verloren und muss neugeladen werden.",
+    "RecentChanges": "Neuste Änderungen",
+    "WhatsNew": "Was gibt's Neues?",
+    "minutes": "Minuten",
+    "DeleteAppProfileMessageText": "Qualitätsprofil '{0}' wirklich löschen?"
 }

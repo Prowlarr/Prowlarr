@@ -485,5 +485,11 @@
     "UpdateAvailable": "Uusi päivitys on saatavilla",
     "Episode": "Jakso",
     "Label": "Tunniste",
-    "Theme": "Teema"
+    "Theme": "Teema",
+    "ConnectionLostReconnect": "Radarr pyrkii muodostamaan yhteyden automaattisesti tai voit painaa alta \"Lataa uudelleen\".",
+    "DeleteAppProfileMessageText": "Haluatko varmasti poistaa laatuprofiilin '{0}'?",
+    "RecentChanges": "Viimeaikaiset muutokset",
+    "WhatsNew": "Mikä on uutta?",
+    "ConnectionLostToBackend": "Radarr on menettänyt yhteyden taustajärjestelmään ja sivu on päivitettävä toiminnallisuuden palauttamiseksi.",
+    "minutes": "Minuuttia"
 }

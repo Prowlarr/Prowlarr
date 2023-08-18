@@ -344,5 +344,11 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "Jak použít značky na vybrané filmy",
     "ApplyTagsHelpTextReplace": "Nahradit: Nahradit tagy zadanými tagy (pro vymazání všech tagů zadejte žádné tagy)",
     "Track": "Stopa",
-    "Genre": "Žánry"
+    "Genre": "Žánry",
+    "ConnectionLostReconnect": "Radarr se pokusí připojit automaticky, nebo můžete kliknout na znovu načíst níže.",
+    "RecentChanges": "Nedávné změny",
+    "WhatsNew": "Co je nového?",
+    "DeleteAppProfileMessageText": "Opravdu chcete smazat kvalitní profil {0}",
+    "ConnectionLostToBackend": "Radarr ztratil spojení s back-endem a pro obnovení funkčnosti bude nutné jej znovu načíst.",
+    "minutes": "Minut"
 }

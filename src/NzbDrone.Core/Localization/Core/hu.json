@@ -488,5 +488,11 @@
     "Season": "Évad",
     "Album": "Album",
     "Artist": "Előadó",
-    "Author": "Szerző"
+    "Author": "Szerző",
+    "ConnectionLostReconnect": "A Radarr megpróbál automatikusan csatlakozni, vagy kattints a frissítés gombra.",
+    "DeleteAppProfileMessageText": "Biztosan törli a {0} minőségi profilt?",
+    "RecentChanges": "Friss változtatások",
+    "WhatsNew": "Mi az újdonság?",
+    "ConnectionLostToBackend": "A Radarr elvesztette kapcsolatát a háttérrendszerrel, a funkciók helyreállításához frissíts.",
+    "minutes": "percek"
 }

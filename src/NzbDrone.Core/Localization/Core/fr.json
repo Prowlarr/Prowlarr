@@ -525,5 +525,11 @@
     "AreYouSureYouWantToDeleteIndexer": "Êtes-vous sûr de vouloir supprimer “{0}” de Prowlarr ?",
     "AuthQueries": "Requêtes d’authentification",
     "CountApplicationsSelected": "{0} application(s) sélectionnée(s)",
-    "CountDownloadClientsSelected": "{0} client(s) de téléchargement sélectionné(s)"
+    "CountDownloadClientsSelected": "{0} client(s) de téléchargement sélectionné(s)",
+    "ConnectionLostReconnect": "Radarr essaiera de se connecter automatiquement, ou vous pouvez cliquer sur \"Recharger\" en bas.",
+    "ConnectionLostToBackend": "Radarr a perdu sa connexion au backend et devra être rechargé pour fonctionner à nouveau.",
+    "RecentChanges": "Changements récents",
+    "WhatsNew": "Quoi de neuf ?",
+    "minutes": "Minutes",
+    "DeleteAppProfileMessageText": "Voulez-vous vraiment supprimer le profil de qualité {0} ?"
 }

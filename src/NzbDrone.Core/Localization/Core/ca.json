@@ -363,5 +363,11 @@
     "Theme": "Tema",
     "Track": "Traça",
     "Year": "Any",
-    "UpdateAvailable": "Nova actualització disponible"
+    "UpdateAvailable": "Nova actualització disponible",
+    "ConnectionLostReconnect": "Radarr intentarà connectar-se automàticament, o podeu fer clic a recarregar.",
+    "ConnectionLostToBackend": "Radarr ha perdut la connexió amb el backend i s'haurà de tornar a carregar per restaurar la funcionalitat.",
+    "RecentChanges": "Canvis recents",
+    "WhatsNew": "Que hi ha de nou?",
+    "minutes": "Minuts",
+    "DeleteAppProfileMessageText": "Esteu segur que voleu suprimir el perfil de qualitat {0}"
 }

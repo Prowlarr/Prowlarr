@@ -342,5 +342,8 @@
     "ApplyTagsHelpTextReplace": "바꾸기 : 태그를 입력 한 태그로 바꿉니다 (모든 태그를 지우려면 태그를 입력하지 않음)",
     "DeleteSelectedIndexersMessageText": "인덱서 '{0}'을 (를) 삭제 하시겠습니까?",
     "Track": "자취",
-    "Year": "년"
+    "Year": "년",
+    "ConnectionLostReconnect": "Radarr가 자동으로 연결을 시도하거나 아래에서 새로고침을 클릭할 수 있습니다.",
+    "ConnectionLostToBackend": "Radarr는 백엔드와의 연결이 끊어졌으며 기능을 복원하려면 다시 로딩해야 합니다.",
+    "DeleteAppProfileMessageText": "품질 프로필 {0}을 (를) 삭제 하시겠습니까?"
 }

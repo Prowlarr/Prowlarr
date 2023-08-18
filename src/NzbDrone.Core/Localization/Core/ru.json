@@ -375,5 +375,11 @@
     "Track": "След",
     "UpdateAvailable": "Доступно новое обновление",
     "More": "Более",
-    "Publisher": "Издатель"
+    "Publisher": "Издатель",
+    "ConnectionLostReconnect": "Radarr попытается соединиться автоматически или нажмите кнопку внизу.",
+    "ConnectionLostToBackend": "Radarr потерял связь с сервером и его необходимо перезагрузить, чтобы восстановить работоспособность.",
+    "RecentChanges": "Последние изменения",
+    "WhatsNew": "Что нового?",
+    "minutes": "Минуты",
+    "DeleteAppProfileMessageText": "Вы действительно хотите удалить профиль качества {0}"
 }

@@ -392,5 +392,13 @@
     "Track": "זֵכֶר",
     "ApplyTagsHelpTextHowToApplyApplications": "כיצד להחיל תגים על הסרטים שנבחרו",
     "DeleteSelectedDownloadClientsMessageText": "האם אתה בטוח שברצונך למחוק את האינדקס '{0}'?",
-    "Year": "שָׁנָה"
+    "Year": "שָׁנָה",
+    "DeleteAppProfileMessageText": "האם אתה בטוח שברצונך למחוק את פרופיל האיכות {0}",
+    "RecentChanges": "שינויים אחרונים",
+    "WhatsNew": "מה חדש?",
+    "minutes": "דקות",
+    "Theme": "ערכת נושא",
+    "ConnectionLostReconnect": "Radarr ינסה להתחבר אוטומטית, או שתלחץ על טען מחדש למטה.",
+    "Album": "אלבום",
+    "Artist": "אמן"
 }

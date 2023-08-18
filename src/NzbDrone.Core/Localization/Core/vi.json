@@ -342,5 +342,10 @@
     "More": "Hơn",
     "Track": "Dấu vết",
     "Year": "Năm",
-    "Genre": "Thể loại"
+    "Genre": "Thể loại",
+    "DeleteAppProfileMessageText": "Bạn có chắc chắn muốn xóa cấu hình chất lượng không {0}",
+    "RecentChanges": "Những thay đổi gần đây",
+    "minutes": "Phút",
+    "ConnectionLostReconnect": "Radarr sẽ cố gắng kết nối tự động hoặc bạn có thể nhấp vào tải lại bên dưới.",
+    "WhatsNew": "Có gì mới?"
 }

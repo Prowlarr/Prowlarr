@@ -357,5 +357,10 @@
     "ApplyTagsHelpTextRemove": "Fjern: Fjern de indtastede tags",
     "ApplyTagsHelpTextReplace": "Erstat: Udskift tags med de indtastede tags (indtast ingen tags for at rydde alle tags)",
     "DownloadClientPriorityHelpText": "Prioriter flere downloadklienter. Round-Robin bruges til klienter med samme prioritet.",
-    "Track": "Spor"
+    "Track": "Spor",
+    "DeleteAppProfileMessageText": "Er du sikker på, at du vil slette kvalitetsprofilen {0}",
+    "RecentChanges": "Seneste ændringer",
+    "WhatsNew": "Hvad er nyt?",
+    "ConnectionLostReconnect": "Radarr vil prøve at tilslutte automatisk, eller du kan klikke genindlæs forneden.",
+    "minutes": "Protokoller"
 }

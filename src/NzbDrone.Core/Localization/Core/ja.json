@@ -341,5 +341,10 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "選択した映画にタグを適用する方法",
     "ApplyTagsHelpTextRemove": "削除：入力したタグを削除します",
     "DownloadClientPriorityHelpText": "複数のダウンロードクライアントに優先順位を付けます。ラウンドロビンは、同じ優先度のクライアントに使用されます。",
-    "More": "もっと"
+    "More": "もっと",
+    "ConnectionLostReconnect": "Radarrは自動的に接続を試みます。または、下の[再読み込み]をクリックしてください。",
+    "DeleteAppProfileMessageText": "品質プロファイル{0}を削除してもよろしいですか",
+    "RecentChanges": "最近の変化",
+    "WhatsNew": "新着情報？",
+    "minutes": "議事録"
 }

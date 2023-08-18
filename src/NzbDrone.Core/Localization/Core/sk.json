@@ -113,5 +113,6 @@
     "ApplyTagsHelpTextHowToApplyApplications": "Ako použiť značky na vybrané filmy",
     "ApplyTagsHelpTextHowToApplyIndexers": "Ako použiť značky na vybrané filmy",
     "Season": "Séria",
-    "Publisher": "Vydavateľ"
+    "Publisher": "Vydavateľ",
+    "DeleteAppProfileMessageText": "Naozaj chcete zmazať tento profil oneskorenia?"
 }

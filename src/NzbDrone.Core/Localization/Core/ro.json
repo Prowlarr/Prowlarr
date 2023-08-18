@@ -136,8 +136,8 @@
     "AppDataDirectory": "Directorul AppData",
     "ApplicationStatusCheckAllClientMessage": "Toate aplicațiile sunt indisponibile datorită erorilor",
     "AreYouSureYouWantToResetYourAPIKey": "Sigur doriți să vă resetați cheia API?",
-    "Authentication": "",
-    "AuthenticationMethodHelpText": "Solicitați numele de utilizator și parola pentru a accesa Prowlarr",
+    "Authentication": "Autentificare",
+    "AuthenticationMethodHelpText": "Solicitați nume utilizator și parola pentru a accesa Prowlarr",
     "AutomaticSearch": "Căutare automată",
     "BackupFolderHelpText": "Căile relative vor fi în directorul AppData al lui Prowlarr",
     "BackupIntervalHelpText": "Interval între crearea copiile de rezervă automate",
@@ -309,7 +309,7 @@
     "ApplicationStatusCheckSingleClientMessage": "Aplicații indisponibile datorită erorilor: {0}",
     "ApplyTags": "Aplicați etichete",
     "Automatic": "Automat",
-    "DeleteApplicationMessageText": "Sigur doriți să ștergeți aplicația „{0}”?",
+    "DeleteApplicationMessageText": "Sigur doriți să ștergeți aplicația '{name}'?",
     "Exception": "Excepție",
     "MaintenanceRelease": "Versiune de întreținere: remedieri de erori și alte îmbunătățiri. Consultați Istoricul comiterilor Github pentru mai multe detalii",
     "Filters": "Filtre",
@@ -432,5 +432,11 @@
     "DeleteSelectedIndexers": "Ștergeți indexatorii selectați",
     "DeleteSelectedApplications": "Ștergeți aplicațiile selectate",
     "DevelopmentSettings": "Setări dezvoltare",
-    "DisabledUntil": "Dezactivat până la"
+    "DisabledUntil": "Dezactivat până la",
+    "DeleteApplication": "Şterge aplicaţia",
+    "ConnectionLostReconnect": "{appName} va încerca să se conecteze automat, sau poți apăsa reîncarcă mai jos.",
+    "ConnectionLostToBackend": "{appName} a pierdut conexiunea cu backend-ul și trebuie reîncărcat pentru a restabili funcționalitatea.",
+    "RecentChanges": "Schimbări recente",
+    "WhatsNew": "Ce mai e nou?",
+    "DeleteAppProfileMessageText": "Sigur doriți să ștergeți profilul de aplicație '{0}'?"
 }

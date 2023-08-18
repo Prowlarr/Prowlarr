@@ -341,5 +341,10 @@
     "Genre": "الأنواع",
     "More": "أكثر",
     "Track": "أثر",
-    "Year": "عام"
+    "Year": "عام",
+    "ConnectionLostReconnect": "سيحاول Radarr الاتصال تلقائيًا ، أو يمكنك النقر فوق إعادة التحميل أدناه.",
+    "DeleteAppProfileMessageText": "هل أنت متأكد من أنك تريد حذف ملف تعريف الجودة {0}",
+    "RecentChanges": "التغييرات الأخيرة",
+    "WhatsNew": "ما هو الجديد؟",
+    "minutes": "الدقائق"
 }

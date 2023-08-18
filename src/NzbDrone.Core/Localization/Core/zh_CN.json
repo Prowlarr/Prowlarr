@@ -548,5 +548,17 @@
     "SeedTimeHelpText": "种子停止下载前应做种的时长，应用的默认设置为空",
     "TorznabUrl": "Torznab链接",
     "days": "天",
-    "minutes": "分钟"
+    "minutes": "分钟",
+    "ConnectionLostReconnect": "Radarr将会尝试自动连接，您也可以点击下方的重新加载。",
+    "DeleteAppProfileMessageText": "您确定要删除备份“{name}”吗？",
+    "RecentChanges": "最近修改",
+    "ConnectionLostToBackend": "Radarr与后端的链接已断开，需要重新加载恢复功能。",
+    "WhatsNew": "什么是新的？",
+    "AddApplicationImplementation": "添加应用-{实体名称}",
+    "AddConnection": "添加连接",
+    "AddIndexerImplementation": "添加索引器-{实体名称}",
+    "AddCategory": "添加目录",
+    "AddConnectionImplementation": "添加连接-{实体名称}",
+    "AddDownloadClientImplementation": "添加下载客户端-{实体名称}",
+    "AddIndexerProxyImplementation": "添加搜刮器代理-{实体名称}"
 }

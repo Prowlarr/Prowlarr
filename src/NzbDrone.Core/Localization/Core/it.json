@@ -489,5 +489,11 @@
     "UpdateAvailable": "É disponibile un nuovo aggiornamento",
     "Author": "Autore",
     "ApplyChanges": "Applica Cambiamenti",
-    "ApiKeyValidationHealthCheckMessage": "Aggiorna la tua chiave API in modo che abbia una lunghezza di almeno {0} caratteri. Puoi farlo dalle impostazioni o dal file di configurazione"
+    "ApiKeyValidationHealthCheckMessage": "Aggiorna la tua chiave API in modo che abbia una lunghezza di almeno {0} caratteri. Puoi farlo dalle impostazioni o dal file di configurazione",
+    "DeleteAppProfileMessageText": "Sicuro di voler cancellare il profilo di qualità {0}",
+    "RecentChanges": "Cambiamenti recenti",
+    "WhatsNew": "Cosa c'è di nuovo?",
+    "ConnectionLostReconnect": "Radarr cercherà di connettersi automaticamente, oppure clicca su ricarica qui sotto.",
+    "ConnectionLostToBackend": "Radarr ha perso la connessione al backend e dovrà essere ricaricato per ripristinare la funzionalità.",
+    "minutes": "Minuti"
 }

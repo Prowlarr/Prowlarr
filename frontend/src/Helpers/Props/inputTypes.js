@@ -10,6 +10,7 @@ export const INFO = 'info';
 export const MOVIE_MONITORED_SELECT = 'movieMonitoredSelect';
 export const CATEGORY_SELECT = 'newznabCategorySelect';
 export const DOWNLOAD_CLIENT_SELECT = 'downloadClientSelect';
+export const FLOAT = 'float';
 export const NUMBER = 'number';
 export const OAUTH = 'oauth';
 export const PASSWORD = 'password';
@@ -35,6 +36,7 @@ export const all = [
   INFO,
   MOVIE_MONITORED_SELECT,
   CATEGORY_SELECT,
+  FLOAT,
   NUMBER,
   OAUTH,
   PASSWORD,

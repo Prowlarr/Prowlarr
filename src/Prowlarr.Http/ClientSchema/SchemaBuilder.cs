@@ -125,6 +125,11 @@ namespace Prowlarr.Http.ClientSchema
                         field.Hidden = fieldAttribute.Hidden.ToString().FirstCharToLower();
                     }
 
+                    if (fieldAttribute.Type is FieldType.Number && propertyInfo.PropertyType == typeof(double))
+                    {
+                        field.IsFloat = true;
+                    }
+
                     var valueConverter = GetValueConverter(propertyInfo.PropertyType);
 
                     result.Add(new FieldMapping

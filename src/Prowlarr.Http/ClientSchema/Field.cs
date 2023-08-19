@@ -21,6 +21,7 @@ namespace Prowlarr.Http.ClientSchema
         public string Section { get; set; }
         public string Hidden { get; set; }
         public string Placeholder { get; set; }
+        public bool IsFloat { get; set; }
 
         public Field Clone()
         {

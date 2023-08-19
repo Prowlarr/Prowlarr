@@ -16,8 +16,8 @@ variables:
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
   dotnetVersion: '6.0.408'
+  nodeVersion: '16.X'
   innoVersion: '6.2.0'
-  nodeVersion: '16.x'
   windowsImage: 'windows-2022'
   linuxImage: 'ubuntu-20.04'
   macImage: 'macOS-11'
@@ -27,6 +27,10 @@ trigger:
     include:
     - develop
     - master
+  paths:
+    exclude:
+      - .github
+      - src/Prowlarr.Api.*/openapi.json
 
 pr:
   branches:
@@ -34,8 +38,9 @@ pr:
     - develop
   paths:
     exclude:
+    - .github
     - src/NzbDrone.Core/Localization/Core
-    - src/Prowlarr.API.*/openapi.json
+    - src/Prowlarr.Api.*/openapi.json
 
 stages:
   - stage: Setup
@@ -349,7 +354,7 @@ stages:
           includeRootFolder: false
           rootFolderOrFile: $(artifactsFolder)/linux-musl-arm64/net6.0
       - task: ArchiveFiles@2
-        displayName: Create FreeBSD Core Core tar
+        displayName: Create freebsd-x64 tar
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).freebsd-core-x64.tar.gz'
           archiveType: 'tar'
@@ -1121,7 +1126,7 @@ stages:
           git add .
           if git status | grep -q modified
           then
-            git commit -am 'Automated API Docs update [skip ci]'
+            git commit -am 'Automated API Docs update'
             git push -f --set-upstream origin api-docs
             curl -X POST -H "Authorization: token ${GITHUBTOKEN}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/prowlarr/prowlarr/pulls -d '{"head":"api-docs","base":"develop","title":"Update API docs"}'
           else

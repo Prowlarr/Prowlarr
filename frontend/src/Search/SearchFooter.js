@@ -24,6 +24,7 @@ class SearchFooter extends Component {
     super(props, context);
 
     const {
+      defaultSearchQueryParams,
       defaultIndexerIds,
       defaultCategories,
       defaultSearchQuery,
@@ -33,16 +34,16 @@ class SearchFooter extends Component {
     } = props;
 
     this.state = {
-      isQueryParameterModalOpen: false,
-      queryModalOptions: null,
-      searchType: defaultSearchType,
+      searchIndexerIds: defaultSearchQueryParams.searchIndexerIds ?? defaultIndexerIds,
+      searchCategories: defaultSearchQueryParams.searchCategories ?? defaultCategories,
+      searchQuery: (defaultSearchQueryParams.searchQuery ?? defaultSearchQuery) || '',
+      searchType: defaultSearchQueryParams.searchType ?? defaultSearchType,
+      searchLimit: defaultSearchQueryParams.searchLimit ?? defaultSearchLimit,
+      searchOffset: defaultSearchQueryParams.searchOffset ?? defaultSearchOffset,
+      newSearch: true,
       searchingReleases: false,
-      searchQuery: defaultSearchQuery || '',
-      searchIndexerIds: defaultIndexerIds,
-      searchCategories: defaultCategories,
-      searchLimit: defaultSearchLimit,
-      searchOffset: defaultSearchOffset,
-      newSearch: true
+      isQueryParameterModalOpen: false,
+      queryModalOptions: null
     };
   }
 
@@ -189,6 +190,7 @@ class SearchFooter extends Component {
         break;
       default:
         icon = icons.SEARCH;
+        break;
     }
 
     let footerLabel = searchIndexerIds.length === 0 ? translate('SearchAllIndexers') : translate('SearchCountIndexers', { count: searchIndexerIds.length });
@@ -300,6 +302,7 @@ class SearchFooter extends Component {
 }
 
 SearchFooter.propTypes = {
+  defaultSearchQueryParams: PropTypes.object.isRequired,
   defaultIndexerIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   defaultCategories: PropTypes.arrayOf(PropTypes.number).isRequired,
   defaultSearchQuery: PropTypes.string.isRequired,

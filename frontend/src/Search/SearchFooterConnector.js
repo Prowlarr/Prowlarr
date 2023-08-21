@@ -49,12 +49,12 @@ function createMapStateToProps() {
 
       return {
         defaultSearchQueryParams,
-        defaultSearchQuery: defaultSearchQueryParams.searchQuery ?? defaultSearchQuery,
-        defaultIndexerIds: defaultSearchQueryParams.searchIndexerIds ?? defaultIndexerIds,
-        defaultCategories: defaultSearchQueryParams.searchCategories ?? defaultCategories,
-        defaultSearchType: defaultSearchQueryParams.searchType ?? defaultSearchType,
-        defaultSearchLimit: defaultSearchQueryParams.searchLimit ?? defaultSearchLimit,
-        defaultSearchOffset: defaultSearchQueryParams.searchOffset ?? defaultSearchOffset
+        defaultSearchQuery,
+        defaultIndexerIds,
+        defaultCategories,
+        defaultSearchType,
+        defaultSearchLimit,
+        defaultSearchOffset
       };
     }
   );
@@ -87,14 +87,9 @@ class SearchFooterConnector extends Component {
   // Render
 
   render() {
-    const {
-      defaultSearchQueryParams,
-      ...otherProps
-    } = this.props;
-
     return (
       <SearchFooter
-        {...otherProps}
+        {...this.props}
         onInputChange={this.onInputChange}
       />
     );

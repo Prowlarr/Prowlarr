@@ -124,7 +124,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("anime[bd_special]", NewznabStandardCategory.TVAnime, "BD Special");
             caps.Categories.AddCategoryMapping("anime[movie]", NewznabStandardCategory.Movies, "Movie");
             caps.Categories.AddCategoryMapping("audio", NewznabStandardCategory.Audio, "Music");
+            caps.Categories.AddCategoryMapping("gamec[game]", NewznabStandardCategory.Console, "Game");
             caps.Categories.AddCategoryMapping("gamec[game]", NewznabStandardCategory.PCGames, "Game");
+            caps.Categories.AddCategoryMapping("gamec[visual_novel]", NewznabStandardCategory.Console, "Game Visual Novel");
             caps.Categories.AddCategoryMapping("gamec[visual_novel]", NewznabStandardCategory.PCGames, "Game Visual Novel");
             caps.Categories.AddCategoryMapping("printedtype[manga]", NewznabStandardCategory.BooksComics, "Manga");
             caps.Categories.AddCategoryMapping("printedtype[oneshot]", NewznabStandardCategory.BooksComics, "Oneshot");
@@ -364,7 +366,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var minimumSeedTime = 259200 + (int)(size / (int)Math.Pow(1024, 3) * 18000);
 
                     var propertyList = WebUtility.HtmlDecode(torrent.Property)
-                        .Split('|', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .Split(new[] { " | ",  " / " }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
 
                     propertyList.RemoveAll(p => ExcludedProperties.Any(p.ContainsIgnoreCase));
@@ -386,7 +388,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     if (_settings.ExcludeRaw &&
-                        categoryName == "Anime" &&
                         properties.Any(p => p.StartsWithIgnoreCase("RAW") || p.Contains("BR-DISK")))
                     {
                         continue;
@@ -467,32 +468,34 @@ namespace NzbDrone.Core.Indexers.Definitions
                     {
                         if (properties.Contains("PSP"))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.ConsolePSP };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console, NewznabStandardCategory.ConsolePSP };
                         }
 
                         if (properties.Contains("PS3"))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.ConsolePS3 };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console, NewznabStandardCategory.ConsolePS3 };
                         }
 
                         if (properties.Contains("PS Vita"))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.ConsolePSVita };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console, NewznabStandardCategory.ConsolePSVita };
                         }
 
                         if (properties.Contains("3DS"))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console3DS };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console, NewznabStandardCategory.Console3DS };
                         }
 
                         if (properties.Contains("NDS"))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.ConsoleNDS };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console, NewznabStandardCategory.ConsoleNDS };
                         }
 
-                        if (properties.Contains("PSX") || properties.Contains("PS2") || properties.Contains("SNES") || properties.Contains("NES") || properties.Contains("GBA") || properties.Contains("Switch"))
+                        if (properties.Contains("PSX") || properties.Contains("PS2") || properties.Contains("SNES") ||
+                            properties.Contains("NES") || properties.Contains("GBA") || properties.Contains("Switch") ||
+                            properties.Contains("N64"))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.ConsoleOther };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Console, NewznabStandardCategory.ConsoleOther };
                         }
 
                         if (properties.Contains("PC"))
@@ -505,15 +508,15 @@ namespace NzbDrone.Core.Indexers.Definitions
                     {
                         if (properties.Any(p => p.Contains("Lossless")))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.AudioLossless };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Audio, NewznabStandardCategory.AudioLossless };
                         }
                         else if (properties.Any(p => p.Contains("MP3")))
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.AudioMP3 };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Audio, NewznabStandardCategory.AudioMP3 };
                         }
                         else
                         {
-                            categories = new List<IndexerCategory> { NewznabStandardCategory.AudioOther };
+                            categories = new List<IndexerCategory> { NewznabStandardCategory.Audio, NewznabStandardCategory.AudioOther };
                         }
                     }
 

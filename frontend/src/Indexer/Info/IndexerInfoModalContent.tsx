@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -249,8 +250,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
           </div>
         </FieldSet>
 
-        {capabilities.categories !== null &&
-        capabilities.categories.length > 0 ? (
+        {capabilities?.categories?.length > 0 ? (
           <FieldSet legend={translate('IndexerCategories')}>
             <Table
               columns={[
@@ -266,7 +266,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                 },
               ]}
             >
-              {capabilities.categories
+              {uniqBy(capabilities.categories, 'id')
                 .sort((a, b) => a.id - b.id)
                 .map((category) => {
                   return (
@@ -275,9 +275,8 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                         <TableRowCell>{category.id}</TableRowCell>
                         <TableRowCell>{category.name}</TableRowCell>
                       </TableRow>
-                      {category.subCategories !== null &&
-                      category.subCategories.length > 0
-                        ? category.subCategories
+                      {category?.subCategories?.length > 0
+                        ? uniqBy(category.subCategories, 'id')
                             .sort((a, b) => a.id - b.id)
                             .map((subCategory) => {
                               return (

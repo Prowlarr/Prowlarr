@@ -79,6 +79,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD);
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TVHD);
+            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVUHD);
 
             return caps;
         }

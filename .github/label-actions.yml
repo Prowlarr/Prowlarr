@@ -4,8 +4,7 @@
   comment: >
     :wave: @{issue-author}, we use the issue tracker exclusively
     for bug reports and feature requests. However, this issue appears
-    to be a support request. Please hop over onto our [Discord](https://prowlarr.com/discord) 
-    or [Subreddit](https://reddit.com/r/prowlarr)
+    to be a support request. Please hop over onto our [Discord](https://prowlarr.com/discord).
   close: true
   close-reason: 'not planned'
 

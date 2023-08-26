@@ -495,5 +495,8 @@
     "WhatsNew": "Cosa c'è di nuovo?",
     "ConnectionLostReconnect": "Radarr cercherà di connettersi automaticamente, oppure clicca su ricarica qui sotto.",
     "ConnectionLostToBackend": "Radarr ha perso la connessione al backend e dovrà essere ricaricato per ripristinare la funzionalità.",
-    "minutes": "Minuti"
+    "minutes": "Minuti",
+    "AddConnection": "Aggiungi Connessione",
+    "NotificationStatusAllClientHealthCheckMessage": "Tutte le applicazioni non sono disponibili a causa di errori",
+    "NotificationStatusSingleClientHealthCheckMessage": "Applicazioni non disponibili a causa di errori: {0}"
 }

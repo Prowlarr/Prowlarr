@@ -367,5 +367,8 @@
     "RecentChanges": "Ostatnie zmiany",
     "WhatsNew": "Co nowego?",
     "ConnectionLostToBackend": "Radarr utracił połączenie z silnikiem programu, aby przywrócić funkcjonalność musi zostać zrestartowany.",
-    "minutes": "Minuty"
+    "minutes": "Minuty",
+    "NotificationStatusSingleClientHealthCheckMessage": "Listy niedostępne z powodu błędów: {0}",
+    "AddConnection": "Edytuj kolekcję",
+    "NotificationStatusAllClientHealthCheckMessage": "Wszystkie listy są niedostępne z powodu błędów"
 }

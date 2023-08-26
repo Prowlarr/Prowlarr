@@ -346,5 +346,7 @@
     "DeleteAppProfileMessageText": "هل أنت متأكد من أنك تريد حذف ملف تعريف الجودة {0}",
     "RecentChanges": "التغييرات الأخيرة",
     "WhatsNew": "ما هو الجديد؟",
-    "minutes": "الدقائق"
+    "minutes": "الدقائق",
+    "NotificationStatusAllClientHealthCheckMessage": "جميع القوائم غير متاحة بسبب الإخفاقات",
+    "NotificationStatusSingleClientHealthCheckMessage": "القوائم غير متاحة بسبب الإخفاقات: {0}"
 }

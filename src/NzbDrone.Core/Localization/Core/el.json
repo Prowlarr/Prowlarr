@@ -499,5 +499,8 @@
     "WhatsNew": "Τι νέα?",
     "ConnectionLostToBackend": "Το Radarr έχασε τη σύνδεσή του με το backend και θα χρειαστεί να επαναφορτωθεί για να αποκαταστήσει τη λειτουργικότητά του.",
     "minutes": "Λεπτά",
-    "DeleteAppProfileMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το προφίλ ποιότητας '{0}'?"
+    "DeleteAppProfileMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το προφίλ ποιότητας '{0}'?",
+    "AddConnection": "Προσθήκη Σύνδεσης",
+    "NotificationStatusAllClientHealthCheckMessage": "Όλες οι λίστες δεν είναι διαθέσιμες λόγω αστοχιών",
+    "NotificationStatusSingleClientHealthCheckMessage": "Μη διαθέσιμες λίστες λόγω αποτυχιών: {0}"
 }

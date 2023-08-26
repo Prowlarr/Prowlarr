@@ -346,5 +346,7 @@
     "RecentChanges": "हाल में हुए बदलाव",
     "WhatsNew": "नया क्या है?",
     "minutes": "मिनट",
-    "DeleteAppProfileMessageText": "क्या आप वाकई गुणवत्ता प्रोफ़ाइल {0} को हटाना चाहते हैं"
+    "DeleteAppProfileMessageText": "क्या आप वाकई गुणवत्ता प्रोफ़ाइल {0} को हटाना चाहते हैं",
+    "NotificationStatusAllClientHealthCheckMessage": "सभी सूचियाँ विफल होने के कारण अनुपलब्ध हैं",
+    "NotificationStatusSingleClientHealthCheckMessage": "विफलताओं के कारण अनुपलब्ध सूची: {0}"
 }

@@ -369,5 +369,8 @@
     "RecentChanges": "Canvis recents",
     "WhatsNew": "Que hi ha de nou?",
     "minutes": "Minuts",
-    "DeleteAppProfileMessageText": "Esteu segur que voleu suprimir el perfil de qualitat {0}"
+    "DeleteAppProfileMessageText": "Esteu segur que voleu suprimir el perfil de qualitat {0}",
+    "NotificationStatusSingleClientHealthCheckMessage": "Llistes no disponibles a causa d'errors: {0}",
+    "AddConnection": "Edita la col·lecció",
+    "NotificationStatusAllClientHealthCheckMessage": "Totes les llistes no estan disponibles a causa d'errors"
 }

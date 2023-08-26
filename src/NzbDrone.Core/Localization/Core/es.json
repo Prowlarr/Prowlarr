@@ -410,5 +410,8 @@
     "minutes": "Minutos",
     "Album": "álbum",
     "Artist": "artista",
-    "DeleteAppProfileMessageText": "Seguro que quieres eliminar el perfil de calidad {0}"
+    "DeleteAppProfileMessageText": "Seguro que quieres eliminar el perfil de calidad {0}",
+    "AddConnection": "Añadir Conexión",
+    "NotificationStatusAllClientHealthCheckMessage": "Las listas no están disponibles debido a errores",
+    "NotificationStatusSingleClientHealthCheckMessage": "Listas no disponibles debido a errores: {0}"
 }

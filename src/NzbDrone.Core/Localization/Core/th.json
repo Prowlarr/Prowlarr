@@ -349,5 +349,7 @@
     "DeleteAppProfileMessageText": "แน่ใจไหมว่าต้องการลบโปรไฟล์คุณภาพ {0}",
     "minutes": "นาที",
     "WhatsNew": "มีอะไรใหม่",
-    "RecentChanges": "การเปลี่ยนแปลงล่าสุด"
+    "RecentChanges": "การเปลี่ยนแปลงล่าสุด",
+    "NotificationStatusAllClientHealthCheckMessage": "รายการทั้งหมดไม่พร้อมใช้งานเนื่องจากความล้มเหลว",
+    "NotificationStatusSingleClientHealthCheckMessage": "รายการไม่พร้อมใช้งานเนื่องจากความล้มเหลว: {0}"
 }

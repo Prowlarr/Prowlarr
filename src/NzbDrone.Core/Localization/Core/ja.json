@@ -346,5 +346,7 @@
     "DeleteAppProfileMessageText": "品質プロファイル{0}を削除してもよろしいですか",
     "RecentChanges": "最近の変化",
     "WhatsNew": "新着情報？",
-    "minutes": "議事録"
+    "minutes": "議事録",
+    "NotificationStatusSingleClientHealthCheckMessage": "失敗のため利用できないリスト：{0}",
+    "NotificationStatusAllClientHealthCheckMessage": "障害のため、すべてのリストを利用できません"
 }

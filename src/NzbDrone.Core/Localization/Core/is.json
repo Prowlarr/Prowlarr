@@ -346,5 +346,7 @@
     "RecentChanges": "Nýlegar breytingar",
     "WhatsNew": "Hvað er nýtt?",
     "ConnectionLostReconnect": "Radarr mun reyna að tengjast sjálfkrafa eða þú getur smellt á endurhlaða hér að neðan.",
-    "minutes": "Fundargerð"
+    "minutes": "Fundargerð",
+    "NotificationStatusAllClientHealthCheckMessage": "Allir listar eru ekki tiltækir vegna bilana",
+    "NotificationStatusSingleClientHealthCheckMessage": "Listar ekki tiltækir vegna bilana: {0}"
 }

@@ -491,5 +491,8 @@
     "RecentChanges": "Viimeaikaiset muutokset",
     "WhatsNew": "Mikä on uutta?",
     "ConnectionLostToBackend": "Radarr on menettänyt yhteyden taustajärjestelmään ja sivu on päivitettävä toiminnallisuuden palauttamiseksi.",
-    "minutes": "Minuuttia"
+    "minutes": "Minuuttia",
+    "AddConnection": "Lisää yhteys",
+    "NotificationStatusAllClientHealthCheckMessage": "Sovellukset eivät ole käytettävissä virheiden vuoksi",
+    "NotificationStatusSingleClientHealthCheckMessage": "Sovellukset eivät ole käytettävissä virheiden vuoksi: {0}"
 }

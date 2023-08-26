@@ -346,5 +346,7 @@
     "DeleteAppProfileMessageText": "Наистина ли искате да изтриете качествения профил {0}",
     "RecentChanges": "Последни промени",
     "WhatsNew": "Какво ново?",
-    "minutes": "Минути"
+    "minutes": "Минути",
+    "NotificationStatusSingleClientHealthCheckMessage": "Списъци, недостъпни поради неуспехи: {0}",
+    "NotificationStatusAllClientHealthCheckMessage": "Всички списъци са недостъпни поради неуспехи"
 }

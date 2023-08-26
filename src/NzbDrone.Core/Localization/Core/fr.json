@@ -531,5 +531,12 @@
     "RecentChanges": "Changements récents",
     "WhatsNew": "Quoi de neuf ?",
     "minutes": "Minutes",
-    "DeleteAppProfileMessageText": "Voulez-vous vraiment supprimer le profil de qualité {0} ?"
+    "DeleteAppProfileMessageText": "Voulez-vous vraiment supprimer le profil de qualité {0} ?",
+    "AddConnection": "Ajouter une connexion",
+    "AddConnectionImplementation": "Ajouter une connexion - {implementationName}",
+    "AddApplicationImplementation": "Ajouter une condition - {implementationName}",
+    "AddIndexerImplementation": "Ajouter une condition - {implementationName}",
+    "EditConnectionImplementation": "Ajouter une connexion - {implementationName}",
+    "NotificationStatusAllClientHealthCheckMessage": "Toutes les applications sont indisponibles en raison de dysfonctionnements",
+    "NotificationStatusSingleClientHealthCheckMessage": "Applications indisponibles en raison de dysfonctionnements : {0}"
 }

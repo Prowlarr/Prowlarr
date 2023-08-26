@@ -497,5 +497,8 @@
     "RecentChanges": "Neuste Änderungen",
     "WhatsNew": "Was gibt's Neues?",
     "minutes": "Minuten",
-    "DeleteAppProfileMessageText": "Qualitätsprofil '{0}' wirklich löschen?"
+    "DeleteAppProfileMessageText": "Qualitätsprofil '{0}' wirklich löschen?",
+    "AddConnection": "Sammlung bearbeiten",
+    "NotificationStatusAllClientHealthCheckMessage": "Wegen Fehlern sind keine Applikationen verfügbar",
+    "NotificationStatusSingleClientHealthCheckMessage": "Applikationen wegen folgender Fehler nicht verfügbar: {0}"
 }

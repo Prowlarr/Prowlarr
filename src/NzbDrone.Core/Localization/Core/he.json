@@ -400,5 +400,7 @@
     "Theme": "ערכת נושא",
     "ConnectionLostReconnect": "Radarr ינסה להתחבר אוטומטית, או שתלחץ על טען מחדש למטה.",
     "Album": "אלבום",
-    "Artist": "אמן"
+    "Artist": "אמן",
+    "NotificationStatusAllClientHealthCheckMessage": "כל הרשימות אינן זמינות בגלל כשלים",
+    "NotificationStatusSingleClientHealthCheckMessage": "רשימות לא זמינות בגלל כשלים: {0}"
 }

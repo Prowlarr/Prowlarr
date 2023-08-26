@@ -361,5 +361,7 @@
     "DeleteAppProfileMessageText": "Ви впевнені, що хочете видалити цей профіль затримки?",
     "RecentChanges": "Останні зміни",
     "minutes": "Хвилин",
-    "WhatsNew": "Що нового?"
+    "WhatsNew": "Що нового?",
+    "NotificationStatusAllClientHealthCheckMessage": "Усі списки недоступні через помилки",
+    "NotificationStatusSingleClientHealthCheckMessage": "Списки недоступні через помилки: {0}"
 }

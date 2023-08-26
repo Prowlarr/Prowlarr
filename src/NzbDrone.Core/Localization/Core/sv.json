@@ -431,5 +431,7 @@
     "DeleteAppProfileMessageText": "Är du säker på att du vill ta bort kvalitetsprofilen '{0}'?",
     "RecentChanges": "Senaste ändringar",
     "WhatsNew": "Vad är nytt?",
-    "minutes": "Minuter"
+    "minutes": "Minuter",
+    "NotificationStatusSingleClientHealthCheckMessage": "Listor otillgängliga på grund av fel: {0}",
+    "NotificationStatusAllClientHealthCheckMessage": "Samtliga listor otillgängliga på grund av fel"
 }

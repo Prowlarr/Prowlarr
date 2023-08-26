@@ -347,5 +347,7 @@
     "RecentChanges": "Những thay đổi gần đây",
     "minutes": "Phút",
     "ConnectionLostReconnect": "Radarr sẽ cố gắng kết nối tự động hoặc bạn có thể nhấp vào tải lại bên dưới.",
-    "WhatsNew": "Có gì mới?"
+    "WhatsNew": "Có gì mới?",
+    "NotificationStatusAllClientHealthCheckMessage": "Tất cả danh sách không có sẵn do lỗi",
+    "NotificationStatusSingleClientHealthCheckMessage": "Danh sách không có sẵn do lỗi: {0}"
 }

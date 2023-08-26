@@ -439,5 +439,6 @@
     "WhatsNew": "O que há de novo?",
     "RecentChanges": "Mudanças recentes",
     "minutes": "Minutos",
-    "DeleteAppProfileMessageText": "Tem a certeza que quer eliminar o perfil de qualidade \"{0}\"?"
+    "DeleteAppProfileMessageText": "Tem a certeza que quer eliminar o perfil de qualidade \"{0}\"?",
+    "AddConnection": "Editar Coleção"
 }

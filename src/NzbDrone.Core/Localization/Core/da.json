@@ -362,5 +362,7 @@
     "RecentChanges": "Seneste ændringer",
     "WhatsNew": "Hvad er nyt?",
     "ConnectionLostReconnect": "Radarr vil prøve at tilslutte automatisk, eller du kan klikke genindlæs forneden.",
-    "minutes": "Protokoller"
+    "minutes": "Protokoller",
+    "NotificationStatusAllClientHealthCheckMessage": "Alle lister er utilgængelige på grund af fejl",
+    "NotificationStatusSingleClientHealthCheckMessage": "Lister utilgængelige på grund af fejl: {0}"
 }

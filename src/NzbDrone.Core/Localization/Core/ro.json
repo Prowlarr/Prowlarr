@@ -438,5 +438,6 @@
     "ConnectionLostToBackend": "{appName} a pierdut conexiunea cu backend-ul și trebuie reîncărcat pentru a restabili funcționalitatea.",
     "RecentChanges": "Schimbări recente",
     "WhatsNew": "Ce mai e nou?",
-    "DeleteAppProfileMessageText": "Sigur doriți să ștergeți profilul de aplicație '{0}'?"
+    "DeleteAppProfileMessageText": "Sigur doriți să ștergeți profilul de aplicație '{0}'?",
+    "NotificationStatusSingleClientHealthCheckMessage": "Aplicații indisponibile datorită erorilor: {0}"
 }

@@ -494,5 +494,8 @@
     "RecentChanges": "Friss változtatások",
     "WhatsNew": "Mi az újdonság?",
     "ConnectionLostToBackend": "A Radarr elvesztette kapcsolatát a háttérrendszerrel, a funkciók helyreállításához frissíts.",
-    "minutes": "percek"
+    "minutes": "percek",
+    "AddConnection": "Gyűjtemény módosítása",
+    "NotificationStatusAllClientHealthCheckMessage": "Összes alkalmazás elérhetetlen hiba miatt",
+    "NotificationStatusSingleClientHealthCheckMessage": "Az alkalmazás nem áll rendelkezésre az alábbi hibák miatt: {0}"
 }

@@ -131,5 +131,6 @@
     "ApiKeyValidationHealthCheckMessage": "Vennligst oppdater din API-nøkkel til å være minst {0} tegn lang. Du kan gjøre dette via innstillinger eller konfigurasjonsfilen",
     "ConnectionLostReconnect": "Radarr vil forsøke å koble til automatisk, eller du kan klikke oppdater nedenfor.",
     "ConnectionLostToBackend": "Radarr har mistet tilkoblingen til baksystemet og må lastes inn på nytt for å gjenopprette funksjonalitet.",
-    "DeleteAppProfileMessageText": "Er du sikker på at du vil slette denne forsinkelsesprofilen?"
+    "DeleteAppProfileMessageText": "Er du sikker på at du vil slette denne forsinkelsesprofilen?",
+    "AddConnection": "Legg til kobling"
 }

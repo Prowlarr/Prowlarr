@@ -439,5 +439,5 @@
     "RecentChanges": "Schimbări recente",
     "WhatsNew": "Ce mai e nou?",
     "DeleteAppProfileMessageText": "Sigur doriți să ștergeți profilul de aplicație '{0}'?",
-    "NotificationStatusSingleClientHealthCheckMessage": "Aplicații indisponibile datorită erorilor: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Notificări indisponibile datorită erorilor: {0}"
 }

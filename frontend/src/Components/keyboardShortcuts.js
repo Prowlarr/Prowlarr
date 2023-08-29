@@ -6,37 +6,51 @@ import translate from 'Utilities/String/translate';
 export const shortcuts = {
   OPEN_KEYBOARD_SHORTCUTS_MODAL: {
     key: '?',
-    name: translate('OpenThisModal')
+    get name() {
+      return translate('OpenThisModal');
+    }
   },
 
   CLOSE_MODAL: {
     key: 'Esc',
-    name: translate('CloseCurrentModal')
+    get name() {
+      return translate('CloseCurrentModal');
+    }
   },
 
   ACCEPT_CONFIRM_MODAL: {
     key: 'Enter',
-    name: translate('AcceptConfirmationModal')
+    get name() {
+      return translate('AcceptConfirmationModal');
+    }
   },
 
   MOVIE_SEARCH_INPUT: {
     key: 's',
-    name: translate('FocusSearchBox')
+    get name() {
+      return translate('FocusSearchBox');
+    }
   },
 
   SAVE_SETTINGS: {
     key: 'mod+s',
-    name: translate('SaveSettings')
+    get name() {
+      return translate('SaveSettings');
+    }
   },
 
   SCROLL_TOP: {
     key: 'mod+home',
-    name: translate('MovieIndexScrollTop')
+    get name() {
+      return translate('MovieIndexScrollTop');
+    }
   },
 
   SCROLL_BOTTOM: {
     key: 'mod+end',
-    name: translate('MovieIndexScrollBottom')
+    get name() {
+      return translate('MovieIndexScrollBottom');
+    }
   }
 };
 

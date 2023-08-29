@@ -3,9 +3,24 @@ import translate from 'Utilities/String/translate';
 import FilterBuilderRowValue from './FilterBuilderRowValue';
 
 const privacyTypes = [
-  { id: 'public', name: translate('Public') },
-  { id: 'private', name: translate('Private') },
-  { id: 'semiPrivate', name: translate('SemiPrivate') }
+  {
+    id: 'public',
+    get name() {
+      return translate('Public');
+    }
+  },
+  {
+    id: 'private',
+    get name() {
+      return translate('Private');
+    }
+  },
+  {
+    id: 'semiPrivate',
+    get name() {
+      return translate('SemiPrivate');
+    }
+  }
 ];
 
 function PrivacyFilterBuilderRowValue(props) {

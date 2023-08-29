@@ -21,17 +21,17 @@ const historyParameters = [
   { key: historyDataTypes.TRAKT_ID, title: 'Trakt' },
   { key: historyDataTypes.R_ID, title: 'TvRage' },
   { key: historyDataTypes.TVMAZE_ID, title: 'TvMaze' },
-  { key: historyDataTypes.SEASON, title: translate('Season') },
-  { key: historyDataTypes.EPISODE, title: translate('Episode') },
-  { key: historyDataTypes.ARTIST, title: translate('Artist') },
-  { key: historyDataTypes.ALBUM, title: translate('Album') },
-  { key: historyDataTypes.LABEL, title: translate('Label') },
-  { key: historyDataTypes.TRACK, title: translate('Track') },
-  { key: historyDataTypes.YEAR, title: translate('Year') },
-  { key: historyDataTypes.GENRE, title: translate('Genre') },
-  { key: historyDataTypes.AUTHOR, title: translate('Author') },
-  { key: historyDataTypes.TITLE, title: translate('Title') },
-  { key: historyDataTypes.PUBLISHER, title: translate('Publisher') }
+  { key: historyDataTypes.SEASON, title: () => translate('Season') },
+  { key: historyDataTypes.EPISODE, title: () => translate('Episode') },
+  { key: historyDataTypes.ARTIST, title: () => translate('Artist') },
+  { key: historyDataTypes.ALBUM, title: () => translate('Album') },
+  { key: historyDataTypes.LABEL, title: () => translate('Label') },
+  { key: historyDataTypes.TRACK, title: () => translate('Track') },
+  { key: historyDataTypes.YEAR, title: () => translate('Year') },
+  { key: historyDataTypes.GENRE, title: () => translate('Genre') },
+  { key: historyDataTypes.AUTHOR, title: () => translate('Author') },
+  { key: historyDataTypes.TITLE, title: () => translate('Title') },
+  { key: historyDataTypes.PUBLISHER, title: () => translate('Publisher') }
 ];
 
 class HistoryRow extends Component {

@@ -294,6 +294,7 @@
   "InstanceNameHelpText": "Instance name in tab and for Syslog app name",
   "InteractiveSearch": "Interactive Search",
   "Interval": "Interval",
+  "InvalidUILanguage": "Your UI is set to an invalid language, correct it and save your settings",
   "KeyboardShortcuts": "Keyboard Shortcuts",
   "Label": "Label",
   "Language": "Language",

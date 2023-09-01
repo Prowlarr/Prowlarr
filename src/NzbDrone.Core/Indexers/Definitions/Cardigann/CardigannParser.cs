@@ -35,7 +35,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         {
             var releases = new List<ReleaseInfo>();
 
-            _logger.Debug("Parsing");
+            _logger.Trace("Cardigann ({0}): Parsing response", _definition.Id);
 
             var indexerLogging = _configService.LogIndexerResponse;
 
@@ -428,7 +428,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 }
             });
 
-            _logger.Debug($"Got {releases.Count} releases");
+            _logger.Trace("Cardigann ({0}): Got {1} releases", _definition.Id, releases.Count);
 
             return releases;
         }

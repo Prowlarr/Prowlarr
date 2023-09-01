@@ -287,7 +287,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 [".Today.Year"] = DateTime.Today.Year.ToString()
             };
 
-            _logger.Debug("Populating config vars");
+            _logger.Trace("Populating config vars");
 
             foreach (var setting in _definition.Settings)
             {

@@ -214,7 +214,7 @@ namespace NzbDrone.Core.IndexerSearch
 
                     if (releases.Count != indexerReports.Releases.Count)
                     {
-                        _logger.Trace("{0} {1} Releases which didn't contain search categories [{2}] were filtered", indexerReports.Releases.Count - releases.Count, indexer.Name, string.Join(", ", expandedQueryCats));
+                        _logger.Trace("{0} releases from {1} ({2}) which didn't contain search categories [{3}] were filtered", indexerReports.Releases.Count - releases.Count, ((IndexerDefinition)indexer.Definition).Name, indexer.Name, string.Join(", ", expandedQueryCats));
                     }
                 }
 

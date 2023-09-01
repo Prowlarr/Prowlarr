@@ -3,8 +3,6 @@ namespace NzbDrone.Core.Applications.Lidarr
     public class LidarrField
     {
         public string Name { get; set; }
-        public string Label { get; set; }
-        public string Unit { get; set; }
         public object Value { get; set; }
         public string Type { get; set; }
         public bool Advanced { get; set; }

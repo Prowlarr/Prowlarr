@@ -104,6 +104,9 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // RSS
         [TestCase(@"<atom:link href = ""https://api.nzb.su/api?t=search&amp;extended=1&amp;cat=3030&apikey=mySecret&amp;q=Diggers"" rel=""self"" type=""application/rss+xml"" />")]
 
+        // Applications
+        [TestCase(@"""name"":""apiKey"",""value"":""mySecret""")]
+
         // Internal
         [TestCase(@"[Info] MigrationController: *** Migrating Database=prowlarr-main;Host=postgres14;Username=mySecret;Password=mySecret;Port=5432;Enlist=False ***")]
         [TestCase("/readarr/signalr/messages/negotiate?access_token=1234530f422f4aacb6b301233210aaaa&negotiateVersion=1")]

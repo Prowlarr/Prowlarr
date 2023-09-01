@@ -58,6 +58,9 @@ namespace NzbDrone.Common.Instrumentation
             new (@"(?:avistaz|exoticaz|cinemaz|privatehd)\.[a-z]{2,3}/rss/download/(?<secret>[^&=]+?)/(?<secret>[^&=]+?)\.torrent", RegexOptions.Compiled | RegexOptions.IgnoreCase),
             new (@"(?:animebytes)\.[a-z]{2,3}/torrent/[0-9]+/download/(?<secret>[^&=]+?)[""]", RegexOptions.Compiled | RegexOptions.IgnoreCase),
             new (@"""(info_hash|token|((pass|rss)[- _]?key))"":""(?<secret>[^&=]+?)""", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+
+            // Applications
+            new (@"""name"":""apikey"",""value"":""(?<secret>[^&=]+?)""", RegexOptions.Compiled | RegexOptions.IgnoreCase),
         };
 
         private static readonly Regex CleanseRemoteIPRegex = new (@"(?:Auth-\w+(?<!Failure|Unauthorized) ip|from) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", RegexOptions.Compiled);

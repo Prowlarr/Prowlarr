@@ -210,7 +210,7 @@ export const reducers = createHandleActions({
 
     // Set the name in pendingChanges
     newState.pendingChanges = {
-      name: `${item.name} - Copy`
+      name: translate('DefaultNameCopiedProfile', { name: item.name })
     };
 
     return updateSectionState(state, section, newState);

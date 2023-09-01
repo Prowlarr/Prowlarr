@@ -131,6 +131,7 @@
   "Database": "Database",
   "Date": "Date",
   "Dates": "Dates",
+  "DefaultNameCopiedProfile": "{name} - Copy",
   "Delete": "Delete",
   "DeleteAppProfile": "Delete App Profile",
   "DeleteAppProfileMessageText": "Are you sure you want to delete the app profile '{name}'?",

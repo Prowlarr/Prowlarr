@@ -139,6 +139,10 @@ namespace NzbDrone.Core.IndexerSearch
             spec.SearchType = query.t;
             spec.Limit = query.limit;
             spec.Offset = query.offset;
+            spec.MinAge = query.minage;
+            spec.MaxAge = query.maxage;
+            spec.MinSize = query.minsize;
+            spec.MaxSize = query.maxsize;
             spec.Source = query.source;
             spec.Host = query.host;
 
@@ -216,6 +220,34 @@ namespace NzbDrone.Core.IndexerSearch
                     {
                         _logger.Trace("{0} releases from {1} ({2}) which didn't contain search categories [{3}] were filtered", indexerReports.Releases.Count - releases.Count, ((IndexerDefinition)indexer.Definition).Name, indexer.Name, string.Join(", ", expandedQueryCats));
                     }
+                }
+
+                if (criteriaBase.MinAge.HasValue && criteriaBase.MinAge.Value > 0)
+                {
+                    var cutoffDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(criteriaBase.MinAge.Value));
+
+                    releases = releases.Where(r => r.PublishDate <= cutoffDate).ToList();
+                }
+
+                if (criteriaBase.MaxAge.HasValue && criteriaBase.MaxAge.Value > 0)
+                {
+                    var cutoffDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(criteriaBase.MaxAge.Value));
+
+                    releases = releases.Where(r => r.PublishDate >= cutoffDate).ToList();
+                }
+
+                if (criteriaBase.MinSize.HasValue && criteriaBase.MinSize.Value > 0)
+                {
+                    var minSize = criteriaBase.MinSize.Value;
+
+                    releases = releases.Where(r => r.Size >= minSize).ToList();
+                }
+
+                if (criteriaBase.MaxSize.HasValue && criteriaBase.MaxSize.Value > 0)
+                {
+                    var maxSize = criteriaBase.MaxSize.Value;
+
+                    releases = releases.Where(r => r.Size <= maxSize).ToList();
                 }
 
                 foreach (var query in indexerReports.Queries)

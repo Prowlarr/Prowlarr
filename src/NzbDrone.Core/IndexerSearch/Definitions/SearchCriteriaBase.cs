@@ -17,6 +17,10 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string SearchType { get; set; }
         public int? Limit { get; set; }
         public int? Offset { get; set; }
+        public int? MinAge { get; set; }
+        public int? MaxAge { get; set; }
+        public long? MinSize { get; set; }
+        public long? MaxSize { get; set; }
         public string Source { get; set; }
         public string Host { get; set; }
 

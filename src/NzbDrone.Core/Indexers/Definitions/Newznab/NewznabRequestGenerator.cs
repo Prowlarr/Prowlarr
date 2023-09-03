@@ -272,6 +272,26 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Set("offset", searchCriteria.Offset.ToString());
             }
 
+            if (searchCriteria.MinAge.HasValue)
+            {
+                parameters.Set("minage", searchCriteria.MaxAge.ToString());
+            }
+
+            if (searchCriteria.MaxAge.HasValue)
+            {
+                parameters.Set("maxage", searchCriteria.MaxAge.ToString());
+            }
+
+            if (searchCriteria.MinSize.HasValue)
+            {
+                parameters.Set("minsize", searchCriteria.MaxAge.ToString());
+            }
+
+            if (searchCriteria.MaxSize.HasValue)
+            {
+                parameters.Set("maxsize", searchCriteria.MaxAge.ToString());
+            }
+
             if (parameters.Count > 0)
             {
                 searchUrl += $"&{parameters.GetQueryString()}";

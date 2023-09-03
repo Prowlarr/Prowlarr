@@ -18,6 +18,10 @@ namespace NzbDrone.Core.IndexerSearch
         public string extended { get; set; }
         public int? limit { get; set; }
         public int? offset { get; set; }
+        public int? minage { get; set; }
+        public int? maxage { get; set; }
+        public long? minsize { get; set; }
+        public long? maxsize { get; set; }
         public int? rid { get; set; }
         public int? tvmazeid { get; set; }
         public int? traktid { get; set; }

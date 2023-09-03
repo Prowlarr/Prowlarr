@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.IndexerStatsTests
                 .Setup(o => o.Between(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .Returns<DateTime, DateTime>((s, f) => history);
 
-            var statistics = Subject.IndexerStatistics(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow);
+            var statistics = Subject.IndexerStatistics(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow, new List<int> { 5 });
 
             statistics.IndexerStatistics.Count.Should().Be(1);
             statistics.IndexerStatistics.First().AverageResponseTime.Should().Be(0);

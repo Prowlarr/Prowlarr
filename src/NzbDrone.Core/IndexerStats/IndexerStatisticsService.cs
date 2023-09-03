@@ -8,7 +8,7 @@ namespace NzbDrone.Core.IndexerStats
 {
     public interface IIndexerStatisticsService
     {
-        CombinedStatistics IndexerStatistics(DateTime start, DateTime end);
+        CombinedStatistics IndexerStatistics(DateTime start, DateTime end, List<int> indexerIds);
     }
 
     public class IndexerStatisticsService : IIndexerStatisticsService
@@ -22,13 +22,15 @@ namespace NzbDrone.Core.IndexerStats
             _indexerFactory = indexerFactory;
         }
 
-        public CombinedStatistics IndexerStatistics(DateTime start, DateTime end)
+        public CombinedStatistics IndexerStatistics(DateTime start, DateTime end, List<int> indexerIds)
         {
             var history = _historyService.Between(start, end);
 
-            var groupedByIndexer = history.GroupBy(h => h.IndexerId);
-            var groupedByUserAgent = history.GroupBy(h => h.Data.GetValueOrDefault("source") ?? "");
-            var groupedByHost = history.GroupBy(h => h.Data.GetValueOrDefault("host") ?? "");
+            var filteredHistory = history.Where(h => indexerIds.Contains(h.IndexerId));
+
+            var groupedByIndexer = filteredHistory.GroupBy(h => h.IndexerId);
+            var groupedByUserAgent = filteredHistory.GroupBy(h => h.Data.GetValueOrDefault("source") ?? "");
+            var groupedByHost = filteredHistory.GroupBy(h => h.Data.GetValueOrDefault("host") ?? "");
 
             var indexerStatsList = new List<IndexerStatistics>();
             var userAgentStatsList = new List<UserAgentStatistics>();

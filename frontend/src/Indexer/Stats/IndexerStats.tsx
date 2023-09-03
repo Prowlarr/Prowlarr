@@ -8,6 +8,7 @@ import BarChart from 'Components/Chart/BarChart';
 import DoughnutChart from 'Components/Chart/DoughnutChart';
 import StackedBarChart from 'Components/Chart/StackedBarChart';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
+import FilterMenu from 'Components/Menu/FilterMenu';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
@@ -17,6 +18,7 @@ import {
   fetchIndexerStats,
   setIndexerStatsFilter,
 } from 'Store/Actions/indexerStatsActions';
+import { createCustomFiltersSelector } from 'Store/Selectors/createClientSideCollectionSelector';
 import {
   IndexerStatsHost,
   IndexerStatsIndexer,
@@ -24,7 +26,7 @@ import {
 } from 'typings/IndexerStats';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
-import IndexerStatsFilterMenu from './IndexerStatsFilterMenu';
+import IndexerStatsFilterModal from './IndexerStatsFilterModal';
 import styles from './IndexerStats.css';
 
 function getAverageResponseTimeData(indexerStats: IndexerStatsIndexer[]) {
@@ -165,15 +167,26 @@ function getHostQueryData(indexerStats: IndexerStatsHost[]) {
 const indexerStatsSelector = () => {
   return createSelector(
     (state: AppState) => state.indexerStats,
-    (indexerStats: IndexerStatsAppState) => {
-      return indexerStats;
+    createCustomFiltersSelector('indexerStats'),
+    (indexerStats: IndexerStatsAppState, customFilters) => {
+      return {
+        ...indexerStats,
+        customFilters,
+      };
     }
   );
 };
 
 function IndexerStats() {
-  const { isFetching, isPopulated, item, error, filters, selectedFilterKey } =
-    useSelector(indexerStatsSelector());
+  const {
+    isFetching,
+    isPopulated,
+    item,
+    error,
+    filters,
+    customFilters,
+    selectedFilterKey,
+  } = useSelector(indexerStatsSelector());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -193,10 +206,13 @@ function IndexerStats() {
     <PageContent>
       <PageToolbar>
         <PageToolbarSection alignContent={align.RIGHT} collapseButtons={false}>
-          <IndexerStatsFilterMenu
+          <FilterMenu
+            alignMenu={align.RIGHT}
             selectedFilterKey={selectedFilterKey}
             filters={filters}
+            customFilters={customFilters}
             onFilterSelect={onFilterSelect}
+            filterModalConnectorComponent={IndexerStatsFilterModal}
             isDisabled={false}
           />
         </PageToolbarSection>
@@ -213,57 +229,73 @@ function IndexerStats() {
         {isLoaded && (
           <div>
             <div className={styles.fullWidthChart}>
-              <BarChart
-                data={getAverageResponseTimeData(item.indexers)}
-                title={translate('AverageResponseTimesMs')}
-              />
+              <div className={styles.chartContainer}>
+                <BarChart
+                  data={getAverageResponseTimeData(item.indexers)}
+                  title={translate('AverageResponseTimesMs')}
+                />
+              </div>
             </div>
             <div className={styles.fullWidthChart}>
-              <BarChart
-                data={getFailureRateData(item.indexers)}
-                title={translate('IndexerFailureRate')}
-                kind={kinds.WARNING}
-              />
+              <div className={styles.chartContainer}>
+                <BarChart
+                  data={getFailureRateData(item.indexers)}
+                  title={translate('IndexerFailureRate')}
+                  kind={kinds.WARNING}
+                />
+              </div>
             </div>
             <div className={styles.halfWidthChart}>
-              <StackedBarChart
-                data={getTotalRequestsData(item.indexers)}
-                title={translate('TotalIndexerQueries')}
-              />
+              <div className={styles.chartContainer}>
+                <StackedBarChart
+                  data={getTotalRequestsData(item.indexers)}
+                  title={translate('TotalIndexerQueries')}
+                />
+              </div>
             </div>
             <div className={styles.halfWidthChart}>
-              <BarChart
-                data={getNumberGrabsData(item.indexers)}
-                title={translate('TotalIndexerSuccessfulGrabs')}
-              />
+              <div className={styles.chartContainer}>
+                <BarChart
+                  data={getNumberGrabsData(item.indexers)}
+                  title={translate('TotalIndexerSuccessfulGrabs')}
+                />
+              </div>
             </div>
             <div className={styles.halfWidthChart}>
-              <BarChart
-                data={getUserAgentQueryData(item.userAgents)}
-                title={translate('TotalUserAgentQueries')}
-                horizontal={true}
-              />
+              <div className={styles.chartContainer}>
+                <BarChart
+                  data={getUserAgentQueryData(item.userAgents)}
+                  title={translate('TotalUserAgentQueries')}
+                  horizontal={true}
+                />
+              </div>
             </div>
             <div className={styles.halfWidthChart}>
-              <BarChart
-                data={getUserAgentGrabsData(item.userAgents)}
-                title={translate('TotalUserAgentGrabs')}
-                horizontal={true}
-              />
+              <div className={styles.chartContainer}>
+                <BarChart
+                  data={getUserAgentGrabsData(item.userAgents)}
+                  title={translate('TotalUserAgentGrabs')}
+                  horizontal={true}
+                />
+              </div>
             </div>
             <div className={styles.halfWidthChart}>
-              <DoughnutChart
-                data={getHostQueryData(item.hosts)}
-                title={translate('TotalHostQueries')}
-                horizontal={true}
-              />
+              <div className={styles.chartContainer}>
+                <DoughnutChart
+                  data={getHostQueryData(item.hosts)}
+                  title={translate('TotalHostQueries')}
+                  horizontal={true}
+                />
+              </div>
             </div>
             <div className={styles.halfWidthChart}>
-              <DoughnutChart
-                data={getHostGrabsData(item.hosts)}
-                title={translate('TotalHostGrabs')}
-                horizontal={true}
-              />
+              <div className={styles.chartContainer}>
+                <DoughnutChart
+                  data={getHostGrabsData(item.hosts)}
+                  title={translate('TotalHostGrabs')}
+                  horizontal={true}
+                />
+              </div>
             </div>
           </div>
         )}

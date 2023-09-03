@@ -3,6 +3,7 @@ import { batchActions } from 'redux-batched-actions';
 import { filterBuilderTypes, filterBuilderValueTypes } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
+import findSelectedFilters from 'Utilities/Filter/findSelectedFilters';
 import translate from 'Utilities/String/translate';
 import { set, update } from './baseActions';
 import createHandleActions from './Creators/createHandleActions';
@@ -55,19 +56,20 @@ export const defaultState = {
 
   filterBuilderProps: [
     {
-      name: 'startDate',
-      label: 'Start Date',
-      type: filterBuilderTypes.EXACT,
-      valueType: filterBuilderValueTypes.DATE
+      name: 'indexers',
+      label: () => translate('Indexers'),
+      type: filterBuilderTypes.CONTAINS,
+      valueType: filterBuilderValueTypes.INDEXER
     },
     {
-      name: 'endDate',
-      label: 'End Date',
-      type: filterBuilderTypes.EXACT,
-      valueType: filterBuilderValueTypes.DATE
+      name: 'tags',
+      label: () => translate('Tags'),
+      type: filterBuilderTypes.CONTAINS,
+      valueType: filterBuilderValueTypes.TAG
     }
   ],
-  selectedFilterKey: 'all'
+  selectedFilterKey: 'all',
+  customFilters: []
 };
 
 export const persistState = [
@@ -80,6 +82,10 @@ export const persistState = [
 
 export const FETCH_INDEXER_STATS = 'indexerStats/fetchIndexerStats';
 export const SET_INDEXER_STATS_FILTER = 'indexerStats/setIndexerStatsFilter';
+
+function getCustomFilters(state, type) {
+  return state.customFilters.items.filter((customFilter) => customFilter.type === type);
+}
 
 //
 // Action Creators
@@ -94,23 +100,35 @@ export const actionHandlers = handleThunks({
   [FETCH_INDEXER_STATS]: function(getState, payload, dispatch) {
     const state = getState();
     const indexerStats = state.indexerStats;
+    const customFilters = getCustomFilters(state, section);
+    const selectedFilters = findSelectedFilters(indexerStats.selectedFilterKey, indexerStats.filters, customFilters);
 
     const requestParams = {
       endDate: moment().toISOString()
     };
 
+    selectedFilters.forEach((selectedFilter) => {
+      if (selectedFilter.key === 'indexers') {
+        requestParams.indexers = selectedFilter.value.join(',');
+      }
+
+      if (selectedFilter.key === 'tags') {
+        requestParams.tags = selectedFilter.value.join(',');
+      }
+    });
+
     if (indexerStats.selectedFilterKey !== 'all') {
-      let dayCount = 7;
+      if (indexerStats.selectedFilterKey === 'lastSeven') {
+        requestParams.startDate = moment().add(-7, 'days').endOf('day').toISOString();
+      }
 
       if (indexerStats.selectedFilterKey === 'lastThirty') {
-        dayCount = 30;
+        requestParams.startDate = moment().add(-30, 'days').endOf('day').toISOString();
       }
 
       if (indexerStats.selectedFilterKey === 'lastNinety') {
-        dayCount = 90;
+        requestParams.startDate = moment().add(-90, 'days').endOf('day').toISOString();
       }
-
-      requestParams.startDate = moment().add(-dayCount, 'days').endOf('day').toISOString();
     }
 
     const basesAttrs = {

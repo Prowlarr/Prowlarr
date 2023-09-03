@@ -187,6 +187,7 @@ module.exports = {
   //
   // Charts
 
+  chartBackgroundColor: '#fff',
   failedColors: ['#ffbeb2', '#feb4a6', '#fdab9b', '#fca290', '#fb9984', '#fa8f79', '#f9856e', '#f77b66', '#f5715d', '#f36754', '#f05c4d', '#ec5049', '#e74545', '#e13b42', '#da323f', '#d3293d', '#ca223c', '#c11a3b', '#b8163a', '#ae123a'],
   chartColorsDiversified: ['#90caf9', '#f4d166', '#ff8a65', '#ce93d8', '#80cba9', '#ffab91', '#8097ea', '#bcaaa4', '#a57583', '#e4e498', '#9e96af', '#c6ab81', '#6972c6', '#619fc6', '#81ad81', '#f48fb1', '#82afca', '#b5b071', '#8b959b', '#7ec0b4'],
   chartColors: ['#f4d166', '#f6c760', '#f8bc58', '#f8b252', '#f7a84a', '#f69e41', '#f49538', '#f38b2f', '#f28026', '#f0751e', '#eb6c1c', '#e4641e', '#de5d1f', '#d75521', '#cf4f22', '#c64a22', '#bc4623', '#b24223', '#a83e24', '#9e3a26']

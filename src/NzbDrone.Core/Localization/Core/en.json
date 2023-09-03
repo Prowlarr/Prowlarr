@@ -79,7 +79,7 @@
   "Author": "Author",
   "Automatic": "Automatic",
   "AutomaticSearch": "Automatic Search",
-  "AverageResponseTimesMs": "Average Response Times (Ms)",
+  "AverageResponseTimesMs": "Average Indexer Response Times (ms)",
   "Backup": "Backup",
   "BackupFolderHelpText": "Relative paths will be under Prowlarr's AppData directory",
   "BackupIntervalHelpText": "Interval between automatic backups",

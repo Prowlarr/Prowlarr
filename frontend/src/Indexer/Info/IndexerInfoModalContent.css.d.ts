@@ -3,6 +3,11 @@
 interface CssExports {
   'deleteButton': string;
   'description': string;
+  'selectedTab': string;
+  'tab': string;
+  'tabContent': string;
+  'tabList': string;
+  'tabs': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

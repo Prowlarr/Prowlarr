@@ -67,8 +67,13 @@ namespace Prowlarr.Api.V1.History
 
         [HttpGet("indexer")]
         [Produces("application/json")]
-        public List<HistoryResource> GetIndexerHistory(int indexerId, HistoryEventType? eventType = null)
+        public List<HistoryResource> GetIndexerHistory(int indexerId, HistoryEventType? eventType = null, int? limit = null)
         {
+            if (limit.HasValue)
+            {
+                return _historyService.GetByIndexerId(indexerId, eventType).Select(h => MapToResource(h)).Take(limit.Value).ToList();
+            }
+
             return _historyService.GetByIndexerId(indexerId, eventType).Select(h => MapToResource(h)).ToList();
         }
     }

@@ -1,5 +1,7 @@
 import CommandAppState from './CommandAppState';
+import HistoryAppState from './HistoryAppState';
 import IndexerAppState, {
+  IndexerHistoryAppState,
   IndexerIndexAppState,
   IndexerStatusAppState,
 } from './IndexerAppState';
@@ -42,6 +44,8 @@ export interface CustomFilter {
 
 interface AppState {
   commands: CommandAppState;
+  history: HistoryAppState;
+  indexerHistory: IndexerHistoryAppState;
   indexerIndex: IndexerIndexAppState;
   indexerStats: IndexerStatsAppState;
   indexerStatus: IndexerStatusAppState;

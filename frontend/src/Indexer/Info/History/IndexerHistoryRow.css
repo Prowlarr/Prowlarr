@@ -1,0 +1,18 @@
+.query {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 120px;
+}
+
+.elapsedTime,
+.source {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 150px;
+}
+
+.details {
+  composes: cell from '~Components/Table/Cells/TableRowCell.css';
+
+  width: 70px;
+}

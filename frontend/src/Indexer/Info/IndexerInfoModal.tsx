@@ -14,7 +14,7 @@ function IndexerInfoModal(props: IndexerInfoModalProps) {
   const { isOpen, indexerId, onModalClose, onCloneIndexerPress } = props;
 
   return (
-    <Modal size={sizes.MEDIUM} isOpen={isOpen} onModalClose={onModalClose}>
+    <Modal size={sizes.LARGE} isOpen={isOpen} onModalClose={onModalClose}>
       <IndexerInfoModalContent
         indexerId={indexerId}
         onModalClose={onModalClose}

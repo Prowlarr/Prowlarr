@@ -4,6 +4,10 @@ interface CssExports {
   'chartContainer': string;
   'fullWidthChart': string;
   'halfWidthChart': string;
+  'quarterWidthChart': string;
+  'stat': string;
+  'statContainer': string;
+  'statTitle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

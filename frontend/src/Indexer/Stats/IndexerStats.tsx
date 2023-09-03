@@ -24,6 +24,7 @@ import {
   IndexerStatsIndexer,
   IndexerStatsUserAgent,
 } from 'typings/IndexerStats';
+import abbreviateNumber from 'Utilities/Number/abbreviateNumber';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
 import IndexerStatsFilterModal from './IndexerStatsFilterModal';
@@ -201,6 +202,16 @@ function IndexerStats() {
   );
 
   const isLoaded = !error && isPopulated;
+  const indexerCount = item.indexers?.length ?? 0;
+  const userAgentCount = item.userAgents?.length ?? 0;
+  const queryCount =
+    item.indexers?.reduce((total, indexer) => {
+      return total + indexer.numberOfQueries;
+    }, 0) ?? 0;
+  const grabCount =
+    item.indexers?.reduce((total, indexer) => {
+      return total + indexer.numberOfGrabs;
+    }, 0) ?? 0;
 
   return (
     <PageContent>
@@ -228,6 +239,40 @@ function IndexerStats() {
 
         {isLoaded && (
           <div>
+            <div className={styles.quarterWidthChart}>
+              <div className={styles.statContainer}>
+                <div className={styles.statTitle}>
+                  {translate('ActiveIndexers')}
+                </div>
+                <div className={styles.stat}>{indexerCount}</div>
+              </div>
+            </div>
+            <div className={styles.quarterWidthChart}>
+              <div className={styles.statContainer}>
+                <div className={styles.statTitle}>
+                  {translate('TotalQueries')}
+                </div>
+                <div className={styles.stat}>
+                  {abbreviateNumber(queryCount)}
+                </div>
+              </div>
+            </div>
+            <div className={styles.quarterWidthChart}>
+              <div className={styles.statContainer}>
+                <div className={styles.statTitle}>
+                  {translate('TotalGrabs')}
+                </div>
+                <div className={styles.stat}>{abbreviateNumber(grabCount)}</div>
+              </div>
+            </div>
+            <div className={styles.quarterWidthChart}>
+              <div className={styles.statContainer}>
+                <div className={styles.statTitle}>
+                  {translate('ActiveApps')}
+                </div>
+                <div className={styles.stat}>{userAgentCount}</div>
+              </div>
+            </div>
             <div className={styles.fullWidthChart}>
               <div className={styles.chartContainer}>
                 <BarChart

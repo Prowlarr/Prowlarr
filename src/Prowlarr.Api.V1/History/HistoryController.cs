@@ -19,13 +19,6 @@ namespace Prowlarr.Api.V1.History
             _historyService = historyService;
         }
 
-        protected HistoryResource MapToResource(NzbDrone.Core.History.History model)
-        {
-            var resource = model.ToResource();
-
-            return resource;
-        }
-
         [HttpGet]
         [Produces("application/json")]
         public PagingResource<HistoryResource> GetHistory()
@@ -55,14 +48,14 @@ namespace Prowlarr.Api.V1.History
                 pagingSpec.FilterExpressions.Add(h => h.DownloadId == downloadId);
             }
 
-            return pagingSpec.ApplyToPage(_historyService.Paged, h => MapToResource(h));
+            return pagingSpec.ApplyToPage(_historyService.Paged, MapToResource);
         }
 
         [HttpGet("since")]
         [Produces("application/json")]
         public List<HistoryResource> GetHistorySince(DateTime date, HistoryEventType? eventType = null)
         {
-            return _historyService.Since(date, eventType).Select(h => MapToResource(h)).ToList();
+            return _historyService.Since(date, eventType).Select(MapToResource).ToList();
         }
 
         [HttpGet("indexer")]
@@ -71,10 +64,15 @@ namespace Prowlarr.Api.V1.History
         {
             if (limit.HasValue)
             {
-                return _historyService.GetByIndexerId(indexerId, eventType).Select(h => MapToResource(h)).Take(limit.Value).ToList();
+                return _historyService.GetByIndexerId(indexerId, eventType).Select(MapToResource).Take(limit.Value).ToList();
             }
 
-            return _historyService.GetByIndexerId(indexerId, eventType).Select(h => MapToResource(h)).ToList();
+            return _historyService.GetByIndexerId(indexerId, eventType).Select(MapToResource).ToList();
+        }
+
+        protected HistoryResource MapToResource(NzbDrone.Core.History.History model)
+        {
+            return model.ToResource();
         }
     }
 }

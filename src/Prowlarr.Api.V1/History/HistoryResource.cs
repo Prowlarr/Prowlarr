@@ -11,9 +11,7 @@ namespace Prowlarr.Api.V1.History
         public DateTime Date { get; set; }
         public string DownloadId { get; set; }
         public bool Successful { get; set; }
-
         public HistoryEventType EventType { get; set; }
-
         public Dictionary<string, string> Data { get; set; }
     }
 
@@ -29,16 +27,11 @@ namespace Prowlarr.Api.V1.History
             return new HistoryResource
             {
                 Id = model.Id,
-
                 IndexerId = model.IndexerId,
-
-                //QualityCutoffNotMet
                 Date = model.Date,
                 DownloadId = model.DownloadId,
                 Successful = model.Successful,
-
                 EventType = model.EventType,
-
                 Data = model.Data
             };
         }

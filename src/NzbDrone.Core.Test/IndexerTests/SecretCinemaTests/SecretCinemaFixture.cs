@@ -11,6 +11,7 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
 
 namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
@@ -40,9 +41,9 @@ namespace NzbDrone.Core.Test.IndexerTests.SecretCinemaTests
             var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(3);
-            releases.First().Should().BeOfType<GazelleInfo>();
+            releases.First().Should().BeOfType<TorrentInfo>();
 
-            var torrentInfo = releases.First() as GazelleInfo;
+            var torrentInfo = releases.First() as TorrentInfo;
 
             torrentInfo.Title.Should().Be("Singin' in the Rain (1952) 2160p");
             torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);

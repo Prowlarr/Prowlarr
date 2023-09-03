@@ -110,7 +110,7 @@ public class SecretCinemaParser : IParseIndexerResponse
                     var title = WebUtility.HtmlDecode(result.GroupName);
                     var time = DateTime.SpecifyKind(torrent.Time, DateTimeKind.Unspecified);
 
-                    var release = new GazelleInfo
+                    var release = new TorrentInfo
                     {
                         Guid = $"SecretCinema-{id}",
                         Title = title,
@@ -170,7 +170,7 @@ public class SecretCinemaParser : IParseIndexerResponse
                 var id = result.TorrentId;
                 var groupName = WebUtility.HtmlDecode(result.GroupName);
 
-                var release = new GazelleInfo
+                var release = new TorrentInfo
                 {
                     Guid = $"SecretCinema-{id}",
                     Title = groupName,

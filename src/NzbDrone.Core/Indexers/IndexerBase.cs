@@ -131,12 +131,17 @@ namespace NzbDrone.Core.Indexers
                 c.IndexerPrivacy = ((IndexerDefinition)Definition).Privacy;
                 c.IndexerPriority = ((IndexerDefinition)Definition).Priority;
 
-                if (Protocol == DownloadProtocol.Torrent)
+                //Add common flags
+                if (Protocol == DownloadProtocol.Torrent && c is TorrentInfo torrentRelease)
                 {
-                    //Add common flags
-                    if (((TorrentInfo)c).DownloadVolumeFactor == 0)
+                    if (torrentRelease.DownloadVolumeFactor == 0)
                     {
-                        ((TorrentInfo)c).IndexerFlags.Add(IndexerFlag.FreeLeech);
+                        torrentRelease.IndexerFlags.Add(IndexerFlag.FreeLeech);
+                    }
+
+                    if (torrentRelease.Scene.GetValueOrDefault(false))
+                    {
+                        torrentRelease.IndexerFlags.Add(IndexerFlag.Scene);
                     }
                 }
             });

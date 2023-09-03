@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Parser.Model
         public long? MinimumSeedTime { get; set; }
         public double? DownloadVolumeFactor { get; set; }
         public double? UploadVolumeFactor { get; set; }
+        public bool? Scene { get; set; }
 
         public TorrentSeedConfiguration SeedConfiguration { get; set; }
 

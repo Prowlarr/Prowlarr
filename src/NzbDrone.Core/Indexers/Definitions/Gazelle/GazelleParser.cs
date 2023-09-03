@@ -69,7 +69,7 @@ public class GazelleParser : IParseIndexerResponse
 
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                    var release = new GazelleInfo
+                    var release = new TorrentInfo
                     {
                         Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(title),
@@ -108,7 +108,7 @@ public class GazelleParser : IParseIndexerResponse
                 var groupName = WebUtility.HtmlDecode(result.GroupName);
                 var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                var release = new GazelleInfo
+                var release = new TorrentInfo
                 {
                     Guid = infoUrl,
                     Title = groupName,

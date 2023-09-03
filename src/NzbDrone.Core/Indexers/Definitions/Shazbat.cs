@@ -339,7 +339,7 @@ public class ShazbatParser : IParseIndexerResponse
                 Seeders = seeders,
                 Peers = seeders + leechers,
                 PublishDate = publishDate,
-                IndexerFlags = new HashSet<IndexerFlag> { IndexerFlag.Scene },
+                Scene = true,
                 Genres = row.QuerySelectorAll("label.label-tag").Select(t => t.TextContent.Trim()).ToList(),
                 DownloadVolumeFactor = hasGlobalFreeleech ? 0 : 1,
                 UploadVolumeFactor = 1,

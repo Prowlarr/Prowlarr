@@ -171,7 +171,7 @@ public class GreatPosterWallParser : GazelleParser
                 var infoUrl = GetInfoUrl(result.GroupId.ToString(), torrent.TorrentId);
                 var time = DateTime.SpecifyKind(torrent.Time, DateTimeKind.Unspecified);
 
-                var release = new GazelleInfo
+                var release = new TorrentInfo
                 {
                     Title = WebUtility.HtmlDecode(torrent.FileName).Trim(),
                     Guid = infoUrl,

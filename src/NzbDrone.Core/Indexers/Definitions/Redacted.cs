@@ -231,7 +231,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         var title = GetTitle(result, torrent);
                         var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                        var release = new GazelleInfo
+                        var release = new TorrentInfo
                         {
                             Guid = infoUrl,
                             InfoUrl = infoUrl,
@@ -272,7 +272,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var id = result.TorrentId;
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
-                    var release = new GazelleInfo
+                    var release = new TorrentInfo
                     {
                         Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(result.GroupName),

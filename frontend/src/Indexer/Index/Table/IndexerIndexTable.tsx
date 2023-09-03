@@ -26,6 +26,7 @@ interface RowItemData {
   sortKey: string;
   columns: Column[];
   isSelectMode: boolean;
+  onCloneIndexerPress(id: number): void;
 }
 
 interface IndexerIndexTableProps {
@@ -37,6 +38,7 @@ interface IndexerIndexTableProps {
   scrollerRef: RefObject<HTMLElement>;
   isSelectMode: boolean;
   isSmallScreen: boolean;
+  onCloneIndexerPress(id: number): void;
 }
 
 const columnsSelector = createSelector(
@@ -49,7 +51,7 @@ const Row: React.FC<ListChildComponentProps<RowItemData>> = ({
   style,
   data,
 }) => {
-  const { items, sortKey, columns, isSelectMode } = data;
+  const { items, sortKey, columns, isSelectMode, onCloneIndexerPress } = data;
 
   if (index >= items.length) {
     return null;
@@ -71,6 +73,7 @@ const Row: React.FC<ListChildComponentProps<RowItemData>> = ({
         sortKey={sortKey}
         columns={columns}
         isSelectMode={isSelectMode}
+        onCloneIndexerPress={onCloneIndexerPress}
       />
     </div>
   );
@@ -89,6 +92,7 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
     isSelectMode,
     isSmallScreen,
     scrollerRef,
+    onCloneIndexerPress,
   } = props;
 
   const columns = useSelector(columnsSelector);
@@ -198,6 +202,7 @@ function IndexerIndexTable(props: IndexerIndexTableProps) {
             sortKey,
             columns,
             isSelectMode,
+            onCloneIndexerPress,
           }}
         >
           {Row}

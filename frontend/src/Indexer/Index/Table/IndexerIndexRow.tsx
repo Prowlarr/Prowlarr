@@ -27,10 +27,11 @@ interface IndexerIndexRowProps {
   sortKey: string;
   columns: Column[];
   isSelectMode: boolean;
+  onCloneIndexerPress(id: number): void;
 }
 
 function IndexerIndexRow(props: IndexerIndexRowProps) {
-  const { indexerId, columns, isSelectMode } = props;
+  const { indexerId, columns, isSelectMode, onCloneIndexerPress } = props;
 
   const { indexer, appProfile, status, longDateFormat, timeFormat } =
     useSelector(createIndexerIndexItemSelector(props.indexerId));
@@ -153,6 +154,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
               <IndexerTitleLink
                 indexerId={indexerId}
                 indexerName={indexerName}
+                onCloneIndexerPress={onCloneIndexerPress}
               />
             </VirtualTableRowCell>
           );

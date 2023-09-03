@@ -41,12 +41,13 @@ function createIndexerInfoItemSelector(indexerId: number) {
 interface IndexerInfoModalContentProps {
   indexerId: number;
   onModalClose(): void;
+  onCloneIndexerPress(id: number): void;
 }
 
 function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
-  const { indexer } = useSelector(
-    createIndexerInfoItemSelector(props.indexerId)
-  );
+  const { indexerId, onCloneIndexerPress } = props;
+
+  const { indexer } = useSelector(createIndexerInfoItemSelector(indexerId));
 
   const {
     id,
@@ -91,6 +92,11 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     setIsDeleteIndexerModalOpen(false);
     onModalClose();
   }, [setIsDeleteIndexerModalOpen, onModalClose]);
+
+  const onCloneIndexerPressWrapper = useCallback(() => {
+    onCloneIndexerPress(id);
+    onModalClose();
+  }, [id, onCloneIndexerPress, onModalClose]);
 
   return (
     <ModalContent onModalClose={onModalClose}>
@@ -303,6 +309,9 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
           onPress={onDeleteIndexerPress}
         >
           {translate('Delete')}
+        </Button>
+        <Button onPress={onCloneIndexerPressWrapper}>
+          {translate('Clone')}
         </Button>
         <Button onPress={onEditIndexerPress}>{translate('Edit')}</Button>
         <Button onPress={onModalClose}>{translate('Close')}</Button>

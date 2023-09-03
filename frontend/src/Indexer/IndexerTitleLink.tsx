@@ -7,10 +7,11 @@ import styles from './IndexerTitleLink.css';
 interface IndexerTitleLinkProps {
   indexerName: string;
   indexerId: number;
+  onCloneIndexerPress(id: number): void;
 }
 
 function IndexerTitleLink(props: IndexerTitleLinkProps) {
-  const { indexerName, indexerId } = props;
+  const { indexerName, indexerId, onCloneIndexerPress } = props;
 
   const [isIndexerInfoModalOpen, setIsIndexerInfoModalOpen] = useState(false);
 
@@ -32,6 +33,7 @@ function IndexerTitleLink(props: IndexerTitleLinkProps) {
         indexerId={indexerId}
         isOpen={isIndexerInfoModalOpen}
         onModalClose={onIndexerInfoModalClose}
+        onCloneIndexerPress={onCloneIndexerPress}
       />
     </div>
   );

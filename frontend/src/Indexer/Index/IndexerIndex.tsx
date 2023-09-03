@@ -22,7 +22,7 @@ import AddIndexerModal from 'Indexer/Add/AddIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
 import NoIndexer from 'Indexer/NoIndexer';
 import { executeCommand } from 'Store/Actions/commandActions';
-import { testAllIndexers } from 'Store/Actions/indexerActions';
+import { cloneIndexer, testAllIndexers } from 'Store/Actions/indexerActions';
 import {
   setIndexerFilter,
   setIndexerSort,
@@ -97,6 +97,15 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
   const onEditIndexerModalClose = useCallback(() => {
     setIsEditIndexerModalOpen(false);
   }, [setIsEditIndexerModalOpen]);
+
+  const onCloneIndexerPress = useCallback(
+    (id: number) => {
+      dispatch(cloneIndexer({ id }));
+
+      setIsEditIndexerModalOpen(true);
+    },
+    [dispatch, setIsEditIndexerModalOpen]
+  );
 
   const onAppIndexerSyncPress = useCallback(() => {
     dispatch(
@@ -303,6 +312,7 @@ const IndexerIndex = withScrollPosition((props: IndexerIndexProps) => {
                   jumpToCharacter={jumpToCharacter}
                   isSelectMode={isSelectMode}
                   isSmallScreen={isSmallScreen}
+                  onCloneIndexerPress={onCloneIndexerPress}
                 />
 
                 <IndexerIndexFooter />

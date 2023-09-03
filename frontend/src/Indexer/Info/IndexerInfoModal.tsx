@@ -7,16 +7,18 @@ interface IndexerInfoModalProps {
   isOpen: boolean;
   indexerId: number;
   onModalClose(): void;
+  onCloneIndexerPress(id: number): void;
 }
 
 function IndexerInfoModal(props: IndexerInfoModalProps) {
-  const { isOpen, onModalClose, indexerId } = props;
+  const { isOpen, indexerId, onModalClose, onCloneIndexerPress } = props;
 
   return (
     <Modal size={sizes.MEDIUM} isOpen={isOpen} onModalClose={onModalClose}>
       <IndexerInfoModalContent
         indexerId={indexerId}
         onModalClose={onModalClose}
+        onCloneIndexerPress={onCloneIndexerPress}
       />
     </Modal>
   );

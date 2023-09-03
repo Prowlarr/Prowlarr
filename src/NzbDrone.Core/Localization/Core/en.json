@@ -108,6 +108,7 @@
   "ClearHistory": "Clear History",
   "ClearHistoryMessageText": "Are you sure you want to clear all Prowlarr history?",
   "ClientPriority": "Client Priority",
+  "Clone": "Clone",
   "CloneProfile": "Clone Profile",
   "Close": "Close",
   "CloseCurrentModal": "Close Current Modal",

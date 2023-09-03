@@ -233,6 +233,7 @@ function IndexerStats() {
                 <BarChart
                   data={getAverageResponseTimeData(item.indexers)}
                   title={translate('AverageResponseTimesMs')}
+                  stepSize={100}
                 />
               </div>
             </div>
@@ -241,6 +242,7 @@ function IndexerStats() {
                 <BarChart
                   data={getFailureRateData(item.indexers)}
                   title={translate('IndexerFailureRate')}
+                  stepSize={0.1}
                   kind={kinds.WARNING}
                 />
               </div>

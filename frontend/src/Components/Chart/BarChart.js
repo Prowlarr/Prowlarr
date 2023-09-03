@@ -2,6 +2,7 @@ import Chart from 'chart.js/auto';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { kinds } from 'Helpers/Props';
+import { defaultFontFamily } from 'Styles/Variables/fonts';
 
 function getColors(kind) {
 
@@ -39,7 +40,15 @@ class BarChart extends Component {
         plugins: {
           title: {
             display: true,
-            text: this.props.title
+            align: 'start',
+            text: this.props.title,
+            padding: {
+              bottom: 30
+            },
+            font: {
+              size: 14,
+              family: defaultFontFamily
+            }
           },
           legend: {
             display: this.props.legend

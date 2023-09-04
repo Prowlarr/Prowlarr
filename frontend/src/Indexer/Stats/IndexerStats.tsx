@@ -206,7 +206,12 @@ function IndexerStats() {
   const userAgentCount = item.userAgents?.length ?? 0;
   const queryCount =
     item.indexers?.reduce((total, indexer) => {
-      return total + indexer.numberOfQueries;
+      return (
+        total +
+        indexer.numberOfQueries +
+        indexer.numberOfRssQueries +
+        indexer.numberOfAuthQueries
+      );
     }, 0) ?? 0;
   const grabCount =
     item.indexers?.reduce((total, indexer) => {

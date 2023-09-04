@@ -67,7 +67,7 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
               <HistoryRowParameter
                 key={parameter.key}
                 title={parameter.title}
-                value={data[parameter.key as keyof HistoryData]}
+                value={data[parameter.key as keyof HistoryData].toString()}
               />
             );
           })}

@@ -94,18 +94,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             _settings = settings;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(NebulanceQuery parameters, int? results, int? offset)
-        {
-            var apiUrl = _settings.BaseUrl + "api.php";
-
-            var builder = new JsonRpcRequestBuilder(apiUrl)
-                .Call("getTorrents", _settings.ApiKey, parameters, results ?? 100, offset ?? 0);
-
-            builder.SuppressHttpError = true;
-
-            yield return new IndexerRequest(builder.Build());
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             return new IndexerPageableRequestChain();
@@ -151,6 +139,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
 
+            if (queryParams.Name.IsNotNullOrWhiteSpace() && (queryParams.Tvmaze is > 0 || queryParams.Imdb is > 0))
+            {
+                queryParams = queryParams.Clone();
+                queryParams.Name = null;
+
+                pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
+            }
+
             return pageableRequests;
         }
 
@@ -176,6 +172,18 @@ namespace NzbDrone.Core.Indexers.Definitions
             pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
 
             return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(NebulanceQuery parameters, int? results, int? offset)
+        {
+            var apiUrl = _settings.BaseUrl + "api.php";
+
+            var builder = new JsonRpcRequestBuilder(apiUrl)
+                .Call("getTorrents", _settings.ApiKey, parameters, results ?? 100, offset ?? 0);
+
+            builder.SuppressHttpError = true;
+
+            yield return new IndexerRequest(builder.Build());
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -264,17 +272,17 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Id { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Time { get; set; }
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName="age", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Age { get; set; }
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int Tvmaze { get; set; }
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int Imdb { get; set; }
+        [JsonProperty(PropertyName="tvmaze", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? Tvmaze { get; set; }
+        [JsonProperty(PropertyName="imdb", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? Imdb { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Hash { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] Tags { get; set; }
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName="name", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Category { get; set; }

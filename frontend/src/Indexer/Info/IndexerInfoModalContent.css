@@ -40,3 +40,16 @@
 .tabContent {
   margin-top: 20px;
 }
+
+.modalFooter {
+  composes: modalFooter from '~Components/Modal/ModalFooter.css';
+
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: $breakpointExtraSmall) {
+  .modalFooter {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

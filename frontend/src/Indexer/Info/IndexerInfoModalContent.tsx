@@ -348,19 +348,23 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
           </TabPanel>
         </Tabs>
       </ModalBody>
-      <ModalFooter>
-        <Button
-          className={styles.deleteButton}
-          kind={kinds.DANGER}
-          onPress={onDeleteIndexerPress}
-        >
-          {translate('Delete')}
-        </Button>
-        <Button onPress={onCloneIndexerPressWrapper}>
-          {translate('Clone')}
-        </Button>
-        <Button onPress={onEditIndexerPress}>{translate('Edit')}</Button>
-        <Button onPress={onModalClose}>{translate('Close')}</Button>
+      <ModalFooter className={styles.modalFooter}>
+        <div>
+          <Button
+            className={styles.deleteButton}
+            kind={kinds.DANGER}
+            onPress={onDeleteIndexerPress}
+          >
+            {translate('Delete')}
+          </Button>
+          <Button onPress={onCloneIndexerPressWrapper}>
+            {translate('Clone')}
+          </Button>
+        </div>
+        <div>
+          <Button onPress={onEditIndexerPress}>{translate('Edit')}</Button>
+          <Button onPress={onModalClose}>{translate('Close')}</Button>
+        </div>
       </ModalFooter>
 
       <EditIndexerModalConnector

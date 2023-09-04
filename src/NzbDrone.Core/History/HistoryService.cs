@@ -203,6 +203,7 @@ namespace NzbDrone.Core.History
             history.Data.Add("Host", message.Host ?? string.Empty);
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("GrabTitle", message.Title);
+            history.Data.Add("Categories", string.Join(",", message.Release.Categories.Select(x => x.Id) ?? Array.Empty<int>()));
             history.Data.Add("Url", message.Url ?? string.Empty);
 
             _historyRepository.Insert(history);

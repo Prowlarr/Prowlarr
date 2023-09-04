@@ -29,6 +29,11 @@ const columns = [
     isVisible: true,
   },
   {
+    name: 'parameters',
+    label: () => translate('Parameters'),
+    isVisible: true,
+  },
+  {
     name: 'date',
     label: () => translate('Date'),
     isVisible: true,

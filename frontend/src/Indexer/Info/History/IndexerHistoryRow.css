@@ -16,3 +16,8 @@
 
   width: 70px;
 }
+
+.parametersContent {
+  display: flex;
+  flex-wrap: wrap;
+}

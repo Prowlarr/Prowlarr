@@ -14,7 +14,7 @@ import HistoryEventTypeCell from './HistoryEventTypeCell';
 import HistoryRowParameter from './HistoryRowParameter';
 import styles from './HistoryRow.css';
 
-const historyParameters = [
+export const historyParameters = [
   { key: historyDataTypes.IMDB_ID, title: 'IMDb' },
   { key: historyDataTypes.TMDB_ID, title: 'TMDb' },
   { key: historyDataTypes.TVDB_ID, title: 'TVDb' },

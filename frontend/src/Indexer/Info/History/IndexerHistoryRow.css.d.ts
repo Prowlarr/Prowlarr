@@ -3,6 +3,7 @@
 interface CssExports {
   'details': string;
   'elapsedTime': string;
+  'parametersContent': string;
   'query': string;
   'source': string;
 }

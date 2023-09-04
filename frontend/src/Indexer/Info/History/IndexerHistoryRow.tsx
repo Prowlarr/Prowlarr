@@ -6,6 +6,8 @@ import TableRow from 'Components/Table/TableRow';
 import { icons } from 'Helpers/Props';
 import HistoryDetailsModal from 'History/Details/HistoryDetailsModal';
 import HistoryEventTypeCell from 'History/HistoryEventTypeCell';
+import { historyParameters } from 'History/HistoryRow';
+import HistoryRowParameter from 'History/HistoryRowParameter';
 import Indexer from 'Indexer/Indexer';
 import { HistoryData } from 'typings/History';
 import translate from 'Utilities/String/translate';
@@ -42,6 +44,11 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
     setIsDetailsModalOpen(false);
   }, [setIsDetailsModalOpen]);
 
+  const parameters = historyParameters.filter(
+    (parameter) =>
+      parameter.key in data && data[parameter.key as keyof HistoryData]
+  );
+
   return (
     <TableRow>
       <HistoryEventTypeCell
@@ -52,6 +59,20 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
       />
 
       <TableRowCell className={styles.query}>{data.query}</TableRowCell>
+
+      <TableRowCell>
+        <div className={styles.parametersContent}>
+          {parameters.map((parameter) => {
+            return (
+              <HistoryRowParameter
+                key={parameter.key}
+                title={parameter.title}
+                value={data[parameter.key as keyof HistoryData]}
+              />
+            );
+          })}
+        </div>
+      </TableRowCell>
 
       <RelativeDateCell date={date} />
 

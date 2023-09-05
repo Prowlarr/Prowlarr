@@ -18,6 +18,12 @@ public class FileListSettings : NoAuthTorrentBaseSettings
 {
     private static readonly FileListSettingsValidator Validator = new ();
 
+    public FileListSettings()
+    {
+        BaseSettings.QueryLimit = 150;
+        BaseSettings.LimitsUnit = (int)IndexerLimitsUnit.Hour;
+    }
+
     [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
     public string Username { get; set; }
 

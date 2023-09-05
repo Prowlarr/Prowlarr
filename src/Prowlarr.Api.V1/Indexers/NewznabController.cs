@@ -162,7 +162,10 @@ namespace NzbDrone.Api.V1.Indexers
                 var retryAfterQueryLimit = _indexerLimitService.CalculateRetryAfterQueryLimit(indexerDef);
                 AddRetryAfterHeader(retryAfterQueryLimit);
 
-                return CreateResponse(CreateErrorXML(429, $"User configurable Indexer Query Limit of {((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit} reached."), statusCode: StatusCodes.Status429TooManyRequests);
+                var queryLimit = ((IIndexerSettings)indexer.Definition.Settings).BaseSettings.QueryLimit;
+                var intervalLimitHours = _indexerLimitService.CalculateIntervalLimitHours(indexerDef);
+
+                return CreateResponse(CreateErrorXML(429, $"User configurable Indexer Query Limit of {queryLimit} in last {intervalLimitHours} hour(s) reached."), statusCode: StatusCodes.Status429TooManyRequests);
             }
 
             switch (requestType)
@@ -226,7 +229,10 @@ namespace NzbDrone.Api.V1.Indexers
                 var retryAfterDownloadLimit = _indexerLimitService.CalculateRetryAfterDownloadLimit(indexerDef);
                 AddRetryAfterHeader(retryAfterDownloadLimit);
 
-                return CreateResponse(CreateErrorXML(429, $"User configurable Indexer Grab Limit of {((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit} reached."), statusCode: StatusCodes.Status429TooManyRequests);
+                var grabLimit = ((IIndexerSettings)indexer.Definition.Settings).BaseSettings.GrabLimit;
+                var intervalLimitHours = _indexerLimitService.CalculateIntervalLimitHours(indexerDef);
+
+                return CreateResponse(CreateErrorXML(429, $"User configurable Indexer Grab Limit of {grabLimit} in last {intervalLimitHours} hour(s) reached."), statusCode: StatusCodes.Status429TooManyRequests);
             }
 
             if (link.IsNullOrWhiteSpace() || file.IsNullOrWhiteSpace())

@@ -1,7 +1,9 @@
 import $ from 'jquery';
+import React from 'react';
 import { createAction } from 'redux-actions';
 import { batchActions } from 'redux-batched-actions';
-import { filterBuilderTypes, filterBuilderValueTypes, sortDirections } from 'Helpers/Props';
+import Icon from 'Components/Icon';
+import { filterBuilderTypes, filterBuilderValueTypes, icons, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import getSectionState from 'Utilities/State/getSectionState';
@@ -110,7 +112,11 @@ export const defaultState = {
     },
     {
       name: 'indexerFlags',
-      columnLabel: 'Indexer Flags',
+      columnLabel: () => translate('IndexerFlags'),
+      label: React.createElement(Icon, {
+        name: icons.FLAG,
+        title: () => translate('IndexerFlags')
+      }),
       isSortable: true,
       isVisible: true
     },

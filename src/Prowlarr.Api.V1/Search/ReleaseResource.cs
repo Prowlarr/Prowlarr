@@ -37,6 +37,8 @@ namespace Prowlarr.Api.V1.Search
         public string InfoHash { get; set; }
         public int? Seeders { get; set; }
         public int? Leechers { get; set; }
+        public double? DownloadVolumeFactor { get; set; }
+        public double? UploadVolumeFactor { get; set; }
         public DownloadProtocol Protocol { get; set; }
 
         public string FileName
@@ -92,6 +94,8 @@ namespace Prowlarr.Api.V1.Search
                 InfoHash = torrentInfo.InfoHash,
                 Seeders = torrentInfo.Seeders,
                 Leechers = (torrentInfo.Peers.HasValue && torrentInfo.Seeders.HasValue) ? (torrentInfo.Peers.Value - torrentInfo.Seeders.Value) : (int?)null,
+                DownloadVolumeFactor = torrentInfo.DownloadVolumeFactor,
+                UploadVolumeFactor = torrentInfo.UploadVolumeFactor,
                 Protocol = releaseInfo.DownloadProtocol,
                 IndexerFlags = indexerFlags
             };

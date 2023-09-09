@@ -15,7 +15,9 @@ import formatBytes from 'Utilities/Number/formatBytes';
 import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CategoryLabel from './CategoryLabel';
+import DownloadVolumeFactorLabel from './DownloadVolumeFactorLabel';
 import Peers from './Peers';
+import UploadVolumeFactorLabel from './UploadVolumeFactorLabel';
 import styles from './SearchIndexRow.css';
 
 function getDownloadIcon(isGrabbing, isGrabbed, grabError) {
@@ -118,6 +120,8 @@ class SearchIndexRow extends Component {
       grabs,
       seeders,
       leechers,
+      downloadVolumeFactor,
+      uploadVolumeFactor,
       indexerFlags,
       columns,
       isGrabbing,
@@ -191,6 +195,8 @@ class SearchIndexRow extends Component {
                   >
                     <div>
                       {title}
+                      <DownloadVolumeFactorLabel factor={downloadVolumeFactor} />
+                      <UploadVolumeFactorLabel factor={uploadVolumeFactor} />
                     </div>
                   </Link>
                 </VirtualTableRowCell>
@@ -375,6 +381,8 @@ SearchIndexRow.propTypes = {
   grabs: PropTypes.number,
   seeders: PropTypes.number,
   leechers: PropTypes.number,
+  downloadVolumeFactor: PropTypes.number,
+  uploadVolumeFactor: PropTypes.number,
   indexerFlags: PropTypes.arrayOf(PropTypes.string).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   onGrabPress: PropTypes.func.isRequired,

@@ -29,7 +29,6 @@
     "ApiKey": "API Nøkkel",
     "AppDataLocationHealthCheckMessage": "Oppdatering vil ikke være mulig for å forhindre sletting av AppData på oppdateringen",
     "Apply": "Bruk",
-    "AreYouSureYouWantToResetYourAPIKey": "Er du sikker på at du vil tilbakestille API -nøkkelen din?",
     "AutomaticSearch": "Automatisk Søk",
     "BackupRetentionHelpText": "Automatiske sikkerhetskopier som er eldre enn oppbevaringsperioden, blir ryddet opp automatisk",
     "BindAddress": "Bind adresse",

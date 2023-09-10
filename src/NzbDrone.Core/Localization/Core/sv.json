@@ -187,7 +187,6 @@
     "UnableToLoadNotifications": "Det gick inte att läsa in aviseringar",
     "UnableToLoadTags": "Det gick inte att ladda taggar",
     "AcceptConfirmationModal": "Acceptera bekräftelsemodal",
-    "AreYouSureYouWantToResetYourAPIKey": "Är du säker på att du vill nollställa din API-nyckel?",
     "Authentication": "Autentisera",
     "LogLevelTraceHelpTextWarning": "Spårloggning bör endast aktiveras tillfälligt",
     "DeleteIndexerProxyMessageText": "Är du säker på att du vill radera taggen '{0}'?",

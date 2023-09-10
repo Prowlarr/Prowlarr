@@ -12,7 +12,6 @@
     "AllIndexersHiddenDueToFilter": "جميع الأفلام مخفية بسبب الفلتر المطبق.",
     "ApplicationStatusCheckAllClientMessage": "جميع القوائم غير متاحة بسبب الإخفاقات",
     "ApplicationStatusCheckSingleClientMessage": "القوائم غير متاحة بسبب الإخفاقات: {0}",
-    "AreYouSureYouWantToResetYourAPIKey": "هل أنت متأكد أنك تريد إعادة تعيين مفتاح API الخاص بك؟",
     "Authentication": "المصادقة",
     "BackupIntervalHelpText": "الفاصل الزمني بين النسخ الاحتياطية التلقائية",
     "BackupNow": "اعمل نسخة احتياطية الان",

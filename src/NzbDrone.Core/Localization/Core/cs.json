@@ -229,7 +229,6 @@
     "Analytics": "Analýzy",
     "EnableRss": "Povolit RSS",
     "NoChange": "Žádná změna",
-    "AreYouSureYouWantToResetYourAPIKey": "Opravdu chcete resetovat klíč API?",
     "Authentication": "Ověřování",
     "AuthenticationMethodHelpText": "Vyžadovat uživatelské jméno a heslo pro přístup k Prowlarr",
     "Automatic": "Automatický",

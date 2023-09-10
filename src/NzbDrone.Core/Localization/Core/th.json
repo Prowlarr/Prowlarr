@@ -114,7 +114,6 @@
     "Size": "ขนาด",
     "AppDataDirectory": "ไดเรกทอรี AppData",
     "ApplyTags": "ใช้แท็ก",
-    "AreYouSureYouWantToResetYourAPIKey": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API",
     "Authentication": "การรับรองความถูกต้อง",
     "AuthenticationMethodHelpText": "ต้องการชื่อผู้ใช้และรหัสผ่านเพื่อเข้าถึงเรดาร์",
     "Automatic": "อัตโนมัติ",

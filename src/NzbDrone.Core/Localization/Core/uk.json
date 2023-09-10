@@ -34,7 +34,6 @@
     "DeleteBackupMessageText": "Ви впевнені, що хочете видалити резервну копію '{0}'?",
     "DeleteDownloadClient": "Видалити клієнт завантаження",
     "DeleteDownloadClientMessageText": "Ви впевнені, що хочете видалити клієнт завантаження '{0}'?",
-    "AreYouSureYouWantToResetYourAPIKey": "Ви впевнені, що хочете скинути свій ключ API?",
     "Authentication": "Аутентифікація",
     "Automatic": "Автоматичний",
     "AutomaticSearch": "Автоматичний пошук",

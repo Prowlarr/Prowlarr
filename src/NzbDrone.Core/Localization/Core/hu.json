@@ -66,7 +66,6 @@
     "AnalyticsEnabledHelpText": "Küldjön névtelen használati és hibainformációkat a Prowlarr szervereire. Ez magában foglalja a böngészőjéről szóló információkat, mely Prowlarr WebUI oldalakat használja, a hibajelentést, valamint az operációs rendszer adatait. Ezeket az információkat a funkciók és a hibajavítások rangsorolására használjuk fel.",
     "AuthenticationMethodHelpText": "Felhasználónév és Jelszó szükséges a Prowlarr-hoz való hozzáféréshez",
     "Authentication": "Hitelesítés",
-    "AreYouSureYouWantToResetYourAPIKey": "Biztos hogy vissza szeretnéd állítani az API-Kulcsod?",
     "ApplyTags": "Címkék alkalmazása",
     "Age": "Kora",
     "ApiKey": "API Kulcs",

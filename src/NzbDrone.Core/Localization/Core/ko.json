@@ -56,7 +56,6 @@
     "Add": "추가",
     "Apply": "적용",
     "AppDataLocationHealthCheckMessage": "업데이트 시 AppData 삭제를 방지하기 위해 업데이트 할 수 없습니다.",
-    "AreYouSureYouWantToResetYourAPIKey": "API 키를 재설정하시겠습니까?",
     "BranchUpdateMechanism": "외부 업데이트 메커니즘에서 사용하는 파생 버전",
     "CertificateValidation": "인증서 검증",
     "CertificateValidationHelpText": "HTTPS 인증 유효성 검사의 엄격한 방법 변경",

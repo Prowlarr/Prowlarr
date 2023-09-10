@@ -135,7 +135,6 @@
     "LaunchBrowserHelpText": " Deschideți un browser web și navigați la pagina de pornire Prowlarr la pornirea aplicației.",
     "AppDataDirectory": "Directorul AppData",
     "ApplicationStatusCheckAllClientMessage": "Toate aplicațiile sunt indisponibile datorită erorilor",
-    "AreYouSureYouWantToResetYourAPIKey": "Sigur doriți să vă resetați cheia API?",
     "Authentication": "Autentificare",
     "AuthenticationMethodHelpText": "Solicitați nume utilizator și parola pentru a accesa Prowlarr",
     "AutomaticSearch": "Căutare automată",

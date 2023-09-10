@@ -571,7 +571,7 @@
     "NotificationStatusSingleClientHealthCheckMessage": "由于故障应用程序不可用",
     "AuthBasic": "基础（浏览器弹出对话框）",
     "AuthForm": "表单（登陆页面）",
-    "AuthenticationMethod": "认证方式",
+    "AuthenticationMethod": "",
     "AuthenticationMethodHelpTextWarning": "请选择有效的认证方式",
     "AuthenticationRequiredPasswordHelpTextWarning": "输入一个新的密码",
     "AuthenticationRequiredUsernameHelpTextWarning": "输入一个新的用户名",

@@ -143,7 +143,6 @@
     "Automatic": "Automatique",
     "AuthenticationMethodHelpText": "Exiger un identifiant et un mot de passe pour accéder à Prowlarr",
     "Authentication": "Authentification",
-    "AreYouSureYouWantToResetYourAPIKey": "Êtes vous sûr de vouloir réinitialiser votre Clé d'API ?",
     "ApplyTags": "Appliquer les tags",
     "AppDataDirectory": "Dossier AppData",
     "ApiKey": "Clé API",

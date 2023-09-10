@@ -258,7 +258,6 @@
     "ApplicationStatusCheckSingleClientMessage": "רשימות לא זמינות בגלל כשלים: {0}",
     "Apply": "להגיש מועמדות",
     "ApplyTags": "החל תגים",
-    "AreYouSureYouWantToResetYourAPIKey": "האם אתה בטוח שברצונך לאפס את מפתח ה- API שלך?",
     "Authentication": "אימות",
     "AuthenticationMethodHelpText": "דרוש שם משתמש וסיסמה כדי לגשת ל Prowlarr",
     "Automatic": "אוֹטוֹמָטִי",

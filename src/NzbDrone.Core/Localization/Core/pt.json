@@ -131,7 +131,6 @@
     "Automatic": "Automático",
     "AuthenticationMethodHelpText": "Solicitar nome de utilizador e palavra-passe para acessar ao Prowlarr",
     "Authentication": "Autenticação",
-    "AreYouSureYouWantToResetYourAPIKey": "Tem a certeza que quer repor a Chave da API?",
     "ApplyTags": "Aplicar etiquetas",
     "AppDataDirectory": "Pasta AppData",
     "ApiKey": "Chave da API",

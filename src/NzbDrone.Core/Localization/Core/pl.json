@@ -369,5 +369,10 @@
     "minutes": "Minuty",
     "NotificationStatusSingleClientHealthCheckMessage": "Listy niedostępne z powodu błędów: {0}",
     "AddConnection": "Edytuj kolekcję",
-    "NotificationStatusAllClientHealthCheckMessage": "Wszystkie listy są niedostępne z powodu błędów"
+    "NotificationStatusAllClientHealthCheckMessage": "Wszystkie listy są niedostępne z powodu błędów",
+    "AuthForm": "Formularze (strona logowania)",
+    "DisabledForLocalAddresses": "Wyłączone dla adresów lokalnych",
+    "None": "Żaden",
+    "AuthBasic": "Podstawowe (wyskakujące okienko przeglądarki)",
+    "ResetAPIKeyMessageText": "Czy na pewno chcesz zresetować swój klucz API?"
 }

@@ -501,5 +501,11 @@
     "DeleteAppProfileMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το προφίλ ποιότητας '{0}'?",
     "AddConnection": "Προσθήκη Σύνδεσης",
     "NotificationStatusAllClientHealthCheckMessage": "Όλες οι λίστες δεν είναι διαθέσιμες λόγω αστοχιών",
-    "NotificationStatusSingleClientHealthCheckMessage": "Μη διαθέσιμες λίστες λόγω αποτυχιών: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Μη διαθέσιμες λίστες λόγω αποτυχιών: {0}",
+    "AuthBasic": "Βασικό (Αναδυόμενο παράθυρο προγράμματος περιήγησης)",
+    "AuthForm": "Φόρμες (σελίδα σύνδεσης)",
+    "Clone": "Κλωνοποίηση",
+    "DisabledForLocalAddresses": "Απενεργοποιήθηκε για τοπικές διευθύνσεις",
+    "None": "Κανένας",
+    "ResetAPIKeyMessageText": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε το κλειδί API σας;"
 }

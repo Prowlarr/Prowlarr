@@ -131,5 +131,9 @@
     "ConnectionLostReconnect": "Radarr vil forsøke å koble til automatisk, eller du kan klikke oppdater nedenfor.",
     "ConnectionLostToBackend": "Radarr har mistet tilkoblingen til baksystemet og må lastes inn på nytt for å gjenopprette funksjonalitet.",
     "DeleteAppProfileMessageText": "Er du sikker på at du vil slette denne forsinkelsesprofilen?",
-    "AddConnection": "Legg til kobling"
+    "AddConnection": "Legg til kobling",
+    "AuthBasic": "Grunnleggende (nettleser -popup)",
+    "AuthForm": "Skjemaer (påloggingsside)",
+    "DisabledForLocalAddresses": "Deaktivert for lokale adresser",
+    "ResetAPIKeyMessageText": "Er du sikker på at du vil tilbakestille API -nøkkelen din?"
 }

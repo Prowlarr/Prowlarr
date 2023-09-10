@@ -499,5 +499,10 @@
     "DeleteAppProfileMessageText": "Qualitätsprofil '{0}' wirklich löschen?",
     "AddConnection": "Sammlung bearbeiten",
     "NotificationStatusAllClientHealthCheckMessage": "Wegen Fehlern sind keine Applikationen verfügbar",
-    "NotificationStatusSingleClientHealthCheckMessage": "Applikationen wegen folgender Fehler nicht verfügbar: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Applikationen wegen folgender Fehler nicht verfügbar: {0}",
+    "AuthBasic": "Einfach (Browser Popup)",
+    "AuthForm": "Formular (Login Seite)",
+    "DisabledForLocalAddresses": "Für Lokale Adressen deaktivieren",
+    "None": "Keine",
+    "ResetAPIKeyMessageText": "Bist du sicher, dass du den API-Schlüssel zurücksetzen willst?"
 }

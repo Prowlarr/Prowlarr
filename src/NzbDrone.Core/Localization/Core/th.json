@@ -350,5 +350,10 @@
     "WhatsNew": "มีอะไรใหม่",
     "RecentChanges": "การเปลี่ยนแปลงล่าสุด",
     "NotificationStatusAllClientHealthCheckMessage": "รายการทั้งหมดไม่พร้อมใช้งานเนื่องจากความล้มเหลว",
-    "NotificationStatusSingleClientHealthCheckMessage": "รายการไม่พร้อมใช้งานเนื่องจากความล้มเหลว: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "รายการไม่พร้อมใช้งานเนื่องจากความล้มเหลว: {0}",
+    "AuthBasic": "พื้นฐาน (เบราว์เซอร์ป๊อปอัพ)",
+    "AuthForm": "แบบฟอร์ม (หน้าเข้าสู่ระบบ)",
+    "DisabledForLocalAddresses": "ปิดใช้งานสำหรับที่อยู่ท้องถิ่น",
+    "None": "ไม่มี",
+    "ResetAPIKeyMessageText": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API"
 }

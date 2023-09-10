@@ -497,5 +497,10 @@
     "minutes": "Minuti",
     "AddConnection": "Aggiungi Connessione",
     "NotificationStatusAllClientHealthCheckMessage": "Tutte le applicazioni non sono disponibili a causa di errori",
-    "NotificationStatusSingleClientHealthCheckMessage": "Applicazioni non disponibili a causa di errori: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Applicazioni non disponibili a causa di errori: {0}",
+    "AuthForm": "Moduli (Pagina di Accesso)",
+    "DisabledForLocalAddresses": "Disabilitato per Indirizzi Locali",
+    "None": "Nessuna",
+    "ResetAPIKeyMessageText": "Sei sicuro di voler reimpostare la tua chiave API?",
+    "AuthBasic": "Base (Popup del Browser)"
 }

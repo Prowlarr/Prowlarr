@@ -347,5 +347,10 @@
     "WhatsNew": "ما هو الجديد؟",
     "minutes": "الدقائق",
     "NotificationStatusAllClientHealthCheckMessage": "جميع القوائم غير متاحة بسبب الإخفاقات",
-    "NotificationStatusSingleClientHealthCheckMessage": "القوائم غير متاحة بسبب الإخفاقات: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "القوائم غير متاحة بسبب الإخفاقات: {0}",
+    "AuthBasic": "أساسي (المتصفح المنبثق)",
+    "AuthForm": "النماذج (صفحة تسجيل الدخول)",
+    "DisabledForLocalAddresses": "معطل بسبب العناوين المحلية",
+    "None": "لا شيء",
+    "ResetAPIKeyMessageText": "هل أنت متأكد أنك تريد إعادة تعيين مفتاح API الخاص بك؟"
 }

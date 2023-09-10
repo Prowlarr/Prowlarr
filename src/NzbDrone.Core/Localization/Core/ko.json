@@ -346,5 +346,10 @@
     "ConnectionLostToBackend": "Radarr는 백엔드와의 연결이 끊어졌으며 기능을 복원하려면 다시 로딩해야 합니다.",
     "DeleteAppProfileMessageText": "품질 프로필 {0}을 (를) 삭제 하시겠습니까?",
     "NotificationStatusAllClientHealthCheckMessage": "실패로 인해 모든 목록을 사용할 수 없습니다.",
-    "NotificationStatusSingleClientHealthCheckMessage": "실패로 인해 사용할 수없는 목록 : {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "실패로 인해 사용할 수없는 목록 : {0}",
+    "AuthBasic": "기본 (브라우저 팝업)",
+    "AuthForm": "양식 (로그인 페이지)",
+    "DisabledForLocalAddresses": "로컬 주소에 대해 비활성화됨",
+    "None": "없음",
+    "ResetAPIKeyMessageText": "API 키를 재설정하시겠습니까?"
 }

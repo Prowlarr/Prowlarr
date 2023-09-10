@@ -568,5 +568,18 @@
     "EditApplicationImplementation": "添加应用-{实体名称}",
     "EditConnectionImplementation": "添加集合 - {implementationName}",
     "NotificationStatusAllClientHealthCheckMessage": "由于故障所用应用程序都不可用",
-    "NotificationStatusSingleClientHealthCheckMessage": "由于故障应用程序不可用"
+    "NotificationStatusSingleClientHealthCheckMessage": "由于故障应用程序不可用",
+    "AuthBasic": "基础（浏览器弹出对话框）",
+    "AuthForm": "表单（登陆页面）",
+    "AuthenticationMethod": "认证方式",
+    "AuthenticationMethodHelpTextWarning": "请选择有效的认证方式",
+    "AuthenticationRequiredPasswordHelpTextWarning": "输入一个新的密码",
+    "AuthenticationRequiredUsernameHelpTextWarning": "输入一个新的用户名",
+    "Clone": "复制",
+    "DefaultNameCopiedProfile": "{name} - 复制",
+    "DisabledForLocalAddresses": "对局域网内禁用",
+    "External": "外部的",
+    "None": "无",
+    "ResetAPIKeyMessageText": "您确定要重置您的 API 密钥吗？",
+    "IndexerDownloadClientHealthCheckMessage": "有无效下载客户端的索引器：{0}。"
 }

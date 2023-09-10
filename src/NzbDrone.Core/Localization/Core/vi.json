@@ -348,5 +348,10 @@
     "ConnectionLostReconnect": "Radarr sẽ cố gắng kết nối tự động hoặc bạn có thể nhấp vào tải lại bên dưới.",
     "WhatsNew": "Có gì mới?",
     "NotificationStatusAllClientHealthCheckMessage": "Tất cả danh sách không có sẵn do lỗi",
-    "NotificationStatusSingleClientHealthCheckMessage": "Danh sách không có sẵn do lỗi: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Danh sách không có sẵn do lỗi: {0}",
+    "AuthBasic": "Cơ bản (Cửa sổ bật lên trình duyệt)",
+    "AuthForm": "Biểu mẫu (Trang đăng nhập)",
+    "DisabledForLocalAddresses": "Bị vô hiệu hóa đối với địa chỉ địa phương",
+    "None": "không ai",
+    "ResetAPIKeyMessageText": "Bạn có chắc chắn muốn đặt lại Khóa API của mình không?"
 }

@@ -493,5 +493,10 @@
     "minutes": "Minuuttia",
     "AddConnection": "Lisää yhteys",
     "NotificationStatusAllClientHealthCheckMessage": "Sovellukset eivät ole käytettävissä virheiden vuoksi",
-    "NotificationStatusSingleClientHealthCheckMessage": "Sovellukset eivät ole käytettävissä virheiden vuoksi: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Sovellukset eivät ole käytettävissä virheiden vuoksi: {0}",
+    "AuthBasic": "Perus (selaimen ponnahdus)",
+    "AuthForm": "Lomake (kirjautumissivu)",
+    "DisabledForLocalAddresses": "Ei käytetä paikallisille osoittelle",
+    "None": "Ei mitään",
+    "ResetAPIKeyMessageText": "Haluatko varmasti uudistaa API-avaimesi?"
 }

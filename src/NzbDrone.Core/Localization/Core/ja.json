@@ -347,5 +347,10 @@
     "WhatsNew": "新着情報？",
     "minutes": "議事録",
     "NotificationStatusSingleClientHealthCheckMessage": "失敗のため利用できないリスト：{0}",
-    "NotificationStatusAllClientHealthCheckMessage": "障害のため、すべてのリストを利用できません"
+    "NotificationStatusAllClientHealthCheckMessage": "障害のため、すべてのリストを利用できません",
+    "AuthBasic": "基本（ブラウザポップアップ）",
+    "AuthForm": "フォーム（ログインページ）",
+    "DisabledForLocalAddresses": "ローカルアドレスでは無効",
+    "None": "なし",
+    "ResetAPIKeyMessageText": "APIキーをリセットしてもよろしいですか？"
 }

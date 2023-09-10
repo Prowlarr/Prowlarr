@@ -407,5 +407,12 @@
     "EditIndexerProxyImplementation": "Редактировать индексатор - {implementationName}",
     "Season": "Сезон",
     "AddApplicationImplementation": "Добавить соединение - {implementationName}",
-    "EditApplicationImplementation": "Редактировать уведомление - {implementationName}"
+    "EditApplicationImplementation": "Редактировать уведомление - {implementationName}",
+    "AuthBasic": "Базовый (всплывающее окно браузера)",
+    "AuthForm": "Формы (Страница авторизации)",
+    "DisabledForLocalAddresses": "Отключено для локальных адресов",
+    "None": "Ничто",
+    "ResetAPIKeyMessageText": "Вы уверены, что хотите сбросить Ваш API ключ?",
+    "Categories": "Категории",
+    "Album": "альбом"
 }

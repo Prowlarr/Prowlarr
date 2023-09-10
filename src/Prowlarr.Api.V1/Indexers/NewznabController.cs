@@ -30,7 +30,7 @@ namespace NzbDrone.Api.V1.Indexers
     public class NewznabController : Controller
     {
         private IIndexerFactory _indexerFactory { get; set; }
-        private ISearchForNzb _nzbSearchService { get; set; }
+        private IReleaseSearchService _releaseSearchService { get; set; }
         private IIndexerLimitService _indexerLimitService { get; set; }
         private IIndexerStatusService _indexerStatusService;
         private IDownloadMappingService _downloadMappingService { get; set; }
@@ -38,7 +38,7 @@ namespace NzbDrone.Api.V1.Indexers
         private readonly Logger _logger;
 
         public NewznabController(IndexerFactory indexerFactory,
-            ISearchForNzb nzbSearchService,
+            IReleaseSearchService releaseSearchService,
             IIndexerLimitService indexerLimitService,
             IIndexerStatusService indexerStatusService,
             IDownloadMappingService downloadMappingService,
@@ -46,7 +46,7 @@ namespace NzbDrone.Api.V1.Indexers
             Logger logger)
         {
             _indexerFactory = indexerFactory;
-            _nzbSearchService = nzbSearchService;
+            _releaseSearchService = releaseSearchService;
             _indexerLimitService = indexerLimitService;
             _indexerStatusService = indexerStatusService;
             _downloadMappingService = downloadMappingService;
@@ -156,7 +156,7 @@ namespace NzbDrone.Api.V1.Indexers
                 return CreateResponse(CreateErrorXML(429, $"Indexer is disabled till {blockedIndexerStatus.DisabledTill.Value.ToLocalTime()} due to recent failures."), statusCode: StatusCodes.Status429TooManyRequests);
             }
 
-            //TODO Optimize this so it's not called here and in NzbSearchService (for manual search)
+            // TODO Optimize this so it's not called here and in ReleaseSearchService (for manual search)
             if (_indexerLimitService.AtQueryLimit(indexerDef))
             {
                 var retryAfterQueryLimit = _indexerLimitService.CalculateRetryAfterQueryLimit(indexerDef);
@@ -178,7 +178,7 @@ namespace NzbDrone.Api.V1.Indexers
                 case "music":
                 case "book":
                 case "movie":
-                    var results = await _nzbSearchService.Search(request, new List<int> { indexerDef.Id }, false);
+                    var results = await _releaseSearchService.Search(request, new List<int> { indexerDef.Id }, false);
 
                     foreach (var result in results.Releases)
                     {

@@ -169,7 +169,7 @@ namespace Prowlarr.Http.Extensions
             }
 
             // Front-End-Https: Non-standard header field used by Microsoft applications and load-balancers
-            else if (request.Headers.Where(x => x.Key == "Front-End-Https" && x.Value.FirstOrDefault() == "on").Any())
+            else if (request.Headers.Any(x => x.Key == "Front-End-Https" && x.Value.FirstOrDefault() == "on"))
             {
                 scheme = "https";
             }

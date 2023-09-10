@@ -23,7 +23,7 @@ namespace Prowlarr.Api.V1.Search
     [V1ApiController]
     public class SearchController : RestController<ReleaseResource>
     {
-        private readonly ISearchForNzb _nzbSearhService;
+        private readonly IReleaseSearchService _releaseSearchService;
         private readonly IDownloadService _downloadService;
         private readonly IIndexerFactory _indexerFactory;
         private readonly IDownloadMappingService _downloadMappingService;
@@ -31,9 +31,9 @@ namespace Prowlarr.Api.V1.Search
 
         private readonly ICached<ReleaseInfo> _remoteReleaseCache;
 
-        public SearchController(ISearchForNzb nzbSearhService, IDownloadService downloadService, IIndexerFactory indexerFactory, IDownloadMappingService downloadMappingService, ICacheManager cacheManager, Logger logger)
+        public SearchController(IReleaseSearchService releaseSearchService, IDownloadService downloadService, IIndexerFactory indexerFactory, IDownloadMappingService downloadMappingService, ICacheManager cacheManager, Logger logger)
         {
-            _nzbSearhService = nzbSearhService;
+            _releaseSearchService = releaseSearchService;
             _downloadService = downloadService;
             _indexerFactory = indexerFactory;
             _downloadMappingService = downloadMappingService;
@@ -143,7 +143,7 @@ namespace Prowlarr.Api.V1.Search
 
                 request.QueryToParams();
 
-                var result = await _nzbSearhService.Search(request, payload.IndexerIds, true);
+                var result = await _releaseSearchService.Search(request, payload.IndexerIds, true);
                 var releases = result.Releases;
 
                 return MapReleases(releases, Request.GetServerUrl());

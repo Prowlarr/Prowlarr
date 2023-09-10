@@ -14,12 +14,12 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
 {
-    public interface ISearchForNzb
+    public interface IReleaseSearchService
     {
         Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch);
     }
 
-    public class ReleaseSearchService : ISearchForNzb
+    public class ReleaseSearchService : IReleaseSearchService
     {
         private readonly IIndexerLimitService _indexerLimitService;
         private readonly IEventAggregator _eventAggregator;
@@ -222,28 +222,28 @@ namespace NzbDrone.Core.IndexerSearch
                     }
                 }
 
-                if (criteriaBase.MinAge.HasValue && criteriaBase.MinAge.Value > 0)
+                if (criteriaBase.MinAge is > 0)
                 {
                     var cutoffDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(criteriaBase.MinAge.Value));
 
                     releases = releases.Where(r => r.PublishDate <= cutoffDate).ToList();
                 }
 
-                if (criteriaBase.MaxAge.HasValue && criteriaBase.MaxAge.Value > 0)
+                if (criteriaBase.MaxAge is > 0)
                 {
                     var cutoffDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(criteriaBase.MaxAge.Value));
 
                     releases = releases.Where(r => r.PublishDate >= cutoffDate).ToList();
                 }
 
-                if (criteriaBase.MinSize.HasValue && criteriaBase.MinSize.Value > 0)
+                if (criteriaBase.MinSize is > 0)
                 {
                     var minSize = criteriaBase.MinSize.Value;
 
                     releases = releases.Where(r => r.Size >= minSize).ToList();
                 }
 
-                if (criteriaBase.MaxSize.HasValue && criteriaBase.MaxSize.Value > 0)
+                if (criteriaBase.MaxSize is > 0)
                 {
                     var maxSize = criteriaBase.MaxSize.Value;
 

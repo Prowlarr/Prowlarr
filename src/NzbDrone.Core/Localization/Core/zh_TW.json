@@ -102,5 +102,7 @@
     "AnalyticsEnabledHelpText": "將使用和錯誤資訊匿名傳送至Radarr的伺服器。這些資訊包括您的瀏覽器資訊、使用的Radarr WebUI頁面、錯誤報告，以及作業系統和執行時版本。我們將使用這些資訊來優先處理功能和錯誤修復。",
     "ApiKey": "API 金鑰",
     "AppDataDirectory": "AppData 路徑",
-    "Applications": "應用程式"
+    "Applications": "應用程式",
+    "AuthBasic": "基礎（瀏覽器彈出視窗）",
+    "AuthForm": "表單（登入頁面）"
 }

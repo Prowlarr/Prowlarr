@@ -362,5 +362,11 @@
     "minutes": "Хвилин",
     "WhatsNew": "Що нового?",
     "NotificationStatusAllClientHealthCheckMessage": "Усі списки недоступні через помилки",
-    "NotificationStatusSingleClientHealthCheckMessage": "Списки недоступні через помилки: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Списки недоступні через помилки: {0}",
+    "AuthBasic": "Основний (спливаюче вікно браузера)",
+    "AuthForm": "Форми (сторінка входу)",
+    "DisabledForLocalAddresses": "Відключено для локальних адрес",
+    "None": "Жодного",
+    "ResetAPIKeyMessageText": "Ви впевнені, що хочете скинути свій ключ API?",
+    "AddConnection": "Редагувати колекцію"
 }

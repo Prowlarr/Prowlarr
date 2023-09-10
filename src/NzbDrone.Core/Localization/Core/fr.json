@@ -537,5 +537,14 @@
     "AddIndexerImplementation": "Ajouter une condition - {implementationName}",
     "EditConnectionImplementation": "Ajouter une connexion - {implementationName}",
     "NotificationStatusAllClientHealthCheckMessage": "Toutes les applications sont indisponibles en raison de dysfonctionnements",
-    "NotificationStatusSingleClientHealthCheckMessage": "Applications indisponibles en raison de dysfonctionnements : {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Applications indisponibles en raison de dysfonctionnements : {0}",
+    "EditApplicationImplementation": "Ajouter une condition - {implementationName}",
+    "EditIndexerImplementation": "Ajouter une condition - {implementationName}",
+    "EditIndexerProxyImplementation": "Ajouter une condition - {implementationName}",
+    "AuthBasic": "Authentification de base (Basic) (popup dans le navigateur)",
+    "AuthForm": "Authentification par un formulaire (page de connexion)",
+    "DisabledForLocalAddresses": "Désactivé pour les adresses IP locales",
+    "None": "Aucun",
+    "ResetAPIKeyMessageText": "Êtes vous sûr de vouloir réinitialiser votre Clé d'API ?",
+    "AddIndexerProxyImplementation": "Ajouter une condition - {implementationName}"
 }

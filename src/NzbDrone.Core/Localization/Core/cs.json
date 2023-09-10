@@ -383,5 +383,17 @@
     "Applications": "Aplikace",
     "Connect": "Oznámení",
     "EditConnectionImplementation": "Přidat spojení - {implementationName}",
-    "EditDownloadClientImplementation": "Přidat klienta pro stahování - {implementationName}"
+    "EditDownloadClientImplementation": "Přidat klienta pro stahování - {implementationName}",
+    "AuthForm": "Formuláře (přihlašovací stránka)",
+    "Clone": "Klonovat",
+    "DefaultNameCopiedProfile": "{name} - Kopírovat",
+    "DisabledForLocalAddresses": "Zakázáno pro místní adresy",
+    "EditApplicationImplementation": "Přidat spojení - {implementationName}",
+    "None": "Žádný",
+    "ResetAPIKeyMessageText": "Opravdu chcete resetovat klíč API?",
+    "Database": "Databáze",
+    "CountDownloadClientsSelected": "{count} vybraných klientů ke stahování",
+    "CountIndexersSelected": "{count} vybraných indexátorů",
+    "EditIndexerProxyImplementation": "Přidat indexátor - {implementationName}",
+    "AuthBasic": "Základní (vyskakovací okno prohlížeče)"
 }

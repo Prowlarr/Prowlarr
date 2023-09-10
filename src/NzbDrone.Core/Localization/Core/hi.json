@@ -347,5 +347,10 @@
     "minutes": "मिनट",
     "DeleteAppProfileMessageText": "क्या आप वाकई गुणवत्ता प्रोफ़ाइल {0} को हटाना चाहते हैं",
     "NotificationStatusAllClientHealthCheckMessage": "सभी सूचियाँ विफल होने के कारण अनुपलब्ध हैं",
-    "NotificationStatusSingleClientHealthCheckMessage": "विफलताओं के कारण अनुपलब्ध सूची: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "विफलताओं के कारण अनुपलब्ध सूची: {0}",
+    "AuthBasic": "बेसिक (ब्राउज़र पॉपअप)",
+    "AuthForm": "प्रपत्र (लॉग इन पेज)",
+    "DisabledForLocalAddresses": "स्थानीय पते के लिए अक्षम",
+    "None": "कोई नहीं",
+    "ResetAPIKeyMessageText": "क्या आप वाकई अपनी API कुंजी को रीसेट करना चाहते हैं?"
 }

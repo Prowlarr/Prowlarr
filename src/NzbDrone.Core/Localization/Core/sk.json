@@ -113,5 +113,9 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "Ako použiť značky na vybrané filmy",
     "Season": "Séria",
     "Publisher": "Vydavateľ",
-    "DeleteAppProfileMessageText": "Naozaj chcete zmazať tento profil oneskorenia?"
+    "DeleteAppProfileMessageText": "Naozaj chcete zmazať tento profil oneskorenia?",
+    "AuthBasic": "Základné (vyskakovacie okno prehliadača)",
+    "AuthForm": "Formuláre (prihlasovacia stránka)",
+    "DisabledForLocalAddresses": "Zakázané pre miestne adresy",
+    "ResetAPIKeyMessageText": "Naozaj chcete obnoviť kľúč API?"
 }

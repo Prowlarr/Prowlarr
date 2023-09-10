@@ -350,5 +350,14 @@
     "WhatsNew": "Ne var ne yok?",
     "ConnectionLostReconnect": "Radarr otomatik olarak bağlanmayı deneyecek veya aşağıdan yeniden yükle'yi tıklayabilirsiniz.",
     "NotificationStatusAllClientHealthCheckMessage": "Hatalar nedeniyle tüm listeler kullanılamıyor",
-    "NotificationStatusSingleClientHealthCheckMessage": "Hatalar nedeniyle kullanılamayan listeler: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Hatalar nedeniyle kullanılamayan listeler: {0}",
+    "Applications": "Uygulamalar",
+    "AuthBasic": "Temel (Tarayıcı Açılır Penceresi)",
+    "AuthForm": "Formlar (Giriş Sayfası)",
+    "DisabledForLocalAddresses": "Yerel Adresler için Devre Dışı Bırakıldı",
+    "None": "Yok",
+    "ResetAPIKeyMessageText": "API Anahtarınızı sıfırlamak istediğinizden emin misiniz?",
+    "Categories": "Kategoriler",
+    "Application": "Uygulamalar",
+    "Episode": "bölüm"
 }

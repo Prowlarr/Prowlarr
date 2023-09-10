@@ -371,5 +371,10 @@
     "DeleteAppProfileMessageText": "Esteu segur que voleu suprimir el perfil de qualitat {0}",
     "NotificationStatusSingleClientHealthCheckMessage": "Llistes no disponibles a causa d'errors: {0}",
     "AddConnection": "Edita la col·lecció",
-    "NotificationStatusAllClientHealthCheckMessage": "Totes les llistes no estan disponibles a causa d'errors"
+    "NotificationStatusAllClientHealthCheckMessage": "Totes les llistes no estan disponibles a causa d'errors",
+    "AuthBasic": "Basic (finestra emergent del navegador)",
+    "AuthForm": "Formularis (pàgina d'inici de sessió)",
+    "DisabledForLocalAddresses": "Desactivat per a adreces locals",
+    "None": "Cap",
+    "ResetAPIKeyMessageText": "Esteu segur que voleu restablir la clau de l'API?"
 }

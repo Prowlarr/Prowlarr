@@ -432,5 +432,10 @@
     "WhatsNew": "Vad är nytt?",
     "minutes": "Minuter",
     "NotificationStatusSingleClientHealthCheckMessage": "Listor otillgängliga på grund av fel: {0}",
-    "NotificationStatusAllClientHealthCheckMessage": "Samtliga listor otillgängliga på grund av fel"
+    "NotificationStatusAllClientHealthCheckMessage": "Samtliga listor otillgängliga på grund av fel",
+    "AuthBasic": "Grundläggande (Browser Popup)",
+    "AuthForm": "Blanketter (inloggningssida)",
+    "DisabledForLocalAddresses": "Inaktiverad för lokala adresser",
+    "None": "Ingen",
+    "ResetAPIKeyMessageText": "Är du säker på att du vill nollställa din API-nyckel?"
 }

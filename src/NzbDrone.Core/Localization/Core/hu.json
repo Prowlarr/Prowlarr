@@ -496,5 +496,10 @@
     "minutes": "percek",
     "AddConnection": "Gyűjtemény módosítása",
     "NotificationStatusAllClientHealthCheckMessage": "Összes alkalmazás elérhetetlen hiba miatt",
-    "NotificationStatusSingleClientHealthCheckMessage": "Az alkalmazás nem áll rendelkezésre az alábbi hibák miatt: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Az alkalmazás nem áll rendelkezésre az alábbi hibák miatt: {0}",
+    "AuthBasic": "Alap (Böngésző felugró ablak)",
+    "AuthForm": "Felhasználó (Bejelentkezési oldal)",
+    "DisabledForLocalAddresses": "Letiltva a helyi címeknél",
+    "None": "Nincs",
+    "ResetAPIKeyMessageText": "Biztos hogy vissza szeretnéd állítani az API-Kulcsod?"
 }

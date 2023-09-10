@@ -347,5 +347,10 @@
     "WhatsNew": "Какво ново?",
     "minutes": "Минути",
     "NotificationStatusSingleClientHealthCheckMessage": "Списъци, недостъпни поради неуспехи: {0}",
-    "NotificationStatusAllClientHealthCheckMessage": "Всички списъци са недостъпни поради неуспехи"
+    "NotificationStatusAllClientHealthCheckMessage": "Всички списъци са недостъпни поради неуспехи",
+    "AuthBasic": "Основно (изскачащ прозорец на браузъра)",
+    "AuthForm": "Формуляри (Страница за вход)",
+    "DisabledForLocalAddresses": "Забранено за местни адреси",
+    "None": "Нито един",
+    "ResetAPIKeyMessageText": "Наистина ли искате да нулирате своя API ключ?"
 }

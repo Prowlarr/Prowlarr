@@ -347,5 +347,10 @@
     "ConnectionLostReconnect": "Radarr mun reyna að tengjast sjálfkrafa eða þú getur smellt á endurhlaða hér að neðan.",
     "minutes": "Fundargerð",
     "NotificationStatusAllClientHealthCheckMessage": "Allir listar eru ekki tiltækir vegna bilana",
-    "NotificationStatusSingleClientHealthCheckMessage": "Listar ekki tiltækir vegna bilana: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Listar ekki tiltækir vegna bilana: {0}",
+    "AuthBasic": "Grunn (sprettiglugga vafra)",
+    "AuthForm": "Eyðublöð (Innskráningarsíða)",
+    "DisabledForLocalAddresses": "Óvirkt vegna heimilisfanga",
+    "None": "Enginn",
+    "ResetAPIKeyMessageText": "Ertu viss um að þú viljir endurstilla API lykilinn þinn?"
 }

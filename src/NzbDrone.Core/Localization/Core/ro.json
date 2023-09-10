@@ -438,5 +438,10 @@
     "RecentChanges": "Schimbări recente",
     "WhatsNew": "Ce mai e nou?",
     "DeleteAppProfileMessageText": "Sigur doriți să ștergeți profilul de aplicație '{0}'?",
-    "NotificationStatusSingleClientHealthCheckMessage": "Notificări indisponibile datorită erorilor: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Notificări indisponibile datorită erorilor: {0}",
+    "AuthBasic": "Basic (fereastră pop-up browser)",
+    "AuthForm": "Formulare (Pagina de autentificare)",
+    "DisabledForLocalAddresses": "Dezactivat pentru adresele locale",
+    "None": "Nici unul",
+    "ResetAPIKeyMessageText": "Sigur doriți să vă resetați cheia API?"
 }

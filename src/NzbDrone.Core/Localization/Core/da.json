@@ -363,5 +363,10 @@
     "ConnectionLostReconnect": "Radarr vil prøve at tilslutte automatisk, eller du kan klikke genindlæs forneden.",
     "minutes": "Protokoller",
     "NotificationStatusAllClientHealthCheckMessage": "Alle lister er utilgængelige på grund af fejl",
-    "NotificationStatusSingleClientHealthCheckMessage": "Lister utilgængelige på grund af fejl: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Lister utilgængelige på grund af fejl: {0}",
+    "AuthForm": "Formularer (login-side)",
+    "DisabledForLocalAddresses": "Deaktiveret for lokale adresser",
+    "ResetAPIKeyMessageText": "Er du sikker på, at du vil nulstille din API-nøgle?",
+    "AuthBasic": "Grundlæggende (pop op-browser)",
+    "None": "Ingen"
 }

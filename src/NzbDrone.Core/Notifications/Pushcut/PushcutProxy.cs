@@ -58,7 +58,7 @@ namespace NzbDrone.Core.Notifications.Pushcut
         {
             try
             {
-                const string title = "Sonarr Test Title";
+                const string title = "Prowlarr Test Title";
                 const string message = "Success! You have properly configured your Pushcut notification settings.";
                 SendNotification(title, message, settings);
             }

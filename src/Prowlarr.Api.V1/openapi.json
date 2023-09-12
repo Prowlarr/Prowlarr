@@ -2174,6 +2174,13 @@
             }
           },
           {
+            "name": "protocols",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "tags",
             "in": "query",
             "schema": {

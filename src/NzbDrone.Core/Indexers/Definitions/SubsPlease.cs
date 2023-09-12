@@ -62,6 +62,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "Anime");
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Movies, "Movies");
 
             return caps;
         }

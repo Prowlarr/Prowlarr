@@ -26,13 +26,30 @@ namespace Prowlarr.Api.V1.Indexers
 
         [HttpGet]
         [Produces("application/json")]
-        public IndexerStatsResource GetAll(DateTime? startDate, DateTime? endDate, string indexers, string tags)
+        public IndexerStatsResource GetAll(DateTime? startDate, DateTime? endDate, string indexers, string protocols, string tags)
         {
             var statsStartDate = startDate ?? DateTime.MinValue;
             var statsEndDate = endDate ?? DateTime.Now;
             var parsedIndexers = new List<int>();
             var parsedTags = new List<int>();
-            var indexerIds = _indexerFactory.All().Select(i => i.Id).ToList();
+
+            var allIndexers = _indexerFactory.All().Select(_indexerFactory.GetInstance).ToList();
+
+            if (protocols.IsNotNullOrWhiteSpace())
+            {
+                var parsedProtocols = protocols.Split(',')
+                    .Select(protocol =>
+                    {
+                        Enum.TryParse(protocol, true, out DownloadProtocol downloadProtocol);
+
+                        return downloadProtocol;
+                    })
+                    .ToHashSet();
+
+                allIndexers = allIndexers.Where(i => parsedProtocols.Contains(i.Protocol)).ToList();
+            }
+
+            var indexerIds = allIndexers.Select(i => i.Definition.Id).ToList();
 
             if (tags.IsNotNullOrWhiteSpace())
             {

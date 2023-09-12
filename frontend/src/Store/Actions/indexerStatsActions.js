@@ -62,6 +62,12 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.INDEXER
     },
     {
+      name: 'protocols',
+      label: () => translate('Protocols'),
+      type: filterBuilderTypes.EXACT,
+      valueType: filterBuilderValueTypes.PROTOCOL
+    },
+    {
       name: 'tags',
       label: () => translate('Tags'),
       type: filterBuilderTypes.CONTAINS,
@@ -110,6 +116,10 @@ export const actionHandlers = handleThunks({
     selectedFilters.forEach((selectedFilter) => {
       if (selectedFilter.key === 'indexers') {
         requestParams.indexers = selectedFilter.value.join(',');
+      }
+
+      if (selectedFilter.key === 'protocols') {
+        requestParams.protocols = selectedFilter.value.join(',');
       }
 
       if (selectedFilter.key === 'tags') {

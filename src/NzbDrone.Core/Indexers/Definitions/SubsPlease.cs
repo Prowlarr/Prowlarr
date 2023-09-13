@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SubsPleaseRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new SubsPleaseRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -56,12 +56,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
+                MovieSearchParams = new List<MovieSearchParam>
+                {
+                    MovieSearchParam.Q
+                }
             };
 
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "Anime");
+            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime);
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.MoviesOther);
 
             return caps;
         }
@@ -204,6 +209,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                         DownloadVolumeFactor = 0,
                         UploadVolumeFactor = 1
                     };
+
+                    if (value.Episode.ToLowerInvariant() == "movie")
+                    {
+                        release.Categories.Add(NewznabStandardCategory.MoviesOther);
+                    }
 
                     // Ex: [SubsPlease] Shingeki no Kyojin (The Final Season) - 64 (1080p)
                     release.Title += $"[SubsPlease] {value.Show} - {value.Episode} ({d.Res}p)";

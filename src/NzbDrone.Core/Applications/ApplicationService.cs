@@ -202,9 +202,17 @@ namespace NzbDrone.Core.Applications
 
         private bool ShouldHandleIndexer(ProviderDefinition app, ProviderDefinition indexer)
         {
+            if (!indexer.Settings.Validate().IsValid)
+            {
+                _logger.Debug("Indexer {0} [{1}] has invalid settings.", indexer.Name, indexer.Id);
+
+                return false;
+            }
+
             if (app.Tags.Empty())
             {
                 _logger.Debug("No tags set to application {0}.", app.Name);
+
                 return true;
             }
 
@@ -213,10 +221,12 @@ namespace NzbDrone.Core.Applications
             if (intersectingTags.Any())
             {
                 _logger.Debug("Application {0} and indexer {1} [{2}] have {3} intersecting (matching) tags.", app.Name, indexer.Name, indexer.Id, intersectingTags.Length);
+
                 return true;
             }
 
             _logger.Debug("Application {0} does not have any intersecting (matching) tags with {1} [{2}]. Indexer will neither be synced to nor removed from the application.", app.Name, indexer.Name, indexer.Id);
+
             return false;
         }
 

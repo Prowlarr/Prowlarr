@@ -46,7 +46,8 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
                 ParseSizeInDescription = parserSettings.ParseSizeInDescription,
                 SizeElementName = parserSettings.SizeElementName,
 
-                DefaultReleaseSize = indexerSettings.DefaultReleaseSize
+                DefaultReleaseSize = indexerSettings.DefaultReleaseSize,
+                DefaultReleaseSeeders = 1
             };
         }
 

@@ -34,6 +34,9 @@ namespace NzbDrone.Core.Indexers
         // Default size for when release sizes aren't available
         public double? DefaultReleaseSize { get; set; }
 
+        // Default value for when release seeders aren't available
+        public int? DefaultReleaseSeeders { get; set; }
+
         public TorrentRssParser()
         {
             PreferredEnclosureMimeTypes = TorrentEnclosureMimeTypes;
@@ -145,8 +148,7 @@ namespace NzbDrone.Core.Indexers
                 return (int)seeds;
             }
 
-            // Return 1 seeder as fallback
-            return 1;
+            return DefaultReleaseSeeders;
         }
 
         protected virtual int? GetPeers(XElement item)
@@ -175,8 +177,7 @@ namespace NzbDrone.Core.Indexers
                 return int.Parse(itempeers.Value);
             }
 
-            // Ensure returning 1 seeder as fallback
-            return 1;
+            return DefaultReleaseSeeders;
         }
 
         protected override long GetSize(XElement item)

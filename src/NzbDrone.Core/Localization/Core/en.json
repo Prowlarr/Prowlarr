@@ -48,7 +48,7 @@
   "ApplicationStatusCheckAllClientMessage": "All applications are unavailable due to failures",
   "ApplicationStatusCheckSingleClientMessage": "Applications unavailable due to failures: {0}",
   "ApplicationTagsHelpText": "Sync Indexers to this application that have no tags or that have 1 or more matching tags",
-  "ApplicationTagsHelpTextWarning": "Tags should be used with caution, they can have unintended effects. An app with a tag will only sync to indexers with the same tag.",
+  "ApplicationTagsHelpTextWarning": "Tags should be used with caution, they can have unintended effects. An app with a tag will only sync with indexers having the same tag.",
   "ApplicationURL": "Application URL",
   "ApplicationUrlHelpText": "This application's external URL including http(s)://, port and URL base",
   "Applications": "Applications",

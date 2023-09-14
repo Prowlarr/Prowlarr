@@ -187,6 +187,7 @@ function EditIndexerModalContent(props) {
                   type={inputTypes.TAG}
                   name="tags"
                   helpText={translate('IndexerTagsHelpText')}
+                  helpTextWarning={translate('IndexerTagsHelpTextWarning')}
                   {...tags}
                   onChange={onInputChange}
                 />

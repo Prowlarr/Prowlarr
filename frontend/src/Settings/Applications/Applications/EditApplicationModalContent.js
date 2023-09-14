@@ -133,7 +133,8 @@ function EditApplicationModalContent(props) {
                 <FormInputGroup
                   type={inputTypes.TAG}
                   name="tags"
-                  helpText={translate('TagsHelpText')}
+                  helpText={translate('ApplicationTagsHelpText')}
+                  helpTextWarning={translate('ApplicationTagsHelpTextWarning')}
                   {...tags}
                   onChange={onInputChange}
                 />

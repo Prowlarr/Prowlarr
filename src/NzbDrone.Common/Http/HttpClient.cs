@@ -221,11 +221,18 @@ namespace NzbDrone.Common.Http
                             };
                         }
 
-                        sourceContainer.Add((Uri)request.Url, cookie);
-
-                        if (request.StoreRequestCookie)
+                        try
                         {
-                            presistentContainer.Add((Uri)request.Url, cookie);
+                            sourceContainer.Add((Uri)request.Url, cookie);
+
+                            if (request.StoreRequestCookie)
+                            {
+                                presistentContainer.Add((Uri)request.Url, cookie);
+                            }
+                        }
+                        catch (CookieException ex)
+                        {
+                            _logger.Debug(ex, "Invalid cookie in {0}", (Uri)request.Url);
                         }
                     }
                 }
@@ -260,7 +267,14 @@ namespace NzbDrone.Common.Http
                         };
                     }
 
-                    sourceContainer.Add((Uri)request.Url, cookie);
+                    try
+                    {
+                        sourceContainer.Add((Uri)request.Url, cookie);
+                    }
+                    catch (CookieException ex)
+                    {
+                        _logger.Debug(ex, "Invalid cookie in {0}", (Uri)request.Url);
+                    }
                 }
             }
 

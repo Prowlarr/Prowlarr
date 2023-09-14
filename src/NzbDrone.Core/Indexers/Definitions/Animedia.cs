@@ -17,6 +17,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Site is unusable due to a mix of HTTP errors")]
     public class Animedia : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "Animedia";

@@ -145,7 +145,8 @@ namespace NzbDrone.Core.Indexers
                 return (int)seeds;
             }
 
-            return null;
+            // Return 1 seeder as fallback
+            return 1;
         }
 
         protected virtual int? GetPeers(XElement item)
@@ -174,7 +175,8 @@ namespace NzbDrone.Core.Indexers
                 return int.Parse(itempeers.Value);
             }
 
-            return null;
+            // Ensure returning 1 seeder as fallback
+            return 1;
         }
 
         protected override long GetSize(XElement item)

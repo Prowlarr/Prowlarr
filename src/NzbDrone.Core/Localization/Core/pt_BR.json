@@ -215,7 +215,7 @@
     "IndexerSite": "Site do Indexador",
     "IndexerStatusCheckAllClientMessage": "Todos os indexadores estão indisponíveis devido a falhas",
     "IndexerStatusCheckSingleClientMessage": "Indexadores indisponíveis devido a falhas: {0}",
-    "IndexerTagsHelpText": "Usar etiquetas para especificar os proxies do indexador ou com quais aplicativos o indexador está sincronizado. Aplicativos sem 1 ou mais etiquetas de indexador correspondentes não serão sincronizados.",
+    "IndexerTagsHelpText": "Use tags para especificar Proxies do indexador ou com quais aplicativos o indexador está sincronizado.",
     "IndexerVipCheckExpiredClientMessage": "Benefícios VIP do Indexador expiraram: {0}",
     "IndexerVipCheckExpiringClientMessage": "Os benefícios VIPS do Indexador expirarão em breve: {0}",
     "Indexers": "Indexadores",
@@ -594,5 +594,8 @@
     "IndexerHistoryLoadError": "Erro ao carregar o histórico do indexador",
     "NoIndexerHistory": "Nenhum histórico encontrado para este indexador",
     "TotalGrabs": "Total de Capturas",
-    "TotalQueries": "Total de Consultas"
+    "TotalQueries": "Total de Consultas",
+    "ApplicationTagsHelpText": "Sincronize indexadores com este aplicativo que não possuem tags ou que possuem 1 ou mais tags correspondentes",
+    "ApplicationTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um aplicativo com uma tag só será sincronizado com indexadores que tenham a mesma tag.",
+    "IndexerTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um indexador com uma tag sincronizará apenas com aplicativos com a mesma tag."
 }

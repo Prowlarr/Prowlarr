@@ -364,8 +364,8 @@
     "IndexerObsoleteCheckMessage": "Indexatorii sunt învechiți sau nu au fost actualizați: {0}. Vă rugăm să-i ștergeți și (sau) să-i adăugați din nou în Prowlarr",
     "IndexerProxies": "Proxiuri indexatoare",
     "IndexerVipCheckExpiringClientMessage": "Beneficiile VIP pentru indexator expiră în curând: {0}",
-    "ApplicationLongTermStatusCheckAllClientMessage": "Toți indexatorii nu sunt disponibili din cauza unor eșecuri de mai mult de 6 ore",
-    "ApplicationLongTermStatusCheckSingleClientMessage": "Indexatori indisponibili din cauza unor eșecuri de mai mult de 6 ore: {0}",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Toate aplicațiile sunt indisponibile din cauza unor eșecuri pentru mai mult de 6 ore",
+    "ApplicationLongTermStatusCheckSingleClientMessage": "Aplicațiile indisponibile din cauza unor eșecuri pentru mai mult de 6 ore: {0}",
     "LastDuration": "Ultima durată",
     "LastExecution": "Ultima executare",
     "Queued": "În așteptare",
@@ -443,5 +443,13 @@
     "AuthForm": "Formulare (Pagina de autentificare)",
     "DisabledForLocalAddresses": "Dezactivat pentru adresele locale",
     "None": "Nici unul",
-    "ResetAPIKeyMessageText": "Sigur doriți să vă resetați cheia API?"
+    "ResetAPIKeyMessageText": "Sigur doriți să vă resetați cheia API?",
+    "AddApplicationImplementation": "Adăugați aplicație - {implementareName}",
+    "AddCategory": "Adăugați categorie",
+    "AddConnection": "Adăugați conexiune",
+    "AddConnectionImplementation": "Adăugați conexiune - {implementationName}",
+    "AddDownloadClientImplementation": "Adăugați client de descărcare - {implementationName}",
+    "AddIndexerImplementation": "Adăugați Indexator - {implementationName}",
+    "AddIndexerProxyImplementation": "Adăugați proxy indexator - {implementationName}",
+    "Album": "Album"
 }

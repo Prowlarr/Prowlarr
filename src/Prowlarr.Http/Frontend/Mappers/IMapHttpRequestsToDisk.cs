@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Prowlarr.Http.Frontend.Mappers
@@ -6,6 +7,6 @@ namespace Prowlarr.Http.Frontend.Mappers
     {
         string Map(string resourceUrl);
         bool CanHandle(string resourceUrl);
-        FileStreamResult GetResponse(string resourceUrl);
+        Task<FileStreamResult> GetResponse(string resourceUrl);
     }
 }

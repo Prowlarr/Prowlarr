@@ -226,9 +226,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var details = _settings.BaseUrl + "torrents.php?id=" + row.TorrentId;
 
+                var title = row.ReleaseTitle;
+
+                if (title.IsNullOrWhiteSpace())
+                {
+                    title = row.GroupName;
+                }
+
                 var release = new TorrentInfo
                 {
-                    Title = row.ReleaseTitle,
+                    Title = title,
                     Guid = details,
                     InfoUrl = details,
                     PosterUrl = row.Banner,
@@ -299,7 +306,6 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         [JsonProperty(PropertyName = "rls_name")]
         public string ReleaseTitle { get; set; }
-        public string Title { get; set; }
         [JsonProperty(PropertyName = "cat")]
         public string Category { get; set; }
         public string Size { get; set; }
@@ -309,6 +315,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Download { get; set; }
         [JsonProperty(PropertyName = "file_list")]
         public string[] FileList { get; set; }
+        [JsonProperty(PropertyName = "group_name")]
+        public string GroupName { get; set; }
         [JsonProperty(PropertyName = "series_banner")]
         public string Banner { get; set; }
         [JsonProperty(PropertyName = "group_id")]

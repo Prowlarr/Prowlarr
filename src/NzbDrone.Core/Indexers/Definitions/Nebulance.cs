@@ -226,12 +226,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var details = _settings.BaseUrl + "torrents.php?id=" + row.TorrentId;
 
-                var title = row.ReleaseTitle;
-
-                if (title.IsNullOrWhiteSpace())
-                {
-                    title = row.GroupName;
-                }
+                var title = row.ReleaseTitle.IsNotNullOrWhiteSpace() ? row.ReleaseTitle : row.GroupName;
 
                 var release = new TorrentInfo
                 {

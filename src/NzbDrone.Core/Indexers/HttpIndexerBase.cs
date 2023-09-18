@@ -363,7 +363,7 @@ namespace NzbDrone.Core.Indexers
                             }
                         }
 
-                        releases.AddRange(pagedReleases);
+                        releases.AddRange(pagedReleases.Where(IsValidRelease));
                     }
 
                     if (releases.Any())
@@ -467,6 +467,18 @@ namespace NzbDrone.Core.Indexers
         public override IndexerCapabilities GetCapabilities()
         {
             return Capabilities ?? ((IndexerDefinition)Definition).Capabilities;
+        }
+
+        protected virtual bool IsValidRelease(ReleaseInfo release)
+        {
+            if (release.Title.IsNullOrWhiteSpace())
+            {
+                _logger.Error("Invalid Release: '{0}' from indexer: {1}. No title provided.", release.InfoUrl, Definition.Name);
+
+                return false;
+            }
+
+            return true;
         }
 
         protected virtual bool IsFullPage(IList<ReleaseInfo> page, int pageSize)

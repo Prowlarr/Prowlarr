@@ -15,6 +15,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -55,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override async Task<byte[]> Download(Uri link)
         {
-            if (Settings.Freeleech)
+            if (Settings.Freeleech > 0)
             {
                 _logger.Debug($"Attempting to use freeleech token for {link.AbsoluteUri}");
 
@@ -76,13 +77,25 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var response = await FetchIndexerResponse(indexerReq).ConfigureAwait(false);
                     var resource = Json.Deserialize<MyAnonamouseBuyPersonalFreeleechResponse>(response.Content);
 
-                    if (resource.Success)
+                    if (!resource.Success)
                     {
-                        _logger.Debug($"Successfully to used freeleech token for torrentid ${id}");
+                        _logger.Debug($"Failed to use freeleech token: {resource.Error}");
+
+                        if (Settings.Freeleech == 1)
+                        {
+                            _logger.Debug($"'Use Freeleech Token' option set to preferred, continuing download");
+                        }
+                        else
+                        {
+                            // TODO Find a way to deal with failures due to already being freeleech (either personal or VIP)
+                            // TODO Find a better way to abort downloads
+                            throw new ReleaseUnavailableException(
+                                "Failed to buy freeleech token and 'Use Freeleech Token' is set to required, aborting download");
+                        }
                     }
                     else
                     {
-                        _logger.Debug($"Failed to use freeleech token: ${resource.Error}");
+                        _logger.Debug($"Successfully used freeleech token for torrentid ${id}");
                     }
                 }
                 else
@@ -507,8 +520,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Type = FieldType.Select, Label = "Search Type", SelectOptions = typeof(MyAnonamouseSearchType), HelpText = "Specify the desired search type")]
         public int SearchType { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Buy Freeleech Token", HelpText = "Buy personal freeleech token for download")]
-        public bool Freeleech { get; set; }
+        [FieldDefinition(4, Type = FieldType.Select, Label = "Buy Freeleech Token", SelectOptions = typeof(MyAnonamouseFreeleech), HelpText = "Buy personal freeleech token for download")]
+        public int Freeleech { get; set; }
 
         [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Search in description", HelpText = "Search text in the description")]
         public bool SearchInDescription { get; set; }
@@ -539,6 +552,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         Vip = 4,
         [FieldOption(Label="Not VIP", Hint = "Torrents not VIP")]
         NotVip = 5,
+    }
+
+    public enum MyAnonamouseFreeleech
+    {
+        [FieldOption(Label="Never", Hint = "Do not buy tokens")]
+        Never = 0,
+        [FieldOption(Label="Preferred", Hint = "Buy and use token if possible")]
+        Preferred = 1,
+        [FieldOption(Label="Required", Hint = "Abort download if unable to buy token")]
+        Required = 2,
     }
 
     public class MyAnonamouseTorrent

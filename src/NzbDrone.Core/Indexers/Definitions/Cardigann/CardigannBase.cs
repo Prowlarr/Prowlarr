@@ -374,7 +374,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 var newvalue = reReplaceRegexMatches.Groups[3].Value;
 
                 var replaceRegex = new Regex(regexp);
-                var input = (string)variables[variable];
+                var input = (string)variables[variable] ?? string.Empty;
                 var expanded = replaceRegex.Replace(input, newvalue);
 
                 if (modifier != null)

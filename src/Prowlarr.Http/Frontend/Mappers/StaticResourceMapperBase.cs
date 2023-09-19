@@ -50,7 +50,7 @@ namespace Prowlarr.Http.Frontend.Mappers
 
             _logger.Warn("File {0} not found", filePath);
 
-            return null;
+            return Task.FromResult<FileStreamResult>(null);
         }
 
         protected virtual Stream GetContentStream(string filePath)

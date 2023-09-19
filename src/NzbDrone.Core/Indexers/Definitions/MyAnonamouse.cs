@@ -56,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override async Task<byte[]> Download(Uri link)
         {
-            if (Settings.Freeleech > 0)
+            if (Settings.Freeleech != (int)MyAnonamouseFreeleech.Never)
             {
                 _logger.Debug($"Attempting to use freeleech token for {link.AbsoluteUri}");
 
@@ -81,7 +81,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     {
                         _logger.Debug($"Failed to use freeleech token: {resource.Error}");
 
-                        if (Settings.Freeleech == 1)
+                        if (Settings.Freeleech == (int)MyAnonamouseFreeleech.Preferred)
                         {
                             _logger.Debug($"'Use Freeleech Token' option set to preferred, continuing download");
                         }

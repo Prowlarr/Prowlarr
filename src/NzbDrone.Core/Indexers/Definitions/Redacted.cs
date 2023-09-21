@@ -10,6 +10,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -50,20 +51,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new RedactedParser(Settings, Capabilities.Categories);
         }
 
-        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
-        {
-            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
-            {
-                AllowAutoRedirect = FollowRedirect
-            };
-
-            var request = requestBuilder
-                .SetHeader("Authorization", Settings.Apikey)
-                .Build();
-
-            return Task.FromResult(request);
-        }
-
         protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
         {
             var cleanReleases = base.CleanupReleases(releases, searchCriteria);
@@ -101,6 +88,78 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksComics, "Comics");
 
             return caps;
+        }
+
+        public override async Task<byte[]> Download(Uri link)
+        {
+            var request = new HttpRequestBuilder(link.AbsoluteUri)
+                .SetHeader("Authorization", Settings.Apikey)
+                .Build();
+
+            byte[] fileData;
+
+            try
+            {
+                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                fileData = response.ResponseData;
+
+                if (Settings.UseFreeleechToken == (int)RedactedUseFreeleechTokens.Preferred
+                    && fileData.Length >= 1
+                    && fileData[0] != 'd' // simple test for torrent vs HTML content
+                    && link.Query.Contains("usetoken=1"))
+                {
+                    var html = Encoding.GetString(fileData);
+
+                    if (html.Contains("You do not have any freeleech tokens left.")
+                        || html.Contains("You do not have enough freeleech tokens")
+                        || html.Contains("This torrent is too large.")
+                        || html.Contains("You cannot use tokens here"))
+                    {
+                        // Try to download again without usetoken
+                        request.Url = new HttpUri(link.ToString().Replace("&usetoken=1", ""));
+
+                        response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                        fileData = response.ResponseData;
+                    }
+                }
+
+                _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);
+            }
+            catch (HttpException ex)
+            {
+                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    _logger.Error(ex, "Downloading file for release failed since it no longer exists ({0})", link.AbsoluteUri);
+                    throw new ReleaseUnavailableException("Download failed", ex);
+                }
+
+                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
+                }
+                else
+                {
+                    _logger.Error(ex, "Downloading for release failed ({0})", link.AbsoluteUri);
+                }
+
+                throw new ReleaseDownloadException("Download failed", ex);
+            }
+            catch (WebException ex)
+            {
+                _logger.Error(ex, "Downloading for release failed ({0})", link.AbsoluteUri);
+
+                throw new ReleaseDownloadException("Download failed", ex);
+            }
+            catch (Exception)
+            {
+                _indexerStatusService.RecordFailure(Definition.Id);
+                _logger.Error("Download failed");
+                throw;
+            }
+
+            ValidateDownloadData(fileData);
+
+            return fileData;
         }
     }
 
@@ -383,7 +442,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId);
 
-            if (_settings.UseFreeleechToken && canUseToken)
+            if (_settings.UseFreeleechToken is (int)RedactedUseFreeleechTokens.Preferred or (int)RedactedUseFreeleechTokens.Required && canUseToken)
             {
                 url = url.AddQueryParam("usetoken", "1");
             }
@@ -417,14 +476,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public RedactedSettings()
         {
             Apikey = "";
-            UseFreeleechToken = false;
+            UseFreeleechToken = (int)RedactedUseFreeleechTokens.Never;
         }
 
         [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey, HelpText = "API Key from the Site (Found in Settings => Access Settings)")]
         public string Apikey { get; set; }
 
-        [FieldDefinition(3, Label = "Use Freeleech Tokens", Type = FieldType.Checkbox, HelpText = "Use freeleech tokens when available")]
-        public bool UseFreeleechToken { get; set; }
+        [FieldDefinition(3, Type = FieldType.Select, Label = "Use Freeleech Tokens", SelectOptions = typeof(RedactedUseFreeleechTokens), HelpText = "When to use freeleech tokens")]
+        public int UseFreeleechToken { get; set; }
 
         [FieldDefinition(4, Label = "Freeload Only", Type = FieldType.Checkbox, Advanced = true, HelpTextWarning = "Search freeload torrents only. End date: 31 January 2024, 23:59 UTC.")]
         public bool FreeloadOnly { get; set; }
@@ -433,5 +492,17 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    internal enum RedactedUseFreeleechTokens
+    {
+        [FieldOption(Label = "Never", Hint = "Do not use tokens")]
+        Never = 0,
+
+        [FieldOption(Label = "Preferred", Hint = "Use token if possible")]
+        Preferred = 1,
+
+        [FieldOption(Label = "Required", Hint = "Abort download if unable to use token")]
+        Required = 2,
     }
 }

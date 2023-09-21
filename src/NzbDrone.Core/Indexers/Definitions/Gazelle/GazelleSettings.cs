@@ -16,11 +16,23 @@ public class GazelleSettings : UserPassTorrentBaseSettings
     public string AuthKey { get; set; }
     public string PassKey { get; set; }
 
-    [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Use Freeleech Token", HelpText = "Use freeleech tokens when available")]
-    public bool UseFreeleechToken { get; set; }
+    [FieldDefinition(5, Type = FieldType.Select, Label = "Use Freeleech Tokens", SelectOptions = typeof(GazelleFreeleechTokenAction), HelpText = "When to use freeleech tokens")]
+    public int UseFreeleechToken { get; set; }
 
     public override NzbDroneValidationResult Validate()
     {
         return new NzbDroneValidationResult(Validator.Validate(this));
     }
+}
+
+public enum GazelleFreeleechTokenAction
+{
+    [FieldOption(Label = "Never", Hint = "Do not use tokens")]
+    Never = 0,
+
+    [FieldOption(Label = "Preferred", Hint = "Use token if possible")]
+    Preferred = 1,
+
+    [FieldOption(Label = "Required", Hint = "Abort download if unable to use token")]
+    Required = 2,
 }

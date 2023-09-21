@@ -102,6 +102,32 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             return caps;
         }
+
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
+        {
+            var downloadResponse = await base.Download(link);
+
+            var fileData = downloadResponse.Data;
+
+            if (Settings.UseFreeleechToken == (int)RedactedFreeleechTokenAction.Preferred
+                && fileData.Length >= 1
+                && fileData[0] != 'd' // simple test for torrent vs HTML content
+                && link.Query.Contains("usetoken=1"))
+            {
+                var html = Encoding.GetString(fileData);
+
+                if (html.Contains("You do not have any freeleech tokens left.")
+                    || html.Contains("You do not have enough freeleech tokens")
+                    || html.Contains("This torrent is too large.")
+                    || html.Contains("You cannot use tokens here"))
+                {
+                    // Try to download again without usetoken
+                    downloadResponse = await base.Download(link.RemoveQueryParam("usetoken"));
+                }
+            }
+
+            return downloadResponse;
+        }
     }
 
     public class RedactedRequestGenerator : IIndexerRequestGenerator
@@ -248,7 +274,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     foreach (var torrent in result.Torrents)
                     {
                         // skip releases that cannot be used with freeleech tokens when the option is enabled
-                        if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                        if (_settings.UseFreeleechToken == (int)RedactedFreeleechTokenAction.Required && !torrent.CanUseToken)
                         {
                             continue;
                         }
@@ -305,7 +331,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 else
                 {
                     // skip releases that cannot be used with freeleech tokens when the option is enabled
-                    if (_settings.UseFreeleechToken && !result.CanUseToken)
+                    if (_settings.UseFreeleechToken == (int)RedactedFreeleechTokenAction.Required && !result.CanUseToken)
                     {
                         continue;
                     }
@@ -397,7 +423,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddQueryParam("action", "download")
                 .AddQueryParam("id", torrentId);
 
-            if (_settings.UseFreeleechToken && canUseToken)
+            if (_settings.UseFreeleechToken is (int)RedactedFreeleechTokenAction.Preferred or (int)RedactedFreeleechTokenAction.Required && canUseToken)
             {
                 url = url.AddQueryParam("usetoken", "1");
             }
@@ -431,14 +457,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         public RedactedSettings()
         {
             Apikey = "";
-            UseFreeleechToken = false;
+            UseFreeleechToken = (int)RedactedFreeleechTokenAction.Never;
         }
 
         [FieldDefinition(2, Label = "ApiKey", Privacy = PrivacyLevel.ApiKey, HelpText = "IndexerRedactedSettingsApiKeyHelpText")]
         public string Apikey { get; set; }
 
-        [FieldDefinition(3, Label = "Use Freeleech Tokens", Type = FieldType.Checkbox, HelpText = "Use freeleech tokens when available")]
-        public bool UseFreeleechToken { get; set; }
+        [FieldDefinition(3, Type = FieldType.Select, Label = "Use Freeleech Tokens", SelectOptions = typeof(RedactedFreeleechTokenAction), HelpText = "When to use freeleech tokens")]
+        public int UseFreeleechToken { get; set; }
 
         [FieldDefinition(4, Label = "Freeload Only", Type = FieldType.Checkbox, Advanced = true, HelpTextWarning = "Search freeload torrents only. End date: 31 January 2024, 23:59 UTC.")]
         public bool FreeloadOnly { get; set; }
@@ -447,5 +473,17 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    public enum RedactedFreeleechTokenAction
+    {
+        [FieldOption(Label = "Never", Hint = "Do not use tokens")]
+        Never = 0,
+
+        [FieldOption(Label = "Preferred", Hint = "Use token if possible")]
+        Preferred = 1,
+
+        [FieldOption(Label = "Required", Hint = "Abort download if unable to use token")]
+        Required = 2,
     }
 }

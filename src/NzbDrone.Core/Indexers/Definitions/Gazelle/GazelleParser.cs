@@ -62,7 +62,7 @@ public class GazelleParser : IParseIndexerResponse
                     var isFreeLeech = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech;
 
                     // skip releases that cannot be used with freeleech tokens when the option is enabled
-                    if (Settings.UseFreeleechToken && !torrent.CanUseToken && !isFreeLeech)
+                    if (Settings.UseFreeleechToken == (int)GazelleFreeleechTokenAction.Required && !torrent.CanUseToken && !isFreeLeech)
                     {
                         continue;
                     }
@@ -115,7 +115,7 @@ public class GazelleParser : IParseIndexerResponse
                 var isFreeLeech = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech;
 
                 // skip releases that cannot be used with freeleech tokens when the option is enabled
-                if (Settings.UseFreeleechToken && !result.CanUseToken && !isFreeLeech)
+                if (Settings.UseFreeleechToken == (int)GazelleFreeleechTokenAction.Required && !result.CanUseToken && !isFreeLeech)
                 {
                     continue;
                 }
@@ -169,7 +169,7 @@ public class GazelleParser : IParseIndexerResponse
             .AddQueryParam("action", "download")
             .AddQueryParam("id", torrentId);
 
-        if (Settings.UseFreeleechToken)
+        if (Settings.UseFreeleechToken is (int)GazelleFreeleechTokenAction.Preferred or (int)GazelleFreeleechTokenAction.Required && canUseToken)
         {
             url = url.AddQueryParam("usetoken", "1");
         }

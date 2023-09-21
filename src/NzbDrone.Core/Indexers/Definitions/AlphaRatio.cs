@@ -143,7 +143,7 @@ public class AlphaRatioParser : GazelleParser
             .AddQueryParam("action", "download")
             .AddQueryParam("id", torrentId);
 
-        if (Settings.UseFreeleechToken && canUseToken)
+        if (Settings.UseFreeleechToken is (int)GazelleFreeleechTokenAction.Preferred or (int)GazelleFreeleechTokenAction.Required && canUseToken)
         {
             url = url.AddQueryParam("usetoken", "1");
         }

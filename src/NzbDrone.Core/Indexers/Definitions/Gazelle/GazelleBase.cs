@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
@@ -85,22 +86,23 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
     public override async Task<IndexerDownloadResponse> Download(Uri link)
     {
         var downloadResponse = await base.Download(link);
-        var response = downloadResponse.Data;
 
-        if (response.Length >= 1
-            && response[0] != 'd' // simple test for torrent vs HTML content
+        var fileData = downloadResponse.Data;
+
+        if (Settings.UseFreeleechToken == (int)GazelleFreeleechTokenAction.Preferred
+            && fileData.Length >= 1
+            && fileData[0] != 'd' // simple test for torrent vs HTML content
             && link.Query.Contains("usetoken=1"))
         {
-            var html = Encoding.GetString(response);
+            var html = Encoding.GetString(fileData);
+
             if (html.Contains("You do not have any freeleech tokens left.")
                 || html.Contains("You do not have enough freeleech tokens")
                 || html.Contains("This torrent is too large.")
                 || html.Contains("You cannot use tokens here"))
             {
-                // download again without usetoken=1
-                var requestLinkNew = link.ToString().Replace("&usetoken=1", "");
-
-                downloadResponse = await base.Download(new Uri(requestLinkNew));
+                // Try to download again without usetoken
+                downloadResponse = await base.Download(link.RemoveQueryParam("usetoken"));
             }
         }
 

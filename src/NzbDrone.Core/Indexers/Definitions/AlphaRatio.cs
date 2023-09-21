@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using NLog;
@@ -5,6 +6,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions;
@@ -15,6 +17,9 @@ public class AlphaRatio : GazelleBase<AlphaRatioSettings>
     public override string[] IndexerUrls => new[] { "https://alpharatio.cc/" };
     public override string Description => "AlphaRatio(AR) is a Private Torrent Tracker for 0DAY / GENERAL";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+    public override bool SupportsPagination => true;
+    public override int PageSize => 50;
+    public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
     public AlphaRatio(IIndexerHttpClient httpClient,
                       IEventAggregator eventAggregator,
@@ -39,6 +44,8 @@ public class AlphaRatio : GazelleBase<AlphaRatioSettings>
     {
         var caps = new IndexerCapabilities
         {
+            LimitsDefault = PageSize,
+            LimitsMax = PageSize,
             TvSearchParams = new List<TvSearchParam>
             {
                 TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
@@ -98,9 +105,9 @@ public class AlphaRatioRequestGenerator : GazelleRequestGenerator
         _settings = settings;
     }
 
-    protected override NameValueCollection GetBasicSearchParameters(string term, int[] categories)
+    protected override NameValueCollection GetBasicSearchParameters(SearchCriteriaBase searchCriteria, string term)
     {
-        var parameters = base.GetBasicSearchParameters(term, categories);
+        var parameters = base.GetBasicSearchParameters(searchCriteria, term);
 
         if (_settings.FreeleechOnly)
         {
@@ -110,6 +117,12 @@ public class AlphaRatioRequestGenerator : GazelleRequestGenerator
         if (_settings.ExcludeScene)
         {
             parameters.Set("scene", "0");
+        }
+
+        if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
+        {
+            var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
+            parameters.Set("page", page.ToString());
         }
 
         return parameters;

@@ -89,7 +89,7 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
 
     public override IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
     {
-        var parameters = GetBasicSearchParameters(searchCriteria.SearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria, searchCriteria.SearchTerm);
 
         if (searchCriteria.ImdbId != null)
         {
@@ -101,9 +101,9 @@ public class GreatPosterWallRequestGenerator : GazelleRequestGenerator
         return pageableRequests;
     }
 
-    protected override NameValueCollection GetBasicSearchParameters(string term, int[] categories)
+    protected override NameValueCollection GetBasicSearchParameters(SearchCriteriaBase searchCriteria, string term)
     {
-        var parameters = base.GetBasicSearchParameters(term, categories);
+        var parameters = base.GetBasicSearchParameters(searchCriteria, term);
 
         if (_settings.FreeleechOnly)
         {

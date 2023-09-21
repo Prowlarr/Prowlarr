@@ -46,7 +46,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria, searchCriteria.SanitizedSearchTerm);
 
         if (searchCriteria.ImdbId != null)
         {
@@ -62,7 +62,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria, searchCriteria.SanitizedSearchTerm);
 
         if (searchCriteria.Artist.IsNotNullOrWhiteSpace() && searchCriteria.Artist != "VA")
         {
@@ -88,7 +88,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedTvSearchString, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria, searchCriteria.SanitizedTvSearchString);
 
         if (searchCriteria.ImdbId != null)
         {
@@ -104,7 +104,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria, searchCriteria.SanitizedSearchTerm);
         pageableRequests.Add(GetRequest(parameters));
 
         return pageableRequests;
@@ -114,7 +114,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     {
         var pageableRequests = new IndexerPageableRequestChain();
 
-        var parameters = GetBasicSearchParameters(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+        var parameters = GetBasicSearchParameters(searchCriteria, searchCriteria.SanitizedSearchTerm);
         pageableRequests.Add(GetRequest(parameters));
 
         return pageableRequests;
@@ -123,7 +123,7 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
     // hook to adjust the search term
     protected virtual string GetSearchTerm(string term) => term;
 
-    protected virtual NameValueCollection GetBasicSearchParameters(string term, int[] categories)
+    protected virtual NameValueCollection GetBasicSearchParameters(SearchCriteriaBase searchCriteria, string term)
     {
         var parameters = new NameValueCollection
         {
@@ -139,9 +139,10 @@ public class GazelleRequestGenerator : IIndexerRequestGenerator
             parameters.Set("searchstr", searchTerm.Replace(".", " "));
         }
 
-        if (categories != null)
+        if (searchCriteria.Categories != null && searchCriteria.Categories.Any())
         {
-            var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(categories);
+            var queryCats = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+
             if (queryCats.Any())
             {
                 queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));

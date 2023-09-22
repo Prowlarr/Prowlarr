@@ -67,7 +67,9 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Year = request.year;
             searchSpec.Genre = request.genre;
 
-            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            var releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+
+            return new NewznabResults { Releases = DeDupeReleases(releases) };
         }
 
         private async Task<NewznabResults> MusicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -81,7 +83,9 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Track = request.track;
             searchSpec.Year = request.year;
 
-            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            var releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+
+            return new NewznabResults { Releases = DeDupeReleases(releases) };
         }
 
         private async Task<NewznabResults> TvSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -102,7 +106,9 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Year = request.year;
             searchSpec.Genre = request.genre;
 
-            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            var releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+
+            return new NewznabResults { Releases = DeDupeReleases(releases) };
         }
 
         private async Task<NewznabResults> BookSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -115,14 +121,18 @@ namespace NzbDrone.Core.IndexerSearch
             searchSpec.Year = request.year;
             searchSpec.Genre = request.genre;
 
-            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            var releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+
+            return new NewznabResults { Releases = DeDupeReleases(releases) };
         }
 
         private async Task<NewznabResults> BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<BasicSearchCriteria>(request, indexerIds, interactiveSearch);
 
-            return new NewznabResults { Releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec) };
+            var releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
+
+            return new NewznabResults { Releases = DeDupeReleases(releases) };
         }
 
         private TSpec Get<TSpec>(NewznabRequest query, List<int> indexerIds, bool interactiveSearch)
@@ -264,6 +274,14 @@ namespace NzbDrone.Core.IndexerSearch
             }
 
             return Array.Empty<ReleaseInfo>();
+        }
+
+        private List<ReleaseInfo> DeDupeReleases(IList<ReleaseInfo> releases)
+        {
+            // De-dupe reports by guid so duplicate results aren't returned. Pick the one with the higher indexer priority.
+            return releases.GroupBy(r => r.Guid)
+                .Select(r => r.OrderBy(v => v.IndexerPriority).First())
+                .ToList();
         }
     }
 }

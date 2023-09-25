@@ -16,12 +16,11 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    [Obsolete("Site unavailable")]
     public class Shizaproject : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
         public override string Name => "ShizaProject";
-        public override string[] IndexerUrls => new string[] { "https://shiza-project.com/" };
-        public override string Description => "Shizaproject is russian anime voiceover group and eponymous anime tracker.";
+        public override string[] IndexerUrls => new[] { "https://shiza-project.com/" };
+        public override string Description => "ShizaProject Tracker is a Public RUSSIAN tracker and release group for ANIME";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
@@ -34,7 +33,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new ShizaprojectRequestGenerator() { Settings = Settings, Capabilities = Capabilities };
+            return new ShizaprojectRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -47,20 +46,22 @@ namespace NzbDrone.Core.Indexers.Definitions
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
-                                   {
-                                       TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
-                                   },
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
-                                   {
-                                       MovieSearchParam.Q
-                                   }
+                {
+                    MovieSearchParam.Q
+                }
             };
+
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TVAnime, "TV");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVAnime, "TV_SPECIAL");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TVAnime, "ONA");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TVAnime, "OVA");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "MOVIE");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Movies, "SHORT_MOVIE");
+
             return caps;
         }
     }

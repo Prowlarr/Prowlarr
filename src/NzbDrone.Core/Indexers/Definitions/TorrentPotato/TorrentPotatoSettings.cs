@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
         }
     }
 
-    public class TorrentPotatoSettings : IIndexerSettings
+    public class TorrentPotatoSettings : ITorrentIndexerSettings
     {
         private static readonly TorrentPotatoSettingsValidator Validator = new ();
 

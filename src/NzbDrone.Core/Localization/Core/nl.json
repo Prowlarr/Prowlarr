@@ -450,11 +450,14 @@
     "minutes": "Minuten",
     "DeleteAppProfileMessageText": "Bent u zeker dat u het kwaliteitsprofiel {0} wilt verwijderen",
     "NotificationStatusSingleClientHealthCheckMessage": "Applicaties onbeschikbaar door fouten",
-    "AddConnection": "Bewerk collectie",
+    "AddConnection": "Voeg connectie toe",
     "NotificationStatusAllClientHealthCheckMessage": "Alle applicaties onbeschikbaar door fouten",
     "AuthBasic": "Basis (Browser Pop-up)",
     "AuthForm": "Formulier (Login Pagina)",
     "DisabledForLocalAddresses": "Uitgeschakeld voor lokale adressen",
     "None": "Geen",
-    "ResetAPIKeyMessageText": "Bent u zeker dat u uw API-sleutel wilt resetten?"
+    "ResetAPIKeyMessageText": "Bent u zeker dat u uw API-sleutel wilt resetten?",
+    "AddConnectionImplementation": "Voeg connectie toe - {implementationName}",
+    "AddDownloadClientImplementation": "Voeg Downloadclient toe - {implementationName}",
+    "AddIndexerImplementation": "Indexeerder toevoegen - {implementationName}"
 }

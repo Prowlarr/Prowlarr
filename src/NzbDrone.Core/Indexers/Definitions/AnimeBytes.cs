@@ -571,8 +571,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                             };
 
                             releaseInfos.Add(release);
-
-                            continue;
                         }
                     }
 

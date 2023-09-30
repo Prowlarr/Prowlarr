@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
                 var torrentInfo = new TorrentInfo
                 {
                     Guid = GetGuid(torrent),
-                    Title = torrent.release_name,
+                    Title = WebUtility.HtmlDecode(torrent.release_name),
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
                     Size = torrent.size * 1000 * 1000,
                     DownloadUrl = torrent.download_url,

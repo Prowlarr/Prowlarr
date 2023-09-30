@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(BuildRequest(searchCriteria.SearchTerm, searchCriteria.ImdbId));
+            pageableRequests.Add(BuildRequest(searchCriteria.SearchTerm, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }

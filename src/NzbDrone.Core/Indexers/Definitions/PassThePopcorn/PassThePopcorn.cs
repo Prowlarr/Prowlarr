@@ -3,7 +3,7 @@ using NLog;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
-namespace NzbDrone.Core.Indexers.PassThePopcorn
+namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 {
     public class PassThePopcorn : TorrentIndexerBase<PassThePopcornSettings>
     {
@@ -29,22 +29,20 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new PassThePopcornRequestGenerator
-            {
-                Settings = Settings,
-                HttpClient = _httpClient,
-                Logger = _logger
-            };
+            return new PassThePopcornRequestGenerator(Settings);
+        }
+
+        public override IParseIndexerResponse GetParser()
+        {
+            return new PassThePopcornParser(Settings, _logger);
         }
 
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
-                SearchParams = new List<SearchParam>
-                {
-                    SearchParam.Q
-                },
+                LimitsDefault = PageSize,
+                LimitsMax = PageSize,
                 MovieSearchParams = new List<MovieSearchParam>
                 {
                     MovieSearchParam.Q, MovieSearchParam.ImdbId
@@ -73,16 +71,11 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
             return caps;
         }
-
-        public override IParseIndexerResponse GetParser()
-        {
-            return new PassThePopcornParser(Settings, Capabilities, _logger);
-        }
     }
 
     public class PassThePopcornFlag : IndexerFlag
     {
-        public static IndexerFlag Golden => new IndexerFlag("golden", "Release follows Golden Popcorn quality rules");
-        public static IndexerFlag Approved => new IndexerFlag("approved", "Release approved by PTP");
+        public static IndexerFlag Golden => new ("golden", "Release follows Golden Popcorn quality rules");
+        public static IndexerFlag Approved => new ("approved", "Release approved by PTP");
     }
 }

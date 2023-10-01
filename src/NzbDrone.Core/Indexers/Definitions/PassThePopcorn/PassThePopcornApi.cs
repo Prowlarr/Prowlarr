@@ -1,15 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NzbDrone.Core.Indexers.PassThePopcorn
+namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 {
-    public class Director
+    public class PassThePopcornResponse
     {
-        public string Name { get; set; }
-        public string Id { get; set; }
+        public string TotalResults { get; set; }
+        public List<PassThePopcornMovie> Movies { get; set; }
+        public string Page { get; set; }
+        public string AuthKey { get; set; }
+        public string PassKey { get; set; }
     }
 
-    public class Torrent
+    public class PassThePopcornMovie
+    {
+        public string GroupId { get; set; }
+        public string Title { get; set; }
+        public string Year { get; set; }
+        public string Cover { get; set; }
+        public List<string> Tags { get; set; }
+        public string ImdbId { get; set; }
+        public List<PassThePopcornTorrent> Torrents { get; set; }
+    }
+
+    public class PassThePopcornTorrent
     {
         public int Id { get; set; }
         public string Quality { get; set; }
@@ -28,33 +42,5 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
         public bool Checked { get; set; }
         public bool GoldenPopcorn { get; set; }
         public string FreeleechType { get; set; }
-    }
-
-    public class Movie
-    {
-        public string GroupId { get; set; }
-        public string Title { get; set; }
-        public string Year { get; set; }
-        public string Cover { get; set; }
-        public List<string> Tags { get; set; }
-        public List<Director> Directors { get; set; }
-        public string ImdbId { get; set; }
-        public List<Torrent> Torrents { get; set; }
-    }
-
-    public class PassThePopcornResponse
-    {
-        public string TotalResults { get; set; }
-        public List<Movie> Movies { get; set; }
-        public string Page { get; set; }
-        public string AuthKey { get; set; }
-        public string PassKey { get; set; }
-    }
-
-    public class PassThePopcornAuthResponse
-    {
-        public string Result { get; set; }
-        public string Popcron { get; set; }
-        public string AntiCsrfToken { get; set; }
     }
 }

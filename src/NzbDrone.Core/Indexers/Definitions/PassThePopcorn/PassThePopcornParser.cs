@@ -8,36 +8,28 @@ using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
-namespace NzbDrone.Core.Indexers.PassThePopcorn
+namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 {
     public class PassThePopcornParser : IParseIndexerResponse
     {
-        private readonly IndexerCapabilities _capabilities;
         private readonly PassThePopcornSettings _settings;
         private readonly Logger _logger;
-        public PassThePopcornParser(PassThePopcornSettings settings, IndexerCapabilities capabilities, Logger logger)
+
+        public PassThePopcornParser(PassThePopcornSettings settings, Logger logger)
         {
             _settings = settings;
-            _capabilities = capabilities;
             _logger = logger;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             var torrentInfos = new List<ReleaseInfo>();
-            var indexerHttpResponse = indexerResponse.HttpResponse;
 
-            if (indexerHttpResponse.StatusCode != HttpStatusCode.OK)
+            var httpResponse = indexerResponse.HttpResponse;
+
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
-                // Remove cookie cache
-                if (indexerHttpResponse.HasHttpRedirect && indexerHttpResponse.RedirectUrl
-                        .ContainsIgnoreCase("login.php"))
-                {
-                    CookiesUpdater(null, null);
-                    throw new IndexerAuthException("We are being redirected to the PTP login page. Most likely your session expired or was killed. Recheck your cookie or credentials and try testing the indexer.");
-                }
-
-                if (indexerHttpResponse.StatusCode == HttpStatusCode.Forbidden)
+                if (httpResponse.StatusCode == HttpStatusCode.Forbidden)
                 {
                     throw new RequestLimitReachedException(indexerResponse, "PTP Query Limit Reached. Please try again later.");
                 }
@@ -45,19 +37,13 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
-            if (indexerHttpResponse.Headers.ContentType != HttpAccept.Json.Value)
+            if (httpResponse.Headers.ContentType != HttpAccept.Json.Value)
             {
-                if (indexerHttpResponse.Request.Url.Path.ContainsIgnoreCase("login.php"))
-                {
-                    CookiesUpdater(null, null);
-                    throw new IndexerAuthException("We are currently on the login page. Most likely your session expired or was killed. Try testing the indexer in the settings.");
-                }
-
-                // Remove cookie cache
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             var jsonResponse = STJson.Deserialize<PassThePopcornResponse>(indexerResponse.Content);
+
             if (jsonResponse.TotalResults == "0" ||
                 jsonResponse.TotalResults.IsNullOrWhiteSpace() ||
                 jsonResponse.Movies == null)
@@ -70,7 +56,6 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
                 foreach (var torrent in result.Torrents)
                 {
                     var id = torrent.Id;
-                    var title = torrent.ReleaseName;
 
                     var flags = new HashSet<IndexerFlag>();
 
@@ -81,37 +66,32 @@ namespace NzbDrone.Core.Indexers.PassThePopcorn
 
                     if (torrent.Checked)
                     {
-                        flags.Add(PassThePopcornFlag.Approved); //title = $"{title} ✔";
+                        flags.Add(PassThePopcornFlag.Approved);
                     }
-
-                    if (torrent.Scene)
-                    {
-                        flags.Add(IndexerFlag.Scene);
-                    }
-
-                    var free = !(torrent.FreeleechType is null);
 
                     // Only add approved torrents
                     try
                     {
                         torrentInfos.Add(new TorrentInfo
                         {
-                            Guid = string.Format("PassThePopcorn-{0}", id),
-                            Title = title,
-                            Size = long.Parse(torrent.Size),
-                            DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
+                            Guid = $"PassThePopcorn-{id}",
+                            Title = torrent.ReleaseName,
                             InfoUrl = GetInfoUrl(result.GroupId, id),
+                            DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
+                            Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
+                            Size = long.Parse(torrent.Size),
                             Grabs = int.Parse(torrent.Snatched),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                             PublishDate = torrent.UploadTime.ToUniversalTime(),
                             ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
+                            Scene = torrent.Scene,
                             IndexerFlags = flags,
+                            DownloadVolumeFactor = torrent.FreeleechType is "Freeleech" ? 0 : 1,
+                            UploadVolumeFactor = 1,
                             MinimumRatio = 1,
                             MinimumSeedTime = 345600,
-                            DownloadVolumeFactor = free ? 0 : 1,
-                            UploadVolumeFactor = 1,
-                            Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies }
+                            Genres = result.Tags ?? new List<string>()
                         });
                     }
                     catch (Exception e)

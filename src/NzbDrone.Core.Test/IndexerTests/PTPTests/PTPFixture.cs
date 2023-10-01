@@ -6,9 +6,8 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
-using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers;
-using NzbDrone.Core.Indexers.PassThePopcorn;
+using NzbDrone.Core.Indexers.Definitions.PassThePopcorn;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
@@ -21,25 +20,21 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "PTP",
-                Settings = new PassThePopcornSettings() { APIUser = "asdf", APIKey = "sad" }
+                Settings = new PassThePopcornSettings
+                {
+                    APIUser = "asdf",
+                    APIKey = "sad"
+                }
             };
         }
 
         [TestCase("Files/Indexers/PTP/imdbsearch.json")]
         public async Task should_parse_feed_from_PTP(string fileName)
         {
-            var authResponse = new PassThePopcornAuthResponse { Result = "Ok" };
-
-            var authStream = new System.IO.StringWriter();
-            Json.Serialize(authResponse, authStream);
             var responseJson = ReadAllText(fileName);
-
-            Mocker.GetMock<IIndexerHttpClient>()
-                  .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Post), Subject.Definition))
-                  .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader(), new CookieCollection(), authStream.ToString())));
 
             Mocker.GetMock<IIndexerHttpClient>()
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))

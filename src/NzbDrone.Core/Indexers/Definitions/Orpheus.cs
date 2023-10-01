@@ -10,7 +10,6 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -81,70 +80,40 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .SetHeader("Authorization", $"token {Settings.Apikey}")
                 .Build();
 
-            byte[] fileData;
+            var downloadBytes = Array.Empty<byte>();
 
             try
             {
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                fileData = response.ResponseData;
+                downloadBytes = response.ResponseData;
 
-                if (Settings.UseFreeleechToken == (int)OrpheusUseFreeleechTokens.Preferred
-                    && fileData.Length >= 1
-                    && fileData[0] != 'd' // simple test for torrent vs HTML content
+                if (downloadBytes.Length >= 1
+                    && downloadBytes[0] != 'd' // simple test for torrent vs HTML content
                     && link.Query.Contains("usetoken=1"))
                 {
-                    var html = Encoding.GetString(fileData);
-
+                    var html = Encoding.GetString(downloadBytes);
                     if (html.Contains("You do not have any freeleech tokens left.")
                         || html.Contains("You do not have enough freeleech tokens")
                         || html.Contains("This torrent is too large.")
                         || html.Contains("You cannot use tokens here"))
                     {
-                        // Try to download again without usetoken
+                        // download again without usetoken
                         request.Url = new HttpUri(link.ToString().Replace("&usetoken=1", ""));
 
                         response = await _httpClient.ExecuteProxiedAsync(request, Definition);
-                        fileData = response.ResponseData;
+                        downloadBytes = response.ResponseData;
                     }
                 }
-
-                _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);
-            }
-            catch (HttpException ex)
-            {
-                if (ex.Response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    _logger.Error(ex, "Downloading file for release failed since it no longer exists ({0})", link.AbsoluteUri);
-                    throw new ReleaseUnavailableException("Download failed", ex);
-                }
-
-                if (ex.Response.StatusCode == HttpStatusCode.TooManyRequests)
-                {
-                    _logger.Error("API Grab Limit reached for {0}", link.AbsoluteUri);
-                }
-                else
-                {
-                    _logger.Error(ex, "Downloading for release failed ({0})", link.AbsoluteUri);
-                }
-
-                throw new ReleaseDownloadException("Download failed", ex);
-            }
-            catch (WebException ex)
-            {
-                _logger.Error(ex, "Downloading for release failed ({0})", link.AbsoluteUri);
-
-                throw new ReleaseDownloadException("Download failed", ex);
             }
             catch (Exception)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Error("Download failed");
-                throw;
             }
 
-            ValidateDownloadData(fileData);
+            ValidateDownloadData(downloadBytes);
 
-            return fileData;
+            return downloadBytes;
         }
     }
 
@@ -406,7 +375,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddQueryParam("id", torrentId);
 
             // Orpheus fails to download if usetoken=0 so we need to only add if we will use one
-            if (_settings.UseFreeleechToken is (int)OrpheusUseFreeleechTokens.Preferred or (int)OrpheusUseFreeleechTokens.Required)
+            if (_settings.UseFreeleechToken)
             {
                 url = url.AddQueryParam("usetoken", "1");
             }
@@ -440,30 +409,18 @@ namespace NzbDrone.Core.Indexers.Definitions
         public OrpheusSettings()
         {
             Apikey = "";
-            UseFreeleechToken = (int)OrpheusUseFreeleechTokens.Never;
+            UseFreeleechToken = false;
         }
 
         [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings)", Privacy = PrivacyLevel.ApiKey)]
         public string Apikey { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Select, Label = "Use Freeleech Tokens", SelectOptions = typeof(OrpheusUseFreeleechTokens), HelpText = "When to use freeleech tokens")]
-        public int UseFreeleechToken { get; set; }
+        [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
+        public bool UseFreeleechToken { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
-    }
-
-    public enum OrpheusUseFreeleechTokens
-    {
-        [FieldOption(Label = "Never", Hint = "Do not use tokens")]
-        Never = 0,
-
-        [FieldOption(Label = "Preferred", Hint = "Use token if possible")]
-        Preferred = 1,
-
-        [FieldOption(Label = "Required", Hint = "Abort download if unable to use token")]
-        Required = 2,
     }
 }

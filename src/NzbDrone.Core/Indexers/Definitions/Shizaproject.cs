@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -94,6 +95,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             publishedAt
                             slug
                             torrents {
+                                synopsis
                                 downloaded
                                 seeders
                                 leechers
@@ -113,7 +115,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var queryCollection = new NameValueCollection
             {
                 { "query", query.Replace('\n', ' ').Trim() },
-                { "variables", Newtonsoft.Json.JsonConvert.SerializeObject(variables) }
+                { "variables", JsonConvert.SerializeObject(variables) }
             };
 
             var requestUrl = string.Format("{0}/graphql?", Settings.BaseUrl.TrimEnd('/')) + queryCollection.GetQueryString();
@@ -176,25 +178,26 @@ namespace NzbDrone.Core.Indexers.Definitions
             _categories = categories;
         }
 
-        private string composeTitle(ShizaprojectNode n, ShizaprojectTorrent tr)
+        private string ComposeTitle(ShizaprojectNode n, ShizaprojectTorrent tr)
         {
-            var title = string.Format("{0} / {1}", n.Name, n.OriginalName);
-            foreach (var tl in n.AlternativeNames)
+            var allNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                title += " / " + tl;
+                n.Name,
+                n.OriginalName
+            };
+            allNames.UnionWith(n.AlternativeNames.ToHashSet());
+
+            var title = $"{string.Join(" / ", allNames)} {tr.Synopsis}";
+
+            if (tr.VideoQualities.Length > 0)
+            {
+                title += $" [{string.Join(" ", tr.VideoQualities)}]";
             }
 
-            title += " [";
-            foreach (var q in tr.VideoQualities)
-            {
-                title += " " + q;
-            }
-
-            title += " ]";
             return title;
         }
 
-        private DateTime getActualPublishDate(ShizaprojectNode n, ShizaprojectTorrent t)
+        private DateTime GetActualPublishDate(ShizaprojectNode n, ShizaprojectTorrent t)
         {
             if (n.PublishedAt == null)
             {
@@ -206,7 +209,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
         }
 
-        private string getResolution(string[] qualities)
+        private string GetResolution(string[] qualities)
         {
             var resPrefix = "RESOLUTION_";
             var res = Array.Find(qualities, s => s.StartsWith(resPrefix));
@@ -235,7 +238,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     var torrentInfo = new TorrentInfo
                     {
-                        Title = composeTitle(e.Node, tr),
+                        Title = ComposeTitle(e.Node, tr),
                         InfoUrl = string.Format("{0}/releases/{1}/", _settings.BaseUrl.TrimEnd('/'), e.Node.Slug),
                         DownloadVolumeFactor = 0,
                         UploadVolumeFactor = 1,
@@ -243,12 +246,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                         Peers = tr.Leechers + tr.Seeders,
                         Grabs = tr.Downloaded,
                         Categories = _categories.MapTrackerCatDescToNewznab(e.Node.Type),
-                        PublishDate = getActualPublishDate(e.Node, tr),
+                        PublishDate = GetActualPublishDate(e.Node, tr),
                         Guid = tr.File.Url,
                         DownloadUrl = tr.File.Url,
                         MagnetUrl = tr.MagnetUri,
                         Size = tr.Size,
-                        Resolution = getResolution(tr.VideoQualities)
+                        Resolution = GetResolution(tr.VideoQualities)
                     };
 
                     torrentInfos.Add(torrentInfo);
@@ -311,6 +314,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ShizaprojectTorrent
     {
+        public string Synopsis { get; set; }
         public int Downloaded { get; set; }
         public int Seeders { get; set; }
         public int Leechers { get; set; }

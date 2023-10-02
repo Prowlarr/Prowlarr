@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -83,7 +84,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                             Grabs = int.Parse(torrent.Snatched),
                             Seeders = int.Parse(torrent.Seeders),
                             Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
-                            PublishDate = torrent.UploadTime.ToUniversalTime(),
+                            PublishDate = DateTime.Parse(torrent.UploadTime + " +0000", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                             ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
                             Scene = torrent.Scene,
                             IndexerFlags = flags,

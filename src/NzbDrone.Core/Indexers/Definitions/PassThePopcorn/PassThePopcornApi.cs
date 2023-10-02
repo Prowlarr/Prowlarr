@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 {
@@ -33,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
         public string Resolution { get; set; }
         public bool Scene { get; set; }
         public string Size { get; set; }
-        public DateTime UploadTime { get; set; }
+        public string UploadTime { get; set; }
         public string RemasterTitle { get; set; }
         public string Snatched { get; set; }
         public string Seeders { get; set; }

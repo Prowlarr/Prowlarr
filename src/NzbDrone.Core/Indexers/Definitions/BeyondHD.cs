@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json.Serialization;
 using FluentValidation;
-using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -19,6 +19,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
+using static Newtonsoft.Json.Formatting;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -163,7 +164,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Method = HttpMethod.Post
             };
             request.SetContent(body.ToJson());
-            request.ContentSummary = body.ToJson(Formatting.None);
+            request.ContentSummary = body.ToJson(None);
 
             yield return new IndexerRequest(request);
         }
@@ -245,16 +246,16 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException("API Key invalid or not authorized");
             }
 
-            var jsonResponse = new HttpResponse<BeyondHDResponse>(indexerHttpResponse);
+            var jsonResponse = STJson.Deserialize<BeyondHDResponse>(indexerResponse.Content);
 
-            if (jsonResponse.Resource.StatusCode == 0)
+            if (jsonResponse.StatusCode == 0)
             {
-                throw new IndexerException(indexerResponse, $"Indexer Error: {jsonResponse.Resource.StatusMessage}");
+                throw new IndexerException(indexerResponse, $"Indexer Error: {jsonResponse.StatusMessage}");
             }
 
             var releaseInfos = new List<ReleaseInfo>();
 
-            foreach (var row in jsonResponse.Resource.Results)
+            foreach (var row in jsonResponse.Results)
             {
                 var details = row.InfoUrl;
                 var link = row.DownloadLink;
@@ -412,10 +413,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDResponse
     {
-        [JsonProperty(PropertyName = "status_code")]
+        [JsonPropertyName("status_code")]
         public int StatusCode { get; set; }
 
-        [JsonProperty(PropertyName = "status_message")]
+        [JsonPropertyName("status_message")]
         public string StatusMessage { get; set; }
         public List<BeyondHDTorrent> Results { get; set; }
     }
@@ -424,36 +425,48 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "info_hash")]
+        [JsonPropertyName("info_hash")]
         public string InfoHash { get; set; }
         public string Category { get; set; }
         public string Type { get; set; }
         public long Size { get; set; }
 
-        [JsonProperty(PropertyName = "times_completed")]
+        [JsonPropertyName("times_completed")]
         public int Grabs { get; set; }
         public int Seeders { get; set; }
         public int Leechers { get; set; }
 
-        [JsonProperty(PropertyName = "created_at")]
+        [JsonPropertyName("created_at")]
         public string CreatedAt { get; set; }
 
-        [JsonProperty(PropertyName = "download_url")]
+        [JsonPropertyName("download_url")]
         public string DownloadLink { get; set; }
 
-        [JsonProperty(PropertyName = "url")]
+        [JsonPropertyName("url")]
         public string InfoUrl { get; set; }
 
-        [JsonProperty(PropertyName = "imdb_id")]
+        [JsonPropertyName("imdb_id")]
         public string ImdbId { get; set; }
 
-        [JsonProperty(PropertyName = "tmdb_id")]
+        [JsonPropertyName("tmdb_id")]
         public string TmdbId { get; set; }
+
+        [JsonConverter(typeof(BooleanConverter))]
         public bool Freeleech { get; set; }
+
+        [JsonConverter(typeof(BooleanConverter))]
         public bool Promo25 { get; set; }
+
+        [JsonConverter(typeof(BooleanConverter))]
         public bool Promo50 { get; set; }
+
+        [JsonConverter(typeof(BooleanConverter))]
         public bool Promo75 { get; set; }
+
+        [JsonConverter(typeof(BooleanConverter))]
         public bool Limited { get; set; }
+
+        [JsonConverter(typeof(BooleanConverter))]
         public bool Internal { get; set; }
     }
 }

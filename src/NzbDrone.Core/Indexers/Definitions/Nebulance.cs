@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -208,7 +210,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 
-            var jsonResponse = new HttpResponse<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse).Resource;
+            var jsonResponse = STJson.Deserialize<JsonRpcResponse<NebulanceTorrents>>(indexerResponse.HttpResponse.Content);
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
             {
@@ -299,24 +301,24 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NebulanceTorrent
     {
-        [JsonProperty(PropertyName = "rls_name")]
+        [JsonPropertyName("rls_name")]
         public string ReleaseTitle { get; set; }
-        [JsonProperty(PropertyName = "cat")]
+        [JsonPropertyName("cat")]
         public string Category { get; set; }
         public string Size { get; set; }
         public string Seed { get; set; }
         public string Leech { get; set; }
         public string Snatch { get; set; }
         public string Download { get; set; }
-        [JsonProperty(PropertyName = "file_list")]
+        [JsonPropertyName("file_list")]
         public string[] FileList { get; set; }
-        [JsonProperty(PropertyName = "group_name")]
+        [JsonPropertyName("group_name")]
         public string GroupName { get; set; }
-        [JsonProperty(PropertyName = "series_banner")]
+        [JsonPropertyName("series_banner")]
         public string Banner { get; set; }
-        [JsonProperty(PropertyName = "group_id")]
+        [JsonPropertyName("group_id")]
         public string TorrentId { get; set; }
-        [JsonProperty(PropertyName = "rls_utc")]
+        [JsonPropertyName("rls_utc")]
         public string PublishDateUtc { get; set; }
     }
 

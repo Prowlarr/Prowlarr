@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
@@ -42,9 +43,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
-            var jsonResponse = new HttpResponse<AvistazResponse>(indexerResponse.HttpResponse);
+            var jsonResponse = STJson.Deserialize<AvistazResponse>(indexerResponse.HttpResponse.Content);
 
-            foreach (var row in jsonResponse.Resource.Data)
+            foreach (var row in jsonResponse.Data)
             {
                 var details = row.Url;
                 var link = row.Download;

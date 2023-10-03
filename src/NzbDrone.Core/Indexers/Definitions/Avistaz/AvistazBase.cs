@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
@@ -120,12 +121,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("pid", Settings.Pid.Trim())
                 .Accept(HttpAccept.Json)
+                .WithRateLimit(RateLimit.TotalSeconds)
                 .Build();
 
-            var response = await _httpClient.PostAsync<AvistazAuthResponse>(authLoginRequest);
-            var token = response.Resource.Token;
+            var response = await _httpClient.ExecuteProxiedAsync(authLoginRequest, Definition);
+            var authResponse = STJson.Deserialize<AvistazAuthResponse>(response.Content);
 
-            return token;
+            return authResponse.Token;
         }
     }
 }

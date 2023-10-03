@@ -17,7 +17,7 @@
     "AddIndexer": "Добавить индексер",
     "Added": "Добавлено",
     "Actions": "Действия",
-    "About": "Подробности",
+    "About": "Об",
     "DeleteBackupMessageText": "Вы уверены, что хотите удалить резервную копию '{name}'?",
     "DeleteBackup": "Удалить резервную копию",
     "Delete": "Удалить",
@@ -396,8 +396,8 @@
     "IndexerDownloadClientHealthCheckMessage": "Индексаторы с недопустимыми клиентами загрузки: {0}.",
     "StopSelecting": "Прекратить выбор",
     "AddDownloadClientImplementation": "Добавить клиент загрузки - {implementationName}",
-    "AddConnection": "Добавить соединение",
-    "AddConnectionImplementation": "Добавить соединение - {implementationName}",
+    "AddConnection": "Добавить подключение",
+    "AddConnectionImplementation": "Добавить подключение - {implementationName}",
     "ManageDownloadClients": "Менеджер клиентов загрузки",
     "NotificationStatusAllClientHealthCheckMessage": "Все уведомления недоступны из-за сбоев",
     "NotificationStatusSingleClientHealthCheckMessage": "Уведомления недоступны из-за сбоев: {0}",
@@ -414,5 +414,6 @@
     "None": "Ничто",
     "ResetAPIKeyMessageText": "Вы уверены, что хотите сбросить Ваш API ключ?",
     "Categories": "Категории",
-    "Album": "альбом"
+    "Album": "альбом",
+    "AddCustomFilter": "Добавить специальный фильтр"
 }

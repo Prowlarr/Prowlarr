@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using Newtonsoft.Json;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
 
@@ -35,7 +35,7 @@ public class FileListParser : IParseIndexerResponse
 
         var releaseInfos = new List<ReleaseInfo>();
 
-        var results = JsonConvert.DeserializeObject<List<FileListTorrent>>(indexerResponse.Content);
+        var results = STJson.Deserialize<List<FileListTorrent>>(indexerResponse.Content);
 
         foreach (var row in results)
         {
@@ -54,7 +54,7 @@ public class FileListParser : IParseIndexerResponse
             }
 
             var imdbId = 0;
-            if (row.ImdbId != null && row.ImdbId.Length > 2)
+            if (row.ImdbId is { Length: > 2 })
             {
                 imdbId = int.Parse(row.ImdbId.Substring(2));
             }
@@ -64,7 +64,7 @@ public class FileListParser : IParseIndexerResponse
 
             releaseInfos.Add(new TorrentInfo
             {
-                Guid = string.Format("FileList-{0}", id),
+                Guid = $"FileList-{id}",
                 Title = row.Name,
                 Size = row.Size,
                 Categories = _categories.MapTrackerCatDescToNewznab(row.Category),
@@ -91,21 +91,21 @@ public class FileListParser : IParseIndexerResponse
 
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-    private string GetDownloadUrl(string torrentId)
+    private string GetDownloadUrl(uint torrentId)
     {
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/download.php")
-            .AddQueryParam("id", torrentId)
+            .AddQueryParam("id", torrentId.ToString())
             .AddQueryParam("passkey", _settings.Passkey);
 
         return url.FullUri;
     }
 
-    private string GetInfoUrl(string torrentId)
+    private string GetInfoUrl(uint torrentId)
     {
         var url = new HttpUri(_settings.BaseUrl)
             .CombinePath("/details.php")
-            .AddQueryParam("id", torrentId);
+            .AddQueryParam("id", torrentId.ToString());
 
         return url.FullUri;
     }

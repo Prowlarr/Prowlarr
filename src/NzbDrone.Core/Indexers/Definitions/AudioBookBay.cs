@@ -269,7 +269,7 @@ public class AudioBookBayParser : IParseIndexerResponse
     {
         var releaseInfos = new List<ReleaseInfo>();
 
-        var doc = ParseHtmlDocument(indexerResponse.Content);
+        using var doc = ParseHtmlDocument(indexerResponse.Content);
 
         var rows = doc.QuerySelectorAll("div.post:has(div[class=\"postTitle\"])");
         foreach (var row in rows)
@@ -333,7 +333,7 @@ public class AudioBookBayParser : IParseIndexerResponse
     private static IHtmlDocument ParseHtmlDocument(string response)
     {
         var parser = new HtmlParser();
-        using var doc = parser.ParseDocument(response);
+        var doc = parser.ParseDocument(response);
 
         var hidden = doc.QuerySelectorAll("div.post.re-ab");
         foreach (var element in hidden)

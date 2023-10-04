@@ -70,43 +70,28 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         flags.Add(PassThePopcornFlag.Approved);
                     }
 
-                    // Only add approved torrents
-                    try
+                    torrentInfos.Add(new TorrentInfo
                     {
-                        torrentInfos.Add(new TorrentInfo
-                        {
-                            Guid = $"PassThePopcorn-{id}",
-                            Title = torrent.ReleaseName,
-                            InfoUrl = GetInfoUrl(result.GroupId, id),
-                            DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
-                            Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
-                            Size = long.Parse(torrent.Size),
-                            Grabs = int.Parse(torrent.Snatched),
-                            Seeders = int.Parse(torrent.Seeders),
-                            Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
-                            PublishDate = DateTime.Parse(torrent.UploadTime + " +0000", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
-                            ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
-                            Scene = torrent.Scene,
-                            IndexerFlags = flags,
-                            DownloadVolumeFactor = torrent.FreeleechType is "Freeleech" ? 0 : 1,
-                            UploadVolumeFactor = 1,
-                            MinimumRatio = 1,
-                            MinimumSeedTime = 345600,
-                            Genres = result.Tags ?? new List<string>()
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "Encountered exception parsing PTP torrent: {" +
-                                         $"Size: {torrent.Size}" +
-                                         $"UploadTime: {torrent.UploadTime}" +
-                                         $"Seeders: {torrent.Seeders}" +
-                                         $"Leechers: {torrent.Leechers}" +
-                                         $"ReleaseName: {torrent.ReleaseName}" +
-                                         $"ID: {torrent.Id}" +
-                                         "}. Please immediately report this info on https://github.com/Prowlarr/Prowlarr/issues/1584.");
-                        throw;
-                    }
+                        Guid = $"PassThePopcorn-{id}",
+                        Title = torrent.ReleaseName,
+                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
+                        Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
+                        Size = long.Parse(torrent.Size),
+                        Grabs = int.Parse(torrent.Snatched),
+                        Seeders = int.Parse(torrent.Seeders),
+                        Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
+                        PublishDate = DateTime.Parse(torrent.UploadTime + " +0000", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                        ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
+                        Scene = torrent.Scene,
+                        IndexerFlags = flags,
+                        DownloadVolumeFactor = torrent.FreeleechType is "Freeleech" ? 0 : 1,
+                        UploadVolumeFactor = 1,
+                        MinimumRatio = 1,
+                        MinimumSeedTime = 345600,
+                        Genres = result.Tags ?? new List<string>(),
+                        PosterUrl = GetPosterUrl(result.Cover)
+                    });
                 }
             }
 
@@ -135,6 +120,18 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                 .AddQueryParam("torrentid", torrentId);
 
             return url.FullUri;
+        }
+
+        private static string GetPosterUrl(string cover)
+        {
+            if (cover.IsNotNullOrWhiteSpace() &&
+                Uri.TryCreate(cover, UriKind.Absolute, out var posterUri) &&
+                (posterUri.Scheme == Uri.UriSchemeHttp || posterUri.Scheme == Uri.UriSchemeHttps))
+            {
+                return posterUri.AbsoluteUri;
+            }
+
+            return null;
         }
     }
 }

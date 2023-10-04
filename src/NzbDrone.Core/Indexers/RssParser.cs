@@ -161,6 +161,7 @@ namespace NzbDrone.Core.Indexers
         {
             releaseInfo.Guid = GetGuid(item);
             releaseInfo.Title = GetTitle(item);
+            releaseInfo.Description = GetDescription(item);
             releaseInfo.PublishDate = GetPublishDate(item);
             releaseInfo.DownloadUrl = GetDownloadUrl(item);
             releaseInfo.InfoUrl = GetInfoUrl(item);
@@ -193,6 +194,11 @@ namespace NzbDrone.Core.Indexers
         protected virtual string GetTitle(XElement item)
         {
             return item.TryGetValue("title", "Unknown");
+        }
+
+        protected virtual string GetDescription(XElement item)
+        {
+            return item.TryGetValue("description", null);
         }
 
         protected virtual ICollection<IndexerCategory> GetCategory(XElement item)

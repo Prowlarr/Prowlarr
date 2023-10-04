@@ -121,10 +121,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("pid", Settings.Pid.Trim())
                 .Accept(HttpAccept.Json)
-                .WithRateLimit(RateLimit.TotalSeconds)
                 .Build();
 
-            var response = await _httpClient.ExecuteProxiedAsync(authLoginRequest, Definition);
+            var response = await ExecuteAuth(authLoginRequest);
+
             var authResponse = STJson.Deserialize<AvistazAuthResponse>(response.Content);
 
             return authResponse.Token;

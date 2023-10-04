@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = parser.ParseDocument(response.Content);
             var downloadLink = dom.QuerySelector(".download_link")?.GetAttribute("href");
 
             if (downloadLink.IsNullOrWhiteSpace())
@@ -82,7 +82,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var loginPage = await ExecuteAuth(new HttpRequest(loginUrl));
 
             var parser = new HtmlParser();
-            var dom = await parser.ParseDocumentAsync(loginPage.Content);
+            using var dom = await parser.ParseDocumentAsync(loginPage.Content);
             var loginKey = dom.QuerySelector("input[name=\"loginKey\"]");
             if (loginKey != null)
             {
@@ -102,7 +102,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (CheckIfLoginNeeded(response))
             {
                 var htmlParser = new HtmlParser();
-                var document = await htmlParser.ParseDocumentAsync(response.Content);
+                using var document = await htmlParser.ParseDocumentAsync(response.Content);
                 var errorMessage = document.QuerySelector("#loginError, .error")?.TextContent.Trim();
 
                 throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
@@ -247,7 +247,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
             var rows = dom.QuerySelectorAll(".torrents tr.torrent, .torrents tr.torrent_alt");
             var currentCategories = new List<IndexerCategory> { NewznabStandardCategory.TVAnime };
 

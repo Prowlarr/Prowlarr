@@ -63,7 +63,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
                 var parser = new HtmlParser();
-                var dom = parser.ParseDocument(response.Content);
+                using var dom = parser.ParseDocument(response.Content);
                 var magnetLink = dom.QuerySelector("table.attach a.magnet-link[href^=\"magnet:?\"]")?.GetAttribute("href");
 
                 if (magnetLink == null)
@@ -104,7 +104,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (!response.Content.Contains("id=\"logged-in-username\""))
             {
                 var parser = new HtmlParser();
-                var document = await parser.ParseDocumentAsync(response.Content);
+                using var document = await parser.ParseDocumentAsync(response.Content);
                 var errorMessage = document.QuerySelector("h4.warnColor1.tCenter.mrg_16, div.msg-main")?.TextContent.Trim();
 
                 throw new IndexerAuthException(errorMessage ?? "RuTracker Auth Failed");
@@ -1580,7 +1580,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var doc = parser.ParseDocument(indexerResponse.Content);
+            using var doc = parser.ParseDocument(indexerResponse.Content);
             var rows = doc.QuerySelectorAll("table#tor-tbl > tbody > tr");
 
             foreach (var row in rows)

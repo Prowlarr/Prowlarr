@@ -96,7 +96,7 @@ public class SpeedCD : TorrentIndexerBase<SpeedCDSettings>
         if (CheckIfLoginNeeded(response))
         {
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = parser.ParseDocument(response.Content);
             var errorMessage = dom.QuerySelector("h5")?.TextContent.Trim();
 
             if (response.Content.Contains("Wrong Captcha!"))
@@ -323,7 +323,7 @@ public class SpeedCDParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(indexerResponse.Content);
+        using var dom = parser.ParseDocument(indexerResponse.Content);
 
         var rows = dom.QuerySelectorAll("div.boxContent > table > tbody > tr");
         foreach (var row in rows)

@@ -72,7 +72,7 @@ public class XSpeeds : TorrentIndexerBase<UserPassTorrentBaseSettings>
         if (CheckIfLoginNeeded(response))
         {
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = await parser.ParseDocumentAsync(response.Content);
             var errorMessage = dom.QuerySelector(".left_side table:nth-of-type(1) tr:nth-of-type(2)")?.TextContent.Trim().Replace("\n\t", " ");
             if (errorMessage.IsNullOrWhiteSpace())
             {
@@ -289,7 +289,7 @@ public class XSpeedsParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(indexerResponse.Content);
+        using var dom = parser.ParseDocument(indexerResponse.Content);
 
         var rows = dom.QuerySelectorAll("table#sortabletable > tbody > tr:has(a[href*=\"details.php?id=\"])");
         foreach (var row in rows)

@@ -234,7 +234,7 @@ public class PirateTheNetParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(indexerResponse.Content);
+        using var dom = parser.ParseDocument(indexerResponse.Content);
 
         var rows = dom.QuerySelectorAll("table.main > tbody > tr");
         foreach (var row in rows.Skip(1))

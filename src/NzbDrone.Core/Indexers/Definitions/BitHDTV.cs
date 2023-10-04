@@ -185,7 +185,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var torrentInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
             foreach (var child in dom.QuerySelectorAll("#needseed"))
             {
                 child.Remove();

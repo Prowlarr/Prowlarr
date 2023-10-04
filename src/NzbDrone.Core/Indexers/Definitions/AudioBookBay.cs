@@ -88,7 +88,7 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(response.Content);
+        using var dom = parser.ParseDocument(response.Content);
 
         var hash = dom.QuerySelector("td:contains(\"Info Hash:\") ~ td")?.TextContent.Trim();
         if (hash == null)
@@ -333,7 +333,7 @@ public class AudioBookBayParser : IParseIndexerResponse
     private static IHtmlDocument ParseHtmlDocument(string response)
     {
         var parser = new HtmlParser();
-        var doc = parser.ParseDocument(response);
+        using var doc = parser.ParseDocument(response);
 
         var hidden = doc.QuerySelectorAll("div.post.re-ab");
         foreach (var element in hidden)

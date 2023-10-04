@@ -249,7 +249,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var torrentInfos = new List<TorrentInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
             var rows = dom.QuerySelectorAll("#torrents-table > tbody > tr");
 
             foreach (var row in rows.Skip(1))

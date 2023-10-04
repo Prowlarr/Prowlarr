@@ -177,7 +177,7 @@ public class MoreThanTVParser : IParseIndexerResponse
         try
         {
             var parser = new HtmlParser();
-            var document = parser.ParseDocument(indexerResponse.Content);
+            using var document = parser.ParseDocument(indexerResponse.Content);
             var torrents = document.QuerySelectorAll("#torrent_table > tbody > tr.torrent");
             var movies = new[] { "movie" };
             var tv = new[] { "season", "episode" };

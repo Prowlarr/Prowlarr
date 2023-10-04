@@ -73,7 +73,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (CheckIfLoginNeeded(response))
             {
                 var parser = new HtmlParser();
-                var dom = parser.ParseDocument(response.Content);
+                using var dom = parser.ParseDocument(response.Content);
                 var errorMessages = dom
                     .QuerySelectorAll("table.lista td.lista span[style*=\"#FF0000\"], table.lista td.header:contains(\"login attempts\")")
                     .Select(r => r.TextContent.Trim())

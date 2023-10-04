@@ -77,7 +77,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             else
             {
                 var parser = new HtmlParser();
-                var document = await parser.ParseDocumentAsync(response.Content);
+                using var document = await parser.ParseDocumentAsync(response.Content);
                 var errorMessage = document.QuerySelector("#content .berror .berror_c")?.TextContent.Trim();
 
                 throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
@@ -433,7 +433,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var torrentInfos = new List<TorrentInfo>();
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
 
             foreach (var t in dom.QuerySelectorAll("#tabs .torrent_c > div"))
             {
@@ -465,7 +465,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var torrentInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
 
             var links = dom.QuerySelectorAll(".searchitem > h3 > a[href], #dle-content > .story > .story_h > .lcol > h2 > a[href]");
             foreach (var link in links)

@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using NzbDrone.Common.Serializer;
 
 namespace NzbDrone.Core.Indexers.Definitions.FileList;
 
@@ -23,15 +22,12 @@ public class FileListTorrent
     [JsonPropertyName("imdb")]
     public string ImdbId { get; set; }
 
-    [JsonConverter(typeof(BooleanConverter))]
     public bool Internal { get; set; }
 
     [JsonPropertyName("freeleech")]
-    [JsonConverter(typeof(BooleanConverter))]
     public bool FreeLeech { get; set; }
 
     [JsonPropertyName("doubleup")]
-    [JsonConverter(typeof(BooleanConverter))]
     public bool DoubleUp { get; set; }
 
     [JsonPropertyName("upload_date")]

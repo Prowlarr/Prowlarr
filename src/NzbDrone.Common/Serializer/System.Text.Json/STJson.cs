@@ -36,6 +36,7 @@ namespace NzbDrone.Common.Serializer
             serializerSettings.Converters.Add(new STJTimeSpanConverter());
             serializerSettings.Converters.Add(new STJUtcConverter());
             serializerSettings.Converters.Add(new DictionaryStringObjectConverter());
+            serializerSettings.Converters.Add(new BooleanConverter());
         }
 
         public static T Deserialize<T>(string json)

@@ -451,22 +451,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonPropertyName("tmdb_id")]
         public string TmdbId { get; set; }
 
-        [JsonConverter(typeof(BooleanConverter))]
         public bool Freeleech { get; set; }
 
-        [JsonConverter(typeof(BooleanConverter))]
         public bool Promo25 { get; set; }
 
-        [JsonConverter(typeof(BooleanConverter))]
         public bool Promo50 { get; set; }
 
-        [JsonConverter(typeof(BooleanConverter))]
         public bool Promo75 { get; set; }
 
-        [JsonConverter(typeof(BooleanConverter))]
         public bool Limited { get; set; }
 
-        [JsonConverter(typeof(BooleanConverter))]
         public bool Internal { get; set; }
     }
 }

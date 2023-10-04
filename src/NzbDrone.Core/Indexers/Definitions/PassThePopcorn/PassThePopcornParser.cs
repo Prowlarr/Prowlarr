@@ -74,6 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                     {
                         Guid = $"PassThePopcorn-{id}",
                         Title = torrent.ReleaseName,
+                        Year = int.Parse(result.Year),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
                         Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },

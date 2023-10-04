@@ -108,6 +108,7 @@ namespace NzbDrone.Core.IndexerSearch
                             GetNabElement("files", r.Files, protocol),
                             GetNabElement("grabs", r.Grabs, protocol),
                             GetNabElement("peers", t.Peers, protocol),
+                            r.Year == 0 ? null : GetNabElement("year", r.Year, protocol),
                             GetNabElement("author", RemoveInvalidXMLChars(r.Author), protocol),
                             GetNabElement("booktitle", RemoveInvalidXMLChars(r.BookTitle), protocol),
                             GetNabElement("artist", RemoveInvalidXMLChars(r.Artist), protocol),

@@ -161,7 +161,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var doc = parser.ParseDocument(indexerResponse.Content);
+            using var doc = parser.ParseDocument(indexerResponse.Content);
             var rows = doc.QuerySelectorAll("table.xMenuT > tbody > tr").Skip(1);
             foreach (var row in rows)
             {

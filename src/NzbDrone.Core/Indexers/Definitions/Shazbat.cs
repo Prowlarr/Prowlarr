@@ -78,7 +78,7 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
         if (CheckIfLoginNeeded(response))
         {
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = await parser.ParseDocumentAsync(response.Content);
             var errorMessage = dom.QuerySelector("div#fail .modal-body")?.TextContent.Trim();
 
             throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
@@ -223,7 +223,7 @@ public class ShazbatParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(indexerResponse.Content);
+        using var dom = parser.ParseDocument(indexerResponse.Content);
 
         var hasGlobalFreeleech = dom.QuerySelector("span:contains(\"Freeleech until:\"):has(span.datetime)") != null;
 
@@ -303,7 +303,7 @@ public class ShazbatParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(indexerResponse.Content);
+        using var dom = parser.ParseDocument(indexerResponse.Content);
 
         if (!hasGlobalFreeleech)
         {

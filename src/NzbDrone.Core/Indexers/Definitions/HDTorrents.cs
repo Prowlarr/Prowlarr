@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (response.Content != null && !response.Content.ContainsIgnoreCase("If your browser doesn't have javascript enabled"))
             {
                 var parser = new HtmlParser();
-                var dom = parser.ParseDocument(response.Content);
+                using var dom = await parser.ParseDocumentAsync(response.Content);
 
                 var errorMessage = dom.QuerySelector("div > font[color=\"#FF0000\"]")?.TextContent.Trim();
 
@@ -256,7 +256,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
 
             var userInfo = dom.QuerySelector("table.navus tr");
             var userRank = userInfo?.Children[1].TextContent.Replace("Rank:", string.Empty).Trim();

@@ -598,7 +598,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             }
 
             var resultParser = new HtmlParser();
-            var resultDocument = resultParser.ParseDocument(loginResult.Content);
+            using var resultDocument = resultParser.ParseDocument(loginResult.Content);
             foreach (var error in errorBlocks)
             {
                 var selection = resultDocument.QuerySelector(error.Selector);
@@ -984,7 +984,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             var selectorText = ApplyGoTemplateText(selector.Selector, variables);
             var parser = new HtmlParser();
 
-            var resultDocument = parser.ParseDocument(response.Content);
+            using var resultDocument = parser.ParseDocument(response.Content);
 
             var element = resultDocument.QuerySelector(selectorText);
             if (element == null)
@@ -1045,7 +1045,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             if (_definition.Login.Test?.Selector != null && (response.Headers.ContentType?.Contains("text/html") ?? true))
             {
                 var parser = new HtmlParser();
-                var document = parser.ParseDocument(response.Content);
+                using var document = parser.ParseDocument(response.Content);
 
                 var selection = document.QuerySelectorAll(_definition.Login.Test.Selector);
                 if (selection.Length == 0)

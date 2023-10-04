@@ -65,7 +65,7 @@ public class Uniotaku : TorrentIndexerBase<UniotakuSettings>
         if (CheckIfLoginNeeded(response))
         {
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = await parser.ParseDocumentAsync(response.Content);
             var errorMessage = dom.QuerySelector(".login-content span.text-red")?.TextContent.Trim();
 
             throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
@@ -92,7 +92,7 @@ public class Uniotaku : TorrentIndexerBase<UniotakuSettings>
         var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(response.Content);
+        using var dom = parser.ParseDocument(response.Content);
         var downloadLink = dom.QuerySelector("a[href^=\"download.php?id=\"]")?.GetAttribute("href")?.Trim();
 
         if (downloadLink == null)
@@ -250,9 +250,9 @@ public class UniotakuParser : IParseIndexerResponse
         var publishDate = DateTime.Now;
         foreach (var item in jsonContent.Value<JArray>("data"))
         {
-            var detailsDom = parser.ParseDocument(item.SelectToken("[0]").Value<string>());
-            var categoryDom = parser.ParseDocument(item.SelectToken("[1]").Value<string>());
-            var groupDom = parser.ParseDocument(item.SelectToken("[7]").Value<string>());
+            using var detailsDom = parser.ParseDocument(item.SelectToken("[0]").Value<string>());
+            using var categoryDom = parser.ParseDocument(item.SelectToken("[1]").Value<string>());
+            using var groupDom = parser.ParseDocument(item.SelectToken("[7]").Value<string>());
 
             var qTitleLink = detailsDom.QuerySelector("a[href^=\"torrents-details.php?id=\"]");
             var title = qTitleLink?.TextContent.Trim();

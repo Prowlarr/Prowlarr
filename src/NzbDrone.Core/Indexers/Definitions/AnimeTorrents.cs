@@ -275,7 +275,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var releaseInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
 
             var rows = dom.QuerySelectorAll("table tr");
             foreach (var (row, index) in rows.Skip(1).Select((v, i) => (v, i)))

@@ -77,7 +77,7 @@ public class Libble : TorrentIndexerBase<LibbleSettings>
         if (CheckIfLoginNeeded(response))
         {
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = parser.ParseDocument(response.Content);
             var errorMessage = dom.QuerySelector("#loginform > .warning")?.TextContent.Trim();
 
             throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");
@@ -238,7 +238,7 @@ public class LibbleParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var doc = parser.ParseDocument(indexerResponse.Content);
+        using var doc = parser.ParseDocument(indexerResponse.Content);
 
         var groups = doc.QuerySelectorAll("table#torrent_table > tbody > tr.group:has(strong > a[href*=\"torrents.php?id=\"])");
         foreach (var group in groups)

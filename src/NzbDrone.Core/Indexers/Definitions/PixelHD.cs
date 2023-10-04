@@ -171,7 +171,7 @@ public class PixelHDParser : IParseIndexerResponse
         var releaseInfos = new List<ReleaseInfo>();
 
         var parser = new HtmlParser();
-        var dom = parser.ParseDocument(indexerResponse.Content);
+        using var dom = parser.ParseDocument(indexerResponse.Content);
 
         var groups = dom.QuerySelectorAll("div.browsePoster");
         foreach (var group in groups)

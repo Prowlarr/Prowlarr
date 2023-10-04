@@ -37,7 +37,7 @@ public class AroLol : GazelleBase<AroLolSettings>
         if (response.Content.Contains("loginform"))
         {
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(response.Content);
+            using var dom = parser.ParseDocument(response.Content);
             var errorMessage = dom.QuerySelector("#loginform > .warning")?.TextContent.Trim();
 
             throw new IndexerAuthException(errorMessage ?? "Unknown error message, please report.");

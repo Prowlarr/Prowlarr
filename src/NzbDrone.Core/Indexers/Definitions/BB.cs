@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (CheckIfLoginNeeded(response))
             {
                 var parser = new HtmlParser();
-                var dom = parser.ParseDocument(response.Content);
+                using var dom = parser.ParseDocument(response.Content);
                 var messageEl = dom.QuerySelectorAll("#loginform");
                 var messages = new List<string>();
                 for (var i = 0; i < 13; i++)
@@ -242,7 +242,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var torrentInfos = new List<ReleaseInfo>();
 
             var parser = new HtmlParser();
-            var dom = parser.ParseDocument(indexerResponse.Content);
+            using var dom = parser.ParseDocument(indexerResponse.Content);
             var rows = dom.QuerySelectorAll("#torrent_table > tbody > tr.torrent");
 
             foreach (var row in rows)

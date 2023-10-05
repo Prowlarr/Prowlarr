@@ -77,14 +77,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             };
 
-            caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.TVAnime, "Anime");
-            caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.PC, "Appz/Packs");
-            caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.AudioAudiobook, "Audio Books");
-            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.Books, "Books");
-            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.TVDocumentary, "Documentary");
-            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Other, "Fonts");
-            caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.PCMac, "Mac");
-
             caps.Categories.AddCategoryMapping(96, NewznabStandardCategory.MoviesUHD, "Movie/4K");
             caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.MoviesSD, "Movies/480p");
             caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.MoviesBluRay, "Movies/Bluray");
@@ -97,31 +89,43 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(48, NewznabStandardCategory.Movies, "Movies/x265");
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesSD, "Movies/XviD");
 
-            caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.AudioMP3, "Music/Audio");
-            caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.AudioForeign, "Music/Non-English");
-            caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.Audio, "Music/Packs");
-            caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.AudioVideo, "Music/Video");
-            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.Audio, "Music/Flac");
-
-            caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.AudioOther, "Podcast");
-
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "PC/Games");
-            caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.ConsolePS3, "PS3");
-            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.ConsolePSP, "PSP");
-            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.ConsoleWii, "Wii");
-            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.ConsoleXBox360, "Xbox-360");
-
             caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.TVSD, "TV/480p");
             caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.TVHD, "TV/Bluray");
             caps.Categories.AddCategoryMapping(31, NewznabStandardCategory.TVSD, "TV/DVD-R");
             caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.TVSD, "TV/DVD-Rip");
             caps.Categories.AddCategoryMapping(46, NewznabStandardCategory.TVSD, "TV/Mobile");
+            caps.Categories.AddCategoryMapping(82, NewznabStandardCategory.TVForeign, "TV/Non-English");
             caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.TV, "TV/Packs");
             caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.TVSD, "TV/SD/x264");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.TVHD, "TV/x264");
             caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.TVUHD, "TV/x265");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/XviD");
 
+            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "PC/Games");
+            caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.ConsolePS3, "PS");
+            caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.ConsolePSP, "PSP");
+            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.ConsoleNDS, "Nintendo");
+            caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.ConsoleXBox, "Xbox");
+
+            caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.AudioMP3, "Music/Audio");
+            caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.Audio, "Music/Flac");
+            caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.AudioForeign, "Music/Non-English");
+            caps.Categories.AddCategoryMapping(41, NewznabStandardCategory.Audio, "Music/Packs");
+            caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.AudioVideo, "Music/Video");
+
+            caps.Categories.AddCategoryMapping(29, NewznabStandardCategory.TVAnime, "Anime");
+            caps.Categories.AddCategoryMapping(42, NewznabStandardCategory.AudioAudiobook, "Audio Books");
+            caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.Books, "Books");
+            caps.Categories.AddCategoryMapping(102, NewznabStandardCategory.BooksForeign, "Books/Non-English");
+            caps.Categories.AddCategoryMapping(30, NewznabStandardCategory.TVDocumentary, "Documentary");
+            caps.Categories.AddCategoryMapping(95, NewznabStandardCategory.TVDocumentary, "Educational");
+            caps.Categories.AddCategoryMapping(47, NewznabStandardCategory.Other, "Fonts");
+            caps.Categories.AddCategoryMapping(43, NewznabStandardCategory.PCMac, "Mac");
+            caps.Categories.AddCategoryMapping(45, NewznabStandardCategory.AudioOther, "Podcast");
+            caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.PC, "Softwa/Packs");
+            caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.PC, "Software");
+
+            caps.Categories.AddCategoryMapping(19, NewznabStandardCategory.XXX, "XXX/0Day");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.XXX, "XXX/Movies");
             caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.XXXPack, "XXX/Packs");
 

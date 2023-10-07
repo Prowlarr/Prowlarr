@@ -149,7 +149,7 @@ namespace NzbDrone.Core.Indexers
             return result.DistinctBy(v => v.Guid).ToList();
         }
 
-        protected IEnumerable<ReleaseInfo> FilterReleasesByQuery(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        protected virtual IEnumerable<ReleaseInfo> FilterReleasesByQuery(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
         {
             var commonWords = new[] { "and", "the", "an", "of" };
 

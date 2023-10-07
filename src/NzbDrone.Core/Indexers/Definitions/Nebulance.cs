@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -65,6 +66,26 @@ namespace NzbDrone.Core.Indexers.Definitions
             var request = requestBuilder.Build();
 
             return Task.FromResult(request);
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            return FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
+        }
+
+        protected override IEnumerable<ReleaseInfo> FilterReleasesByQuery(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            if (!searchCriteria.IsRssSearch &&
+                searchCriteria.IsIdSearch &&
+                searchCriteria is TvSearchCriteria tvSearchCriteria &&
+                tvSearchCriteria.EpisodeSearchString.IsNotNullOrWhiteSpace())
+            {
+                releases = releases.Where(r => r.Title.IsNotNullOrWhiteSpace() && r.Title.ContainsIgnoreCase(tvSearchCriteria.EpisodeSearchString)).ToList();
+            }
+
+            return releases;
         }
 
         private IndexerCapabilities SetCapabilities()

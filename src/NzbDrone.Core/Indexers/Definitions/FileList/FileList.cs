@@ -8,12 +8,12 @@ namespace NzbDrone.Core.Indexers.Definitions.FileList;
 public class FileList : TorrentIndexerBase<FileListSettings>
 {
     public override string Name => "FileList.io";
-    public override string[] IndexerUrls => new[]
+    public override string[] IndexerUrls => new[] { "https://filelist.io/" };
+    public override string[] LegacyUrls => new[]
     {
-        "https://filelist.io/",
+        "https://filelist.io",
         "https://flro.org/"
     };
-    public override string[] LegacyUrls => new[] { "https://filelist.io" };
     public override string Description => "FileList (FL) is a ROMANIAN Private Torrent Tracker for 0DAY / GENERAL";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override bool SupportsRss => true;

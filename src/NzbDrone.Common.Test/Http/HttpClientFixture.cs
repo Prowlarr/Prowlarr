@@ -129,6 +129,17 @@ namespace NzbDrone.Common.Test.Http
         }
 
         [Test]
+        public void should_throw_timeout_request()
+        {
+            var request = new HttpRequest($"https://{_httpBinHost}/delay/10");
+
+            request.RequestTimeout = new TimeSpan(0, 0, 5);
+
+            Assert.Throws<WebException>(() => Subject.Execute(request));
+            ExceptionVerification.ExpectedErrors(1);
+        }
+
+        [Test]
         public void should_execute_https_get()
         {
             var request = new HttpRequest($"https://{_httpBinHost}/get");

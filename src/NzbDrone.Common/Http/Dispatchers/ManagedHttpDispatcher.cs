@@ -107,52 +107,59 @@ namespace NzbDrone.Common.Http.Dispatchers
 
             sw.Start();
 
-            using var responseMessage = await httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+            try
             {
-                byte[] data = null;
-
-                try
+                using var responseMessage = await httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, cts.Token);
                 {
-                    if (request.ResponseStream != null && responseMessage.StatusCode == HttpStatusCode.OK)
+                    byte[] data = null;
+
+                    try
                     {
-                        await responseMessage.Content.CopyToAsync(request.ResponseStream, null, cts.Token);
-                    }
-                    else
-                    {
-                        data = await responseMessage.Content.ReadAsByteArrayAsync(cts.Token);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new WebException("Failed to read complete http response", ex, WebExceptionStatus.ReceiveFailure, null);
-                }
-
-                var headers = responseMessage.Headers.ToNameValueCollection();
-
-                headers.Add(responseMessage.Content.Headers.ToNameValueCollection());
-
-                var responseCookies = new CookieContainer();
-
-                if (responseMessage.Headers.TryGetValues("Set-Cookie", out var cookieHeaders))
-                {
-                    foreach (var responseCookieHeader in cookieHeaders)
-                    {
-                        try
+                        if (request.ResponseStream != null && responseMessage.StatusCode == HttpStatusCode.OK)
                         {
-                            cookies.SetCookies(responseMessage.RequestMessage.RequestUri, responseCookieHeader);
+                            await responseMessage.Content.CopyToAsync(request.ResponseStream, null, cts.Token);
                         }
-                        catch
+                        else
                         {
-                            // Ignore invalid cookies
+                            data = await responseMessage.Content.ReadAsByteArrayAsync(cts.Token);
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        throw new WebException("Failed to read complete http response", ex, WebExceptionStatus.ReceiveFailure, null);
+                    }
+
+                    var headers = responseMessage.Headers.ToNameValueCollection();
+
+                    headers.Add(responseMessage.Content.Headers.ToNameValueCollection());
+
+                    var responseCookies = new CookieContainer();
+
+                    if (responseMessage.Headers.TryGetValues("Set-Cookie", out var cookieHeaders))
+                    {
+                        foreach (var responseCookieHeader in cookieHeaders)
+                        {
+                            try
+                            {
+                                cookies.SetCookies(responseMessage.RequestMessage.RequestUri, responseCookieHeader);
+                            }
+                            catch
+                            {
+                                // Ignore invalid cookies
+                            }
+                        }
+                    }
+
+                    var cookieCollection = cookies.GetCookies(responseMessage.RequestMessage.RequestUri);
+
+                    sw.Stop();
+
+                    return new HttpResponse(request, new HttpHeader(headers), cookieCollection, data, sw.ElapsedMilliseconds, responseMessage.StatusCode, responseMessage.Version);
                 }
-
-                var cookieCollection = cookies.GetCookies(responseMessage.RequestMessage.RequestUri);
-
-                sw.Stop();
-
-                return new HttpResponse(request, new HttpHeader(headers), cookieCollection, data, sw.ElapsedMilliseconds, responseMessage.StatusCode, responseMessage.Version);
+            }
+            catch (OperationCanceledException ex) when (cts.IsCancellationRequested)
+            {
+                throw new WebException("Http request timed out", ex.InnerException, WebExceptionStatus.Timeout, null);
             }
         }
 

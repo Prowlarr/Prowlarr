@@ -136,7 +136,8 @@ namespace NzbDrone.Common.Test.Http
             request.RequestTimeout = new TimeSpan(0, 0, 5);
 
             Assert.Throws<WebException>(() => Subject.Execute(request));
-            ExceptionVerification.ExpectedErrors(1);
+
+            ExceptionVerification.ExpectedErrors(0);
         }
 
         [Test]

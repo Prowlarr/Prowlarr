@@ -3,7 +3,7 @@
     "AcceptConfirmationModal": "Bestätigung akzeptieren Modal",
     "Actions": "Aktionen",
     "Add": "Hinzufügen",
-    "AddDownloadClient": "Zum Downloader hinzufügen",
+    "AddDownloadClient": "Downloadmanager hinzufügen",
     "AddDownloadClientToProwlarr": "Durch das Hinzufügen eines Download-Clients kann Prowlarr während einer manuellen Suche Releases direkt über die Benutzeroberfläche senden.",
     "AddIndexer": "Indexer hinzufügen",
     "AddIndexerProxy": "Indexer Proxy hinzufügen",
@@ -497,12 +497,13 @@
     "WhatsNew": "Was gibt's Neues?",
     "minutes": "Minuten",
     "DeleteAppProfileMessageText": "Qualitätsprofil '{0}' wirklich löschen?",
-    "AddConnection": "Sammlung bearbeiten",
+    "AddConnection": "Verbindung hinzufügen",
     "NotificationStatusAllClientHealthCheckMessage": "Wegen Fehlern sind keine Applikationen verfügbar",
     "NotificationStatusSingleClientHealthCheckMessage": "Applikationen wegen folgender Fehler nicht verfügbar: {0}",
     "AuthBasic": "Einfach (Browser Popup)",
     "AuthForm": "Formular (Login Seite)",
     "DisabledForLocalAddresses": "Für Lokale Adressen deaktivieren",
     "None": "Keine",
-    "ResetAPIKeyMessageText": "Bist du sicher, dass du den API-Schlüssel zurücksetzen willst?"
+    "ResetAPIKeyMessageText": "Bist du sicher, dass du den API-Schlüssel zurücksetzen willst?",
+    "AddCustomFilter": "Eigenen Filter hinzufügen"
 }

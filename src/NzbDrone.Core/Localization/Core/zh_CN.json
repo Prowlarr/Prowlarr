@@ -56,7 +56,7 @@
     "BackupFolderHelpText": "相对路径将在 Prowlarr 的 AppData 目录下",
     "BackupIntervalHelpText": "自动备份时间间隔",
     "BackupNow": "马上备份",
-    "BackupRetentionHelpText": "早于保留周期的自动备份将被自动清除",
+    "BackupRetentionHelpText": "超过保留期限的自动备份将被自动清理",
     "Backups": "历史备份",
     "BeforeUpdate": "更新前",
     "BindAddress": "绑定地址",

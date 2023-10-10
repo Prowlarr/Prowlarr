@@ -83,9 +83,10 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             get
             {
-                yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", GetSettings("https://feed.animetosho.org"));
-                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"));
-                yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", GetSettings(""));
+                yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", settings: GetSettings("https://feed.animetosho.org"));
+                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", settings: GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"));
+                yield return GetDefinition("Torrent Network", "Torrent Network (TN) is a GERMAN Private site for TV / MOVIES / GENERAL", language: "de-DE", settings: GetSettings("https://tntracker.org", apiPath: @"/api/torznab/api"));
+                yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", settings: GetSettings(""));
             }
         }
 
@@ -95,16 +96,17 @@ namespace NzbDrone.Core.Indexers.Torznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, string description, TorznabSettings settings)
+        private IndexerDefinition GetDefinition(string name, string description, string language = null, TorznabSettings settings = null)
         {
             return new IndexerDefinition
             {
                 Enable = true,
                 Name = name,
                 Description = description,
+                Language = language ?? "en-US",
                 Implementation = GetType().Name,
                 Settings = settings,
-                Protocol = DownloadProtocol.Usenet,
+                Protocol = DownloadProtocol.Torrent,
                 SupportsRss = SupportsRss,
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,

@@ -207,7 +207,7 @@ namespace NzbDrone.Core.Indexers
                 definition.Privacy = provider.Privacy;
                 definition.Description ??= provider.Description;
                 definition.Encoding = provider.Encoding;
-                definition.Language = provider.Language;
+                definition.Language ??= provider.Language;
                 definition.Capabilities = provider.Capabilities;
             }
         }

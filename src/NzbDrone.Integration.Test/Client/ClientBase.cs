@@ -93,7 +93,7 @@ namespace NzbDrone.Integration.Test.Client
             return Get<List<TResource>>(request);
         }
 
-        public PagingResource<TResource> GetPaged(int pageNumber, int pageSize, string sortKey, string sortDir, string filterKey = null, string filterValue = null)
+        public PagingResource<TResource> GetPaged(int pageNumber, int pageSize, string sortKey, string sortDir, string filterKey = null, object filterValue = null)
         {
             var request = BuildRequest();
             request.AddParameter("page", pageNumber);
@@ -103,8 +103,7 @@ namespace NzbDrone.Integration.Test.Client
 
             if (filterKey != null && filterValue != null)
             {
-                request.AddParameter("filterKey", filterKey);
-                request.AddParameter("filterValue", filterValue);
+                request.AddParameter(filterKey, filterValue);
             }
 
             return Get<PagingResource<TResource>>(request);

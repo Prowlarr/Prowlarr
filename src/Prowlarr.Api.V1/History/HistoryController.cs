@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.History;
 using Prowlarr.Http;
@@ -21,30 +22,25 @@ namespace Prowlarr.Api.V1.History
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<HistoryResource> GetHistory()
+        public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, int? eventType, bool? successful, string downloadId)
         {
-            var pagingResource = Request.ReadPagingResourceFromRequest<HistoryResource>();
+            var pagingResource = new PagingResource<HistoryResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>("date", SortDirection.Descending);
 
-            var eventTypeFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "eventType");
-            var successfulFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "successful");
-            var downloadIdFilter = pagingResource.Filters.FirstOrDefault(f => f.Key == "downloadId");
-
-            if (eventTypeFilter != null)
+            if (eventType.HasValue)
             {
-                var filterValue = (HistoryEventType)Convert.ToInt32(eventTypeFilter.Value);
+                var filterValue = (HistoryEventType)eventType.Value;
                 pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
             }
 
-            if (successfulFilter != null)
+            if (successful.HasValue)
             {
-                var filterValue = bool.Parse(successfulFilter.Value);
+                var filterValue = successful.Value;
                 pagingSpec.FilterExpressions.Add(v => v.Successful == filterValue);
             }
 
-            if (downloadIdFilter != null)
+            if (downloadId.IsNotNullOrWhiteSpace())
             {
-                var downloadId = downloadIdFilter.Value;
                 pagingSpec.FilterExpressions.Add(h => h.DownloadId == downloadId);
             }
 

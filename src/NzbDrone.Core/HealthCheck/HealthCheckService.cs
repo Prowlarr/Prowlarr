@@ -79,8 +79,15 @@ namespace NzbDrone.Core.HealthCheck
 
         private void PerformHealthCheck(IProvideHealthCheck[] healthChecks, bool performServerChecks = false)
         {
-            var results = healthChecks.Select(c => c.Check())
-                                       .ToList();
+            var results = healthChecks.Select(c =>
+                {
+                    _logger.Trace("Check health -> {0}", c.GetType().Name);
+                    var result = c.Check();
+                    _logger.Trace("Check health <- {0}", c.GetType().Name);
+
+                    return result;
+                })
+                .ToList();
 
             if (performServerChecks)
             {

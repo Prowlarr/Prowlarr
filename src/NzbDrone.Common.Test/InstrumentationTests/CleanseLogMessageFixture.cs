@@ -89,8 +89,16 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // Download Station
         [TestCase(@"webapi/entry.cgi?api=(removed)&version=2&method=login&account=01233210&passwd=mySecret&format=sid&session=DownloadStation")]
 
-        // Tracker Responses
-        [TestCase(@"tracker"":""http://xxx.yyy/announce.php?passkey=9pr04sg601233210imaveql2tyu8xyui"",""info"":""http://xxx.yyy/info?a=b""")]
+        // Announce URLs (passkeys) Magnet & Tracker
+        [TestCase(@"magnet_uri"":""magnet:?xt=urn:btih:9pr04sgkillroyimaveql2tyu8xyui&dn=&tr=https%3a%2f%2fxxx.yyy%2f9pr04sg601233210IMAveQL2tyu8xyui%2fannounce""}")]
+        [TestCase(@"magnet_uri"":""magnet:?xt=urn:btih:9pr04sgkillroyimaveql2tyu8xyui&dn=&tr=https%3a%2f%2fxxx.yyy%2ftracker.php%2f9pr04sg601233210IMAveQL2tyu8xyui%2fannounce""}")]
+        [TestCase(@"magnet_uri"":""magnet:?xt=urn:btih:9pr04sgkillroyimaveql2tyu8xyui&dn=&tr=https%3a%2f%2fxxx.yyy%2fannounce%2f9pr04sg601233210IMAveQL2tyu8xyui""}")]
+        [TestCase(@"magnet_uri"":""magnet:?xt=urn:btih:9pr04sgkillroyimaveql2tyu8xyui&dn=&tr=https%3a%2f%2fxxx.yyy%2fannounce.php%3fpasskey%3d9pr04sg601233210IMAveQL2tyu8xyui""}")]
+        [TestCase(@"tracker"":""https://xxx.yyy/9pr04sg601233210IMAveQL2tyu8xyui/announce""}")]
+        [TestCase(@"tracker"":""https://xxx.yyy/tracker.php/9pr04sg601233210IMAveQL2tyu8xyui/announce""}")]
+        [TestCase(@"tracker"":""https://xxx.yyy/announce/9pr04sg601233210IMAveQL2tyu8xyui""}")]
+        [TestCase(@"tracker"":""https://xxx.yyy/announce.php?passkey=9pr04sg601233210IMAveQL2tyu8xyui""}")]
+        [TestCase(@"tracker"":""http://xxx.yyy/announce.php?passkey=9pr04sg601233210IMAveQL2tyu8xyui"",""info"":""http://xxx.yyy/info?a=b""")]
 
         // BroadcastheNet
         [TestCase(@"method: ""getTorrents"", ""params"": [ ""mySecret"",")]

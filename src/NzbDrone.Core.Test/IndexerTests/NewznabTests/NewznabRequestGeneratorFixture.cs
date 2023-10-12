@@ -19,6 +19,11 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         [SetUp]
         public void SetUp()
         {
+            Subject.Definition = new IndexerDefinition
+            {
+                Name = "Newznab"
+            };
+
             Subject.Settings = new NewznabSettings()
             {
                 BaseUrl = "http://127.0.0.1:1234/",

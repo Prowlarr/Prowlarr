@@ -13,10 +13,11 @@ namespace NzbDrone.Core.Indexers.Newznab
     public class NewznabRequestGenerator : IIndexerRequestGenerator
     {
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
+
+        public ProviderDefinition Definition { get; set; }
         public int MaxPages { get; set; }
         public int PageSize { get; set; }
         public NewznabSettings Settings { get; set; }
-        public ProviderDefinition Definition { get; set; }
 
         public NewznabRequestGenerator(INewznabCapabilitiesProvider capabilitiesProvider)
         {

@@ -31,6 +31,7 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             return new NewznabRequestGenerator(_capabilitiesProvider)
             {
+                Definition = Definition,
                 PageSize = PageSize,
                 Settings = Settings
             };

@@ -9,7 +9,8 @@ namespace NzbDrone.Core.Indexers.Definitions;
 public class DICMusic : GazelleBase<DICMusicSettings>
 {
     public override string Name => "DICMusic";
-    public override string[] IndexerUrls => new[] { "https://dicmusic.club/" };
+    public override string[] IndexerUrls => new[] { "https://dicmusic.com/" };
+    public override string[] LegacyUrls => new[] { "https://dicmusic.club/" };
     public override string Description => "DICMusic is a CHINESE Private Torrent Tracker for MUSIC";
     public override string Language => "zh-CN";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;

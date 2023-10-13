@@ -265,13 +265,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Grabs = ParseUtil.CoerceInt(row.Snatch),
                     Seeders = ParseUtil.CoerceInt(row.Seed),
                     Peers = ParseUtil.CoerceInt(row.Seed) + ParseUtil.CoerceInt(row.Leech),
-                    TvMazeId = ParseUtil.CoerceInt(row.TvMazeId),
                     Scene = row.Tags?.ContainsIgnoreCase("scene"),
                     MinimumRatio = 0, // ratioless
                     MinimumSeedTime = row.Category.ToLower() == "season" ? 432000 : 86400, // 120 hours for seasons and 24 hours for episodes
                     DownloadVolumeFactor = 0, // ratioless tracker
                     UploadVolumeFactor = 1
                 };
+
+                if (row.TvMazeId.IsNotNullOrWhiteSpace())
+                {
+                    release.TvMazeId = ParseUtil.CoerceInt(row.TvMazeId);
+                }
 
                 torrentInfos.Add(release);
             }

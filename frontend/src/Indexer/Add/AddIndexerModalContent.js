@@ -16,7 +16,7 @@ import TableBody from 'Components/Table/TableBody';
 import { kinds, scrollDirections } from 'Helpers/Props';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
 import translate from 'Utilities/String/translate';
-import SelectIndexerRowConnector from './SelectIndexerRowConnector';
+import SelectIndexerRow from './SelectIndexerRow';
 import styles from './AddIndexerModalContent.css';
 
 const columns = [
@@ -48,6 +48,12 @@ const columns = [
     name: 'privacy',
     label: () => translate('Privacy'),
     isSortable: true,
+    isVisible: true
+  },
+  {
+    name: 'categories',
+    label: () => translate('Categories'),
+    isSortable: false,
     isVisible: true
   }
 ];
@@ -260,7 +266,7 @@ class AddIndexerModalContent extends Component {
                   <TableBody>
                     {
                       filteredIndexers.map((indexer) => (
-                        <SelectIndexerRowConnector
+                        <SelectIndexerRow
                           key={`${indexer.implementation}-${indexer.name}`}
                           implementation={indexer.implementation}
                           implementationName={indexer.implementationName}

@@ -1,15 +1,18 @@
+import { some } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { fetchIndexerSchema, selectIndexerSchema, setIndexerSchemaSort } from 'Store/Actions/indexerActions';
+import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import AddIndexerModalContent from './AddIndexerModalContent';
 
 function createMapStateToProps() {
   return createSelector(
     createClientSideCollectionSelector('indexers.schema'),
-    (indexers) => {
+    createAllIndexersSelector(),
+    (indexers, allIndexers) => {
       const {
         isFetching,
         isPopulated,
@@ -19,11 +22,19 @@ function createMapStateToProps() {
         sortKey
       } = indexers;
 
+      const indexerList = items.map((item) => {
+        const { definitionName } = item;
+        return {
+          ...item,
+          isExistingIndexer: some(allIndexers, { definitionName })
+        };
+      });
+
       return {
         isFetching,
         isPopulated,
         error,
-        indexers: items,
+        indexers: indexerList,
         sortKey,
         sortDirection
       };

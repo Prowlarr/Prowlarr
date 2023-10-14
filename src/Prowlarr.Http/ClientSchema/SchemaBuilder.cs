@@ -105,6 +105,7 @@ namespace Prowlarr.Http.ClientSchema
                         Advanced = fieldAttribute.Advanced,
                         Type = fieldAttribute.Type.ToString().FirstCharToLower(),
                         Section = fieldAttribute.Section,
+                        Privacy = fieldAttribute.Privacy,
                         Placeholder = fieldAttribute.Placeholder
                     };
 

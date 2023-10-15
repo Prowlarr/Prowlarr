@@ -19,7 +19,7 @@ using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions;
-
+[Obsolete("PirateTheNet has shutdown 2023-10-14")]
 public class PirateTheNet : TorrentIndexerBase<UserPassTorrentBaseSettings>
 {
     public override string Name => "PirateTheNet";

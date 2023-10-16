@@ -37,6 +37,7 @@ namespace Prowlarr.Api.V1.Search
         public string InfoHash { get; set; }
         public int? Seeders { get; set; }
         public int? Leechers { get; set; }
+        public int? Peers => Seeders + Leechers;
         public DownloadProtocol Protocol { get; set; }
 
         public string FileName

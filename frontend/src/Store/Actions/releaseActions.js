@@ -172,6 +172,7 @@ export const defaultState = {
   filterPredicates: {
     peers: function(item, filterValue, type) {
       const predicate = filterTypePredicates[type];
+
       const seeders = item.seeders || 0;
       const leechers = item.leechers || 0;
       const peers = seeders + leechers;

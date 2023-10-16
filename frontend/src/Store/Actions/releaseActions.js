@@ -3,7 +3,7 @@ import React from 'react';
 import { createAction } from 'redux-actions';
 import { batchActions } from 'redux-batched-actions';
 import Icon from 'Components/Icon';
-import { filterBuilderTypes, filterBuilderValueTypes, icons, sortDirections } from 'Helpers/Props';
+import { filterBuilderTypes, filterBuilderValueTypes, filterTypePredicates, icons, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import getSectionState from 'Utilities/State/getSectionState';
@@ -168,6 +168,17 @@ export const defaultState = {
       filters: []
     }
   ],
+
+  filterPredicates: {
+    peers: function(item, filterValue, type) {
+      const predicate = filterTypePredicates[type];
+      const seeders = item.seeders || 0;
+      const leechers = item.leechers || 0;
+      const peers = seeders + leechers;
+
+      return predicate(peers, filterValue);
+    }
+  },
 
   filterBuilderProps: [
     {

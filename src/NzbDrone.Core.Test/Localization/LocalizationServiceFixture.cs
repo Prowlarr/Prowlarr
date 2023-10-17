@@ -29,19 +29,22 @@ namespace NzbDrone.Core.Test.Localization
         }
 
         [Test]
-        public void should_get_string_in_default_dictionary_if_no_lang_exists_and_string_exists()
+        public void should_get_string_in_french()
         {
-            var localizedString = Subject.GetLocalizedString("BackupNow", "an");
+            Mocker.GetMock<IConfigService>().Setup(m => m.UILanguage).Returns("fr_fr");
 
-            localizedString.Should().Be("Backup Now");
+            var localizedString = Subject.GetLocalizedString("BackupNow");
+
+            localizedString.Should().Be("Sauvegarder maintenant");
 
             ExceptionVerification.ExpectedErrors(1);
         }
 
         [Test]
-        public void should_get_string_in_default_dictionary_if_lang_empty_and_string_exists()
+        public void should_get_string_in_default_dictionary_if_unknown_language_and_string_exists()
         {
-            var localizedString = Subject.GetLocalizedString("BackupNow", "");
+            Mocker.GetMock<IConfigService>().Setup(m => m.UILanguage).Returns("");
+            var localizedString = Subject.GetLocalizedString("BackupNow");
 
             localizedString.Should().Be("Backup Now");
         }
@@ -49,7 +52,7 @@ namespace NzbDrone.Core.Test.Localization
         [Test]
         public void should_return_argument_if_string_doesnt_exists()
         {
-            var localizedString = Subject.GetLocalizedString("BadString", "en");
+            var localizedString = Subject.GetLocalizedString("BadString");
 
             localizedString.Should().Be("BadString");
         }

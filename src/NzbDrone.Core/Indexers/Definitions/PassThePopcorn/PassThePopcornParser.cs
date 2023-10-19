@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
-using NLog;
+using System.Text.RegularExpressions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
@@ -14,12 +14,12 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
     public class PassThePopcornParser : IParseIndexerResponse
     {
         private readonly PassThePopcornSettings _settings;
-        private readonly Logger _logger;
 
-        public PassThePopcornParser(PassThePopcornSettings settings, Logger logger)
+        private static Regex SeasonRegex => new (@"\bS\d{2,3}(E\d{2,3})?\b", RegexOptions.Compiled);
+
+        public PassThePopcornParser(PassThePopcornSettings settings)
         {
             _settings = settings;
-            _logger = logger;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -57,6 +57,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                 foreach (var torrent in result.Torrents)
                 {
                     var id = torrent.Id;
+                    var title = torrent.ReleaseName;
 
                     var flags = new HashSet<IndexerFlag>();
 
@@ -70,14 +71,21 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         flags.Add(PassThePopcornFlag.Approved);
                     }
 
+                    var categories = new List<IndexerCategory> { NewznabStandardCategory.Movies };
+
+                    if (title != null && SeasonRegex.Match(title).Success)
+                    {
+                        categories.Add(NewznabStandardCategory.TV);
+                    }
+
                     torrentInfos.Add(new TorrentInfo
                     {
                         Guid = $"PassThePopcorn-{id}",
-                        Title = torrent.ReleaseName,
+                        Title = title,
                         Year = int.Parse(result.Year),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
-                        Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
+                        Categories = categories,
                         Size = long.Parse(torrent.Size),
                         Grabs = int.Parse(torrent.Snatched),
                         Seeders = int.Parse(torrent.Seeders),

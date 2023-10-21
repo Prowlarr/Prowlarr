@@ -30,6 +30,12 @@ public class FileListRequestGenerator : IIndexerRequestGenerator
 
             if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
+                if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
+                {
+                    // Skip ID searches for daily episodes
+                    return pageableRequests;
+                }
+
                 searchQuery = $"{searchQuery} {showDate:yyyy.MM.dd}".Trim();
             }
             else

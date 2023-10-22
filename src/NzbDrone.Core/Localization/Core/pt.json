@@ -444,5 +444,7 @@
     "AuthForm": "Formulários (página de início de sessão)",
     "DisabledForLocalAddresses": "Desativado para endereços locais",
     "None": "Nenhum",
-    "ResetAPIKeyMessageText": "Tem a certeza que quer repor a Chave da API?"
+    "ResetAPIKeyMessageText": "Tem a certeza que quer repor a Chave da API?",
+    "ActiveApps": "Aplicações Ativadas",
+    "ActiveIndexers": "Indexadores ativados"
 }

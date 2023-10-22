@@ -121,7 +121,7 @@
     "SettingsEnableColorImpairedModeHelpText": "Stil modificat pentru a permite utilizatorilor cu deficiențe de culoare să distingă mai bine informațiile codificate prin culoare",
     "SettingsLongDateFormat": "Format de dată lungă",
     "SettingsShortDateFormat": "Format scurt de dată",
-    "SettingsTimeFormat": "Format de timp",
+    "SettingsTimeFormat": "Format ora",
     "RSSIsNotSupportedWithThisIndexer": "RSS nu este suportat de acest indexator",
     "ShowSearchHelpText": "Afișați butonul de căutare pe hover",
     "UILanguageHelpText": "Limba pe care Prowlarr o va folosi pentru interfața de utilizare",
@@ -451,5 +451,6 @@
     "AddDownloadClientImplementation": "Adăugați client de descărcare - {implementationName}",
     "AddIndexerImplementation": "Adăugați Indexator - {implementationName}",
     "AddIndexerProxyImplementation": "Adăugați proxy indexator - {implementationName}",
-    "Album": "Album"
+    "Album": "Album",
+    "AppUpdated": "{appName} actualizat"
 }

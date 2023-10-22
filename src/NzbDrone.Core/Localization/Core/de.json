@@ -505,5 +505,7 @@
     "DisabledForLocalAddresses": "Für Lokale Adressen deaktivieren",
     "None": "Keine",
     "ResetAPIKeyMessageText": "Bist du sicher, dass du den API-Schlüssel zurücksetzen willst?",
-    "AddCustomFilter": "Eigenen Filter hinzufügen"
+    "AddCustomFilter": "Eigenen Filter hinzufügen",
+    "AddApplication": "Application hinzufügen",
+    "AddCategory": "Kategorie hinzufügen"
 }

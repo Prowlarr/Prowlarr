@@ -507,5 +507,14 @@
     "Clone": "Κλωνοποίηση",
     "DisabledForLocalAddresses": "Απενεργοποιήθηκε για τοπικές διευθύνσεις",
     "None": "Κανένας",
-    "ResetAPIKeyMessageText": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε το κλειδί API σας;"
+    "ResetAPIKeyMessageText": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε το κλειδί API σας;",
+    "AppUpdated": "{appName} Ενημερώθηκε",
+    "AppUpdatedVersion": "ξαναφορτωθεί",
+    "EditIndexerImplementation": "Προσθήκη",
+    "AddIndexerProxyImplementation": "Προσθήκη",
+    "EditConnectionImplementation": "Προσθήκη",
+    "EditApplicationImplementation": "Προσθήκη",
+    "AddApplicationImplementation": "Προσθήκη",
+    "AddConnectionImplementation": "Προσθήκη",
+    "AddIndexerImplementation": "Προσθήκη"
 }

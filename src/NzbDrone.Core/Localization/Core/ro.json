@@ -452,5 +452,14 @@
     "AddIndexerImplementation": "Adăugați Indexator - {implementationName}",
     "AddIndexerProxyImplementation": "Adăugați proxy indexator - {implementationName}",
     "Album": "Album",
-    "AppUpdated": "{appName} actualizat"
+    "AppUpdated": "{appName} actualizat",
+    "NoHistoryFound": "Nu s-a găsit istoric",
+    "AuthenticationRequiredPasswordHelpTextWarning": "Introduceți o parolă nouă",
+    "AuthenticationRequiredUsernameHelpTextWarning": "Introduceți un nou nume de utilizator",
+    "DefaultNameCopiedProfile": "{name} - Copie",
+    "EditConnectionImplementation": "Adăugați conexiune - {implementationName}",
+    "EditDownloadClientImplementation": "Adăugați client de descărcare - {implementationName}",
+    "EditIndexerImplementation": "Adăugați Indexator - {implementationName}",
+    "EditIndexerProxyImplementation": "Adăugați proxy indexator - {implementationName}",
+    "EditApplicationImplementation": "Adăugați aplicație - {implementareName}"
 }

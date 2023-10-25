@@ -395,5 +395,6 @@
     "CountDownloadClientsSelected": "{count} vybraných klientů ke stahování",
     "CountIndexersSelected": "{count} vybraných indexátorů",
     "EditIndexerProxyImplementation": "Přidat indexátor - {implementationName}",
-    "AuthBasic": "Základní (vyskakovací okno prohlížeče)"
+    "AuthBasic": "Základní (vyskakovací okno prohlížeče)",
+    "AuthenticationRequiredWarning": "Aby se zabránilo vzdálenému přístupu bez ověření, vyžaduje nyní {appName} povolení ověření. Ověřování z místních adres můžete volitelně zakázat."
 }

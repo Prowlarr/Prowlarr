@@ -459,5 +459,17 @@
     "ResetAPIKeyMessageText": "Bent u zeker dat u uw API-sleutel wilt resetten?",
     "AddConnectionImplementation": "Voeg connectie toe - {implementationName}",
     "AddDownloadClientImplementation": "Voeg Downloadclient toe - {implementationName}",
-    "AddIndexerImplementation": "Indexeerder toevoegen - {implementationName}"
+    "AddIndexerImplementation": "Indexeerder toevoegen - {implementationName}",
+    "AdvancedSettingsHiddenClickToShow": "Geavanceerde instellingen zijn verborgen, klik om te tonen",
+    "AdvancedSettingsShownClickToHide": "Geavanceerde instellingen worden getoond, klik om te verbergen",
+    "AppUpdated": "{appName} is geüpdatet",
+    "AppUpdatedVersion": "{appName} is geüpdatet naar versie '{version}', om de laatste wijzigingen door te voeren moet je mogelijk {appName} herstarten",
+    "AddCategory": "Categorie toevoegen",
+    "ActiveIndexers": "Actieve indexeerders",
+    "ActiveApps": "Actieve Applicaties",
+    "EditConnectionImplementation": "Voeg connectie toe - {implementationName}",
+    "EditDownloadClientImplementation": "Voeg Downloadclient toe - {implementationName}",
+    "EditIndexerImplementation": "Indexeerder toevoegen - {implementationName}",
+    "AddApplicationImplementation": "Voeg connectie toe - {implementationName}",
+    "AddIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}"
 }

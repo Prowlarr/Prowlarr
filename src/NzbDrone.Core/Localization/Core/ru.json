@@ -415,5 +415,8 @@
     "ResetAPIKeyMessageText": "Вы уверены, что хотите сбросить Ваш API ключ?",
     "Categories": "Категории",
     "Album": "альбом",
-    "AddCustomFilter": "Добавить специальный фильтр"
+    "AddCustomFilter": "Добавить специальный фильтр",
+    "AuthenticationMethod": "Способ авторизации",
+    "AuthenticationRequiredPasswordHelpTextWarning": "Введите новый пароль",
+    "AuthenticationRequiredUsernameHelpTextWarning": "Введите новое имя пользователя"
 }

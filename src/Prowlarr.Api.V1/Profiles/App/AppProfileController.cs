@@ -16,6 +16,7 @@ namespace Prowlarr.Api.V1.Profiles.App
         public AppProfileController(IAppProfileService appProfileService)
         {
             _appProfileService = appProfileService;
+
             SharedValidator.RuleFor(c => c.Name).NotEmpty();
         }
 
@@ -63,6 +64,15 @@ namespace Prowlarr.Api.V1.Profiles.App
         public List<AppProfileResource> GetAll()
         {
             return _appProfileService.All().ToResource();
+        }
+
+        [HttpGet("schema")]
+        [Produces("application/json")]
+        public AppProfileResource GetTemplates()
+        {
+            var profile = _appProfileService.GetDefaultProfile(string.Empty);
+
+            return profile.ToResource();
         }
     }
 }

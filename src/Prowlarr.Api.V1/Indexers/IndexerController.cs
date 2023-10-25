@@ -15,7 +15,6 @@ namespace Prowlarr.Api.V1.Indexers
             : base(indexerFactory, "indexer", resourceMapper, bulkResourceMapper)
         {
             Http.Validation.RuleBuilderExtensions.ValidId(SharedValidator.RuleFor(s => s.AppProfileId));
-            Http.Validation.RuleBuilderExtensions.ValidId(SharedValidator.RuleFor(s => s.DownloadClientId));
 
             SharedValidator.RuleFor(c => c.AppProfileId).SetValidator(appProfileExistsValidator);
             SharedValidator.RuleFor(c => c.DownloadClientId).SetValidator(downloadClientExistsValidator);

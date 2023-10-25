@@ -129,6 +129,8 @@ namespace NzbDrone.Core.Indexers.Newznab
                             capabilities.SearchParams.AddIfNotNull(searchParam);
                         }
                     }
+
+                    capabilities.SupportsRawSearch = xmlBasicSearch.Attribute("searchEngine")?.Value == "raw";
                 }
                 else
                 {

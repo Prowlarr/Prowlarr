@@ -56,6 +56,7 @@ namespace NzbDrone.Integration.Test
                 Implementation = nameof(FileList),
                 Name = "NewznabTest",
                 Protocol = Core.Indexers.DownloadProtocol.Usenet,
+                AppProfileId = 1,
                 Fields = SchemaBuilder.ToSchema(new FileListSettings())
             });
 

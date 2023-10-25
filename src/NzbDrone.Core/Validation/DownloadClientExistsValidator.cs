@@ -16,7 +16,12 @@ namespace NzbDrone.Core.Validation
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            return context?.PropertyValue == null || _downloadClientFactory.Exists((int)context.PropertyValue);
+            if (context?.PropertyValue == null || (int)context.PropertyValue == 0)
+            {
+                return true;
+            }
+
+            return _downloadClientFactory.Exists((int)context.PropertyValue);
         }
     }
 }

@@ -483,6 +483,25 @@
         }
       }
     },
+    "/api/v1/appprofile/schema": {
+      "get": {
+        "tags": [
+          "AppProfile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppProfileResource"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/login": {
       "post": {
         "tags": [
@@ -3273,25 +3292,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PingResource"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/appprofile/schema": {
-      "get": {
-        "tags": [
-          "QualityProfileSchema"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AppProfileResource"
                 }
               }
             }

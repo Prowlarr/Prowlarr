@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
+import { kinds } from 'Helpers/Props';
 
 class InfoInput extends Component {
 
@@ -7,12 +9,12 @@ class InfoInput extends Component {
   // Render
 
   render() {
-    const {
-      value
-    } = this.props;
+    const { value } = this.props;
 
     return (
-      <span dangerouslySetInnerHTML={{ __html: value }} />
+      <Alert kind={kinds.INFO}>
+        <span dangerouslySetInnerHTML={{ __html: value }} />
+      </Alert>
     );
   }
 }

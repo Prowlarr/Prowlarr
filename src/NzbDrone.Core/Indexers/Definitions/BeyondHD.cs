@@ -143,7 +143,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (searchTypes.Any())
                 {
-                    body.Add("types", string.Join(",", searchTypes));
+                    body.Add("types", searchTypes.ToArray());
                 }
             }
 

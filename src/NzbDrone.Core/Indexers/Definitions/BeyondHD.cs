@@ -130,7 +130,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (cats.Count > 0)
             {
-                body.Add("categories", string.Join(",", cats));
+                body.Add("categories", cats.Select(int.Parse).ToArray());
             }
 
             if (_settings.SearchTypes.Any())

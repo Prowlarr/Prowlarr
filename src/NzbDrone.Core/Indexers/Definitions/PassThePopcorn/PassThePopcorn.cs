@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new PassThePopcornRequestGenerator(Settings);
+            return new PassThePopcornRequestGenerator(Settings, Capabilities);
         }
 
         public override IParseIndexerResponse GetParser()
@@ -56,18 +56,11 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies, "Feature Film");
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesForeign);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesOther);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesSD);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesHD);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies3D);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesBluRay);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesDVD);
-            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesWEBDL);
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Movies, "Short Film");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TV, "Miniseries");
-            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.TV, "Stand-up Comedy");
-            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.TV, "Live Performance");
+            caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.Movies, "Stand-up Comedy");
+            caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "Live Performance");
+            caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Movies, "Movie Collection");
 
             return caps;
         }

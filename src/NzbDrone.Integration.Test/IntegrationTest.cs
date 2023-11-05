@@ -47,7 +47,7 @@ namespace NzbDrone.Integration.Test
 
         protected override void InitializeTestTarget()
         {
-            WaitForCompletion(() => Tasks.All().SelectList(x => x.TaskName).Contains("CheckHealth"));
+            WaitForCompletion(() => Tasks.All().SelectList(x => x.TaskName).Contains("CheckHealth"), 20000);
 
             Indexers.Post(new Prowlarr.Api.V1.Indexers.IndexerResource
             {

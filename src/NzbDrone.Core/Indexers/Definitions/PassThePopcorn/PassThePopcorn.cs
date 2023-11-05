@@ -43,6 +43,10 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
             {
                 LimitsDefault = PageSize,
                 LimitsMax = PageSize,
+                TvSearchParams = new List<TvSearchParam>
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
                 MovieSearchParams = new List<MovieSearchParam>
                 {
                     MovieSearchParam.Q, MovieSearchParam.ImdbId

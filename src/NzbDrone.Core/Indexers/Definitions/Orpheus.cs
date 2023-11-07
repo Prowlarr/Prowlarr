@@ -29,6 +29,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override bool SupportsRedirect => true;
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
         public Orpheus(IIndexerHttpClient httpClient,
                        IEventAggregator eventAggregator,
@@ -49,10 +50,24 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new OrpheusParser(Settings, Capabilities.Categories);
         }
 
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            if (searchCriteria.IsRssSearch)
+            {
+                cleanReleases = cleanReleases.Take(50).ToList();
+            }
+
+            return cleanReleases;
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
+                LimitsDefault = 50,
+                LimitsMax = 50,
                 MusicSearchParams = new List<MusicSearchParam>
                 {
                     MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album, MusicSearchParam.Year
@@ -200,6 +215,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var queryCats = _capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
+
             if (queryCats.Any())
             {
                 queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));

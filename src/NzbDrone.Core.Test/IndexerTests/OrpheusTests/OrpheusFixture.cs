@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
 
             var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 3000 } })).Releases;
 
-            releases.Should().HaveCount(65);
+            releases.Should().HaveCount(50);
             releases.First().Should().BeOfType<TorrentInfo>();
 
             var torrentInfo = releases.First() as TorrentInfo;

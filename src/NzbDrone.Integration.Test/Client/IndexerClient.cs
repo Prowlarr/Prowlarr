@@ -1,4 +1,5 @@
-﻿using Prowlarr.Api.V1.Indexers;
+﻿using System.Collections.Generic;
+using Prowlarr.Api.V1.Indexers;
 using RestSharp;
 
 namespace NzbDrone.Integration.Test.Client
@@ -8,6 +9,12 @@ namespace NzbDrone.Integration.Test.Client
         public IndexerClient(IRestClient restClient, string apiKey)
             : base(restClient, apiKey)
         {
+        }
+
+        public List<IndexerResource> Schema()
+        {
+            var request = BuildRequest("/schema");
+            return Get<List<IndexerResource>>(request);
         }
     }
 }

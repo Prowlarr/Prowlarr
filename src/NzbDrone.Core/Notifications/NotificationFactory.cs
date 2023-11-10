@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentValidation.Results;
 using NLog;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
@@ -96,6 +97,27 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
             definition.SupportsOnHealthRestored = provider.SupportsOnHealthRestored;
             definition.SupportsOnApplicationUpdate = provider.SupportsOnApplicationUpdate;
+        }
+
+        public override ValidationResult Test(NotificationDefinition definition)
+        {
+            var result = base.Test(definition);
+
+            if (definition.Id == 0)
+            {
+                return result;
+            }
+
+            if (result == null || result.IsValid)
+            {
+                _notificationStatusService.RecordSuccess(definition.Id);
+            }
+            else
+            {
+                _notificationStatusService.RecordFailure(definition.Id);
+            }
+
+            return result;
         }
     }
 }

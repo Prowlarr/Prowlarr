@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
             torrentInfo.InfoUrl.Should().Be("https://avistaz.to/torrent/187240-japan-sinks-people-of-hope-2021-s01e05-720p-nf-web-dl-ddp20-x264-seikel");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2021-11-14 21:26:21"));
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2021-11-14 22:26:21"));
             torrentInfo.Size.Should().Be(935127615);
             torrentInfo.InfoHash.Should().Be("a879261d4e6e792402f92401141a21de70d51bf2");
             torrentInfo.MagnetUrl.Should().Be(null);

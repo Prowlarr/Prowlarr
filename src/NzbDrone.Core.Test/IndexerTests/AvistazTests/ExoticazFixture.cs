@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AvistazTests
             torrentInfo.InfoUrl.Should().Be("https://exoticaz.to/torrent/64040-ssis-419-my-first-experience-is-yua-mikami-from-the-day-i-lost-my-virginity-i-was-devoted-to-sex");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-06-11 15:04:50"));
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-06-11 10:04:50"));
             torrentInfo.Size.Should().Be(7085405541);
             torrentInfo.InfoHash.Should().Be("asdjfiasdf54asd7f4a2sdf544asdf");
             torrentInfo.MagnetUrl.Should().Be(null);

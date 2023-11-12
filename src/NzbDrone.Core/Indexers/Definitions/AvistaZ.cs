@@ -84,6 +84,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AvistaZParser : AvistazParserBase
     {
-        protected override string TimezoneOffset => "+02:00";
+        protected override string TimezoneOffset => "+01:00";
     }
 }

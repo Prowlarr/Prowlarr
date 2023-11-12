@@ -14,7 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
     public class AvistazParserBase : IParseIndexerResponse
     {
-        protected virtual string TimezoneOffset => "-04:00"; // Avistaz does not specify a timezone & returns server time
+        protected virtual string TimezoneOffset => "-05:00"; // Avistaz does not specify a timezone & returns server time
         private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

@@ -54,6 +54,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly IndexerCapabilitiesCategories _categories;
 
+        protected override string TimezoneOffset => "+01:00";
+
         public ExoticaZParser(IndexerCapabilitiesCategories categories)
         {
             _categories = categories;

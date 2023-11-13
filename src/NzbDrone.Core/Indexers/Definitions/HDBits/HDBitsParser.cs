@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             foreach (var result in queryResults)
             {
                 var id = result.Id;
-                var internalRelease = result.TypeOrigin == 1 ? true : false;
+                var internalRelease = result.TypeOrigin == 1;
 
                 var flags = new HashSet<IndexerFlag>();
 
@@ -62,9 +62,9 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                     flags.Add(IndexerFlag.Internal);
                 }
 
-                torrentInfos.Add(new HDBitsInfo()
+                torrentInfos.Add(new HDBitsInfo
                 {
-                    Guid = string.Format("HDBits-{0}", id),
+                    Guid = $"HDBits-{id}",
                     Title = result.Name,
                     Size = result.Size,
                     Categories = _categories.MapTrackerCatToNewznab(result.TypeCategory.ToString()),
@@ -77,6 +77,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                     Peers = result.Leechers + result.Seeders,
                     PublishDate = result.Added.ToUniversalTime(),
                     Internal = internalRelease,
+                    Year = result.ImdbInfo?.Year ?? 0,
                     ImdbId = result.ImdbInfo?.Id ?? 0,
                     TvdbId = result.TvdbInfo?.Id ?? 0,
                     DownloadVolumeFactor = result.FreeLeech == "yes" ? 0 : 1,

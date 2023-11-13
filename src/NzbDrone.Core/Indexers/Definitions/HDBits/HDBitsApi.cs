@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace NzbDrone.Core.Indexers.Definitions.HDBits
@@ -7,19 +8,15 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
     {
         [JsonProperty(Required = Required.Always)]
         public string Username { get; set; }
+
         [JsonProperty(Required = Required.Always)]
         public string Passkey { get; set; }
 
         public string Hash { get; set; }
-
         public string Search { get; set; }
-
-        public int[] Category { get; set; }
-
-        public int[] Codec { get; set; }
-
-        public int[] Medium { get; set; }
-
+        public IEnumerable<int> Category { get; set; }
+        public IEnumerable<int> Codec { get; set; }
+        public IEnumerable<int> Medium { get; set; }
         public int? Origin { get; set; }
 
         [JsonProperty(PropertyName = "imdb")]
@@ -33,13 +30,9 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
         [JsonProperty(PropertyName = "snatched_only")]
         public bool? SnatchedOnly { get; set; }
+
         public int? Limit { get; set; }
         public int? Page { get; set; }
-
-        public TorrentQuery Clone()
-        {
-            return MemberwiseClone() as TorrentQuery;
-        }
     }
 
     public class HDBitsResponse

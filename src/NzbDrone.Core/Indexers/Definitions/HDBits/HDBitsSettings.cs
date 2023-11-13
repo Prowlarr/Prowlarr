@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
@@ -10,6 +11,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
     {
         public HDBitsSettingsValidator()
         {
+            RuleFor(c => c.Username).NotEmpty();
             RuleFor(c => c.ApiKey).NotEmpty();
         }
     }
@@ -20,8 +22,8 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
         public HDBitsSettings()
         {
-            Codecs = System.Array.Empty<int>();
-            Mediums = System.Array.Empty<int>();
+            Codecs = Array.Empty<int>();
+            Mediums = Array.Empty<int>();
         }
 
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
@@ -40,18 +42,6 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
-    }
-
-    public enum HdBitsCategory
-    {
-        Movie = 1,
-        Tv = 2,
-        Documentary = 3,
-        Music = 4,
-        Sport = 5,
-        Audio = 6,
-        Xxx = 7,
-        MiscDemo = 8
     }
 
     public enum HdBitsCodec

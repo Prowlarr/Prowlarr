@@ -24,6 +24,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         {
             Codecs = Array.Empty<int>();
             Mediums = Array.Empty<int>();
+            FreeleechOnly = false;
         }
 
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
@@ -37,6 +38,9 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
         [FieldDefinition(5, Label = "Mediums", Type = FieldType.TagSelect, SelectOptions = typeof(HdBitsMedium), Advanced = true, HelpText = "Options: BluRay, Encode, Capture, Remux, WebDL. If unspecified, all options are used.")]
         public IEnumerable<int> Mediums { get; set; }
+
+        [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Show freeleech releases only")]
+        public bool FreeleechOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

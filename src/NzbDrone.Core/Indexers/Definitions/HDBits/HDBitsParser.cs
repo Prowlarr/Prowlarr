@@ -14,6 +14,8 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         private readonly HDBitsSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
+        private readonly List<int> _halfLeechMediums = new () { (int)HdBitsMedium.Bluray, (int)HdBitsMedium.Remux, (int)HdBitsMedium.Capture };
+
         public HDBitsParser(HDBitsSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
@@ -22,7 +24,6 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var torrentInfos = new List<ReleaseInfo>();
             var indexerHttpResponse = indexerResponse.HttpResponse;
 
             if (indexerHttpResponse.StatusCode == HttpStatusCode.Forbidden)
@@ -42,16 +43,23 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 throw new IndexerException(indexerResponse, "HDBits API request returned status code {0}: {1}", jsonResponse.Status, jsonResponse.Message ?? string.Empty);
             }
 
-            var responseData = jsonResponse.Data as JArray;
-            if (responseData == null)
+            if (jsonResponse.Data is not JArray responseData)
             {
                 throw new IndexerException(indexerResponse, "Indexer API call response missing result data");
             }
+
+            var releaseInfos = new List<ReleaseInfo>();
 
             var queryResults = responseData.ToObject<TorrentQueryResponse[]>();
 
             foreach (var result in queryResults)
             {
+                // Skip non-freeleech results when freeleech only is set
+                if (_settings.FreeleechOnly && result.FreeLeech != "yes")
+                {
+                    continue;
+                }
+
                 var id = result.Id;
                 var internalRelease = result.TypeOrigin == 1;
 
@@ -62,7 +70,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                     flags.Add(IndexerFlag.Internal);
                 }
 
-                torrentInfos.Add(new HDBitsInfo
+                releaseInfos.Add(new HDBitsInfo
                 {
                     Guid = $"HDBits-{id}",
                     Title = result.Name,
@@ -80,16 +88,44 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                     Year = result.ImdbInfo?.Year ?? 0,
                     ImdbId = result.ImdbInfo?.Id ?? 0,
                     TvdbId = result.TvdbInfo?.Id ?? 0,
-                    DownloadVolumeFactor = result.FreeLeech == "yes" ? 0 : 1,
-                    UploadVolumeFactor = 1,
+                    DownloadVolumeFactor = GetDownloadVolumeFactor(result),
+                    UploadVolumeFactor = GetUploadVolumeFactor(result),
                     IndexerFlags = flags
                 });
             }
 
-            return torrentInfos.ToArray();
+            return releaseInfos.ToArray();
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private double GetDownloadVolumeFactor(TorrentQueryResponse item)
+        {
+            if (item.FreeLeech == "yes")
+            {
+                return 0;
+            }
+
+            // 100% Neutral Leech: all XXX content.
+            if (item.TypeCategory == 7)
+            {
+                return 0;
+            }
+
+            // 50% Free Leech: all full discs, remuxes, captures and all internal encodes, also all TV and Documentary content.
+            if (_halfLeechMediums.Contains(item.TypeMedium) || item.TypeOrigin == 1 || item.TypeCategory is 2 or 3)
+            {
+                return 0.5;
+            }
+
+            return 1;
+        }
+
+        private static double GetUploadVolumeFactor(TorrentQueryResponse item)
+        {
+            // 100% Neutral Leech: all XXX content.
+            return item.TypeCategory == 7 ? 0 : 1;
+        }
 
         private string GetDownloadUrl(string torrentId)
         {

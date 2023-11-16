@@ -45,7 +45,14 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRequest($"{searchCriteria.SanitizedTvSearchString}", searchCriteria));
+            if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRequest(searchCriteria.FullImdbId, searchCriteria));
+            }
+            else
+            {
+                pageableRequests.Add(GetRequest($"{searchCriteria.SanitizedTvSearchString}", searchCriteria));
+            }
 
             return pageableRequests;
         }

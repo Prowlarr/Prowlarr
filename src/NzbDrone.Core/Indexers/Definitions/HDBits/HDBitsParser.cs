@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Parser.Model;
@@ -73,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 releaseInfos.Add(new HDBitsInfo
                 {
                     Guid = $"HDBits-{id}",
-                    Title = result.Name,
+                    Title = GetTitle(result),
                     Size = result.Size,
                     Categories = _categories.MapTrackerCatToNewznab(result.TypeCategory.ToString()),
                     InfoHash = result.Hash,
@@ -98,6 +99,13 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private string GetTitle(TorrentQueryResponse item)
+        {
+            return _settings.UseFilenames && item.FileName.IsNotNullOrWhiteSpace()
+                ? item.FileName.Replace(".torrent", "", StringComparison.InvariantCultureIgnoreCase)
+                : item.Name;
+        }
 
         private double GetDownloadVolumeFactor(TorrentQueryResponse item)
         {

@@ -25,6 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             Codecs = Array.Empty<int>();
             Mediums = Array.Empty<int>();
             FreeleechOnly = false;
+            UseFilenames = false;
         }
 
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
@@ -41,6 +42,9 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
         [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, Advanced = true, HelpText = "Show freeleech releases only")]
         public bool FreeleechOnly { get; set; }
+
+        [FieldDefinition(7, Label = "Use Filenames", Type = FieldType.Checkbox, HelpText = "Check this option if you want to use torrent filenames as release titles")]
+        public bool UseFilenames { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

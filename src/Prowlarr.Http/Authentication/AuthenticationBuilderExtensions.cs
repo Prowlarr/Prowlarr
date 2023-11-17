@@ -40,6 +40,7 @@ namespace Prowlarr.Http.Authentication
                     options.LoginPath = "/login";
                     options.ExpireTimeSpan = TimeSpan.FromDays(7);
                     options.SlidingExpiration = true;
+                    options.ReturnUrlParameter = "returnUrl";
                 })
                 .AddApiKey("API", options =>
                 {

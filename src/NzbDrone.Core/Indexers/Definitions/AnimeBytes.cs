@@ -91,6 +91,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var cleanReleases = base.CleanupReleases(releases, searchCriteria);
 
+            if (searchCriteria.IsRssSearch)
+            {
+                cleanReleases = cleanReleases.Where(r => r.PublishDate > DateTime.Now.AddDays(-1)).ToList();
+            }
+
             return cleanReleases.Select(r => (ReleaseInfo)r.Clone()).ToList();
         }
 

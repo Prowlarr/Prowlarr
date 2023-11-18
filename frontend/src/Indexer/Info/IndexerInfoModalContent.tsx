@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { createSelector } from 'reselect';
+import Alert from 'Components/Alert';
 import DescriptionList from 'Components/DescriptionList/DescriptionList';
 import DescriptionListItem from 'Components/DescriptionList/DescriptionListItem';
 import DescriptionListItemDescription from 'Components/DescriptionList/DescriptionListItemDescription';
@@ -23,7 +24,7 @@ import TagListConnector from 'Components/TagListConnector';
 import { kinds } from 'Helpers/Props';
 import DeleteIndexerModal from 'Indexer/Delete/DeleteIndexerModal';
 import EditIndexerModalConnector from 'Indexer/Edit/EditIndexerModalConnector';
-import Indexer from 'Indexer/Indexer';
+import Indexer, { IndexerCapabilities } from 'Indexer/Indexer';
 import { createIndexerSelectorForHook } from 'Store/Selectors/createIndexerSelector';
 import translate from 'Utilities/String/translate';
 import IndexerHistory from './History/IndexerHistory';
@@ -63,7 +64,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
     fields,
     tags,
     protocol,
-    capabilities,
+    capabilities = {} as IndexerCapabilities,
   } = indexer as Indexer;
 
   const { onModalClose } = props;
@@ -207,7 +208,7 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                       descriptionClassName={styles.description}
                       title={translate('RawSearchSupported')}
                       data={
-                        capabilities.supportsRawSearch
+                        capabilities?.supportsRawSearch
                           ? translate('Yes')
                           : translate('No')
                       }
@@ -216,12 +217,12 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                       descriptionClassName={styles.description}
                       title={translate('SearchTypes')}
                       data={
-                        capabilities.searchParams.length === 0 ? (
-                          translate('NotSupported')
-                        ) : (
+                        capabilities?.searchParams?.length > 0 ? (
                           <Label kind={kinds.PRIMARY}>
                             {capabilities.searchParams[0]}
                           </Label>
+                        ) : (
+                          translate('NotSupported')
                         )
                       }
                     />
@@ -229,60 +230,60 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                       descriptionClassName={styles.description}
                       title={translate('TVSearchTypes')}
                       data={
-                        capabilities.tvSearchParams.length === 0
-                          ? translate('NotSupported')
-                          : capabilities.tvSearchParams.map((p) => {
+                        capabilities?.tvSearchParams?.length > 0
+                          ? capabilities.tvSearchParams.map((p) => {
                               return (
                                 <Label key={p} kind={kinds.PRIMARY}>
                                   {p}
                                 </Label>
                               );
                             })
+                          : translate('NotSupported')
                       }
                     />
                     <DescriptionListItem
                       descriptionClassName={styles.description}
                       title={translate('MovieSearchTypes')}
                       data={
-                        capabilities.movieSearchParams.length === 0
-                          ? translate('NotSupported')
-                          : capabilities.movieSearchParams.map((p) => {
+                        capabilities?.movieSearchParams?.length > 0
+                          ? capabilities.movieSearchParams.map((p) => {
                               return (
                                 <Label key={p} kind={kinds.PRIMARY}>
                                   {p}
                                 </Label>
                               );
                             })
+                          : translate('NotSupported')
                       }
                     />
                     <DescriptionListItem
                       descriptionClassName={styles.description}
                       title={translate('BookSearchTypes')}
                       data={
-                        capabilities.bookSearchParams.length === 0
-                          ? translate('NotSupported')
-                          : capabilities.bookSearchParams.map((p) => {
+                        capabilities?.bookSearchParams?.length > 0
+                          ? capabilities.bookSearchParams.map((p) => {
                               return (
                                 <Label key={p} kind={kinds.PRIMARY}>
                                   {p}
                                 </Label>
                               );
                             })
+                          : translate('NotSupported')
                       }
                     />
                     <DescriptionListItem
                       descriptionClassName={styles.description}
                       title={translate('MusicSearchTypes')}
                       data={
-                        capabilities.musicSearchParams.length === 0
-                          ? translate('NotSupported')
-                          : capabilities.musicSearchParams.map((p) => {
+                        capabilities?.musicSearchParams?.length > 0
+                          ? capabilities.musicSearchParams.map((p) => {
                               return (
                                 <Label key={p} kind={kinds.PRIMARY}>
                                   {p}
                                 </Label>
                               );
                             })
+                          : translate('NotSupported')
                       }
                     />
                   </DescriptionList>
@@ -338,7 +339,11 @@ function IndexerInfoModalContent(props: IndexerInfoModalContentProps) {
                       })}
                   </Table>
                 </FieldSet>
-              ) : null}
+              ) : (
+                <Alert kind={kinds.INFO}>
+                  {translate('NoIndexerCategories')}
+                </Alert>
+              )}
             </div>
           </TabPanel>
           <TabPanel>

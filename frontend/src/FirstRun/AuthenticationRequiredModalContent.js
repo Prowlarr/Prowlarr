@@ -64,7 +64,7 @@ function AuthenticationRequiredModalContent(props) {
           className={styles.authRequiredAlert}
           kind={kinds.WARNING}
         >
-          {translate('AuthenticationRequiredWarning', { appName: 'Prowlarr' })}
+          {translate('AuthenticationRequiredWarning')}
         </Alert>
 
         {
@@ -77,7 +77,7 @@ function AuthenticationRequiredModalContent(props) {
                   type={inputTypes.SELECT}
                   name="authenticationMethod"
                   values={authenticationMethodOptions}
-                  helpText={translate('AuthenticationMethodHelpText', { appName: 'Prowlarr' })}
+                  helpText={translate('AuthenticationMethodHelpText')}
                   helpTextWarning={authenticationMethod.value === 'none' ? translate('AuthenticationMethodHelpTextWarning') : undefined}
                   helpLink="https://wiki.servarr.com/prowlarr/faq#forced-authentication"
                   onChange={onInputChange}

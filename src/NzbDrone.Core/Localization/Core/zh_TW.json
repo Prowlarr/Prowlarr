@@ -16,7 +16,7 @@
     "Language": "語言",
     "Filter": "篩選",
     "Reload": "重新載入",
-    "UpdateMechanismHelpText": "使用 Prowlarr內建的更新程式或是腳本文件",
+    "UpdateMechanismHelpText": "使用 {appName}內建的更新程式或是腳本文件",
     "URLBase": "URL Base",
     "Username": "使用者名稱",
     "Details": "詳情",

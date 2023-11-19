@@ -134,7 +134,7 @@
     "RemoveFilter": "Ukloni filter",
     "Restart": "Resetiraj",
     "RestartNow": "Resetiraj sad",
-    "RestartProwlarr": "Resetiraj Prowlarr",
+    "RestartProwlarr": "Resetiraj {appName}",
     "Save": "Spremi",
     "SelectAll": "Odaberi sve",
     "Security": "Sigurnost",

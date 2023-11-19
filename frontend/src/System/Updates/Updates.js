@@ -114,7 +114,7 @@ class Updates extends Component {
                 />
 
                 <div className={styles.message}>
-                  {translate('TheLatestVersionIsAlreadyInstalled', { appName: 'Prowlarr' })}
+                  {translate('TheLatestVersionIsAlreadyInstalled')}
                 </div>
 
                 {

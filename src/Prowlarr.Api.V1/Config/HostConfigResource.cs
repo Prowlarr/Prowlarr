@@ -19,6 +19,7 @@ namespace Prowlarr.Api.V1.Config
         public bool AnalyticsEnabled { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string PasswordConfirmation { get; set; }
         public string LogLevel { get; set; }
         public string ConsoleLogLevel { get; set; }
         public string Branch { get; set; }

@@ -146,14 +146,13 @@ namespace NzbDrone.Api.V1.Indexers
 
             var indexer = _indexerFactory.GetInstance(indexerDef);
 
-            var blockedIndexerStatus = GetBlockedIndexerStatus(indexer);
+            var blockedIndexerStatusPre = GetBlockedIndexerStatus(indexer);
 
-            if (blockedIndexerStatus?.DisabledTill != null)
+            if (blockedIndexerStatusPre?.DisabledTill != null)
             {
-                var retryAfterDisabledTill = Convert.ToInt32(blockedIndexerStatus.DisabledTill.Value.ToLocalTime().Subtract(DateTime.Now).TotalSeconds);
-                AddRetryAfterHeader(retryAfterDisabledTill);
+                AddRetryAfterHeader(CalculateRetryAfterDisabledTill(blockedIndexerStatusPre.DisabledTill.Value));
 
-                return CreateResponse(CreateErrorXML(429, $"Indexer is disabled till {blockedIndexerStatus.DisabledTill.Value.ToLocalTime()} due to recent failures."), statusCode: StatusCodes.Status429TooManyRequests);
+                return CreateResponse(CreateErrorXML(429, $"Indexer is disabled till {blockedIndexerStatusPre.DisabledTill.Value.ToLocalTime()} due to recent failures."), statusCode: StatusCodes.Status429TooManyRequests);
             }
 
             // TODO Optimize this so it's not called here and in ReleaseSearchService (for manual search)
@@ -179,6 +178,15 @@ namespace NzbDrone.Api.V1.Indexers
                 case "book":
                 case "movie":
                     var results = await _releaseSearchService.Search(request, new List<int> { indexerDef.Id }, false);
+
+                    var blockedIndexerStatusPost = GetBlockedIndexerStatus(indexer);
+
+                    if (blockedIndexerStatusPost?.DisabledTill != null)
+                    {
+                        AddRetryAfterHeader(CalculateRetryAfterDisabledTill(blockedIndexerStatusPost.DisabledTill.Value));
+
+                        return CreateResponse(CreateErrorXML(429, $"Indexer is disabled till {blockedIndexerStatusPost.DisabledTill.Value.ToLocalTime()} due to recent failures."), statusCode: StatusCodes.Status429TooManyRequests);
+                    }
 
                     foreach (var result in results.Releases)
                     {
@@ -335,6 +343,11 @@ namespace NzbDrone.Api.V1.Indexers
             {
                 HttpContext.Response.Headers.Add("Retry-After", $"{retryAfterSeconds}");
             }
+        }
+
+        private static int CalculateRetryAfterDisabledTill(DateTime disabledTill)
+        {
+            return Convert.ToInt32(disabledTill.ToLocalTime().Subtract(DateTime.Now).TotalSeconds);
         }
     }
 }

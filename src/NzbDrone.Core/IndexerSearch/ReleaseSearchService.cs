@@ -39,19 +39,14 @@ namespace NzbDrone.Core.IndexerSearch
 
         public Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            switch (request.t)
+            return request.t switch
             {
-                case "movie":
-                    return MovieSearch(request, indexerIds, interactiveSearch);
-                case "music":
-                    return MusicSearch(request, indexerIds, interactiveSearch);
-                case "tvsearch":
-                    return TvSearch(request, indexerIds, interactiveSearch);
-                case "book":
-                    return BookSearch(request, indexerIds, interactiveSearch);
-                default:
-                    return BasicSearch(request, indexerIds, interactiveSearch);
-            }
+                "movie" => MovieSearch(request, indexerIds, interactiveSearch),
+                "music" => MusicSearch(request, indexerIds, interactiveSearch),
+                "tvsearch" => TvSearch(request, indexerIds, interactiveSearch),
+                "book" => BookSearch(request, indexerIds, interactiveSearch),
+                _ => BasicSearch(request, indexerIds, interactiveSearch)
+            };
         }
 
         private async Task<NewznabResults> MovieSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)

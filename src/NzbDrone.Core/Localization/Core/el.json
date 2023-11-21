@@ -516,5 +516,6 @@
     "EditApplicationImplementation": "Προσθήκη",
     "AddApplicationImplementation": "Προσθήκη",
     "AddConnectionImplementation": "Προσθήκη",
-    "AddIndexerImplementation": "Προσθήκη"
+    "AddIndexerImplementation": "Προσθήκη",
+    "EditIndexerProxyImplementation": "Προσθήκη"
 }

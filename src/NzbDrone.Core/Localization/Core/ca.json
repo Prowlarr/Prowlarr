@@ -376,5 +376,6 @@
     "AuthForm": "Formularis (pàgina d'inici de sessió)",
     "DisabledForLocalAddresses": "Desactivat per a adreces locals",
     "None": "Cap",
-    "ResetAPIKeyMessageText": "Esteu segur que voleu restablir la clau de l'API?"
+    "ResetAPIKeyMessageText": "Esteu segur que voleu restablir la clau de l'API?",
+    "RestartProwlarr": "Reinicia {appName}"
 }

@@ -401,5 +401,11 @@
     "Album": "אלבום",
     "Artist": "אמן",
     "NotificationStatusAllClientHealthCheckMessage": "כל הרשימות אינן זמינות בגלל כשלים",
-    "NotificationStatusSingleClientHealthCheckMessage": "רשימות לא זמינות בגלל כשלים: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "רשימות לא זמינות בגלל כשלים: {0}",
+    "ResetAPIKeyMessageText": "האם אתה בטוח שברצונך לאפס את מפתח ה- API שלך?",
+    "DisabledForLocalAddresses": "מושבת לכתובות מקומיות",
+    "Publisher": "מוציא לאור",
+    "None": "אף אחד",
+    "AuthForm": "טפסים (דף כניסה)",
+    "AuthBasic": "בסיסי (חלון קופץ לדפדפן)"
 }

@@ -355,5 +355,6 @@
     "AuthForm": "แบบฟอร์ม (หน้าเข้าสู่ระบบ)",
     "DisabledForLocalAddresses": "ปิดใช้งานสำหรับที่อยู่ท้องถิ่น",
     "None": "ไม่มี",
-    "ResetAPIKeyMessageText": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API"
+    "ResetAPIKeyMessageText": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API",
+    "RestartProwlarr": "รีสตาร์ท {appName}"
 }

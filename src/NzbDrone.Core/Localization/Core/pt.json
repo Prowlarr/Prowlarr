@@ -466,5 +466,11 @@
     "AuthenticationMethodHelpTextWarning": "Selecione um método de autenticação válido",
     "AuthenticationRequiredPasswordHelpTextWarning": "Insira uma nova senha",
     "AuthenticationRequiredUsernameHelpTextWarning": "Insira um novo Nome de Usuário",
-    "EditIndexerImplementation": "Adicionar Indexador - {implementationName}"
+    "EditIndexerImplementation": "Adicionar Indexador - {implementationName}",
+    "CountDownloadClientsSelected": "{count} cliente(s) de transferência selecionado(s)",
+    "CountIndexersSelected": "{count} indexador(es) selecionado(s)",
+    "EditSelectedDownloadClients": "Editar Clientes de Transferência Selecionados",
+    "Album": "álbum",
+    "Artist": "artista",
+    "DefaultNameCopiedProfile": "{name} - Copiar"
 }

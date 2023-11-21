@@ -418,5 +418,6 @@
     "AddCustomFilter": "Добавить специальный фильтр",
     "AuthenticationMethod": "Способ авторизации",
     "AuthenticationRequiredPasswordHelpTextWarning": "Введите новый пароль",
-    "AuthenticationRequiredUsernameHelpTextWarning": "Введите новое имя пользователя"
+    "AuthenticationRequiredUsernameHelpTextWarning": "Введите новое имя пользователя",
+    "RestartProwlarr": "Перезапустить {appName}"
 }

@@ -368,5 +368,6 @@
     "DisabledForLocalAddresses": "Deaktiveret for lokale adresser",
     "ResetAPIKeyMessageText": "Er du sikker på, at du vil nulstille din API-nøgle?",
     "AuthBasic": "Grundlæggende (pop op-browser)",
-    "None": "Ingen"
+    "None": "Ingen",
+    "RestartProwlarr": "Genstart {appName}"
 }

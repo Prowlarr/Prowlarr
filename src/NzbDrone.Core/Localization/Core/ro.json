@@ -461,5 +461,6 @@
     "EditDownloadClientImplementation": "Adăugați client de descărcare - {implementationName}",
     "EditIndexerImplementation": "Adăugați Indexator - {implementationName}",
     "EditIndexerProxyImplementation": "Adăugați proxy indexator - {implementationName}",
-    "EditApplicationImplementation": "Adăugați aplicație - {implementareName}"
+    "EditApplicationImplementation": "Adăugați aplicație - {implementareName}",
+    "RestartProwlarr": "Reporniți {appName}"
 }

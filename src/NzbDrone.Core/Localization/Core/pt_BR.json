@@ -597,5 +597,8 @@
     "TotalQueries": "Total de Consultas",
     "ApplicationTagsHelpText": "Sincronize indexadores com este aplicativo que não possuem tags ou que possuem 1 ou mais tags correspondentes",
     "ApplicationTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um aplicativo com uma tag só será sincronizado com indexadores que tenham a mesma tag.",
-    "IndexerTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um indexador com uma tag sincronizará apenas com aplicativos com a mesma tag."
+    "IndexerTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um indexador com uma tag sincronizará apenas com aplicativos com a mesma tag.",
+    "NoIndexerCategories": "Nenhuma categoria encontrada para este indexador",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirme a nova senha",
+    "PasswordConfirmation": "Confirmação Da Senha"
 }

@@ -359,5 +359,13 @@
     "ResetAPIKeyMessageText": "API Anahtarınızı sıfırlamak istediğinizden emin misiniz?",
     "Categories": "Kategoriler",
     "Application": "Uygulamalar",
-    "Episode": "bölüm"
+    "Episode": "bölüm",
+    "AddApplicationImplementation": "Koşul Ekle - {uygulama Adı}",
+    "AddConnection": "Bağlantı Ekle",
+    "AddConnectionImplementation": "Koşul Ekle - {uygulama Adı}",
+    "AddIndexerImplementation": "Koşul Ekle - {uygulama Adı}",
+    "AddIndexerProxyImplementation": "Koşul Ekle - {uygulama Adı}",
+    "EditConnectionImplementation": "Koşul Ekle - {uygulama Adı}",
+    "EditApplicationImplementation": "Koşul Ekle - {uygulama Adı}",
+    "EditIndexerImplementation": "Koşul Ekle - {uygulama Adı}"
 }

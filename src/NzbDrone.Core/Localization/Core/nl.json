@@ -471,5 +471,7 @@
     "EditDownloadClientImplementation": "Voeg Downloadclient toe - {implementationName}",
     "EditIndexerImplementation": "Indexeerder toevoegen - {implementationName}",
     "AddApplicationImplementation": "Voeg connectie toe - {implementationName}",
-    "AddIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}"
+    "AddIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}",
+    "EditApplicationImplementation": "Voeg connectie toe - {implementationName}",
+    "EditIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}"
 }

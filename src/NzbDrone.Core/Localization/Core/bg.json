@@ -352,5 +352,6 @@
     "AuthForm": "Формуляри (Страница за вход)",
     "DisabledForLocalAddresses": "Забранено за местни адреси",
     "None": "Нито един",
-    "ResetAPIKeyMessageText": "Наистина ли искате да нулирате своя API ключ?"
+    "ResetAPIKeyMessageText": "Наистина ли искате да нулирате своя API ключ?",
+    "RestartProwlarr": "Рестартирайте {appName}"
 }

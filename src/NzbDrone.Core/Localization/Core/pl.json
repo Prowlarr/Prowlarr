@@ -374,5 +374,6 @@
     "DisabledForLocalAddresses": "Wyłączone dla adresów lokalnych",
     "None": "Żaden",
     "AuthBasic": "Podstawowe (wyskakujące okienko przeglądarki)",
-    "ResetAPIKeyMessageText": "Czy na pewno chcesz zresetować swój klucz API?"
+    "ResetAPIKeyMessageText": "Czy na pewno chcesz zresetować swój klucz API?",
+    "RestartProwlarr": "Zrestartuj {appName}"
 }

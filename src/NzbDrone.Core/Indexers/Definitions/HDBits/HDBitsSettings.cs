@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             Codecs = Array.Empty<int>();
             Mediums = Array.Empty<int>();
             FreeleechOnly = false;
-            UseFilenames = false;
+            UseFilenames = true;
         }
 
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]

@@ -20,6 +20,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Site has shutdown")]
     public class BB : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "BB";

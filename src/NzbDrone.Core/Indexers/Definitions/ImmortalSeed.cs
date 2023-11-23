@@ -10,6 +10,7 @@ using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -20,7 +21,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class ImmortalSeed : TorrentIndexerBase<UserPassTorrentBaseSettings>
+    public class ImmortalSeed : TorrentIndexerBase<ImmortalSeedSettings>
     {
         public override string Name => "ImmortalSeed";
         public override string[] IndexerUrls => new[] { "https://immortalseed.me/" };
@@ -46,7 +47,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new ImmortalSeedParser(Capabilities.Categories);
+            return new ImmortalSeedParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -253,11 +254,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class ImmortalSeedParser : IParseIndexerResponse
     {
+        private readonly ImmortalSeedSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
+
         private readonly Regex _dateAddedRegex = new (@"\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AaPp][Mm]", RegexOptions.Compiled);
 
-        public ImmortalSeedParser(IndexerCapabilitiesCategories categories)
+        public ImmortalSeedParser(ImmortalSeedSettings settings, IndexerCapabilitiesCategories categories)
         {
+            _settings = settings;
             _categories = categories;
         }
 
@@ -271,6 +275,23 @@ namespace NzbDrone.Core.Indexers.Definitions
             var rows = dom.QuerySelectorAll("table#sortabletable > tbody > tr:has(a[href*=\"details.php?id=\"])");
             foreach (var row in rows)
             {
+                var downloadVolumeFactor = 1.0;
+
+                if (row.QuerySelector("img[title^=\"Free Torrent\"], img[title^=\"Sitewide Free Torrent\"]") != null)
+                {
+                    downloadVolumeFactor = 0.0;
+                }
+                else if (row.QuerySelector("img[title^=\"Silver Torrent\"]") != null)
+                {
+                    downloadVolumeFactor = 0.5;
+                }
+
+                // Skip non-freeleech results when freeleech only is set
+                if (_settings.FreeleechOnly && downloadVolumeFactor != 0.0)
+                {
+                    continue;
+                }
+
                 // details link, release name gets shortened if it's to long
                 var qDetails = row.QuerySelector("div > a[href*=\"details.php?id=\"]");
 
@@ -300,6 +321,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Peers = peers,
                     Size =  ParseUtil.GetBytes(row.QuerySelector("td:nth-of-type(5)")?.TextContent.Trim()),
                     Grabs = ParseUtil.CoerceInt(row.QuerySelector("td:nth-child(6)")?.TextContent),
+                    DownloadVolumeFactor = downloadVolumeFactor,
                     UploadVolumeFactor = row.QuerySelector("img[title^=\"x2 Torrent\"]") != null ? 2 : 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 86400 // 24 hours
@@ -311,19 +333,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.PublishDate = DateTime.ParseExact(dateAddedMatch.Value, "yyyy-MM-dd hh:mm tt", CultureInfo.InvariantCulture);
                 }
 
-                if (row.QuerySelector("img[title^=\"Free Torrent\"], img[title^=\"Sitewide Free Torrent\"]") != null)
-                {
-                    release.DownloadVolumeFactor = 0;
-                }
-                else if (row.QuerySelector("img[title^=\"Silver Torrent\"]") != null)
-                {
-                    release.DownloadVolumeFactor = 0.5;
-                }
-                else
-                {
-                    release.DownloadVolumeFactor = 1;
-                }
-
                 releaseInfos.Add(release);
             }
 
@@ -331,5 +340,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class ImmortalSeedSettings : UserPassTorrentBaseSettings
+    {
+        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Show freeleech releases only")]
+        public bool FreeleechOnly { get; set; } = false;
     }
 }

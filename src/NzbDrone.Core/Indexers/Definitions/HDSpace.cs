@@ -9,6 +9,7 @@ using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -19,7 +20,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class HDSpace : TorrentIndexerBase<UserPassTorrentBaseSettings>
+    public class HDSpace : TorrentIndexerBase<HDSpaceSettings>
     {
         public override string Name => "HD-Space";
         public override string[] IndexerUrls => new[] { "https://hd-space.org/" };
@@ -225,10 +226,10 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class HDSpaceParser : IParseIndexerResponse
     {
-        private readonly UserPassTorrentBaseSettings _settings;
+        private readonly HDSpaceSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public HDSpaceParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        public HDSpaceParser(HDSpaceSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;
@@ -251,9 +252,34 @@ namespace NzbDrone.Core.Indexers.Definitions
                     continue;
                 }
 
-                var release = new TorrentInfo();
-                release.MinimumRatio = 1;
-                release.MinimumSeedTime = 86400; // 24 hours
+                var downloadVolumeFactor = 1.0;
+
+                if (row.QuerySelector("img[title=\"FreeLeech\"]") != null)
+                {
+                    downloadVolumeFactor = 0;
+                }
+                else if (row.QuerySelector("img[src=\"images/sf.png\"]") != null)
+                {
+                    downloadVolumeFactor = 0;
+                }
+                else if (row.QuerySelector("img[title=\"Half FreeLeech\"]") != null)
+                {
+                    downloadVolumeFactor = 0.5;
+                }
+
+                // Skip non-freeleech results when freeleech only is set
+                if (_settings.FreeleechOnly && downloadVolumeFactor != 0.0)
+                {
+                    continue;
+                }
+
+                var release = new TorrentInfo
+                {
+                    DownloadVolumeFactor = downloadVolumeFactor,
+                    UploadVolumeFactor = 1,
+                    MinimumRatio = 1,
+                    MinimumSeedTime = 86400 // 24 hours
+                };
 
                 var qLink = row.QuerySelector("td:nth-child(2) a[href^=\"index.php?page=torrent-details&id=\"]");
                 release.Title = qLink?.TextContent.Trim();
@@ -292,25 +318,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var grabs = row.QuerySelector("td:nth-child(10)")?.TextContent.Trim().Replace("---", "0");
                 release.Grabs = ParseUtil.CoerceInt(grabs);
 
-                if (row.QuerySelector("img[title=\"FreeLeech\"]") != null)
-                {
-                    release.DownloadVolumeFactor = 0;
-                }
-                else if (row.QuerySelector("img[src=\"images/sf.png\"]") != null)
-                {
-                    release.DownloadVolumeFactor = 0;
-                }
-                else if (row.QuerySelector("img[title=\"Half FreeLeech\"]") != null)
-                {
-                    release.DownloadVolumeFactor = 0.5;
-                }
-                else
-                {
-                    release.DownloadVolumeFactor = 1;
-                }
-
-                release.UploadVolumeFactor = 1;
-
                 var categoryLink = row.QuerySelector("a[href^=\"index.php?page=torrents&category=\"]").GetAttribute("href");
                 var cat = ParseUtil.GetArgumentFromQueryString(categoryLink, "category");
                 release.Categories = _categories.MapTrackerCatToNewznab(cat);
@@ -322,5 +329,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class HDSpaceSettings : UserPassTorrentBaseSettings
+    {
+        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Show freeleech releases only")]
+        public bool FreeleechOnly { get; set; } = false;
     }
 }

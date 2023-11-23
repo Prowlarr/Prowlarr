@@ -292,56 +292,60 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             foreach (var setting in _definition.Settings)
             {
                 var name = ".Config." + setting.Name;
-                var value = Settings.ExtraFieldData.GetValueOrDefault(setting.Name, setting.Default);
 
-                if ((setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey") && indexerLogging)
+                object defaultValue = setting.Type switch
+                {
+                    "select" => setting.Options.OrderBy(x => x.Key).Select(x => x.Key).ToList().IndexOf(setting.Default).ToString().ParseInt64() ?? 0,
+                    _ => setting.Default
+                };
+
+                var value = Settings.ExtraFieldData.GetValueOrDefault(setting.Name, defaultValue);
+
+                if (indexerLogging && setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey")
                 {
                     _logger.Trace($"{name} got value {value.ToJson()}");
                 }
 
-                if (setting.Type == "text" || setting.Type == "password")
+                switch (setting.Type)
                 {
-                    variables[name] = value;
-                }
-                else if (setting.Type == "checkbox")
-                {
-                    if (value is string stringValue && bool.TryParse(stringValue, out var result))
-                    {
-                        value = result;
-                    }
+                    case "text":
+                    case "password":
+                        variables[name] = value;
+                        break;
+                    case "checkbox":
+                        if (value is string stringValue && bool.TryParse(stringValue, out var result))
+                        {
+                            value = result;
+                        }
 
-                    variables[name] = (bool)value ? ".True" : null;
-                }
-                else if (setting.Type == "select")
-                {
-                    if (indexerLogging)
-                    {
-                        _logger.Trace($"Setting options: {setting.Options.ToJson()}");
-                    }
+                        variables[name] = (bool)value ? ".True" : null;
+                        break;
+                    case "select":
+                        if (indexerLogging)
+                        {
+                            _logger.Trace($"Setting options: {setting.Options.ToJson()}");
+                        }
 
-                    var sorted = setting.Options.OrderBy(x => x.Key).ToList();
-                    var selected = sorted[(int)(long)value];
+                        var sorted = setting.Options.OrderBy(x => x.Key).ToList();
+                        var selected = sorted[(int)(long)value];
 
-                    if (indexerLogging)
-                    {
-                        _logger.Debug($"Selected option: {selected.ToJson()}");
-                    }
+                        if (indexerLogging)
+                        {
+                            _logger.Debug($"Selected option: {selected.ToJson()}");
+                        }
 
-                    variables[name] = selected.Key;
-                }
-                else if (setting.Type == "info")
-                {
-                    variables[name] = value;
-                }
-                else if (setting.Type == "cardigannCaptcha")
-                {
-                }
-                else
-                {
-                    throw new NotSupportedException($"Type {setting.Type} is not supported.");
+                        variables[name] = selected.Key;
+                        break;
+                    case "info":
+                        variables[name] = value;
+                        break;
+                    case "cardigannCaptcha":
+                        break;
+                    default:
+                        throw new NotSupportedException($"Type {setting.Type} is not supported.");
                 }
 
-                if (setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && indexerLogging && variables.ContainsKey(name))
+                if (indexerLogging && setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && variables.ContainsKey(name))
                 {
                     _logger.Debug($"Setting {setting.Name} to {variables[name].ToJson()}");
                 }

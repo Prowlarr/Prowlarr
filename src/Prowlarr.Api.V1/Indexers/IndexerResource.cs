@@ -152,25 +152,12 @@ namespace Prowlarr.Api.V1.Indexers
 
         private object MapValue(SettingsField setting, object value)
         {
-            if (setting.Type == "select")
+            return setting.Type switch
             {
-                return value.ToString().ParseInt64() ?? 0;
-            }
-            else if (setting.Type == "checkbox")
-            {
-                if (bool.TryParse(value.ToString(), out var result))
-                {
-                    return result;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return value?.ToString() ?? string.Empty;
-            }
+                "select" => value.ToString().ParseInt64() ?? 0,
+                "checkbox" => bool.TryParse(value.ToString(), out var result) && result,
+                _ => value?.ToString() ?? string.Empty
+            };
         }
 
         private Field MapField(SettingsField setting, int order)
@@ -196,14 +183,7 @@ namespace Prowlarr.Api.V1.Indexers
             }
             else if (setting.Type == "checkbox")
             {
-                if (bool.TryParse(setting.Default, out var value))
-                {
-                    field.Value = value;
-                }
-                else
-                {
-                    field.Value = false;
-                }
+                field.Value = bool.TryParse(setting.Default, out var value) && value;
             }
             else
             {

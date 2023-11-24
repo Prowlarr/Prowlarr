@@ -134,9 +134,18 @@ namespace NzbDrone.Core.Indexers
                 //Add common flags
                 if (Protocol == DownloadProtocol.Torrent && c is TorrentInfo torrentRelease)
                 {
-                    if (torrentRelease.DownloadVolumeFactor == 0)
+                    if (torrentRelease.DownloadVolumeFactor == 0.0)
                     {
                         torrentRelease.IndexerFlags.Add(IndexerFlag.FreeLeech);
+                    }
+
+                    if (torrentRelease.UploadVolumeFactor == 0.0)
+                    {
+                        torrentRelease.IndexerFlags.Add(IndexerFlag.NeutralLeech);
+                    }
+                    else if (torrentRelease.UploadVolumeFactor == 2.0)
+                    {
+                        torrentRelease.IndexerFlags.Add(IndexerFlag.DoubleUpload);
                     }
 
                     if (torrentRelease.Scene.GetValueOrDefault(false))

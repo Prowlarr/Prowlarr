@@ -265,8 +265,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Scene = torrent.Scene,
                             Files = torrent.FileCount,
                             Grabs = torrent.Snatches,
-                            DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
-                            UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
+                            DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsFreeload || torrent.IsPersonalFreeLeech ? 0 : 1,
+                            UploadVolumeFactor = torrent.IsNeutralLeech || torrent.IsFreeload ? 0 : 1
                         };
 
                         var category = torrent.Category;
@@ -301,8 +301,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
                         Files = result.FileCount,
                         Grabs = result.Snatches,
-                        DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
-                        UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
+                        DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsFreeload || result.IsPersonalFreeLeech ? 0 : 1,
+                        UploadVolumeFactor = result.IsNeutralLeech || result.IsFreeload ? 0 : 1
                     };
 
                     var category = result.Category;

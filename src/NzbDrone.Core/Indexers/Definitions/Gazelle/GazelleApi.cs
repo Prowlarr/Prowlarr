@@ -35,6 +35,7 @@ public class GazelleTorrent
     public string Category { get; set; }
     public bool IsFreeLeech { get; set; }
     public bool IsNeutralLeech { get; set; }
+    public bool IsFreeload { get; set; }
     public bool IsPersonalFreeLeech { get; set; }
     public bool CanUseToken { get; set; }
 }
@@ -63,6 +64,7 @@ public class GazelleRelease
     public List<GazelleTorrent> Torrents { get; set; }
     public bool IsFreeLeech { get; set; }
     public bool IsNeutralLeech { get; set; }
+    public bool IsFreeload { get; set; }
     public bool IsPersonalFreeLeech { get; set; }
     public bool CanUseToken { get; set; }
 }

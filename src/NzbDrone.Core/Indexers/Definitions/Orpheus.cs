@@ -289,6 +289,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Title = WebUtility.HtmlDecode(title),
                             Artist = WebUtility.HtmlDecode(result.Artist),
                             Album = WebUtility.HtmlDecode(result.GroupName),
+                            Year = int.Parse(result.GroupYear),
                             Container = torrent.Encoding,
                             Codec = torrent.Format,
                             Size = long.Parse(torrent.Size),

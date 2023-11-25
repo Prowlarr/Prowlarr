@@ -600,5 +600,6 @@
     "IndexerTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um indexador com uma tag sincronizará apenas com aplicativos com a mesma tag.",
     "NoIndexerCategories": "Nenhuma categoria encontrada para este indexador",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirme a nova senha",
-    "PasswordConfirmation": "Confirmação Da Senha"
+    "PasswordConfirmation": "Confirmação Da Senha",
+    "InvalidUILanguage": "Sua UI está definida com um idioma inválido, corrija-a e salve suas configurações"
 }

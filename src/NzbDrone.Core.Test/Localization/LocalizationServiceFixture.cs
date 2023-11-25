@@ -5,7 +5,6 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.Test.Framework;
-using NzbDrone.Test.Common;
 
 namespace NzbDrone.Core.Test.Localization
 {
@@ -31,13 +30,11 @@ namespace NzbDrone.Core.Test.Localization
         [Test]
         public void should_get_string_in_french()
         {
-            Mocker.GetMock<IConfigService>().Setup(m => m.UILanguage).Returns("fr_fr");
+            Mocker.GetMock<IConfigService>().Setup(m => m.UILanguage).Returns("fr");
 
             var localizedString = Subject.GetLocalizedString("BackupNow");
 
             localizedString.Should().Be("Sauvegarder maintenant");
-
-            ExceptionVerification.ExpectedErrors(1);
         }
 
         [Test]

@@ -507,5 +507,14 @@
     "ResetAPIKeyMessageText": "Bist du sicher, dass du den API-Schlüssel zurücksetzen willst?",
     "AddCustomFilter": "Eigenen Filter hinzufügen",
     "AddApplication": "Application hinzufügen",
-    "AddCategory": "Kategorie hinzufügen"
+    "AddCategory": "Kategorie hinzufügen",
+    "AdvancedSettingsHiddenClickToShow": "Erweiterte Einstellungen versteckt, klicke hier zum anzeigen",
+    "AdvancedSettingsShownClickToHide": "Erweitere Einstellung angezeigt, klicke hier zum verstecken",
+    "AppUpdated": "{appName} aktualisiert",
+    "TotalQueries": "Gesamte Abfragen",
+    "days": "Tage",
+    "VipExpiration": "VIP Ablaufdatum",
+    "TotalUserAgentQueries": "Gesamte Nutzeragent Anfragen",
+    "ActiveApps": "Aktive Apps",
+    "ActiveIndexers": "Aktive Indexer"
 }

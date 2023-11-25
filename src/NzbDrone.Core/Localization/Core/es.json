@@ -440,5 +440,6 @@
     "AuthenticationRequiredUsernameHelpTextWarning": "Introduzca un nuevo nombre de usuario",
     "AuthenticationRequiredWarning": "Para evitar el acceso remoto sin autenticación, {appName} ahora requiere que la autenticación esté habilitada. Opcionalmente puede desactivar la autenticación desde una dirección local.",
     "EditDownloadClientImplementation": "Añadir Cliente de Descarga - {implementationName}",
-    "DefaultNameCopiedProfile": "{name} - Copia"
+    "DefaultNameCopiedProfile": "{name} - Copia",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirma la nueva contraseña"
 }

@@ -12,7 +12,7 @@
     "Events": "Événements",
     "Edit": "Modifier",
     "DownloadClientStatusCheckAllClientMessage": "Aucun client de téléchargement n'est disponible en raison d'échecs",
-    "DownloadClients": "Clients de téléchargements",
+    "DownloadClients": "Clients de télécharg.",
     "Dates": "Dates",
     "Date": "Date",
     "Delete": "Supprimer",
@@ -148,9 +148,9 @@
     "ApiKey": "Clé API",
     "AnalyticsEnabledHelpText": "Envoyer des informations anonymes sur l'utilisation et les erreurs vers les serveurs de {appName}. Cela inclut des informations sur votre navigateur, quelle page {appName} WebUI vous utilisez, les rapports d'erreurs, ainsi que le système d'exploitation et sa version. Nous utiliserons ces informations pour prioriser les nouvelles fonctionnalités et les corrections de bugs.",
     "IgnoredAddresses": "Adresses ignorées",
-    "Hostname": "Hostname",
+    "Hostname": "Nom d'hôte",
     "GeneralSettings": "Réglages généraux",
-    "Fixed": "Fixé",
+    "Fixed": "Corrigés",
     "EnableSslHelpText": " Nécessite un redémarrage en tant qu'administrateur pour être effectif",
     "EnableSSL": "Activer le SSL",
     "EnableInteractiveSearch": "Activer la recherche interactive",
@@ -597,5 +597,9 @@
     "PackSeedTime": "Temps de Seed",
     "ApplicationTagsHelpText": "Synchroniser les indexeurs avec cette application qui n'ont aucune balise ou qui ont une ou plusieurs balises correspondantes",
     "OnHealthRestored": "Sur la santé restaurée",
-    "OnHealthRestoredHelpText": "Sur la santé restaurée"
+    "OnHealthRestoredHelpText": "Sur la santé restaurée",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmer le nouveau mot de passe",
+    "PasswordConfirmation": "Confirmation du mot de passe",
+    "NoIndexerCategories": "Aucune catégorie disponible pour cet indexeur",
+    "InvalidUILanguage": "Votre interface utilisateur est définie sur une langue non valide, corrigez-la et enregistrez vos paramètres"
 }

@@ -173,6 +173,8 @@
   "DownloadClient": "Download Client",
   "DownloadClientCategory": "Download Client Category",
   "DownloadClientPriorityHelpText": "Prioritize multiple Download Clients. Round-Robin is used for clients with the same priority.",
+  "DownloadClientQbittorrentSettingsContentLayout": "Content Layout",
+  "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Whether to use qBittorrent's configured content layout, the original layout from the torrent or always create a subfolder (qBittorrent 4.3.2+)",
   "DownloadClientSettings": "Download Client Settings",
   "DownloadClientStatusCheckAllClientMessage": "All download clients are unavailable due to failures",
   "DownloadClientStatusCheckSingleClientMessage": "Download clients unavailable due to failures: {0}",

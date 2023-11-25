@@ -18,6 +18,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         public IEnumerable<int> Codec { get; set; }
         public IEnumerable<int> Medium { get; set; }
         public IEnumerable<int> Origin { get; set; }
+        public IEnumerable<int> Exclusive { get; set; }
 
         [JsonProperty(PropertyName = "imdb")]
         public ImdbInfo ImdbInfo { get; set; }

@@ -27,6 +27,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             Origins = Array.Empty<int>();
             FreeleechOnly = false;
             UseFilenames = true;
+            Exclusive = Array.Empty<int>();
         }
 
         [FieldDefinition(2, Label = "Username", HelpText = "IndexerHDBitsSettingsUsernameHelpText", Privacy = PrivacyLevel.UserName)]
@@ -49,6 +50,9 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
         [FieldDefinition(8, Label = "IndexerHDBitsSettingsUseFilenames", Type = FieldType.Checkbox, HelpText = "IndexerHDBitsSettingsUseFilenamesHelpText")]
         public bool UseFilenames { get; set; }
+
+        [FieldDefinition(9, Label = "Exclusivities", Type = FieldType.Select, SelectOptions = typeof(HdBitsExclusive), HelpText = "If unspecified, all options are used.", Advanced = true)]
+        public IEnumerable<int> Exclusive { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
@@ -90,5 +94,13 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         Undefined = 0,
         [FieldOption("Internal")]
         Internal = 1
+    }
+
+    public enum HdBitsExclusive
+    {
+        [FieldOption("Non-exclusive")]
+        NonExclusive = 0,
+        [FieldOption("Exclusive")]
+        Exclusive = 1
     }
 }

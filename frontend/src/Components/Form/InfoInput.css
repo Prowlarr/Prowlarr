@@ -1,0 +1,13 @@
+.message {
+  composes: alert from '~Components/Alert.css';
+
+  a {
+    color: var(--linkColor);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--linkHoverColor);
+      text-decoration: underline;
+    }
+  }
+}

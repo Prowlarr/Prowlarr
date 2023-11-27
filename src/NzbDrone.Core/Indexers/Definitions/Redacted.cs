@@ -193,6 +193,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
             }
 
+            if (_settings.FreeloadOnly)
+            {
+                parameters.Set("freetorrent", "4");
+            }
+
             var searchUrl = _settings.BaseUrl.TrimEnd('/') + $"/ajax.php?{parameters.GetQueryString()}";
 
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
@@ -242,6 +247,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     foreach (var torrent in result.Torrents)
                     {
+                        // skip non-freeload results when freeload only is set
+                        if (_settings.FreeloadOnly && !torrent.IsFreeload)
+                        {
+                            continue;
+                        }
+
                         var id = torrent.TorrentId;
 
                         var title = GetTitle(result, torrent);
@@ -251,7 +262,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         {
                             Guid = infoUrl,
                             InfoUrl = infoUrl,
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken && !torrent.IsFreeload),
                             Title = WebUtility.HtmlDecode(title),
                             Artist = WebUtility.HtmlDecode(result.Artist),
                             Album = WebUtility.HtmlDecode(result.GroupName),
@@ -286,6 +297,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Non-Audio files are formatted a little differently (1:1 for group and torrents)
                 else
                 {
+                    // skip non-freeload results when freeload only is set
+                    if (_settings.FreeloadOnly && !result.IsFreeload)
+                    {
+                        continue;
+                    }
+
                     var id = result.TorrentId;
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
@@ -294,7 +311,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         Guid = infoUrl,
                         Title = WebUtility.HtmlDecode(result.GroupName),
                         Size = long.Parse(result.Size),
-                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
+                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken && !result.IsFreeload),
                         InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
@@ -394,11 +411,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings)", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey, HelpText = "API Key from the Site (Found in Settings => Access Settings)")]
         public string Apikey { get; set; }
 
-        [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]
+        [FieldDefinition(3, Label = "Use Freeleech Tokens", Type = FieldType.Checkbox, HelpText = "Use freeleech tokens when available")]
         public bool UseFreeleechToken { get; set; }
+
+        [FieldDefinition(4, Label = "Freeload Only", Type = FieldType.Checkbox, Advanced = true, HelpTextWarning = "Search freeload torrents only. End date: 6 January 2024, 23:59 UTC.")]
+        public bool FreeloadOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

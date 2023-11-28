@@ -9,7 +9,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
     public class BroadcastheNet : TorrentIndexerBase<BroadcastheNetSettings>
     {
         public override string Name => "BroadcasTheNet";
-
+        public override string[] IndexerUrls => new[] { "https://api.broadcasthe.net/" };
+        public override string[] LegacyUrls => new[] { "http://api.broadcasthe.net/" };
+        public override string Description => "BroadcasTheNet (BTN) is an invite-only torrent tracker focused on TV shows";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
@@ -18,11 +20,6 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         public override IndexerCapabilities Capabilities => SetCapabilities();
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
 
-        public override string[] IndexerUrls => new string[] { "https://api.broadcasthe.net/" };
-        public override string[] LegacyUrls => new string[] { "http://api.broadcasthe.net/" };
-
-        public override string Description => "BroadcasTheNet (BTN) is an invite-only torrent tracker focused on TV shows";
-
         public BroadcastheNet(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
@@ -30,7 +27,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var requestGenerator = new BroadcastheNetRequestGenerator() { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities };
+            var requestGenerator = new BroadcastheNetRequestGenerator { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities };
 
             var releaseInfo = _indexerStatusService.GetLastRssSyncReleaseInfo(Definition.Id);
             if (releaseInfo != null)

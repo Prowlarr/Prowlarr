@@ -25,7 +25,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
-            var results = new List<ReleaseInfo>();
+            var releaseInfos = new List<ReleaseInfo>();
             var indexerHttpResponse = indexerResponse.HttpResponse;
 
             switch (indexerHttpResponse.StatusCode)
@@ -69,60 +69,71 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             if (jsonResponse.Result.Results == 0 || jsonResponse.Result?.Torrents?.Values == null)
             {
-                return results;
+                return releaseInfos;
             }
 
             var protocol = indexerResponse.HttpRequest.Url.Scheme + ":";
 
             foreach (var torrent in jsonResponse.Result.Torrents.Values)
             {
-                var torrentInfo = new TorrentInfo();
+                var flags = new HashSet<IndexerFlag>();
 
-                torrentInfo.Guid = string.Format("BTN-{0}", torrent.TorrentID);
-                torrentInfo.Title = CleanReleaseName(torrent.ReleaseName);
-                torrentInfo.Size = torrent.Size;
-                torrentInfo.DownloadUrl = RegexProtocol.Replace(torrent.DownloadURL, protocol);
-                torrentInfo.InfoUrl = string.Format("{0}//broadcasthe.net/torrents.php?id={1}&torrentid={2}", protocol, torrent.GroupID, torrent.TorrentID);
-
-                //torrentInfo.CommentUrl =
-                if (torrent.TvdbID.HasValue)
+                if (torrent.Origin.ToUpperInvariant() == "INTERNAL")
                 {
-                    torrentInfo.TvdbId = torrent.TvdbID.Value;
+                    flags.Add(IndexerFlag.Internal);
                 }
 
-                if (torrent.TvrageID.HasValue)
+                var releaseInfo = new TorrentInfo
                 {
-                    torrentInfo.TvRageId = torrent.TvrageID.Value;
+                    Guid = $"BTN-{torrent.TorrentID}",
+                    InfoUrl = $"{protocol}//broadcasthe.net/torrents.php?id={torrent.GroupID}&torrentid={torrent.TorrentID}",
+                    DownloadUrl = RegexProtocol.Replace(torrent.DownloadURL, protocol),
+                    Title = CleanReleaseName(torrent.ReleaseName),
+                    Categories = _categories.MapTrackerCatToNewznab(torrent.Resolution),
+                    InfoHash = torrent.InfoHash,
+                    Size = torrent.Size,
+                    Grabs = torrent.Snatched,
+                    Seeders = torrent.Seeders,
+                    Peers = torrent.Leechers + torrent.Seeders,
+                    PublishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).ToUniversalTime().AddSeconds(torrent.Time),
+                    Origin = torrent.Origin,
+                    Source = torrent.Source,
+                    Container = torrent.Container,
+                    Codec = torrent.Codec,
+                    Resolution = torrent.Resolution,
+                    Scene = torrent.Origin.ToUpperInvariant() == "SCENE",
+                    IndexerFlags = flags,
+                    DownloadVolumeFactor = 0,
+                    UploadVolumeFactor = 1,
+                    MinimumRatio = 1,
+                    MinimumSeedTime = torrent.Category.ToUpperInvariant() == "SEASON" ? 432000 : 86400, // 120 hours for seasons and 24 hours for episodes
+                };
+
+                if (torrent.TvdbID is > 0)
+                {
+                    releaseInfo.TvdbId = torrent.TvdbID.Value;
                 }
 
-                torrentInfo.PublishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).ToUniversalTime().AddSeconds(torrent.Time);
+                if (torrent.TvrageID is > 0)
+                {
+                    releaseInfo.TvRageId = torrent.TvrageID.Value;
+                }
 
-                //torrentInfo.MagnetUrl =
-                torrentInfo.InfoHash = torrent.InfoHash;
-                torrentInfo.Seeders = torrent.Seeders;
-                torrentInfo.Peers = torrent.Leechers + torrent.Seeders;
-
-                torrentInfo.Origin = torrent.Origin;
-                torrentInfo.Source = torrent.Source;
-                torrentInfo.Container = torrent.Container;
-                torrentInfo.Codec = torrent.Codec;
-                torrentInfo.Resolution = torrent.Resolution;
-                torrentInfo.UploadVolumeFactor = 1;
-                torrentInfo.DownloadVolumeFactor = 0;
-                torrentInfo.MinimumRatio = 1;
-
-                torrentInfo.Categories = _categories.MapTrackerCatToNewznab(torrent.Resolution);
+                if (torrent.ImdbID.IsNotNullOrWhiteSpace() && int.TryParse(torrent.ImdbID, out var imdbId))
+                {
+                    releaseInfo.ImdbId = imdbId;
+                }
 
                 // Default to TV if category could not be mapped
-                if (torrentInfo.Categories == null || !torrentInfo.Categories.Any())
+                if (releaseInfo.Categories == null || !releaseInfo.Categories.Any())
                 {
-                    torrentInfo.Categories = new List<IndexerCategory> { NewznabStandardCategory.TV };
+                    releaseInfo.Categories = new List<IndexerCategory> { NewznabStandardCategory.TV };
                 }
 
-                results.Add(torrentInfo);
+                releaseInfos.Add(releaseInfo);
             }
 
-            return results;
+            return releaseInfos;
         }
 
         private string CleanReleaseName(string releaseName)

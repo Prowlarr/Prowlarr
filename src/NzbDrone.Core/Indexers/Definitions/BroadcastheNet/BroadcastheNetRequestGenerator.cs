@@ -9,30 +9,12 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 {
     public class BroadcastheNetRequestGenerator : IIndexerRequestGenerator
     {
-        public int MaxPages { get; set; }
-        public int PageSize { get; set; }
         public BroadcastheNetSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
-
-        public int? LastRecentTorrentID { get; set; }
+        public int PageSize { get; set; }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
-
-        public BroadcastheNetRequestGenerator()
-        {
-            MaxPages = 10;
-            PageSize = 100;
-        }
-
-        private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset)
-        {
-            var builder = new JsonRpcRequestBuilder(Settings.BaseUrl)
-                .Call("getTorrents", Settings.ApiKey, parameters, results, offset);
-            builder.SuppressHttpError = true;
-
-            yield return new IndexerRequest(builder.Build());
-        }
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
@@ -132,11 +114,24 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault(0);
 
-            parameters.Search = searchString.Replace(" ", "%");
+            if (searchString.IsNotNullOrWhiteSpace())
+            {
+                parameters.Search = searchString.Replace(" ", "%");
+            }
 
             pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
 
             return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetPagedRequests(BroadcastheNetTorrentQuery parameters, int results, int offset)
+        {
+            var builder = new JsonRpcRequestBuilder(Settings.BaseUrl)
+                .Call("getTorrents", Settings.ApiKey, parameters, results, offset);
+
+            builder.SuppressHttpError = true;
+
+            yield return new IndexerRequest(builder.Build());
         }
     }
 }

@@ -27,18 +27,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var requestGenerator = new BroadcastheNetRequestGenerator { Settings = Settings, PageSize = PageSize, Capabilities = Capabilities };
-
-            var releaseInfo = _indexerStatusService.GetLastRssSyncReleaseInfo(Definition.Id);
-            if (releaseInfo != null)
-            {
-                if (int.TryParse(releaseInfo.Guid.Replace("BTN-", string.Empty), out var torrentId))
-                {
-                    requestGenerator.LastRecentTorrentID = torrentId;
-                }
-            }
-
-            return requestGenerator;
+            return new BroadcastheNetRequestGenerator { Settings = Settings, Capabilities = Capabilities, PageSize = PageSize };
         }
 
         public override IParseIndexerResponse GetParser()
@@ -62,7 +51,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             caps.Categories.AddCategoryMapping("720p", NewznabStandardCategory.TVHD, "720p");
             caps.Categories.AddCategoryMapping("1080p", NewznabStandardCategory.TVHD, "1080p");
             caps.Categories.AddCategoryMapping("1080i", NewznabStandardCategory.TVHD, "1080i");
-            caps.Categories.AddCategoryMapping("2160p", NewznabStandardCategory.TVHD, "2160p");
+            caps.Categories.AddCategoryMapping("2160p", NewznabStandardCategory.TVUHD, "2160p");
             caps.Categories.AddCategoryMapping("Portable Device", NewznabStandardCategory.TVSD, "Portable Device");
 
             return caps;

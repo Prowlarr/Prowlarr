@@ -138,9 +138,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
         private string CleanReleaseName(string releaseName)
         {
-            releaseName = releaseName.Replace("\\", "");
-
-            return releaseName;
+            return releaseName.Replace("\\", "");
         }
     }
 }

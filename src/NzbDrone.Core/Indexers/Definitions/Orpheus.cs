@@ -401,7 +401,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddQueryParam("id", torrentId);
 
             // Orpheus fails to download if usetoken=0 so we need to only add if we will use one
-            if (_settings.UseFreeleechToken)
+            if (_settings.UseFreeleechToken && canUseToken)
             {
                 url = url.AddQueryParam("usetoken", "1");
             }

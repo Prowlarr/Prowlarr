@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RedactedTests
 
             var torrentInfo = releases.First() as TorrentInfo;
 
-            torrentInfo.Title.Should().Be("Red Hot Chili Peppers - Californication [1999] [Album] [US / Reissue 2020] [FLAC 24bit Lossless] [Vinyl]");
+            torrentInfo.Title.Should().Be("Red Hot Chili Peppers - Californication [1999] [Album] [US / Reissue 2020] [FLAC 24bit Lossless / Vinyl]");
             torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             torrentInfo.DownloadUrl.Should().Be("https://redacted.ch/ajax.php?action=download&id=3892313");
             torrentInfo.InfoUrl.Should().Be("https://redacted.ch/torrents.php?id=16720&torrentid=3892313");

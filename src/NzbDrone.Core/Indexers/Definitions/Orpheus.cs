@@ -374,14 +374,23 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title += $" [{$"{torrent.RemasterTitle} {torrent.RemasterYear}".Trim()}]";
             }
 
-            title += $" [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
+            var flags = new List<string>
+            {
+                $"{torrent.Format} {torrent.Encoding}",
+                $"{torrent.Media}"
+            };
+
+            if (torrent.HasLog)
+            {
+                flags.Add("Log (" + torrent.LogScore + "%)");
+            }
 
             if (torrent.HasCue)
             {
-                title += " [Cue]";
+                flags.Add("Cue");
             }
 
-            return title;
+            return $"{title} [{string.Join(" / ", flags)}]";
         }
 
         private string GetDownloadUrl(int torrentId, bool canUseToken)

@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Test.IndexerTests.OrpheusTests
 
             var torrentInfo = releases.First() as TorrentInfo;
 
-            torrentInfo.Title.Should().Be("The Beatles - Abbey Road [1969] [Album] [2.0 Mix 2019] [MP3 V2 (VBR)] [BD]");
+            torrentInfo.Title.Should().Be("The Beatles - Abbey Road [1969] [Album] [2.0 Mix 2019] [MP3 V2 (VBR) / BD]");
             torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             torrentInfo.DownloadUrl.Should().Be("https://orpheus.network/ajax.php?action=download&id=1902448");
             torrentInfo.InfoUrl.Should().Be("https://orpheus.network/torrents.php?id=466&torrentid=1902448");

@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public override bool SupportsSearch => true;
         public override bool SupportsPagination => true;
         public override int PageSize => 50;
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(6);
         public override IndexerCapabilities Capabilities => SetCapabilities();
         protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
         private IIndexerRepository _indexerRepository;
@@ -50,10 +50,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             return new AvistazParserBase();
         }
 
-        protected virtual IndexerCapabilities SetCapabilities()
-        {
-            return new IndexerCapabilities();
-        }
+        protected abstract IndexerCapabilities SetCapabilities();
 
         protected override async Task DoLogin()
         {
@@ -116,11 +113,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 Method = HttpMethod.Post
             };
 
+            // TODO: Change to HttpAccept.Json after they fix the issue with missing headers
             var authLoginRequest = requestBuilder
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("pid", Settings.Pid.Trim())
-                .Accept(HttpAccept.Json)
+                .Accept(HttpAccept.Html)
                 .Build();
 
             var response = await ExecuteAuth(authLoginRequest);

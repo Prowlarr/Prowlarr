@@ -1,7 +1,7 @@
 {
     "Indexers": "Indexadores",
     "Host": "Host",
-    "History": "Historia",
+    "History": "Historial",
     "HideAdvanced": "Ocultar Avanzado",
     "Health": "Salud",
     "General": "General",
@@ -167,7 +167,7 @@
     "URLBase": "URL Base",
     "Uptime": "Tiempo de actividad",
     "UpdateScriptPathHelpText": "Ruta del script propio que toma el paquete de actualización y se encarga del proceso de actualización restante",
-    "UpdateMechanismHelpText": "Usar el actualizador de {appName} o un script",
+    "UpdateMechanismHelpText": "Usar el actualizador incorporado de {appName} o un script",
     "UpdateAutomaticallyHelpText": "Descargar e instalar actualizaciones automáticamente. Se podrán instalar desde Sistema: Actualizaciones también",
     "UnableToLoadTags": "No se pueden cargar las Etiquetas",
     "UnableToLoadNotifications": "No se pueden cargar las Notificaciones",
@@ -441,5 +441,6 @@
     "AuthenticationRequiredWarning": "Para evitar el acceso remoto sin autenticación, {appName} ahora requiere que la autenticación esté habilitada. Opcionalmente puede desactivar la autenticación desde una dirección local.",
     "EditDownloadClientImplementation": "Añadir Cliente de Descarga - {implementationName}",
     "DefaultNameCopiedProfile": "{name} - Copia",
-    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirma la nueva contraseña"
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirma la nueva contraseña",
+    "NoHistoryFound": "No se encontró historial"
 }

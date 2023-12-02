@@ -7,6 +7,7 @@ using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions.Avistaz
@@ -54,14 +55,24 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
         protected override async Task DoLogin()
         {
-            Settings.Token = await GetToken();
-
-            if (Definition.Id > 0)
+            try
             {
-                _indexerRepository.UpdateSettings((IndexerDefinition)Definition);
-            }
+                Settings.Token = await GetToken();
 
-            _logger.Debug("Avistaz authentication succeeded.");
+                if (Definition.Id > 0)
+                {
+                    _indexerRepository.UpdateSettings((IndexerDefinition)Definition);
+                }
+
+                _logger.Debug("Avistaz authentication succeeded.");
+            }
+            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                _logger.Warn(ex, "Failed to authenticate with Avistaz");
+
+                var jsonResponse = STJson.Deserialize<AvistazErrorResponse>(ex.Response.Content);
+                throw new IndexerAuthException(jsonResponse?.Message ?? "Unauthorized request to indexer");
+            }
         }
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)

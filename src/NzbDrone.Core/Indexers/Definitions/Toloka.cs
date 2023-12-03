@@ -110,7 +110,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 BookSearchParams = new List<BookSearchParam>
                 {
                     BookSearchParam.Q
-                }
+                },
+                SupportsRawSearch = true
             };
 
             caps.Categories.AddCategoryMapping("117", NewznabStandardCategory.Movies, "Українське кіно");

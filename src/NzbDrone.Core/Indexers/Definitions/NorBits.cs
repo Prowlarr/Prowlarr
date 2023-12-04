@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
@@ -76,12 +75,16 @@ public class NorBits : TorrentIndexerBase<NorBitsSettings>
         {
             LogResponseContent = true,
             AllowAutoRedirect = true,
-            Method = HttpMethod.Post
+            SuppressHttpError = true
         };
 
         var authLoginCheckRequest = requestBuilder3
+            .Post()
             .AddFormParameter("username", Settings.Username)
             .AddFormParameter("password", Settings.Password)
+            .AddFormParameter("code", Settings.TwoFactorAuthCode ?? string.Empty)
+            .AddFormParameter("logout", "no")
+            .AddFormParameter("returnto", "/")
             .SetCookies(indexPage.GetCookies())
             .SetHeader("Referer", loginUrl)
             .Build();
@@ -343,6 +346,9 @@ public class NorBitsSettings : UserPassTorrentBaseSettings
         UseFullSearch = false;
     }
 
-    [FieldDefinition(4, Label = "Use Full Search", HelpText = "Use Full Search from Site", Type = FieldType.Checkbox)]
+    [FieldDefinition(4, Label = "2FA code", Type = FieldType.Textbox, HelpText = "Only fill in the <b>2FA code</b> box if you have enabled <b>2FA</b> on the NorBits Web Site. Otherwise just leave it empty.")]
+    public string TwoFactorAuthCode { get; set; }
+
+    [FieldDefinition(5, Label = "Use Full Search", HelpText = "Use Full Search from Site", Type = FieldType.Checkbox)]
     public bool UseFullSearch { get; set; }
 }

@@ -177,6 +177,11 @@ public class NorBitsRequestGenerator : IIndexerRequestGenerator
             { "scenerelease", "0" }
         };
 
+        if (_settings.FreeLeechOnly)
+        {
+            parameters.Set("FL", "1");
+        }
+
         var searchTerm = "search=";
 
         if (!string.IsNullOrWhiteSpace(imdbId))
@@ -349,6 +354,9 @@ public class NorBitsSettings : UserPassTorrentBaseSettings
     [FieldDefinition(4, Label = "2FA code", Type = FieldType.Textbox, HelpText = "Only fill in the <b>2FA code</b> box if you have enabled <b>2FA</b> on the NorBits Web Site. Otherwise just leave it empty.")]
     public string TwoFactorAuthCode { get; set; }
 
-    [FieldDefinition(5, Label = "Use Full Search", HelpText = "Use Full Search from Site", Type = FieldType.Checkbox)]
+    [FieldDefinition(5, Label = "Use Full Search", Type = FieldType.Checkbox, HelpText = "Use Full Search from Site")]
     public bool UseFullSearch { get; set; }
+
+    [FieldDefinition(6, Label = "FreeLeech Only", Type = FieldType.Checkbox, HelpText = "Search FreeLeech torrents only")]
+    public bool FreeLeechOnly { get; set; }
 }

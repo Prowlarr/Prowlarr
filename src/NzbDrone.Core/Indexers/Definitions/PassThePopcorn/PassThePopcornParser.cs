@@ -94,7 +94,12 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
                         Scene = torrent.Scene,
                         IndexerFlags = flags,
-                        DownloadVolumeFactor = torrent.FreeleechType is "Freeleech" ? 0 : 1,
+                        DownloadVolumeFactor = torrent.FreeleechType?.ToUpperInvariant() switch
+                        {
+                            "FREELEECH" => 0,
+                            "HALF LEECH" => 0.5,
+                            _ => 1
+                        },
                         UploadVolumeFactor = 1,
                         MinimumRatio = 1,
                         MinimumSeedTime = 345600,

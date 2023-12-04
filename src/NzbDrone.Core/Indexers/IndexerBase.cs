@@ -138,6 +138,10 @@ namespace NzbDrone.Core.Indexers
                     {
                         torrentRelease.IndexerFlags.Add(IndexerFlag.FreeLeech);
                     }
+                    else if (torrentRelease.DownloadVolumeFactor == 0.5)
+                    {
+                        torrentRelease.IndexerFlags.Add(IndexerFlag.HalfLeech);
+                    }
 
                     if (torrentRelease.UploadVolumeFactor == 0.0)
                     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AngleSharp.Html.Parser;
 using NLog;
@@ -10,6 +11,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
+[Obsolete("Site has shutdown")]
 public class AroLol : GazelleBase<AroLolSettings>
 {
     public override string Name => "aro.lol";

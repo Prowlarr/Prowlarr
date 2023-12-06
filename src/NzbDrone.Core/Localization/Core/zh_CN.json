@@ -46,7 +46,7 @@
     "Authentication": "认证",
     "AuthenticationMethodHelpText": "需要用户名和密码以访问 {appName}",
     "AuthenticationRequired": "需要身份验证",
-    "AuthenticationRequiredHelpText": "更改身份验证的请求。除非您了解风险，否则请勿更改。",
+    "AuthenticationRequiredHelpText": "修改哪些请求需要认证。除非你了解其中的风险，否则不要更改。",
     "AuthenticationRequiredWarning": "为了防止未经身份验证的远程访问，{appName} 现在需要启用身份验证。您可以禁用本地地址的身份验证。",
     "Author": "作者",
     "Automatic": "自动化",
@@ -469,7 +469,7 @@
     "UpdateCheckStartupNotWritableMessage": "无法安装更新，因为用户“{1}”对于启动文件夹“{0}”没有写入权限。",
     "UpdateCheckStartupTranslocationMessage": "无法安装更新，因为启动文件夹“{0}”在一个应用程序迁移文件夹。Cannot install update because startup folder '{0}' is in an App Translocation folder.",
     "UpdateCheckUINotWritableMessage": "无法安装升级，因为用户“{1}”不可写入界面文件夹“{0}”。",
-    "UpdateMechanismHelpText": "使用 {appName} 内置的更新器或者脚本",
+    "UpdateMechanismHelpText": "使用 {appName} 内置的更新程序或脚本",
     "UpdateScriptPathHelpText": "自定义脚本的路径，该脚本处理获取的更新包并处理更新过程的其余部分",
     "Updates": "更新",
     "Uptime": "运行时间",
@@ -597,5 +597,8 @@
     "ActiveIndexers": "活动索引器",
     "ActiveApps": "活动应用程序",
     "AppsMinimumSeeders": "应用程序最少种子数",
-    "PackSeedTime": "做种时间"
+    "PackSeedTime": "做种时间",
+    "PasswordConfirmation": "确认密码",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "确认新密码",
+    "InvalidUILanguage": "语言"
 }

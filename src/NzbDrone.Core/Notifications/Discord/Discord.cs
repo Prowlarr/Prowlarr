@@ -65,6 +65,11 @@ namespace NzbDrone.Core.Notifications.Discord
                         discordField.Name = "Host";
                         discordField.Value = message.Host ?? string.Empty;
                         break;
+                    case DiscordGrabFieldType.Size:
+                        discordField.Name = "Size";
+                        discordField.Value = BytesToString(message.Release.Size.GetValueOrDefault(0));
+                        discordField.Inline = true;
+                        break;
                 }
 
                 if (discordField.Name.IsNotNullOrWhiteSpace() && discordField.Value.IsNotNullOrWhiteSpace())

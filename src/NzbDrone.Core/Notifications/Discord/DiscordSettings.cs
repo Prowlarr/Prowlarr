@@ -19,10 +19,19 @@ namespace NzbDrone.Core.Notifications.Discord
         public DiscordSettings()
         {
             //Set Default Fields
-            GrabFields = new List<int> { 0, 1, 2, 3, 5, 6, 7, 8, 9 };
+            GrabFields = new List<int>
+            {
+                (int)DiscordGrabFieldType.Release,
+                (int)DiscordGrabFieldType.Indexer,
+                (int)DiscordGrabFieldType.DownloadClient,
+                (int)DiscordGrabFieldType.GrabTrigger,
+                (int)DiscordGrabFieldType.Source,
+                (int)DiscordGrabFieldType.Host,
+                (int)DiscordGrabFieldType.Size
+            };
         }
 
-        private static readonly DiscordSettingsValidator Validator = new DiscordSettingsValidator();
+        private static readonly DiscordSettingsValidator Validator = new ();
 
         [FieldDefinition(0, Label = "Webhook URL", HelpText = "Discord channel webhook url")]
         public string WebHookUrl { get; set; }
@@ -36,7 +45,7 @@ namespace NzbDrone.Core.Notifications.Discord
         [FieldDefinition(3, Label = "Host", Advanced = true, HelpText = "Override the Host that shows for this notification, Blank is machine name", Type = FieldType.Textbox)]
         public string Author { get; set; }
 
-        [FieldDefinition(4, Label = "On Grab Fields", Advanced = true, SelectOptions = typeof(DiscordGrabFieldType), HelpText = "Change the fields that are passed in for this 'on grab' notification", Type = FieldType.TagSelect)]
+        [FieldDefinition(4, Label = "On Grab Fields", Advanced = true, SelectOptions = typeof(DiscordGrabFieldType), HelpText = "Change the fields that are passed in for this 'on grab' notification", Type = FieldType.Select)]
         public IEnumerable<int> GrabFields { get; set; }
 
         public NzbDroneValidationResult Validate()

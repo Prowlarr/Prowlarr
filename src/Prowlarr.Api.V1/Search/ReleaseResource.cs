@@ -23,8 +23,10 @@ namespace Prowlarr.Api.V1.Search
         public string ReleaseHash { get; set; }
         public string Title { get; set; }
         public string SortTitle { get; set; }
-        public bool Approved { get; set; }
         public int ImdbId { get; set; }
+        public int TmdbId { get; set; }
+        public int TvdbId { get; set; }
+        public int TvMazeId { get; set; }
         public DateTime PublishDate { get; set; }
         public string CommentUrl { get; set; }
         public string DownloadUrl { get; set; }
@@ -80,6 +82,9 @@ namespace Prowlarr.Api.V1.Search
                 Title = releaseInfo.Title,
                 SortTitle = releaseInfo.Title.NormalizeTitle(),
                 ImdbId = releaseInfo.ImdbId,
+                TmdbId = releaseInfo.TmdbId,
+                TvdbId = releaseInfo.TvdbId,
+                TvMazeId = releaseInfo.TvMazeId,
                 PublishDate = releaseInfo.PublishDate,
                 CommentUrl = releaseInfo.CommentUrl,
                 DownloadUrl = releaseInfo.DownloadUrl,

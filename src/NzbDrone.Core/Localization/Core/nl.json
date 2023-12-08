@@ -473,5 +473,8 @@
     "AddApplicationImplementation": "Voeg connectie toe - {implementationName}",
     "AddIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}",
     "EditApplicationImplementation": "Voeg connectie toe - {implementationName}",
-    "EditIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}"
+    "EditIndexerProxyImplementation": "Indexeerder toevoegen - {implementationName}",
+    "AuthenticationMethod": "Authenticatiemethode",
+    "AuthenticationRequired": "Verificatie vereist",
+    "AuthenticationMethodHelpTextWarning": "Selecteer een geldige verificatie methode"
 }

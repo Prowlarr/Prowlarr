@@ -16,6 +16,7 @@ import titleCase from 'Utilities/String/titleCase';
 import translate from 'Utilities/String/translate';
 import CategoryLabel from './CategoryLabel';
 import Peers from './Peers';
+import ReleaseLinks from './ReleaseLinks';
 import styles from './SearchIndexRow.css';
 
 function getDownloadIcon(isGrabbing, isGrabbed, grabError) {
@@ -118,6 +119,10 @@ class SearchIndexRow extends Component {
       grabs,
       seeders,
       leechers,
+      imdbId,
+      tmdbId,
+      tvdbId,
+      tvMazeId,
       indexerFlags,
       columns,
       isGrabbing,
@@ -343,6 +348,32 @@ class SearchIndexRow extends Component {
                       /> :
                       null
                   }
+
+                  {
+                    imdbId || tmdbId || tvdbId || tvMazeId ? (
+                      <Popover
+                        anchor={
+                          <Icon
+                            className={styles.externalLinks}
+                            name={icons.EXTERNAL_LINK}
+                            size={12}
+                          />
+                        }
+                        title={translate('Links')}
+                        body={
+                          <ReleaseLinks
+                            categories={categories}
+                            imdbId={imdbId}
+                            tmdbId={tmdbId}
+                            tvdbId={tvdbId}
+                            tvMazeId={tvMazeId}
+                          />
+                        }
+                        kind={kinds.INVERSE}
+                        position={tooltipPositions.TOP}
+                      />
+                    ) : null
+                  }
                 </VirtualTableRowCell>
               );
             }
@@ -375,6 +406,10 @@ SearchIndexRow.propTypes = {
   grabs: PropTypes.number,
   seeders: PropTypes.number,
   leechers: PropTypes.number,
+  imdbId: PropTypes.number,
+  tmdbId: PropTypes.number,
+  tvdbId: PropTypes.number,
+  tvMazeId: PropTypes.number,
   indexerFlags: PropTypes.arrayOf(PropTypes.string).isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   onGrabPress: PropTypes.func.isRequired,

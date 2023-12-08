@@ -63,7 +63,7 @@
 }
 
 .externalLinks {
-  margin: 0 2px;
-  width: 22px;
-  text-align: center;
+  composes: button from '~Components/Link/IconButton.css';
+
+  color: var(--textColor);
 }

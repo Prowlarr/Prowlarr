@@ -293,6 +293,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             var parser = new HtmlParser();
             using var doc = parser.ParseDocument(indexerResponse.Content);
 
+            var headerColumns = doc.QuerySelectorAll("table[id=\"torrents\"] > thead > tr > th").Select(x => x.TextContent.Trim()).ToList();
+            var sizeIndex = FindColumnIndexOrDefault(headerColumns, "Sort by size", 5);
+            var filesIndex = FindColumnIndexOrDefault(headerColumns, "Sort by files");
+
             var rows = doc.QuerySelectorAll("table[id=\"torrents\"] > tbody > tr");
             foreach (var row in rows)
             {
@@ -314,7 +318,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var dateSplit = descrSplit.Last().Split(new[] { " by " }, StringSplitOptions.None);
                 var publishDate = DateTimeUtil.FromTimeAgo(dateSplit.First());
                 var description = descrSplit.Length > 1 ? "Tags: " + descrSplit.First().Trim() : "";
-                description += dateSplit.Length > 1 ? " Uploaded by: " + dateSplit.Last().Trim() : "";
 
                 var catIcon = row.QuerySelector("td:nth-of-type(1) a");
                 if (catIcon == null)
@@ -327,36 +330,40 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Torrents - Category column == Icons
                 var cat = _categories.MapTrackerCatToNewznab(catIcon.GetAttribute("href").Substring(1));
 
-                var size = ParseUtil.GetBytes(row.Children[5].TextContent);
+                var size = ParseUtil.GetBytes(row.Children[sizeIndex].TextContent);
 
-                var colIndex = 6;
                 int? files = null;
 
-                if (row.Children.Length == 10)
+                if (filesIndex != -1)
                 {
-                    files = ParseUtil.CoerceInt(row.Children[colIndex].TextContent.Replace("Go to files", ""));
-                    colIndex++;
+                    files = ParseUtil.CoerceInt(row.Children[filesIndex].TextContent.Replace("Go to files", ""));
                 }
 
-                var grabs = ParseUtil.CoerceInt(row.Children[colIndex++].TextContent);
-                var seeders = ParseUtil.CoerceInt(row.Children[colIndex++].TextContent);
-                var leechers = ParseUtil.CoerceInt(row.Children[colIndex].TextContent);
-                var dlVolumeFactor = row.QuerySelector("span.free") != null ? 0 : 1;
+                var colIndex = row.Children.Length == 10 ? 7 : 6;
+
+                var grabsIndex = FindColumnIndexOrDefault(headerColumns, "Sort by snatches", colIndex++);
+                var seedersIndex = FindColumnIndexOrDefault(headerColumns, "Sort by seeders", colIndex++);
+                var leechersIndex = FindColumnIndexOrDefault(headerColumns, "Sort by leechers", colIndex);
+
+                var grabs = ParseUtil.CoerceInt(row.Children[grabsIndex].TextContent);
+                var seeders = ParseUtil.CoerceInt(row.Children[seedersIndex].TextContent);
+                var leechers = ParseUtil.CoerceInt(row.Children[leechersIndex].TextContent);
 
                 var release = new TorrentInfo
                 {
-                    Title = title,
                     Guid = details.AbsoluteUri,
                     DownloadUrl = link.AbsoluteUri,
                     InfoUrl = details.AbsoluteUri,
-                    PublishDate = publishDate,
+                    Title = title,
+                    Description = description,
                     Categories = cat,
                     Size = size,
                     Files = files,
                     Grabs = grabs,
                     Seeders = seeders,
                     Peers = seeders + leechers,
-                    DownloadVolumeFactor = dlVolumeFactor,
+                    PublishDate = publishDate,
+                    DownloadVolumeFactor = row.QuerySelector("span.free") != null ? 0 : 1,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 1209600 // 336 hours
@@ -366,6 +373,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return torrentInfos.ToArray();
+        }
+
+        private static int FindColumnIndexOrDefault(List<string> columns, string name, int defaultIndex = -1)
+        {
+            var index = columns.FindIndex(x => x.Equals(name, StringComparison.Ordinal));
+
+            return index != -1 ? index : defaultIndex;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

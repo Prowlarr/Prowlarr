@@ -5751,10 +5751,19 @@
             "type": "string",
             "nullable": true
           },
-          "approved": {
-            "type": "boolean"
-          },
           "imdbId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tmdbId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tvdbId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tvMazeId": {
             "type": "integer",
             "format": "int32"
           },

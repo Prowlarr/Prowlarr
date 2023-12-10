@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions.FileList;
 
@@ -38,6 +41,13 @@ public class FileList : TorrentIndexerBase<FileListSettings>
     public override IParseIndexerResponse GetParser()
     {
         return new FileListParser(Settings, Capabilities.Categories);
+    }
+
+    protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+    {
+        var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+        return FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
     }
 
     private IndexerCapabilities SetCapabilities()

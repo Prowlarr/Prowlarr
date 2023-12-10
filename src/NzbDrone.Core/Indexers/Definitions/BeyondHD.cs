@@ -48,6 +48,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new BeyondHDParser(Capabilities.Categories);
         }
 
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            return FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
+        }
+
         private IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities

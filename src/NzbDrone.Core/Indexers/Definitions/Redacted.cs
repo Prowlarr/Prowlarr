@@ -345,7 +345,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string GetTitle(GazelleRelease result, GazelleTorrent torrent)
         {
-            var title = $"{result.Artist} - {result.GroupName} [{result.GroupYear}]";
+            var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear})";
 
             if (result.ReleaseType.IsNotNullOrWhiteSpace() && result.ReleaseType != "Unknown")
             {

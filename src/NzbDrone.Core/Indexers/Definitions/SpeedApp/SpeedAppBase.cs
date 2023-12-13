@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -51,6 +50,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new SpeedAppParser(Settings, Capabilities.Categories, MinimumSeedTime);
         }
 
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            return FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
+        }
+
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
             return Settings.ApiKey.IsNullOrWhiteSpace() || httpResponse.StatusCode == HttpStatusCode.Unauthorized;
@@ -58,14 +64,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override async Task DoLogin()
         {
-            var requestBuilder = new HttpRequestBuilder(LoginUrl)
-            {
-                LogResponseContent = true,
-                AllowAutoRedirect = true,
-                Method = HttpMethod.Post,
-            };
-
-            var request = requestBuilder.Build();
+            var request = new HttpRequestBuilder(LoginUrl)
+                {
+                    LogResponseContent = true,
+                    AllowAutoRedirect = true
+                }
+                .Post()
+                .Build();
 
             var data = new SpeedAppAuthenticationRequest
             {

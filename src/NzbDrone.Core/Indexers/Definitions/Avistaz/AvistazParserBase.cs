@@ -69,10 +69,21 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     DownloadVolumeFactor = row.DownloadMultiply,
                     UploadVolumeFactor = row.UploadMultiply,
                     MinimumRatio = 1,
-                    MinimumSeedTime = 172800, // 48 hours
+                    MinimumSeedTime = 259200, // 72 hours
                     Languages = row.Audio?.Select(x => x.Language).ToList() ?? new List<string>(),
                     Subs = row.Subtitle?.Select(x => x.Language).ToList() ?? new List<string>()
                 };
+
+                if (row.FileSize is > 0)
+                {
+                    var sizeGigabytes = row.FileSize.Value / Math.Pow(1024, 3);
+
+                    release.MinimumSeedTime = sizeGigabytes switch
+                    {
+                        > 50.0 => (long)((100 * Math.Log(sizeGigabytes)) - 219.2023) * 3600,
+                        _ => 259200 + (long)(sizeGigabytes * 7200)
+                    };
+                }
 
                 if (row.MovieTvinfo != null)
                 {

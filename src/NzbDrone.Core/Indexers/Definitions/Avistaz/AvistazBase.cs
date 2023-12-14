@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     {
         public override bool SupportsRss => true;
         public override bool SupportsSearch => true;
-        public override bool SupportsPagination => true;
+        public override bool SupportsPagination => false;
         public override int PageSize => 50;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(6);
         public override IndexerCapabilities Capabilities => SetCapabilities();

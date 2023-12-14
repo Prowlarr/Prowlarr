@@ -1,1 +1,9 @@
-{}
+{
+    "About": "Par",
+    "AcceptConfirmationModal": "Apstiprināt Apstiprināšanas Modālu",
+    "Actions": "Darbības",
+    "Add": "Pievienot",
+    "AddDownloadClient": "Pievienot Lejupielādes Klientu",
+    "AddConnection": "Pievienot Savienojumu",
+    "AddConnectionImplementation": "Pievienot Savienojumu - {implementationName}"
+}

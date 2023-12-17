@@ -4,6 +4,7 @@ using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.Flood.Models;
 using NzbDrone.Core.Indexers;
@@ -56,7 +57,7 @@ namespace NzbDrone.Core.Download.Clients.Flood
                 }
             }
 
-            return result;
+            return result.Where(t => t.IsNotNullOrWhiteSpace());
         }
 
         public override string Name => "Flood";

@@ -360,12 +360,5 @@
     "Categories": "Kategoriler",
     "Application": "Uygulamalar",
     "Episode": "bölüm",
-    "AddApplicationImplementation": "Koşul Ekle - {implementationName}",
-    "AddConnection": "Bağlantı Ekle",
-    "AddConnectionImplementation": "Koşul Ekle - {implementationName}",
-    "AddIndexerImplementation": "Koşul Ekle - {implementationName}",
-    "AddIndexerProxyImplementation": "Koşul Ekle - {implementationName}",
-    "EditConnectionImplementation": "Koşul Ekle - {implementationName}",
-    "EditApplicationImplementation": "Koşul Ekle - {implementationName}",
-    "EditIndexerImplementation": "Koşul Ekle - {implementationName}"
+    "AddConnection": "Bağlantı Ekle"
 }

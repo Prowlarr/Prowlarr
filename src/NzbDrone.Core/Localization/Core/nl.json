@@ -5,7 +5,7 @@
     "Add": "Toevoegen",
     "AddApplication": "Applicatie Toevoegen",
     "AddCustomFilter": "Aangepaste Filter Toevoegen",
-    "AddDownloadClient": "Downloadclient Toevoegen",
+    "AddDownloadClient": "Download Client Toevoegen",
     "AddDownloadClientToProwlarr": "Door een downloadclient toe te voegen, kan {appName} releases rechtstreeks vanuit de gebruikersinterface verzenden tijdens een handmatige zoekopdracht.",
     "AddIndexer": "Voeg Indexeerder Toe",
     "AddIndexerProxy": "Indexeerproxy toevoegen",

@@ -360,12 +360,12 @@
     "Categories": "Kategoriler",
     "Application": "Uygulamalar",
     "Episode": "bölüm",
-    "AddApplicationImplementation": "Koşul Ekle - {uygulama Adı}",
+    "AddApplicationImplementation": "Koşul Ekle - {implementationName}",
     "AddConnection": "Bağlantı Ekle",
-    "AddConnectionImplementation": "Koşul Ekle - {uygulama Adı}",
-    "AddIndexerImplementation": "Koşul Ekle - {uygulama Adı}",
-    "AddIndexerProxyImplementation": "Koşul Ekle - {uygulama Adı}",
-    "EditConnectionImplementation": "Koşul Ekle - {uygulama Adı}",
-    "EditApplicationImplementation": "Koşul Ekle - {uygulama Adı}",
-    "EditIndexerImplementation": "Koşul Ekle - {uygulama Adı}"
+    "AddConnectionImplementation": "Koşul Ekle - {implementationName}",
+    "AddIndexerImplementation": "Koşul Ekle - {implementationName}",
+    "AddIndexerProxyImplementation": "Koşul Ekle - {implementationName}",
+    "EditConnectionImplementation": "Koşul Ekle - {implementationName}",
+    "EditApplicationImplementation": "Koşul Ekle - {implementationName}",
+    "EditIndexerImplementation": "Koşul Ekle - {implementationName}"
 }

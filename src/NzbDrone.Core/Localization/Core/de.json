@@ -525,5 +525,12 @@
     "AddDownloadClientImplementation": "Download-Client hinzufügen - {implementationName}",
     "AddIndexerImplementation": "Indexer hinzufügen - {implementationName}",
     "AddIndexerProxyImplementation": "Indexer Proxy hinzufügen - {implementationName}",
-    "AppUpdatedVersion": "{appName} wurde auf die Version `{version}` aktualisiert. Um die neusten Funktionen zu bekommen lade {appName} neu"
+    "AppUpdatedVersion": "{appName} wurde auf die Version `{version}` aktualisiert. Um die neusten Funktionen zu bekommen lade {appName} neu",
+    "AuthenticationRequiredWarning": "Um unberechtigte Fernzugriffe zu vermeiden benötigt {appName} jetzt , dass Authentifizierung eingeschaltet ist. Du kannst Authentifizierung optional für lokale Adressen ausschalten.",
+    "AuthenticationRequired": "Authentifizierung benötigt",
+    "AuthenticationRequiredHelpText": "Ändern, welche anfragen Authentifizierung benötigen. Ändere nichts wenn du dir nicht des Risikos bewusst bist.",
+    "AuthenticationRequiredUsernameHelpTextWarning": "Gib einen neuen Benutzernamen ein",
+    "AuthenticationMethodHelpTextWarning": "Bitte wähle eine gültige Authentifizierungsmethode aus",
+    "AuthenticationRequiredPasswordHelpTextWarning": "Gib ein neues Passwort ein",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Neues Passwort bestätigen"
 }

@@ -19,6 +19,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Site has shutdown")]
     public class BinSearch : UsenetIndexerBase<BinSearchSettings>
     {
         public override string Name => "BinSearch";

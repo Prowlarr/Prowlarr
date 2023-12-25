@@ -26,8 +26,7 @@ namespace NzbDrone.Core.Notifications.Discord
                 (int)DiscordGrabFieldType.DownloadClient,
                 (int)DiscordGrabFieldType.GrabTrigger,
                 (int)DiscordGrabFieldType.Source,
-                (int)DiscordGrabFieldType.Host,
-                (int)DiscordGrabFieldType.Size
+                (int)DiscordGrabFieldType.Host
             };
         }
 

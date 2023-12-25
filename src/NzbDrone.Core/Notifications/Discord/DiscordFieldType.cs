@@ -7,7 +7,6 @@ namespace NzbDrone.Core.Notifications.Discord
         DownloadClient,
         GrabTrigger,
         Source,
-        Host,
-        Size
+        Host
     }
 }

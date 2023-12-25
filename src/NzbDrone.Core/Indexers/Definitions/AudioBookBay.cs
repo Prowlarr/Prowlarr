@@ -26,8 +26,7 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     public override string Name => "AudioBook Bay";
     public override string[] IndexerUrls => new[]
     {
-        "https://audiobookbay.is/",
-        "https://audiobookbay.se/"
+        "https://audiobookbay.is/"
     };
     public override string[] LegacyUrls => new[]
     {
@@ -55,12 +54,14 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         "https://audiobookbay.unblockit.pet/",
         "https://audiobookbay.unblockit.ink/",
         "https://audiobookbay.unblockit.bio/", // error 502
-        "https://audiobookbay.li/"
+        "https://audiobookbay.li/",
+        "https://audiobookbay.se/" // redirects to .is but has invalid CA
     };
     public override string Description => "AudioBook Bay (ABB) is a public Torrent Tracker for AUDIOBOOKS";
     public override string Language => "en-US";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
     public override int PageSize => 15;
+    public override TimeSpan RateLimit => TimeSpan.FromSeconds(5);
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
     public AudioBookBay(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
@@ -70,7 +71,7 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new AudioBookBayRequestGenerator(Settings, Capabilities);
+        return new AudioBookBayRequestGenerator(Settings);
     }
 
     public override IParseIndexerResponse GetParser()
@@ -119,64 +120,7 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
             }
         };
 
-        // Age
-        caps.Categories.AddCategoryMapping("children", NewznabStandardCategory.AudioAudiobook, "Children");
-        caps.Categories.AddCategoryMapping("teen-young-adult", NewznabStandardCategory.AudioAudiobook, "Teen & Young Adult");
-        caps.Categories.AddCategoryMapping("adults", NewznabStandardCategory.AudioAudiobook, "Adults");
-
-        // Category
-        caps.Categories.AddCategoryMapping("postapocalyptic", NewznabStandardCategory.AudioAudiobook, "(Post)apocalyptic");
-        caps.Categories.AddCategoryMapping("action", NewznabStandardCategory.AudioAudiobook, "Action");
-        caps.Categories.AddCategoryMapping("adventure", NewznabStandardCategory.AudioAudiobook, "Adventure");
-        caps.Categories.AddCategoryMapping("art", NewznabStandardCategory.AudioAudiobook, "Art");
-        caps.Categories.AddCategoryMapping("autobiography-biographies", NewznabStandardCategory.AudioAudiobook, "Autobiography & Biographies");
-        caps.Categories.AddCategoryMapping("business", NewznabStandardCategory.AudioAudiobook, "Business");
-        caps.Categories.AddCategoryMapping("computer", NewznabStandardCategory.AudioAudiobook, "Computer");
-        caps.Categories.AddCategoryMapping("contemporary", NewznabStandardCategory.AudioAudiobook, "Contemporary");
-        caps.Categories.AddCategoryMapping("crime", NewznabStandardCategory.AudioAudiobook, "Crime");
-        caps.Categories.AddCategoryMapping("detective", NewznabStandardCategory.AudioAudiobook, "Detective");
-        caps.Categories.AddCategoryMapping("doctor-who-sci-fi", NewznabStandardCategory.AudioAudiobook, "Doctor Who");
-        caps.Categories.AddCategoryMapping("education", NewznabStandardCategory.AudioAudiobook, "Education");
-        caps.Categories.AddCategoryMapping("fantasy", NewznabStandardCategory.AudioAudiobook, "Fantasy");
-        caps.Categories.AddCategoryMapping("general-fiction", NewznabStandardCategory.AudioAudiobook, "General Fiction");
-        caps.Categories.AddCategoryMapping("historical-fiction", NewznabStandardCategory.AudioAudiobook, "Historical Fiction");
-        caps.Categories.AddCategoryMapping("history", NewznabStandardCategory.AudioAudiobook, "History");
-        caps.Categories.AddCategoryMapping("horror", NewznabStandardCategory.AudioAudiobook, "Horror");
-        caps.Categories.AddCategoryMapping("humor", NewznabStandardCategory.AudioAudiobook, "Humor");
-        caps.Categories.AddCategoryMapping("lecture", NewznabStandardCategory.AudioAudiobook, "Lecture");
-        caps.Categories.AddCategoryMapping("lgbt", NewznabStandardCategory.AudioAudiobook, "LGBT");
-        caps.Categories.AddCategoryMapping("literature", NewznabStandardCategory.AudioAudiobook, "Literature");
-        caps.Categories.AddCategoryMapping("litrpg", NewznabStandardCategory.AudioAudiobook, "LitRPG");
-        caps.Categories.AddCategoryMapping("general-non-fiction", NewznabStandardCategory.AudioAudiobook, "Misc. Non-fiction");
-        caps.Categories.AddCategoryMapping("mystery", NewznabStandardCategory.AudioAudiobook, "Mystery");
-        caps.Categories.AddCategoryMapping("paranormal", NewznabStandardCategory.AudioAudiobook, "Paranormal");
-        caps.Categories.AddCategoryMapping("plays-theater", NewznabStandardCategory.AudioAudiobook, "Plays & Theater");
-        caps.Categories.AddCategoryMapping("poetry", NewznabStandardCategory.AudioAudiobook, "Poetry");
-        caps.Categories.AddCategoryMapping("political", NewznabStandardCategory.AudioAudiobook, "Political");
-        caps.Categories.AddCategoryMapping("radio-productions", NewznabStandardCategory.AudioAudiobook, "Radio Productions");
-        caps.Categories.AddCategoryMapping("romance", NewznabStandardCategory.AudioAudiobook, "Romance");
-        caps.Categories.AddCategoryMapping("sci-fi", NewznabStandardCategory.AudioAudiobook, "Sci-Fi");
-        caps.Categories.AddCategoryMapping("science", NewznabStandardCategory.AudioAudiobook, "Science");
-        caps.Categories.AddCategoryMapping("self-help", NewznabStandardCategory.AudioAudiobook, "Self-help");
-        caps.Categories.AddCategoryMapping("spiritual", NewznabStandardCategory.AudioAudiobook, "Spiritual & Religious");
-        caps.Categories.AddCategoryMapping("sports", NewznabStandardCategory.AudioAudiobook, "Sport & Recreation");
-        caps.Categories.AddCategoryMapping("suspense", NewznabStandardCategory.AudioAudiobook, "Suspense");
-        caps.Categories.AddCategoryMapping("thriller", NewznabStandardCategory.AudioAudiobook, "Thriller");
-        caps.Categories.AddCategoryMapping("true-crime", NewznabStandardCategory.AudioAudiobook, "True Crime");
-        caps.Categories.AddCategoryMapping("tutorial", NewznabStandardCategory.AudioAudiobook, "Tutorial");
-        caps.Categories.AddCategoryMapping("westerns", NewznabStandardCategory.AudioAudiobook, "Westerns");
-        caps.Categories.AddCategoryMapping("zombies", NewznabStandardCategory.AudioAudiobook, "Zombies");
-
-        // Category Modifiers
-        caps.Categories.AddCategoryMapping("anthology", NewznabStandardCategory.AudioAudiobook, "Anthology");
-        caps.Categories.AddCategoryMapping("bestsellers", NewznabStandardCategory.AudioAudiobook, "Bestsellers");
-        caps.Categories.AddCategoryMapping("classic", NewznabStandardCategory.AudioAudiobook, "Classic");
-        caps.Categories.AddCategoryMapping("documentary", NewznabStandardCategory.AudioAudiobook, "Documentary");
-        caps.Categories.AddCategoryMapping("full-cast", NewznabStandardCategory.AudioAudiobook, "Full Cast");
-        caps.Categories.AddCategoryMapping("libertarian", NewznabStandardCategory.AudioAudiobook, "Libertarian");
-        caps.Categories.AddCategoryMapping("military", NewznabStandardCategory.AudioAudiobook, "Military");
-        caps.Categories.AddCategoryMapping("novel", NewznabStandardCategory.AudioAudiobook, "Novel");
-        caps.Categories.AddCategoryMapping("short-story", NewznabStandardCategory.AudioAudiobook, "Short Story");
+        caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.AudioAudiobook);
 
         return caps;
     }
@@ -185,12 +129,10 @@ public class AudioBookBay : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 public class AudioBookBayRequestGenerator : IIndexerRequestGenerator
 {
     private readonly NoAuthTorrentBaseSettings _settings;
-    private readonly IndexerCapabilities _capabilities;
 
-    public AudioBookBayRequestGenerator(NoAuthTorrentBaseSettings settings, IndexerCapabilities capabilities)
+    public AudioBookBayRequestGenerator(NoAuthTorrentBaseSettings settings)
     {
         _settings = settings;
-        _capabilities = capabilities;
     }
 
     public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
@@ -246,8 +188,6 @@ public class AudioBookBayRequestGenerator : IIndexerRequestGenerator
         }
 
         yield return new IndexerRequest(new UriBuilder(searchUrl) { Path = "/" }.Uri.AbsoluteUri, HttpAccept.Html);
-        yield return new IndexerRequest(new UriBuilder(searchUrl) { Path = "/page/2/" }.Uri.AbsoluteUri, HttpAccept.Html);
-        yield return new IndexerRequest(new UriBuilder(searchUrl) { Path = "/page/3/" }.Uri.AbsoluteUri, HttpAccept.Html);
     }
 
     public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -300,8 +240,7 @@ public class AudioBookBayParser : IParseIndexerResponse
 
             var postInfo = row.QuerySelector("div.postInfo")?.FirstChild?.TextContent.Trim().Replace("\xA0", ";") ?? string.Empty;
             var matchCategory = Regex.Match(postInfo, @"Category: (.+)$", RegexOptions.IgnoreCase);
-            var category = matchCategory.Groups[1].Success ? matchCategory.Groups[1].Value.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
-            var categories = category.SelectMany(_categories.MapTrackerCatDescToNewznab).Distinct().ToList();
+            var genres = matchCategory.Groups[1].Success ? matchCategory.Groups[1].Value.Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
 
             var release = new TorrentInfo
             {
@@ -309,13 +248,14 @@ public class AudioBookBayParser : IParseIndexerResponse
                 InfoUrl = infoUrl,
                 DownloadUrl = infoUrl,
                 Title = CleanTitle(title),
-                Categories = categories,
+                Categories = new List<IndexerCategory> { NewznabStandardCategory.AudioAudiobook },
                 Size = size,
                 Seeders = 1,
                 Peers = 1,
                 PublishDate = publishDate,
                 DownloadVolumeFactor = 0,
-                UploadVolumeFactor = 1
+                UploadVolumeFactor = 1,
+                Genres = genres
             };
 
             var cover = row.QuerySelector("img[src]")?.GetAttribute("src")?.Trim();

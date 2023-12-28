@@ -120,7 +120,7 @@
     "Clear": "Limpar",
     "Cancel": "Cancelar",
     "BackupNow": "Criar cópia de segurança",
-    "Backup": "Cópia de segurança",
+    "Backup": "Backup",
     "Apply": "Aplicar",
     "Analytics": "Análises",
     "All": "Todos",
@@ -181,7 +181,7 @@
     "BindAddressHelpText": "Endereço de IP válido, localhost ou \"*\" para todas as interfaces",
     "BindAddress": "Endereço de vínculo",
     "Backups": "Cópias de segurança",
-    "BackupFolderHelpText": "Caminhos relativos estarão na pasta AppData do {appName}",
+    "BackupFolderHelpText": "Caminhos relativos estarão no diretório AppData do {appName}",
     "BackupIntervalHelpText": "Intervalo entre cópias de segurança automáticas",
     "BackupRetentionHelpText": "Cópias de segurança automáticas anteriores ao período de retenção serão eliminadas automaticamente",
     "ClientPriority": "Prioridade do cliente",
@@ -472,5 +472,6 @@
     "EditSelectedDownloadClients": "Editar Clientes de Transferência Selecionados",
     "Album": "álbum",
     "Artist": "artista",
-    "DefaultNameCopiedProfile": "{name} - Copiar"
+    "DefaultNameCopiedProfile": "{name} - Copiar",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha"
 }

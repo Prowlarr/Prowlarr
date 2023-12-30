@@ -76,6 +76,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         // AvistaZ has episodes without season. eg Running Man E323
         protected override string GetEpisodeSearchTerm(TvSearchCriteria searchCriteria)
         {
+            if (searchCriteria.Season is null or 0 &&
+                searchCriteria.Episode.IsNullOrWhiteSpace() &&
+                int.TryParse(searchCriteria.SearchTerm, out var episode) && episode > 0)
+            {
+                return $"E{episode}";
+            }
+
             return searchCriteria.Season is null or 0 && searchCriteria.Episode.IsNotNullOrWhiteSpace()
                 ? $"E{searchCriteria.Episode}"
                 : $"{searchCriteria.EpisodeSearchString}";

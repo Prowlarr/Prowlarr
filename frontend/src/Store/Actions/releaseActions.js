@@ -369,8 +369,9 @@ export const actionHandlers = handleThunks({
 
     promise.done((data) => {
       dispatch(batchActions([
-        ...data.map((release) => {
+        ...data.map(({ guid }) => {
           return updateRelease({
+            guid,
             isGrabbing: false,
             isGrabbed: true,
             grabError: null

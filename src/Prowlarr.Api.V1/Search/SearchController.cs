@@ -9,6 +9,7 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Download;
+using NzbDrone.Core.Download.Clients;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.IndexerSearch;
@@ -54,7 +55,7 @@ namespace Prowlarr.Api.V1.Search
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<ReleaseResource> GrabRelease(ReleaseResource release)
+        public async Task<ActionResult<ReleaseResource>> GrabRelease(ReleaseResource release)
         {
             ValidateResource(release);
 
@@ -73,11 +74,12 @@ namespace Prowlarr.Api.V1.Search
 
             try
             {
-                _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null).GetAwaiter().GetResult();
+                await _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null);
             }
             catch (ReleaseDownloadException ex)
             {
                 _logger.Error(ex, "Getting release from indexer failed");
+
                 throw new NzbDroneClientException(HttpStatusCode.Conflict, "Getting release from indexer failed");
             }
 
@@ -87,12 +89,16 @@ namespace Prowlarr.Api.V1.Search
         [HttpPost("bulk")]
         [Consumes("application/json")]
         [Produces("application/json")]
-        public ActionResult<ReleaseResource> GrabReleases(List<ReleaseResource> releases)
+        public async Task<ActionResult<ReleaseResource>> GrabReleases(List<ReleaseResource> releases)
         {
+            releases.ForEach(release => ValidateResource(release));
+
             var source = Request.GetSource();
             var host = Request.GetHostName();
 
-            var groupedReleases = releases.GroupBy(r => r.IndexerId);
+            var grabbedReleases = new List<ReleaseResource>();
+
+            var groupedReleases = releases.GroupBy(r => r.IndexerId).ToList();
 
             foreach (var indexerReleases in groupedReleases)
             {
@@ -100,22 +106,42 @@ namespace Prowlarr.Api.V1.Search
 
                 foreach (var release in indexerReleases)
                 {
-                    ValidateResource(release);
-
                     var releaseInfo = _remoteReleaseCache.Find(GetCacheKey(release));
+
+                    if (releaseInfo == null)
+                    {
+                        _logger.Error("Couldn't find requested release in cache, cache timeout probably expired.");
+
+                        continue;
+                    }
 
                     try
                     {
-                        _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null).GetAwaiter().GetResult();
+                        await _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, null);
                     }
                     catch (ReleaseDownloadException ex)
                     {
                         _logger.Error(ex, "Getting release from indexer failed");
+
+                        continue;
                     }
+                    catch (DownloadClientException ex)
+                    {
+                        _logger.Error(ex, "Failed to send grabbed release to download client");
+
+                        continue;
+                    }
+
+                    grabbedReleases.Add(release);
                 }
             }
 
-            return Ok(releases);
+            if (!grabbedReleases.Any())
+            {
+                throw new NzbDroneClientException(HttpStatusCode.BadRequest, "Failed to grab any release");
+            }
+
+            return Ok(grabbedReleases);
         }
 
         [HttpGet]

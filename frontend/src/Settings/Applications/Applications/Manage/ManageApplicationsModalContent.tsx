@@ -14,9 +14,11 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import useSelectState from 'Helpers/Hooks/useSelectState';
 import { kinds } from 'Helpers/Props';
+import SortDirection from 'Helpers/Props/SortDirection';
 import {
   bulkDeleteApplications,
   bulkEditApplications,
+  setManageApplicationsSort,
 } from 'Store/Actions/settingsActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import { SelectStateInputProps } from 'typings/props';
@@ -62,6 +64,8 @@ const COLUMNS = [
 
 interface ManageApplicationsModalContentProps {
   onModalClose(): void;
+  sortKey?: string;
+  sortDirection?: SortDirection;
 }
 
 function ManageApplicationsModalContent(
@@ -76,6 +80,8 @@ function ManageApplicationsModalContent(
     isSaving,
     error,
     items,
+    sortKey,
+    sortDirection,
   }: ApplicationAppState = useSelector(
     createClientSideCollectionSelector('settings.applications')
   );
@@ -95,6 +101,13 @@ function ManageApplicationsModalContent(
   }, [selectedState]);
 
   const selectedCount = selectedIds.length;
+
+  const onSortPress = useCallback(
+    (value: string) => {
+      dispatch(setManageApplicationsSort({ sortKey: value }));
+    },
+    [dispatch]
+  );
 
   const onDeletePress = useCallback(() => {
     setIsDeleteModalOpen(true);
@@ -201,6 +214,9 @@ function ManageApplicationsModalContent(
             allSelected={allSelected}
             allUnselected={allUnselected}
             onSelectAllChange={onSelectAllChange}
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+            onSortPress={onSortPress}
           >
             <TableBody>
               {items.map((item) => {

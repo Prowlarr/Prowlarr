@@ -14,9 +14,11 @@ import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
 import useSelectState from 'Helpers/Hooks/useSelectState';
 import { kinds } from 'Helpers/Props';
+import SortDirection from 'Helpers/Props/SortDirection';
 import {
   bulkDeleteDownloadClients,
   bulkEditDownloadClients,
+  setManageDownloadClientsSort,
 } from 'Store/Actions/settingsActions';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
 import { SelectStateInputProps } from 'typings/props';
@@ -61,6 +63,8 @@ const COLUMNS = [
 
 interface ManageDownloadClientsModalContentProps {
   onModalClose(): void;
+  sortKey?: string;
+  sortDirection?: SortDirection;
 }
 
 function ManageDownloadClientsModalContent(
@@ -75,6 +79,8 @@ function ManageDownloadClientsModalContent(
     isSaving,
     error,
     items,
+    sortKey,
+    sortDirection,
   }: DownloadClientAppState = useSelector(
     createClientSideCollectionSelector('settings.downloadClients')
   );
@@ -92,6 +98,13 @@ function ManageDownloadClientsModalContent(
   }, [selectedState]);
 
   const selectedCount = selectedIds.length;
+
+  const onSortPress = useCallback(
+    (value: string) => {
+      dispatch(setManageDownloadClientsSort({ sortKey: value }));
+    },
+    [dispatch]
+  );
 
   const onDeletePress = useCallback(() => {
     setIsDeleteModalOpen(true);
@@ -174,6 +187,9 @@ function ManageDownloadClientsModalContent(
             allSelected={allSelected}
             allUnselected={allUnselected}
             onSelectAllChange={onSelectAllChange}
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+            onSortPress={onSortPress}
           >
             <TableBody>
               {items.map((item) => {

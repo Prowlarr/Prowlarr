@@ -52,7 +52,7 @@
     "BindAddressHelpText": "Gültige IP-Adresse, localhost oder „*“ für alle Schnittstellen",
     "BookSearch": "Buch Suche",
     "BookSearchTypes": "Buch-Suchtypen",
-    "Branch": "Git-Branch",
+    "Branch": "Branch",
     "BranchUpdate": "Verwendeter Branch zur Aktualisierung von {appName}",
     "BranchUpdateMechanism": "Git-Branch für den externen Updateablauf",
     "BypassProxyForLocalAddresses": "Proxy für lokale Adressen umgehen",

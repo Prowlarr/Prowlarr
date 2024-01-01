@@ -601,5 +601,7 @@
     "NoIndexerCategories": "Nenhuma categoria encontrada para este indexador",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirme a nova senha",
     "PasswordConfirmation": "Confirmação Da Senha",
-    "InvalidUILanguage": "Sua UI está definida com um idioma inválido, corrija-a e salve suas configurações"
+    "InvalidUILanguage": "Sua UI está definida com um idioma inválido, corrija-a e salve suas configurações",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Seja para usar o layout de conteúdo configurado do qBittorrent, o layout original do torrent ou sempre criar uma subpasta (qBittorrent 4.3.2+)",
+    "DownloadClientQbittorrentSettingsContentLayout": "Layout de Conteúdo"
 }

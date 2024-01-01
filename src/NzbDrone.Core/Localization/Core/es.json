@@ -351,7 +351,7 @@
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent proporcionado por la aplicación llamó a la API",
     "InstanceName": "Nombre de Instancia",
     "InstanceNameHelpText": "Nombre de instancia en pestaña y para nombre de aplicación en Syslog",
-    "Database": "Base de Datos",
+    "Database": "Base de datos",
     "Duration": "Duración",
     "LastDuration": "Duración",
     "LastExecution": "Última ejecución",

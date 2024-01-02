@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,10 +22,10 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
         [SetUp]
         public void Setup()
         {
-            Subject.Definition = new IndexerDefinition()
+            Subject.Definition = new IndexerDefinition
             {
                 Name = "GazelleGames",
-                Settings = new GazelleGamesSettings() { Apikey = "somekey" }
+                Settings = new GazelleGamesSettings { Apikey = "somekey" }
             };
         }
 
@@ -37,20 +38,20 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
 
-            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new int[] { 2000 } })).Releases;
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
-            releases.Should().HaveCount(1464);
+            releases.Should().HaveCount(1463);
             releases.First().Should().BeOfType<TorrentInfo>();
 
             var torrentInfo = releases.First() as TorrentInfo;
 
-            torrentInfo.Title.Should().Be("Microsoft_Flight_Simulator-HOODLUM");
+            torrentInfo.Title.Should().Be("Microsoft_Flight_Simulator-HOODLUM (2020) [Windows / Multi-Language / Full ISO]");
             torrentInfo.DownloadProtocol.Should().Be(DownloadProtocol.Torrent);
             torrentInfo.DownloadUrl.Should().Be("https://gazellegames.net/torrents.php?action=download&id=303216&authkey=prowlarr&torrent_pass=");
             torrentInfo.InfoUrl.Should().Be("https://gazellegames.net/torrents.php?id=84781&torrentid=303216");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-07-25 6:39:11").ToUniversalTime());
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2022-07-25 06:39:11", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal));
             torrentInfo.Size.Should().Be(80077617780);
             torrentInfo.InfoHash.Should().Be(null);
             torrentInfo.MagnetUrl.Should().Be(null);
@@ -74,7 +75,7 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
                 .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), recentFeed)));
 
-            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new int[] { 2000 } })).Releases;
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
             releases.Should().HaveCount(0);
         }

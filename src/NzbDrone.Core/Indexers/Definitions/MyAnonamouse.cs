@@ -244,17 +244,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (Settings.SearchInDescription)
             {
-                parameters.Add("tor[srchIn][description]", "true");
+                parameters.Set("tor[srchIn][description]", "true");
             }
 
             if (Settings.SearchInSeries)
             {
-                parameters.Add("tor[srchIn][series]", "true");
+                parameters.Set("tor[srchIn][series]", "true");
             }
 
             if (Settings.SearchInFilenames)
             {
-                parameters.Add("tor[srchIn][filenames]", "true");
+                parameters.Set("tor[srchIn][filenames]", "true");
             }
 
             var catList = Capabilities.Categories.MapTorznabCapsToTrackers(searchCriteria.Categories);
@@ -263,13 +263,28 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var index = 0;
                 foreach (var cat in catList)
                 {
-                    parameters.Add("tor[cat][" + index + "]", cat);
+                    parameters.Set("tor[cat][" + index + "]", cat);
                     index++;
                 }
             }
             else
             {
-                parameters.Add("tor[cat][]", "0");
+                parameters.Set("tor[cat][]", "0");
+            }
+
+            if (searchCriteria.MinSize is > 0)
+            {
+                parameters.Set("tor[minSize]", searchCriteria.MinSize.Value.ToString());
+            }
+
+            if (searchCriteria.MaxSize is > 0)
+            {
+                parameters.Set("tor[maxSize]", searchCriteria.MaxSize.Value.ToString());
+            }
+
+            if (searchCriteria.MinSize is > 0 || searchCriteria.MaxSize is > 0)
+            {
+                parameters.Set("tor[unit]", "1");
             }
 
             var searchUrl = Settings.BaseUrl + "tor/js/loadSearchJSONbasic.php";

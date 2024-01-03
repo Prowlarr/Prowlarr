@@ -409,6 +409,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.Title = item.Title;
                 release.Description = item.Description;
 
+                release.BookTitle = item.Title;
+
                 if (item.AuthorInfo != null)
                 {
                     var authorInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.AuthorInfo);
@@ -417,6 +419,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     if (author.IsNotNullOrWhiteSpace())
                     {
                         release.Title += " by " + author;
+                        release.Author = author;
                     }
                 }
 

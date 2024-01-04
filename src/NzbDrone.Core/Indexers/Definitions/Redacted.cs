@@ -426,7 +426,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Use Freeleech Tokens", Type = FieldType.Checkbox, HelpText = "Use freeleech tokens when available")]
         public bool UseFreeleechToken { get; set; }
 
-        [FieldDefinition(4, Label = "Freeload Only", Type = FieldType.Checkbox, Advanced = true, HelpTextWarning = "Search freeload torrents only. End date: 6 January 2024, 23:59 UTC.")]
+        [FieldDefinition(4, Label = "Freeload Only", Type = FieldType.Checkbox, Advanced = true, HelpTextWarning = "Search freeload torrents only. End date: 31 January 2024, 23:59 UTC.")]
         public bool FreeloadOnly { get; set; }
 
         public override NzbDroneValidationResult Validate()

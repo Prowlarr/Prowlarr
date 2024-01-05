@@ -13,7 +13,7 @@
     "DownloadClientStatusCheckSingleClientMessage": "Gestores de descargas no disponibles debido a errores: {0}",
     "DownloadClientStatusCheckAllClientMessage": "Los gestores de descargas no están disponibles debido a errores",
     "DownloadClients": "Gestores de Descargas",
-    "Delete": "Borrar",
+    "Delete": "Eliminar",
     "Dates": "Fechas",
     "Date": "Fecha",
     "CustomFilters": "Filtros Personalizados",
@@ -137,7 +137,7 @@
     "DeleteTag": "Borrar Etiqueta",
     "DeleteNotification": "Borrar Notificación",
     "DeleteDownloadClient": "Borrar Gestor de Descargas",
-    "DeleteBackup": "Borrar Backup",
+    "DeleteBackup": "Eliminar copia de seguridad",
     "DBMigration": "Migración de DB",
     "CloneProfile": "Clonar Perfil",
     "ClientPriority": "Prioridad del Cliente",
@@ -492,5 +492,12 @@
     "Id": "Id",
     "EditCategory": "Editar categoría",
     "EditSyncProfile": "Editar perfil de sincronización",
-    "EnableIndexer": "Habilitar indexador"
+    "EnableIndexer": "Habilitar indexador",
+    "InvalidUILanguage": "Su interfaz de usuario está configurada en un idioma no válido, corríjalo y guarde la configuración",
+    "DownloadClientQbittorrentSettingsContentLayout": "Diseño del contenido",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Si usar el diseño de contenido configurado de qBittorrent, el diseño original del torrent o siempre crear una subcarpeta (qBittorrent 4.3.2+)",
+    "EnableRssHelpText": "Habilitar feed Rss para indexador",
+    "days": "días",
+    "ElapsedTime": "Tiempo transcurrido",
+    "GrabTitle": "Capturar título"
 }

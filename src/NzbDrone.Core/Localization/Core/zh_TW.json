@@ -104,5 +104,9 @@
     "AppDataDirectory": "AppData 路徑",
     "Applications": "應用程式",
     "AuthBasic": "基礎（瀏覽器彈出視窗）",
-    "AuthForm": "表單（登入頁面）"
+    "AuthForm": "表單（登入頁面）",
+    "AddConnection": "新增連接",
+    "AddConnectionImplementation": "新增連接 - {implementationName}",
+    "AddDownloadClientImplementation": "新增下載用戶端 - {implementationName}",
+    "AddIndexerImplementation": "新增索引 - {implementationName}"
 }

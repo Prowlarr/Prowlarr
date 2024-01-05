@@ -495,7 +495,7 @@
     "ApplyTagsHelpTextAdd": "添加: 添加标签至已有的标签列表中",
     "CountDownloadClientsSelected": "已选择 {count} 个下载客户端",
     "CountIndexersSelected": "已选择 {count} 个索引器",
-    "DeleteSelectedDownloadClientsMessageText": "您确定要删除{count}选定的下载客户端吗?",
+    "DeleteSelectedDownloadClientsMessageText": "您确定要删除 {count} 个选定的下载客户端吗?",
     "DeleteSelectedIndexersMessageText": "您确定要删除{count}选定的索引器吗?",
     "EditSelectedDownloadClients": "编辑选定的下载客户端",
     "Implementation": "执行",
@@ -600,5 +600,8 @@
     "PackSeedTime": "做种时间",
     "PasswordConfirmation": "确认密码",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "确认新密码",
-    "InvalidUILanguage": "语言"
+    "InvalidUILanguage": "您的UI设置为无效语言，请纠正并保存设置",
+    "NoIndexerCategories": "没有找到此索引器的分类",
+    "DownloadClientQbittorrentSettingsContentLayout": "内容布局",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "是否使用 qBittorrent 配置的内容布局，使用种子的原始布局或始终创建子文件夹（qBittorrent 4.3.2+）"
 }

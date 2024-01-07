@@ -15,9 +15,9 @@ import TableOptionsModalWrapper from 'Components/Table/TableOptions/TableOptions
 import TablePager from 'Components/Table/TablePager';
 import { align, icons, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
+import HistoryFilterModal from './HistoryFilterModal';
 import HistoryOptionsConnector from './HistoryOptionsConnector';
 import HistoryRowConnector from './HistoryRowConnector';
-import HistoryFilterModal from './HistoryFilterModal';
 
 class History extends Component {
 

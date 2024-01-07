@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import { filterTypes, sortDirections } from 'Helpers/Props';
+import { filterBuilderTypes, filterBuilderValueTypes, filterTypes, sortDirections } from 'Helpers/Props';
 import { createThunk, handleThunks } from 'Store/thunks';
 import createAjaxRequest from 'Utilities/createAjaxRequest';
 import serverSideCollectionHandlers from 'Utilities/serverSideCollectionHandlers';
@@ -158,6 +158,27 @@ export const defaultState = {
           type: filterTypes.EQUAL
         }
       ]
+    }
+  ],
+
+  filterBuilderProps: [
+    {
+      name: 'eventType',
+      label: () => translate('EventType'),
+      type: filterBuilderTypes.EQUAL,
+      valueType: filterBuilderValueTypes.HISTORY_EVENT_TYPE
+    },
+    {
+      name: 'indexerIds',
+      label: () => translate('Indexer'),
+      type: filterBuilderTypes.EQUAL,
+      valueType: filterBuilderValueTypes.INDEXER
+    },
+    {
+      name: 'successful',
+      label: () => translate('Successful'),
+      type: filterBuilderTypes.EQUAL,
+      valueType: filterBuilderValueTypes.BOOL
     }
   ]
 

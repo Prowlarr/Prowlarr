@@ -7,6 +7,7 @@ import AppProfileFilterBuilderRowValueConnector from './AppProfileFilterBuilderR
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
 import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
+import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuilderRowValue';
 import IndexerFilterBuilderRowValueConnector from './IndexerFilterBuilderRowValueConnector';
 import PrivacyFilterBuilderRowValue from './PrivacyFilterBuilderRowValue';
 import ProtocolFilterBuilderRowValue from './ProtocolFilterBuilderRowValue';
@@ -57,6 +58,9 @@ function getRowValueConnector(selectedFilterBuilderProp) {
 
     case filterBuilderValueTypes.DATE:
       return DateFilterBuilderRowValue;
+
+    case filterBuilderValueTypes.HISTORY_EVENT_TYPE:
+      return HistoryEventTypeFilterBuilderRowValue;
 
     case filterBuilderValueTypes.INDEXER:
       return IndexerFilterBuilderRowValueConnector;

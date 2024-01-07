@@ -74,8 +74,9 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.TAG
     }
   ],
-  selectedFilterKey: 'all',
-  customFilters: []
+
+  selectedFilterKey: 'all'
+
 };
 
 export const persistState = [

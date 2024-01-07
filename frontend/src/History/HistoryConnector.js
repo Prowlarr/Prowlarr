@@ -6,6 +6,7 @@ import * as commandNames from 'Commands/commandNames';
 import withCurrentPage from 'Components/withCurrentPage';
 import { executeCommand } from 'Store/Actions/commandActions';
 import * as historyActions from 'Store/Actions/historyActions';
+import { createCustomFiltersSelector } from 'Store/Selectors/createClientSideCollectionSelector';
 import createCommandExecutingSelector from 'Store/Selectors/createCommandExecutingSelector';
 import { registerPagePopulator, unregisterPagePopulator } from 'Utilities/pagePopulator';
 import History from './History';
@@ -14,13 +15,15 @@ function createMapStateToProps() {
   return createSelector(
     (state) => state.history,
     (state) => state.indexers,
+    createCustomFiltersSelector('history'),
     createCommandExecutingSelector(commandNames.CLEAR_HISTORY),
-    (history, indexers, isHistoryClearing) => {
+    (history, indexers, customFilters, isHistoryClearing) => {
       return {
         isIndexersFetching: indexers.isFetching,
         isIndexersPopulated: indexers.isPopulated,
         indexersError: indexers.error,
         isHistoryClearing,
+        customFilters,
         ...history
       };
     }

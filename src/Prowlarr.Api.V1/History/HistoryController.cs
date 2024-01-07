@@ -22,15 +22,15 @@ namespace Prowlarr.Api.V1.History
 
         [HttpGet]
         [Produces("application/json")]
-        public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, int? eventType, bool? successful, string downloadId)
+        public PagingResource<HistoryResource> GetHistory([FromQuery] PagingRequestResource paging, [FromQuery(Name = "eventType")] int[] eventTypes, bool? successful, string downloadId)
         {
             var pagingResource = new PagingResource<HistoryResource>(paging);
             var pagingSpec = pagingResource.MapToPagingSpec<HistoryResource, NzbDrone.Core.History.History>("date", SortDirection.Descending);
 
-            if (eventType.HasValue)
+            if (eventTypes != null && eventTypes.Any())
             {
-                var filterValue = (HistoryEventType)eventType.Value;
-                pagingSpec.FilterExpressions.Add(v => v.EventType == filterValue);
+                var filterValues = eventTypes.Cast<HistoryEventType>().ToArray();
+                pagingSpec.FilterExpressions.Add(v => filterValues.Contains(v.EventType));
             }
 
             if (successful.HasValue)

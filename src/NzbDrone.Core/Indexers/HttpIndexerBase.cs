@@ -733,7 +733,7 @@ namespace NzbDrone.Core.Indexers
             }
             catch (WebException webException)
             {
-                _logger.Warn("Unable to connect to indexer.");
+                _logger.Warn(webException, "Unable to connect to indexer.");
 
                 if (webException.Status is WebExceptionStatus.NameResolutionFailure or WebExceptionStatus.ConnectFailure)
                 {

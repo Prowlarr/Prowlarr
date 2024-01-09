@@ -352,5 +352,6 @@
     "DisabledForLocalAddresses": "로컬 주소에 대해 비활성화됨",
     "None": "없음",
     "ResetAPIKeyMessageText": "API 키를 재설정하시겠습니까?",
-    "StopSelecting": "선택 취소"
+    "StopSelecting": "선택 취소",
+    "RestartProwlarr": "{appName} 다시 시작"
 }

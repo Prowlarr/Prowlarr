@@ -419,5 +419,6 @@
     "AuthenticationMethod": "Способ авторизации",
     "AuthenticationRequiredPasswordHelpTextWarning": "Введите новый пароль",
     "AuthenticationRequiredUsernameHelpTextWarning": "Введите новое имя пользователя",
-    "RestartProwlarr": "Перезапустить {appName}"
+    "RestartProwlarr": "Перезапустить {appName}",
+    "AuthenticationRequiredWarning": "Чтобы предотвратить удаленный доступ без авторизации, {appName} теперь требует, чтобы авторизация была включена. При желании вы можете отключить авторизацию с локальных адресов."
 }

@@ -108,5 +108,18 @@
     "AddConnection": "新增連接",
     "AddConnectionImplementation": "新增連接 - {implementationName}",
     "AddDownloadClientImplementation": "新增下載用戶端 - {implementationName}",
-    "AddIndexerImplementation": "新增索引 - {implementationName}"
+    "AddIndexerImplementation": "新增索引 - {implementationName}",
+    "UnableToAddANewAppProfilePleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "UnableToAddANewApplicationPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "UnableToAddANewDownloadClientPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "UnableToAddANewIndexerPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "UnableToAddANewIndexerProxyPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "AddApplicationImplementation": "新增連接 - {implementationName}",
+    "AddIndexerProxyImplementation": "新增索引 - {implementationName}",
+    "EditConnectionImplementation": "新增連接 - {implementationName}",
+    "EditDownloadClientImplementation": "新增下載用戶端 - {implementationName}",
+    "UnableToAddANewNotificationPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
+    "EditIndexerImplementation": "新增索引 - {implementationName}",
+    "EditApplicationImplementation": "新增連接 - {implementationName}",
+    "EditIndexerProxyImplementation": "新增索引 - {implementationName}"
 }

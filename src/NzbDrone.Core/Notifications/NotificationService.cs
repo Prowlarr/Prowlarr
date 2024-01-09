@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -21,12 +22,14 @@ namespace NzbDrone.Core.Notifications
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly INotificationStatusService _notificationStatusService;
+        private readonly IIndexerFactory _indexerFactory;
         private readonly Logger _logger;
 
-        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, Logger logger)
+        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, IIndexerFactory indexerFactory, Logger logger)
         {
             _notificationFactory = notificationFactory;
             _notificationStatusService = notificationStatusService;
+            _indexerFactory = indexerFactory;
             _logger = logger;
         }
 
@@ -85,7 +88,8 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    if (ShouldHandleIndexers(notification.Definition, message.HealthCheck.IndexerIds) &&
+                        ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                     {
                         notification.OnHealthIssue(message.HealthCheck);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
@@ -110,7 +114,8 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    if (ShouldHandleIndexers(notification.Definition, message.PreviousCheck.IndexerIds) &&
+                        ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
                     {
                         notification.OnHealthRestored(message.PreviousCheck);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
@@ -199,6 +204,18 @@ namespace NzbDrone.Core.Notifications
                     _logger.Error(ex, "Unable to send OnGrab notification to {0}", notification.Definition.Name);
                 }
             }
+        }
+
+        private bool ShouldHandleIndexers(ProviderDefinition definition, IList<int> indexerIds)
+        {
+            if (!indexerIds.Any())
+            {
+                return true;
+            }
+
+            var indexers = _indexerFactory.Get(indexerIds).ToList();
+
+            return indexers.Any(indexer => ShouldHandleIndexer(definition, indexer));
         }
 
         private bool ShouldHandleIndexer(ProviderDefinition definition, ProviderDefinition indexer)

@@ -56,7 +56,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 HealthCheckResult.Warning,
                 string.Format(_localizationService.GetLocalizedString("IndexerVipCheckExpiringClientMessage"),
                     string.Join(", ", expiringProviders.Select(v => v.Definition.Name))),
-                "#indexer-vip-expiring");
+                "#indexer-vip-expiring")
+                {
+                    IndexerIds = expiringProviders.Select(p => p.Definition.Id).ToList()
+                };
             }
 
             return new HealthCheck(GetType());

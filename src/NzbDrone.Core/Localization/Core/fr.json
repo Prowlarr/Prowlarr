@@ -12,7 +12,7 @@
     "Events": "Événements",
     "Edit": "Modifier",
     "DownloadClientStatusCheckAllClientMessage": "Aucun client de téléchargement n'est disponible en raison d'échecs",
-    "DownloadClients": "Clients de téléchargement",
+    "DownloadClients": "Clients de télécharg.",
     "Dates": "Dates",
     "Date": "Date",
     "Delete": "Supprimer",
@@ -601,5 +601,6 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmer le nouveau mot de passe",
     "PasswordConfirmation": "Confirmation du mot de passe",
     "NoIndexerCategories": "Aucune catégorie disponible pour cet indexeur",
-    "InvalidUILanguage": "Votre interface utilisateur est définie sur une langue non valide, corrigez-la et enregistrez vos paramètres"
+    "InvalidUILanguage": "Votre interface utilisateur est définie sur une langue non valide, corrigez-la et enregistrez vos paramètres",
+    "DownloadClientQbittorrentSettingsContentLayout": "Disposition du contenu"
 }

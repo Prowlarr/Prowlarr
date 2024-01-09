@@ -405,5 +405,6 @@
     "AuthenticationRequiredPasswordHelpTextWarning": "Vložte nové heslo",
     "AuthenticationRequiredUsernameHelpTextWarning": "Vložte nové uživatelské jméno",
     "AuthenticationMethodHelpTextWarning": "Prosím vyberte platnou metodu ověřování",
-    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Potvrďte nové heslo"
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Potvrďte nové heslo",
+    "days": "dnů"
 }

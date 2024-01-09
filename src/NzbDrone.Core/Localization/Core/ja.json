@@ -352,5 +352,6 @@
     "AuthForm": "フォーム（ログインページ）",
     "DisabledForLocalAddresses": "ローカルアドレスでは無効",
     "None": "なし",
-    "ResetAPIKeyMessageText": "APIキーをリセットしてもよろしいですか？"
+    "ResetAPIKeyMessageText": "APIキーをリセットしてもよろしいですか？",
+    "RestartProwlarr": "{appName}を再起動します"
 }

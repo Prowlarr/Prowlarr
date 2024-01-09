@@ -368,5 +368,13 @@
     "DisabledForLocalAddresses": "Відключено для локальних адрес",
     "None": "Жодного",
     "ResetAPIKeyMessageText": "Ви впевнені, що хочете скинути свій ключ API?",
-    "AddConnection": "Редагувати колекцію"
+    "AddConnection": "Редагувати колекцію",
+    "RestartProwlarr": "Перезавантажити {appName}",
+    "EditApplicationImplementation": "Додати умому",
+    "EditConnectionImplementation": "Додати умому",
+    "EditIndexerImplementation": "Додати умому",
+    "AddConnectionImplementation": "Додати умому",
+    "AddApplicationImplementation": "Додати умому",
+    "AddIndexerImplementation": "Додати умому",
+    "AddIndexerProxyImplementation": "Додати умому"
 }

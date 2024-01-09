@@ -517,5 +517,12 @@
     "AuthenticationMethod": "Hitelesítési Módszer",
     "AuthenticationMethodHelpTextWarning": "Kérjük, válasszon érvényes hitelesítési módot",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Erősítsd meg az új jelszót",
-    "DefaultNameCopiedProfile": "{name} - Másolat"
+    "DefaultNameCopiedProfile": "{name} - Másolat",
+    "EditConnectionImplementation": "Csatlakozás hozzáadása - {megvalósítás neve}",
+    "EditIndexerProxyImplementation": "Indexelő hozzáadása - {megvalósítás neve}",
+    "AddApplicationImplementation": "Csatlakozás hozzáadása - {implementationName}",
+    "AddIndexerProxyImplementation": "Indexelő hozzáadása - {implementationName}",
+    "EditIndexerImplementation": "Indexelő hozzáadása - {megvalósítás neve}",
+    "EditApplicationImplementation": "Csatlakozás hozzáadása - {megvalósítás neve}",
+    "EditDownloadClientImplementation": "Letöltési kliens hozzáadása – {megvalósítási név}"
 }

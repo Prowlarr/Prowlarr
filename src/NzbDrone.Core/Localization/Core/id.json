@@ -78,5 +78,8 @@
     "AuthenticationRequiredPasswordHelpTextWarning": "Masukkan sandi baru",
     "AuthenticationRequiredUsernameHelpTextWarning": "Masukkan nama pengguna baru",
     "AuthenticationRequiredWarning": "Untuk mencegah akses jarak jauh tanpa autentikasi, {appName} kini mewajibkan pengaktifkan autentikasi. Kamu dapat menonaktifkan autentikasi dari jaringan lokal.",
-    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Konfirmasi sandi baru"
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Konfirmasi sandi baru",
+    "days": "hari",
+    "minutes": "menit",
+    "Link": "Tautan"
 }

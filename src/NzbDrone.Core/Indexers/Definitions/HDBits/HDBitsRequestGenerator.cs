@@ -123,8 +123,20 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             query.Username = Settings.Username;
             query.Passkey = Settings.ApiKey;
 
-            query.Codec = Settings.Codecs.ToArray();
-            query.Medium = Settings.Mediums.ToArray();
+            if (Settings.Codecs.Any())
+            {
+                query.Codec = Settings.Codecs.ToArray();
+            }
+
+            if (Settings.Mediums.Any())
+            {
+                query.Medium = Settings.Mediums.ToArray();
+            }
+
+            if (Settings.Origins.Any())
+            {
+                query.Origin = Settings.Origins.ToArray();
+            }
 
             if (searchCriteria.Categories?.Length > 0)
             {

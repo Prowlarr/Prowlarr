@@ -11,6 +11,12 @@
   flex: 0 0 60px;
 }
 
+.id {
+  composes: cell;
+
+  flex: 0 0 60px;
+}
+
 .sortName {
   composes: cell;
 

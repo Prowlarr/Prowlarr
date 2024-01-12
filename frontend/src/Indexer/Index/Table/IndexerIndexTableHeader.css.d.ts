@@ -5,6 +5,7 @@ interface CssExports {
   'added': string;
   'appProfileId': string;
   'capabilities': string;
+  'id': string;
   'minimumSeeders': string;
   'packSeedTime': string;
   'priority': string;

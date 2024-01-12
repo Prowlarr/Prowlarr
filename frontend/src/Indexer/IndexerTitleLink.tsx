@@ -1,17 +1,16 @@
-import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 import Link from 'Components/Link/Link';
 import IndexerInfoModal from './Info/IndexerInfoModal';
 import styles from './IndexerTitleLink.css';
 
 interface IndexerTitleLinkProps {
-  indexerName: string;
   indexerId: number;
+  title: string;
   onCloneIndexerPress(id: number): void;
 }
 
 function IndexerTitleLink(props: IndexerTitleLinkProps) {
-  const { indexerName, indexerId, onCloneIndexerPress } = props;
+  const { title, indexerId, onCloneIndexerPress } = props;
 
   const [isIndexerInfoModalOpen, setIsIndexerInfoModalOpen] = useState(false);
 
@@ -26,7 +25,7 @@ function IndexerTitleLink(props: IndexerTitleLinkProps) {
   return (
     <div>
       <Link className={styles.link} onPress={onIndexerInfoPress}>
-        {indexerName}
+        {title}
       </Link>
 
       <IndexerInfoModal
@@ -38,9 +37,5 @@ function IndexerTitleLink(props: IndexerTitleLinkProps) {
     </div>
   );
 }
-
-IndexerTitleLink.propTypes = {
-  indexerName: PropTypes.string.isRequired,
-};
 
 export default IndexerTitleLink;

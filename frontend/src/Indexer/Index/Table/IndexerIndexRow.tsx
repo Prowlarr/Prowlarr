@@ -34,7 +34,7 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
   const { indexerId, columns, isSelectMode, onCloneIndexerPress } = props;
 
   const { indexer, appProfile, status, longDateFormat, timeFormat } =
-    useSelector(createIndexerIndexItemSelector(props.indexerId));
+    useSelector(createIndexerIndexItemSelector(indexerId));
 
   const {
     id,
@@ -148,12 +148,24 @@ function IndexerIndexRow(props: IndexerIndexRowProps) {
           );
         }
 
+        if (name === 'id') {
+          return (
+            <VirtualTableRowCell key={name} className={styles[name]}>
+              <IndexerTitleLink
+                indexerId={indexerId}
+                title={`${indexerId}`}
+                onCloneIndexerPress={onCloneIndexerPress}
+              />
+            </VirtualTableRowCell>
+          );
+        }
+
         if (name === 'sortName') {
           return (
             <VirtualTableRowCell key={name} className={styles[name]}>
               <IndexerTitleLink
                 indexerId={indexerId}
-                indexerName={indexerName}
+                title={indexerName}
                 onCloneIndexerPress={onCloneIndexerPress}
               />
             </VirtualTableRowCell>

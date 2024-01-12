@@ -8,6 +8,7 @@ interface CssExports {
   'cell': string;
   'checkInput': string;
   'externalLink': string;
+  'id': string;
   'minimumSeeders': string;
   'packSeedTime': string;
   'priority': string;

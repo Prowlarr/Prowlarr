@@ -38,11 +38,17 @@ export const defaultState = {
       isModifiable: false
     },
     {
+      name: 'id',
+      columnLabel: () => translate('IndexerId'),
+      label: () => translate('Id'),
+      isSortable: true,
+      isVisible: false
+    },
+    {
       name: 'sortName',
       label: () => translate('IndexerName'),
       isSortable: true,
-      isVisible: true,
-      isModifiable: false
+      isVisible: true
     },
     {
       name: 'protocol',

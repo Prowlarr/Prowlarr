@@ -285,7 +285,7 @@ class SearchIndex extends Component {
     const hasNoIndexer = !totalItems;
 
     return (
-      <PageContent>
+      <PageContent title={translate('Search')}>
         <PageToolbar>
           <PageToolbarSection
             alignContent={align.RIGHT}

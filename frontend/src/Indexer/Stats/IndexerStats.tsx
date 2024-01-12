@@ -12,8 +12,9 @@ import FilterMenu from 'Components/Menu/FilterMenu';
 import PageContent from 'Components/Page/PageContent';
 import PageContentBody from 'Components/Page/PageContentBody';
 import PageToolbar from 'Components/Page/Toolbar/PageToolbar';
+import PageToolbarButton from 'Components/Page/Toolbar/PageToolbarButton';
 import PageToolbarSection from 'Components/Page/Toolbar/PageToolbarSection';
-import { align, kinds } from 'Helpers/Props';
+import { align, icons, kinds } from 'Helpers/Props';
 import {
   fetchIndexerStats,
   setIndexerStatsFilter,
@@ -194,6 +195,10 @@ function IndexerStats() {
     dispatch(fetchIndexerStats());
   }, [dispatch]);
 
+  const onRefreshPress = useCallback(() => {
+    dispatch(fetchIndexerStats());
+  }, [dispatch]);
+
   const onFilterSelect = useCallback(
     (value: string) => {
       dispatch(setIndexerStatsFilter({ selectedFilterKey: value }));
@@ -219,8 +224,17 @@ function IndexerStats() {
     }, 0) ?? 0;
 
   return (
-    <PageContent>
+    <PageContent title={translate('Stats')}>
       <PageToolbar>
+        <PageToolbarSection>
+          <PageToolbarButton
+            label={translate('Refresh')}
+            iconName={icons.REFRESH}
+            isSpinning={isFetching}
+            onPress={onRefreshPress}
+          />
+        </PageToolbarSection>
+
         <PageToolbarSection alignContent={align.RIGHT} collapseButtons={false}>
           <FilterMenu
             alignMenu={align.RIGHT}

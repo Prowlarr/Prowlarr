@@ -29,8 +29,7 @@ namespace Prowlarr.Api.V1.History
 
             if (eventTypes != null && eventTypes.Any())
             {
-                var filterValues = eventTypes.Cast<HistoryEventType>().ToArray();
-                pagingSpec.FilterExpressions.Add(v => filterValues.Contains(v.EventType));
+                pagingSpec.FilterExpressions.Add(v => eventTypes.Contains((int)v.EventType));
             }
 
             if (successful.HasValue)

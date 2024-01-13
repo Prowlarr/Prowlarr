@@ -171,6 +171,7 @@
   "Docker": "Docker",
   "Donations": "Donations",
   "DownloadClient": "Download Client",
+  "DownloadClientAriaSettingsDirectoryHelpText": "Optional location to put downloads in, leave blank to use the default Aria2 location",
   "DownloadClientCategory": "Download Client Category",
   "DownloadClientPriorityHelpText": "Prioritize multiple Download Clients. Round-Robin is used for clients with the same priority.",
   "DownloadClientQbittorrentSettingsContentLayout": "Content Layout",

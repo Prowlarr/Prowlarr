@@ -158,7 +158,7 @@
     "Enable": "Activer",
     "DownloadClientSettings": "Télécharger les paramètres client",
     "Docker": "Docker",
-    "DeleteTag": "Supprimer le tag",
+    "DeleteTag": "Supprimer l'étiquette",
     "DeleteNotification": "Supprimer la notification",
     "DeleteDownloadClient": "Supprimer le client de téléchargement",
     "DeleteBackup": "Supprimer la sauvegarde",
@@ -602,5 +602,6 @@
     "PasswordConfirmation": "Confirmation du mot de passe",
     "NoIndexerCategories": "Aucune catégorie disponible pour cet indexeur",
     "InvalidUILanguage": "Votre interface utilisateur est définie sur une langue non valide, corrigez-la et enregistrez vos paramètres",
-    "DownloadClientQbittorrentSettingsContentLayout": "Disposition du contenu"
+    "DownloadClientQbittorrentSettingsContentLayout": "Disposition du contenu",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Utiliser la disposition du contenu configurée par qBittorrent, la disposition originale du torrent ou toujours créer un sous-dossier (qBittorrent 4.3.2+)"
 }

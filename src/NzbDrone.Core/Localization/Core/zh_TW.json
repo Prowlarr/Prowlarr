@@ -121,5 +121,9 @@
     "UnableToAddANewNotificationPleaseTryAgain": "無法加入新的條件，請重新嘗試。",
     "EditIndexerImplementation": "新增索引 - {implementationName}",
     "EditApplicationImplementation": "新增連接 - {implementationName}",
-    "EditIndexerProxyImplementation": "新增索引 - {implementationName}"
+    "EditIndexerProxyImplementation": "新增索引 - {implementationName}",
+    "ApplyTagsHelpTextAdd": "加入：將標籤加入已存在的標籤清單",
+    "AppUpdated": "{appName}已更新",
+    "AppUpdatedVersion": "重新載入",
+    "ApplyChanges": "應用"
 }

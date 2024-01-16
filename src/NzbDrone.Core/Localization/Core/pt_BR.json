@@ -110,7 +110,7 @@
     "DeleteIndexerProxyMessageText": "Tem certeza de que deseja excluir o proxy do indexador '{name}'?",
     "DeleteNotification": "Excluir notificação",
     "DeleteNotificationMessageText": "Tem certeza de que deseja excluir a notificação '{name}'?",
-    "DeleteTag": "Excluir tag",
+    "DeleteTag": "Excluir Etiqueta",
     "DeleteTagMessageText": "Tem certeza de que deseja excluir a tag '{label}'?",
     "Description": "Descrição",
     "Details": "Detalhes",
@@ -139,7 +139,7 @@
     "EnableInteractiveSearch": "Ativar pesquisa interativa",
     "EnableInteractiveSearchHelpText": "Será usado com a pesquisa interativa",
     "EnableRss": "Habilitar RSS",
-    "EnableRssHelpText": "Habilitar feed RSS para o indexador",
+    "EnableRssHelpText": "Habilitar feed RSS para indexador",
     "EnableSSL": "Habilitar SSL",
     "EnableSslHelpText": " Requer a reinicialização com a execução como administrador para fazer efeito",
     "Enabled": "Habilitado",
@@ -603,5 +603,6 @@
     "PasswordConfirmation": "Confirmação Da Senha",
     "InvalidUILanguage": "Sua UI está definida com um idioma inválido, corrija-a e salve suas configurações",
     "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Seja para usar o layout de conteúdo configurado do qBittorrent, o layout original do torrent ou sempre criar uma subpasta (qBittorrent 4.3.2+)",
-    "DownloadClientQbittorrentSettingsContentLayout": "Layout de Conteúdo"
+    "DownloadClientQbittorrentSettingsContentLayout": "Layout de Conteúdo",
+    "IndexerId": "ID do Indexador"
 }

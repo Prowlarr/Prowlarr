@@ -473,5 +473,7 @@
     "Album": "álbum",
     "Artist": "artista",
     "DefaultNameCopiedProfile": "{name} - Copiar",
-    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha"
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha",
+    "AdvancedSettingsHiddenClickToShow": "Definições avançadas ocultas, clique para mostrar",
+    "AddCategory": "Adicionar Categoria"
 }

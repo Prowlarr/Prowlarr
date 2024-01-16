@@ -423,5 +423,7 @@
     "AddApplicationImplementation": "Afegeix una condició - {implementationName}",
     "AddIndexerProxyImplementation": "Afegeix un indexador - {implementationName}",
     "Category": "Categoria",
-    "Clone": "Clona"
+    "Clone": "Clona",
+    "Yes": "Si",
+    "No": "No"
 }

@@ -38,3 +38,8 @@ public class FileListTorrent
     [JsonPropertyName("small_description")]
     public string SmallDescription { get; set; }
 }
+
+public class FileListErrorResponse
+{
+    public string Error { get; set; }
+}

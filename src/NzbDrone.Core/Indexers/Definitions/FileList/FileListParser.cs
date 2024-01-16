@@ -28,9 +28,14 @@ public class FileListParser : IParseIndexerResponse
             throw new IndexerException(indexerResponse, "Unexpected response status {0} code from indexer request", indexerResponse.HttpResponse.StatusCode);
         }
 
+        if (indexerResponse.Content.StartsWith("{\"error2\"") && STJson.TryDeserialize<FileListErrorResponse>(indexerResponse.Content, out var errorResponse))
+        {
+            throw new IndexerException(indexerResponse, "Unexpected response from indexer request: {0}", errorResponse.Error);
+        }
+
         if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
         {
-            throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
+            throw new IndexerException(indexerResponse, "Unexpected response header {0} from indexer request, expected {1}", indexerResponse.HttpResponse.Headers.ContentType, HttpAccept.Json.Value);
         }
 
         var releaseInfos = new List<ReleaseInfo>();

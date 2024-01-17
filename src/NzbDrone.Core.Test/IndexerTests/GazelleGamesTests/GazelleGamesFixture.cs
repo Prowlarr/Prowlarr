@@ -40,7 +40,7 @@ namespace NzbDrone.Core.Test.IndexerTests.GazelleGamesTests
 
             var releases = (await Subject.Fetch(new BasicSearchCriteria { Categories = new[] { 2000 } })).Releases;
 
-            releases.Should().HaveCount(1463);
+            releases.Should().HaveCount(1462);
             releases.First().Should().BeOfType<TorrentInfo>();
 
             var torrentInfo = releases.First() as TorrentInfo;

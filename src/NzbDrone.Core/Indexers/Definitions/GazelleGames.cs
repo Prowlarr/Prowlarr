@@ -394,7 +394,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var torrents = groupTorrents
                     .ToObject<Dictionary<int, GazelleGamesTorrent>>(JsonSerializer.Create(Json.GetSerializerSettings()))
-                    .Where(t => t.Value.TorrentType != "Link")
+                    .Where(t => t.Value.TorrentType.ToUpperInvariant() == "TORRENT")
                     .ToList();
 
                 var categories = group.Value.Artists
@@ -470,11 +470,21 @@ namespace NzbDrone.Core.Indexers.Definitions
             flags.AddIfNotNull(torrent.Region);
             flags.AddIfNotNull(torrent.Miscellaneous);
 
+            if (torrent.Dupable == 1)
+            {
+                flags.Add("Trumpable");
+            }
+
             flags = flags.Where(x => x.IsNotNullOrWhiteSpace()).ToList();
 
             if (flags.Any())
             {
                 title += $" [{string.Join(" / ", flags)}]";
+            }
+
+            if (torrent.GameDoxType.IsNotNullOrWhiteSpace())
+            {
+                title += $" [{torrent.GameDoxType.Trim()}]";
             }
 
             return title;
@@ -570,6 +580,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string ReleaseTitle { get; set; }
         public string Miscellaneous { get; set; }
         public int Scene { get; set; }
+        public int Dupable { get; set; }
         public DateTime Time { get; set; }
         public string TorrentType { get; set; }
         public int FileCount { get; set; }
@@ -580,6 +591,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public GazelleGamesFreeTorrent FreeTorrent { get; set; }
         public bool PersonalFL { get; set; }
         public bool LowSeedFL { get; set; }
+
+        [JsonProperty("GameDOXType")]
+        public string GameDoxType { get; set; }
     }
 
     public class GazelleGamesUserResponse

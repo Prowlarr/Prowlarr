@@ -34,7 +34,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string Language => "en-US";
         public override Encoding Encoding => Encoding.UTF8;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
+        public override bool SupportsPagination => true;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
         public GazelleGames(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -312,6 +314,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "request", "search" },
                 { "search_type", "torrents" },
                 { "empty_groups", "filled" },
+                { "dupable", "0" },
                 { "order_by", "time" },
                 { "order_way", "desc" }
             };
@@ -355,6 +358,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     parameters.Add("sizeslarge", maxSize.ToString());
                 }
+            }
+
+            if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
+            {
+                var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
+                parameters.Add("page", page.ToString());
             }
 
             return parameters;
@@ -501,6 +510,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 flags.Add("Trumpable");
             }
 
+            if (torrent.IsSnatched)
+            {
+                flags.Add("Snatched");
+            }
+
             flags = flags.Where(x => x.IsNotNullOrWhiteSpace()).ToList();
 
             if (flags.Any())
@@ -614,6 +628,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string TorrentType { get; set; }
         public int FileCount { get; set; }
         public string Size { get; set; }
+        public bool IsSnatched { get; set; }
         public int? Snatched { get; set; }
         public int Seeders { get; set; }
         public int Leechers { get; set; }

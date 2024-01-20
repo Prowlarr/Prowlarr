@@ -388,11 +388,11 @@ namespace NzbDrone.Core.Indexers
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
                     webException.Message.Contains("504") || webException.Message.Contains("timed out"))
                 {
-                    _logger.Warn("{0} server is currently unavailable. {1} {2}", this, url, webException.Message);
+                    _logger.Warn(webException, "{0} server is currently unavailable. {1} {2}", this, url, webException.Message);
                 }
                 else
                 {
-                    _logger.Warn("{0} {1} {2}", this, url, webException.Message);
+                    _logger.Warn(webException, "{0} {1} {2}", this, url, webException.Message);
                 }
             }
             catch (TooManyRequestsException ex)
@@ -402,7 +402,7 @@ namespace NzbDrone.Core.Indexers
                 var retryTime = ex.RetryAfter != TimeSpan.Zero ? ex.RetryAfter : minimumBackoff;
 
                 _indexerStatusService.RecordFailure(Definition.Id, retryTime);
-                _logger.Warn("Request Limit reached for {0}. Disabled for {1}", this, retryTime);
+                _logger.Warn(ex, "Request Limit reached for {0}. Disabled for {1}", this, retryTime);
             }
             catch (HttpException ex)
             {
@@ -411,18 +411,18 @@ namespace NzbDrone.Core.Indexers
 
                 if (ex.Response.HasHttpServerError)
                 {
-                    _logger.Warn("Unable to connect to {0} at [{1}]. Indexer's server is unavailable. Try again later. {2}", this, url, ex.Message);
+                    _logger.Warn(ex, "Unable to connect to {0} at [{1}]. Indexer's server is unavailable. Try again later. {2}", this, url, ex.Message);
                 }
                 else
                 {
-                    _logger.Warn("{0} {1}", this, ex.Message);
+                    _logger.Warn(ex, "{0} {1}", this, ex.Message);
                 }
             }
             catch (RequestLimitReachedException ex)
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response.HttpResponse });
                 _indexerStatusService.RecordFailure(Definition.Id, minimumBackoff);
-                _logger.Warn("Request Limit reached for {0}. Disabled for {1}", this, minimumBackoff);
+                _logger.Warn(ex, "Request Limit reached for {0}. Disabled for {1}", this, minimumBackoff);
             }
             catch (IndexerAuthException ex)
             {

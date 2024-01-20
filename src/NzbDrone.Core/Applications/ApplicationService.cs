@@ -252,11 +252,11 @@ namespace NzbDrone.Core.Applications
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
                     webException.Message.Contains("timed out"))
                 {
-                    _logger.Warn("{0} server is currently unavailable. {1}", this, webException.Message);
+                    _logger.Warn(webException, "{0} server is currently unavailable. {1}", this, webException.Message);
                 }
                 else
                 {
-                    _logger.Warn("{0} {1}", this, webException.Message);
+                    _logger.Warn(webException, "{0} {1}", this, webException.Message);
                 }
             }
             catch (TooManyRequestsException ex)
@@ -264,12 +264,12 @@ namespace NzbDrone.Core.Applications
                 var minimumBackOff = ex.RetryAfter != TimeSpan.Zero ? ex.RetryAfter : TimeSpan.FromHours(1);
                 _applicationStatusService.RecordFailure(application.Definition.Id, minimumBackOff);
 
-                _logger.Warn("API Request Limit reached for {0}", this);
+                _logger.Warn(ex, "API Request Limit reached for {0}", this);
             }
             catch (HttpException ex)
             {
                 _applicationStatusService.RecordFailure(application.Definition.Id);
-                _logger.Warn("{0} {1}", this, ex.Message);
+                _logger.Warn(ex, "{0} {1}", this, ex.Message);
             }
             catch (Exception ex)
             {
@@ -301,11 +301,11 @@ namespace NzbDrone.Core.Applications
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
                     webException.Message.Contains("timed out"))
                 {
-                    _logger.Warn("{0} server is currently unavailable. {1}", this, webException.Message);
+                    _logger.Warn(webException, "{0} server is currently unavailable. {1}", this, webException.Message);
                 }
                 else
                 {
-                    _logger.Warn("{0} {1}", this, webException.Message);
+                    _logger.Warn(webException, "{0} {1}", this, webException.Message);
                 }
             }
             catch (TooManyRequestsException ex)
@@ -313,12 +313,12 @@ namespace NzbDrone.Core.Applications
                 var minimumBackOff = ex.RetryAfter != TimeSpan.Zero ? ex.RetryAfter : TimeSpan.FromHours(1);
                 _applicationStatusService.RecordFailure(application.Definition.Id, minimumBackOff);
 
-                _logger.Warn("API Request Limit reached for {0}", this);
+                _logger.Warn(ex, "API Request Limit reached for {0}", this);
             }
             catch (HttpException ex)
             {
                 _applicationStatusService.RecordFailure(application.Definition.Id);
-                _logger.Warn("{0} {1}", this, ex.Message);
+                _logger.Warn(ex, "{0} {1}", this, ex.Message);
             }
             catch (Exception ex)
             {

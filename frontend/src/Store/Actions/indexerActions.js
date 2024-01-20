@@ -225,7 +225,13 @@ export const reducers = createHandleActions({
     delete selectedSchema.name;
 
     selectedSchema.fields = selectedSchema.fields.map((field) => {
-      return { ...field };
+      const newField = { ...field };
+
+      if (newField.privacy === 'apiKey' || newField.privacy === 'password') {
+        newField.value = '';
+      }
+
+      return newField;
     });
 
     newState.selectedSchema = selectedSchema;

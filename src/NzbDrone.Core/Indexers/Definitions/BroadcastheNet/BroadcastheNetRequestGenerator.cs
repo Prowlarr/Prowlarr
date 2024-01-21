@@ -50,7 +50,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             {
                 parameters.Tvrage = $"{searchCriteria.RId}";
             }
-            else if (searchString.IsNotNullOrWhiteSpace())
+
+            if (searchString.IsNotNullOrWhiteSpace())
             {
                 parameters.Search = searchString.Replace(" ", "%");
             }

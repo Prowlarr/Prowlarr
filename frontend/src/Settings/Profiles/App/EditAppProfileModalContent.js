@@ -99,20 +99,6 @@ class EditAppProfileModalContent extends Component {
 
                   <FormGroup>
                     <FormLabel>
-                      {translate('EnableInteractiveSearch')}
-                    </FormLabel>
-
-                    <FormInputGroup
-                      type={inputTypes.CHECK}
-                      name="enableInteractiveSearch"
-                      {...enableInteractiveSearch}
-                      helpText={translate('EnableInteractiveSearchHelpText')}
-                      onChange={onInputChange}
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <FormLabel>
                       {translate('EnableAutomaticSearch')}
                     </FormLabel>
 
@@ -121,6 +107,20 @@ class EditAppProfileModalContent extends Component {
                       name="enableAutomaticSearch"
                       {...enableAutomaticSearch}
                       helpText={translate('EnableAutomaticSearchHelpText')}
+                      onChange={onInputChange}
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <FormLabel>
+                      {translate('EnableInteractiveSearch')}
+                    </FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.CHECK}
+                      name="enableInteractiveSearch"
+                      {...enableInteractiveSearch}
+                      helpText={translate('EnableInteractiveSearchHelpText')}
                       onChange={onInputChange}
                     />
                   </FormGroup>

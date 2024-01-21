@@ -86,9 +86,9 @@ namespace NzbDrone.Core.Profiles
             var qualityProfile = new AppSyncProfile
             {
                 Name = name,
+                EnableRss = true,
                 EnableAutomaticSearch = true,
                 EnableInteractiveSearch = true,
-                EnableRss = true,
                 MinimumSeeders = 1
             };
 

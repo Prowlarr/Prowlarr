@@ -141,7 +141,7 @@
     "UI": "UI",
     "CouldNotConnectSignalR": "SignalRに接続できませんでした。UIは更新されません",
     "Custom": "カスタム",
-    "DBMigration": "DB移行",
+    "DatabaseMigration": "DB移行",
     "Delete": "削除",
     "DeleteApplicationMessageText": "通知「{0}」を削除してもよろしいですか？",
     "DeleteBackup": "バックアップを削除する",

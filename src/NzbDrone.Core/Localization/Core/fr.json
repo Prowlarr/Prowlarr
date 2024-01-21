@@ -162,7 +162,7 @@
     "DeleteNotification": "Supprimer la notification",
     "DeleteDownloadClient": "Supprimer le client de téléchargement",
     "DeleteBackup": "Supprimer la sauvegarde",
-    "DBMigration": "Migration de la base de données",
+    "DatabaseMigration": "Migration de la base de données",
     "ConnectSettings": "Paramètres de connexion",
     "BackupFolderHelpText": "Les chemins correspondants seront sous le répertoire AppData de {appName}",
     "IllRestartLater": "Je redémarrerai plus tard",

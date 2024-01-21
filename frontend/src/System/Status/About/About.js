@@ -22,9 +22,9 @@ class About extends Component {
       isNetCore,
       isDocker,
       runtimeVersion,
-      migrationVersion,
       databaseVersion,
       databaseType,
+      migrationVersion,
       appData,
       startupPath,
       mode,
@@ -66,13 +66,13 @@ class About extends Component {
           }
 
           <DescriptionListItem
-            title={translate('DBMigration')}
-            data={migrationVersion}
+            title={translate('Database')}
+            data={`${titleCase(databaseType)} ${databaseVersion}`}
           />
 
           <DescriptionListItem
-            title={translate('Database')}
-            data={`${titleCase(databaseType)} ${databaseVersion}`}
+            title={translate('DatabaseMigration')}
+            data={migrationVersion}
           />
 
           <DescriptionListItem

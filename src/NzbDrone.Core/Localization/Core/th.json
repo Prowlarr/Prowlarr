@@ -139,7 +139,7 @@
     "CustomFilters": "ตัวกรองที่กำหนดเอง",
     "Date": "วันที่",
     "Dates": "วันที่",
-    "DBMigration": "การย้ายฐานข้อมูล",
+    "DatabaseMigration": "การย้ายฐานข้อมูล",
     "Delete": "ลบ",
     "DeleteApplicationMessageText": "แน่ใจไหมว่าต้องการลบการแจ้งเตือน \"{0}\"",
     "DeleteBackup": "ลบข้อมูลสำรอง",

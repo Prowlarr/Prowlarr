@@ -244,7 +244,7 @@
     "CustomFilters": "Vlastní filtry",
     "Date": "datum",
     "Dates": "Termíny",
-    "DBMigration": "Migrace databáze",
+    "DatabaseMigration": "Migrace databáze",
     "Delete": "Vymazat",
     "DeleteApplicationMessageText": "Opravdu chcete smazat oznámení „{0}“?",
     "DeleteBackup": "Odstranit zálohu",

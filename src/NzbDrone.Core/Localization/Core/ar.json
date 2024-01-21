@@ -82,7 +82,7 @@
     "ConnectSettings": "ربط الإعدادات",
     "CouldNotConnectSignalR": "تعذر الاتصال بـ SignalR ، لن يتم تحديث واجهة المستخدم",
     "Dates": "تواريخ",
-    "DBMigration": "ترحيل DB",
+    "DatabaseMigration": "ترحيل DB",
     "Delete": "حذف",
     "Details": "تفاصيل",
     "Donations": "التبرعات",

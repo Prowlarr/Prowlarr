@@ -272,7 +272,7 @@
     "CloneProfile": "פרופיל שיבוט",
     "Close": "סגור",
     "CloseCurrentModal": "סגור את המודול הנוכחי",
-    "DBMigration": "הגירת DB",
+    "DatabaseMigration": "הגירת DB",
     "Delete": "לִמְחוֹק",
     "DeleteNotification": "מחק הודעה",
     "DeleteNotificationMessageText": "האם אתה בטוח שברצונך למחוק את ההודעה '{0}'?",

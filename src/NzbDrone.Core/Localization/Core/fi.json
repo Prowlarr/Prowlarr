@@ -148,7 +148,7 @@
     "AnalyticsEnabledHelpText": "Lähetä nimettömiä käyttö- ja virhetietoja {appName}in palvelimille. Tämä sisältää tietoja selaimestasi, käyttöliittymän sivujen käytöstä, virheraportoinnista, käyttöjärjestelmästä ja suoritusalustasta. Käytämme näitä tietoja ominaisuuksien ja vikakorjausten painotukseen.",
     "ApiKey": "API-avain",
     "AppDataDirectory": "AppData-kansio",
-    "DBMigration": "Tietokannan siirto",
+    "DatabaseMigration": "Tietokannan siirto",
     "Delete": "Poista",
     "DeleteIndexerProxyMessageText": "Haluatko varmasti poistaa tietolähdevälityspalvelimen \"{name}\"?",
     "DeleteNotificationMessageText": "Haluatko varmasti poistaa ilmoituspalvelun \"{name}\"?",

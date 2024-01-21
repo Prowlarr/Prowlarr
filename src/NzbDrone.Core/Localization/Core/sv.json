@@ -169,7 +169,7 @@
     "BindAddress": "Bindningsadress",
     "Branch": "Gren",
     "CloseCurrentModal": "Stäng nuvarande modal",
-    "DBMigration": "DB Migration",
+    "DatabaseMigration": "DB Migration",
     "DeleteApplicationMessageText": "Är du säker på att du vill radera aviseringen '{0}'?",
     "Discord": "Discord",
     "Donations": "Donationer",

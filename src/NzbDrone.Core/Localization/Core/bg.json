@@ -35,7 +35,7 @@
     "CustomFilters": "Персонализирани филтри",
     "Date": "Дата",
     "Dates": "Дати",
-    "DBMigration": "DB миграция",
+    "DatabaseMigration": "DB миграция",
     "Delete": "Изтрий",
     "DeleteDownloadClient": "Изтриване на клиент за изтегляне",
     "DeleteDownloadClientMessageText": "Наистина ли искате да изтриете клиента за изтегляне '{0}'?",

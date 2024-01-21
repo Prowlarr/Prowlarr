@@ -170,7 +170,7 @@
     "DeleteNotification": "Eliminar notificação",
     "DeleteDownloadClient": "Eliminar cliente de transferências",
     "DeleteBackup": "Eliminar cópia de segurança",
-    "DBMigration": "Migração da base de dados",
+    "DatabaseMigration": "Migração da base de dados",
     "ConnectSettings": "Definições de ligação",
     "CloneProfile": "Clonar perfil",
     "ChangeHasNotBeenSavedYet": "A mudança ainda não foi guardada",

@@ -53,7 +53,7 @@
     "Disabled": "deaktiveret",
     "Add": "Tilføj",
     "AddDownloadClient": "Tilføj downloadklient",
-    "DBMigration": "DB Migration",
+    "DatabaseMigration": "DB Migration",
     "MIA": "MIA",
     "ResetAPIKey": "Nulstil API-nøgle",
     "SettingsTimeFormat": "Tidsformat",

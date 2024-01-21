@@ -80,7 +80,7 @@
     "CouldNotConnectSignalR": "Es konnte keine Verbindung zu SignalR hergestellt werden, die Benutzeroberfläche wird nicht aktualisiert",
     "Custom": "Benutzerdefiniert",
     "CustomFilters": "Benutzerdefinierte Filter",
-    "DBMigration": "DB Migration",
+    "DatabaseMigration": "DB Migration",
     "Database": "Datenbank",
     "Date": "Datum",
     "Dates": "Termine",

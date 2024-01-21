@@ -139,7 +139,7 @@
     "DeleteNotification": "Cancella Notifica",
     "DeleteDownloadClient": "Cancella Client di Download",
     "DeleteBackup": "Cancella Backup",
-    "DBMigration": "Migrazione DB",
+    "DatabaseMigration": "Migrazione DB",
     "ConnectSettings": "Impostazioni Collegamento",
     "ConnectionLost": "Connessione Persa",
     "Component": "Componente",

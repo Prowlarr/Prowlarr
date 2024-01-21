@@ -121,7 +121,7 @@
     "Custom": "Zwyczaj",
     "Date": "Data",
     "Dates": "Daktyle",
-    "DBMigration": "Migracja bazy danych",
+    "DatabaseMigration": "Migracja bazy danych",
     "DeleteApplicationMessageText": "Czy na pewno chcesz usunąć powiadomienie „{0}”?",
     "DeleteBackup": "Usuń kopię zapasową",
     "DeleteBackupMessageText": "Czy na pewno chcesz usunąć kopię zapasową „{0}”?",

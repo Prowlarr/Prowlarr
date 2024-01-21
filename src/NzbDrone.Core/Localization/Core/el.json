@@ -122,7 +122,7 @@
     "ChangeHasNotBeenSavedYet": "Η αλλαγή δεν έχει αποθηκευτεί ακόμα",
     "CloneProfile": "Προφίλ κλώνου",
     "CloseCurrentModal": "Κλείσιμο τρέχοντος modal",
-    "DBMigration": "Μετεγκατάσταση DB",
+    "DatabaseMigration": "Μετεγκατάσταση DB",
     "DeleteApplicationMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε την ειδοποίηση \"{0}\";",
     "DeleteBackupMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το αντίγραφο ασφαλείας \"{0}\";",
     "DeleteIndexerProxyMessageText": "Είστε βέβαιοι ότι θέλετε να διαγράψετε τη λίστα \"{0}\";",

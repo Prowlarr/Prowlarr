@@ -27,7 +27,7 @@
     "DeleteBackupMessageText": "Biztosan törli a '{name}' biztonsági mentést?",
     "DeleteBackup": "Biztonsági Mentés törlése",
     "Delete": "Törlés",
-    "DBMigration": "DB Migráció",
+    "DatabaseMigration": "DB Migráció",
     "Dates": "Dátumok",
     "Date": "Dátum",
     "CustomFilters": "Egyéni Szűrők",

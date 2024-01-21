@@ -106,7 +106,7 @@
     "DeleteTag": "Etiketi Sil",
     "BindAddressHelpText": "Tüm arayüzler için geçerli IP4 adresi veya '*'",
     "ConnectSettings": "Bağlantı Ayarları",
-    "DBMigration": "DB Geçişi",
+    "DatabaseMigration": "DB Geçişi",
     "DeleteApplicationMessageText": "'{0}' bildirimini silmek istediğinizden emin misiniz?",
     "DeleteBackup": "Yedeklemeyi Sil",
     "DeleteBackupMessageText": "'{0}' yedeğini silmek istediğinizden emin misiniz?",

@@ -29,7 +29,7 @@
     "Database": "База даних",
     "Date": "Дата",
     "Dates": "Дати",
-    "DBMigration": "Міграція БД",
+    "DatabaseMigration": "Міграція БД",
     "DeleteBackup": "Видалити резервну копію",
     "DeleteBackupMessageText": "Ви впевнені, що хочете видалити резервну копію '{0}'?",
     "DeleteDownloadClient": "Видалити клієнт завантаження",

@@ -26,7 +26,7 @@
     "Connections": "연결",
     "CouldNotConnectSignalR": "SignalR에 연결할 수 없습니다. UI가 업데이트되지 않습니다.",
     "Custom": "사용자 지정",
-    "DBMigration": "DB 마이그레이션",
+    "DatabaseMigration": "DB 마이그레이션",
     "DeleteBackupMessageText": "백업 '{0}'을(를) 삭제하시겠습니까?",
     "BackupNow": "지금 백업",
     "Authentication": "인증",

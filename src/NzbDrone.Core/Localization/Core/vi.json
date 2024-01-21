@@ -6,7 +6,7 @@
     "CustomFilters": "Bộ lọc tùy chỉnh",
     "Date": "Ngày",
     "Dates": "ngày",
-    "DBMigration": "Di chuyển DB",
+    "DatabaseMigration": "Di chuyển DB",
     "NoBackupsAreAvailable": "Không có bản sao lưu nào",
     "NoChanges": "Không thay đổi",
     "NoLeaveIt": "Không để nó",

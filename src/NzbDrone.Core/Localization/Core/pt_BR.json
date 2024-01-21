@@ -93,7 +93,7 @@
     "CouldNotConnectSignalR": "Não é possível conectar ao SignalR, a interface não atualizará",
     "Custom": "Personalizado",
     "CustomFilters": "Filtros personalizados",
-    "DBMigration": "Migração de banco de dados",
+    "DatabaseMigration": "Migração de banco de dados",
     "Database": "Banco de dados",
     "Date": "Data",
     "Dates": "Datas",

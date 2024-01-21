@@ -138,7 +138,7 @@
     "DeleteNotification": "Borrar Notificacion",
     "DeleteDownloadClient": "Borrar cliente de descarga",
     "DeleteBackup": "Eliminar copia de seguridad",
-    "DBMigration": "Migración de DB",
+    "DatabaseMigration": "Migración de DB",
     "CloneProfile": "Clonar Perfil",
     "ClientPriority": "Prioridad del Cliente",
     "ChangeHasNotBeenSavedYet": "El cambio aún no se ha guardado",

@@ -92,7 +92,7 @@
     "CouldNotConnectSignalR": "无法连接至SignalR，不会升级UI",
     "Custom": "自定义",
     "CustomFilters": "自定义过滤器",
-    "DBMigration": "数据库迁移版本",
+    "DatabaseMigration": "数据库迁移版本",
     "Database": "数据库",
     "Date": "日期",
     "Dates": "日期",

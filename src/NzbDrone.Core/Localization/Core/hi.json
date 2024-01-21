@@ -120,7 +120,7 @@
     "New": "नया",
     "CustomFilters": "कस्टम फ़िल्टर",
     "Dates": "खजूर",
-    "DBMigration": "DB प्रवासन",
+    "DatabaseMigration": "DB प्रवासन",
     "DeleteApplicationMessageText": "क्या आप वाकई '{0}' की सूचना हटाना चाहते हैं?",
     "DeleteBackup": "बैकअप हटाएं",
     "DeleteBackupMessageText": "क्या आप वाकई '{0}' बैकअप हटाना चाहते हैं?",

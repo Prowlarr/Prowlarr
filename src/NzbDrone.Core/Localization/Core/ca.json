@@ -168,7 +168,7 @@
     "CustomFilters": "Filtres personalitzats",
     "Date": "Data",
     "Dates": "Dates",
-    "DBMigration": "Migració de BD",
+    "DatabaseMigration": "Migració de BD",
     "Delete": "Suprimeix",
     "DeleteNotificationMessageText": "Esteu segur que voleu suprimir la notificació '{name}'?",
     "DeleteTag": "Suprimeix l'etiqueta",

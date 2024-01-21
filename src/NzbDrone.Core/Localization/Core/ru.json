@@ -118,7 +118,7 @@
     "CustomFilters": "Настраиваемые фильтры",
     "Date": "Дата",
     "Dates": "Даты",
-    "DBMigration": "Перенос БД",
+    "DatabaseMigration": "Перенос БД",
     "DeleteNotification": "Удалить уведомление",
     "DeleteNotificationMessageText": "Вы уверены, что хотите удалить уведомление '{name}'?",
     "DeleteTag": "Удалить тэг",

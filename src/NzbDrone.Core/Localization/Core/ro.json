@@ -228,7 +228,7 @@
     "ChangeHasNotBeenSavedYet": "Modificarea nu a fost încă salvată",
     "CloneProfile": "Clonați profil",
     "NoLeaveIt": "Nu, lasă-l",
-    "DBMigration": "Migrarea BD",
+    "DatabaseMigration": "Migrarea BD",
     "DeleteBackupMessageText": "Sigur doriți să ștergeți copia de siguranță „{0}”?",
     "DeleteTagMessageText": "Sigur doriți să ștergeți eticheta '{label}'?",
     "EnableInteractiveSearch": "Activați căutarea interactivă",

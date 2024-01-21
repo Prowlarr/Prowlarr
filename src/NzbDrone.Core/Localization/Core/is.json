@@ -199,7 +199,7 @@
     "CouldNotConnectSignalR": "Gat ekki tengst SignalR, HÍ mun ekki uppfæra",
     "CustomFilters": "Sérsniðin síur",
     "Dates": "Dagsetningar",
-    "DBMigration": "DB fólksflutningar",
+    "DatabaseMigration": "DB fólksflutningar",
     "Delete": "Eyða",
     "DeleteApplicationMessageText": "Ertu viss um að þú viljir eyða tilkynningunni „{0}“?",
     "DeleteBackup": "Eyða afritun",

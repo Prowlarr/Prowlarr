@@ -81,7 +81,7 @@
     "CouldNotConnectSignalR": "Kan geen verbinding maken met SignalR, gebruikersinterface wordt niet bijgewerkt",
     "Custom": "Aangepast",
     "CustomFilters": "Aangepaste Filters",
-    "DBMigration": "DB Migratie",
+    "DatabaseMigration": "DB Migratie",
     "Database": "Databasis",
     "Date": "Datum",
     "Dates": "Datum en tijd",

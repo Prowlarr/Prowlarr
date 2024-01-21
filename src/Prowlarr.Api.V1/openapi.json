@@ -4013,10 +4013,10 @@
           "enableRss": {
             "type": "boolean"
           },
-          "enableInteractiveSearch": {
+          "enableAutomaticSearch": {
             "type": "boolean"
           },
-          "enableAutomaticSearch": {
+          "enableInteractiveSearch": {
             "type": "boolean"
           },
           "minimumSeeders": {

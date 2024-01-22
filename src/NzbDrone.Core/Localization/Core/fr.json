@@ -282,7 +282,7 @@
     "CloseCurrentModal": "Fermer cette fenêtre modale",
     "AddingTag": "Ajout d'une étiquette",
     "OnHealthIssueHelpText": "Sur un problème de santé",
-    "AcceptConfirmationModal": "Accepter les modalités d'utilisations",
+    "AcceptConfirmationModal": "Accepter les modalités d'utilisation",
     "OpenThisModal": "Ouvrir cette fenêtre modale",
     "IndexerLongTermStatusCheckSingleClientMessage": "Indexeurs indisponibles en raison de pannes pendant plus de 6 heures : {0}",
     "IndexerLongTermStatusCheckAllClientMessage": "Tous les indexeurs sont indisponibles en raison d'échecs de plus de 6 heures",

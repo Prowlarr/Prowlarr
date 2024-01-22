@@ -82,7 +82,7 @@
     "EditIndexer": "Edita l'indexador",
     "EnableAutomaticSearch": "Activa la cerca automàtica",
     "Enabled": "Habilitat",
-    "Error": "error",
+    "Error": "Error",
     "ErrorLoadingContents": "S'ha produït un error en carregar el contingut",
     "Events": "Esdeveniments",
     "ExistingTag": "Etiqueta existent",
@@ -358,7 +358,7 @@
     "DeleteSelectedIndexersMessageText": "Esteu segur que voleu suprimir {count} indexador(s) seleccionat(s)?",
     "DownloadClientPriorityHelpText": "Prioritzeu diversos clients de baixada. S'utilitza round-robin per a clients amb la mateixa prioritat.",
     "More": "Més",
-    "Season": "temporada",
+    "Season": "Temporada",
     "Theme": "Tema",
     "Track": "Traça",
     "Year": "Any",
@@ -413,7 +413,7 @@
     "AuthenticationRequiredUsernameHelpTextWarning": "Introduïu un nom d'usuari nou",
     "Categories": "Categories",
     "ApiKeyValidationHealthCheckMessage": "Actualitzeu la vostra clau de l'API perquè tingui almenys {length} caràcters. Podeu fer-ho mitjançant la configuració o el fitxer de configuració",
-    "Episode": "episodi",
+    "Episode": "Episodi",
     "EditApplicationImplementation": "Edita la notificació - {implementationName}",
     "EditConnectionImplementation": "Afegeix una connexió - {implementationName}",
     "EditIndexerProxyImplementation": "Edita l'indexador - {implementationName}",
@@ -425,5 +425,7 @@
     "Category": "Categoria",
     "Clone": "Clona",
     "Yes": "Si",
-    "No": "No"
+    "No": "No",
+    "StopSelecting": "Deixa de seleccionar",
+    "External": "Extern"
 }

@@ -604,5 +604,6 @@
     "InvalidUILanguage": "Sua UI está definida com um idioma inválido, corrija-a e salve suas configurações",
     "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Seja para usar o layout de conteúdo configurado do qBittorrent, o layout original do torrent ou sempre criar uma subpasta (qBittorrent 4.3.2+)",
     "DownloadClientQbittorrentSettingsContentLayout": "Layout de Conteúdo",
-    "IndexerId": "ID do Indexador"
+    "IndexerId": "ID do Indexador",
+    "DownloadClientAriaSettingsDirectoryHelpText": "Local opcional para colocar downloads, deixe em branco para usar o local padrão do Aria2"
 }

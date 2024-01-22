@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var parameters = new BroadcastheNetTorrentQuery();
 
-            var searchString = searchCriteria.SearchTerm ?? string.Empty;
+            var searchTerm = searchCriteria.SearchTerm ?? string.Empty;
 
             var btnResults = searchCriteria.Limit.GetValueOrDefault();
             if (btnResults == 0)
@@ -51,9 +51,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 parameters.Tvrage = $"{searchCriteria.RId}";
             }
 
-            if (searchString.IsNotNullOrWhiteSpace())
+            if (searchTerm.IsNotNullOrWhiteSpace())
             {
-                parameters.Search = searchString.Replace(" ", "%");
+                parameters.Search = searchTerm.Replace(" ", "%");
             }
 
             // If only the season/episode is searched for then change format to match expected format
@@ -85,6 +85,11 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
+            else if (searchTerm.IsNotNullOrWhiteSpace() && int.TryParse(searchTerm, out _) && (searchCriteria.TvdbId > 0 || searchCriteria.RId > 0))
+            {
+                // Disable ID-based searches for episodes with absolute episode number
+                return new IndexerPageableRequestChain();
+            }
             else
             {
                 // Neither a season only search nor daily nor standard, fall back to query
@@ -105,7 +110,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var parameters = new BroadcastheNetTorrentQuery();
 
-            var searchString = searchCriteria.SearchTerm ?? "";
+            var searchTerm = searchCriteria.SearchTerm ?? string.Empty;
 
             var btnResults = searchCriteria.Limit.GetValueOrDefault();
             if (btnResults == 0)
@@ -115,9 +120,9 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault(0);
 
-            if (searchString.IsNotNullOrWhiteSpace())
+            if (searchTerm.IsNotNullOrWhiteSpace())
             {
-                parameters.Search = searchString.Replace(" ", "%");
+                parameters.Search = searchTerm.Replace(" ", "%");
             }
 
             pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));

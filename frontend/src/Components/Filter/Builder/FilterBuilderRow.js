@@ -5,6 +5,7 @@ import IconButton from 'Components/Link/IconButton';
 import { filterBuilderTypes, filterBuilderValueTypes, icons } from 'Helpers/Props';
 import AppProfileFilterBuilderRowValueConnector from './AppProfileFilterBuilderRowValueConnector';
 import BoolFilterBuilderRowValue from './BoolFilterBuilderRowValue';
+import CategoryFilterBuilderRowValue from './CategoryFilterBuilderRowValue';
 import DateFilterBuilderRowValue from './DateFilterBuilderRowValue';
 import FilterBuilderRowValueConnector from './FilterBuilderRowValueConnector';
 import HistoryEventTypeFilterBuilderRowValue from './HistoryEventTypeFilterBuilderRowValue';
@@ -55,6 +56,9 @@ function getRowValueConnector(selectedFilterBuilderProp) {
 
     case filterBuilderValueTypes.BOOL:
       return BoolFilterBuilderRowValue;
+
+    case filterBuilderValueTypes.CATEGORY:
+      return CategoryFilterBuilderRowValue;
 
     case filterBuilderValueTypes.DATE:
       return DateFilterBuilderRowValue;

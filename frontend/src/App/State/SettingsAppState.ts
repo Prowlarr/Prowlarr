@@ -3,6 +3,7 @@ import AppSectionState, {
   AppSectionItemState,
   AppSectionSaveState,
 } from 'App/State/AppSectionState';
+import { IndexerCategory } from 'Indexer/Indexer';
 import Application from 'typings/Application';
 import DownloadClient from 'typings/DownloadClient';
 import Notification from 'typings/Notification';
@@ -25,6 +26,11 @@ export interface DownloadClientAppState
     AppSectionDeleteState,
     AppSectionSaveState {}
 
+export interface IndexerCategoryAppState
+  extends AppSectionState<IndexerCategory>,
+    AppSectionDeleteState,
+    AppSectionSaveState {}
+
 export interface NotificationAppState
   extends AppSectionState<Notification>,
     AppSectionDeleteState {}
@@ -35,6 +41,7 @@ interface SettingsAppState {
   appProfiles: AppProfileAppState;
   applications: ApplicationAppState;
   downloadClients: DownloadClientAppState;
+  indexerCategories: IndexerCategoryAppState;
   notifications: NotificationAppState;
   ui: UiSettingsAppState;
 }

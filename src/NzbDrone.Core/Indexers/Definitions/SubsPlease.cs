@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
@@ -43,12 +44,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new SubsPleaseRequestGenerator { Settings = Settings, Capabilities = Capabilities };
+            return new SubsPleaseRequestGenerator(Settings);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new SubsPleaseParser(Settings, Capabilities.Categories);
+            return new SubsPleaseParser(Settings);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -74,12 +75,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseRequestGenerator : IIndexerRequestGenerator
     {
-        public NoAuthTorrentBaseSettings Settings { get; set; }
-        public IndexerCapabilities Capabilities { get; set; }
+        private readonly NoAuthTorrentBaseSettings _settings;
+
+        public SubsPleaseRequestGenerator(NoAuthTorrentBaseSettings settings)
+        {
+            _settings = settings;
+        }
 
         private IEnumerable<IndexerRequest> GetSearchRequests(string term)
         {
-            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/api/?";
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/?";
 
             var searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
 
@@ -104,7 +109,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetRssRequest()
         {
-            var searchUrl = $"{Settings.BaseUrl.TrimEnd('/')}/api/?";
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/?";
 
             var queryParameters = new NameValueCollection
             {
@@ -119,16 +124,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
@@ -166,13 +167,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseParser : IParseIndexerResponse
     {
-        private readonly NoAuthTorrentBaseSettings _settings;
-        private readonly IndexerCapabilitiesCategories _categories;
+        private static readonly Regex RegexSize = new (@"\&xl=(?<size>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public SubsPleaseParser(NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        private readonly NoAuthTorrentBaseSettings _settings;
+
+        public SubsPleaseParser(NoAuthTorrentBaseSettings settings)
         {
             _settings = settings;
-            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -216,34 +217,41 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     // Ex: [SubsPlease] Shingeki no Kyojin (The Final Season) - 64 (1080p)
-                    release.Title += $"[SubsPlease] {value.Show} - {value.Episode} ({d.Res}p)";
+                    release.Title += $"[SubsPlease] {value.Show} - {value.Episode} ({d.Resolution}p)";
                     release.MagnetUrl = d.Magnet;
                     release.DownloadUrl = null;
                     release.Guid = d.Magnet;
-
-                    // The API doesn't tell us file size, so give an estimate based on resolution
-                    if (string.Equals(d.Res, "1080"))
-                    {
-                        release.Size = 1395864371; // 1.3GB
-                    }
-                    else if (string.Equals(d.Res, "720"))
-                    {
-                        release.Size = 734003200; // 700MB
-                    }
-                    else if (string.Equals(d.Res, "480"))
-                    {
-                        release.Size = 367001600; // 350MB
-                    }
-                    else
-                    {
-                        release.Size = 1073741824; // 1GB
-                    }
+                    release.Size = GetReleaseSize(d);
 
                     torrentInfos.Add(release);
                 }
             }
 
             return torrentInfos.ToArray();
+        }
+
+        private static long GetReleaseSize(SubPleaseDownloadInfo info)
+        {
+            if (info.Magnet.IsNotNullOrWhiteSpace())
+            {
+                var sizeMatch = RegexSize.Match(info.Magnet);
+
+                if (sizeMatch.Success &&
+                    long.TryParse(sizeMatch.Groups["size"].Value, out var releaseSize)
+                    && releaseSize > 0)
+                {
+                    return releaseSize;
+                }
+            }
+
+            // The API doesn't tell us file size, so give an estimate based on resolution
+            return info.Resolution switch
+            {
+                "1080" => 1.3.Gigabytes(),
+                "720" => 700.Megabytes(),
+                "480" => 350.Megabytes(),
+                _ => 1.Gigabytes()
+            };
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
@@ -265,7 +273,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubPleaseDownloadInfo
     {
-        public string Res { get; set; }
+        [JsonProperty("res")]
+        public string Resolution { get; set; }
         public string Magnet { get; set; }
     }
 }

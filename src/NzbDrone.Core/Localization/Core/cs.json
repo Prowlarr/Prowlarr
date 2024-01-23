@@ -199,7 +199,7 @@
     "SSLCertPath": "Cesta certifikátu SSL",
     "SSLCertPathHelpText": "Cesta k souboru pfx",
     "UnableToLoadBackups": "Nelze načíst zálohy",
-    "UnableToLoadDownloadClients": "Nelze načíst klienty pro stahování",
+    "DownloadClientsLoadError": "Nelze načíst klienty pro stahování",
     "UnableToLoadGeneralSettings": "Nelze načíst obecná nastavení",
     "DeleteNotification": "Smazat oznámení",
     "EnableAutomaticSearch": "Povolit automatické vyhledávání",

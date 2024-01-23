@@ -294,7 +294,7 @@
     "RestartNow": "अब पुनःचालू करें",
     "SettingsEnableColorImpairedMode": "रंग-बिगड़ा मोड सक्षम करें",
     "UnableToAddANewNotificationPleaseTryAgain": "नई अधिसूचना जोड़ने में असमर्थ, कृपया पुनः प्रयास करें।",
-    "UnableToLoadDownloadClients": "डाउनलोड क्लाइंट लोड करने में असमर्थ",
+    "DownloadClientsLoadError": "डाउनलोड क्लाइंट लोड करने में असमर्थ",
     "UnableToLoadGeneralSettings": "सामान्य सेटिंग्स लोड करने में असमर्थ",
     "UnableToLoadNotifications": "सूचनाएं लोड करने में असमर्थ",
     "UpdateCheckStartupNotWritableMessage": "अपडेट स्थापित नहीं किया जा सकता क्योंकि स्टार्टअप फ़ोल्डर '{0}' उपयोगकर्ता '{1}' द्वारा लिखने योग्य नहीं है।",

@@ -58,7 +58,7 @@
     "UILanguageHelpTextWarning": "จำเป็นต้องโหลดเบราว์เซอร์ใหม่",
     "UnableToAddANewIndexerPleaseTryAgain": "ไม่สามารถเพิ่มตัวสร้างดัชนีใหม่ได้โปรดลองอีกครั้ง",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "ไม่สามารถเพิ่มตัวสร้างดัชนีใหม่ได้โปรดลองอีกครั้ง",
-    "UnableToLoadDownloadClients": "ไม่สามารถโหลดไคลเอนต์ดาวน์โหลด",
+    "DownloadClientsLoadError": "ไม่สามารถโหลดไคลเอนต์ดาวน์โหลด",
     "UpdateCheckUINotWritableMessage": "ไม่สามารถติดตั้งการอัปเดตเนื่องจากโฟลเดอร์ UI \"{0}\" ไม่สามารถเขียนได้โดยผู้ใช้ \"{1}\"",
     "Updates": "อัปเดต",
     "UpdateScriptPathHelpText": "พา ธ ไปยังสคริปต์แบบกำหนดเองที่ใช้แพ็กเกจโปรแกรมปรับปรุงที่แยกออกมาและจัดการส่วนที่เหลือของกระบวนการอัพเดต",

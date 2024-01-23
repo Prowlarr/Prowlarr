@@ -257,7 +257,7 @@
     "Tags": "العلامات",
     "TagsHelpText": "ينطبق على الأفلام التي تحتوي على علامة مطابقة واحدة على الأقل",
     "UISettings": "إعدادات واجهة المستخدم",
-    "UnableToLoadDownloadClients": "تعذر تحميل عملاء التنزيل",
+    "DownloadClientsLoadError": "تعذر تحميل عملاء التنزيل",
     "UnableToLoadTags": "تعذر تحميل العلامات",
     "UnableToLoadUISettings": "تعذر تحميل إعدادات واجهة المستخدم",
     "UpdateCheckStartupTranslocationMessage": "لا يمكن تثبيت التحديث لأن مجلد بدء التشغيل \"{0}\" موجود في مجلد App Translocation.",

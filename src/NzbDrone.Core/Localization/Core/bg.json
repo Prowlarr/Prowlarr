@@ -188,7 +188,7 @@
     "Priority": "Приоритет",
     "SettingsLongDateFormat": "Формат с дълга дата",
     "SettingsShowRelativeDates": "Показване на относителни дати",
-    "UnableToLoadDownloadClients": "Клиентите за изтегляне не могат да се заредят",
+    "DownloadClientsLoadError": "Клиентите за изтегляне не могат да се заредят",
     "Logging": "Регистрация",
     "Exception": "Изключение",
     "MovieIndexScrollBottom": "Индекс на филма: Превъртане отдолу",

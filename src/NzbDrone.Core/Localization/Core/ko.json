@@ -160,7 +160,7 @@
     "Title": "표제",
     "Today": "오늘",
     "UILanguageHelpTextWarning": "브라우저 새로 고침 필요",
-    "UnableToLoadDownloadClients": "다운로드 클라이언트를로드 할 수 없습니다.",
+    "DownloadClientsLoadError": "다운로드 클라이언트를로드 할 수 없습니다.",
     "UnableToLoadHistory": "기록을로드 할 수 없습니다.",
     "UnableToLoadTags": "태그를로드 할 수 없습니다.",
     "UnableToLoadUISettings": "UI 설정을로드 할 수 없습니다.",

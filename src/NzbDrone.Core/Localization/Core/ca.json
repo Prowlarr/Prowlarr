@@ -44,7 +44,7 @@
     "UILanguageHelpTextWarning": "Es requereix una recàrrega del navegador",
     "UISettings": "Configuració de la interfície",
     "UnableToLoadBackups": "No es poden carregar còpies de seguretat",
-    "UnableToLoadDownloadClients": "No es poden carregar els clients de baixada",
+    "DownloadClientsLoadError": "No es poden carregar els clients de baixada",
     "UnableToLoadTags": "No es poden carregar les etiquetes",
     "UnableToLoadUISettings": "No es pot carregar la configuració de la IU",
     "UnselectAll": "Desseleccioneu-ho tot",

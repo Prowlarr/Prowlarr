@@ -256,7 +256,7 @@
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Не удалось добавить новый индексатор, повторите попытку.",
     "UnableToAddANewNotificationPleaseTryAgain": "Невозможно добавить новое уведомление, попробуйте еще раз.",
     "UnableToLoadBackups": "Невозможно загрузить резервные копии",
-    "UnableToLoadDownloadClients": "Невозможно загрузить загрузчики",
+    "DownloadClientsLoadError": "Невозможно загрузить загрузчики",
     "UnableToLoadGeneralSettings": "Невозможно загрузить общие настройки",
     "UnableToLoadNotifications": "Невозможно загрузить уведомления",
     "UnableToLoadUISettings": "Не удалось загрузить настройки пользовательского интерфейса",

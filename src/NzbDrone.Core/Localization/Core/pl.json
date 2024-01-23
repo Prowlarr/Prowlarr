@@ -262,7 +262,7 @@
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Nie można dodać nowego indeksatora, spróbuj ponownie.",
     "UnableToAddANewNotificationPleaseTryAgain": "Nie można dodać nowego powiadomienia, spróbuj ponownie.",
     "UnableToLoadBackups": "Nie można załadować kopii zapasowych",
-    "UnableToLoadDownloadClients": "Nie można załadować klientów pobierania",
+    "DownloadClientsLoadError": "Nie można załadować klientów pobierania",
     "UnableToLoadGeneralSettings": "Nie można załadować ustawień ogólnych",
     "UnableToLoadHistory": "Nie można załadować historii",
     "UnableToLoadTags": "Nie można załadować tagów",

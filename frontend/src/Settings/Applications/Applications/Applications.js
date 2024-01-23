@@ -62,7 +62,7 @@ class Applications extends Component {
     return (
       <FieldSet legend={translate('Applications')}>
         <PageSectionContent
-          errorMessage={translate('UnableToLoadApplicationList')}
+          errorMessage={translate('ApplicationsLoadError')}
           {...otherProps}
         >
           <div className={styles.applications}>

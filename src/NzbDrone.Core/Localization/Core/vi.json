@@ -215,7 +215,7 @@
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Không thể thêm trình chỉ mục mới, vui lòng thử lại.",
     "UnableToAddANewNotificationPleaseTryAgain": "Không thể thêm thông báo mới, vui lòng thử lại.",
     "UnableToLoadBackups": "Không thể tải các bản sao lưu",
-    "UnableToLoadDownloadClients": "Không thể tải ứng dụng khách tải xuống",
+    "DownloadClientsLoadError": "Không thể tải ứng dụng khách tải xuống",
     "UnableToLoadGeneralSettings": "Không thể tải Cài đặt chung",
     "UnableToLoadHistory": "Không thể tải lịch sử",
     "UnableToLoadNotifications": "Không thể tải thông báo",

@@ -84,7 +84,7 @@ class DownloadClientSettings extends Component {
               />
 
               <PageToolbarButton
-                label={translate('ManageDownloadClients')}
+                label={translate('ManageClients')}
                 iconName={icons.MANAGE}
                 onPress={this.onManageDownloadClientsPress}
               />

@@ -100,7 +100,7 @@
     "TagCannotBeDeletedWhileInUse": "使用中は削除できません",
     "TagIsNotUsedAndCanBeDeleted": "タグは使用されておらず、削除できます",
     "TestAll": "すべてテスト",
-    "UnableToLoadDownloadClients": "ダウンロードクライアントを読み込めません",
+    "DownloadClientsLoadError": "ダウンロードクライアントを読み込めません",
     "UnableToLoadGeneralSettings": "一般設定を読み込めません",
     "UpdateAutomaticallyHelpText": "アップデートを自動的にダウンロードしてインストールします。 System：Updatesから引き続きインストールできます。",
     "Updates": "更新",

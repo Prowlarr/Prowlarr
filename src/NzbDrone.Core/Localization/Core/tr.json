@@ -301,7 +301,7 @@
     "UpdateAutomaticallyHelpText": "Güncellemeleri otomatik olarak indirin ve yükleyin. Yine de Sistem'den yükleyebileceksiniz: Güncellemeler",
     "UpdateMechanismHelpText": "{appName}'ın yerleşik güncelleyicisini veya bir komut dosyasını kullanın",
     "ShowSearch": "Aramayı Göster",
-    "UnableToLoadDownloadClients": "İndirme istemcileri yüklenemiyor",
+    "DownloadClientsLoadError": "İndirme istemcileri yüklenemiyor",
     "UnableToLoadGeneralSettings": "Genel ayarlar yüklenemiyor",
     "Automatic": "Otomatik",
     "AutomaticSearch": "Otomatik Arama",

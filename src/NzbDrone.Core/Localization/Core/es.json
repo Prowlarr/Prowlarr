@@ -171,7 +171,7 @@
     "UpdateAutomaticallyHelpText": "Descargar e instalar actualizaciones automáticamente. Se podrán instalar desde Sistema: Actualizaciones también",
     "UnableToLoadTags": "No se pueden cargar las Etiquetas",
     "UnableToLoadNotifications": "No se pueden cargar las Notificaciones",
-    "UnableToLoadDownloadClients": "No se puden cargar los gestores de descargas",
+    "DownloadClientsLoadError": "No se puden cargar los gestores de descargas",
     "UISettings": "Ajustes del UI",
     "Torrents": "Torrents",
     "TestAllClients": "Comprobar Todos los Gestores",

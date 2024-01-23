@@ -72,7 +72,7 @@
     "SSLCertPasswordHelpText": "Пароль для файлу pfx",
     "TestAll": "Перевірити все",
     "Type": "Тип",
-    "UnableToLoadDownloadClients": "Не вдалося завантажити клієнти для завантаження",
+    "DownloadClientsLoadError": "Не вдалося завантажити клієнти для завантаження",
     "UnableToLoadGeneralSettings": "Не вдалося завантажити загальні налаштування",
     "UnableToLoadHistory": "Не вдалося завантажити історію",
     "UnableToLoadIndexers": "Не вдалося завантажити індексатори",

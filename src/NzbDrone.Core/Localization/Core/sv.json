@@ -308,7 +308,7 @@
     "ApplicationStatusCheckAllClientMessage": "Samtliga listor otillgängliga på grund av fel",
     "LogLevel": "Loggnivå",
     "NoLogFiles": "Inga loggfiler",
-    "UnableToLoadDownloadClients": "Det gick inte att ladda nedladdningsklienter",
+    "DownloadClientsLoadError": "Det gick inte att ladda nedladdningsklienter",
     "UpdateMechanismHelpText": "Använd {appName}s inbyggda uppdaterare eller ett skript",
     "AddDownloadClientToProwlarr": "Lägg till en nedladdningsklient tillåter {appName} att sända nyutgåvor direkt från UI:t samtidigt som en manuell sökning genomförs.",
     "UnableToLoadIndexerProxies": "Kunde inte ladda Indexer Proxies",

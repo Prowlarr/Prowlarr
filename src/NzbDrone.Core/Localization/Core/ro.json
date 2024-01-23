@@ -179,7 +179,7 @@
     "Today": "Astăzi",
     "UnableToAddANewNotificationPleaseTryAgain": "Imposibil de adăugat o nouă notificare, încercați din nou.",
     "UnableToLoadBackups": "Imposibil de încărcat copiile de rezervă",
-    "UnableToLoadDownloadClients": "Nu se pot încărca clienții de descărcare",
+    "DownloadClientsLoadError": "Nu se pot încărca clienții de descărcare",
     "URLBase": "Baza URL",
     "UrlBaseHelpText": "Pentru suport proxy invers, implicit este gol",
     "Usenet": "Usenet",

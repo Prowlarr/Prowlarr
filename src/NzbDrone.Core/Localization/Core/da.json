@@ -264,7 +264,7 @@
     "SSLPort": "SSL-port",
     "StartupDirectory": "Startmappe",
     "Status": "Status",
-    "UnableToLoadDownloadClients": "Kunne ikke indlæse downloadklienter",
+    "DownloadClientsLoadError": "Kunne ikke indlæse downloadklienter",
     "UpdateCheckStartupTranslocationMessage": "Kan ikke installere opdatering, fordi startmappen '{0}' er i en App Translocation-mappe.",
     "UpdateMechanismHelpText": "Brug den indbyggede opdateringsfunktion eller et script",
     "View": "Udsigt",

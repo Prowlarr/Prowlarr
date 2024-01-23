@@ -31,7 +31,7 @@
     "SettingsEnableColorImpairedModeHelpText": "סגנון שונה כדי לאפשר למשתמשים לקויי צבע להבחין טוב יותר במידע המקודד בצבע",
     "SettingsLongDateFormat": "פורמט תאריך ארוך",
     "SettingsShortDateFormat": "פורמט תאריך קצר",
-    "UnableToLoadDownloadClients": "לא ניתן לטעון לקוחות הורדות",
+    "DownloadClientsLoadError": "לא ניתן לטעון לקוחות הורדות",
     "UnableToAddANewNotificationPleaseTryAgain": "לא ניתן להוסיף התראה חדשה, נסה שוב.",
     "UnableToLoadGeneralSettings": "לא ניתן לטעון את ההגדרות הכלליות",
     "About": "אודות",

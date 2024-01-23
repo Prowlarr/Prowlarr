@@ -65,7 +65,7 @@
     "Type": "Tegund",
     "UnableToAddANewApplicationPleaseTryAgain": "Ekki er hægt að bæta við nýrri tilkynningu. Reyndu aftur.",
     "UnableToLoadBackups": "Ekki er hægt að hlaða afrit",
-    "UnableToLoadDownloadClients": "Ekki er hægt að hlaða niður viðskiptavinum",
+    "DownloadClientsLoadError": "Ekki er hægt að hlaða niður viðskiptavinum",
     "UnableToLoadGeneralSettings": "Ekki er hægt að hlaða almennar stillingar",
     "UnableToLoadHistory": "Ekki er hægt að hlaða sögu",
     "UnableToLoadNotifications": "Ekki er hægt að hlaða tilkynningar",

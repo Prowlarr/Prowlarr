@@ -388,7 +388,7 @@
     "UnableToLoadAppProfiles": "Kan app-profielen niet laden",
     "UnableToLoadBackups": "Kon geen veiligheidskopieën laden",
     "UnableToLoadDevelopmentSettings": "Kan ontwikkelingsinstellingen niet laden",
-    "UnableToLoadDownloadClients": "Downloaders kunnen niet worden geladen",
+    "DownloadClientsLoadError": "Downloaders kunnen niet worden geladen",
     "UnableToLoadGeneralSettings": "Kon Algemene instellingen niet inladen",
     "UnableToLoadHistory": "Kon geschiedenis niet laden",
     "UnableToLoadIndexerProxies": "Kan Indexeerder-proxy's niet laden",

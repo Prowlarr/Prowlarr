@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { createAction } from 'redux-actions';
-import { sortDirections } from 'Helpers/Props';
+import { filterTypePredicates, sortDirections } from 'Helpers/Props';
 import createFetchHandler from 'Store/Actions/Creators/createFetchHandler';
 import createRemoveItemHandler from 'Store/Actions/Creators/createRemoveItemHandler';
 import createSaveProviderHandler, { createCancelSaveProviderHandler } from 'Store/Actions/Creators/createSaveProviderHandler';
@@ -69,6 +69,28 @@ export const filterPredicates = {
     item.fields.find((field) => field.name === 'vipExpiration')?.value ?? null;
 
     return dateFilterPredicate(vipExpiration, filterValue, type);
+  },
+
+  categories: function(item, filterValue, type) {
+    const predicate = filterTypePredicates[type];
+
+    const { categories = [] } = item.capabilities || {};
+
+    const categoryList = categories
+      .filter((category) => category.id < 100000)
+      .reduce((acc, element) => {
+        acc.push(element.id);
+
+        if (element.subCategories && element.subCategories.length > 0) {
+          element.subCategories.forEach((subCat) => {
+            acc.push(subCat.id);
+          });
+        }
+
+        return acc;
+      }, []);
+
+    return predicate(categoryList, filterValue);
   }
 };
 

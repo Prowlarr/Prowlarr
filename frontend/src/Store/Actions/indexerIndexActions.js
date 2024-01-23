@@ -187,6 +187,12 @@ export const defaultState = {
       valueType: filterBuilderValueTypes.APP_PROFILE
     },
     {
+      name: 'categories',
+      label: () => translate('Categories'),
+      type: filterBuilderTypes.ARRAY,
+      valueType: filterBuilderValueTypes.CATEGORY
+    },
+    {
       name: 'tags',
       label: () => translate('Tags'),
       type: filterBuilderTypes.ARRAY,

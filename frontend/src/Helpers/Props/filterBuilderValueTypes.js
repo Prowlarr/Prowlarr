@@ -7,5 +7,5 @@ export const INDEXER = 'indexer';
 export const PROTOCOL = 'protocol';
 export const PRIVACY = 'privacy';
 export const APP_PROFILE = 'appProfile';
-export const MOVIE_STATUS = 'movieStatus';
+export const CATEGORY = 'category';
 export const TAG = 'tag';

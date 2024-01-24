@@ -366,6 +366,8 @@
   "NotificationTriggers": "Notification Triggers",
   "NotificationTriggersHelpText": "Select which events should trigger this notification",
   "Notifications": "Notifications",
+  "NotificationsEmailSettingsUseEncryption": "Use Encryption",
+  "NotificationsEmailSettingsUseEncryptionHelpText": "Whether to prefer using encryption if configured on the server, to always use encryption via SSL (Port 465 only) or StartTLS (any other port) or to never use encryption",
   "OAuthPopupMessage": "Pop-ups are being blocked by your browser",
   "Ok": "Ok",
   "OnApplicationUpdate": "On Application Update",

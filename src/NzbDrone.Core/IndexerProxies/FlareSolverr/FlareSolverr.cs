@@ -209,7 +209,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             switch (proxySettings.Type)
             {
                 case ProxyType.Http:
-                    return new Uri("http://" + proxySettings.Host + ":" + proxySettings.Port);
+                    return new Uri(proxySettings.Host + ":" + proxySettings.Port);
                 case ProxyType.Socks4:
                     return new Uri("socks4://" + proxySettings.Host + ":" + proxySettings.Port);
                 case ProxyType.Socks5:

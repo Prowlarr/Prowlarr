@@ -277,6 +277,18 @@ namespace NzbDrone.Core.Indexers.Torznab
                 flags.Add(IndexerFlag.FreeLeech);
             }
 
+            var tags = TryGetMultipleTorznabAttributes(item, "tag");
+
+            if (tags.Any(t => t.EqualsIgnoreCase("internal")))
+            {
+                flags.Add(IndexerFlag.Internal);
+            }
+
+            if (tags.Any(t => t.EqualsIgnoreCase("scene")))
+            {
+                flags.Add(IndexerFlag.Scene);
+            }
+
             return flags;
         }
 

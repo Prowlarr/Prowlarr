@@ -10,26 +10,26 @@ namespace NzbDrone.Core.Indexers
     {
         private static readonly List<string> Trackers = new ()
         {
-            "udp://tracker.opentrackr.org:1337/announce",
-            "https://tracker2.ctix.cn:443/announce",
-            "https://tracker1.520.jp:443/announce",
+            "http://tracker.opentrackr.org:1337/announce",
+            "udp://tracker.auctor.tv:6969/announce",
             "udp://opentracker.i2p.rocks:6969/announce",
-            "udp://open.tracker.cl:1337/announce",
+            "https://opentracker.i2p.rocks:443/announce",
             "udp://open.demonii.com:1337/announce",
             "udp://tracker.openbittorrent.com:6969/announce",
             "http://tracker.openbittorrent.com:80/announce",
             "udp://open.stealth.si:80/announce",
-            "udp://exodus.desync.com:6969/announce",
             "udp://tracker.torrent.eu.org:451/announce",
-            "udp://tracker1.bt.moack.co.kr:80/announce",
-            "udp://tracker-udp.gbitt.info:80/announce",
+            "udp://tracker.moeking.me:6969/announce",
             "udp://explodie.org:6969/announce",
-            "https://tracker.gbitt.info:443/announce",
-            "http://tracker.gbitt.info:80/announce",
-            "http://bt.endpot.com:80/announce",
+            "udp://exodus.desync.com:6969/announce",
+            "udp://uploads.gamecoast.net:6969/announce",
+            "udp://tracker1.bt.moack.co.kr:80/announce",
             "udp://tracker.tiny-vps.com:6969/announce",
-            "udp://tracker.auctor.tv:6969/announce",
-            "udp://tk1.trackerservers.com:8080/announce"
+            "udp://tracker.theoks.net:6969/announce",
+            "udp://tracker.skyts.net:6969/announce",
+            "udp://tracker-udp.gbitt.info:80/announce",
+            "udp://open.tracker.ink:6969/announce",
+            "udp://movies.zsw.ca:6969/announce"
         };
 
         public static string BuildPublicMagnetLink(string infoHash, string releaseTitle)

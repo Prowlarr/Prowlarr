@@ -4629,6 +4629,9 @@
             "type": "string",
             "nullable": true
           },
+          "privacy": {
+            "$ref": "#/components/schemas/PrivacyLevel"
+          },
           "placeholder": {
             "type": "string",
             "nullable": true
@@ -5674,6 +5677,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "PrivacyLevel": {
+        "enum": [
+          "normal",
+          "password",
+          "apiKey",
+          "userName"
+        ],
+        "type": "string"
       },
       "ProviderMessage": {
         "type": "object",

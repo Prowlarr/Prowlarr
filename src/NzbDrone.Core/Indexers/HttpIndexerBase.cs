@@ -27,6 +27,7 @@ namespace NzbDrone.Core.Indexers
         where TSettings : IIndexerSettings, new()
     {
         protected const int MaxNumResultsPerQuery = 1000;
+        private const int MaxRedirects = 5;
 
         protected readonly IIndexerHttpClient _httpClient;
         protected readonly IEventAggregator _eventAggregator;
@@ -239,11 +240,47 @@ namespace NzbDrone.Core.Indexers
                 request.RateLimit = RateLimit;
             }
 
+            request.AllowAutoRedirect = false;
+
             byte[] fileData;
 
             try
             {
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+
+                if (response.StatusCode is HttpStatusCode.MovedPermanently or HttpStatusCode.Found or HttpStatusCode.SeeOther)
+                {
+                    var autoRedirectChain = new List<string> { request.Url.ToString() };
+
+                    do
+                    {
+                        var redirectUrl = response.RedirectUrl;
+
+                        _logger.Debug("Download request is being redirected to: {0}", redirectUrl);
+
+                        if (redirectUrl.IsNullOrWhiteSpace())
+                        {
+                            throw new WebException("Remote website tried to redirect without providing a location.");
+                        }
+
+                        if (redirectUrl.StartsWith("magnet:"))
+                        {
+                            return await Download(new Uri(redirectUrl));
+                        }
+
+                        request.Url = new HttpUri(redirectUrl);
+                        autoRedirectChain.Add(request.Url.ToString());
+
+                        if (autoRedirectChain.Count > MaxRedirects)
+                        {
+                            throw new WebException($"Too many download redirections were attempted for {autoRedirectChain.Join(" -> ")}", WebExceptionStatus.ProtocolError);
+                        }
+
+                        response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                    }
+                    while (response.StatusCode is HttpStatusCode.MovedPermanently or HttpStatusCode.Found or HttpStatusCode.SeeOther);
+                }
+
                 fileData = response.ResponseData;
 
                 _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);
@@ -287,10 +324,7 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual Task<HttpRequest> GetDownloadRequest(Uri link)
         {
-            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
-            {
-                AllowAutoRedirect = FollowRedirect
-            };
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
 
             if (Cookies != null)
             {

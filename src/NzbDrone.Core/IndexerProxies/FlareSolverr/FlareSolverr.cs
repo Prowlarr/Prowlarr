@@ -115,7 +115,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     MaxTimeout = maxTimeout,
                     Proxy = new FlareSolverrProxy
                     {
-                        Url = proxyUrl?.AbsoluteUri
+                        Url = proxyUrl?.OriginalString
                     }
                 };
             }
@@ -141,7 +141,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                         MaxTimeout = maxTimeout,
                         Proxy = new FlareSolverrProxy
                         {
-                            Url = proxyUrl?.AbsoluteUri
+                            Url = proxyUrl?.OriginalString
                         }
                     };
                 }
@@ -206,17 +206,13 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         private Uri GetProxyUri(HttpProxySettings proxySettings)
         {
-            switch (proxySettings.Type)
+            return proxySettings.Type switch
             {
-                case ProxyType.Http:
-                    return new Uri("http://" + proxySettings.Host + ":" + proxySettings.Port);
-                case ProxyType.Socks4:
-                    return new Uri("socks4://" + proxySettings.Host + ":" + proxySettings.Port);
-                case ProxyType.Socks5:
-                    return new Uri("socks5://" + proxySettings.Host + ":" + proxySettings.Port);
-                default:
-                    return null;
-            }
+                ProxyType.Http => new Uri("http://" + proxySettings.Host + ":" + proxySettings.Port),
+                ProxyType.Socks4 => new Uri("socks4://" + proxySettings.Host + ":" + proxySettings.Port),
+                ProxyType.Socks5 => new Uri("socks5://" + proxySettings.Host + ":" + proxySettings.Port),
+                _ => null
+            };
         }
 
         private class FlareSolverrRequest

@@ -255,7 +255,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests($"{searchCriteria.SanitizedTvSearchString}", searchCriteria, searchCriteria.FullImdbId));
+            var searchTerm = $"{searchCriteria.SanitizedTvSearchString}";
+
+            if (searchCriteria.Season > 0 && searchCriteria.Episode.IsNullOrWhiteSpace())
+            {
+                searchTerm += "*";
+            }
+
+            pageableRequests.Add(GetPagedRequests(searchTerm.Trim(), searchCriteria, searchCriteria.FullImdbId));
 
             return pageableRequests;
         }

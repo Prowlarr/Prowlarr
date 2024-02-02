@@ -125,5 +125,8 @@
     "ApplyTagsHelpTextAdd": "加入：將標籤加入已存在的標籤清單",
     "AppUpdated": "{appName}已更新",
     "AppUpdatedVersion": "重新載入",
-    "ApplyChanges": "應用"
+    "ApplyChanges": "應用",
+    "ApplyTagsHelpTextHowToApplyApplications": "如何套用標籤在所選擇的輸入清單",
+    "Artist": "演員",
+    "Id": "ID"
 }

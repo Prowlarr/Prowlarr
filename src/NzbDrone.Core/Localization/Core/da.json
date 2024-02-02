@@ -369,5 +369,8 @@
     "ResetAPIKeyMessageText": "Er du sikker på, at du vil nulstille din API-nøgle?",
     "AuthBasic": "Grundlæggende (pop op-browser)",
     "None": "Ingen",
-    "RestartProwlarr": "Genstart {appName}"
+    "RestartProwlarr": "Genstart {appName}",
+    "AddCustomFilter": "Tilføj tilpasset filter",
+    "AddConnectionImplementation": "Tilføj forbindelse - {implementationName}",
+    "AddConnection": "Tilføj forbindelse"
 }

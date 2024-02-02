@@ -223,7 +223,7 @@
     "StartTypingOrSelectAPathBelow": "Commencer à écrire ou sélectionner un chemin ci-dessous",
     "NoTagsHaveBeenAddedYet": "Aucune identification n'a été ajoutée pour l'instant",
     "IndexerFlags": "Indicateurs d'indexeur",
-    "DeleteTagMessageText": "Voulez-vous vraiment supprimer l'étiquette « {label} » ?",
+    "DeleteTagMessageText": "Voulez-vous vraiment supprimer l'étiquette '{label}' ?",
     "UISettings": "Paramètres UI",
     "UILanguageHelpTextWarning": "Rechargement du navigateur requis",
     "UILanguageHelpText": "Langue que {appName} utilisera pour l'interface utilisateur",
@@ -603,5 +603,7 @@
     "NoIndexerCategories": "Aucune catégorie disponible pour cet indexeur",
     "InvalidUILanguage": "Votre interface utilisateur est définie sur une langue non valide, corrigez-la et enregistrez vos paramètres",
     "DownloadClientQbittorrentSettingsContentLayout": "Disposition du contenu",
-    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Utiliser la disposition du contenu configurée par qBittorrent, la disposition originale du torrent ou toujours créer un sous-dossier (qBittorrent 4.3.2+)"
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Utiliser la disposition du contenu configurée par qBittorrent, la disposition originale du torrent ou toujours créer un sous-dossier (qBittorrent 4.3.2+)",
+    "DownloadClientAriaSettingsDirectoryHelpText": "Emplacement facultatif pour les téléchargements, laisser vide pour utiliser l'emplacement par défaut Aria2",
+    "ManageClients": "Gérer les clients"
 }

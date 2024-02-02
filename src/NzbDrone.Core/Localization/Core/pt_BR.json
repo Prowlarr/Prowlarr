@@ -93,7 +93,7 @@
     "CouldNotConnectSignalR": "Não é possível conectar ao SignalR, a interface não atualizará",
     "Custom": "Personalizado",
     "CustomFilters": "Filtros personalizados",
-    "DatabaseMigration": "Migração de banco de dados",
+    "DatabaseMigration": "Migração de Banco de Dados",
     "Database": "Banco de dados",
     "Date": "Data",
     "Dates": "Datas",
@@ -401,7 +401,7 @@
     "Source": "Origem",
     "StartTypingOrSelectAPathBelow": "Comece a digitar ou selecione um caminho abaixo",
     "Started": "Iniciado",
-    "StartupDirectory": "Diretório de inicialização",
+    "StartupDirectory": "Diretório de Inicialização",
     "Stats": "Estatísticas",
     "Status": "Status",
     "StopSelecting": "Parar Seleção",
@@ -595,7 +595,7 @@
     "NoIndexerHistory": "Nenhum histórico encontrado para este indexador",
     "TotalGrabs": "Total de Capturas",
     "TotalQueries": "Total de Consultas",
-    "ApplicationTagsHelpText": "Sincronize indexadores com este aplicativo que não possuem tags ou que possuem 1 ou mais tags correspondentes",
+    "ApplicationTagsHelpText": "Sincronize indexadores com este aplicativo que possuem uma ou mais etiquetas correspondentes. Se nenhuma etiqueta estiver listada aqui, nenhum indexador será impedido de sincronizar devido às suas etiquetas.",
     "ApplicationTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um aplicativo com uma tag só será sincronizado com indexadores que tenham a mesma tag.",
     "IndexerTagsHelpTextWarning": "As tags devem ser usadas com cautela, pois podem ter efeitos indesejados. Um indexador com uma tag sincronizará apenas com aplicativos com a mesma tag.",
     "NoIndexerCategories": "Nenhuma categoria encontrada para este indexador",
@@ -605,5 +605,9 @@
     "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Seja para usar o layout de conteúdo configurado do qBittorrent, o layout original do torrent ou sempre criar uma subpasta (qBittorrent 4.3.2+)",
     "DownloadClientQbittorrentSettingsContentLayout": "Layout de Conteúdo",
     "IndexerId": "ID do Indexador",
-    "DownloadClientAriaSettingsDirectoryHelpText": "Local opcional para colocar downloads, deixe em branco para usar o local padrão do Aria2"
+    "DownloadClientAriaSettingsDirectoryHelpText": "Local opcional para colocar downloads, deixe em branco para usar o local padrão do Aria2",
+    "ManageClients": "Gerenciar Clientes",
+    "NoApplicationsFound": "Nenhum aplicativo encontrado",
+    "NotificationsEmailSettingsUseEncryptionHelpText": "Se preferir usar criptografia se configurado no servidor, usar sempre criptografia via SSL (somente porta 465) ou StartTLS (qualquer outra porta) ou nunca usar criptografia",
+    "NotificationsEmailSettingsUseEncryption": "Usar Criptografia"
 }

@@ -427,5 +427,8 @@
     "Yes": "Si",
     "No": "No",
     "StopSelecting": "Deixa de seleccionar",
-    "External": "Extern"
+    "External": "Extern",
+    "Id": "ID",
+    "Author": "Autor",
+    "ManageClients": "Gestiona els clients"
 }

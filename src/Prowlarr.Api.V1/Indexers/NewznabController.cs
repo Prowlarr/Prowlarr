@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -346,9 +346,9 @@ namespace NzbDrone.Api.V1.Indexers
 
         private void AddRetryAfterHeader(int retryAfterSeconds)
         {
-            if (!HttpContext.Response.Headers.ContainsKey("Retry-After") && retryAfterSeconds > 0)
+            if (!HttpContext.Response.Headers.ContainsKey(HeaderNames.RetryAfter) && retryAfterSeconds > 0)
             {
-                HttpContext.Response.Headers.Add("Retry-After", $"{retryAfterSeconds}");
+                HttpContext.Response.Headers.RetryAfter = $"{retryAfterSeconds}";
             }
         }
 

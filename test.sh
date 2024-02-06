@@ -37,11 +37,14 @@ fi
 if [ "$PLATFORM" = "Windows" ]; then
   mkdir -p "$ProgramData/Prowlarr"
   WHERE="$WHERE&Category!=LINUX"
-elif [ "$PLATFORM" = "Linux" ] || [ "$PLATFORM" = "Mac" ] ; then
+elif [ "$PLATFORM" = "Linux" ]; then
   mkdir -p ~/.config/Prowlarr
   WHERE="$WHERE&Category!=WINDOWS"
+elif  [ "$PLATFORM" = "Mac" ]; then
+  mkdir -p ~/Library/Application\ Support/Prowlarr
+  WHERE="$WHERE&Category!=WINDOWS"
 else
-  echo "Platform must be provided as first arguement: Windows, Linux or Mac"
+  echo "Platform must be provided as first argument: Windows, Linux or Mac"
   exit 1
 fi
 

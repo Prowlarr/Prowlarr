@@ -89,7 +89,7 @@ namespace Prowlarr.Http.REST
             if (controllerAttributes.Any(x => x.AttributeType == DEPRECATED_ATTRIBUTE) || attributes.Any(x => x.AttributeType == DEPRECATED_ATTRIBUTE))
             {
                 _logger.Warn("API call made to deprecated endpoint from {0}", Request.Headers.UserAgent.ToString());
-                Response.Headers.Add("Deprecation", "true");
+                Response.Headers["Deprecation"] = "true";
             }
 
             base.OnActionExecuting(context);

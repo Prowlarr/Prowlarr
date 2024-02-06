@@ -341,7 +341,7 @@ namespace NzbDrone.Api.V1.Indexers
         {
             if (!HttpContext.Response.Headers.ContainsKey("Retry-After") && retryAfterSeconds > 0)
             {
-                HttpContext.Response.Headers.Add("Retry-After", $"{retryAfterSeconds}");
+                HttpContext.Response.Headers.Append("Retry-After", $"{retryAfterSeconds}");
             }
         }
 

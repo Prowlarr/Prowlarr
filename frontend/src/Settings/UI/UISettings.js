@@ -28,12 +28,12 @@ export const weekColumnOptions = [
 ];
 
 const shortDateFormatOptions = [
-  { key: 'MMM D YYYY', value: 'Mar 5 2014' },
-  { key: 'DD MMM YYYY', value: '05 Mar 2014' },
-  { key: 'MM/D/YYYY', value: '03/5/2014' },
-  { key: 'MM/DD/YYYY', value: '03/05/2014' },
-  { key: 'DD/MM/YYYY', value: '05/03/2014' },
-  { key: 'YYYY-MM-DD', value: '2014-03-05' }
+  { key: 'MMM D YYYY', value: 'Mar 25 2014', hint: 'MMM D YYYY' },
+  { key: 'DD MMM YYYY', value: '25 Mar 2014', hint: 'DD MMM YYYY' },
+  { key: 'MM/D/YYYY', value: '03/25/2014', hint: 'MM/D/YYYY' },
+  { key: 'MM/DD/YYYY', value: '03/25/2014', hint: 'MM/DD/YYYY' },
+  { key: 'DD/MM/YYYY', value: '25/03/2014', hint: 'DD/MM/YYYY' },
+  { key: 'YYYY-MM-DD', value: '2014-03-25', hint: 'YYYY-MM-DD' }
 ];
 
 const longDateFormatOptions = [

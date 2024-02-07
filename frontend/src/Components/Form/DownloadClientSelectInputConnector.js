@@ -24,7 +24,8 @@ function createMapStateToProps() {
         .sort(sortByName)
         .map((downloadClient) => ({
           key: downloadClient.id,
-          value: downloadClient.name
+          value: downloadClient.name,
+          hint: `(${downloadClient.id})`
         }));
 
       if (includeAny) {

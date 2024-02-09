@@ -267,7 +267,7 @@
   "IndexerDownloadClientHelpText": "Specify which download client is used for grabs made within {appName} from this indexer",
   "IndexerFailureRate": "Indexer Failure Rate",
   "IndexerFlags": "Indexer Flags",
-  "IndexerHDBitsSettingsPasskeyHelpText": "Passkey from Userdetails",
+  "IndexerHDBitsSettingsPasskeyHelpText": "Passkey from User Details",
   "IndexerHealthCheckNoIndexers": "No indexers enabled, {appName} will not return search results",
   "IndexerHistoryLoadError": "Error loading indexer history",
   "IndexerId": "Indexer ID",

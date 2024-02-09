@@ -372,5 +372,8 @@
     "RestartProwlarr": "Genstart {appName}",
     "AddCustomFilter": "Tilføj tilpasset filter",
     "AddConnectionImplementation": "Tilføj forbindelse - {implementationName}",
-    "AddConnection": "Tilføj forbindelse"
+    "AddConnection": "Tilføj forbindelse",
+    "EditConnectionImplementation": "Tilføj forbindelse - {implementationName}",
+    "AddApplicationImplementation": "Tilføj forbindelse - {implementationName}",
+    "AddIndexerImplementation": "Tilføj betingelse - {implementationName}"
 }

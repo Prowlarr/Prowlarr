@@ -430,5 +430,6 @@
     "External": "Extern",
     "Id": "ID",
     "Author": "Autor",
-    "ManageClients": "Gestiona els clients"
+    "ManageClients": "Gestiona els clients",
+    "CountApplicationsSelected": "{count} Col·lecció(ns) seleccionades"
 }

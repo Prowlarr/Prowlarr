@@ -517,5 +517,6 @@
     "AddApplicationImplementation": "Προσθήκη",
     "AddConnectionImplementation": "Προσθήκη",
     "AddIndexerImplementation": "Προσθήκη",
-    "EditIndexerProxyImplementation": "Προσθήκη"
+    "EditIndexerProxyImplementation": "Προσθήκη",
+    "CountApplicationsSelected": "Επιλέχθηκαν {0} συλλογές"
 }

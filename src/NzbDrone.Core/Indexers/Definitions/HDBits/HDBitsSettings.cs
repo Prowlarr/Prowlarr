@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
-        [FieldDefinition(3, Label = "API Key", HelpText = "Site API Key", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(3, Label = "Passkey", HelpText = "Passkey from Userdetails", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         [FieldDefinition(4, Label = "Codecs", Type = FieldType.Select, SelectOptions = typeof(HdBitsCodec), HelpText = "If unspecified, all options are used.", Advanced = true)]

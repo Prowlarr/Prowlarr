@@ -379,5 +379,10 @@
     "AddIndexerProxyImplementation": "Додати умому",
     "EditIndexerProxyImplementation": "Додати умому",
     "AddCustomFilter": "Додати власний фільтр",
-    "AddDownloadClientImplementation": "Додати клієнт завантаження - {implementationName}"
+    "AddDownloadClientImplementation": "Додати клієнт завантаження - {implementationName}",
+    "Application": "Додатки",
+    "CountApplicationsSelected": "Вибрано колекцій: {0}",
+    "Applications": "Додатки",
+    "Categories": "Категорії",
+    "EditDownloadClientImplementation": "Додати клієнт завантаження - {implementationName}"
 }

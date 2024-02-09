@@ -362,12 +362,14 @@
     "Episode": "bölüm",
     "AddConnection": "Bağlantı Ekle",
     "AddApplicationImplementation": "Koşul Ekle - {implementationName}",
-    "AddIndexerImplementation": "Koşul Ekle - {implementationName}",
+    "AddIndexerImplementation": "Yeni Dizin Ekle - {implementationName}",
     "AddIndexerProxyImplementation": "Koşul Ekle - {implementationName}",
     "EditConnectionImplementation": "Koşul Ekle - {implementationName}",
     "AddConnectionImplementation": "Koşul Ekle - {implementationName}",
     "RestartProwlarr": "{appName}'ı yeniden başlatın",
     "EditApplicationImplementation": "Koşul Ekle - {implementationName}",
     "EditIndexerImplementation": "Koşul Ekle - {implementationName}",
-    "EditIndexerProxyImplementation": "Koşul Ekle - {implementationName}"
+    "EditIndexerProxyImplementation": "Koşul Ekle - {implementationName}",
+    "AddCustomFilter": "Özel Filtre Ekleyin",
+    "AddDownloadClientImplementation": "İndirme İstemcisi Ekle - {implementationName}"
 }

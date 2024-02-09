@@ -475,5 +475,6 @@
     "DefaultNameCopiedProfile": "{name} - Copiar",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha",
     "AdvancedSettingsHiddenClickToShow": "Definições avançadas ocultas, clique para mostrar",
-    "AddCategory": "Adicionar Categoria"
+    "AddCategory": "Adicionar Categoria",
+    "CountApplicationsSelected": "{count} Coleções Selecionadas"
 }

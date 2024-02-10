@@ -117,5 +117,7 @@
     "AuthBasic": "Základné (vyskakovacie okno prehliadača)",
     "AuthForm": "Formuláre (prihlasovacia stránka)",
     "DisabledForLocalAddresses": "Zakázané pre miestne adresy",
-    "ResetAPIKeyMessageText": "Naozaj chcete obnoviť kľúč API?"
+    "ResetAPIKeyMessageText": "Naozaj chcete obnoviť kľúč API?",
+    "CountApplicationsSelected": "{count} Označených kolekcií",
+    "Id": "ID"
 }

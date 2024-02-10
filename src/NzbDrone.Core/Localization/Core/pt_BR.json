@@ -609,5 +609,7 @@
     "ManageClients": "Gerenciar Clientes",
     "NoApplicationsFound": "Nenhum aplicativo encontrado",
     "NotificationsEmailSettingsUseEncryptionHelpText": "Se preferir usar criptografia se configurado no servidor, usar sempre criptografia via SSL (somente porta 465) ou StartTLS (qualquer outra porta) ou nunca usar criptografia",
-    "NotificationsEmailSettingsUseEncryption": "Usar Criptografia"
+    "NotificationsEmailSettingsUseEncryption": "Usar Criptografia",
+    "IndexerHDBitsSettingsPasskeyHelpText": "Chave de Acesso dos Detalhes do Usuário",
+    "IndexerSettingsPasskey": "Chave de Acesso"
 }

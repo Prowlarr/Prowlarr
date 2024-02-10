@@ -482,5 +482,6 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Bevestig het nieuwe wachtwoord",
     "AuthenticationRequiredUsernameHelpTextWarning": "Voeg een nieuwe gebruikersnaam in",
     "AuthenticationRequiredWarning": "Om toegang zonder authenticatie te voorkomen vereist {appName} nu verificatie. Je kan dit optioneel uitschakelen voor lokale adressen.",
-    "Episode": "aflevering"
+    "Episode": "aflevering",
+    "CountApplicationsSelected": "{count} Collectie(s) geselecteerd"
 }

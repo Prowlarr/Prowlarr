@@ -371,5 +371,6 @@
     "EditIndexerImplementation": "Koşul Ekle - {implementationName}",
     "EditIndexerProxyImplementation": "Koşul Ekle - {implementationName}",
     "AddCustomFilter": "Özel Filtre Ekleyin",
-    "AddDownloadClientImplementation": "İndirme İstemcisi Ekle - {implementationName}"
+    "AddDownloadClientImplementation": "İndirme İstemcisi Ekle - {implementationName}",
+    "EditDownloadClientImplementation": "İndirme İstemcisi Ekle - {implementationName}"
 }

@@ -515,5 +515,14 @@
     "AuthenticationRequiredPasswordHelpTextWarning": "Inserisci la nuova password",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Conferma la nuova password",
     "Clone": "Copia",
-    "DefaultNameCopiedProfile": "{name} - Copia"
+    "DefaultNameCopiedProfile": "{name} - Copia",
+    "AppUpdatedVersion": "{appName} è stato aggiornato alla versione `{version}`, per vedere le modifiche devi ricaricare {appName}",
+    "AddApplicationImplementation": "Aggiungi Connessione - {implementationName}",
+    "AddIndexerProxyImplementation": "Aggiungi indicizzatore - {implementationName}",
+    "EditApplicationImplementation": "Aggiungi Condizione - {implementationName}",
+    "CountApplicationsSelected": "{count} Collezione(i) Selezionate",
+    "EditConnectionImplementation": "Aggiungi Connessione - {implementationName}",
+    "EditDownloadClientImplementation": "Aggiungi un Client di Download - {implementationName}",
+    "EditIndexerImplementation": "Aggiungi indicizzatore - {implementationName}",
+    "EditIndexerProxyImplementation": "Aggiungi indicizzatore - {implementationName}"
 }

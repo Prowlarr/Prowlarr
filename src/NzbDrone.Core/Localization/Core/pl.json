@@ -377,5 +377,14 @@
     "ResetAPIKeyMessageText": "Czy na pewno chcesz zresetować swój klucz API?",
     "RestartProwlarr": "Zrestartuj {appName}",
     "AddConnectionImplementation": "Dodaj Connection - {implementationName}",
-    "AddDownloadClientImplementation": "Dodaj klienta pobierania - {implementationName}"
+    "AddDownloadClientImplementation": "Dodaj klienta pobierania - {implementationName}",
+    "CountApplicationsSelected": "Wybrane kolekcje: {0}",
+    "EditDownloadClientImplementation": "Dodaj klienta pobierania - {implementationName}",
+    "Id": "Identyfikator",
+    "AddApplicationImplementation": "Dodaj Connection - {implementationName}",
+    "AddIndexerImplementation": "Dodaj condition - {implementationName}",
+    "AddIndexerProxyImplementation": "Dodaj condition - {implementationName}",
+    "EditConnectionImplementation": "Dodaj Connection - {implementationName}",
+    "EditApplicationImplementation": "Dodaj Connection - {implementationName}",
+    "EditIndexerImplementation": "Dodaj condition - {implementationName}"
 }

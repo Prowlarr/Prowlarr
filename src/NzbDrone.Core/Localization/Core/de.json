@@ -542,5 +542,8 @@
     "IndexerTagsHelpTextWarning": "Tags sollten mit Vorsicht verwendet werden, da sie ungewollte Effekte haben können. Eine Anwendung mit einem Tag synchronisiert nur Indexer die den Gleichen Tag haben.",
     "EditIndexerImplementation": "Indexer hinzufügen - {implementationName}",
     "EditApplicationImplementation": "Anwendung hinzufügen - {implementationName}",
-    "EditIndexerProxyImplementation": "Indexer Proxy hinzufügen - {implementationName}"
+    "EditIndexerProxyImplementation": "Indexer Proxy hinzufügen - {implementationName}",
+    "CountApplicationsSelected": "{count} Ausgewählte Sammlung(en)",
+    "DownloadClientAriaSettingsDirectoryHelpText": "Optionaler Speicherort für Downloads. Lassen Sie das Feld leer, um den standardmäßigen rTorrent-Speicherort zu verwenden",
+    "ManageClients": "Verwalte Clienten"
 }

@@ -334,25 +334,25 @@ namespace NzbDrone.Core.Indexers.Definitions
             SearchTypes = Array.Empty<int>();
         }
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in My Security => API Key)", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "ApiKey", HelpText = "IndexerBeyondHDSettingsApiKeyHelpText", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(3, Label = "RSS Key", HelpText = "RSS Key from the Site (Found in My Security => RSS Key)", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(3, Label = "IndexerSettingsRssKey", HelpText = "IndexerBeyondHDSettingsRssKeyHelpText", Privacy = PrivacyLevel.ApiKey)]
         public string RssKey { get; set; }
 
-        [FieldDefinition(4, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only")]
+        [FieldDefinition(4, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerBeyondHDSettingsFreeleechOnlyHelpText")]
         public bool FreeleechOnly { get; set; }
 
-        [FieldDefinition(5, Label = "Limited Only", Type = FieldType.Checkbox, HelpText = "Search freeleech only (Limited UL)")]
+        [FieldDefinition(5, Label = "IndexerBeyondHDSettingsLimitedOnly", Type = FieldType.Checkbox, HelpText = "IndexerBeyondHDSettingsLimitedOnlyHelpText")]
         public bool LimitedOnly { get; set; }
 
-        [FieldDefinition(6, Label = "Refund Only", Type = FieldType.Checkbox, HelpText = "Search refund only")]
+        [FieldDefinition(6, Label = "IndexerBeyondHDSettingsRefundOnly", Type = FieldType.Checkbox, HelpText = "IndexerBeyondHDSettingsRefundOnlyHelpText")]
         public bool RefundOnly { get; set; }
 
-        [FieldDefinition(7, Label = "Rewind Only", Type = FieldType.Checkbox, HelpText = "Search rewind only")]
+        [FieldDefinition(7, Label = "IndexerBeyondHDSettingsRewindOnly", Type = FieldType.Checkbox, HelpText = "IndexerBeyondHDSettingsRewindOnlyHelpText")]
         public bool RewindOnly { get; set; }
 
-        [FieldDefinition(8, Label = "Search Types", Type = FieldType.TagSelect, SelectOptions = typeof(BeyondHDSearchType), Advanced = true, HelpText = "Select the types of releases that you are interested in. If none selected, all options are used.")]
+        [FieldDefinition(8, Label = "IndexerBeyondHDSettingsSearchTypes", Type = FieldType.TagSelect, SelectOptions = typeof(BeyondHDSearchType), HelpText = "IndexerBeyondHDSettingsSearchTypesHelpText", Advanced = true)]
         public IEnumerable<int> SearchTypes { get; set; }
 
         public override NzbDroneValidationResult Validate()

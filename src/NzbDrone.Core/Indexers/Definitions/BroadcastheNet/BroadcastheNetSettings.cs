@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             BaseSettings.LimitsUnit = (int)IndexerLimitsUnit.Hour;
         }
 
-        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "ApiKey", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         public override NzbDroneValidationResult Validate()

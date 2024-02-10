@@ -60,16 +60,17 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(0, Label = "URL")]
         public string BaseUrl { get; set; }
 
-        [FieldDefinition(1, Label = "API Path", HelpText = "Path to the api, usually /api", Advanced = true)]
+        [FieldDefinition(1, Label = "IndexerSettingsApiPath", HelpText = "IndexerSettingsApiPathHelpText", Advanced = true)]
+        [FieldToken(TokenField.HelpText, "IndexerSettingsApiPath", "url", "/api")]
         public string ApiPath { get; set; }
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "Site API Key", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "ApiKey", HelpText = "IndexerNewznabSettingsApiKeyHelpText", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(5, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]
+        [FieldDefinition(5, Label = "IndexerSettingsAdditionalParameters", HelpText = "IndexerNewznabSettingsAdditionalParametersHelpText", Advanced = true)]
         public string AdditionalParameters { get; set; }
 
-        [FieldDefinition(6, Label = "VIP Expiration", HelpText = "Enter date (yyyy-mm-dd) for VIP Expiration or blank, Prowlarr will notify 1 week from expiration of VIP")]
+        [FieldDefinition(6, Label = "IndexerSettingsVipExpiration", HelpText = "IndexerNewznabSettingsVipExpirationHelpText")]
         public string VipExpiration { get; set; }
 
         [FieldDefinition(7)]

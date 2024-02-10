@@ -154,9 +154,9 @@ public class AlphaRatioParser : GazelleParser
 
 public class AlphaRatioSettings : GazelleSettings
 {
-    [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
+    [FieldDefinition(6, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerAlphaRatioSettingsFreeleechOnlyHelpText")]
     public bool FreeleechOnly { get; set; }
 
-    [FieldDefinition(7, Label = "Exclude Scene", Type = FieldType.Checkbox, HelpText = "Exclude Scene torrents from results")]
+    [FieldDefinition(7, Label = "IndexerAlphaRatioSettingsExcludeScene", Type = FieldType.Checkbox, HelpText = "IndexerAlphaRatioSettingsExcludeSceneHelpText")]
     public bool ExcludeScene { get; set; }
 }

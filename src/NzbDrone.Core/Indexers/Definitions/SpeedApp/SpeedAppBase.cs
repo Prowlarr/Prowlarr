@@ -316,7 +316,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Password", HelpText = "Site Password", Privacy = PrivacyLevel.Password, Type = FieldType.Password)]
         public string Password { get; set; }
 
-        [FieldDefinition(4, Label = "API Key", Hidden = HiddenType.Hidden)]
+        [FieldDefinition(4, Label = "ApiKey", Hidden = HiddenType.Hidden)]
         public string ApiKey { get; set; }
 
         public override NzbDroneValidationResult Validate()

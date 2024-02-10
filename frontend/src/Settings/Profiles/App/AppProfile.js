@@ -96,7 +96,7 @@ class AppProfile extends Component {
               kind={enableRss ? kinds.SUCCESS : kinds.DISABLED}
               outline={!enableRss}
             >
-              {translate('RSS')}
+              {translate('Rss')}
             </Label>
           }
 

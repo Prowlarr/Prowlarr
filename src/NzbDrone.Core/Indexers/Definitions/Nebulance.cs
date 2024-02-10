@@ -293,7 +293,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             ApiKey = "";
         }
 
-        [FieldDefinition(4, Label = "API Key", HelpText = "API Key from User Settings > Api Keys. Key must have List and Download permissions")]
+        [FieldDefinition(4, Label = "ApiKey", HelpText = "IndexerNebulanceSettingsApiKeyHelpText")]
         public string ApiKey { get; set; }
     }
 

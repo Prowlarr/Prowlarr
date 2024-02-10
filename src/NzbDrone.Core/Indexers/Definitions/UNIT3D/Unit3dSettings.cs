@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
     {
         private static readonly Unit3dSettingsValidator Validator = new ();
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "Site API Key generated in My Security", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "ApiKey", HelpText = "Site API Key generated in My Security", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
         public override NzbDroneValidationResult Validate()

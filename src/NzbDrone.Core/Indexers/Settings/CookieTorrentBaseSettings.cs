@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Settings
             Cookie = "";
         }
 
-        [FieldDefinition(2, Label = "Cookie", HelpText = "Site Cookie", HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies", Privacy = PrivacyLevel.Password)]
+        [FieldDefinition(2, Label = "IndexerSettingsCookie", HelpText = "IndexerSettingsCookieHelpText", HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies", Privacy = PrivacyLevel.Password)]
         public string Cookie { get; set; }
 
         public override NzbDroneValidationResult Validate()

@@ -438,7 +438,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings)", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "ApiKey", HelpText = "IndexerOrpheusSettingsApiKeyHelpText", Privacy = PrivacyLevel.ApiKey)]
         public string Apikey { get; set; }
 
         [FieldDefinition(3, Label = "Use Freeleech Tokens", HelpText = "Use freeleech tokens when available", Type = FieldType.Checkbox)]

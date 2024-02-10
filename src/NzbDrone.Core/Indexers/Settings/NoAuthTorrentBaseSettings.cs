@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Indexers.Settings
     {
         private static readonly NoAuthSettingsValidator<NoAuthTorrentBaseSettings> Validator = new ();
 
-        [FieldDefinition(1, Label = "Base Url", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "Select which baseurl Prowlarr will use for requests to the site")]
+        [FieldDefinition(1, Label = "IndexerSettingsBaseUrl", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "IndexerSettingsBaseUrlHelpText")]
         public string BaseUrl { get; set; }
 
         [FieldDefinition(20)]

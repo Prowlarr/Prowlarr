@@ -52,16 +52,16 @@ namespace NzbDrone.Core.Indexers
 
     public class IndexerTorrentBaseSettings
     {
-        [FieldDefinition(1, Type = FieldType.Number, Label = "Apps Minimum Seeders", HelpText = "Minimum seeders required by the Applications for the indexer to grab, empty is Sync profile's default", Advanced = true)]
+        [FieldDefinition(1, Type = FieldType.Number, Label = "IndexerSettingsAppsMinimumSeeders", HelpText = "IndexerSettingsAppsMinimumSeedersHelpText", Advanced = true)]
         public int? AppMinimumSeeders { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Textbox, Label = "Seed Ratio", HelpText = "The ratio a torrent should reach before stopping, empty is app's default", Advanced = true)]
+        [FieldDefinition(2, Type = FieldType.Textbox, Label = "IndexerSettingsSeedRatio", HelpText = "IndexerSettingsSeedRatioHelpText")]
         public double? SeedRatio { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Number, Label = "Seed Time", HelpText = "The time a torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
+        [FieldDefinition(3, Type = FieldType.Number, Label = "IndexerSettingsSeedTime", Unit = "minutes", HelpText = "IndexerSettingsSeedTimeHelpText", Advanced = true)]
         public int? SeedTime { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Number, Label = "Pack Seed Time", HelpText = "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default", Unit = "minutes", Advanced = true)]
+        [FieldDefinition(4, Type = FieldType.Number, Label = "IndexerSettingsPackSeedTime", HelpText = "IndexerSettingsPackSeedTimeIndexerHelpText", Unit = "minutes", Advanced = true)]
         public int? PackSeedTime { get; set; }
     }
 }

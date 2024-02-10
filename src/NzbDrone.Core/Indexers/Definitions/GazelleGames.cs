@@ -535,10 +535,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             Passkey = "";
         }
 
-        [FieldDefinition(2, Label = "API Key", HelpText = "API Key from the Site (Found in Settings => Access Settings)", HelpTextWarning = "Must have User and Torrents permissions", Privacy = PrivacyLevel.ApiKey)]
+        [FieldDefinition(2, Label = "ApiKey", HelpText = "IndexerGazelleGamesSettingsApiKeyHelpText", HelpTextWarning = "IndexerGazelleGamesSettingsApiKeyHelpTextWarning", Privacy = PrivacyLevel.ApiKey)]
         public string Apikey { get; set; }
 
-        [FieldDefinition(3, Label = "Search Group Names", Type = FieldType.Checkbox, HelpText = "Search Group Names Only")]
+        [FieldDefinition(3, Label = "IndexerGazelleGamesSettingsSearchGroupNames", Type = FieldType.Checkbox, HelpText = "IndexerGazelleGamesSettingsSearchGroupNamesHelpText")]
         public bool SearchGroupNames { get; set; }
 
         public string Passkey { get; set; }

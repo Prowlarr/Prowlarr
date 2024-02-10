@@ -29,25 +29,25 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             UseFilenames = true;
         }
 
-        [FieldDefinition(2, Label = "Username", HelpText = "Site Username", Privacy = PrivacyLevel.UserName)]
+        [FieldDefinition(2, Label = "Username", HelpText = "IndexerHDBitsSettingsUsernameHelpText", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }
 
         [FieldDefinition(3, Label = "IndexerSettingsPasskey", HelpText = "IndexerHDBitsSettingsPasskeyHelpText", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }
 
-        [FieldDefinition(4, Label = "Codecs", Type = FieldType.Select, SelectOptions = typeof(HdBitsCodec), HelpText = "If unspecified, all options are used.", Advanced = true)]
+        [FieldDefinition(4, Label = "IndexerHDBitsSettingsCodecs", Type = FieldType.Select, SelectOptions = typeof(HdBitsCodec), HelpText = "IndexerHDBitsSettingsCodecsHelpText", Advanced = true)]
         public IEnumerable<int> Codecs { get; set; }
 
-        [FieldDefinition(5, Label = "Mediums", Type = FieldType.Select, SelectOptions = typeof(HdBitsMedium), HelpText = "If unspecified, all options are used.", Advanced = true)]
+        [FieldDefinition(5, Label = "IndexerHDBitsSettingsMediums", Type = FieldType.Select, SelectOptions = typeof(HdBitsMedium), HelpText = "IndexerHDBitsSettingsMediumsHelpText", Advanced = true)]
         public IEnumerable<int> Mediums { get; set; }
 
-        [FieldDefinition(6, Label = "Origins", Type = FieldType.Select, SelectOptions = typeof(HdBitsOrigin), HelpText = "If unspecified, all options are used.", Advanced = true)]
+        [FieldDefinition(6, Label = "IndexerHDBitsSettingsOrigins", Type = FieldType.Select, SelectOptions = typeof(HdBitsOrigin), HelpText = "IndexerHDBitsSettingsOriginsHelpText", Advanced = true)]
         public IEnumerable<int> Origins { get; set; }
 
-        [FieldDefinition(7, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Show freeleech releases only", Advanced = true)]
+        [FieldDefinition(7, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerHDBitsSettingsFreeleechOnlyHelpText", Advanced = true)]
         public bool FreeleechOnly { get; set; }
 
-        [FieldDefinition(8, Label = "Use Filenames", Type = FieldType.Checkbox, HelpText = "Check this option if you want to use torrent filenames as release titles")]
+        [FieldDefinition(8, Label = "IndexerHDBitsSettingsUseFilenames", Type = FieldType.Checkbox, HelpText = "IndexerHDBitsSettingsUseFilenamesHelpText")]
         public bool UseFilenames { get; set; }
 
         public override NzbDroneValidationResult Validate()

@@ -420,7 +420,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             UseFreeleechToken = false;
         }
 
-        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey, HelpText = "API Key from the Site (Found in Settings => Access Settings)")]
+        [FieldDefinition(2, Label = "ApiKey", Privacy = PrivacyLevel.ApiKey, HelpText = "IndexerRedactedSettingsApiKeyHelpText")]
         public string Apikey { get; set; }
 
         [FieldDefinition(3, Label = "Use Freeleech Tokens", Type = FieldType.Checkbox, HelpText = "Use freeleech tokens when available")]

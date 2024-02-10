@@ -336,7 +336,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             ReleaseTypes = new List<int>();
         }
 
-        [FieldDefinition(2, Label = "API Key", Privacy = PrivacyLevel.ApiKey, HelpText = "Site API Key")]
+        [FieldDefinition(2, Label = "ApiKey", Privacy = PrivacyLevel.ApiKey, HelpText = "IndexerTorrentSyndikatSettingsApiKeyHelpText")]
         public string ApiKey { get; set; }
 
         [FieldDefinition(3, Label = "Products Only", Type = FieldType.Checkbox, HelpText = "Limit search to torrents linked to a product")]

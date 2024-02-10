@@ -21,13 +21,13 @@ namespace NzbDrone.Core.Indexers
 
     public class IndexerBaseSettings
     {
-        [FieldDefinition(1, Type = FieldType.Number, Label = "Query Limit", HelpText = "The number of max queries as specified by the respective unit that Prowlarr will allow to the site", Advanced = true)]
+        [FieldDefinition(1, Type = FieldType.Number, Label = "IndexerSettingsQueryLimit", HelpText = "IndexerSettingsQueryLimitHelpText", Advanced = true)]
         public int? QueryLimit { get; set; }
 
-        [FieldDefinition(2, Type = FieldType.Number, Label = "Grab Limit", HelpText = "The number of max grabs as specified by the respective unit that Prowlarr will allow to the site", Advanced = true)]
+        [FieldDefinition(2, Type = FieldType.Number, Label = "IndexerSettingsGrabLimit", HelpText = "IndexerSettingsGrabLimitHelpText", Advanced = true)]
         public int? GrabLimit { get; set; }
 
-        [FieldDefinition(3, Type = FieldType.Select, SelectOptions = typeof(IndexerLimitsUnit), Label = "Limits Unit", HelpText = "The unit of time for counting limits per indexer", Advanced = true)]
+        [FieldDefinition(3, Type = FieldType.Select, Label = "IndexerSettingsLimitsUnit", SelectOptions = typeof(IndexerLimitsUnit), HelpText = "IndexerSettingsLimitsUnitHelpText", Advanced = true)]
         public int LimitsUnit { get; set; } = (int)IndexerLimitsUnit.Day;
     }
 

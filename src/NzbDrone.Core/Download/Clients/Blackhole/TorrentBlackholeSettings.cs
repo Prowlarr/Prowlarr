@@ -27,15 +27,16 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
 
         private static readonly TorrentBlackholeSettingsValidator Validator = new TorrentBlackholeSettingsValidator();
 
-        [FieldDefinition(0, Label = "Torrent Folder", Type = FieldType.Path, HelpText = "Folder in which Prowlarr will store the .torrent file")]
+        [FieldDefinition(0, Label = "TorrentBlackholeTorrentFolder", Type = FieldType.Path, HelpText = "BlackholeFolderHelpText")]
+        [FieldToken(TokenField.HelpText, "TorrentBlackholeTorrentFolder", "extension", ".torrent")]
         public string TorrentFolder { get; set; }
 
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        [FieldDefinition(1, Label = "Save Magnet Files", Type = FieldType.Checkbox, HelpText = "Save a .magnet file with the magnet link if no .torrent file is available (only useful if the download client supports .magnet files)")]
+        [FieldDefinition(1, Label = "TorrentBlackholeSaveMagnetFiles", Type = FieldType.Checkbox, HelpText = "TorrentBlackholeSaveMagnetFilesHelpText")]
         public bool SaveMagnetFiles { get; set; }
 
-        [FieldDefinition(2, Label = "Save Magnet Files", Type = FieldType.Textbox, HelpText = "Extension to use for magnet links, defaults to '.magnet'")]
+        [FieldDefinition(2, Label = "TorrentBlackholeSaveMagnetFilesExtension", Type = FieldType.Textbox, HelpText = "TorrentBlackholeSaveMagnetFilesExtensionHelpText")]
         public string MagnetFileExtension { get; set; }
 
         public NzbDroneValidationResult Validate()

@@ -46,34 +46,39 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
             ApiUrl = "/api/v1/";
         }
 
-        [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox, HelpText = "Hostname or host IP address of the Freebox, defaults to 'mafreebox.freebox.fr' (will only work if on same network)")]
+        [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox, HelpText = "DownloadClientFreeboxSettingsHostHelpText")]
+        [FieldToken(TokenField.HelpText, "Host", "url", "mafreebox.freebox.fr")]
         public string Host { get; set; }
 
-        [FieldDefinition(1, Label = "Port", Type = FieldType.Textbox, HelpText = "Port used to access Freebox interface, defaults to '443'")]
+        [FieldDefinition(1, Label = "Port", Type = FieldType.Textbox, HelpText = "DownloadClientFreeboxSettingsPortHelpText")]
+        [FieldToken(TokenField.HelpText, "Port", "port", 443)]
         public int Port { get; set; }
 
-        [FieldDefinition(2, Label = "Use SSL", Type = FieldType.Checkbox, HelpText = "Use secured connection when connecting to Freebox API")]
+        [FieldDefinition(2, Label = "UseSsl", Type = FieldType.Checkbox, HelpText = "DownloadClientSettingsUseSslHelpText")]
+        [FieldToken(TokenField.HelpText, "UseSsl", "clientName", "Freebox API")]
         public bool UseSsl { get; set; }
 
-        [FieldDefinition(3, Label = "API URL", Type = FieldType.Textbox, Advanced = true, HelpText = "Define Freebox API base URL with API version, eg http://[host]:[port]/[api_base_url]/[api_version]/, defaults to '/api/v1/'")]
+        [FieldDefinition(3, Label = "DownloadClientFreeboxSettingsApiUrl", Type = FieldType.Textbox, Advanced = true, HelpText = "DownloadClientFreeboxSettingsApiUrlHelpText")]
+        [FieldToken(TokenField.HelpText, "DownloadClientFreeboxSettingsApiUrl", "url", "http://[host]:[port]/[api_base_url]/[api_version]/")]
+        [FieldToken(TokenField.HelpText, "DownloadClientFreeboxSettingsApiUrl", "defaultApiUrl", "/api/v1/")]
         public string ApiUrl { get; set; }
 
-        [FieldDefinition(4, Label = "App ID", Type = FieldType.Textbox, HelpText = "App ID given when creating access to Freebox API (ie 'app_id')")]
+        [FieldDefinition(4, Label = "DownloadClientFreeboxSettingsAppId", Type = FieldType.Textbox, HelpText = "DownloadClientFreeboxSettingsAppIdHelpText")]
         public string AppId { get; set; }
 
-        [FieldDefinition(5, Label = "App Token", Type = FieldType.Password, Privacy = PrivacyLevel.Password, HelpText = "App token retrieved when creating access to Freebox API (ie 'app_token')")]
+        [FieldDefinition(5, Label = "DownloadClientFreeboxSettingsAppToken", Type = FieldType.Password, Privacy = PrivacyLevel.Password, HelpText = "DownloadClientFreeboxSettingsAppTokenHelpText")]
         public string AppToken { get; set; }
 
-        [FieldDefinition(6, Label = "Destination Directory", Type = FieldType.Textbox, Advanced = true, HelpText = "Optional location to put downloads in, leave blank to use the default Freebox download location")]
+        [FieldDefinition(6, Label = "Destination", Type = FieldType.Textbox, Advanced = true, HelpText = "DownloadClientSettingsDestinationHelpText")]
         public string DestinationDirectory { get; set; }
 
-        [FieldDefinition(7, Label = "Default Category", Type = FieldType.Textbox, HelpText = "Adding a category specific to Prowlarr avoids conflicts with unrelated non-Prowlarr downloads (will create a [category] subdirectory in the output directory)")]
+        [FieldDefinition(7, Label = "DefaultCategory", Type = FieldType.Textbox, HelpText = "DownloadClientSettingsDefaultCategoryHelpText")]
         public string Category { get; set; }
 
-        [FieldDefinition(8, Label = "Priority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "Priority to use when grabbing")]
+        [FieldDefinition(8, Label = "Priority", Type = FieldType.Select, SelectOptions = typeof(FreeboxDownloadPriority), HelpText = "DownloadClientSettingsPriorityItemHelpText")]
         public int Priority { get; set; }
 
-        [FieldDefinition(9, Label = "Add Paused", Type = FieldType.Checkbox)]
+        [FieldDefinition(9, Label = "DownloadClientSettingsAddPaused", Type = FieldType.Checkbox)]
         public bool AddPaused { get; set; }
 
         public NzbDroneValidationResult Validate()

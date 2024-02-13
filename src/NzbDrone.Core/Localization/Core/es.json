@@ -611,5 +611,6 @@
     "TotalIndexerSuccessfulGrabs": "Capturas con Éxito Totales por Indexador",
     "NotificationsEmailSettingsUseEncryptionHelpText": "Si prefiere utilizar el cifrado si está configurado en el servidor, utilizar siempre el cifrado mediante SSL (sólo puerto 465) o StartTLS (cualquier otro puerto) o no utilizar nunca el cifrado",
     "IndexerHDBitsSettingsPasskeyHelpText": "Clave de acceso desde los Detalles de Usuario",
-    "IndexerSettingsPasskey": "Clave de Acceso"
+    "IndexerSettingsPasskey": "Clave de Acceso",
+    "BlackholeFolderHelpText": "La carpeta en donde {appName} se almacenaran los {extension} file"
 }

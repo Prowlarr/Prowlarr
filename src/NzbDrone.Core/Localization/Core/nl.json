@@ -51,7 +51,7 @@
     "BackupRetentionHelpText": "Automatische veiligheidskopieën ouder dan de retentie periode zullen worden opgeruimd",
     "Backups": "Veiligheidskopieën",
     "BeforeUpdate": "Voor Update",
-    "BindAddress": "Aanhaak Adres",
+    "BindAddress": "Gebonden Adres",
     "BindAddressHelpText": "Geldig IP-adres, localhost of '*' voor alle interfaces",
     "Branch": "Branch",
     "BranchUpdate": "Te gebruiken branch om {appName} bij te werken",

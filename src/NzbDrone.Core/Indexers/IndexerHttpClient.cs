@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Cache;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Dispatchers;
 using NzbDrone.Common.TPL;
@@ -34,56 +36,63 @@ namespace NzbDrone.Core.Indexers
 
         public async Task<HttpResponse> ExecuteProxiedAsync(HttpRequest request, ProviderDefinition definition)
         {
-            var selectedProxy = GetProxy(definition);
+            var selectedProxies = GetProxies(definition);
 
-            request = PreRequest(request, selectedProxy);
+            request = PreRequest(request, selectedProxies);
 
-            return PostResponse(await ExecuteAsync(request), selectedProxy);
+            return PostResponse(await ExecuteAsync(request), selectedProxies);
         }
 
         public HttpResponse ExecuteProxied(HttpRequest request, ProviderDefinition definition)
         {
-            var selectedProxy = GetProxy(definition);
+            var selectedProxies = GetProxies(definition);
 
-            request = PreRequest(request, selectedProxy);
+            request = PreRequest(request, selectedProxies);
 
-            return PostResponse(Execute(request), selectedProxy);
+            return PostResponse(Execute(request), selectedProxies);
         }
 
-        private IIndexerProxy GetProxy(ProviderDefinition definition)
+        private IList<IIndexerProxy> GetProxies(ProviderDefinition definition)
         {
             // Skip DB call if no tags on the indexers
             if (definition is { Id: > 0 } && definition.Tags.Count == 0)
             {
-                return null;
+                return Array.Empty<IIndexerProxy>();
             }
 
             var proxies = _indexerProxyFactory.GetAvailableProviders();
-            var selectedProxy = proxies.FirstOrDefault(proxy => definition.Tags.Intersect(proxy.Definition.Tags).Any());
 
-            if (selectedProxy == null && definition is not { Id: not 0 })
+            var selectedProxies = proxies
+                .Where(proxy => definition.Tags.Intersect(proxy.Definition.Tags).Any())
+                .GroupBy(p => p is FlareSolverr)
+                .Select(g => g.First())
+                .OrderBy(p => p is FlareSolverr)
+                .ToList();
+
+            if (!selectedProxies.Any() && definition is not { Id: not 0 })
             {
-                selectedProxy = proxies.FirstOrDefault(p => p is FlareSolverr);
+                selectedProxies = new List<IIndexerProxy>();
+                selectedProxies.AddIfNotNull(proxies.Find(p => p is FlareSolverr));
             }
 
-            return selectedProxy;
+            return selectedProxies;
         }
 
-        private HttpRequest PreRequest(HttpRequest request, IIndexerProxy selectedProxy)
+        private HttpRequest PreRequest(HttpRequest request, IList<IIndexerProxy> selectedProxies)
         {
-            if (selectedProxy != null)
+            if (selectedProxies != null && selectedProxies.Any())
             {
-                request = selectedProxy.PreRequest(request);
+                request = selectedProxies.Aggregate(request, (current, selectedProxy) => selectedProxy.PreRequest(current));
             }
 
             return request;
         }
 
-        private HttpResponse PostResponse(HttpResponse response, IIndexerProxy selectedProxy)
+        private HttpResponse PostResponse(HttpResponse response, IList<IIndexerProxy> selectedProxies)
         {
-            if (selectedProxy != null)
+            if (selectedProxies != null && selectedProxies.Any())
             {
-                response = selectedProxy.PostResponse(response);
+                response = selectedProxies.Aggregate(response, (current, selectedProxy) => selectedProxy.PostResponse(current));
             }
 
             return response;

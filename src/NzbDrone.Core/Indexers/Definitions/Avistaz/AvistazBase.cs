@@ -70,7 +70,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             {
                 _logger.Warn(ex, "Failed to authenticate with Avistaz");
 
-                var jsonResponse = STJson.Deserialize<AvistazErrorResponse>(ex.Response.Content);
+                STJson.TryDeserialize<AvistazErrorResponse>(ex.Response.Content, out var jsonResponse);
                 throw new IndexerAuthException(jsonResponse?.Message ?? "Unauthorized request to indexer");
             }
         }
@@ -98,8 +98,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 {
                     _logger.Warn(ex, "Unauthorized request to indexer");
 
-                    var jsonResponse = new HttpResponse<AvistazErrorResponse>(ex.Response);
-                    return new ValidationFailure(string.Empty, jsonResponse.Resource?.Message ?? "Unauthorized request to indexer");
+                    STJson.TryDeserialize<AvistazErrorResponse>(ex.Response.Content, out var jsonResponse);
+                    return new ValidationFailure(string.Empty, jsonResponse?.Message ?? "Unauthorized request to indexer");
                 }
 
                 _logger.Warn(ex, "Unable to connect to indexer");
@@ -134,7 +134,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
             var response = await ExecuteAuth(authLoginRequest);
 
-            var authResponse = STJson.Deserialize<AvistazAuthResponse>(response.Content);
+            if (!STJson.TryDeserialize<AvistazAuthResponse>(response.Content, out var authResponse))
+            {
+                throw new Exception("Invalid response from AvistaZ, the response is not valid JSON");
+            }
 
             return authResponse.Token;
         }

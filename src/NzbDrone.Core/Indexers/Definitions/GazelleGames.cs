@@ -412,6 +412,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                         categories = _categories.MapTrackerCatToNewznab(torrent.Value.CategoryId.ToString()).ToArray();
                     }
 
+                    Enum.TryParse(torrent.Value.FreeTorrent, true, out GazelleGamesFreeTorrent freeTorrent);
+
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
@@ -426,8 +428,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                         Peers = torrent.Value.Leechers + torrent.Value.Seeders,
                         PublishDate = torrent.Value.Time.ToUniversalTime(),
                         Scene = torrent.Value.Scene == 1,
-                        DownloadVolumeFactor = torrent.Value.FreeTorrent is GazelleGamesFreeTorrent.FreeLeech or GazelleGamesFreeTorrent.Neutral || torrent.Value.LowSeedFL ? 0 : 1,
-                        UploadVolumeFactor = torrent.Value.FreeTorrent == GazelleGamesFreeTorrent.Neutral ? 0 : 1,
+                        DownloadVolumeFactor = freeTorrent is GazelleGamesFreeTorrent.FreeLeech or GazelleGamesFreeTorrent.Neutral || torrent.Value.LowSeedFL ? 0 : 1,
+                        UploadVolumeFactor = freeTorrent == GazelleGamesFreeTorrent.Neutral ? 0 : 1,
                         MinimumSeedTime = 288000 // Minimum of 3 days and 8 hours (80 hours in total)
                     };
 
@@ -588,7 +590,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public int? Snatched { get; set; }
         public int Seeders { get; set; }
         public int Leechers { get; set; }
-        public GazelleGamesFreeTorrent FreeTorrent { get; set; }
+        public string FreeTorrent { get; set; }
         public bool PersonalFL { get; set; }
         public bool LowSeedFL { get; set; }
 

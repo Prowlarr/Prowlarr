@@ -101,7 +101,7 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
         {
             TvSearchParams = new List<TvSearchParam>
             {
-                TvSearchParam.Q
+                TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
             },
             Flags = new List<IndexerFlag>
             {

@@ -12,6 +12,7 @@ namespace Prowlarr.Api.V1.Indexers
         public double? SeedRatio { get; set; }
         public int? SeedTime { get; set; }
         public int? PackSeedTime { get; set; }
+        public bool? RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
     }
 
     public class IndexerBulkResourceMapper : ProviderBulkResourceMapper<IndexerBulkResource, IndexerDefinition>
@@ -35,6 +36,7 @@ namespace Prowlarr.Api.V1.Indexers
                     ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.SeedRatio = resource.SeedRatio ?? ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.SeedRatio;
                     ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.SeedTime = resource.SeedTime ?? ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.SeedTime;
                     ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.PackSeedTime = resource.PackSeedTime ?? ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.PackSeedTime;
+                    ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.RejectBlocklistedTorrentHashesWhileGrabbing = resource.RejectBlocklistedTorrentHashesWhileGrabbing ?? ((ITorrentIndexerSettings)existing.Settings).TorrentBaseSettings.RejectBlocklistedTorrentHashesWhileGrabbing;
                 }
             });
 

@@ -394,6 +394,8 @@
   "IndexerSettingsPasskey": "Pass Key",
   "IndexerSettingsQueryLimit": "Query Limit",
   "IndexerSettingsQueryLimitHelpText": "The number of max queries as specified by the respective unit that {appName} will allow to the site",
+  "IndexerSettingsRejectBlocklistedTorrentHashes": "Reject Blocklisted Torrent Hashes While Grabbing",
+  "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "If a torrent is blocked by hash it may not properly be rejected during RSS/Search for some indexers, enabling this will allow it to be rejected after the torrent is grabbed, but before it is sent to the client.",
   "IndexerSettingsRssKey": "RSS Key",
   "IndexerSettingsSeedRatio": "Seed Ratio",
   "IndexerSettingsSeedRatioHelpText": "The ratio a torrent should reach before stopping, empty uses the download client's default. Ratio should be at least 1.0 and follow the indexers rules",

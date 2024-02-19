@@ -55,6 +55,10 @@ namespace NzbDrone.Core.Applications.Lidarr
             var otherSeedRatio = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
             var seedRatioCompare = seedRatio == otherSeedRatio;
 
+            var rejectBlocklistedTorrentHashesWhileGrabbing = Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing")?.Value == null ? null : (bool?)Convert.ToBoolean(Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value);
+            var otherRejectBlocklistedTorrentHashesWhileGrabbing = other.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing")?.Value == null ? null : (bool?)Convert.ToBoolean(other.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value);
+            var rejectBlocklistedTorrentHashesWhileGrabbingCompare = rejectBlocklistedTorrentHashesWhileGrabbing == otherRejectBlocklistedTorrentHashesWhileGrabbing;
+
             return other.EnableRss == EnableRss &&
                 other.EnableAutomaticSearch == EnableAutomaticSearch &&
                 other.EnableInteractiveSearch == EnableInteractiveSearch &&
@@ -62,7 +66,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKeyCompare && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && discographySeedTimeCompare;
+                apiKeyCompare && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && discographySeedTimeCompare && rejectBlocklistedTorrentHashesWhileGrabbingCompare;
         }
     }
 }

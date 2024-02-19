@@ -144,6 +144,7 @@ function EditIndexerModalContent(props) {
                   }) :
                   null
               }
+
               <FormGroup
                 advancedSettings={advancedSettings}
                 isAdvanced={true}

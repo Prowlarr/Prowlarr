@@ -218,7 +218,7 @@ namespace NzbDrone.Core.Applications.Whisparr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _whisparrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
+            var syncFields = new[] { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime", "rejectBlocklistedTorrentHashesWhileGrabbing" };
 
             var newznab = schemas.First(i => i.Implementation == "Newznab");
             var torznab = schemas.First(i => i.Implementation == "Torznab");
@@ -251,6 +251,11 @@ namespace NzbDrone.Core.Applications.Whisparr
                 whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.AppMinimumSeeders ?? indexer.AppProfile.Value.MinimumSeeders;
                 whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedRatio;
                 whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
+
+                if (whisparrIndexer.Fields.Any(x => x.Name == "seedCriteria.seasonPackSeedTime"))
+                {
+                    whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seasonPackSeedTime").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.PackSeedTime ?? ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.SeedTime;
+                }
 
                 if (whisparrIndexer.Fields.Any(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing"))
                 {

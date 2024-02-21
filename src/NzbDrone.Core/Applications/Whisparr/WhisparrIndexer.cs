@@ -47,6 +47,10 @@ namespace NzbDrone.Core.Applications.Whisparr
             var otherSeedTime = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value);
             var seedTimeCompare = seedTime == otherSeedTime;
 
+            var seasonSeedTime = Fields.FirstOrDefault(x => x.Name == "seedCriteria.seasonPackSeedTime")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "seedCriteria.seasonPackSeedTime").Value);
+            var otherSeasonSeedTime = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seasonPackSeedTime")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seasonPackSeedTime").Value);
+            var seasonSeedTimeCompare = seasonSeedTime == otherSeasonSeedTime;
+
             var seedRatio = Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
             var otherSeedRatio = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
             var seedRatioCompare = seedRatio == otherSeedRatio;
@@ -62,7 +66,7 @@ namespace NzbDrone.Core.Applications.Whisparr
                 other.Implementation == Implementation &&
                 other.Priority == Priority &&
                 other.Id == Id &&
-                apiKeyCompare && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && rejectBlocklistedTorrentHashesWhileGrabbingCompare;
+                apiKeyCompare && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare && seasonSeedTimeCompare && rejectBlocklistedTorrentHashesWhileGrabbingCompare;
         }
     }
 }

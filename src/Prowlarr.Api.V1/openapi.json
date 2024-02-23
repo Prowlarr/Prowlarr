@@ -5016,6 +5016,10 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "rejectBlocklistedTorrentHashesWhileGrabbing": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false

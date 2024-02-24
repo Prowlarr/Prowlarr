@@ -462,5 +462,7 @@
     "EditIndexerImplementation": "Adăugați Indexator - {implementationName}",
     "EditIndexerProxyImplementation": "Adăugați proxy indexator - {implementationName}",
     "EditApplicationImplementation": "Adăugați aplicație - {implementareName}",
-    "RestartProwlarr": "Reporniți {appName}"
+    "RestartProwlarr": "Reporniți {appName}",
+    "AddDownloadClientToProwlarr": "Adăugarea unui client de descărcare permite {appName} să trimită versiuni direct din interfața utilizatorului în timp ce se efectuează o căutare manuală",
+    "ActiveApps": "Aplicații active"
 }

@@ -195,7 +195,7 @@
     "IndexerDetails": "Detalhes do Indexador",
     "IndexerDisabled": "Indexador Desabilitado",
     "IndexerFailureRate": "Taxa de falha do indexador",
-    "IndexerFlags": "Sinalizadores do indexador",
+    "IndexerFlags": "Sinalizadores do Indexador",
     "IndexerHealthCheckNoIndexers": "Não há indexadores habilitados, o {appName} não retornará resultados para a pesquisa",
     "IndexerInfo": "Info do Indexador",
     "IndexerLongTermStatusCheckAllClientMessage": "Todos os indexadores estão indisponíveis devido a falhas por mais de 6 horas",
@@ -735,5 +735,9 @@
     "TorrentBlackholeSaveMagnetFiles": "Salvar Arquivos Magnets",
     "TorrentBlackholeSaveMagnetFilesExtensionHelpText": "Extensão a ser usada para links magnet, o padrão é '.magnet'",
     "TorrentBlackholeSaveMagnetFilesHelpText": "Salve o link magnet se nenhum arquivo .torrent estiver disponível (útil apenas se o cliente de download suportar magnets salvos em um arquivo)",
-    "UseSsl": "Usar SSL"
+    "UseSsl": "Usar SSL",
+    "IndexerSettingsRejectBlocklistedTorrentHashes": "Rejeitar Hashes de Torrent Bloqueados Durante a Captura",
+    "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "Se um torrent for bloqueado por hash, ele pode não ser rejeitado corretamente durante o RSS/Pesquisa de alguns indexadores. Ativar isso permitirá que ele seja rejeitado após o torrent ser capturado, mas antes de ser enviado ao cliente.",
+    "CustomFilter": "Filtro Personalizado",
+    "LabelIsRequired": "Rótulo é requerido"
 }

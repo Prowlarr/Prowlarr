@@ -113,7 +113,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 },
                 MusicSearchParams = new List<MusicSearchParam>
                 {
-                    MusicSearchParam.Q
+                    MusicSearchParam.Q, MusicSearchParam.Artist, MusicSearchParam.Album, MusicSearchParam.Year
                 },
                 BookSearchParams = new List<BookSearchParam>
                 {
@@ -206,6 +206,24 @@ namespace NzbDrone.Core.Indexers.Definitions
                 if (searchYear is > 0)
                 {
                     parameters.Set("year", searchYear.ToString());
+                }
+            }
+
+            if (searchType == "music" && searchCriteria is MusicSearchCriteria musicSearchCriteria)
+            {
+                if (musicSearchCriteria.Artist.IsNotNullOrWhiteSpace() && musicSearchCriteria.Artist != "VA")
+                {
+                    parameters.Set("artistnames", musicSearchCriteria.Artist);
+                }
+
+                if (musicSearchCriteria.Album.IsNotNullOrWhiteSpace())
+                {
+                    parameters.Set("groupname", musicSearchCriteria.Album);
+                }
+
+                if (musicSearchCriteria.Year is > 0)
+                {
+                    parameters.Set("year", musicSearchCriteria.Year.ToString());
                 }
             }
 

@@ -1,4 +1,5 @@
 import ModelBase from 'App/ModelBase';
+import DownloadProtocol from 'DownloadClient/DownloadProtocol';
 
 export interface IndexerStatus extends ModelBase {
   disabledTill: Date;
@@ -49,7 +50,7 @@ interface Indexer extends ModelBase {
   supportsSearch: boolean;
   supportsRedirect: boolean;
   supportsPagination: boolean;
-  protocol: string;
+  protocol: DownloadProtocol;
   privacy: IndexerPrivacy;
   priority: number;
   fields: IndexerField[];

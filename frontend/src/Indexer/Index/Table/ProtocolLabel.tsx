@@ -1,18 +1,15 @@
 import React from 'react';
 import Label from 'Components/Label';
+import DownloadProtocol from 'DownloadClient/DownloadProtocol';
 import styles from './ProtocolLabel.css';
 
 interface ProtocolLabelProps {
-  protocol: string;
+  protocol: DownloadProtocol;
 }
 
-function ProtocolLabel(props: ProtocolLabelProps) {
-  const { protocol } = props;
-
+function ProtocolLabel({ protocol }: ProtocolLabelProps) {
   const protocolName = protocol === 'usenet' ? 'nzb' : protocol;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore ts(7053)
   return <Label className={styles[protocol]}>{protocolName}</Label>;
 }
 

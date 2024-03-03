@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import Icon from 'Components/Icon';
 import TableRowCell from 'Components/Table/Cells/TableRowCell';
 import TableRowButton from 'Components/Table/TableRowButton';
+import DownloadProtocol from 'DownloadClient/DownloadProtocol';
 import { icons } from 'Helpers/Props';
 import CapabilitiesLabel from 'Indexer/Index/Table/CapabilitiesLabel';
 import PrivacyLabel from 'Indexer/Index/Table/PrivacyLabel';
@@ -12,7 +13,7 @@ import styles from './SelectIndexerRow.css';
 
 interface SelectIndexerRowProps {
   name: string;
-  protocol: string;
+  protocol: DownloadProtocol;
   privacy: IndexerPrivacy;
   language: string;
   description: string;

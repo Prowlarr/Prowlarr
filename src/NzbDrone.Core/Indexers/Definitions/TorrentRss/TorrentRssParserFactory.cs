@@ -3,12 +3,13 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 {
     public interface ITorrentRssParserFactory
     {
-        TorrentRssParser GetParser(TorrentRssIndexerSettings settings);
+        TorrentRssParser GetParser(TorrentRssIndexerSettings settings, ProviderDefinition definition);
     }
 
     public class TorrentRssParserFactory : ITorrentRssParserFactory
@@ -26,10 +27,10 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
             _logger = logger;
         }
 
-        public TorrentRssParser GetParser(TorrentRssIndexerSettings indexerSettings)
+        public TorrentRssParser GetParser(TorrentRssIndexerSettings indexerSettings, ProviderDefinition definition)
         {
             var key = indexerSettings.ToJson();
-            var parserSettings = _settingsCache.Get(key, () => DetectParserSettings(indexerSettings), TimeSpan.FromDays(7));
+            var parserSettings = _settingsCache.Get(key, () => DetectParserSettings(indexerSettings, definition), TimeSpan.FromDays(7));
 
             if (parserSettings.UseEZTVFormat)
             {
@@ -51,9 +52,9 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
             };
         }
 
-        private TorrentRssIndexerParserSettings DetectParserSettings(TorrentRssIndexerSettings indexerSettings)
+        private TorrentRssIndexerParserSettings DetectParserSettings(TorrentRssIndexerSettings indexerSettings, ProviderDefinition definition)
         {
-            var settings = _torrentRssSettingsDetector.Detect(indexerSettings);
+            var settings = _torrentRssSettingsDetector.Detect(indexerSettings, definition);
 
             if (settings == null)
             {

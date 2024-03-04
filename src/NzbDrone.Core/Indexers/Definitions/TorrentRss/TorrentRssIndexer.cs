@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 
         public override IParseIndexerResponse GetParser()
         {
-            return _torrentRssParserFactory.GetParser(Settings);
+            return _torrentRssParserFactory.GetParser(Settings, Definition);
         }
 
         public override IEnumerable<ProviderDefinition> DefaultDefinitions

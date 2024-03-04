@@ -205,7 +205,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddQueryParam("request", "quick_user")
                 .Build();
 
-            var indexResponse = await _httpClient.ExecuteAsync(request).ConfigureAwait(false);
+            var indexResponse = await _httpClient.ExecuteProxiedAsync(request, Definition).ConfigureAwait(false);
 
             var index = Json.Deserialize<GazelleGamesUserResponse>(indexResponse.Content);
 

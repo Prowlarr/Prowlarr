@@ -9,28 +9,29 @@ using NzbDrone.Common.Http;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 {
     public interface ITorrentRssSettingsDetector
     {
-        TorrentRssIndexerParserSettings Detect(TorrentRssIndexerSettings settings);
+        TorrentRssIndexerParserSettings Detect(TorrentRssIndexerSettings settings, ProviderDefinition definition);
     }
 
     public class TorrentRssSettingsDetector : ITorrentRssSettingsDetector
     {
         private const long ValidSizeThreshold = 2 * 1024 * 1024;
 
-        private readonly IHttpClient _httpClient;
+        private readonly IIndexerHttpClient _httpClient;
         private readonly Logger _logger;
 
-        public TorrentRssSettingsDetector(IHttpClient httpClient, Logger logger)
+        public TorrentRssSettingsDetector(IIndexerHttpClient httpClient, Logger logger)
         {
             _httpClient = httpClient;
             _logger = logger;
         }
 
-        public TorrentRssIndexerParserSettings Detect(TorrentRssIndexerSettings settings)
+        public TorrentRssIndexerParserSettings Detect(TorrentRssIndexerSettings settings, ProviderDefinition definition)
         {
             _logger.Debug("Evaluating TorrentRss feed '{0}'", settings.BaseUrl);
 
@@ -43,7 +44,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 
                 try
                 {
-                    httpResponse = _httpClient.Execute(request.HttpRequest);
+                    httpResponse = _httpClient.ExecuteProxied(request.HttpRequest, definition);
                 }
                 catch (Exception ex)
                 {

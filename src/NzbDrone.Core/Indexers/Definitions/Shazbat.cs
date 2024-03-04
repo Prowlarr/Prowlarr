@@ -19,6 +19,7 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions;
@@ -50,7 +51,7 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
 
     public override IParseIndexerResponse GetParser()
     {
-        return new ShazbatParser(Settings, RateLimit, _httpClient, _logger);
+        return new ShazbatParser(Definition, Settings, RateLimit, _httpClient, _logger);
     }
 
     protected override async Task DoLogin()
@@ -202,6 +203,7 @@ public class ShazbatRequestGenerator : IIndexerRequestGenerator
 
 public class ShazbatParser : IParseIndexerResponse
 {
+    private readonly ProviderDefinition _definition;
     private readonly ShazbatSettings _settings;
     private readonly TimeSpan _rateLimit;
     private readonly IIndexerHttpClient _httpClient;
@@ -210,8 +212,9 @@ public class ShazbatParser : IParseIndexerResponse
     private readonly Regex _torrentInfoRegex = new (@"\((?<size>\d+)\):(?<seeders>\d+) \/ :(?<leechers>\d+)$", RegexOptions.Compiled);
     private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
 
-    public ShazbatParser(ShazbatSettings settings, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
+    public ShazbatParser(ProviderDefinition definition, ShazbatSettings settings, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
     {
+        _definition = definition;
         _settings = settings;
         _rateLimit = rateLimit;
         _httpClient = httpClient;
@@ -272,7 +275,7 @@ public class ShazbatParser : IParseIndexerResponse
                 _logger.Debug("Downloading Feed " + showRequest.ToString());
 
                 var releaseRequest = new IndexerRequest(showRequest);
-                var releaseResponse = new IndexerResponse(releaseRequest, _httpClient.Execute(releaseRequest.HttpRequest));
+                var releaseResponse = new IndexerResponse(releaseRequest, _httpClient.ExecuteProxied(releaseRequest.HttpRequest, _definition));
 
                 if (releaseResponse.HttpResponse.Content.ContainsIgnoreCase("sign in now"))
                 {

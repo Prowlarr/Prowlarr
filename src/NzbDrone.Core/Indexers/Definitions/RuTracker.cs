@@ -1467,27 +1467,27 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
         {
-            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
-            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories, searchCriteria.Season ?? 0);
+            return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories, searchCriteria.Season ?? 0);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories);
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
-            return GetPageableRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Categories);
+            return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories);
         }
 
         private IndexerPageableRequestChain GetPageableRequests(string searchTerm, int[] categories, int season = 0)
@@ -1525,8 +1525,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else
             {
-                // use the normal search
+                //  replace any space, special char, etc. with % (wildcard)
+                searchString = new Regex("[^a-zA-Zа-яА-ЯёЁ0-9]+").Replace(searchString, "%");
                 searchString = searchString.Replace("-", " ");
+
                 if (season != 0)
                 {
                     searchString += " Сезон: " + season;

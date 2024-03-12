@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Alert from 'Components/Alert';
 import Card from 'Components/Card';
 import FieldSet from 'Components/FieldSet';
 import Icon from 'Components/Icon';
 import PageSectionContent from 'Components/Page/PageSectionContent';
-import { icons } from 'Helpers/Props';
+import { icons, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import AddDownloadClientModal from './AddDownloadClientModal';
 import DownloadClient from './DownloadClient';
@@ -59,48 +60,59 @@ class DownloadClients extends Component {
     } = this.state;
 
     return (
-      <FieldSet legend={translate('DownloadClients')}>
-        <PageSectionContent
-          errorMessage={translate('DownloadClientsLoadError')}
-          {...otherProps}
-        >
-          <div className={styles.downloadClients}>
-            {
-              items.map((item) => {
-                return (
-                  <DownloadClient
-                    key={item.id}
-                    {...item}
-                    onConfirmDeleteDownloadClient={onConfirmDeleteDownloadClient}
-                  />
-                );
-              })
-            }
-
-            <Card
-              className={styles.addDownloadClient}
-              onPress={this.onAddDownloadClientPress}
-            >
-              <div className={styles.center}>
-                <Icon
-                  name={icons.ADD}
-                  size={45}
-                />
-              </div>
-            </Card>
+      <div>
+        <Alert kind={kinds.INFO}>
+          <div>
+            {translate('ProwlarrDownloadClientsAlert')}
           </div>
+          <div>
+            {translate('ProwlarrDownloadClientsInAppOnlyAlert')}
+          </div>
+        </Alert>
 
-          <AddDownloadClientModal
-            isOpen={isAddDownloadClientModalOpen}
-            onModalClose={this.onAddDownloadClientModalClose}
-          />
+        <FieldSet legend={translate('DownloadClients')}>
+          <PageSectionContent
+            errorMessage={translate('DownloadClientsLoadError')}
+            {...otherProps}
+          >
+            <div className={styles.downloadClients}>
+              {
+                items.map((item) => {
+                  return (
+                    <DownloadClient
+                      key={item.id}
+                      {...item}
+                      onConfirmDeleteDownloadClient={onConfirmDeleteDownloadClient}
+                    />
+                  );
+                })
+              }
 
-          <EditDownloadClientModalConnector
-            isOpen={isEditDownloadClientModalOpen}
-            onModalClose={this.onEditDownloadClientModalClose}
-          />
-        </PageSectionContent>
-      </FieldSet>
+              <Card
+                className={styles.addDownloadClient}
+                onPress={this.onAddDownloadClientPress}
+              >
+                <div className={styles.center}>
+                  <Icon
+                    name={icons.ADD}
+                    size={45}
+                  />
+                </div>
+              </Card>
+            </div>
+
+            <AddDownloadClientModal
+              isOpen={isAddDownloadClientModalOpen}
+              onModalClose={this.onAddDownloadClientModalClose}
+            />
+
+            <EditDownloadClientModalConnector
+              isOpen={isEditDownloadClientModalOpen}
+              onModalClose={this.onEditDownloadClientModalClose}
+            />
+          </PageSectionContent>
+        </FieldSet>
+      </div>
     );
   }
 }

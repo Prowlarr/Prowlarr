@@ -521,6 +521,8 @@
   "Privacy": "Privacy",
   "Private": "Private",
   "Protocol": "Protocol",
+  "ProwlarrDownloadClientsAlert": "If you intend to do searches directly within {appName}, you need to add Download Clients. Otherwise, you do not need to add them here. For searches from your Apps, the download clients configured there are used instead.",
+  "ProwlarrDownloadClientsInAppOnlyAlert": "Download clients are for {appName} in-app searches only and do not sync to apps. There are no plans to add any such functionality.",
   "ProwlarrSupportsAnyDownloadClient": "{appName} supports any of the download clients listed below.",
   "ProwlarrSupportsAnyIndexer": "{appName} supports many indexers in addition to any indexer that uses the Newznab/Torznab standard using 'Generic Newznab' (for usenet) or 'Generic Torznab' (for torrents). Search & Select your indexer from below.",
   "Proxies": "Proxies",

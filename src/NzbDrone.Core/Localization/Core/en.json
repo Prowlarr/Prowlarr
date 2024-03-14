@@ -452,6 +452,7 @@
   "Message": "Message",
   "MinimumSeeders": "Minimum Seeders",
   "MinimumSeedersHelpText": "Minimum seeders required by the Application for the indexer to grab",
+  "Mixed": "Mixed",
   "Mode": "Mode",
   "More": "More",
   "MoreInfo": "More Info",

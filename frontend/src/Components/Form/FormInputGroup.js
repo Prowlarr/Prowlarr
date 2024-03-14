@@ -5,7 +5,6 @@ import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import AppProfileSelectInputConnector from './AppProfileSelectInputConnector';
 import AutoCompleteInput from './AutoCompleteInput';
-import AvailabilitySelectInput from './AvailabilitySelectInput';
 import CaptchaInputConnector from './CaptchaInputConnector';
 import CardigannCaptchaInputConnector from './CardigannCaptchaInputConnector';
 import CheckInput from './CheckInput';
@@ -36,9 +35,6 @@ function getComponent(type) {
 
     case inputTypes.AUTO_COMPLETE:
       return AutoCompleteInput;
-
-    case inputTypes.AVAILABILITY_SELECT:
-      return AvailabilitySelectInput;
 
     case inputTypes.CAPTCHA:
       return CaptchaInputConnector;

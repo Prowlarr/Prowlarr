@@ -24,16 +24,20 @@ function createMapStateToProps() {
       if (includeNoChange) {
         values.unshift({
           key: 'noChange',
-          value: translate('NoChange'),
-          disabled: true
+          get value() {
+            return translate('NoChange');
+          },
+          isDisabled: true
         });
       }
 
       if (includeMixed) {
         values.unshift({
           key: 'mixed',
-          value: '(Mixed)',
-          disabled: true
+          get value() {
+            return `(${translate('Mixed')})`;
+          },
+          isDisabled: true
         });
       }
 

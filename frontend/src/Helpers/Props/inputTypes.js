@@ -1,6 +1,5 @@
 export const AUTO_COMPLETE = 'autoComplete';
 export const APP_PROFILE_SELECT = 'appProfileSelect';
-export const AVAILABILITY_SELECT = 'availabilitySelect';
 export const CAPTCHA = 'captcha';
 export const CARDIGANNCAPTCHA = 'cardigannCaptcha';
 export const CHECK = 'check';
@@ -27,7 +26,6 @@ export const TAG_SELECT = 'tagSelect';
 export const all = [
   AUTO_COMPLETE,
   APP_PROFILE_SELECT,
-  AVAILABILITY_SELECT,
   CAPTCHA,
   CARDIGANNCAPTCHA,
   CHECK,

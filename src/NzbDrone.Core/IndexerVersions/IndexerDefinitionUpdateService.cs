@@ -137,11 +137,11 @@ namespace NzbDrone.Core.IndexerVersions
 
             if (directoryInfo.Exists)
             {
-                var files = directoryInfo.GetFiles($"*.yml", options);
+                var files = directoryInfo.GetFiles("*.yml", options);
 
                 foreach (var file in files)
                 {
-                    _logger.Debug("Loading definition " + file.FullName);
+                    _logger.Debug("Loading definition {0}", file.FullName);
 
                     try
                     {
@@ -158,9 +158,9 @@ namespace NzbDrone.Core.IndexerVersions
 
                         indexerList.Add(definition);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        _logger.Error($"Error while parsing Cardigann definition {file.FullName}\n{e}");
+                        _logger.Error(ex, "Error while parsing Cardigann definition {0}", file.FullName);
                     }
                 }
             }
@@ -188,7 +188,8 @@ namespace NzbDrone.Core.IndexerVersions
                 if (files.Any())
                 {
                     var file = files.First();
-                    _logger.Trace("Loading Cardigann definition " + file.FullName);
+                    _logger.Trace("Loading Cardigann definition {0}", file.FullName);
+
                     try
                     {
                         var definitionString = File.ReadAllText(file.FullName);
@@ -196,9 +197,9 @@ namespace NzbDrone.Core.IndexerVersions
 
                         return CleanIndexerDefinition(definition);
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        _logger.Error($"Error while parsing Cardigann definition {file.FullName}\n{e}");
+                        _logger.Error(ex, "Error while parsing Cardigann definition {0}", file.FullName);
                     }
                 }
             }
@@ -206,7 +207,7 @@ namespace NzbDrone.Core.IndexerVersions
             var dbDefs = _versionService.All();
 
             //Check to ensure it's in versioned defs before we go to web
-            if (dbDefs.Count > 0 && !dbDefs.Any(x => x.File == fileKey))
+            if (dbDefs.Count > 0 && dbDefs.All(x => x.File != fileKey))
             {
                 throw new ArgumentNullException(nameof(fileKey));
             }
@@ -217,9 +218,10 @@ namespace NzbDrone.Core.IndexerVersions
 
         private CardigannDefinition GetHttpDefinition(string id)
         {
-            var req = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{id}");
-            var response = _httpClient.Get(req);
+            var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{id}");
+            var response = _httpClient.Get(request);
             var definition = _deserializer.Deserialize<CardigannDefinition>(response.Content);
+
             return CleanIndexerDefinition(definition);
         }
 
@@ -289,7 +291,7 @@ namespace NzbDrone.Core.IndexerVersions
                 EnsureDefinitionsFolder();
 
                 var definitionsFolder = Path.Combine(startupFolder, "Definitions");
-                var saveFile = Path.Combine(definitionsFolder, $"indexers.zip");
+                var saveFile = Path.Combine(definitionsFolder, "indexers.zip");
 
                 _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/package.zip", saveFile);
 

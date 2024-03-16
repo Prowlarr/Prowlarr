@@ -55,10 +55,10 @@ namespace NzbDrone.Core.Indexers
                     {
                         MapCardigannDefinition(definition);
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         // Skip indexer if we fail in Cardigann mapping
-                        _logger.Debug("Indexer '{0}' has no definition", definition.Name);
+                        _logger.Debug(ex, "Indexer '{0}' has no definition", definition.Name);
                     }
                 }
 

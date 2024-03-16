@@ -739,5 +739,10 @@
     "IndexerSettingsRejectBlocklistedTorrentHashes": "Rejeitar Hashes de Torrent Bloqueados Durante a Captura",
     "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "Se um torrent for bloqueado por hash, ele pode não ser rejeitado corretamente durante o RSS/Pesquisa de alguns indexadores. Ativar isso permitirá que ele seja rejeitado após o torrent ser capturado, mas antes de ser enviado ao cliente.",
     "CustomFilter": "Filtro Personalizado",
-    "LabelIsRequired": "Rótulo é requerido"
+    "LabelIsRequired": "Rótulo é requerido",
+    "ProwlarrDownloadClientsInAppOnlyAlert": "Os clientes de download destinam-se apenas a pesquisas no aplicativo {appName} e não sincronizam com aplicativos. Não há planos para adicionar tal funcionalidade.",
+    "ProwlarrDownloadClientsAlert": "Se você pretende fazer pesquisas diretamente em {appName}, você precisa adicionar Clientes de Download. Caso contrário, você não precisa adicioná-los aqui. Para pesquisas em seus aplicativos, os clientes de download configurados são usados.",
+    "Menu": "Menu",
+    "Mixed": "Misturado",
+    "Donate": "Doar"
 }

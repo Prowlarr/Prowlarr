@@ -297,7 +297,6 @@
     "Category": "Categoria",
     "ClearHistory": "Cancella cronologia",
     "ClearHistoryMessageText": "Sei sicuro di voler cancellare tutta la cronologia di {appName}?",
-    "Discord": "Discord",
     "Donations": "Donazioni",
     "EnableRssHelpText": "Abilita feed RSS per l'Indicizzatore",
     "HomePage": "Pagina Iniziale",
@@ -524,5 +523,11 @@
     "EditConnectionImplementation": "Aggiungi Connessione - {implementationName}",
     "EditDownloadClientImplementation": "Aggiungi un Client di Download - {implementationName}",
     "EditIndexerImplementation": "Aggiungi indicizzatore - {implementationName}",
-    "EditIndexerProxyImplementation": "Aggiungi indicizzatore - {implementationName}"
+    "EditIndexerProxyImplementation": "Aggiungi indicizzatore - {implementationName}",
+    "AdvancedSettingsShownClickToHide": "Impostazioni avanzate mostrate, clicca per nasconderle",
+    "AdvancedSettingsHiddenClickToShow": "Impostazioni avanzate nascoste, clicca per mostrarle",
+    "AddApplication": "Aggiungi Applicazione",
+    "AddCategory": "Aggiungi Categoria",
+    "ActiveApps": "App Attive",
+    "ActiveIndexers": "Indicizzatori Attivi"
 }

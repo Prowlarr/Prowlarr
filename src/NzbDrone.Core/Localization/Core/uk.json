@@ -34,7 +34,7 @@
     "DeleteBackupMessageText": "Ви впевнені, що хочете видалити резервну копію '{0}'?",
     "DeleteDownloadClient": "Видалити клієнт завантаження",
     "DeleteDownloadClientMessageText": "Ви впевнені, що хочете видалити клієнт завантаження '{0}'?",
-    "Authentication": "Аутентифікація",
+    "Authentication": "Автентифікація",
     "Automatic": "Автоматичний",
     "AutomaticSearch": "Автоматичний пошук",
     "Backup": "Резервне копіювання",
@@ -344,7 +344,7 @@
     "DeleteSelectedApplicationsMessageText": "Ви впевнені, що хочете видалити тег {0} ?",
     "DeleteSelectedDownloadClients": "Видалити клієнт завантаження",
     "DeleteSelectedDownloadClientsMessageText": "Ви впевнені, що хочете видалити тег {0} ?",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Як застосувати теги до вибраних фільмів",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Як застосувати теги до вибраних індексаторів",
     "ApplyTagsHelpTextRemove": "Видалити: видалити введені теги",
     "DeleteSelectedIndexersMessageText": "Ви впевнені, що хочете видалити тег {0} ?",
     "DownloadClientPriorityHelpText": "Надайте пріоритет кільком клієнтам завантаження. Круговий алгоритм використовується для клієнтів з таким же пріоритетом.",
@@ -384,5 +384,9 @@
     "CountApplicationsSelected": "Вибрано колекцій: {0}",
     "Applications": "Додатки",
     "Categories": "Категорії",
-    "EditDownloadClientImplementation": "Додати клієнт завантаження - {implementationName}"
+    "EditDownloadClientImplementation": "Додати клієнт завантаження - {implementationName}",
+    "ApplyChanges": "Застосувати зміни",
+    "AuthenticationMethod": "Метод автентифікації",
+    "AuthenticationMethodHelpTextWarning": "Виберіть дійсний метод автентифікації",
+    "AppUpdated": "{appName} Оновлено"
 }

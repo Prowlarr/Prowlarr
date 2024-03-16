@@ -53,7 +53,7 @@
     "BookSearch": "Buch Suche",
     "BookSearchTypes": "Buch-Suchtypen",
     "Branch": "Branch",
-    "BranchUpdate": "Verwendeter Branch zur Aktualisierung von {appName}",
+    "BranchUpdate": "Branch, der verwendet werden soll, um {appName} zu updaten",
     "BranchUpdateMechanism": "Git-Branch für den externen Updateablauf",
     "BypassProxyForLocalAddresses": "Proxy für lokale Adressen umgehen",
     "Cancel": "Abbrechen",
@@ -545,5 +545,6 @@
     "EditIndexerProxyImplementation": "Indexer Proxy hinzufügen - {implementationName}",
     "CountApplicationsSelected": "{count} Ausgewählte Sammlung(en)",
     "DownloadClientAriaSettingsDirectoryHelpText": "Optionaler Speicherort für Downloads. Lassen Sie das Feld leer, um den standardmäßigen rTorrent-Speicherort zu verwenden",
-    "ManageClients": "Verwalte Clienten"
+    "ManageClients": "Verwalte Clienten",
+    "BlackholeFolderHelpText": "Ordner, in dem {appName} die Datei {extension} speichert"
 }

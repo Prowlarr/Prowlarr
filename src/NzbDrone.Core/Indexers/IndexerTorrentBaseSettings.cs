@@ -63,8 +63,5 @@ namespace NzbDrone.Core.Indexers
 
         [FieldDefinition(4, Type = FieldType.Number, Label = "IndexerSettingsPackSeedTime", HelpText = "IndexerSettingsPackSeedTimeIndexerHelpText", Unit = "minutes", Advanced = true)]
         public int? PackSeedTime { get; set; }
-
-        [FieldDefinition(5, Type = FieldType.Checkbox, Label = "IndexerSettingsRejectBlocklistedTorrentHashes", HelpText = "IndexerSettingsRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
-        public bool RejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
     }
 }

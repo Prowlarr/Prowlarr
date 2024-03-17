@@ -258,7 +258,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
                 if (radarrIndexer.Fields.Any(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing"))
                 {
-                    radarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.RejectBlocklistedTorrentHashesWhileGrabbing;
+                    radarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = Settings.SyncRejectBlocklistedTorrentHashesWhileGrabbing;
                 }
             }
 

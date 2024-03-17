@@ -259,7 +259,7 @@ namespace NzbDrone.Core.Applications.Readarr
 
                 if (readarrIndexer.Fields.Any(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing"))
                 {
-                    readarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.RejectBlocklistedTorrentHashesWhileGrabbing;
+                    readarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = Settings.SyncRejectBlocklistedTorrentHashesWhileGrabbing;
                 }
             }
 

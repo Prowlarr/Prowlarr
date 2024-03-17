@@ -273,7 +273,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
                 if (sonarrIndexer.Fields.Any(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing"))
                 {
-                    sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.RejectBlocklistedTorrentHashesWhileGrabbing;
+                    sonarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = Settings.SyncRejectBlocklistedTorrentHashesWhileGrabbing;
                 }
             }
 

@@ -43,8 +43,11 @@ namespace NzbDrone.Core.Applications.Sonarr
         [FieldDefinition(4, Label = "Anime Sync Categories", Type = FieldType.Select, SelectOptions = typeof(NewznabCategoryFieldConverter), Advanced = true, HelpText = "Only Indexers that support these categories will be synced")]
         public IEnumerable<int> AnimeSyncCategories { get; set; }
 
-        [FieldDefinition(5, Label = "Sync Anime Standard Format Search", Type = FieldType.Checkbox, Advanced = true, HelpText = "Sync also searching for anime using the standard numbering")]
+        [FieldDefinition(5, Label = "Sync Anime Standard Format Search", Type = FieldType.Checkbox, HelpText = "Sync also searching for anime using the standard numbering", Advanced = true)]
         public bool SyncAnimeStandardFormatSearch { get; set; }
+
+        [FieldDefinition(6, Type = FieldType.Checkbox, Label = "ApplicationSettingsSyncRejectBlocklistedTorrentHashes", HelpText = "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
+        public bool SyncRejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

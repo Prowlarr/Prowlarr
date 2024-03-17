@@ -259,7 +259,7 @@ namespace NzbDrone.Core.Applications.Whisparr
 
                 if (whisparrIndexer.Fields.Any(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing"))
                 {
-                    whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = ((ITorrentIndexerSettings)indexer.Settings).TorrentBaseSettings.RejectBlocklistedTorrentHashesWhileGrabbing;
+                    whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing").Value = Settings.SyncRejectBlocklistedTorrentHashesWhileGrabbing;
                 }
             }
 

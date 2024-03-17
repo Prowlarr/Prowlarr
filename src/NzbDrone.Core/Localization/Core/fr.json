@@ -733,11 +733,9 @@
     "DownloadClientFreeboxSettingsAppIdHelpText": "L'ID de l'application donné lors de la création de l'accès à l'API Freebox (c'est-à-dire 'app_id')",
     "DownloadClientQbittorrentSettingsFirstAndLastFirstHelpText": "Télécharger d'abord le premier et le dernier morceau (qBittorrent 4.1.0+)",
     "DownloadClientQbittorrentSettingsUseSslHelpText": "Utilisez une connexion sécurisée. Voir Options -> UI Web -> 'Utiliser HTTPS au lieu de HTTP' dans qBittorrent.",
-    "IndexerSettingsRejectBlocklistedTorrentHashesHelpText": "Si un torrent est bloqué par le hachage, il peut ne pas être correctement rejeté pendant le RSS/recherche pour certains indexeurs. L'activation de cette fonction permet de le rejeter après que le torrent a été saisi, mais avant qu'il ne soit envoyé au client.",
     "TorrentBlackholeSaveMagnetFilesExtensionHelpText": "Extension à utiliser pour les liens magnétiques, la valeur par défaut est '.magnet'",
     "TorrentBlackholeTorrentFolder": "Dossier Torrent",
     "UseSsl": "Utiliser SSL",
-    "IndexerSettingsRejectBlocklistedTorrentHashes": "Rejeter les hachages de torrents bloqués lors de la saisie",
     "DownloadClientRTorrentSettingsDirectoryHelpText": "Emplacement facultatif dans lequel placer les téléchargements. Laisser vide pour utiliser l'emplacement par défaut de rTorrent",
     "DownloadClientSettingsDefaultCategorySubFolderHelpText": "Catégorie de secours par défaut si aucune catégorie mappée n'existe pour une version. L'ajout d'une catégorie spécifique à {appName} permet d'éviter les conflits avec des téléchargements sans rapport avec {appName}. L'utilisation d'une catégorie est facultative, mais fortement recommandée. Crée un sous-répertoire [catégorie] dans le répertoire de sortie."
 }

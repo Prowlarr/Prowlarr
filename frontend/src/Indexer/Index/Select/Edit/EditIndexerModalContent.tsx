@@ -19,7 +19,6 @@ interface SavePayload {
   seedRatio?: number;
   seedTime?: number;
   packSeedTime?: number;
-  rejectBlocklistedTorrentHashesWhileGrabbing?: boolean;
 }
 
 interface EditIndexerModalContentProps {
@@ -66,10 +65,6 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
   const [packSeedTime, setPackSeedTime] = useState<null | string | number>(
     null
   );
-  const [
-    rejectBlocklistedTorrentHashesWhileGrabbing,
-    setRejectBlocklistedTorrentHashesWhileGrabbing,
-  ] = useState(NO_CHANGE);
 
   const save = useCallback(() => {
     let hasChanges = false;
@@ -110,12 +105,6 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
       payload.packSeedTime = packSeedTime as number;
     }
 
-    if (rejectBlocklistedTorrentHashesWhileGrabbing !== NO_CHANGE) {
-      hasChanges = true;
-      payload.rejectBlocklistedTorrentHashesWhileGrabbing =
-        rejectBlocklistedTorrentHashesWhileGrabbing === 'true';
-    }
-
     if (hasChanges) {
       onSavePress(payload);
     }
@@ -129,7 +118,6 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
     seedRatio,
     seedTime,
     packSeedTime,
-    rejectBlocklistedTorrentHashesWhileGrabbing,
     onSavePress,
     onModalClose,
   ]);
@@ -157,9 +145,6 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
           break;
         case 'packSeedTime':
           setPackSeedTime(value);
-          break;
-        case 'rejectBlocklistedTorrentHashesWhileGrabbing':
-          setRejectBlocklistedTorrentHashesWhileGrabbing(value);
           break;
         default:
           console.warn(`EditIndexersModalContent Unknown Input: '${name}'`);
@@ -265,23 +250,6 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
             value={packSeedTime}
             unit={translate('minutes')}
             helpText={translate('PackSeedTimeHelpText')}
-            onChange={onInputChange}
-          />
-        </FormGroup>
-
-        <FormGroup size={sizes.MEDIUM}>
-          <FormLabel>
-            {translate('IndexerSettingsRejectBlocklistedTorrentHashes')}
-          </FormLabel>
-
-          <FormInputGroup
-            type={inputTypes.SELECT}
-            name="rejectBlocklistedTorrentHashesWhileGrabbing"
-            value={rejectBlocklistedTorrentHashesWhileGrabbing}
-            values={enableOptions}
-            helpText={translate(
-              'IndexerSettingsRejectBlocklistedTorrentHashesHelpText'
-            )}
             onChange={onInputChange}
           />
         </FormGroup>

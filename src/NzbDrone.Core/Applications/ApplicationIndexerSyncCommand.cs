@@ -13,6 +13,6 @@ namespace NzbDrone.Core.Applications
 
         public override bool SendUpdatesToClient => true;
 
-        public override string CompletionMessage => null;
+        public override string CompletionMessage => "Completed";
     }
 }

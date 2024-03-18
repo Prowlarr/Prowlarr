@@ -771,13 +771,14 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         protected Dictionary<string, string> ParseCustomHeaders(Dictionary<string, List<string>> customHeaders, Dictionary<string, object> variables)
         {
+            var headers = new Dictionary<string, string>();
+
             if (customHeaders == null)
             {
-                return null;
+                return headers;
             }
 
             // FIXME: fix jackett header handling (allow it to specifiy the same header multipe times)
-            var headers = new Dictionary<string, string>();
             foreach (var header in customHeaders)
             {
                 headers.Add(header.Key, ApplyGoTemplateText(header.Value[0], variables));

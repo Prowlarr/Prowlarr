@@ -116,6 +116,7 @@
   "Clear": "Clear",
   "ClearHistory": "Clear History",
   "ClearHistoryMessageText": "Are you sure you want to clear all {appName} history?",
+  "ClickToChangeQueryOptions": "Click to change query options",
   "ClientPriority": "Client Priority",
   "Clone": "Clone",
   "CloneProfile": "Clone Profile",

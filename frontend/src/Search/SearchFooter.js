@@ -212,7 +212,11 @@ class SearchFooter extends Component {
             name="searchQuery"
             value={searchQuery}
             buttons={
-              <FormInputButton onPress={this.onQueryParameterModalOpenClick}>
+              <FormInputButton
+                kind={kinds.DEFAULT}
+                onPress={this.onQueryParameterModalOpenClick}
+                title={translate('ClickToChangeQueryOptions')}
+              >
                 <Icon
                   name={icon}
                 />
@@ -275,6 +279,7 @@ class SearchFooter extends Component {
               }
 
               <SpinnerButton
+                kind={kinds.PRIMARY}
                 className={styles.searchButton}
                 isSpinning={isFetching}
                 isDisabled={isFetching || !hasIndexers}

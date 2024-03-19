@@ -105,7 +105,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 { "api", "" },
                 { "passkey", _settings.Passkey },
-                { "search", string.Join(" ", search.Where(s => s.IsNotNullOrWhiteSpace())) },
                 { "search", string.Join(" ", search.Where(s => s.IsNotNullOrWhiteSpace())) }
             };
 

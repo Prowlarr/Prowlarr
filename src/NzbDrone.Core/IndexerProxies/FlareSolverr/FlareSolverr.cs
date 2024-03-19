@@ -102,9 +102,15 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             var url = request.Url.ToString();
             var maxTimeout = Settings.RequestTimeout * 1000;
 
-            // Use Proxy if no credentials are set (creds not supported as of FS 2.2.9)
             var proxySettings = _proxySettingsProvider.GetProxySettings();
-            var proxyUrl = proxySettings != null && proxySettings.Username.IsNullOrWhiteSpace() && proxySettings.Password.IsNullOrWhiteSpace() ? GetProxyUri(proxySettings) : null;
+            var proxyUrl = proxySettings != null ? GetProxyUri(proxySettings) : null;
+
+            var requestProxy = new FlareSolverrProxy
+            {
+                Url = proxyUrl?.OriginalString,
+                Username = proxySettings != null && proxySettings.Username.IsNotNullOrWhiteSpace() ? proxySettings.Username : null,
+                Password = proxySettings != null && proxySettings.Password.IsNotNullOrWhiteSpace() ? proxySettings.Password : null
+            };
 
             if (request.Method == HttpMethod.Get)
             {
@@ -113,10 +119,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     Cmd = "request.get",
                     Url = url,
                     MaxTimeout = maxTimeout,
-                    Proxy = new FlareSolverrProxy
-                    {
-                        Url = proxyUrl?.OriginalString
-                    }
+                    Proxy = requestProxy
                 };
             }
             else if (request.Method == HttpMethod.Post)
@@ -139,10 +142,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                             ContentLength = null
                         },
                         MaxTimeout = maxTimeout,
-                        Proxy = new FlareSolverrProxy
-                        {
-                            Url = proxyUrl?.OriginalString
-                        }
+                        Proxy = requestProxy
                     };
                 }
                 else if (contentTypeType.Contains("multipart/form-data")
@@ -169,6 +169,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             newRequest.LogResponseContent = true;
             newRequest.RequestTimeout = TimeSpan.FromSeconds(Settings.RequestTimeout + 5);
             newRequest.SetContent(req.ToJson());
+            newRequest.ContentSummary = req.ToJson(Formatting.None);
 
             _logger.Debug("Cloudflare Detected, Applying FlareSolverr Proxy {0} to request {1}", Name, request.Url);
 
@@ -243,6 +244,8 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
         private class FlareSolverrProxy
         {
             public string Url { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
         }
 
         private class HeadersPost

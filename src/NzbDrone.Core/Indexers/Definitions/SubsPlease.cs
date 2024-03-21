@@ -82,49 +82,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             _settings = settings;
         }
 
-        private IEnumerable<IndexerRequest> GetSearchRequests(string term)
-        {
-            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/?";
-
-            var searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
-
-            // If the search terms contain a resolution, remove it from the query sent to the API
-            var resMatch = Regex.Match(searchTerm, "\\d{3,4}[p|P]");
-            if (resMatch.Success)
-            {
-                searchTerm = searchTerm.Replace(resMatch.Value, string.Empty);
-            }
-
-            var queryParameters = new NameValueCollection
-            {
-                { "f", "search" },
-                { "tz", "UTC" },
-                { "s", searchTerm }
-            };
-
-            var request = new IndexerRequest(searchUrl + queryParameters.GetQueryString(), HttpAccept.Json);
-
-            yield return request;
-        }
-
-        private IEnumerable<IndexerRequest> GetRssRequest()
-        {
-            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/?";
-
-            var queryParameters = new NameValueCollection
-            {
-                { "f", "latest" },
-                { "tz", "UTC" }
-            };
-
-            var request = new IndexerRequest(searchUrl + queryParameters.GetQueryString(), HttpAccept.Json);
-
-            yield return request;
-        }
-
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
-            return new IndexerPageableRequestChain();
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetSearchRequests(searchCriteria.SanitizedSearchTerm, searchCriteria));
+
+            return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
@@ -136,29 +100,67 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(searchCriteria.IsRssSearch
-                ? GetRssRequest()
-                : GetSearchRequests(searchCriteria.SanitizedTvSearchString));
+            var searchTerm = searchCriteria.SanitizedSearchTerm.Trim();
+
+            // Only include season > 1 in searchTerm, format as S2 rather than S02
+            if (searchCriteria.Season is > 1)
+            {
+                searchTerm += $" S{searchCriteria.Season}";
+            }
+
+            if (int.TryParse(searchCriteria.Episode, out var episode) && episode > 0)
+            {
+                searchTerm += $" {episode:00}";
+            }
+
+            pageableRequests.Add(GetSearchRequests(searchTerm, searchCriteria));
 
             return pageableRequests;
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
         {
-            var pageableRequests = new IndexerPageableRequestChain();
-
-            return pageableRequests;
+            return new IndexerPageableRequestChain();
         }
 
         public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(searchCriteria.IsRssSearch
-                ? GetRssRequest()
-                : GetSearchRequests(searchCriteria.SanitizedSearchTerm));
+            pageableRequests.Add(GetSearchRequests(searchCriteria.SanitizedSearchTerm, searchCriteria));
 
             return pageableRequests;
+        }
+
+        private IEnumerable<IndexerRequest> GetSearchRequests(string term, SearchCriteriaBase searchCriteria)
+        {
+            var searchTerm = Regex.Replace(term, "\\[?SubsPlease\\]?\\s*", string.Empty, RegexOptions.IgnoreCase).Trim();
+
+            // If the search terms contain a resolution, remove it from the query sent to the API
+            var resMatch = Regex.Match(searchTerm, "\\d{3,4}[p|P]");
+            if (resMatch.Success)
+            {
+                searchTerm = searchTerm.Replace(resMatch.Value, string.Empty).Trim();
+            }
+
+            var queryParameters = new NameValueCollection
+            {
+                { "tz", "UTC" }
+            };
+
+            if (searchCriteria.IsRssSearch)
+            {
+                queryParameters.Set("f", "latest");
+            }
+            else
+            {
+                queryParameters.Set("f", "search");
+                queryParameters.Set("s", searchTerm);
+            }
+
+            var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/?{queryParameters.GetQueryString()}";
+
+            yield return new IndexerRequest(searchUrl, HttpAccept.Json);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

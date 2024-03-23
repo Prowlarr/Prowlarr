@@ -41,6 +41,14 @@ function getInternalLink(source) {
           to="/settings/connect"
         />
       );
+    case 'IndexerProxyStatusCheck':
+      return (
+        <IconButton
+          name={icons.SETTINGS}
+          title={translate('Settings')}
+          to="/settings/indexers"
+        />
+      );
     case 'IndexerRssCheck':
     case 'IndexerSearchCheck':
     case 'IndexerStatusCheck':

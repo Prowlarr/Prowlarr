@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.IndexerProxies;
@@ -9,11 +10,11 @@ namespace NzbDrone.Core.HealthCheck.Checks
     [CheckOn(typeof(ProviderDeletedEvent<IIndexerProxy>))]
     [CheckOn(typeof(ProviderAddedEvent<IIndexerProxy>))]
     [CheckOn(typeof(ProviderUpdatedEvent<IIndexerProxy>))]
-    public class IndexerProxyCheck : HealthCheckBase
+    public class IndexerProxyStatusCheck : HealthCheckBase
     {
         private readonly IIndexerProxyFactory _proxyFactory;
 
-        public IndexerProxyCheck(IIndexerProxyFactory proxyFactory,
+        public IndexerProxyStatusCheck(IIndexerProxyFactory proxyFactory,
             ILocalizationService localizationService)
             : base(localizationService)
         {
@@ -37,15 +38,17 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
-                    _localizationService.GetLocalizedString("IndexerProxyStatusCheckAllClientMessage"),
-                    "#proxies-are-unavailable-due-to-failures");
+                    _localizationService.GetLocalizedString("IndexerProxyStatusAllUnavailableHealthCheckMessage"),
+                    "#indexer-proxies-are-unavailable-due-to-failures");
             }
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
-                string.Format(_localizationService.GetLocalizedString("IndexerProxyStatusCheckSingleClientMessage"),
-                    string.Join(", ", badProxies.Select(v => v.Definition.Name))),
-                "#proxies-are-unavailable-due-to-failures");
+                _localizationService.GetLocalizedString("IndexerProxyStatusUnavailableHealthCheckMessage", new Dictionary<string, object>
+                {
+                    { "indexerProxyNames", string.Join(", ", badProxies.Select(v => v.Definition.Name)) }
+                }),
+                "#indexer-proxies-are-unavailable-due-to-failures");
         }
     }
 }

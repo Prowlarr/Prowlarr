@@ -1,5 +1,5 @@
 {
-    "IndexerProxyStatusCheckSingleClientMessage": "Välityspalvelimet eivät ole käytettävissä virheiden vuoksi: {0}",
+    "IndexerProxyStatusUnavailableHealthCheckMessage": "Välityspalvelimet eivät ole käytettävissä virheiden vuoksi: {indexerProxyNames}",
     "Logging": "Lokikirjaus",
     "LogLevel": "Lokikirjauksen laajuus",
     "MovieIndexScrollTop": "Elokuvakirjasto: vieritä ylös",
@@ -278,7 +278,7 @@
     "IndexerLongTermStatusCheckAllClientMessage": "Mikään tietolähde ei ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi.",
     "IndexerLongTermStatusCheckSingleClientMessage": "Tietolähteet eivät ole käytettävissä yli 6 tuntia kestäneiden virheiden vuoksi: {0}",
     "IndexerPriority": "Tietolähteiden painotus",
-    "IndexerProxyStatusCheckAllClientMessage": "Välityspalvelimet eivät ole käytettävissä virheiden vuoksi",
+    "IndexerProxyStatusAllUnavailableHealthCheckMessage": "Välityspalvelimet eivät ole käytettävissä virheiden vuoksi",
     "IndexerStatusCheckAllClientMessage": "Tietolähteet eivät ole käytettävissä virheiden vuoksi",
     "IndexerStatusCheckSingleClientMessage": "Tietolähteet eivät ole käytettävissä virheiden vuoksi: {0}",
     "NoChange": "Ei muutosta",

@@ -25,7 +25,7 @@
     "AppDataLocationHealthCheckMessage": "La mise à jour ne sera pas possible afin empêcher la suppression de AppData lors de la mise à jour",
     "Analytics": "Statistiques",
     "All": "Tout",
-    "About": "Tagalog",
+    "About": "À propos",
     "IndexerStatusCheckSingleClientMessage": "Indexeurs indisponibles en raison d'échecs : {0}",
     "DownloadClientStatusCheckSingleClientMessage": "Clients de Téléchargement indisponibles en raison d'échecs : {0}",
     "SetTags": "Définir des étiquettes",
@@ -737,5 +737,13 @@
     "TorrentBlackholeTorrentFolder": "Dossier Torrent",
     "UseSsl": "Utiliser SSL",
     "DownloadClientRTorrentSettingsDirectoryHelpText": "Emplacement facultatif dans lequel placer les téléchargements. Laisser vide pour utiliser l'emplacement par défaut de rTorrent",
-    "DownloadClientSettingsDefaultCategorySubFolderHelpText": "Catégorie de secours par défaut si aucune catégorie mappée n'existe pour une version. L'ajout d'une catégorie spécifique à {appName} permet d'éviter les conflits avec des téléchargements sans rapport avec {appName}. L'utilisation d'une catégorie est facultative, mais fortement recommandée. Crée un sous-répertoire [catégorie] dans le répertoire de sortie."
+    "DownloadClientSettingsDefaultCategorySubFolderHelpText": "Catégorie de secours par défaut si aucune catégorie mappée n'existe pour une version. L'ajout d'une catégorie spécifique à {appName} permet d'éviter les conflits avec des téléchargements sans rapport avec {appName}. L'utilisation d'une catégorie est facultative, mais fortement recommandée. Crée un sous-répertoire [catégorie] dans le répertoire de sortie.",
+    "ProwlarrDownloadClientsInAppOnlyAlert": "Les clients de téléchargement servent uniquement à effectuer des recherches dans l'application {appName} et ne se synchronisent pas avec les applications. Il n'est pas prévu d'ajouter une telle fonctionnalité.",
+    "Donate": "Donation",
+    "Menu": "Menu",
+    "Mixed": "Mixte",
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashes": "Synchroniser le rejet des hachages torrent sur liste bloquée lors de la saisie",
+    "ClickToChangeQueryOptions": "Cliquez pour modifier les options de la requête",
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "Si un torrent est bloqué par le hachage, il peut ne pas être correctement rejeté pendant le RSS/recherche pour certains indexeurs. L'activation de cette fonction permet de le rejeter après que le torrent a été saisi, mais avant qu'il ne soit envoyé au client.",
+    "ProwlarrDownloadClientsAlert": "Si vous avez l'intention d'effectuer des recherches directement dans {appName}, vous devez ajouter les clients de téléchargement. Sinon, vous n'avez pas besoin de les ajouter ici. Pour les recherches à partir de vos applications, les clients de téléchargement qui y sont configurés sont utilisés à la place."
 }

@@ -431,5 +431,12 @@
     "Id": "ID",
     "Author": "Autor",
     "ManageClients": "Gestiona els clients",
-    "CountApplicationsSelected": "{count} Col·lecció(ns) seleccionades"
+    "CountApplicationsSelected": "{count} Col·lecció(ns) seleccionades",
+    "DownloadClientAriaSettingsDirectoryHelpText": "Ubicació opcional per a les baixades, deixeu-lo en blanc per utilitzar la ubicació predeterminada d'Aria2",
+    "Donate": "Dona",
+    "BlackholeFolderHelpText": "Carpeta on {appName} emmagatzemarà els fitxers {extension}",
+    "Destination": "Destinació",
+    "Directory": "Directori",
+    "DownloadClientDelugeSettingsUrlBaseHelpText": "Afegeix un prefix a l'url json del Deluge, vegeu {url}",
+    "CustomFilter": "Filtres personalitzats"
 }

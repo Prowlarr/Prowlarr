@@ -2,7 +2,13 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { saveIndexerProxy, setIndexerProxyFieldValue, setIndexerProxyValue, testIndexerProxy } from 'Store/Actions/settingsActions';
+import {
+  saveIndexerProxy,
+  setIndexerProxyFieldValue,
+  setIndexerProxyValue,
+  testIndexerProxy,
+  toggleAdvancedSettings
+} from 'Store/Actions/settingsActions';
 import createProviderSettingsSelector from 'Store/Selectors/createProviderSettingsSelector';
 import EditIndexerProxyModalContent from './EditIndexerProxyModalContent';
 
@@ -23,7 +29,8 @@ const mapDispatchToProps = {
   setIndexerProxyValue,
   setIndexerProxyFieldValue,
   saveIndexerProxy,
-  testIndexerProxy
+  testIndexerProxy,
+  toggleAdvancedSettings
 };
 
 class EditIndexerProxyModalContentConnector extends Component {
@@ -56,6 +63,10 @@ class EditIndexerProxyModalContentConnector extends Component {
     this.props.testIndexerProxy({ id: this.props.id });
   };
 
+  onAdvancedSettingsPress = () => {
+    this.props.toggleAdvancedSettings();
+  };
+
   //
   // Render
 
@@ -65,6 +76,7 @@ class EditIndexerProxyModalContentConnector extends Component {
         {...this.props}
         onSavePress={this.onSavePress}
         onTestPress={this.onTestPress}
+        onAdvancedSettingsPress={this.onAdvancedSettingsPress}
         onInputChange={this.onInputChange}
         onFieldChange={this.onFieldChange}
       />
@@ -82,6 +94,7 @@ EditIndexerProxyModalContentConnector.propTypes = {
   setIndexerProxyFieldValue: PropTypes.func.isRequired,
   saveIndexerProxy: PropTypes.func.isRequired,
   testIndexerProxy: PropTypes.func.isRequired,
+  toggleAdvancedSettings: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };
 

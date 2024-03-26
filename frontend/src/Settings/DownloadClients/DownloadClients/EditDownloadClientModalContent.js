@@ -17,6 +17,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { icons, inputTypes, kinds } from 'Helpers/Props';
+import AdvancedSettingsButton from 'Settings/AdvancedSettingsButton';
 import translate from 'Utilities/String/translate';
 import AddCategoryModalConnector from './Categories/AddCategoryModalConnector';
 import Category from './Categories/Category';
@@ -61,6 +62,7 @@ class EditDownloadClientModalContent extends Component {
       onModalClose,
       onSavePress,
       onTestPress,
+      onAdvancedSettingsPress,
       onDeleteDownloadClientPress,
       onConfirmDeleteCategory,
       ...otherProps
@@ -219,6 +221,12 @@ class EditDownloadClientModalContent extends Component {
               </Button>
           }
 
+          <AdvancedSettingsButton
+            advancedSettings={advancedSettings}
+            onAdvancedSettingsPress={onAdvancedSettingsPress}
+            showLabel={false}
+          />
+
           <SpinnerErrorButton
             isSpinning={isTesting}
             error={saveError}
@@ -260,6 +268,7 @@ EditDownloadClientModalContent.propTypes = {
   onModalClose: PropTypes.func.isRequired,
   onSavePress: PropTypes.func.isRequired,
   onTestPress: PropTypes.func.isRequired,
+  onAdvancedSettingsPress: PropTypes.func.isRequired,
   onDeleteDownloadClientPress: PropTypes.func,
   onConfirmDeleteCategory: PropTypes.func.isRequired
 };

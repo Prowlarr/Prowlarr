@@ -14,6 +14,7 @@ import ModalContent from 'Components/Modal/ModalContent';
 import ModalFooter from 'Components/Modal/ModalFooter';
 import ModalHeader from 'Components/Modal/ModalHeader';
 import { inputTypes, kinds } from 'Helpers/Props';
+import AdvancedSettingsButton from 'Settings/AdvancedSettingsButton';
 import translate from 'Utilities/String/translate';
 import styles from './EditIndexerProxyModalContent.css';
 
@@ -31,6 +32,7 @@ function EditIndexerProxyModalContent(props) {
     onModalClose,
     onSavePress,
     onTestPress,
+    onAdvancedSettingsPress,
     onDeleteIndexerProxyPress,
     ...otherProps
   } = props;
@@ -130,6 +132,12 @@ function EditIndexerProxyModalContent(props) {
             </Button>
         }
 
+        <AdvancedSettingsButton
+          advancedSettings={advancedSettings}
+          onAdvancedSettingsPress={onAdvancedSettingsPress}
+          showLabel={false}
+        />
+
         <SpinnerErrorButton
           isSpinning={isTesting}
           error={saveError}
@@ -169,6 +177,7 @@ EditIndexerProxyModalContent.propTypes = {
   onModalClose: PropTypes.func.isRequired,
   onSavePress: PropTypes.func.isRequired,
   onTestPress: PropTypes.func.isRequired,
+  onAdvancedSettingsPress: PropTypes.func.isRequired,
   onDeleteIndexerProxyPress: PropTypes.func
 };
 

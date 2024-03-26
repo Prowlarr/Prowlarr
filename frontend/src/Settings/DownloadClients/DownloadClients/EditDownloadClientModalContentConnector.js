@@ -2,7 +2,15 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { deleteDownloadClientCategory, fetchDownloadClientCategories, saveDownloadClient, setDownloadClientFieldValue, setDownloadClientValue, testDownloadClient } from 'Store/Actions/settingsActions';
+import {
+  deleteDownloadClientCategory,
+  fetchDownloadClientCategories,
+  saveDownloadClient,
+  setDownloadClientFieldValue,
+  setDownloadClientValue,
+  testDownloadClient,
+  toggleAdvancedSettings
+} from 'Store/Actions/settingsActions';
 import createProviderSettingsSelector from 'Store/Selectors/createProviderSettingsSelector';
 import EditDownloadClientModalContent from './EditDownloadClientModalContent';
 
@@ -27,7 +35,8 @@ const mapDispatchToProps = {
   saveDownloadClient,
   testDownloadClient,
   fetchDownloadClientCategories,
-  deleteDownloadClientCategory
+  deleteDownloadClientCategory,
+  toggleAdvancedSettings
 };
 
 class EditDownloadClientModalContentConnector extends Component {
@@ -68,6 +77,10 @@ class EditDownloadClientModalContentConnector extends Component {
     this.props.testDownloadClient({ id: this.props.id });
   };
 
+  onAdvancedSettingsPress = () => {
+    this.props.toggleAdvancedSettings();
+  };
+
   onConfirmDeleteCategory = (id) => {
     this.props.deleteDownloadClientCategory({ id });
   };
@@ -81,6 +94,7 @@ class EditDownloadClientModalContentConnector extends Component {
         {...this.props}
         onSavePress={this.onSavePress}
         onTestPress={this.onTestPress}
+        onAdvancedSettingsPress={this.onAdvancedSettingsPress}
         onInputChange={this.onInputChange}
         onFieldChange={this.onFieldChange}
         onConfirmDeleteCategory={this.onConfirmDeleteCategory}
@@ -102,6 +116,7 @@ EditDownloadClientModalContentConnector.propTypes = {
   setDownloadClientFieldValue: PropTypes.func.isRequired,
   saveDownloadClient: PropTypes.func.isRequired,
   testDownloadClient: PropTypes.func.isRequired,
+  toggleAdvancedSettings: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired
 };
 

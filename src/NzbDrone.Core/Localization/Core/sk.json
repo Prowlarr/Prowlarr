@@ -35,7 +35,7 @@
     "DeleteNotificationMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "DeleteTagMessageText": "Naozaj chcete zmazať značku formátu {0} ?",
     "AllIndexersHiddenDueToFilter": "Všetky filmy sú skryté kvôli použitému filtru.",
-    "AnalyticsEnabledHelpText": "Odosielajte anonymné informácie o používaní a chybách na servery {appName}u. To zahŕňa informácie o vašom prehliadači, ktoré stránky {appName} WebUI používate, hlásenia chýb a taktiež verziu operačného systému a spúšťacieho prostredia. Tieto informácie použijeme k uprednostňovaniu funkcií a oprav chýb.",
+    "AnalyticsEnabledHelpText": "Odosielajte anonymné informácie o používaní a chybách na servery aplikácie {appName}. Zahŕňa to informácie o vašom prehliadači, ktoré stránky webového používateľského rozhrania {appName} používate, hlásenia chýb, ako aj verziu operačného systému a spustenia. Tieto informácie použijeme na stanovenie priorít funkcií a opráv chýb.",
     "AuthenticationMethodHelpText": "Vyžadovať používateľské meno a heslo pre prístup k {appName}u",
     "BackupFolderHelpText": "Relatívne cesty budú v priečinku AppData {appName}u",
     "BranchUpdate": "Vetva, ktorá sa má použiť k aktualizácií {appName}u",
@@ -106,7 +106,7 @@
     "ApplicationURL": "URL aplikácie",
     "ApplicationUrlHelpText": "Externá URL tejto aplikácie vrátane http(s)://, portu a URL základu",
     "Label": "Štítok",
-    "ApplyTagsHelpTextAdd": "Pridať: Pridajte značky do existujúceho zoznamu značiek",
+    "ApplyTagsHelpTextAdd": "Pridať: Pridať značky do existujúceho zoznamu značiek",
     "ApplyTagsHelpTextRemove": "Odobrať: Odoberie zadané značky",
     "ApplyTagsHelpTextReplace": "Nahradiť: Nahradí značky zadanými značkami (pre vymazanie všetkých značiek, nezadávajte žiadne)",
     "ApplyTagsHelpTextHowToApplyApplications": "Ako použiť značky na vybrané filmy",
@@ -119,5 +119,12 @@
     "DisabledForLocalAddresses": "Zakázané pre miestne adresy",
     "ResetAPIKeyMessageText": "Naozaj chcete obnoviť kľúč API?",
     "CountApplicationsSelected": "{count} Označených kolekcií",
-    "Id": "ID"
+    "Id": "ID",
+    "EnableSslHelpText": " Vyžaduje sa reštart s oprávnením správcu, aby sa zmeny prejavili",
+    "RestartRequiredHelpTextWarning": "Vyžaduje sa reštart, aby sa zmeny prejavili",
+    "Album": "Album",
+    "AddConnection": "Pridať podmienku",
+    "AddConnectionImplementation": "Pridať pripojenie - {implementationName}",
+    "AddDownloadClientImplementation": "Pridať klienta pre sťahovanie - {implementationName}",
+    "AddIndexerImplementation": "Pridať Indexer - {implementationName}"
 }

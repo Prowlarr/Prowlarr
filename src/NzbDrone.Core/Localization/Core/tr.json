@@ -361,11 +361,11 @@
     "Application": "Uygulamalar",
     "Episode": "bölüm",
     "AddConnection": "Bağlantı Ekle",
-    "AddApplicationImplementation": "Koşul Ekle - {implementationName}",
+    "AddApplicationImplementation": "Uygulama Ekle - {implementationName}",
     "AddIndexerImplementation": "Yeni Dizin Ekle - {implementationName}",
     "AddIndexerProxyImplementation": "Koşul Ekle - {implementationName}",
     "EditConnectionImplementation": "Koşul Ekle - {implementationName}",
-    "AddConnectionImplementation": "Koşul Ekle - {implementationName}",
+    "AddConnectionImplementation": "Bağlantı Ekle - {implementationName}",
     "RestartProwlarr": "{appName}'ı yeniden başlatın",
     "EditApplicationImplementation": "Koşul Ekle - {implementationName}",
     "EditIndexerImplementation": "Koşul Ekle - {implementationName}",
@@ -392,5 +392,13 @@
     "AuthenticationMethod": "Kimlik Doğrulama Yöntemi",
     "AuthenticationMethodHelpTextWarning": "Lütfen geçerli bir kimlik doğrulama yöntemi seçin",
     "AuthenticationRequiredHelpText": "İstekler için Kimlik doğrulamanın gereklilik ayarını değiştirin. Riskleri anlamadığınız sürece değiştirmeyin.",
-    "CustomFilter": "Özel Filtre"
+    "CustomFilter": "Özel Filtre",
+    "AddRemoveOnly": "Sadece Ekle ve Kaldır",
+    "AddSyncProfile": "Eşitleme Profili Ekle",
+    "AddDownloadClientToProwlarr": "İndirme istemcisi eklemek, görsel arayüz üzerinde manuel arama yaparak indirilecek içeriği {appName} uygulamasına direkt olarak eklemenize olanak sağlar.",
+    "AddApplication": "Uygulama Ekle",
+    "AddCategory": "Kategori Ekle",
+    "AddNewIndexer": "Yeni İçerik Sağlayıcı Ekle",
+    "ActiveApps": "Aktif Uygulamalar",
+    "ActiveIndexers": "Aktif İçerik Kaynakları"
 }

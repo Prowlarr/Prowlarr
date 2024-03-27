@@ -22,6 +22,7 @@ namespace Prowlarr.Http
 
         [AllowAnonymous]
         [HttpGet("/ping")]
+        [HttpHead("/ping")]
         [Produces("application/json")]
         public ActionResult<PingResource> GetStatus()
         {

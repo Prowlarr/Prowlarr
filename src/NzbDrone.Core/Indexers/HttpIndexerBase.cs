@@ -204,11 +204,29 @@ namespace NzbDrone.Core.Indexers
                 request.RateLimit = RateLimit;
             }
 
+            request.Headers.Accept = "application/x-bittorrent";
+            request.AllowAutoRedirect = false;
+
             byte[] fileData;
 
             try
             {
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+
+                if (response.HasHttpRedirect)
+                {
+                    var redirectUrl = response.RedirectUrl;
+
+                    _logger.Trace("Torrent request is being redirected to: {0}", redirectUrl);
+
+                    if (redirectUrl.IsNotNullOrWhiteSpace())
+                    {
+                        return await Download(new Uri(response.RedirectUrl));
+                    }
+
+                    throw new WebException("Remote website tried to redirect without providing a location.");
+                }
+
                 fileData = response.ResponseData;
 
                 _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);

@@ -40,19 +40,27 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 return new HealthCheck(GetType());
             }
 
+            var indexerIds = backOffProviders.Select(p => p.Provider.Definition.Id).ToList();
+
             if (backOffProviders.Count == enabledProviders.Count)
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
                     _localizationService.GetLocalizedString("IndexerStatusCheckAllClientMessage"),
-                    "#indexers-are-unavailable-due-to-failures");
+                    "#indexers-are-unavailable-due-to-failures")
+                {
+                    IndexerIds = indexerIds
+                };
             }
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
                 string.Format(_localizationService.GetLocalizedString("IndexerStatusCheckSingleClientMessage"),
                     string.Join(", ", backOffProviders.Select(v => v.Provider.Definition.Name))),
-                "#indexers-are-unavailable-due-to-failures");
+                "#indexers-are-unavailable-due-to-failures")
+            {
+                IndexerIds = indexerIds
+            };
         }
     }
 }

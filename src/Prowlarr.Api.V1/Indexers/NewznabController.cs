@@ -192,9 +192,11 @@ namespace NzbDrone.Api.V1.Indexers
                     {
                         result.DownloadUrl = result.DownloadUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(result.DownloadUrl), request.server, indexerDef.Id, result.Title).AbsoluteUri : null;
 
-                        if (result.DownloadProtocol == DownloadProtocol.Torrent)
+                        if (result.DownloadProtocol == DownloadProtocol.Torrent &&
+                            result is TorrentInfo torrentRelease &&
+                            torrentRelease.MagnetUrl.IsNotNullOrWhiteSpace())
                         {
-                            ((TorrentInfo)result).MagnetUrl = ((TorrentInfo)result).MagnetUrl.IsNotNullOrWhiteSpace() ? _downloadMappingService.ConvertToProxyLink(new Uri(((TorrentInfo)result).MagnetUrl), request.server, indexerDef.Id, result.Title).AbsoluteUri : null;
+                            result.DownloadUrl ??= _downloadMappingService.ConvertToProxyLink(new Uri(torrentRelease.MagnetUrl), request.server, indexerDef.Id, torrentRelease.Title).AbsoluteUri;
                         }
                     }
 

@@ -290,7 +290,7 @@ public class SpeedCDRequestGenerator : IIndexerRequestGenerator
             parameters.Add(term.UrlEncode(_encoding));
         }
 
-        if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
+        if (searchCriteria.Limit > 0 && searchCriteria.Offset > 0)
         {
             var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
 

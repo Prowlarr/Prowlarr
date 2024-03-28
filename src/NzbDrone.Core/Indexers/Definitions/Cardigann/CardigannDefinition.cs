@@ -74,6 +74,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
     public class CapabilitiesBlock
     {
+        public int? LimitsMax { get; set; }
+        public int? LimitsDefault { get; set; }
         public Dictionary<string, string> Categories { get; set; }
         public List<CategorymappingBlock> Categorymappings { get; set; }
         public Dictionary<string, List<string>> Modes { get; set; }
@@ -143,6 +145,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
     public class SearchBlock
     {
+        public int PageSize { get; set; }
+        public string Pageable { get; set; }
+        public int FirstPageNumber { get; set; }
         public string Path { get; set; }
         public List<SearchPathBlock> Paths { get; set; }
         public Dictionary<string, List<string>> Headers { get; set; }

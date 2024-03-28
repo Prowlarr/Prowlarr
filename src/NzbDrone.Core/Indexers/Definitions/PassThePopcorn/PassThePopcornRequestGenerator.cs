@@ -97,7 +97,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                 queryCats.ForEach(cat => parameters.Set($"filter_cat[{cat}]", "1"));
             }
 
-            if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)
+            if (searchCriteria.Limit > 0 && searchCriteria.Offset > 0)
             {
                 var page = (int)(searchCriteria.Offset / searchCriteria.Limit) + 1;
                 parameters.Set("page", page.ToString());

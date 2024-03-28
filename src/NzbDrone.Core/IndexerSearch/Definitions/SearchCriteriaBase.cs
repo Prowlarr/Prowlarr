@@ -15,8 +15,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string SearchTerm { get; set; }
         public int[] Categories { get; set; }
         public string SearchType { get; set; }
-        public int? Limit { get; set; }
-        public int? Offset { get; set; }
+        public int Limit { get; set; }
+        public int Offset { get; set; }
         public int? MinAge { get; set; }
         public int? MaxAge { get; set; }
         public long? MinSize { get; set; }
@@ -24,7 +24,13 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public string Source { get; set; }
         public string Host { get; set; }
 
-        public override string ToString() => $"{SearchQuery}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]";
+        protected SearchCriteriaBase()
+        {
+            Limit = 100;
+            Offset = 0;
+        }
+
+        public override string ToString() => $"{SearchQuery}, Offset: {Offset}, Limit: {Limit}, Categories: [{string.Join(", ", Categories)}]";
 
         public virtual string SearchQuery => $"Term: [{SearchTerm}]";
 

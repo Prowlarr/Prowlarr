@@ -212,7 +212,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             // replace non-word characters with % (wildcard)
             var searchString = Regex.Replace(term.Trim(), @"[\W]+", "%");
 
-            var page = searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0 ? (int)(searchCriteria.Offset / searchCriteria.Limit) + 1 : 1;
+            var page = searchCriteria.Limit > 0 && searchCriteria.Offset > 0 ? (int)(searchCriteria.Offset / searchCriteria.Limit) + 1 : 1;
 
             var refererUri = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")

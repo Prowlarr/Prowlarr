@@ -26,10 +26,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         public override string Description => "";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
 
-        // Page size is different per indexer, setting to 1 ensures we don't break out of paging logic
-        // thinking its a partial page and instead all search_path requests are run for each indexer
-        public override int PageSize => 1;
-
         public override TimeSpan RateLimit
         {
             get
@@ -42,6 +38,36 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 }
 
                 return base.RateLimit;
+            }
+        }
+
+        public override int PageSize
+        {
+            get
+            {
+                if (Definition is null)
+                {
+                    return 0;
+                }
+
+                var definition = _definitionService.GetCachedDefinition(Settings.DefinitionFile);
+
+                return definition.Search is { PageSize: > 0 } ? definition.Search.PageSize : 1;
+            }
+        }
+
+        public override bool SupportsPagination
+        {
+            get
+            {
+                if (Definition is null)
+                {
+                    return false;
+                }
+
+                var definition = _definitionService.GetCachedDefinition(Settings.DefinitionFile);
+
+                return definition.Search is { PageSize: > 0 };
             }
         }
 

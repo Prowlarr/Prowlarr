@@ -62,7 +62,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.TraktID"] = searchCriteria.TraktId?.ToString() ?? null;
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
+            var request = GetRequest(variables, searchCriteria);
+
+            if (bool.TryParse(ApplyGoTemplateText(_definition.Search.Pageable, variables), out _))
+            {
+                pageableRequests.AddTier(request);
+            }
+            else
+            {
+                pageableRequests.Add(request);
+            }
 
             return pageableRequests;
         }
@@ -82,7 +91,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
             variables[".Query.Track"] = searchCriteria.Track;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
+            var request = GetRequest(variables, searchCriteria);
+
+            if (bool.TryParse(ApplyGoTemplateText(_definition.Search.Pageable, variables), out _))
+            {
+                pageableRequests.AddTier(request);
+            }
+            else
+            {
+                pageableRequests.Add(request);
+            }
 
             return pageableRequests;
         }
@@ -110,7 +128,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.DoubanID"] = searchCriteria.DoubanId?.ToString() ?? null;
             variables[".Query.Episode"] = searchCriteria.EpisodeSearchString;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
+            var request = GetRequest(variables, searchCriteria);
+
+            if (bool.TryParse(ApplyGoTemplateText(_definition.Search.Pageable, variables), out _))
+            {
+                pageableRequests.AddTier(request);
+            }
+            else
+            {
+                pageableRequests.Add(request);
+            }
 
             return pageableRequests;
         }
@@ -129,7 +156,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.Publisher"] = searchCriteria.Publisher;
             variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
+            var request = GetRequest(variables, searchCriteria);
+
+            if (bool.TryParse(ApplyGoTemplateText(_definition.Search.Pageable, variables), out _))
+            {
+                pageableRequests.AddTier(request);
+            }
+            else
+            {
+                pageableRequests.Add(request);
+            }
 
             return pageableRequests;
         }
@@ -142,7 +178,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             var variables = GetQueryVariableDefaults(searchCriteria);
 
-            pageableRequests.Add(GetRequest(variables, searchCriteria));
+            var request = GetRequest(variables, searchCriteria);
+
+            if ((_definition?.Search?.Pageable.IsNotNullOrWhiteSpace() ?? true) || bool.TryParse(ApplyGoTemplateText(_definition.Search.Pageable, variables), out _))
+            {
+                pageableRequests.AddTier(request);
+            }
+            else
+            {
+                pageableRequests.Add(request);
+            }
 
             return pageableRequests;
         }
@@ -154,8 +199,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.Type"] = searchCriteria.SearchType;
             variables[".Query.Q"] = searchCriteria.SearchTerm;
             variables[".Query.Categories"] = searchCriteria.Categories;
-            variables[".Query.Limit"] = searchCriteria.Limit?.ToString() ?? null;
-            variables[".Query.Offset"] = searchCriteria.Offset?.ToString() ?? null;
+            variables[".Query.Limit"] = GetQueryLimit(searchCriteria).ToString();
+            variables[".Query.Offset"] = searchCriteria.Offset.ToString();
             variables[".Query.Extended"] = null;
             variables[".Query.APIKey"] = null;
             variables[".Query.Genre"] = null;
@@ -1086,6 +1131,20 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.Keywords"] = string.Join(" ", keywordTokens);
             variables[".Keywords"] = ApplyFilters((string)variables[".Query.Keywords"], search.Keywordsfilters, variables);
 
+            if (search.PageSize == 0 && searchCriteria.Offset > 0)
+            {
+                // Indexer doesn't support pagination
+                yield break;
+            }
+
+            var pageSize = Math.Min(GetQueryLimit(searchCriteria), search.PageSize);
+
+            if (pageSize > 0)
+            {
+                variables[".PageSize"] = pageSize;
+                variables[".Query.Page"] = (int)(searchCriteria.Offset / pageSize) + search.FirstPageNumber;
+            }
+
             var searchUrls = new List<string>();
 
             foreach (var searchPath in search.Paths)
@@ -1220,6 +1279,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                 yield return new CardigannRequest(request, variables, searchPath);
             }
+        }
+
+        private int GetQueryLimit(SearchCriteriaBase searchCriteria)
+        {
+            return Math.Min(Math.Min(searchCriteria.Limit, _definition?.Caps?.LimitsDefault ?? searchCriteria.Limit), _definition?.Caps?.LimitsMax ?? searchCriteria.Limit);
         }
     }
 }

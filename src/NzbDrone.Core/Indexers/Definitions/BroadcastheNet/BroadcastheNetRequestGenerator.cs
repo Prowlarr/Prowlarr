@@ -34,13 +34,13 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var searchTerm = searchCriteria.SearchTerm ?? string.Empty;
 
-            var btnResults = searchCriteria.Limit.GetValueOrDefault();
+            var btnResults = searchCriteria.Limit;
             if (btnResults == 0)
             {
                 btnResults = Capabilities.LimitsDefault.GetValueOrDefault(PageSize);
             }
 
-            var btnOffset = searchCriteria.Offset.GetValueOrDefault(0);
+            var btnOffset = searchCriteria.Offset;
 
             if (searchCriteria.TvdbId > 0)
             {
@@ -112,13 +112,13 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var searchTerm = searchCriteria.SearchTerm ?? string.Empty;
 
-            var btnResults = searchCriteria.Limit.GetValueOrDefault();
+            var btnResults = searchCriteria.Limit;
             if (btnResults == 0)
             {
                 btnResults = Capabilities.LimitsDefault.GetValueOrDefault(PageSize);
             }
 
-            var btnOffset = searchCriteria.Offset.GetValueOrDefault(0);
+            var btnOffset = searchCriteria.Offset;
 
             if (searchTerm.IsNotNullOrWhiteSpace())
             {

@@ -13,12 +13,17 @@ namespace NzbDrone.Common.Instrumentation
             TaskScheduler.UnobservedTaskException += HandleTaskException;
         }
 
-        private static void HandleTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        private static void HandleTaskException(object sender, UnobservedTaskExceptionEventArgs eventArgs)
         {
-            var exception = e.Exception;
+            eventArgs.SetObserved();
 
-            Console.WriteLine("Task Error: {0}", exception);
-            Logger.Error(exception, "Task Error");
+            eventArgs.Exception.Handle(exception =>
+            {
+                Console.WriteLine("Task Error: {0} {1}", exception.GetType(), exception);
+                Logger.Error(exception, "Task Error");
+
+                return true;
+            });
         }
 
         private static void HandleAppDomainException(object sender, UnhandledExceptionEventArgs e)

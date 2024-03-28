@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import PrivacyTextInput from 'Components/Form/PrivacyTextInput';
 import Link from 'Components/Link/Link';
 import { inputTypes, kinds } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
@@ -92,6 +93,9 @@ function getComponent(type) {
 
     case inputTypes.TAG_SELECT:
       return TagSelectInputConnector;
+
+    case inputTypes.PRIVACY_TEXT:
+      return PrivacyTextInput;
 
     default:
       return TextInput;

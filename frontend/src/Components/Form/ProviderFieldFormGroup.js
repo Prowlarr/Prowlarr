@@ -6,7 +6,7 @@ import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
 import { inputTypes } from 'Helpers/Props';
 
-function getType({ type, selectOptionsProviderAction }) {
+function getType({ type, selectOptionsProviderAction, privacy }) {
   switch (type) {
     case 'captcha':
       return inputTypes.CAPTCHA;
@@ -34,6 +34,9 @@ function getType({ type, selectOptionsProviderAction }) {
     case 'tagSelect':
       return inputTypes.TAG_SELECT;
     case 'textbox':
+      if (privacy === 'userName' || privacy === 'apiKey') {
+        return inputTypes.PRIVACY_TEXT;
+      }
       return inputTypes.TEXT;
     case 'oAuth':
       return inputTypes.OAUTH;

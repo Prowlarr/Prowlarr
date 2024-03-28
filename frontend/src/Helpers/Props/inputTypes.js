@@ -19,6 +19,7 @@ export const SELECT = 'select';
 export const DYNAMIC_SELECT = 'dynamicSelect';
 export const TAG = 'tag';
 export const TEXT = 'text';
+export const PRIVACY_TEXT = 'privacyText';
 export const TEXT_AREA = 'textArea';
 export const TEXT_TAG = 'textTag';
 export const TAG_SELECT = 'tagSelect';
@@ -44,6 +45,7 @@ export const all = [
   DYNAMIC_SELECT,
   TAG,
   TEXT,
+  PRIVACY_TEXT,
   TEXT_AREA,
   TEXT_TAG,
   TAG_SELECT

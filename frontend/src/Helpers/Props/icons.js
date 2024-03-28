@@ -56,6 +56,7 @@ import {
   faExclamationTriangle as fasExclamationTriangle,
   faExternalLinkAlt as fasExternalLinkAlt,
   faEye as fasEye,
+  faEyeSlash as fasEyeSlash,
   faFastBackward as fasFastBackward,
   faFastForward as fasFastForward,
   faFileExport as fasFileExport,
@@ -245,3 +246,4 @@ export const VIEW = fasEye;
 export const WARNING = fasExclamationTriangle;
 export const WIKI = fasBookReader;
 export const BLOCKLIST = fasBan;
+export const HIDE = fasEyeSlash;

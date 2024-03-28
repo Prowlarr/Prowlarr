@@ -1,0 +1,17 @@
+.container {
+  position: relative;
+}
+
+.input {
+  composes: input from '~Components/Form/TextInput.css';
+
+  padding: 6px 30px 6px 16px;
+}
+
+.toggle {
+  position: absolute;
+  margin-left: -25px;
+  width: 20px;
+  text-align: center;
+  line-height: 35px;
+}

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -296,6 +297,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 object defaultValue = setting.Type switch
                 {
                     "select" => setting.Options.OrderBy(x => x.Key).Select(x => x.Key).ToList().IndexOf(setting.Default).ToString().ParseInt64() ?? 0,
+                    "multi-select" => setting.Defaults?.Select(d => setting.Options.OrderBy(x => x.Key).Select(x => x.Key).ToList().IndexOf(d).ToString().ParseInt64() ?? 0).ToArray() ?? Array.Empty<long>(),
                     _ => setting.Default
                 };
 
@@ -303,7 +305,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                 if (indexerLogging && setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey")
                 {
-                    _logger.Trace($"{name} got value {value.ToJson()}");
+                    _logger.Trace("{0} got value {1}", name, value.ToJson(Formatting.None));
                 }
 
                 switch (setting.Type)
@@ -323,7 +325,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     case "select":
                         if (indexerLogging)
                         {
-                            _logger.Trace($"Setting options: {setting.Options.ToJson()}");
+                            _logger.Trace("Setting options: {0}", setting.Options.ToJson(Formatting.None));
                         }
 
                         var sorted = setting.Options.OrderBy(x => x.Key).ToList();
@@ -331,10 +333,27 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                         if (indexerLogging)
                         {
-                            _logger.Debug($"Selected option: {selected.ToJson()}");
+                            _logger.Debug("Selected option: {0}", selected.ToJson(Formatting.None));
                         }
 
                         variables[name] = selected.Key;
+                        break;
+                    case "multi-select":
+                        if (indexerLogging)
+                        {
+                            _logger.Trace("Setting options: {0}", setting.Options.ToJson(Formatting.None));
+                        }
+
+                        var sortedMulti = setting.Options.OrderBy(x => x.Key).ToList();
+                        var values = value is ICollection collectionMulti ? collectionMulti.Cast<long>() : Array.Empty<long>();
+                        var selectedMulti = sortedMulti.Where((x, i) => values.Contains(i)).ToArray();
+
+                        if (indexerLogging)
+                        {
+                            _logger.Debug("Selected option: {0}", selectedMulti.ToJson(Formatting.None));
+                        }
+
+                        variables[name] = selectedMulti.Select(x => x.Key).ToArray();
                         break;
                     case "info":
                         variables[name] = value;
@@ -347,7 +366,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                 if (indexerLogging && setting.Type != "password" && setting.Name != "apikey" && setting.Name != "rsskey" && variables.ContainsKey(name))
                 {
-                    _logger.Debug($"Setting {setting.Name} to {variables[name].ToJson()}");
+                    _logger.Debug("Setting '{0}' to {1}", setting.Name, variables[name].ToJson(Formatting.None));
                 }
             }
 

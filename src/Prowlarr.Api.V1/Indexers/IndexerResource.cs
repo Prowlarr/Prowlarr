@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
@@ -155,6 +156,14 @@ namespace Prowlarr.Api.V1.Indexers
             return setting.Type switch
             {
                 "select" => value.ToString().ParseInt64() ?? 0,
+                "multi-select" => value switch
+                {
+                    JsonElement { ValueKind: JsonValueKind.Array } values
+                        => values.EnumerateArray().Select(e => e.ToString().ParseInt64() ?? 0).ToArray(),
+                    JsonElement { ValueKind: JsonValueKind.Number or JsonValueKind.String } singleValue
+                        => new[] { singleValue.ToString().ParseInt64() ?? 0 },
+                    _ => Array.Empty<long>()
+                },
                 "checkbox" => bool.TryParse(value.ToString(), out var result) && result,
                 _ => value?.ToString() ?? string.Empty
             };
@@ -167,7 +176,12 @@ namespace Prowlarr.Api.V1.Indexers
                 Name = setting.Name,
                 Label = setting.Label,
                 Order = order,
-                Type = setting.Type == "text" ? "textbox" : setting.Type
+                Type = setting.Type switch
+                {
+                    "text" => "textbox",
+                    "multi-select" => "select",
+                    _ => setting.Type
+                }
             };
 
             if (setting.Type == "select")
@@ -180,6 +194,17 @@ namespace Prowlarr.Api.V1.Indexers
                 }).ToList();
 
                 field.Value = sorted.Select(x => x.Key).ToList().IndexOf(setting.Default);
+            }
+            else if (setting.Type == "multi-select")
+            {
+                var sorted = setting.Options.OrderBy(x => x.Key).ToList();
+                field.SelectOptions = sorted.Select((x, i) => new SelectOption
+                {
+                    Value = i,
+                    Name = x.Value
+                }).ToList();
+
+                field.Value = setting.Defaults?.Select(d => sorted.Select(x => x.Key).ToList().IndexOf(d)).ToArray() ?? Array.Empty<int>();
             }
             else if (setting.Type == "checkbox")
             {

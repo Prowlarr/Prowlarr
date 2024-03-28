@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Datastore.Converters
                 AllowTrailingCommas = true,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNameCaseInsensitive = true,
-                WriteIndented = true
+                WriteIndented = false
             };
 
             SerializerSettings = serializerSettings;

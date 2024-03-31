@@ -587,7 +587,7 @@
     "AddDownloadClientImplementation": "Ajouter un client de téléchargement - {implementationName}",
     "ManageDownloadClients": "Gérer les clients de téléchargement",
     "AuthenticationRequiredPasswordHelpTextWarning": "Saisir un nouveau mot de passe",
-    "IndexerDownloadClientHealthCheckMessage": "Indexeurs avec des clients de téléchargement invalides : {0].",
+    "IndexerDownloadClientHealthCheckMessage": "Indexeurs avec des clients de téléchargement invalides : {indexerNames}.",
     "AuthenticationMethod": "Méthode d'authentification",
     "AuthenticationMethodHelpTextWarning": "Veuillez choisir une méthode d'authentification valide",
     "ActiveIndexers": "Indexeurs actifs",
@@ -745,5 +745,7 @@
     "ApplicationSettingsSyncRejectBlocklistedTorrentHashes": "Synchroniser le rejet des hachages torrent sur liste bloquée lors de la saisie",
     "ClickToChangeQueryOptions": "Cliquez pour modifier les options de la requête",
     "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "Si un torrent est bloqué par le hachage, il peut ne pas être correctement rejeté pendant le RSS/recherche pour certains indexeurs. L'activation de cette fonction permet de le rejeter après que le torrent a été saisi, mais avant qu'il ne soit envoyé au client.",
-    "ProwlarrDownloadClientsAlert": "Si vous avez l'intention d'effectuer des recherches directement dans {appName}, vous devez ajouter les clients de téléchargement. Sinon, vous n'avez pas besoin de les ajouter ici. Pour les recherches à partir de vos applications, les clients de téléchargement qui y sont configurés sont utilisés à la place."
+    "ProwlarrDownloadClientsAlert": "Si vous avez l'intention d'effectuer des recherches directement dans {appName}, vous devez ajouter les clients de téléchargement. Sinon, vous n'avez pas besoin de les ajouter ici. Pour les recherches à partir de vos applications, les clients de téléchargement qui y sont configurés sont utilisés à la place.",
+    "IndexerMTeamTpSettingsApiKeyHelpText": "Clé API du site (trouvée dans le panneau de configuration utilisateur => Sécurité => Laboratoire)",
+    "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Rechercher uniquement les versions freeleech"
 }

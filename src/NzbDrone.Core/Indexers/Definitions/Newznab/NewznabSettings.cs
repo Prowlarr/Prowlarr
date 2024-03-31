@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
@@ -76,7 +75,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(7)]
         public IndexerBaseSettings BaseSettings { get; set; } = new ();
 
-        public List<IndexerCategory> Categories { get; set; }
+        public NewznabCapabilitiesSettings Capabilities { get; set; }
 
         // Field 8 is used by TorznabSettings MinimumSeeders
         // If you need to add another field here, update TorznabSettings as well and this comment

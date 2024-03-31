@@ -124,7 +124,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 {
                     foreach (var param in xmlBasicSearch.Attribute("supportedParams").Value.Split(','))
                     {
-                        if (Enum.TryParse(param, true, out SearchParam searchParam))
+                        if (Enum.TryParse(param, true, out SearchParam searchParam) && !capabilities.SearchParams.Contains(searchParam))
                         {
                             capabilities.SearchParams.AddIfNotNull(searchParam);
                         }
@@ -146,7 +146,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 {
                     foreach (var param in xmlMovieSearch.Attribute("supportedParams").Value.Split(','))
                     {
-                        if (Enum.TryParse(param, true, out MovieSearchParam searchParam))
+                        if (Enum.TryParse(param, true, out MovieSearchParam searchParam) && !capabilities.MovieSearchParams.Contains(searchParam))
                         {
                             capabilities.MovieSearchParams.AddIfNotNull(searchParam);
                         }
@@ -166,7 +166,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 {
                     foreach (var param in xmlTvSearch.Attribute("supportedParams").Value.Split(','))
                     {
-                        if (Enum.TryParse(param, true, out TvSearchParam searchParam))
+                        if (Enum.TryParse(param, true, out TvSearchParam searchParam) && !capabilities.TvSearchParams.Contains(searchParam))
                         {
                             capabilities.TvSearchParams.AddIfNotNull(searchParam);
                         }
@@ -186,7 +186,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 {
                     foreach (var param in xmlAudioSearch.Attribute("supportedParams").Value.Split(','))
                     {
-                        if (Enum.TryParse(param, true, out MusicSearchParam searchParam))
+                        if (Enum.TryParse(param, true, out MusicSearchParam searchParam) && !capabilities.MusicSearchParams.Contains(searchParam))
                         {
                             capabilities.MusicSearchParams.AddIfNotNull(searchParam);
                         }
@@ -206,7 +206,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 {
                     foreach (var param in xmlBookSearch.Attribute("supportedParams").Value.Split(','))
                     {
-                        if (Enum.TryParse(param, true, out BookSearchParam searchParam))
+                        if (Enum.TryParse(param, true, out BookSearchParam searchParam) && !capabilities.BookSearchParams.Contains(searchParam))
                         {
                             capabilities.BookSearchParams.AddIfNotNull(searchParam);
                         }

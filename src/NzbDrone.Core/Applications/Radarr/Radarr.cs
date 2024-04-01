@@ -21,13 +21,15 @@ namespace NzbDrone.Core.Applications.Radarr
         private readonly IRadarrV3Proxy _radarrV3Proxy;
         private readonly ICached<List<RadarrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerFactory _indexerFactory;
 
-        public Radarr(ICacheManager cacheManager, IRadarrV3Proxy radarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Radarr(ICacheManager cacheManager, IRadarrV3Proxy radarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
             : base(appIndexerMapService, logger)
         {
             _schemaCache = cacheManager.GetCache<List<RadarrIndexer>>(GetType());
             _radarrV3Proxy = radarrV3Proxy;
             _configFileProvider = configFileProvider;
+            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -49,7 +51,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
             try
             {
-                failures.AddIfNotNull(_radarrV3Proxy.TestConnection(BuildRadarrIndexer(testIndexer, DownloadProtocol.Usenet), Settings));
+                failures.AddIfNotNull(_radarrV3Proxy.TestConnection(BuildRadarrIndexer(testIndexer, testIndexer.Capabilities, DownloadProtocol.Usenet), Settings));
             }
             catch (HttpException ex)
             {
@@ -118,7 +120,9 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
+            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+
+            if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
                 _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
@@ -127,7 +131,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
             _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var radarrIndexer = BuildRadarrIndexer(indexer, indexer.Protocol);
+            var radarrIndexer = BuildRadarrIndexer(indexer, indexerCapabilities, indexer.Protocol);
 
             var remoteIndexer = _radarrV3Proxy.AddIndexer(radarrIndexer, Settings);
 
@@ -159,10 +163,11 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
+            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 
-            var radarrIndexer = BuildRadarrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
+            var radarrIndexer = BuildRadarrIndexer(indexer, indexerCapabilities, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
 
             var remoteIndexer = _radarrV3Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
 
@@ -172,7 +177,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
                 if (!radarrIndexer.Equals(remoteIndexer) || forceSync)
                 {
-                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
                         radarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => radarrIndexer.Fields.All(s => s.Name != f.Name)));
@@ -198,7 +203,7 @@ namespace NzbDrone.Core.Applications.Radarr
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Radarr", indexer.Name, indexer.Id);
                     radarrIndexer.Id = 0;
@@ -212,7 +217,7 @@ namespace NzbDrone.Core.Applications.Radarr
             }
         }
 
-        private RadarrIndexer BuildRadarrIndexer(IndexerDefinition indexer, DownloadProtocol protocol, int id = 0)
+        private RadarrIndexer BuildRadarrIndexer(IndexerDefinition indexer, IndexerCapabilities indexerCapabilities, DownloadProtocol protocol, int id = 0)
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
@@ -248,7 +253,7 @@ namespace NzbDrone.Core.Applications.Radarr
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
-            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
+            radarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

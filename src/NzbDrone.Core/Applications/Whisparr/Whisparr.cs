@@ -21,13 +21,15 @@ namespace NzbDrone.Core.Applications.Whisparr
         private readonly IWhisparrV3Proxy _whisparrV3Proxy;
         private readonly ICached<List<WhisparrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerFactory _indexerFactory;
 
-        public Whisparr(ICacheManager cacheManager, IWhisparrV3Proxy whisparrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Whisparr(ICacheManager cacheManager, IWhisparrV3Proxy whisparrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
             : base(appIndexerMapService, logger)
         {
             _schemaCache = cacheManager.GetCache<List<WhisparrIndexer>>(GetType());
             _whisparrV3Proxy = whisparrV3Proxy;
             _configFileProvider = configFileProvider;
+            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -49,7 +51,7 @@ namespace NzbDrone.Core.Applications.Whisparr
 
             try
             {
-                failures.AddIfNotNull(_whisparrV3Proxy.TestConnection(BuildWhisparrIndexer(testIndexer, DownloadProtocol.Usenet), Settings));
+                failures.AddIfNotNull(_whisparrV3Proxy.TestConnection(BuildWhisparrIndexer(testIndexer, testIndexer.Capabilities, DownloadProtocol.Usenet), Settings));
             }
             catch (HttpException ex)
             {
@@ -118,7 +120,9 @@ namespace NzbDrone.Core.Applications.Whisparr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
+            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+
+            if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
                 _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
@@ -127,7 +131,7 @@ namespace NzbDrone.Core.Applications.Whisparr
 
             _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var whisparrIndexer = BuildWhisparrIndexer(indexer, indexer.Protocol);
+            var whisparrIndexer = BuildWhisparrIndexer(indexer, indexerCapabilities, indexer.Protocol);
 
             var remoteIndexer = _whisparrV3Proxy.AddIndexer(whisparrIndexer, Settings);
 
@@ -159,10 +163,11 @@ namespace NzbDrone.Core.Applications.Whisparr
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
+            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 
-            var whisparrIndexer = BuildWhisparrIndexer(indexer, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
+            var whisparrIndexer = BuildWhisparrIndexer(indexer, indexerCapabilities, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
 
             var remoteIndexer = _whisparrV3Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
 
@@ -174,7 +179,7 @@ namespace NzbDrone.Core.Applications.Whisparr
                 {
                     _logger.Debug("Syncing remote indexer with current settings");
 
-                    if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
                         whisparrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => whisparrIndexer.Fields.All(s => s.Name != f.Name)));
@@ -200,7 +205,7 @@ namespace NzbDrone.Core.Applications.Whisparr
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Whisparr", indexer.Name, indexer.Id);
                     whisparrIndexer.Id = 0;
@@ -214,7 +219,7 @@ namespace NzbDrone.Core.Applications.Whisparr
             }
         }
 
-        private WhisparrIndexer BuildWhisparrIndexer(IndexerDefinition indexer, DownloadProtocol protocol, int id = 0)
+        private WhisparrIndexer BuildWhisparrIndexer(IndexerDefinition indexer, IndexerCapabilities indexerCapabilities, DownloadProtocol protocol, int id = 0)
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _whisparrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
@@ -244,7 +249,7 @@ namespace NzbDrone.Core.Applications.Whisparr
             whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
-            whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
+            whisparrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

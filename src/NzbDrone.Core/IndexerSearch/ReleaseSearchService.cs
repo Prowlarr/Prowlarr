@@ -177,8 +177,8 @@ namespace NzbDrone.Core.IndexerSearch
 
             if (criteriaBase.Categories is { Length: > 0 })
             {
-                //Only query supported indexers
-                indexers = indexers.Where(i => ((IndexerDefinition)i.Definition).Capabilities.Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
+                // Only query supported indexers
+                indexers = indexers.Where(i => i.GetCapabilities().Categories.SupportedCategories(criteriaBase.Categories).Any()).ToList();
 
                 if (indexers.Count == 0)
                 {
@@ -217,7 +217,7 @@ namespace NzbDrone.Core.IndexerSearch
                 //Filter results to only those in searched categories
                 if (criteriaBase.Categories.Length > 0)
                 {
-                    var expandedQueryCats = ((IndexerDefinition)indexer.Definition).Capabilities.Categories.ExpandTorznabQueryCategories(criteriaBase.Categories);
+                    var expandedQueryCats = indexer.GetCapabilities().Categories.ExpandTorznabQueryCategories(criteriaBase.Categories);
 
                     releases = releases.Where(result => result.Categories?.Any() != true || expandedQueryCats.Intersect(result.Categories.Select(c => c.Id)).Any()).ToList();
 

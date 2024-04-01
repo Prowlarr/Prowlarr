@@ -15,12 +15,14 @@ namespace NzbDrone.Core.Applications.Mylar
 
         private readonly IMylarV3Proxy _mylarV3Proxy;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerFactory _indexerFactory;
 
-        public Mylar(IMylarV3Proxy mylarV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, Logger logger)
+        public Mylar(IMylarV3Proxy mylarV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
             : base(appIndexerMapService, logger)
         {
             _mylarV3Proxy = mylarV3Proxy;
             _configFileProvider = configFileProvider;
+            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -65,7 +67,9 @@ namespace NzbDrone.Core.Applications.Mylar
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
+            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+
+            if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
                 _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
@@ -74,7 +78,7 @@ namespace NzbDrone.Core.Applications.Mylar
 
             _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var mylarIndexer = BuildMylarIndexer(indexer, indexer.Protocol);
+            var mylarIndexer = BuildMylarIndexer(indexer, indexerCapabilities, indexer.Protocol);
 
             var remoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
 
@@ -107,11 +111,12 @@ namespace NzbDrone.Core.Applications.Mylar
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
+            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
             var indexerProps = indexerMapping.RemoteIndexerName.Split(",");
 
-            var mylarIndexer = BuildMylarIndexer(indexer, indexer.Protocol, indexerProps[1]);
+            var mylarIndexer = BuildMylarIndexer(indexer, indexerCapabilities, indexer.Protocol, indexerProps[1]);
 
             //Use the old remote id to find the indexer on Mylar incase the update was from a name change in Prowlarr
             var remoteIndexer = _mylarV3Proxy.GetIndexer(indexerProps[1], mylarIndexer.Type, Settings);
@@ -133,7 +138,7 @@ namespace NzbDrone.Core.Applications.Mylar
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Mylar", indexer.Name, indexer.Id);
                     var newRemoteIndexer = _mylarV3Proxy.AddIndexer(mylarIndexer, Settings);
@@ -146,7 +151,7 @@ namespace NzbDrone.Core.Applications.Mylar
             }
         }
 
-        private MylarIndexer BuildMylarIndexer(IndexerDefinition indexer, DownloadProtocol protocol, string originalName = null)
+        private MylarIndexer BuildMylarIndexer(IndexerDefinition indexer, IndexerCapabilities indexerCapabilities, DownloadProtocol protocol, string originalName = null)
         {
             var schema = protocol == DownloadProtocol.Usenet ? MylarProviderType.Newznab : MylarProviderType.Torznab;
 
@@ -156,7 +161,7 @@ namespace NzbDrone.Core.Applications.Mylar
                 Altername = $"{indexer.Name} (Prowlarr)",
                 Host = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/api",
                 Apikey = _configFileProvider.ApiKey,
-                Categories = string.Join(",", indexer.Capabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),
+                Categories = string.Join(",", indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),
                 Enabled = indexer.Enable,
                 Type = schema,
             };

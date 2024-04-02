@@ -377,5 +377,20 @@
     "AddApplicationImplementation": "Tilføj forbindelse - {implementationName}",
     "AddIndexerImplementation": "Tilføj betingelse - {implementationName}",
     "ApplyChanges": "Anvend ændringer",
-    "AddDownloadClientImplementation": "Tilføj downloadklient - {implementationName}"
+    "AddDownloadClientImplementation": "Tilføj downloadklient - {implementationName}",
+    "Album": "album",
+    "Theme": "Tema",
+    "Categories": "Kategorier",
+    "Application": "Applikationer",
+    "EditIndexerProxyImplementation": "Tilføj betingelse - {implementationName}",
+    "Publisher": "Udgiver",
+    "IndexerHDBitsSettingsCodecs": "codec",
+    "Applications": "Applikationer",
+    "AddIndexerProxyImplementation": "Tilføj betingelse - {implementationName}",
+    "EditIndexerImplementation": "Tilføj betingelse - {implementationName}",
+    "Directory": "Mappe",
+    "EditApplicationImplementation": "Tilføj forbindelse - {implementationName}",
+    "EditDownloadClientImplementation": "Tilføj downloadklient - {implementationName}",
+    "IndexerHDBitsSettingsMediums": "Medium",
+    "CustomFilter": "Bruger Tilpassede Filtere"
 }

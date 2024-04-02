@@ -438,5 +438,10 @@
     "Destination": "Destinació",
     "Directory": "Directori",
     "DownloadClientDelugeSettingsUrlBaseHelpText": "Afegeix un prefix a l'url json del Deluge, vegeu {url}",
-    "CustomFilter": "Filtres personalitzats"
+    "CustomFilter": "Filtres personalitzats",
+    "IndexerHDBitsSettingsCodecs": "Còdec",
+    "DownloadClientSettingsUrlBaseHelpText": "Afegeix un prefix a l'URL {connectionName}, com ara {url}",
+    "DownloadClientTransmissionSettingsDirectoryHelpText": "Ubicació opcional per a les baixades, deixeu-lo en blanc per utilitzar la ubicació predeterminada d'Aria2",
+    "DownloadClientRTorrentSettingsDirectoryHelpText": "Ubicació opcional de les baixades completades, deixeu-lo en blanc per utilitzar la ubicació predeterminada de Deluge",
+    "IndexerHDBitsSettingsMediums": "Suport"
 }

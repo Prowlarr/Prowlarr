@@ -408,5 +408,9 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Potvrďte nové heslo",
     "days": "dnů",
     "Id": "ID",
-    "CountApplicationsSelected": "Vybráno {0} kolekcí"
+    "CountApplicationsSelected": "Vybráno {0} kolekcí",
+    "IndexerHDBitsSettingsCodecs": "Kodek",
+    "IndexerHDBitsSettingsMediums": "Střední",
+    "Directory": "Adresář",
+    "CustomFilter": "Vlastní filtry"
 }

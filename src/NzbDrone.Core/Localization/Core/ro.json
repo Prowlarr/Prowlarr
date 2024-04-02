@@ -464,5 +464,9 @@
     "EditApplicationImplementation": "Adăugați aplicație - {implementareName}",
     "RestartProwlarr": "Reporniți {appName}",
     "AddDownloadClientToProwlarr": "Adăugarea unui client de descărcare permite {appName} să trimită versiuni direct din interfața utilizatorului în timp ce se efectuează o căutare manuală",
-    "ActiveApps": "Aplicații active"
+    "ActiveApps": "Aplicații active",
+    "IndexerHDBitsSettingsMediums": "Mediu",
+    "IndexerSettingsVipExpiration": "Expirare VIP",
+    "Directory": "Director",
+    "CustomFilter": "Filtru personalizat"
 }

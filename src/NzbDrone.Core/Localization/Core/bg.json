@@ -353,5 +353,7 @@
     "DisabledForLocalAddresses": "Забранено за местни адреси",
     "None": "Нито един",
     "ResetAPIKeyMessageText": "Наистина ли искате да нулирате своя API ключ?",
-    "RestartProwlarr": "Рестартирайте {appName}"
+    "RestartProwlarr": "Рестартирайте {appName}",
+    "IndexerHDBitsSettingsMediums": "Среден",
+    "CustomFilter": "Персонализирани филтри"
 }

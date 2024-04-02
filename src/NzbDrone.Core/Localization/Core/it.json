@@ -529,5 +529,10 @@
     "AddApplication": "Aggiungi Applicazione",
     "AddCategory": "Aggiungi Categoria",
     "ActiveApps": "App Attive",
-    "ActiveIndexers": "Indicizzatori Attivi"
+    "ActiveIndexers": "Indicizzatori Attivi",
+    "IndexerBeyondHDSettingsSearchTypes": "Tipi di Ricerca",
+    "Directory": "Cartella",
+    "CustomFilter": "Filtri Personalizzati",
+    "IndexerHDBitsSettingsCodecs": "Codec",
+    "IndexerHDBitsSettingsMediums": "medio"
 }

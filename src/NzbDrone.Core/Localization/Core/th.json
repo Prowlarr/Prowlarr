@@ -356,5 +356,7 @@
     "DisabledForLocalAddresses": "ปิดใช้งานสำหรับที่อยู่ท้องถิ่น",
     "None": "ไม่มี",
     "ResetAPIKeyMessageText": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API",
-    "RestartProwlarr": "รีสตาร์ท {appName}"
+    "RestartProwlarr": "รีสตาร์ท {appName}",
+    "IndexerHDBitsSettingsMediums": "ปานกลาง",
+    "CustomFilter": "ตัวกรองที่กำหนดเอง"
 }

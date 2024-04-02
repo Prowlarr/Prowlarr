@@ -423,5 +423,9 @@
     "AuthenticationRequiredWarning": "Чтобы предотвратить удаленный доступ без авторизации, {appName} теперь требует, чтобы авторизация была включена. При желании вы можете отключить авторизацию с локальных адресов.",
     "Id": "ID",
     "ManageClients": "Управление клиентами",
-    "CountApplicationsSelected": "{count} коллекция(ий) выбрано"
+    "CountApplicationsSelected": "{count} коллекция(ий) выбрано",
+    "IndexerHDBitsSettingsCodecs": "Кодек",
+    "IndexerHDBitsSettingsMediums": "Средний",
+    "Directory": "Каталог",
+    "CustomFilter": "Настраиваемые фильтры"
 }

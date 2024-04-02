@@ -352,5 +352,7 @@
     "AuthForm": "प्रपत्र (लॉग इन पेज)",
     "DisabledForLocalAddresses": "स्थानीय पते के लिए अक्षम",
     "None": "कोई नहीं",
-    "ResetAPIKeyMessageText": "क्या आप वाकई अपनी API कुंजी को रीसेट करना चाहते हैं?"
+    "ResetAPIKeyMessageText": "क्या आप वाकई अपनी API कुंजी को रीसेट करना चाहते हैं?",
+    "IndexerHDBitsSettingsMediums": "मध्यम",
+    "CustomFilter": "कस्टम फ़िल्टर"
 }

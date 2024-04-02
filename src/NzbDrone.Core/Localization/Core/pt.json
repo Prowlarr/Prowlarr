@@ -476,5 +476,10 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Confirmar nova senha",
     "AdvancedSettingsHiddenClickToShow": "Definições avançadas ocultas, clique para mostrar",
     "AddCategory": "Adicionar Categoria",
-    "CountApplicationsSelected": "{count} Coleções Selecionadas"
+    "CountApplicationsSelected": "{count} Coleções Selecionadas",
+    "IndexerHDBitsSettingsMediums": "Médio",
+    "Directory": "Diretório",
+    "UseSsl": "Usar SSL",
+    "IndexerHDBitsSettingsCodecs": "Codificador",
+    "CustomFilter": "Filtros personalizados"
 }

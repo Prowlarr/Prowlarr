@@ -6,17 +6,17 @@ public class NewznabCapabilitiesSettings
 {
     public bool SupportsRawSearch { get; set; }
 
-    public List<SearchParam> SearchParams { get; set; } = new ();
+    public List<SearchParam> SearchParams { get; set; }
 
-    public List<TvSearchParam> TvSearchParams { get; set; } = new ();
+    public List<TvSearchParam> TvSearchParams { get; set; }
 
-    public List<MovieSearchParam> MovieSearchParams { get; set; } = new ();
+    public List<MovieSearchParam> MovieSearchParams { get; set; }
 
-    public List<MusicSearchParam> MusicSearchParams { get; set; } = new ();
+    public List<MusicSearchParam> MusicSearchParams { get; set; }
 
-    public List<BookSearchParam> BookSearchParams { get; set; } = new ();
+    public List<BookSearchParam> BookSearchParams { get; set; }
 
-    public List<IndexerCategory> Categories { get; set; } = new ();
+    public List<IndexerCategory> Categories { get; set; }
 
     public NewznabCapabilitiesSettings()
     {

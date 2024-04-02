@@ -61,25 +61,22 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             var caps = new IndexerCapabilities();
 
-            if (Definition == null || Settings?.Capabilities == null)
+            if (Definition == null || Settings?.Capabilities?.Categories == null)
             {
                 return caps;
             }
 
-            caps.SupportsRawSearch = Settings.Capabilities?.SupportsRawSearch ?? false;
-            caps.SearchParams = Settings.Capabilities?.SearchParams ?? new List<SearchParam> { SearchParam.Q };
-            caps.TvSearchParams = Settings.Capabilities?.TvSearchParams ?? new List<TvSearchParam>();
-            caps.MovieSearchParams = Settings.Capabilities?.MovieSearchParams ?? new List<MovieSearchParam>();
-            caps.MusicSearchParams = Settings.Capabilities?.MusicSearchParams ?? new List<MusicSearchParam>();
-            caps.BookSearchParams = Settings.Capabilities?.BookSearchParams ?? new List<BookSearchParam>();
-
-            if (Settings.Capabilities?.Categories != null)
+            foreach (var category in Settings.Capabilities.Categories)
             {
-                foreach (var category in Settings.Capabilities.Categories)
-                {
-                    caps.Categories.AddCategoryMapping(category.Name, category);
-                }
+                caps.Categories.AddCategoryMapping(category.Name, category);
             }
+
+            caps.SupportsRawSearch = Settings?.Capabilities?.SupportsRawSearch ?? false;
+            caps.SearchParams = Settings?.Capabilities?.SearchParams ?? new List<SearchParam> { SearchParam.Q };
+            caps.TvSearchParams = Settings?.Capabilities?.TvSearchParams ?? new List<TvSearchParam>();
+            caps.MovieSearchParams = Settings?.Capabilities?.MovieSearchParams ?? new List<MovieSearchParam>();
+            caps.MusicSearchParams = Settings?.Capabilities?.MusicSearchParams ?? new List<MusicSearchParam>();
+            caps.BookSearchParams = Settings?.Capabilities?.BookSearchParams ?? new List<BookSearchParam>();
 
             return caps;
         }

@@ -360,7 +360,7 @@
     "DeleteAppProfileMessageText": "Ви впевнені, що хочете видалити цей профіль затримки?",
     "RecentChanges": "Останні зміни",
     "minutes": "Хвилин",
-    "WhatsNew": "Що нового?",
+    "WhatsNew": "Що нового ?",
     "NotificationStatusAllClientHealthCheckMessage": "Усі списки недоступні через помилки",
     "NotificationStatusSingleClientHealthCheckMessage": "Списки недоступні через помилки: {notificationNames}",
     "AuthBasic": "Основний (спливаюче вікно браузера)",
@@ -388,5 +388,13 @@
     "ApplyChanges": "Застосувати зміни",
     "AuthenticationMethod": "Метод автентифікації",
     "AuthenticationMethodHelpTextWarning": "Виберіть дійсний метод автентифікації",
-    "AppUpdated": "{appName} Оновлено"
+    "AppUpdated": "{appName} Оновлено",
+    "Album": "Альбом",
+    "AuthenticationRequired": "Потрібна Автентифікація",
+    "AuthenticationRequiredPasswordHelpTextWarning": "Введіть новий пароль",
+    "AuthenticationRequiredUsernameHelpTextWarning": "Введіть нове ім'я користувача",
+    "Artist": "Виконавець",
+    "Yes": "Так",
+    "AuthenticationRequiredWarning": "Щоб запобігти віддаленому доступу без автентифікації, {appName} тепер вимагає ввімкнення автентифікації. За бажанням можна вимкнути автентифікацію з локальних адрес.",
+    "AppUpdatedVersion": "{appName} оновлено до версії `{version}`. Щоб отримати останні зміни, потрібно перезавантажити {appName}"
 }

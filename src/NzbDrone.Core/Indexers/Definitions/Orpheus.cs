@@ -276,6 +276,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     foreach (var torrent in result.Torrents)
                     {
+                        // skip releases that cannot be used with freeleech tokens when the option is enabled
+                        if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                        {
+                            continue;
+                        }
+
                         var id = torrent.TorrentId;
 
                         var title = GetTitle(result, torrent);
@@ -285,7 +291,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         {
                             Guid = infoUrl,
                             InfoUrl = infoUrl,
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
+                            DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsPersonalFreeLeech),
                             Title = WebUtility.HtmlDecode(title),
                             Artist = WebUtility.HtmlDecode(result.Artist),
                             Album = WebUtility.HtmlDecode(result.GroupName),
@@ -320,16 +326,22 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Non-Audio files are formatted a little differently (1:1 for group and torrents)
                 else
                 {
+                    // skip releases that cannot be used with freeleech tokens when the option is enabled
+                    if (_settings.UseFreeleechToken && !result.CanUseToken)
+                    {
+                        continue;
+                    }
+
                     var id = result.TorrentId;
                     var infoUrl = GetInfoUrl(result.GroupId, id);
 
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
+                        InfoUrl = infoUrl,
+                        DownloadUrl = GetDownloadUrl(id, !result.IsFreeLeech && !result.IsNeutralLeech && !result.IsPersonalFreeLeech),
                         Title = WebUtility.HtmlDecode(result.GroupName),
                         Size = long.Parse(result.Size),
-                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
-                        InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime(result.GroupTime),

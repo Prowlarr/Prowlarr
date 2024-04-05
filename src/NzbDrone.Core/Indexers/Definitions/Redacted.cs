@@ -247,6 +247,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     foreach (var torrent in result.Torrents)
                     {
+                        // skip releases that cannot be used with freeleech tokens when the option is enabled
+                        if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                        {
+                            continue;
+                        }
+
                         // skip non-freeload results when freeload only is set
                         if (_settings.FreeloadOnly && !torrent.IsFreeload)
                         {
@@ -262,7 +268,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         {
                             Guid = infoUrl,
                             InfoUrl = infoUrl,
-                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken && !torrent.IsFreeload),
+                            DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsFreeload && !torrent.IsPersonalFreeLeech),
                             Title = WebUtility.HtmlDecode(title),
                             Artist = WebUtility.HtmlDecode(result.Artist),
                             Album = WebUtility.HtmlDecode(result.GroupName),
@@ -297,6 +303,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // Non-Audio files are formatted a little differently (1:1 for group and torrents)
                 else
                 {
+                    // skip releases that cannot be used with freeleech tokens when the option is enabled
+                    if (_settings.UseFreeleechToken && !result.CanUseToken)
+                    {
+                        continue;
+                    }
+
                     // skip non-freeload results when freeload only is set
                     if (_settings.FreeloadOnly && !result.IsFreeload)
                     {
@@ -309,10 +321,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
+                        InfoUrl = infoUrl,
+                        DownloadUrl = GetDownloadUrl(id, !result.IsFreeLeech && !result.IsNeutralLeech && !result.IsFreeload && !result.IsPersonalFreeLeech),
                         Title = WebUtility.HtmlDecode(result.GroupName),
                         Size = long.Parse(result.Size),
-                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken && !result.IsFreeload),
-                        InfoUrl = infoUrl,
                         Seeders = int.Parse(result.Seeders),
                         Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,

@@ -168,16 +168,22 @@ public class GreatPosterWallParser : GazelleParser
         {
             foreach (var torrent in result.Torrents)
             {
+                // skip releases that cannot be used with freeleech tokens when the option is enabled
+                if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                {
+                    continue;
+                }
+
                 var infoUrl = GetInfoUrl(result.GroupId.ToString(), torrent.TorrentId);
                 var time = DateTime.SpecifyKind(torrent.Time, DateTimeKind.Unspecified);
 
                 var release = new TorrentInfo
                 {
-                    Title = WebUtility.HtmlDecode(torrent.FileName).Trim(),
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
+                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, !torrent.IsFreeleech && !torrent.IsNeutralLeech && !torrent.IsPersonalFreeleech),
+                    Title = WebUtility.HtmlDecode(torrent.FileName).Trim(),
                     PosterUrl = GetPosterUrl(result.Cover),
-                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken),
                     PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).UtcDateTime, // Time is Chinese Time, add 8 hours difference from UTC
                     Categories = ParseCategories(torrent),
                     Size = torrent.Size,

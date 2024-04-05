@@ -59,6 +59,12 @@ public class GazelleParser : IParseIndexerResponse
             {
                 foreach (var torrent in result.Torrents)
                 {
+                    // skip releases that cannot be used with freeleech tokens when the option is enabled
+                    if (Settings.UseFreeleechToken && !torrent.CanUseToken)
+                    {
+                        continue;
+                    }
+
                     var id = torrent.TorrentId;
 
                     var title = $"{result.Artist} - {result.GroupName} ({result.GroupYear}) [{torrent.Format} {torrent.Encoding}] [{torrent.Media}]";
@@ -72,14 +78,14 @@ public class GazelleParser : IParseIndexerResponse
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
+                        InfoUrl = infoUrl,
+                        DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsPersonalFreeLeech),
                         Title = WebUtility.HtmlDecode(title),
                         Container = torrent.Encoding,
                         Files = torrent.FileCount,
                         Grabs = torrent.Snatches,
                         Codec = torrent.Format,
                         Size = long.Parse(torrent.Size),
-                        DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken),
-                        InfoUrl = infoUrl,
                         Seeders = int.Parse(torrent.Seeders),
                         Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                         PublishDate = torrent.Time.ToUniversalTime(),
@@ -104,6 +110,12 @@ public class GazelleParser : IParseIndexerResponse
             }
             else
             {
+                // skip releases that cannot be used with freeleech tokens when the option is enabled
+                if (Settings.UseFreeleechToken && !result.CanUseToken)
+                {
+                    continue;
+                }
+
                 var id = result.TorrentId;
                 var groupName = WebUtility.HtmlDecode(result.GroupName);
                 var infoUrl = GetInfoUrl(result.GroupId, id);
@@ -111,10 +123,10 @@ public class GazelleParser : IParseIndexerResponse
                 var release = new TorrentInfo
                 {
                     Guid = infoUrl,
+                    InfoUrl = infoUrl,
+                    DownloadUrl = GetDownloadUrl(id, !result.IsFreeLeech && !result.IsNeutralLeech && !result.IsPersonalFreeLeech),
                     Title = groupName,
                     Size = long.Parse(result.Size),
-                    DownloadUrl = GetDownloadUrl(id, result.CanUseToken),
-                    InfoUrl = infoUrl,
                     Seeders = int.Parse(result.Seeders),
                     Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                     Files = result.FileCount,

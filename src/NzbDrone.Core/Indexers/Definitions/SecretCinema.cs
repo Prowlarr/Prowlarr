@@ -113,14 +113,14 @@ public class SecretCinemaParser : IParseIndexerResponse
                     var release = new TorrentInfo
                     {
                         Guid = $"SecretCinema-{id}",
+                        InfoUrl = GetInfoUrl(result.GroupId, id),
+                        DownloadUrl = GetDownloadUrl(id),
                         Title = title,
                         Container = torrent.Encoding,
                         Files = torrent.FileCount,
                         Grabs = torrent.Snatches,
                         Codec = torrent.Format,
                         Size = long.Parse(torrent.Size),
-                        DownloadUrl = GetDownloadUrl(id),
-                        InfoUrl = GetInfoUrl(result.GroupId, id),
                         Seeders = int.Parse(torrent.Seeders),
                         Peers = int.Parse(torrent.Leechers) + int.Parse(torrent.Seeders),
                         PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(2)).UtcDateTime,
@@ -173,10 +173,10 @@ public class SecretCinemaParser : IParseIndexerResponse
                 var release = new TorrentInfo
                 {
                     Guid = $"SecretCinema-{id}",
+                    InfoUrl = GetInfoUrl(result.GroupId, id),
+                    DownloadUrl = GetDownloadUrl(id),
                     Title = groupName,
                     Size = long.Parse(result.Size),
-                    DownloadUrl = GetDownloadUrl(id),
-                    InfoUrl = GetInfoUrl(result.GroupId, id),
                     Seeders = int.Parse(result.Seeders),
                     Peers = int.Parse(result.Leechers) + int.Parse(result.Seeders),
                     Files = result.FileCount,

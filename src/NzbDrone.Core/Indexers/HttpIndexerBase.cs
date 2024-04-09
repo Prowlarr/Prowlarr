@@ -18,6 +18,8 @@ using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser.Model;
+using Polly;
+using Polly.Retry;
 
 namespace NzbDrone.Core.Indexers
 {
@@ -28,6 +30,38 @@ namespace NzbDrone.Core.Indexers
 
         protected readonly IIndexerHttpClient _httpClient;
         protected readonly IEventAggregator _eventAggregator;
+
+        protected ResiliencePipeline<HttpResponse> RetryStrategy => new ResiliencePipelineBuilder<HttpResponse>()
+            .AddRetry(new RetryStrategyOptions<HttpResponse>
+            {
+                ShouldHandle = static args => args.Outcome switch
+                {
+                    { Result.HasHttpServerError: true } => PredicateResult.True(),
+                    { Result.StatusCode: HttpStatusCode.RequestTimeout } => PredicateResult.True(),
+                    _ => PredicateResult.False()
+                },
+                Delay = RateLimit,
+                MaxRetryAttempts = 2,
+                BackoffType = DelayBackoffType.Exponential,
+                UseJitter = true,
+                OnRetry = args =>
+                {
+                    var exception = args.Outcome.Exception;
+
+                    if (exception is not null)
+                    {
+                        _logger.Warn(exception, "Request for {0} failed with exception '{1}'. Retrying in {2}s.", Definition.Name, exception.Message, args.RetryDelay.TotalSeconds);
+                    }
+                    else
+                    {
+                        _logger.Warn("Request for {0} failed with status {1}. Retrying in {2}s.", Definition.Name, args.Outcome.Result?.StatusCode, args.RetryDelay.TotalSeconds);
+                    }
+
+                    return default;
+                }
+            })
+            .Build();
+
         public IDictionary<string, string> Cookies { get; set; }
 
         public override bool SupportsRss => true;
@@ -584,7 +618,9 @@ namespace NzbDrone.Core.Indexers
             request.HttpRequest.SuppressHttpError = true;
             request.HttpRequest.Encoding ??= Encoding;
 
-            var response = await _httpClient.ExecuteProxiedAsync(request.HttpRequest, Definition);
+            var response = await RetryStrategy
+                .ExecuteAsync(static async (state, _) => await state._httpClient.ExecuteProxiedAsync(state.HttpRequest, state.Definition), (_httpClient, request.HttpRequest, Definition))
+                .ConfigureAwait(false);
 
             // Check response to see if auth is needed, if needed try again
             if (CheckIfLoginNeeded(response))

@@ -197,9 +197,9 @@ namespace Prowlarr.Api.V1
         [SkipValidation(true, false)]
         [HttpPost("test")]
         [Consumes("application/json")]
-        public object Test([FromBody] TProviderResource providerResource)
+        public object Test([FromBody] TProviderResource providerResource, [FromQuery] bool forceTest = false)
         {
-            var providerDefinition = GetDefinition(providerResource, true, true, true);
+            var providerDefinition = GetDefinition(providerResource, true, !forceTest, true);
 
             Test(providerDefinition, true);
 

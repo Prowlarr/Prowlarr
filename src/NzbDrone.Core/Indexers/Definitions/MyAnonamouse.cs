@@ -525,7 +525,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Type = FieldType.Select, Label = "Search Type", SelectOptions = typeof(MyAnonamouseSearchType), HelpText = "Specify the desired search type")]
         public int SearchType { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Wedges", HelpText = "Use Freeleech Wedges to make snatched torrents personal freeleech")]
+        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Wedges", HelpText = "Use freeleech wedges to make grabbed torrents personal freeleech")]
         public bool Freeleech { get; set; }
 
         [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Search in description", HelpText = "Search text in the description")]

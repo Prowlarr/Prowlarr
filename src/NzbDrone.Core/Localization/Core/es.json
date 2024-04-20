@@ -28,7 +28,7 @@
     "About": "Acerca de",
     "View": "Vista",
     "Updates": "Actualizaciones",
-    "UpdateUiNotWritableHealthCheckMessage": "No se puede instalar la actualización porque la carpeta UI '{uiFolder}' no tiene permisos de escritura para el usuario '{userName}'.",
+    "UpdateUiNotWritableHealthCheckMessage": "No se puede instalar la actualización porque la carpeta de interfaz de usuario '{uiFolder}' no es modificable por el usuario '{userName}'.",
     "UpdateStartupTranslocationHealthCheckMessage": "No se puede instalar la actualización porque la carpeta de arranque '{startupFolder}' está en una carpeta de \"App Translocation\".",
     "UpdateStartupNotWritableHealthCheckMessage": "No se puede instalar la actualización porque la carpeta de arranque '{startupFolder}' no tiene permisos de escritura para el usuario '{userName}'.",
     "UnselectAll": "Desmarcar todo",
@@ -164,7 +164,7 @@
     "UseProxy": "Usar proxy",
     "Usenet": "Usenet",
     "UrlBaseHelpText": "Para soporte de proxy inverso, por defecto está vacío",
-    "URLBase": "URL Base",
+    "URLBase": "URL base",
     "Uptime": "Tiempo de actividad",
     "UpdateScriptPathHelpText": "Ruta a un script personalizado que toma un paquete de actualización extraído y gestiona el resto del proceso de actualización",
     "UpdateMechanismHelpText": "Usar el actualizador incorporado de {appName} o un script",
@@ -333,7 +333,7 @@
     "Applications": "Aplicaciones",
     "AppProfileInUse": "Perfil de aplicación en uso",
     "AddDownloadClientToProwlarr": "Añadir un cliente de descargas permite a {appName} enviar descargas directamente desde la interfaz en una búsqueda manual.",
-    "Category": "Categoria",
+    "Category": "Categoría",
     "Application": "Aplicación",
     "BookSearch": "Búsqueda de libros",
     "BookSearchTypes": "Tipos de búsqueda de libros",
@@ -747,5 +747,7 @@
     "IndexerSettingsCookieHelpText": "Cookie del sitio",
     "IndexerSettingsFreeleechOnly": "Solo freeleech",
     "IndexerSettingsVipExpiration": "Expiración del VIP",
-    "XmlRpcPath": "Ruta RPC de XML"
+    "XmlRpcPath": "Ruta RPC de XML",
+    "NotificationsTelegramSettingsIncludeAppName": "Incluir {appName} en el título",
+    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente prefija el título del mensaje con {appName} para diferenciar las notificaciones de las diferentes aplicaciones"
 }

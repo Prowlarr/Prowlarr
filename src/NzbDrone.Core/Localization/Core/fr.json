@@ -12,7 +12,7 @@
     "Events": "Événements",
     "Edit": "Modifier",
     "DownloadClientStatusAllClientHealthCheckMessage": "Aucun client de téléchargement n'est disponible en raison d'échecs",
-    "DownloadClients": "Clients de télécharg.",
+    "DownloadClients": "Clients de téléchargement",
     "Dates": "Dates",
     "Date": "Date",
     "Delete": "Supprimer",
@@ -747,5 +747,7 @@
     "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "Si un torrent est bloqué par le hachage, il peut ne pas être correctement rejeté pendant le RSS/recherche pour certains indexeurs. L'activation de cette fonction permet de le rejeter après que le torrent a été saisi, mais avant qu'il ne soit envoyé au client.",
     "ProwlarrDownloadClientsAlert": "Si vous avez l'intention d'effectuer des recherches directement dans {appName}, vous devez ajouter les clients de téléchargement. Sinon, vous n'avez pas besoin de les ajouter ici. Pour les recherches à partir de vos applications, les clients de téléchargement qui y sont configurés sont utilisés à la place.",
     "IndexerMTeamTpSettingsApiKeyHelpText": "Clé API du site (trouvée dans le panneau de configuration utilisateur => Sécurité => Laboratoire)",
-    "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Rechercher uniquement les versions freeleech"
+    "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Rechercher uniquement les versions freeleech",
+    "NotificationsTelegramSettingsIncludeAppName": "Inclure {appName} dans le Titre",
+    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Préfixer éventuellement le titre du message par {appName} pour différencier les notifications des différentes applications"
 }

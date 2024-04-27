@@ -749,5 +749,6 @@
     "IndexerMTeamTpSettingsApiKeyHelpText": "Chave API do Site (Encontrada no Painel de Controle do Usuário => Segurança => Laboratório)",
     "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Pesquise apenas lançamentos freeleech",
     "NotificationsTelegramSettingsIncludeAppName": "Incluir {appName} no Título",
-    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente, prefixe o título da mensagem com {appName} para diferenciar notificações de diferentes aplicativos"
+    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente, prefixe o título da mensagem com {appName} para diferenciar notificações de diferentes aplicativos",
+    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Pesquise apenas lançamentos freeleech"
 }

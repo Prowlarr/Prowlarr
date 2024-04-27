@@ -604,5 +604,6 @@
     "DownloadClientQbittorrentSettingsContentLayout": "内容布局",
     "DownloadClientQbittorrentSettingsContentLayoutHelpText": "是否使用 qBittorrent 配置的内容布局，使用种子的原始布局或始终创建子文件夹（qBittorrent 4.3.2+）",
     "DownloadClientAriaSettingsDirectoryHelpText": "可选的下载位置，留空使用 Aria2 默认位置",
-    "ManageClients": "管理客户端"
+    "ManageClients": "管理客户端",
+    "CustomFilter": "自定义过滤器"
 }

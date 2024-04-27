@@ -668,7 +668,7 @@
     "DownloadClientFreeboxSettingsPortHelpText": "Freebox-liittymän portti. Oletus on \"{port}\".",
     "DownloadClientPneumaticSettingsNzbFolder": "NZB-kansio",
     "DownloadClientQbittorrentSettingsSequentialOrder": "Peräkkäinen järjestys",
-    "CustomFilter": "Omat suodattimet",
+    "CustomFilter": "Oma suodatin",
     "DownloadClientFreeboxSettingsAppIdHelpText": "Freebox-rajapinnan käyttöoikeutta määritettäessä käytettävä App ID -sovellustunniste.",
     "DownloadClientFreeboxSettingsAppToken": "Sovellustietue",
     "DownloadClientNzbgetSettingsAddPausedHelpText": "Tämä vaatii vähintään NzbGet-version 16.0.",
@@ -680,5 +680,6 @@
     "TorrentBlackholeSaveMagnetFilesHelpText": "Tallenna magnet-linkki, jos .torrent-tiedostoa ei ole käytettävissä (hyödyllinen vain lataustyökalun tukiessa tiedostoon tallennettuja magnet-linkkejä).",
     "TorrentBlackholeTorrentFolder": "Torrent-kansio",
     "TorrentBlackholeSaveMagnetFilesExtension": "Tallennettujen magnet-tiedostojen pääte",
-    "TorrentBlackholeSaveMagnetFilesExtensionHelpText": "Magnet-linkeille käytettävä tiedostopääte. Oletus on \".magnet\"."
+    "TorrentBlackholeSaveMagnetFilesExtensionHelpText": "Magnet-linkeille käytettävä tiedostopääte. Oletus on \".magnet\".",
+    "LabelIsRequired": "Nimi on pakollinen"
 }

@@ -1,27 +1,38 @@
 'Area: API':
   - changed-files:
-      - any-glob-to-any-file:
-          - src/Prowlarr.Api.V1/**/*
-
+      - any-glob-to-any-file: src/Lidarr.Api.V1/**/*
+      
 'Area: Db-migration':
   - changed-files:
-      - any-glob-to-any-file:
-          - src/NzbDrone.Core/Datastore/Migration/*
+      - any-glob-to-any-file: src/NzbDrone.Core/Datastore/Migration/*
 
 'Area: Download Clients':
   - changed-files:
-      - any-glob-to-any-file:
-          - src/NzbDrone.Core/Download/Clients/**/*
+      - any-glob-to-any-file: src/NzbDrone.Core/Download/Clients/**/*
+
+'Area: Import Lists':
+  - changed-files:
+      - any-glob-to-any-file: src/NzbDrone.Core/ImportLists/**/*
+
+'Area: Metadata':
+  - changed-files:
+      - any-glob-to-any-file: src/NzbDrone.Core/Extras/Metadata/*
 
 'Area: Indexer':
   - changed-files:
-      - any-glob-to-any-file:
-          - src/NzbDrone.Core/Indexers/**/*
+      - any-glob-to-any-file: src/NzbDrone.Core/Indexers/**/*
 
 'Area: Notifications':
   - changed-files:
-      - any-glob-to-any-file:
-          - src/NzbDrone.Core/Notifications/**/*
+      - any-glob-to-any-file: src/NzbDrone.Core/Notifications/**/*
+
+'Area: Organizer':
+  - changed-files:
+      - any-glob-to-any-file: src/NzbDrone.Core/Organizer/**/*
+
+'Area: Parser':
+  - changed-files:
+      - any-glob-to-any-file: src/NzbDrone.Core/Parser/**/*
 
 'Area: UI':
   - changed-files:

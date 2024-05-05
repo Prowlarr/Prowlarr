@@ -750,5 +750,7 @@
     "XmlRpcPath": "Ruta RPC de XML",
     "NotificationsTelegramSettingsIncludeAppName": "Incluir {appName} en el título",
     "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente prefija el título del mensaje con {appName} para diferenciar las notificaciones de las diferentes aplicaciones",
-    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Busca solo lanzamientos freeleech"
+    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Busca solo lanzamientos freeleech",
+    "ProxyValidationBadRequest": "Fallo al probar el proxy. Código de estado: {statusCode}",
+    "ProxyValidationUnableToConnect": "No se pudo conectar al proxy: {exceptionMessage}. Comprueba el registro de este error para más detalles"
 }

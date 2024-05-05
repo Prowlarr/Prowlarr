@@ -750,5 +750,7 @@
     "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Pesquise apenas lançamentos freeleech",
     "NotificationsTelegramSettingsIncludeAppName": "Incluir {appName} no Título",
     "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente, prefixe o título da mensagem com {appName} para diferenciar notificações de diferentes aplicativos",
-    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Pesquise apenas lançamentos freeleech"
+    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Pesquise apenas lançamentos freeleech",
+    "ProxyValidationBadRequest": "Falha ao testar o proxy. Código de status: {statusCode}",
+    "ProxyValidationUnableToConnect": "Não foi possível conectar-se ao proxy: {exceptionMessage}. Verifique o log em torno deste erro para obter detalhes"
 }

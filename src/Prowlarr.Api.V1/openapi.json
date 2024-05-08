@@ -5919,6 +5919,11 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          },
+          "downloadClientId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

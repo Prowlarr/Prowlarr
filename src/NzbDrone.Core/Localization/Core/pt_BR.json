@@ -752,5 +752,13 @@
     "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente, prefixe o título da mensagem com {appName} para diferenciar notificações de diferentes aplicativos",
     "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Pesquise apenas lançamentos freeleech",
     "ProxyValidationBadRequest": "Falha ao testar o proxy. Código de status: {statusCode}",
-    "ProxyValidationUnableToConnect": "Não foi possível conectar-se ao proxy: {exceptionMessage}. Verifique o log em torno deste erro para obter detalhes"
+    "ProxyValidationUnableToConnect": "Não foi possível conectar-se ao proxy: {exceptionMessage}. Verifique o log em torno deste erro para obter detalhes",
+    "Default": "Padrão",
+    "ManualGrab": "Baixar Manualmente",
+    "Open": "Abrir",
+    "OverrideAndAddToDownloadClient": "Substituir e adicionar ao cliente de download",
+    "OverrideGrabModalTitle": "Substituir e Baixar - {title}",
+    "PrioritySettings": "Prioridade: {priority}",
+    "GrabRelease": "Baixar Lançamento",
+    "SelectDownloadClientModalTitle": "{modalTitle} - Selecionar Cliente de Download"
 }

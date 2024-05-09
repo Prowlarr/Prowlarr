@@ -752,5 +752,13 @@
     "NotificationsTelegramSettingsIncludeAppNameHelpText": "Opcionalmente prefija el título del mensaje con {appName} para diferenciar las notificaciones de las diferentes aplicaciones",
     "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Busca solo lanzamientos freeleech",
     "ProxyValidationBadRequest": "Fallo al probar el proxy. Código de estado: {statusCode}",
-    "ProxyValidationUnableToConnect": "No se pudo conectar al proxy: {exceptionMessage}. Comprueba el registro de este error para más detalles"
+    "ProxyValidationUnableToConnect": "No se pudo conectar al proxy: {exceptionMessage}. Comprueba el registro de este error para más detalles",
+    "GrabRelease": "Capturar lanzamiento",
+    "ManualGrab": "Captura manual",
+    "Open": "Abrir",
+    "OverrideAndAddToDownloadClient": "Sobrescribir y añadir al cliente de descarga",
+    "OverrideGrabModalTitle": "Sobrescribir y capturar - {title}",
+    "PrioritySettings": "Prioridad: {priority}",
+    "SelectDownloadClientModalTitle": "{modalTitle} - Seleccionar cliente de descarga",
+    "Default": "Predeterminado"
 }

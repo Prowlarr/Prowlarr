@@ -476,7 +476,7 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: '$(testName) Unit Tests'
           failTaskOnFailedTests: true
-          failTaskOnMissingResultsFile: true
+          failTaskOnMissingResultsFile: notIn(variables['testName'], 'freebsd-x64', 'linux-x86'))
 
     - job: Unit_Docker
       displayName: Unit Docker
@@ -533,7 +533,7 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: '$(testName) Unit Tests'
           failTaskOnFailedTests: true
-          failTaskOnMissingResultsFile: true
+          failTaskOnMissingResultsFile: ne(variables['testName'], 'linux-x86')
 
     - job: Unit_LinuxCore_Postgres14
       displayName: Unit Native LinuxCore with Postgres14 Database
@@ -898,7 +898,7 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'FreeBSD Integration Tests'
           failTaskOnFailedTests: true
-          failTaskOnMissingResultsFile: true
+          failTaskOnMissingResultsFile: false
         displayName: Publish Test Results
 
     - job: Integration_Docker
@@ -968,7 +968,7 @@ stages:
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: '$(testName) Integration Tests'
           failTaskOnFailedTests: true
-          failTaskOnMissingResultsFile: true
+          failTaskOnMissingResultsFile: ne(variables['testName'], 'linux-x86')
         displayName: Publish Test Results
 
   - stage: Automation

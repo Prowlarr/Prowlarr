@@ -131,13 +131,6 @@ namespace NzbDrone.Core.Download
         {
             _logger.Trace("Attempting download of {0}", link);
             var url = new Uri(link);
-
-            // Limit grabs to 2 per second.
-            if (link.IsNotNullOrWhiteSpace() && !link.StartsWith("magnet:"))
-            {
-                await _rateLimitService.WaitAndPulseAsync(url.Host, TimeSpan.FromSeconds(2));
-            }
-
             var indexer = _indexerFactory.GetInstance(_indexerFactory.Get(indexerId));
             var success = false;
             var downloadedBytes = Array.Empty<byte>();

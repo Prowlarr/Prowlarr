@@ -132,7 +132,7 @@
     "AuthenticationMethodHelpText": "Solicitar nome de utilizador e palavra-passe para acessar ao {appName}",
     "Authentication": "Autenticação",
     "ApplyTags": "Aplicar etiquetas",
-    "AppDataDirectory": "Pasta AppData",
+    "AppDataDirectory": "Diretório AppData",
     "ApiKey": "Chave da API",
     "AnalyticsEnabledHelpText": "Envia informações anônimas de uso e de erros aos servidores do {appName}. Isso inclui informações sobre seu browser, páginas utilizadas na WebUI do {appName}, relatórios de erros, bem como as versões do sistema operativo e da aplicação. Utilizaremos essas informações para priorizar funcionalidades e correções de bugs.",
     "ProxyType": "Tipo de proxy",
@@ -481,5 +481,6 @@
     "Directory": "Diretório",
     "UseSsl": "Usar SSL",
     "IndexerHDBitsSettingsCodecs": "Codificador",
-    "CustomFilter": "Filtros personalizados"
+    "CustomFilter": "Filtros personalizados",
+    "Clone": "Clonar"
 }

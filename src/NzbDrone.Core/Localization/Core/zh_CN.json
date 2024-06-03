@@ -1,6 +1,6 @@
 {
     "About": "关于",
-    "AcceptConfirmationModal": "接受确认模组Accept Confirmation Modal",
+    "AcceptConfirmationModal": "接受确认模组",
     "Actions": "动作",
     "Add": "添加",
     "AddApplication": "添加应用程序",
@@ -605,5 +605,7 @@
     "DownloadClientQbittorrentSettingsContentLayoutHelpText": "是否使用 qBittorrent 配置的内容布局，使用种子的原始布局或始终创建子文件夹（qBittorrent 4.3.2+）",
     "DownloadClientAriaSettingsDirectoryHelpText": "可选的下载位置，留空使用 Aria2 默认位置",
     "ManageClients": "管理客户端",
-    "CustomFilter": "自定义过滤器"
+    "CustomFilter": "自定义过滤器",
+    "BlackholeFolderHelpText": "{appName} 将在其中存储 {extension} 文件的文件夹",
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashes": "在抓取时不会同步黑名单种子"
 }

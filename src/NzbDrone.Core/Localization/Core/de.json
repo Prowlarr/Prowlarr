@@ -105,7 +105,7 @@
     "Discord": "Discord",
     "Docker": "Docker",
     "Donations": "Spenden",
-    "DownloadClient": "Download Client",
+    "DownloadClient": "Downloader",
     "DownloadClientSettings": "Downloader Einstellungen",
     "DownloadClientStatusAllClientHealthCheckMessage": "Alle Download Clients sind aufgrund von Fehlern nicht verfügbar",
     "DownloadClientStatusSingleClientHealthCheckMessage": "Download Clients aufgrund von Fehlern nicht verfügbar: {downloadClientNames}",
@@ -546,5 +546,12 @@
     "CountApplicationsSelected": "{count} Ausgewählte Sammlung(en)",
     "DownloadClientAriaSettingsDirectoryHelpText": "Optionaler Speicherort für Downloads. Lassen Sie das Feld leer, um den standardmäßigen rTorrent-Speicherort zu verwenden",
     "ManageClients": "Verwalte Clienten",
-    "BlackholeFolderHelpText": "Ordner, in dem {appName} die Datei {extension} speichert"
+    "BlackholeFolderHelpText": "Ordner, in dem {appName} die Datei {extension} speichert",
+    "DownloadClientSettingsInitialStateHelpText": "Anfangszustand für zu {clientName} hinzugefügte Torrents",
+    "DownloadClientSettingsDestinationHelpText": "Legt das Ziel für den Download manuell fest; lassen Sie es leer, um die Standardeinstellung zu verwenden",
+    "DownloadClientSettingsUrlBaseHelpText": "Fügt ein Präfix zur {clientName} Url hinzu, z.B. {url}",
+    "DownloadClientSettingsUseSslHelpText": "Sichere Verbindung verwenden, wenn Verbindung zu {clientName} hergestellt wird",
+    "DownloadClientTransmissionSettingsDirectoryHelpText": "Optionaler Speicherort für Downloads; leer lassen, um den Standardspeicherort für Übertragungen zu verwenden",
+    "CustomFilter": "Benutzerdefinierter Filter",
+    "DownloadClientSettingsInitialState": "Ausgangszustand"
 }

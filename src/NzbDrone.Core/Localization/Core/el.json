@@ -522,5 +522,7 @@
     "IndexerBeyondHDSettingsSearchTypes": "Τύποι αναζήτησης",
     "IndexerHDBitsSettingsMediums": "Μεσαίο",
     "UseSsl": "Χρησιμοποιήστε SSL",
-    "CustomFilter": "Custom Φιλτρα"
+    "CustomFilter": "Custom Φιλτρα",
+    "GrabRelease": "Πιάσε την απελευθέρωση",
+    "ProxyValidationBadRequest": "Αποτυχία δοκιμής διακομιστή μεσολάβησης. StatusCode: {statusCode}"
 }

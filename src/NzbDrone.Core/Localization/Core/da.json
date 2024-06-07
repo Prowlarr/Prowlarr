@@ -392,5 +392,7 @@
     "EditApplicationImplementation": "Tilføj forbindelse - {implementationName}",
     "EditDownloadClientImplementation": "Tilføj downloadklient - {implementationName}",
     "IndexerHDBitsSettingsMediums": "Medium",
-    "CustomFilter": "Bruger Tilpassede Filtere"
+    "CustomFilter": "Bruger Tilpassede Filtere",
+    "ProxyValidationBadRequest": "Kunne ikke teste proxy. Statuskode: {statusCode}",
+    "GrabRelease": "Grab Release"
 }

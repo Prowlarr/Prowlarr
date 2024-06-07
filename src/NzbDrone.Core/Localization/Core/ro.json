@@ -468,5 +468,8 @@
     "IndexerHDBitsSettingsMediums": "Mediu",
     "IndexerSettingsVipExpiration": "Expirare VIP",
     "Directory": "Director",
-    "CustomFilter": "Filtru personalizat"
+    "CustomFilter": "Filtru personalizat",
+    "SelectDownloadClientModalTitle": "{modalTitle} - Selectați clientul de descărcare",
+    "ProxyValidationBadRequest": "Testul proxy a eșuat. StatusCode: {statusCode}",
+    "GrabRelease": "Grab Release"
 }

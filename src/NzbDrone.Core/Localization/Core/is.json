@@ -355,5 +355,7 @@
     "ResetAPIKeyMessageText": "Ertu viss um að þú viljir endurstilla API lykilinn þinn?",
     "RestartProwlarr": "Endurræstu {appName}",
     "IndexerHDBitsSettingsMediums": "Miðlungs",
-    "CustomFilter": "Sérsniðin síur"
+    "CustomFilter": "Sérsniðin síur",
+    "ProxyValidationBadRequest": "Mistókst að prófa umboðsmann. Stöðukóði: {statusCode}",
+    "GrabRelease": "Grípa losun"
 }

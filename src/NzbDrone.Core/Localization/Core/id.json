@@ -81,5 +81,8 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Konfirmasi sandi baru",
     "days": "hari",
     "minutes": "menit",
-    "Link": "Tautan"
+    "Link": "Tautan",
+    "Id": "ID",
+    "IndexerHDBitsSettingsCodecs": "Codec",
+    "ProxyValidationBadRequest": "Gagal menguji proxy. Kode Status: {statusCode}"
 }

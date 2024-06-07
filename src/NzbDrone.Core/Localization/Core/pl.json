@@ -386,5 +386,12 @@
     "AddIndexerProxyImplementation": "Dodaj condition - {implementationName}",
     "EditConnectionImplementation": "Dodaj Connection - {implementationName}",
     "EditApplicationImplementation": "Dodaj Connection - {implementationName}",
-    "EditIndexerImplementation": "Dodaj condition - {implementationName}"
+    "EditIndexerImplementation": "Dodaj condition - {implementationName}",
+    "IndexerHDBitsSettingsMediums": "Średni",
+    "EditIndexerProxyImplementation": "Dodaj condition - {implementationName}",
+    "Directory": "Folder",
+    "IndexerHDBitsSettingsCodecs": "Kodek",
+    "ProxyValidationBadRequest": "Nie udało się przetestować serwera proxy. StatusCode: {statusCode}",
+    "CustomFilter": "Filtry niestandardowe",
+    "GrabRelease": "Pobierz Wydanie"
 }

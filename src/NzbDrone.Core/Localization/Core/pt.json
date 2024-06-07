@@ -482,5 +482,9 @@
     "UseSsl": "Usar SSL",
     "IndexerHDBitsSettingsCodecs": "Codificador",
     "CustomFilter": "Filtros personalizados",
-    "Clone": "Clonar"
+    "Clone": "Clonar",
+    "GrabRelease": "Capturar versão",
+    "DownloadClientSettingsUrlBaseHelpText": "Adiciona um prefixo ao URL {connectionName}, como {url}",
+    "ProxyValidationBadRequest": "Falha ao testar o proxy. Código de estado: {statusCode}",
+    "Default": "Predefinição"
 }

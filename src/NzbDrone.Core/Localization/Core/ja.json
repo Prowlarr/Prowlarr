@@ -355,5 +355,7 @@
     "ResetAPIKeyMessageText": "APIキーをリセットしてもよろしいですか？",
     "RestartProwlarr": "{appName}を再起動します",
     "IndexerHDBitsSettingsMediums": "中",
-    "CustomFilter": "カスタムフィルター"
+    "CustomFilter": "カスタムフィルター",
+    "ProxyValidationBadRequest": "プロキシのテストに失敗しました。 StatusCode：{statusCode}",
+    "GrabRelease": "グラブリリース"
 }

@@ -407,5 +407,9 @@
     "Publisher": "מוציא לאור",
     "None": "אף אחד",
     "AuthForm": "טפסים (דף כניסה)",
-    "AuthBasic": "בסיסי (חלון קופץ לדפדפן)"
+    "AuthBasic": "בסיסי (חלון קופץ לדפדפן)",
+    "IndexerHDBitsSettingsMediums": "בינוני",
+    "ProxyValidationBadRequest": "נכשל בדיקת ה- proxy. קוד קוד: {statusCode}",
+    "CustomFilter": "מסננים מותאמים אישית",
+    "GrabRelease": "שחרור תפוס"
 }

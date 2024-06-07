@@ -137,5 +137,20 @@
     "DisabledForLocalAddresses": "Deaktivert for lokale adresser",
     "ResetAPIKeyMessageText": "Er du sikker på at du vil tilbakestille API -nøkkelen din?",
     "CountApplicationsSelected": "{count} samling(er) valgt",
-    "Id": "ID"
+    "Id": "ID",
+    "UnableToAddANewNotificationPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "Docker": "Docker",
+    "UnableToAddANewDownloadClientPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "EditApplicationImplementation": "Legg til betingelse - {implementationName}",
+    "EditIndexerImplementation": "Legg til betingelse - {implementationName}",
+    "AddApplicationImplementation": "Legg til betingelse - {implementationName}",
+    "EditConnectionImplementation": "Legg til betingelse - {implementationName}",
+    "IndexerHDBitsSettingsCodecs": "Kodek",
+    "UnableToAddANewIndexerProxyPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "Directory": "Mappe",
+    "UnableToAddANewIndexerPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "AddConnectionImplementation": "Legg til betingelse - {implementationName}",
+    "AddIndexerImplementation": "Legg til betingelse - {implementationName}",
+    "AddIndexerProxyImplementation": "Legg til betingelse - {implementationName}",
+    "UnableToAddANewApplicationPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen"
 }

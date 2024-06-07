@@ -570,5 +570,10 @@
     "CustomFilter": "Egyedi Szűrők",
     "DownloadClientDownloadStationSettingsDirectoryHelpText": "Opcionális megosztott mappa a letöltések elhelyezéséhez, hagyja üresen az alapértelmezett Download Station hely használatához",
     "DownloadClientRTorrentSettingsDirectoryHelpText": "Választható hely a letöltések elhelyezéséhez, hagyja üresen az alapértelmezett Aria2 hely használatához",
-    "DownloadClientSettingsUseSslHelpText": "Biztonságos kapcsolat használata, amikor a(z) {clientName} szolgáltatással csatlakozik"
+    "DownloadClientSettingsUseSslHelpText": "Biztonságos kapcsolat használata, amikor a(z) {clientName} szolgáltatással csatlakozik",
+    "GrabRelease": "Release megragadása",
+    "ManualGrab": "Megfog",
+    "PrioritySettings": "Prioritás: {priority}",
+    "ProxyValidationBadRequest": "Proxy tesztelése sikertelen. Állapotkód: {statusCode}",
+    "Default": "Alapértelmezett"
 }

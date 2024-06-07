@@ -749,5 +749,15 @@
     "IndexerMTeamTpSettingsApiKeyHelpText": "Clé API du site (trouvée dans le panneau de configuration utilisateur => Sécurité => Laboratoire)",
     "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Rechercher uniquement les versions freeleech",
     "NotificationsTelegramSettingsIncludeAppName": "Inclure {appName} dans le Titre",
-    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Préfixer éventuellement le titre du message par {appName} pour différencier les notifications des différentes applications"
+    "NotificationsTelegramSettingsIncludeAppNameHelpText": "Préfixer éventuellement le titre du message par {appName} pour différencier les notifications des différentes applications",
+    "OverrideAndAddToDownloadClient": "Remplacer et ajouter à la file d'attente de téléchargement",
+    "OverrideGrabModalTitle": "Remplacer et récupérer - {title}",
+    "PrioritySettings": "Priorité : {priority}",
+    "SelectDownloadClientModalTitle": "{modalTitle} – Sélectionnez le client de téléchargement",
+    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Rechercher les publications freeleech uniquement",
+    "ProxyValidationBadRequest": "Échec du test du proxy. Code d'état : {statusCode}",
+    "ProxyValidationUnableToConnect": "Impossible de se connecter à l'indexeur : {exceptionMessage}. Vérifiez le journal pour plus de détails sur cette erreur",
+    "Default": "Par défaut",
+    "GrabRelease": "Saisir Release",
+    "ManualGrab": "Saisie manuelle"
 }

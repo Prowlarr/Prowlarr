@@ -427,5 +427,13 @@
     "IndexerHDBitsSettingsCodecs": "Кодек",
     "IndexerHDBitsSettingsMediums": "Средний",
     "Directory": "Каталог",
-    "CustomFilter": "Настраиваемые фильтры"
+    "CustomFilter": "Настраиваемые фильтры",
+    "GrabRelease": "Захватить релиз",
+    "ManualGrab": "Ручной захват",
+    "OverrideAndAddToDownloadClient": "Замена и добавление в очередь загрузки",
+    "OverrideGrabModalTitle": "Переопределить и захватить - {title}",
+    "PrioritySettings": "Приоритет: {priority}",
+    "SelectDownloadClientModalTitle": "{modalTitle} - Выберите клиент для загрузки",
+    "ProxyValidationBadRequest": "Не удалось проверить прокси. Код: {statusCode}",
+    "Default": "По умолчанию"
 }

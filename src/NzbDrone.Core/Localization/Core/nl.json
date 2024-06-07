@@ -484,5 +484,13 @@
     "AuthenticationRequiredWarning": "Om toegang zonder authenticatie te voorkomen vereist {appName} nu verificatie. Je kan dit optioneel uitschakelen voor lokale adressen.",
     "Episode": "aflevering",
     "CountApplicationsSelected": "{count} Collectie(s) geselecteerd",
-    "BlackholeFolderHelpText": "De map waarin {appName} het {extension} bestand opslaat"
+    "BlackholeFolderHelpText": "De map waarin {appName} het {extension} bestand opslaat",
+    "GrabRelease": "Uitgave Ophalen",
+    "PrioritySettings": "Prioriteit: {priority}",
+    "Artist": "artiest",
+    "IndexerHDBitsSettingsMediums": "Gemiddeld",
+    "IndexerHDBitsSettingsCodecs": "Codec",
+    "Directory": "Map",
+    "ProxyValidationBadRequest": "Testen van proxy is mislukt. Statuscode: {statusCode}",
+    "CustomFilter": "Aangepaste Filters"
 }

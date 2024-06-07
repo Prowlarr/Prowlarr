@@ -412,5 +412,8 @@
     "IndexerHDBitsSettingsCodecs": "Kodek",
     "IndexerHDBitsSettingsMediums": "Střední",
     "Directory": "Adresář",
-    "CustomFilter": "Vlastní filtry"
+    "CustomFilter": "Vlastní filtry",
+    "ProxyValidationBadRequest": "Nepodařilo se otestovat proxy. StatusCode: {statusCode}",
+    "Default": "Výchozí",
+    "GrabRelease": "Uchopte uvolnění"
 }

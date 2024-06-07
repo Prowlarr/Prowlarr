@@ -438,5 +438,11 @@
     "DisabledForLocalAddresses": "Inaktiverad för lokala adresser",
     "None": "Ingen",
     "ResetAPIKeyMessageText": "Är du säker på att du vill nollställa din API-nyckel?",
-    "AddCustomFilter": "Lägg till anpassat filter"
+    "AddCustomFilter": "Lägg till anpassat filter",
+    "UseSsl": "Använd SSL",
+    "IndexerHDBitsSettingsMediums": "Medium",
+    "Directory": "Plats",
+    "ProxyValidationBadRequest": "Test av proxy misslyckades. Statuskod: {statusCode}",
+    "CustomFilter": "Anpassade Filter",
+    "GrabRelease": "Hämta Utågva"
 }

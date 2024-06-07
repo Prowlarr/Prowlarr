@@ -174,5 +174,9 @@
     "DisabledForLocalAddresses": "Onemogućeno za Lokalne Adrese",
     "ResetAPIKeyMessageText": "Jeste li sigurni da želite resetirati vaš API Ključ?",
     "AuthBasic": "Osnovno (Skočni prozor preglednika)",
-    "AuthForm": "Forme (Login Stranica)"
+    "AuthForm": "Forme (Login Stranica)",
+    "Id": "ID",
+    "CountApplicationsSelected": "{count} Kolekcija odabrano",
+    "IndexerHDBitsSettingsCodecs": "Kodek",
+    "Directory": "Direktorij"
 }

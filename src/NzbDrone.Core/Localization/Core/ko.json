@@ -355,5 +355,7 @@
     "StopSelecting": "선택 취소",
     "RestartProwlarr": "{appName} 다시 시작",
     "IndexerHDBitsSettingsMediums": "매질",
-    "CustomFilter": "사용자 지정 필터"
+    "CustomFilter": "사용자 지정 필터",
+    "GrabRelease": "그랩 릴리스",
+    "ProxyValidationBadRequest": "프록시를 테스트하지 못했습니다. StatusCode : {statusCode}"
 }

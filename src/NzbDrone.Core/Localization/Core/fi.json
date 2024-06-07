@@ -681,5 +681,14 @@
     "TorrentBlackholeTorrentFolder": "Torrent-kansio",
     "TorrentBlackholeSaveMagnetFilesExtension": "Tallennettujen magnet-tiedostojen pääte",
     "TorrentBlackholeSaveMagnetFilesExtensionHelpText": "Magnet-linkeille käytettävä tiedostopääte. Oletus on \".magnet\".",
-    "LabelIsRequired": "Nimi on pakollinen"
+    "LabelIsRequired": "Nimi on pakollinen",
+    "Default": "Oletus",
+    "GrabRelease": "Kaappaa julkaisu",
+    "OverrideGrabModalTitle": "Ohita ja sieppaa - {title}",
+    "PrioritySettings": "Painotus: {priority}",
+    "SelectDownloadClientModalTitle": "{modalTitle} - Valitse lataustyökalu",
+    "ProxyValidationBadRequest": "Välityspalvelintesti epäonnistui. Tilakoodi: {statusCode}.",
+    "ProxyValidationUnableToConnect": "Tietolähdettä ei tavoiteta: {exceptionMessage}. Etsi tietoja tämän virheen lähellä olevista lokimerkinnöistä.",
+    "ManualGrab": "Manuaalinen kaappaus",
+    "OverrideAndAddToDownloadClient": "Ohita ja lisää latausjonoon"
 }

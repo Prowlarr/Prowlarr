@@ -410,5 +410,15 @@
     "DownloadClientQbittorrentSettingsUseSslHelpText": "Використовувати безпечне з'єднання. Дивіться параметри -> Web UI -> 'Use HTTPS instead of HTTP' в qBittorrent.",
     "DownloadClientSettingsInitialStateHelpText": "Початковий стан для торрентів, доданих до {clientName}",
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Підтвердити новий пароль",
-    "DownloadClientAriaSettingsDirectoryHelpText": "Додаткове розташування для розміщення завантажень. Залиште поле порожнім, щоб використовувати стандартне розташування Aria2"
+    "DownloadClientAriaSettingsDirectoryHelpText": "Додаткове розташування для розміщення завантажень. Залиште поле порожнім, щоб використовувати стандартне розташування Aria2",
+    "ApiKeyValidationHealthCheckMessage": "Будь ласка оновіть ключ API, щоб він містив принаймні {length} символів. Ви можете зробити це в налаштуваннях або в файлі конфігурації",
+    "DownloadClientRTorrentSettingsDirectoryHelpText": "Додаткове розташування для розміщення завантажень. Залиште поле порожнім, щоб використовувати стандартне розташування Aria2",
+    "IndexerHDBitsSettingsCodecs": "Кодек",
+    "DownloadClientSettingsUrlBaseHelpText": "Додає префікс до URL-адреси {connectionName}, наприклад {url}",
+    "DownloadClientTransmissionSettingsDirectoryHelpText": "Додаткове розташування для розміщення завантажень. Залиште поле порожнім, щоб використовувати стандартне розташування Aria2",
+    "ProxyValidationBadRequest": "Не вдалося перевірити проксі. Код стану: {statusCode}",
+    "CustomFilter": "Користувацькі фільтри",
+    "IndexerHDBitsSettingsMediums": "Середній",
+    "Default": "За замовчуванням",
+    "GrabRelease": "Захопити реліз"
 }

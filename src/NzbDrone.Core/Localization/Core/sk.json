@@ -126,5 +126,21 @@
     "AddConnection": "Pridať podmienku",
     "AddConnectionImplementation": "Pridať pripojenie - {implementationName}",
     "AddDownloadClientImplementation": "Pridať klienta pre sťahovanie - {implementationName}",
-    "AddIndexerImplementation": "Pridať Indexer - {implementationName}"
+    "AddIndexerImplementation": "Pridať Indexer - {implementationName}",
+    "UnableToAddANewDownloadClientPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "UnableToAddANewNotificationPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "UnableToAddANewIndexerPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "UnableToLoadBackups": "Nie je možné načítať albumy",
+    "Docker": "Docker",
+    "UnableToAddANewApplicationPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "EditIndexerImplementation": "Pridať Indexer - {implementationName}",
+    "AddApplicationImplementation": "Pridať pripojenie - {implementationName}",
+    "EditConnectionImplementation": "Pridať pripojenie - {implementationName}",
+    "EditDownloadClientImplementation": "Pridať klienta pre sťahovanie - {implementationName}",
+    "UnableToAddANewIndexerProxyPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
+    "Directory": "Priečinok",
+    "IndexerHDBitsSettingsCodecs": "Kodek",
+    "AddIndexerProxyImplementation": "Pridať Indexer - {implementationName}",
+    "EditIndexerProxyImplementation": "Pridať Indexer - {implementationName}",
+    "EditApplicationImplementation": "Pridať podmienku - {implementationName}"
 }

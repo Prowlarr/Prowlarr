@@ -358,5 +358,7 @@
     "ResetAPIKeyMessageText": "แน่ใจไหมว่าต้องการรีเซ็ตคีย์ API",
     "RestartProwlarr": "รีสตาร์ท {appName}",
     "IndexerHDBitsSettingsMediums": "ปานกลาง",
-    "CustomFilter": "ตัวกรองที่กำหนดเอง"
+    "CustomFilter": "ตัวกรองที่กำหนดเอง",
+    "ProxyValidationBadRequest": "ไม่สามารถทดสอบพร็อกซี StatusCode: {statusCode}",
+    "GrabRelease": "คว้ารีลีส"
 }

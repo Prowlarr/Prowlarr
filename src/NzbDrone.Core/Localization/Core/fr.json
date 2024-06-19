@@ -406,7 +406,7 @@
     "BookSearch": "Recherche de livres",
     "OnApplicationUpdate": "Sur la mise à jour de l'application",
     "OnApplicationUpdateHelpText": "Lors de la mise à jour de l'app",
-    "IndexerNoDefCheckMessage": "Les indexeurs ne sont pas définis et ne fonctionneront pas :Merci de les retirer et (ou) les ajouter à nouveau à {appName}",
+    "IndexerNoDefCheckMessage": "Les indexeurs ne sont pas définis et ne fonctionneront pas : {0}. Merci de les retirer et (ou) les ajouter à nouveau à {appName}",
     "MovieSearch": "Recherche de films",
     "TvSearch": "Recherche de séries TV",
     "Application": "Applications",
@@ -603,7 +603,7 @@
     "NoIndexerCategories": "Aucune catégorie disponible pour cet indexeur",
     "InvalidUILanguage": "Votre interface utilisateur est définie sur une langue non valide, corrigez-la et enregistrez vos paramètres",
     "DownloadClientQbittorrentSettingsContentLayout": "Disposition du contenu",
-    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Utiliser la disposition du contenu configurée par qBittorrent, la disposition originale du torrent ou toujours créer un sous-dossier (qBittorrent 4.3.2+)",
+    "DownloadClientQbittorrentSettingsContentLayoutHelpText": "Si il faut utiliser de la présentation du contenu configurée par qBittorrent, la présentation originale du torrent ou la création systématique d'un sous-dossier (qBittorrent 4.3.2+)",
     "DownloadClientAriaSettingsDirectoryHelpText": "Emplacement facultatif pour les téléchargements, laisser vide pour utiliser l'emplacement par défaut Aria2",
     "ManageClients": "Gérer les clients",
     "DownloadClientDelugeSettingsUrlBaseHelpText": "Ajoute un préfixe à l'URL json du déluge, voir {url}",
@@ -759,5 +759,6 @@
     "ProxyValidationUnableToConnect": "Impossible de se connecter à l'indexeur : {exceptionMessage}. Vérifiez le journal pour plus de détails sur cette erreur",
     "Default": "Par défaut",
     "GrabRelease": "Saisir Release",
-    "ManualGrab": "Saisie manuelle"
+    "ManualGrab": "Saisie manuelle",
+    "Open": "Ouvrir"
 }

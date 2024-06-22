@@ -333,6 +333,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     case "info_cookie":
                     case "info_flaresolverr":
                     case "info_useragent":
+                    case "info_category_8000":
                     case "cardigannCaptcha":
                         // no-op
                         break;

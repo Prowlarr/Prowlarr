@@ -60,7 +60,7 @@ namespace Prowlarr.Api.V1.Indexers
 
             if (definition.Implementation == nameof(Cardigann))
             {
-                var extraFields = definition.ExtraFields?.Select(MapCardigannField).ToList() ?? new List<Field>();
+                var extraFields = definition.ExtraFields?.Select((field, i) => MapCardigannField(definition, field, i)).ToList() ?? new List<Field>();
 
                 resource.Fields.AddRange(extraFields);
 
@@ -160,7 +160,7 @@ namespace Prowlarr.Api.V1.Indexers
             };
         }
 
-        private Field MapCardigannField(SettingsField setting, int order)
+        private Field MapCardigannField(IndexerDefinition definition, SettingsField setting, int order)
         {
             var field = new Field
             {
@@ -185,7 +185,7 @@ namespace Prowlarr.Api.V1.Indexers
             {
                 field.Value = bool.TryParse(setting.Default, out var value) && value;
             }
-            else if (setting.Type is "info_cookie" or "info_flaresolverr" or "info_useragent")
+            else if (setting.Type is "info_cookie" or "info_flaresolverr" or "info_useragent" or "info_category_8000")
             {
                 field.Type = "info";
 
@@ -202,6 +202,10 @@ namespace Prowlarr.Api.V1.Indexers
                     case "info_useragent":
                         field.Label = "How to get the User-Agent";
                         field.Value = "<ol><li>From the same place you fetched the cookie,</li><li>Find <b>'user-agent:'</b> in the <b>Request Headers</b> section</li><li><b>Select</b> and <b>Copy</b> the whole user-agent string <i>(everything after 'user-agent: ')</i> and <b>Paste</b> here.</li></ol>";
+                        break;
+                    case "info_category_8000":
+                        field.Label = $"About {definition.Name} Categories";
+                        field.Value = $"{definition.Name} does not return categories in its search results. To sync to your apps, include 8000(Other) in your Apps' Sync Categories.";
                         break;
                 }
             }

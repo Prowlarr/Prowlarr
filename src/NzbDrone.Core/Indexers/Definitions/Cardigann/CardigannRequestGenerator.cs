@@ -332,37 +332,47 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 }
 
                 // selector inputs
-                if (login.Selectorinputs != null)
+                if (login.Selectorinputs != null && login.Selectorinputs.Any())
                 {
-                    foreach (var selectorinput in login.Selectorinputs)
+                    foreach (var selectorInput in login.Selectorinputs)
                     {
-                        string value = null;
                         try
                         {
-                            value = HandleSelector(selectorinput.Value, landingResultDocument.FirstElementChild);
-                            pairs[selectorinput.Key] = value;
+                            var value = HandleSelector(selectorInput.Value, landingResultDocument.FirstElementChild, required: !selectorInput.Value.Optional);
+
+                            if (selectorInput.Value.Optional && value == null)
+                            {
+                                continue;
+                            }
+
+                            pairs[selectorInput.Key] = value;
                         }
                         catch (Exception ex)
                         {
-                            throw new CardigannException(string.Format("Error while parsing selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
+                            throw new CardigannException($"Error while parsing selector input={selectorInput.Key}, selector={selectorInput.Value.Selector}: {ex.Message}", ex);
                         }
                     }
                 }
 
                 // getselector inputs
-                if (login.Getselectorinputs != null)
+                if (login.Getselectorinputs != null && login.Getselectorinputs.Any())
                 {
-                    foreach (var selectorinput in login.Getselectorinputs)
+                    foreach (var selectorInput in login.Getselectorinputs)
                     {
-                        string value = null;
                         try
                         {
-                            value = HandleSelector(selectorinput.Value, landingResultDocument.FirstElementChild);
-                            queryCollection[selectorinput.Key] = value;
+                            var value = HandleSelector(selectorInput.Value, landingResultDocument.FirstElementChild, required: !selectorInput.Value.Optional);
+
+                            if (selectorInput.Value.Optional && value == null)
+                            {
+                                continue;
+                            }
+
+                            queryCollection[selectorInput.Key] = value;
                         }
                         catch (Exception ex)
                         {
-                            throw new CardigannException(string.Format("Error while parsing get selector input={0}, selector={1}, value={2}: {3}", selectorinput.Key, selectorinput.Value.Selector, value, ex.Message));
+                            throw new CardigannException($"Error while parsing get selector input={selectorInput.Key}, selector={selectorInput.Value.Selector}: {ex.Message}", ex);
                         }
                     }
                 }

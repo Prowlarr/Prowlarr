@@ -139,20 +139,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             {
                 var selectorSelector = ApplyGoTemplateText(selector.Selector, variables);
 
-                if (dom.Matches(selectorSelector))
-                {
-                    selection = dom;
-                }
-                else
-                {
-                    selection = QuerySelector(dom, selectorSelector);
-                }
+                selection = dom.Matches(selectorSelector) ? dom : QuerySelector(dom, selectorSelector);
 
                 if (selection == null)
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selectorSelector, dom.ToHtmlPretty()));
+                        throw new Exception($"Selector \"{selectorSelector}\" didn't match {dom.ToHtmlPretty()}");
                     }
 
                     return null;
@@ -195,7 +188,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("Attribute \"{0}\" is not set for element {1}", selector.Attribute, selection.ToHtmlPretty()));
+                        throw new Exception($"Attribute \"{selector.Attribute}\" is not set for element {selection.ToHtmlPretty()}");
                     }
 
                     return null;

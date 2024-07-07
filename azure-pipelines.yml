@@ -1190,18 +1190,13 @@ stages:
       - task: SonarCloudAnalyze@2
         condition: eq(variables['System.PullRequest.IsFork'], 'False')
         displayName: Publish SonarCloud Results
-      - task: reportgenerator@4
+      - task: reportgenerator@5
         displayName: Generate Coverage Report
         inputs:
           reports: '$(Build.SourcesDirectory)/CoverageResults/**/coverage.opencover.xml'
           targetdir: '$(Build.SourcesDirectory)/CoverageResults/combined'
           reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
-      - task: PublishCodeCoverageResults@1
-        displayName: Publish Coverage Report
-        inputs:
-          codeCoverageTool: 'cobertura'
-          summaryFileLocation: './CoverageResults/combined/Cobertura.xml'
-          reportDirectory: './CoverageResults/combined/'
+          publishCodeCoverageResults: true
 
   - stage: Report_Out
     dependsOn:

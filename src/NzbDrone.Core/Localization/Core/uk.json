@@ -420,5 +420,7 @@
     "CustomFilter": "Користувацькі фільтри",
     "IndexerHDBitsSettingsMediums": "Середній",
     "Default": "За замовчуванням",
-    "GrabRelease": "Захопити реліз"
+    "GrabRelease": "Захопити реліз",
+    "Clone": "Клонування",
+    "CountDownloadClientsSelected": "Вибрано {count} клієнтів завантажувача"
 }

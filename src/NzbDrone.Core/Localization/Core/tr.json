@@ -336,7 +336,7 @@
     "ApplyTagsHelpTextAdd": "Ekle: Etiketleri mevcut etiket listesine ekleyin",
     "ApplyTagsHelpTextHowToApplyApplications": "Seçilen filmlere etiketler nasıl uygulanır",
     "ApplyTagsHelpTextRemove": "Kaldır: Girilen etiketleri kaldırın",
-    "ApplyTagsHelpTextHowToApplyIndexers": "Seçilen indeksleyicilere etiketler nasıl uygulanır?",
+    "ApplyTagsHelpTextHowToApplyIndexers": "Seçilen indeksleyicilere etiketler nasıl uygulanır",
     "ApplyTagsHelpTextReplace": "Değiştir: Etiketleri girilen etiketlerle değiştirin (tüm etiketleri kaldırmak için etiket girmeyin)",
     "DeleteSelectedDownloadClients": "İndirme İstemcilerini Sil",
     "DownloadClientPriorityHelpText": "Birden çok İndirme İstemcisine öncelik verin. Round-Robin, aynı önceliğe sahip müşteriler için kullanılır.",

@@ -152,5 +152,7 @@
     "AddConnectionImplementation": "Legg til betingelse - {implementationName}",
     "AddIndexerImplementation": "Legg til betingelse - {implementationName}",
     "AddIndexerProxyImplementation": "Legg til betingelse - {implementationName}",
-    "UnableToAddANewApplicationPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen"
+    "UnableToAddANewApplicationPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
+    "EditIndexerProxyImplementation": "Legg til betingelse - {implementationName}",
+    "UnableToAddANewAppProfilePleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen"
 }

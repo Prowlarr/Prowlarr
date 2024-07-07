@@ -468,5 +468,14 @@
     "Stats": "Estadístiques",
     "Private": "Privat",
     "Proxies": "Servidors intermediaris",
-    "Public": "Públic"
+    "Public": "Públic",
+    "DeleteSelectedIndexer": "Suprimeix els indexadors seleccionats",
+    "EditSyncProfile": "Afegeix perfil de sincronització",
+    "Menu": "Menú",
+    "OnGrabHelpText": "Al capturar llançament",
+    "ProxyValidationBadRequest": "No s'ha pogut provar el servidor intermediari. Codi d'estat: {statusCode}",
+    "Default": "Per defecte",
+    "GrabRelease": "Captura novetat",
+    "ManualGrab": "Captura manual",
+    "PrioritySettings": "Prioritat: {priority}"
 }

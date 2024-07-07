@@ -128,5 +128,10 @@
     "ApplyChanges": "應用",
     "ApplyTagsHelpTextHowToApplyApplications": "如何套用標籤在所選擇的輸入清單",
     "Artist": "演員",
-    "Id": "ID"
+    "Id": "ID",
+    "Usenet": "Usenet",
+    "ApplyTagsHelpTextHowToApplyIndexers": "如何套用標籤在所選擇的輸入清單",
+    "Docker": "Docker",
+    "IndexerHDBitsSettingsCodecs": "編解碼器",
+    "Directory": "目錄"
 }

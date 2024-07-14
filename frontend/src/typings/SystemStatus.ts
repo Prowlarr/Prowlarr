@@ -22,6 +22,7 @@ interface SystemStatus {
   osVersion: string;
   packageAuthor: string;
   packageUpdateMechanism: string;
+  packageUpdateMechanismMessage: string;
   packageVersion: string;
   runtimeName: string;
   runtimeVersion: string;

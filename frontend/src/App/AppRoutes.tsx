@@ -20,7 +20,7 @@ import LogsTableConnector from 'System/Events/LogsTableConnector';
 import Logs from 'System/Logs/Logs';
 import Status from 'System/Status/Status';
 import Tasks from 'System/Tasks/Tasks';
-import UpdatesConnector from 'System/Updates/UpdatesConnector';
+import Updates from 'System/Updates/Updates';
 import getPathWithUrlBase from 'Utilities/getPathWithUrlBase';
 
 function RedirectWithUrlBase() {
@@ -99,7 +99,7 @@ function AppRoutes() {
 
       <Route path="/system/backup" component={BackupsConnector} />
 
-      <Route path="/system/updates" component={UpdatesConnector} />
+      <Route path="/system/updates" component={Updates} />
 
       <Route path="/system/events" component={LogsTableConnector} />
 

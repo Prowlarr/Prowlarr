@@ -359,5 +359,7 @@
     "CustomFilter": "Bộ lọc tùy chỉnh",
     "IndexerHDBitsSettingsMediums": "Trung bình",
     "ProxyValidationBadRequest": "Không thể kiểm tra proxy. Mã trạng thái: {statusCode}",
-    "GrabRelease": "Lấy bản phát hành"
+    "GrabRelease": "Lấy bản phát hành",
+    "BuiltIn": "Được xây dựng trong",
+    "Script": "Kịch bản"
 }

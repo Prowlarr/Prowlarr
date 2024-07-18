@@ -477,5 +477,8 @@
     "Default": "Per defecte",
     "GrabRelease": "Captura novetat",
     "ManualGrab": "Captura manual",
-    "PrioritySettings": "Prioritat: {priority}"
+    "PrioritySettings": "Prioritat: {priority}",
+    "Any": "Qualsevol",
+    "BuiltIn": "Integrat",
+    "Script": "Script"
 }

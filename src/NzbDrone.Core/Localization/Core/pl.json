@@ -393,5 +393,7 @@
     "IndexerHDBitsSettingsCodecs": "Kodek",
     "ProxyValidationBadRequest": "Nie udało się przetestować serwera proxy. StatusCode: {statusCode}",
     "CustomFilter": "Filtry niestandardowe",
-    "GrabRelease": "Pobierz Wydanie"
+    "GrabRelease": "Pobierz Wydanie",
+    "Script": "Scenariusz",
+    "BuiltIn": "Wbudowany"
 }

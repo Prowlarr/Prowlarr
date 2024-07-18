@@ -415,5 +415,11 @@
     "CustomFilter": "Vlastní filtry",
     "ProxyValidationBadRequest": "Nepodařilo se otestovat proxy. StatusCode: {statusCode}",
     "Default": "Výchozí",
-    "GrabRelease": "Uchopte uvolnění"
+    "GrabRelease": "Uchopte uvolnění",
+    "Category": "Kategorie",
+    "BlackholeFolderHelpText": "Složka do které {appName} uloží {extension} soubor",
+    "DownloadClientSettingsUrlBaseHelpText": "Přidá předponu do {connectionName} url, jako např. {url}",
+    "Any": "Jakákoliv",
+    "BuiltIn": "Vestavěný",
+    "Script": "Skript"
 }

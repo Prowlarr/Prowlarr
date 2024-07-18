@@ -444,5 +444,7 @@
     "Directory": "Plats",
     "ProxyValidationBadRequest": "Test av proxy misslyckades. Statuskod: {statusCode}",
     "CustomFilter": "Anpassade Filter",
-    "GrabRelease": "Hämta Utågva"
+    "GrabRelease": "Hämta Utågva",
+    "BuiltIn": "Inbyggd",
+    "Script": "Skript"
 }

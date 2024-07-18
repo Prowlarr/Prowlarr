@@ -575,5 +575,8 @@
     "ManualGrab": "Megfog",
     "PrioritySettings": "Prioritás: {priority}",
     "ProxyValidationBadRequest": "Proxy tesztelése sikertelen. Állapotkód: {statusCode}",
-    "Default": "Alapértelmezett"
+    "Default": "Alapértelmezett",
+    "BuiltIn": "Beépített",
+    "Script": "Szkript",
+    "Any": "Bármi"
 }

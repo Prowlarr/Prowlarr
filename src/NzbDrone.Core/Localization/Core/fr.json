@@ -760,5 +760,8 @@
     "Default": "Par défaut",
     "GrabRelease": "Saisir Release",
     "ManualGrab": "Saisie manuelle",
-    "Open": "Ouvrir"
+    "Open": "Ouvrir",
+    "Any": "Tous",
+    "BuiltIn": "Intégré",
+    "Script": "Script"
 }

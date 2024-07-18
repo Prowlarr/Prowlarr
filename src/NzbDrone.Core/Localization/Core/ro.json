@@ -471,5 +471,7 @@
     "CustomFilter": "Filtru personalizat",
     "SelectDownloadClientModalTitle": "{modalTitle} - Selectați clientul de descărcare",
     "ProxyValidationBadRequest": "Testul proxy a eșuat. StatusCode: {statusCode}",
-    "GrabRelease": "Grab Release"
+    "GrabRelease": "Grab Release",
+    "BuiltIn": "Incorporat",
+    "Script": "Script"
 }

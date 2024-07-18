@@ -357,5 +357,7 @@
     "IndexerHDBitsSettingsMediums": "Miðlungs",
     "CustomFilter": "Sérsniðin síur",
     "ProxyValidationBadRequest": "Mistókst að prófa umboðsmann. Stöðukóði: {statusCode}",
-    "GrabRelease": "Grípa losun"
+    "GrabRelease": "Grípa losun",
+    "BuiltIn": "Innbyggð",
+    "Script": "Handrit"
 }

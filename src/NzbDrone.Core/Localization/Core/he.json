@@ -411,5 +411,7 @@
     "IndexerHDBitsSettingsMediums": "בינוני",
     "ProxyValidationBadRequest": "נכשל בדיקת ה- proxy. קוד קוד: {statusCode}",
     "CustomFilter": "מסננים מותאמים אישית",
-    "GrabRelease": "שחרור תפוס"
+    "GrabRelease": "שחרור תפוס",
+    "BuiltIn": "נִבנָה בְּ",
+    "Script": "תַסרִיט"
 }

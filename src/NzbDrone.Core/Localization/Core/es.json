@@ -760,5 +760,8 @@
     "OverrideGrabModalTitle": "Sobrescribir y capturar - {title}",
     "PrioritySettings": "Prioridad: {priority}",
     "SelectDownloadClientModalTitle": "{modalTitle} - Seleccionar cliente de descarga",
-    "Default": "Predeterminado"
+    "Default": "Predeterminado",
+    "BuiltIn": "Integrado",
+    "Script": "Script",
+    "Any": "Cualquiera"
 }

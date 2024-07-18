@@ -518,9 +518,9 @@
     "AddIndexerProxyImplementation": "Aggiungi indicizzatore - {implementationName}",
     "EditApplicationImplementation": "Aggiungi Condizione - {implementationName}",
     "CountApplicationsSelected": "{count} Collezione(i) Selezionate",
-    "EditConnectionImplementation": "Aggiungi Connessione - {implementationName}",
-    "EditDownloadClientImplementation": "Aggiungi un Client di Download - {implementationName}",
-    "EditIndexerImplementation": "Aggiungi indicizzatore - {implementationName}",
+    "EditConnectionImplementation": "Modifica Connessione - {implementationName}",
+    "EditDownloadClientImplementation": "Modifica Client di Download - {implementationName}",
+    "EditIndexerImplementation": "Modifica Indicizzatore - {implementationName}",
     "EditIndexerProxyImplementation": "Aggiungi indicizzatore - {implementationName}",
     "AdvancedSettingsShownClickToHide": "Impostazioni avanzate mostrate, clicca per nasconderle",
     "AdvancedSettingsHiddenClickToShow": "Impostazioni avanzate nascoste, clicca per mostrarle",
@@ -639,5 +639,8 @@
     "IndexerPassThePopcornSettingsApiKeyHelpText": "API Key Sito",
     "IndexerNzbIndexSettingsApiKeyHelpText": "API Key Sito",
     "IndexerNewznabSettingsApiKeyHelpText": "API Key Sito",
-    "Fixed": "Fissato"
+    "Fixed": "Fissato",
+    "Any": "Qualunque",
+    "BuiltIn": "Incluso",
+    "Script": "Script"
 }

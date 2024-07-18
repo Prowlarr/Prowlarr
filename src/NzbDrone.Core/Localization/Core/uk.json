@@ -422,5 +422,8 @@
     "Default": "За замовчуванням",
     "GrabRelease": "Захопити реліз",
     "Clone": "Клонування",
-    "CountDownloadClientsSelected": "Вибрано {count} клієнтів завантажувача"
+    "CountDownloadClientsSelected": "Вибрано {count} клієнтів завантажувача",
+    "Script": "Сценарій",
+    "Any": "Будь-який",
+    "BuiltIn": "Вбудований"
 }

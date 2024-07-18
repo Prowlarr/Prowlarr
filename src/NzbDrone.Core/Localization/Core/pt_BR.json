@@ -760,5 +760,8 @@
     "OverrideGrabModalTitle": "Substituir e Baixar - {title}",
     "PrioritySettings": "Prioridade: {priority}",
     "GrabRelease": "Baixar Lançamento",
-    "SelectDownloadClientModalTitle": "{modalTitle} - Selecionar Cliente de Download"
+    "SelectDownloadClientModalTitle": "{modalTitle} - Selecionar Cliente de Download",
+    "Any": "Quaisquer",
+    "Script": "Script",
+    "BuiltIn": "Embutido"
 }

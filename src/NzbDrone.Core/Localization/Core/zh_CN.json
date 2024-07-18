@@ -688,5 +688,8 @@
     "TorrentBlackholeSaveMagnetFiles": "保存磁力链接文件",
     "TorrentBlackholeTorrentFolder": "种子文件夹",
     "UseSsl": "使用 SSL",
-    "Default": "默认"
+    "Default": "默认",
+    "Any": "任何",
+    "BuiltIn": "内置的",
+    "Script": "脚本"
 }

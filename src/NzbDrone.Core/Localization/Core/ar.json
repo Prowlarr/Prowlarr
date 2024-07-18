@@ -357,5 +357,7 @@
     "CustomFilter": "مرشحات مخصصة",
     "IndexerHDBitsSettingsMediums": "متوسط",
     "GrabRelease": "انتزاع الإصدار",
-    "ProxyValidationBadRequest": "فشل اختبار الوكيل. رمز الحالة: {statusCode}"
+    "ProxyValidationBadRequest": "فشل اختبار الوكيل. رمز الحالة: {statusCode}",
+    "Script": "النصي",
+    "BuiltIn": "مدمج"
 }

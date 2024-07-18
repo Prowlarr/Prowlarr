@@ -690,5 +690,8 @@
     "ProxyValidationBadRequest": "Välityspalvelintesti epäonnistui. Tilakoodi: {statusCode}.",
     "ProxyValidationUnableToConnect": "Tietolähdettä ei tavoiteta: {exceptionMessage}. Etsi tietoja tämän virheen lähellä olevista lokimerkinnöistä.",
     "ManualGrab": "Manuaalinen kaappaus",
-    "OverrideAndAddToDownloadClient": "Ohita ja lisää latausjonoon"
+    "OverrideAndAddToDownloadClient": "Ohita ja lisää latausjonoon",
+    "BuiltIn": "Sisäänrakennettu",
+    "Any": "Mikä vain",
+    "Script": "Skripti"
 }

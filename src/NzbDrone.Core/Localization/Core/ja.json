@@ -357,5 +357,7 @@
     "IndexerHDBitsSettingsMediums": "中",
     "CustomFilter": "カスタムフィルター",
     "ProxyValidationBadRequest": "プロキシのテストに失敗しました。 StatusCode：{statusCode}",
-    "GrabRelease": "グラブリリース"
+    "GrabRelease": "グラブリリース",
+    "Script": "脚本",
+    "BuiltIn": "ビルトイン"
 }

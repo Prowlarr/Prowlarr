@@ -525,5 +525,8 @@
     "ManualGrab": "Manuel Yakalama",
     "OverrideAndAddToDownloadClient": "Geçersiz kıl ve indirme kuyruğuna ekle",
     "OverrideGrabModalTitle": "Geçersiz Kıl ve Yakala - {title}",
-    "PrioritySettings": "Öncelik: {priority}"
+    "PrioritySettings": "Öncelik: {priority}",
+    "IndexerDownloadClientHealthCheckMessage": "Geçersiz indirme istemcilerine sahip dizinleyiciler: {indexerNames}.",
+    "BuiltIn": "Dahili",
+    "Script": "Hazır Metin"
 }

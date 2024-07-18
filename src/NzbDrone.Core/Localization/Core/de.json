@@ -605,5 +605,9 @@
     "TorrentBlackholeSaveMagnetFiles": "Speicher Magnetdateien",
     "TorrentBlackholeSaveMagnetFilesExtension": "Speicher die Magnet-Dateienerweiterung",
     "Default": "Standard",
-    "GrabRelease": "Release erfassen"
+    "GrabRelease": "Release erfassen",
+    "Script": "Skript",
+    "IndexerDownloadClientHealthCheckMessage": "Indexer mit ungültigen Downloader: {indexerNames}.",
+    "Any": "Beliebig",
+    "BuiltIn": "Eingebaut"
 }

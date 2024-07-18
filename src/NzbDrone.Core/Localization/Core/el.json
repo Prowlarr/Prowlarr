@@ -524,5 +524,7 @@
     "UseSsl": "Χρησιμοποιήστε SSL",
     "CustomFilter": "Custom Φιλτρα",
     "GrabRelease": "Πιάσε την απελευθέρωση",
-    "ProxyValidationBadRequest": "Αποτυχία δοκιμής διακομιστή μεσολάβησης. StatusCode: {statusCode}"
+    "ProxyValidationBadRequest": "Αποτυχία δοκιμής διακομιστή μεσολάβησης. StatusCode: {statusCode}",
+    "Script": "Γραφή",
+    "BuiltIn": "Ενσωματωμένο"
 }

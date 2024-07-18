@@ -133,5 +133,6 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "如何套用標籤在所選擇的輸入清單",
     "Docker": "Docker",
     "IndexerHDBitsSettingsCodecs": "編解碼器",
-    "Directory": "目錄"
+    "Directory": "目錄",
+    "BuiltIn": "內建的"
 }

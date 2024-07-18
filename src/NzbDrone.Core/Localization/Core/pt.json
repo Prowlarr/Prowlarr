@@ -486,5 +486,8 @@
     "GrabRelease": "Capturar versão",
     "DownloadClientSettingsUrlBaseHelpText": "Adiciona um prefixo ao URL {connectionName}, como {url}",
     "ProxyValidationBadRequest": "Falha ao testar o proxy. Código de estado: {statusCode}",
-    "Default": "Predefinição"
+    "Default": "Predefinição",
+    "Any": "Quaisquer",
+    "Script": "Script",
+    "BuiltIn": "Incorporado"
 }

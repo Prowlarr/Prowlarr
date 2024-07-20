@@ -5412,6 +5412,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "averageGrabResponseTime": {
+            "type": "integer",
+            "format": "int32"
+          },
           "numberOfQueries": {
             "type": "integer",
             "format": "int32"

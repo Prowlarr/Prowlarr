@@ -41,12 +41,10 @@ namespace NzbDrone.Core.Download
 
             var filename = StringUtil.CleanFileName(release.Title) + ".nzb";
 
-            byte[] nzbData;
-
-            nzbData = await indexer.Download(url);
+            var downloadResponse = await indexer.Download(url);
 
             _logger.Info("Adding report [{0}] to the queue.", release.Title);
-            return AddFromNzbFile(release, filename, nzbData);
+            return AddFromNzbFile(release, filename, downloadResponse.Data);
         }
     }
 }

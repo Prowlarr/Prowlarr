@@ -82,9 +82,10 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
 
     protected virtual bool CheckForLoginError(HttpResponse response) => true;
 
-    public override async Task<byte[]> Download(Uri link)
+    public override async Task<IndexerDownloadResponse> Download(Uri link)
     {
-        var response = await base.Download(link);
+        var downloadResponse = await base.Download(link);
+        var response = downloadResponse.Data;
 
         if (response.Length >= 1
             && response[0] != 'd' // simple test for torrent vs HTML content
@@ -99,11 +100,11 @@ public abstract class GazelleBase<TSettings> : TorrentIndexerBase<TSettings>
                 // download again without usetoken=1
                 var requestLinkNew = link.ToString().Replace("&usetoken=1", "");
 
-                response = await base.Download(new Uri(requestLinkNew));
+                downloadResponse = await base.Download(new Uri(requestLinkNew));
             }
         }
 
-        return response;
+        return downloadResponse;
     }
 
     protected override IDictionary<string, string> GetCookies()

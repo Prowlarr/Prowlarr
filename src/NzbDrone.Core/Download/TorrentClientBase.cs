@@ -127,9 +127,8 @@ namespace NzbDrone.Core.Download
 
         private async Task<string> DownloadFromWebUrl(TorrentInfo release, IIndexer indexer, string torrentUrl)
         {
-            byte[] torrentFile = null;
-
-            torrentFile = await indexer.Download(new Uri(torrentUrl));
+            var downloadResponse = await indexer.Download(new Uri(torrentUrl));
+            var torrentFile = downloadResponse.Data;
 
             // handle magnet URLs
             if (torrentFile.Length >= 7

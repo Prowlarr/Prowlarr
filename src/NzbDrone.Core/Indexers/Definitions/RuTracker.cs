@@ -51,7 +51,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new RuTrackerParser(Settings, Capabilities.Categories);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
             if (Settings.UseMagnetLinks && link.PathAndQuery.Contains("viewtopic.php?t="))
             {

@@ -89,18 +89,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             return caps;
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
             var request = new HttpRequestBuilder(link.AbsoluteUri)
                 .SetHeader("Authorization", $"token {Settings.Apikey}")
                 .Build();
 
-            var downloadBytes = Array.Empty<byte>();
+            byte[] downloadBytes;
+            long elapsedTime;
 
             try
             {
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                 downloadBytes = response.ResponseData;
+                elapsedTime = response.ElapsedTime;
 
                 if (downloadBytes.Length >= 1
                     && downloadBytes[0] != 'd' // simple test for torrent vs HTML content
@@ -124,11 +126,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Error("Download failed");
+                throw;
             }
 
             ValidateDownloadData(downloadBytes);
 
-            return downloadBytes;
+            return new IndexerDownloadResponse(downloadBytes, elapsedTime);
         }
     }
 

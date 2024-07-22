@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new MyAnonamouseParser(Settings, Capabilities.Categories, _httpClient, _cacheManager, _logger);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
             if (Settings.Freeleech)
             {

@@ -39,9 +39,9 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
 
             _logger.Debug("Downloading NZB from: {0} to: {1}", url, nzbFile);
 
-            var nzbData = await indexer.Download(url);
+            var downloadResponse = await indexer.Download(url);
 
-            File.WriteAllBytes(nzbFile, nzbData);
+            await File.WriteAllBytesAsync(nzbFile, downloadResponse.Data);
 
             _logger.Debug("NZB Download succeeded, saved to: {0}", nzbFile);
 

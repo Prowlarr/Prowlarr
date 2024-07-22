@@ -59,7 +59,7 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
         return new MTeamTpParser(Settings, Capabilities.Categories, BuildApiUrl(Settings));
     }
 
-    public override async Task<byte[]> Download(Uri link)
+    public override async Task<IndexerDownloadResponse> Download(Uri link)
     {
         var request = new HttpRequestBuilder(link.ToString())
             .SetHeader("x-api-key", Settings.ApiKey)

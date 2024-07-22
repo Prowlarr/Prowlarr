@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Http;
@@ -74,9 +73,6 @@ namespace NzbDrone.Core.Download
                 GrabTrigger = source == "Prowlarr" ? GrabTrigger.Manual : GrabTrigger.Api
             };
 
-            var sw = new Stopwatch();
-            sw.Start();
-
             string downloadClientId;
             try
             {
@@ -115,11 +111,6 @@ namespace NzbDrone.Core.Download
 
                 throw;
             }
-            finally
-            {
-                sw.Stop();
-                grabEvent.ElapsedTime = sw.ElapsedMilliseconds;
-            }
 
             _logger.ProgressInfo("Report sent to {0}. {1}", downloadClient.Definition.Name, downloadTitle);
 
@@ -153,16 +144,15 @@ namespace NzbDrone.Core.Download
                 GrabTrigger = source == "Prowlarr" ? GrabTrigger.Manual : GrabTrigger.Api
             };
 
-            var sw = new Stopwatch();
-            sw.Start();
-
             byte[] downloadedBytes;
 
             try
             {
-                downloadedBytes = await indexer.Download(url);
+                var downloadResponse = await indexer.Download(url);
+                downloadedBytes = downloadResponse.Data;
                 _indexerStatusService.RecordSuccess(indexerId);
                 grabEvent.Successful = true;
+                grabEvent.ElapsedTime = downloadResponse.ElapsedTime;
             }
             catch (ReleaseUnavailableException)
             {
@@ -183,11 +173,6 @@ namespace NzbDrone.Core.Download
 
                 _eventAggregator.PublishEvent(grabEvent);
                 throw;
-            }
-            finally
-            {
-                sw.Stop();
-                grabEvent.ElapsedTime = sw.ElapsedMilliseconds;
             }
 
             _logger.Trace("Downloaded {0} bytes from {1}", downloadedBytes.Length, link);

@@ -205,7 +205,11 @@ namespace NzbDrone.Core.History
             history.Data.Add("GrabMethod", message.Redirect ? "Redirect" : "Proxy");
             history.Data.Add("GrabTitle", message.Title);
             history.Data.Add("Url", message.Url ?? string.Empty);
-            history.Data.Add("ElapsedTime", message.ElapsedTime.ToString());
+
+            if (message.ElapsedTime > 0)
+            {
+                history.Data.Add("ElapsedTime", message.ElapsedTime.ToString());
+            }
 
             if (message.Release.InfoUrl.IsNotNullOrWhiteSpace())
             {

@@ -224,7 +224,7 @@ namespace NzbDrone.Core.Indexers
             return FetchReleases(g => SetCookieFunctions(g).GetSearchRequests(searchCriteria), searchCriteria);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
             Cookies = GetCookies();
 
@@ -233,7 +233,7 @@ namespace NzbDrone.Core.Indexers
             if (request.Url.Scheme == "magnet")
             {
                 ValidateMagnet(request.Url.FullUri);
-                return Encoding.UTF8.GetBytes(request.Url.FullUri);
+                return new IndexerDownloadResponse(Encoding.UTF8.GetBytes(request.Url.FullUri));
             }
 
             if (request.RateLimit < RateLimit)
@@ -244,6 +244,7 @@ namespace NzbDrone.Core.Indexers
             request.AllowAutoRedirect = false;
 
             byte[] fileData;
+            long elapsedTime;
 
             try
             {
@@ -283,6 +284,7 @@ namespace NzbDrone.Core.Indexers
                 }
 
                 fileData = response.ResponseData;
+                elapsedTime = response.ElapsedTime;
 
                 _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);
             }
@@ -320,7 +322,7 @@ namespace NzbDrone.Core.Indexers
 
             ValidateDownloadData(fileData);
 
-            return fileData;
+            return new IndexerDownloadResponse(fileData, elapsedTime);
         }
 
         protected virtual Task<HttpRequest> GetDownloadRequest(Uri link)

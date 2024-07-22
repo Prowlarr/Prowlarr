@@ -82,7 +82,7 @@ public class Uniotaku : TorrentIndexerBase<UniotakuSettings>
         return !httpResponse.GetCookies().ContainsKey("uid") || !httpResponse.GetCookies().ContainsKey("pass");
     }
 
-    public override async Task<byte[]> Download(Uri link)
+    public override async Task<IndexerDownloadResponse> Download(Uri link)
     {
         var request = new HttpRequestBuilder(link.ToString())
             .SetCookies(GetCookies() ?? new Dictionary<string, string>())

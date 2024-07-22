@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new BakaBTParser(Settings, Capabilities.Categories);
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
             var request = new HttpRequestBuilder(link.ToString())
                 .SetCookies(GetCookies() ?? new Dictionary<string, string>())

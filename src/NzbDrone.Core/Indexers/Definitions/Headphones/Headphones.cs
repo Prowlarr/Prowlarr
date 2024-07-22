@@ -50,28 +50,33 @@ namespace NzbDrone.Core.Indexers.Headphones
             }
         }
 
-        public override async Task<byte[]> Download(Uri link)
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
             var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
-
-            var downloadBytes = Array.Empty<byte>();
 
             var request = requestBuilder.Build();
 
             request.Credentials = new BasicNetworkCredential(Settings.Username, Settings.Password);
 
+            byte[] downloadBytes;
+            long elapsedTime;
+
             try
             {
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                 downloadBytes = response.ResponseData;
+                elapsedTime = response.ElapsedTime;
             }
             catch (Exception)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Error("Download failed");
+                throw;
             }
 
-            return downloadBytes;
+            ValidateDownloadData(downloadBytes);
+
+            return new IndexerDownloadResponse(downloadBytes, elapsedTime);
         }
 
         private IndexerCapabilities SetCapabilities()

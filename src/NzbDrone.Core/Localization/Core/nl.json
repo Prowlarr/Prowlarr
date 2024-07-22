@@ -495,5 +495,7 @@
     "CustomFilter": "Aangepaste Filters",
     "Any": "Elke",
     "BuiltIn": "Ingebouwd",
-    "Script": "Script"
+    "Script": "Script",
+    "PublishedDate": "Publicatie Datum",
+    "Redirected": "Omleiden"
 }

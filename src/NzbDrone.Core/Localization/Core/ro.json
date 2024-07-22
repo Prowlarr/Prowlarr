@@ -473,5 +473,7 @@
     "ProxyValidationBadRequest": "Testul proxy a eșuat. StatusCode: {statusCode}",
     "GrabRelease": "Grab Release",
     "BuiltIn": "Incorporat",
-    "Script": "Script"
+    "Script": "Script",
+    "InfoUrl": "URL informații",
+    "PublishedDate": "Data publicării"
 }

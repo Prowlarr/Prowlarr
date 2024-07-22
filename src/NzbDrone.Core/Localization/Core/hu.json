@@ -578,5 +578,7 @@
     "Default": "Alapértelmezett",
     "BuiltIn": "Beépített",
     "Script": "Szkript",
-    "Any": "Bármi"
+    "Any": "Bármi",
+    "PublishedDate": "Közzététel dátuma",
+    "Redirected": "Átirányítás"
 }

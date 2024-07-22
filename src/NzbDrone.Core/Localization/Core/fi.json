@@ -693,5 +693,8 @@
     "OverrideAndAddToDownloadClient": "Ohita ja lisää latausjonoon",
     "BuiltIn": "Sisäänrakennettu",
     "Any": "Mikä vain",
-    "Script": "Skripti"
+    "Script": "Skripti",
+    "InfoUrl": "Tietojen URL",
+    "PublishedDate": "Julkaisupäivä",
+    "Redirected": "Uudelleenohjaus"
 }

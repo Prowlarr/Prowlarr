@@ -526,5 +526,7 @@
     "GrabRelease": "Πιάσε την απελευθέρωση",
     "ProxyValidationBadRequest": "Αποτυχία δοκιμής διακομιστή μεσολάβησης. StatusCode: {statusCode}",
     "Script": "Γραφή",
-    "BuiltIn": "Ενσωματωμένο"
+    "BuiltIn": "Ενσωματωμένο",
+    "PublishedDate": "Ημερομηνία δημοσίευσης",
+    "Redirected": "Διευθύνω πάλιν"
 }

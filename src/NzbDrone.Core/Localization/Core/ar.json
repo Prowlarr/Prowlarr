@@ -359,5 +359,6 @@
     "GrabRelease": "انتزاع الإصدار",
     "ProxyValidationBadRequest": "فشل اختبار الوكيل. رمز الحالة: {statusCode}",
     "Script": "النصي",
-    "BuiltIn": "مدمج"
+    "BuiltIn": "مدمج",
+    "PublishedDate": "تاريخ النشر"
 }

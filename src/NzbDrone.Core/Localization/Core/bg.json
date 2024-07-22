@@ -359,5 +359,6 @@
     "GrabRelease": "Grab Release",
     "ProxyValidationBadRequest": "Неуспешно тестване на прокси. Код на състоянието: {statusCode}",
     "BuiltIn": "Вграден",
-    "Script": "Сценарий"
+    "Script": "Сценарий",
+    "PublishedDate": "Дата на публикуване"
 }

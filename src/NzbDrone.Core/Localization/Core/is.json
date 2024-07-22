@@ -359,5 +359,6 @@
     "ProxyValidationBadRequest": "Mistókst að prófa umboðsmann. Stöðukóði: {statusCode}",
     "GrabRelease": "Grípa losun",
     "BuiltIn": "Innbyggð",
-    "Script": "Handrit"
+    "Script": "Handrit",
+    "PublishedDate": "Útgáfudagur"
 }

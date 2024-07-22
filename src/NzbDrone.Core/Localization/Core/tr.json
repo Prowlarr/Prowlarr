@@ -528,5 +528,8 @@
     "PrioritySettings": "Öncelik: {priority}",
     "IndexerDownloadClientHealthCheckMessage": "Geçersiz indirme istemcilerine sahip dizinleyiciler: {indexerNames}.",
     "BuiltIn": "Dahili",
-    "Script": "Hazır Metin"
+    "Script": "Hazır Metin",
+    "InfoUrl": "Bilgi URL'si",
+    "PublishedDate": "Yayınlanma Tarihi",
+    "Any": "Herhangi"
 }

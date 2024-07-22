@@ -480,5 +480,8 @@
     "PrioritySettings": "Prioritat: {priority}",
     "Any": "Qualsevol",
     "BuiltIn": "Integrat",
-    "Script": "Script"
+    "Script": "Script",
+    "InfoUrl": "URL d'informació",
+    "PublishedDate": "Data de publicació",
+    "Redirected": "Redirecció"
 }

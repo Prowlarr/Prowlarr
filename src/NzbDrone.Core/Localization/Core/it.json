@@ -642,5 +642,8 @@
     "Fixed": "Fissato",
     "Any": "Qualunque",
     "BuiltIn": "Incluso",
-    "Script": "Script"
+    "Script": "Script",
+    "InfoUrl": "URL Info",
+    "PublishedDate": "Data Pubblicazione",
+    "Redirected": "Reindirizzamento"
 }

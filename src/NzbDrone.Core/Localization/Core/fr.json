@@ -763,5 +763,8 @@
     "Open": "Ouvrir",
     "Any": "Tous",
     "BuiltIn": "Intégré",
-    "Script": "Script"
+    "Script": "Script",
+    "InfoUrl": "URL d'informations",
+    "Redirected": "Rediriger",
+    "PublishedDate": "Date de publication"
 }

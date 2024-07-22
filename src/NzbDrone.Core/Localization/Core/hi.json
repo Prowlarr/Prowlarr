@@ -356,5 +356,8 @@
     "IndexerHDBitsSettingsMediums": "मध्यम",
     "CustomFilter": "कस्टम फ़िल्टर",
     "ProxyValidationBadRequest": "प्रॉक्सी का परीक्षण करने में विफल। स्थिति कोड: {statusCode}",
-    "GrabRelease": "पकड़ो रिलीज"
+    "GrabRelease": "पकड़ो रिलीज",
+    "BuiltIn": "में निर्मित",
+    "Script": "लिपि",
+    "PublishedDate": "प्रकाशित तिथि"
 }

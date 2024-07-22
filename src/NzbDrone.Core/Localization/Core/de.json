@@ -609,5 +609,7 @@
     "Script": "Skript",
     "IndexerDownloadClientHealthCheckMessage": "Indexer mit ungültigen Downloader: {indexerNames}.",
     "Any": "Beliebig",
-    "BuiltIn": "Eingebaut"
+    "BuiltIn": "Eingebaut",
+    "PublishedDate": "Veröffentlichungsdatum",
+    "Redirected": "Umleiten"
 }

@@ -763,5 +763,10 @@
     "SelectDownloadClientModalTitle": "{modalTitle} - Selecionar Cliente de Download",
     "Any": "Quaisquer",
     "Script": "Script",
-    "BuiltIn": "Embutido"
+    "BuiltIn": "Embutido",
+    "InfoUrl": "URL da info",
+    "PublishedDate": "Data de Publicação",
+    "Redirected": "Redirecionar",
+    "AverageQueries": "Média de Consultas",
+    "AverageGrabs": "Média de Capturas"
 }

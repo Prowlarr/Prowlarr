@@ -359,5 +359,6 @@
     "ProxyValidationBadRequest": "プロキシのテストに失敗しました。 StatusCode：{statusCode}",
     "GrabRelease": "グラブリリース",
     "Script": "脚本",
-    "BuiltIn": "ビルトイン"
+    "BuiltIn": "ビルトイン",
+    "PublishedDate": "公開日"
 }

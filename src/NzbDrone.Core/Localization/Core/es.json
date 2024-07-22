@@ -763,5 +763,10 @@
     "Default": "Predeterminado",
     "BuiltIn": "Integrado",
     "Script": "Script",
-    "Any": "Cualquiera"
+    "Any": "Cualquiera",
+    "Redirected": "Redirección",
+    "InfoUrl": "Información de la URL",
+    "PublishedDate": "Fecha de publicación",
+    "AverageQueries": "Promedio de peticiones",
+    "AverageGrabs": "Promedio de capturas"
 }

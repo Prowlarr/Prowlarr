@@ -358,5 +358,6 @@
     "CustomFilter": "사용자 지정 필터",
     "GrabRelease": "그랩 릴리스",
     "ProxyValidationBadRequest": "프록시를 테스트하지 못했습니다. StatusCode : {statusCode}",
-    "BuiltIn": "내장"
+    "BuiltIn": "내장",
+    "PublishedDate": "발행일"
 }

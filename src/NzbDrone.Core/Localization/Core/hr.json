@@ -178,5 +178,7 @@
     "Id": "ID",
     "CountApplicationsSelected": "{count} Kolekcija odabrano",
     "IndexerHDBitsSettingsCodecs": "Kodek",
-    "Directory": "Direktorij"
+    "Directory": "Direktorij",
+    "BuiltIn": "Ugrađeno",
+    "Redirected": "Preusmjeri"
 }

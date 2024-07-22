@@ -446,5 +446,7 @@
     "CustomFilter": "Anpassade Filter",
     "GrabRelease": "Hämta Utågva",
     "BuiltIn": "Inbyggd",
-    "Script": "Skript"
+    "Script": "Skript",
+    "PublishedDate": "Publiceringsdatum",
+    "Redirected": "Omdirigera"
 }

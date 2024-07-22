@@ -395,5 +395,6 @@
     "CustomFilter": "Filtry niestandardowe",
     "GrabRelease": "Pobierz Wydanie",
     "Script": "Scenariusz",
-    "BuiltIn": "Wbudowany"
+    "BuiltIn": "Wbudowany",
+    "PublishedDate": "Data publikacji"
 }

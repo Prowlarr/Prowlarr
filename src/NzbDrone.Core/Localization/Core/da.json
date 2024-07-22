@@ -396,5 +396,6 @@
     "ProxyValidationBadRequest": "Kunne ikke teste proxy. Statuskode: {statusCode}",
     "GrabRelease": "Grab Release",
     "Script": "Manuskript",
-    "BuiltIn": "Indbygget"
+    "BuiltIn": "Indbygget",
+    "PublishedDate": "Udgivelsesdato"
 }

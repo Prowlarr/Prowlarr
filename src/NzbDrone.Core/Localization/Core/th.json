@@ -362,5 +362,6 @@
     "ProxyValidationBadRequest": "ไม่สามารถทดสอบพร็อกซี StatusCode: {statusCode}",
     "GrabRelease": "คว้ารีลีส",
     "Script": "สคริปต์",
-    "BuiltIn": "สร้างขึ้นใน"
+    "BuiltIn": "สร้างขึ้นใน",
+    "PublishedDate": "วันที่เผยแพร่"
 }

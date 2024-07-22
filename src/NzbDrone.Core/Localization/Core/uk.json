@@ -425,5 +425,6 @@
     "CountDownloadClientsSelected": "Вибрано {count} клієнтів завантажувача",
     "Script": "Сценарій",
     "Any": "Будь-який",
-    "BuiltIn": "Вбудований"
+    "BuiltIn": "Вбудований",
+    "PublishedDate": "Дата публікації"
 }

@@ -421,5 +421,6 @@
     "DownloadClientSettingsUrlBaseHelpText": "Přidá předponu do {connectionName} url, jako např. {url}",
     "Any": "Jakákoliv",
     "BuiltIn": "Vestavěný",
-    "Script": "Skript"
+    "Script": "Skript",
+    "PublishedDate": "Datum zveřejnění"
 }

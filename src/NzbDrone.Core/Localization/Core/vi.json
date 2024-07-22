@@ -361,5 +361,6 @@
     "ProxyValidationBadRequest": "Không thể kiểm tra proxy. Mã trạng thái: {statusCode}",
     "GrabRelease": "Lấy bản phát hành",
     "BuiltIn": "Được xây dựng trong",
-    "Script": "Kịch bản"
+    "Script": "Kịch bản",
+    "PublishedDate": "Ngày xuất bản"
 }

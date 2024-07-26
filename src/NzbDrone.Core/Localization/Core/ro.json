@@ -475,5 +475,6 @@
     "BuiltIn": "Incorporat",
     "Script": "Script",
     "InfoUrl": "URL informații",
-    "PublishedDate": "Data publicării"
+    "PublishedDate": "Data publicării",
+    "AllSearchResultsHiddenByFilter": "Toate rezultatele sunt ascunse de filtrul aplicat"
 }

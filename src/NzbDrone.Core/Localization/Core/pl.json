@@ -396,5 +396,6 @@
     "GrabRelease": "Pobierz Wydanie",
     "Script": "Scenariusz",
     "BuiltIn": "Wbudowany",
-    "PublishedDate": "Data publikacji"
+    "PublishedDate": "Data publikacji",
+    "AllSearchResultsHiddenByFilter": "Wszystkie wyniki są ukrywane przez zastosowany filtr"
 }

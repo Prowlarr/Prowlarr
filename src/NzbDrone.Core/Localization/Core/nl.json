@@ -497,5 +497,6 @@
     "BuiltIn": "Ingebouwd",
     "Script": "Script",
     "PublishedDate": "Publicatie Datum",
-    "Redirected": "Omleiden"
+    "Redirected": "Omleiden",
+    "AllSearchResultsHiddenByFilter": "Alle resultaten zijn verborgen door het toegepaste filter"
 }

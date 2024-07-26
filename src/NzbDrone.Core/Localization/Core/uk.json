@@ -426,5 +426,6 @@
     "Script": "Сценарій",
     "Any": "Будь-який",
     "BuiltIn": "Вбудований",
-    "PublishedDate": "Дата публікації"
+    "PublishedDate": "Дата публікації",
+    "AllSearchResultsHiddenByFilter": "Всі результати приховані фільтром"
 }

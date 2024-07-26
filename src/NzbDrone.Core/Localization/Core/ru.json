@@ -530,5 +530,6 @@
     "ProxyValidationUnableToConnect": "Невозможно подключиться к индексатору: {exceptionMessage}. Подробности см. в журнале этой ошибки",
     "Script": "Скрипт",
     "InfoUrl": "URL-адрес информации",
-    "PublishedDate": "Дата публикации"
+    "PublishedDate": "Дата публикации",
+    "AllSearchResultsHiddenByFilter": "Все результаты скрыты фильтром"
 }

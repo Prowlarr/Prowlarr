@@ -397,5 +397,6 @@
     "GrabRelease": "Grab Release",
     "Script": "Manuskript",
     "BuiltIn": "Indbygget",
-    "PublishedDate": "Udgivelsesdato"
+    "PublishedDate": "Udgivelsesdato",
+    "AllSearchResultsHiddenByFilter": "Alle resultater skjules af det anvendte filter"
 }

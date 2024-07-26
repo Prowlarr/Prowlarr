@@ -155,5 +155,6 @@
     "UnableToAddANewApplicationPleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
     "EditIndexerProxyImplementation": "Legg til betingelse - {implementationName}",
     "UnableToAddANewAppProfilePleaseTryAgain": "Ikke mulig å legge til ny betingelse, vennligst prøv igjen",
-    "BuiltIn": "Bygget inn"
+    "BuiltIn": "Bygget inn",
+    "AllSearchResultsHiddenByFilter": "Alle resultatene er skjult av det anvendte filteret"
 }

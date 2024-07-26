@@ -483,5 +483,6 @@
     "Script": "Script",
     "InfoUrl": "URL d'informació",
     "PublishedDate": "Data de publicació",
-    "Redirected": "Redirecció"
+    "Redirected": "Redirecció",
+    "AllSearchResultsHiddenByFilter": "Tots els resultats estan ocults pel filtre aplicat"
 }

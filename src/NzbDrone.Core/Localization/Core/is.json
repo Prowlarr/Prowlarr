@@ -360,5 +360,6 @@
     "GrabRelease": "Grípa losun",
     "BuiltIn": "Innbyggð",
     "Script": "Handrit",
-    "PublishedDate": "Útgáfudagur"
+    "PublishedDate": "Útgáfudagur",
+    "AllSearchResultsHiddenByFilter": "Allar niðurstöður eru faldar af beittu síunni"
 }

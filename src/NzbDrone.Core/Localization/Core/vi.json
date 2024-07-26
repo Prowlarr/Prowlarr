@@ -362,5 +362,6 @@
     "GrabRelease": "Lấy bản phát hành",
     "BuiltIn": "Được xây dựng trong",
     "Script": "Kịch bản",
-    "PublishedDate": "Ngày xuất bản"
+    "PublishedDate": "Ngày xuất bản",
+    "AllSearchResultsHiddenByFilter": "Tất cả kết quả bị ẩn bởi bộ lọc được áp dụng"
 }

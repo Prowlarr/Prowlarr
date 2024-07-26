@@ -448,5 +448,6 @@
     "BuiltIn": "Inbyggd",
     "Script": "Skript",
     "PublishedDate": "Publiceringsdatum",
-    "Redirected": "Omdirigera"
+    "Redirected": "Omdirigera",
+    "AllSearchResultsHiddenByFilter": "Alla resultat döljs av det tillämpade filtret"
 }

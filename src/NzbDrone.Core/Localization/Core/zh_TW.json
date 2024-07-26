@@ -134,5 +134,6 @@
     "Docker": "Docker",
     "IndexerHDBitsSettingsCodecs": "編解碼器",
     "Directory": "目錄",
-    "BuiltIn": "內建的"
+    "BuiltIn": "內建的",
+    "AllSearchResultsHiddenByFilter": "根據所使用的篩選器已將所有結果隱藏"
 }

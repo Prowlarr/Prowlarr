@@ -359,5 +359,6 @@
     "GrabRelease": "पकड़ो रिलीज",
     "BuiltIn": "में निर्मित",
     "Script": "लिपि",
-    "PublishedDate": "प्रकाशित तिथि"
+    "PublishedDate": "प्रकाशित तिथि",
+    "AllSearchResultsHiddenByFilter": "सभी परिणाम लागू फ़िल्टर द्वारा छिपे हुए हैं"
 }

@@ -528,5 +528,6 @@
     "Script": "Γραφή",
     "BuiltIn": "Ενσωματωμένο",
     "PublishedDate": "Ημερομηνία δημοσίευσης",
-    "Redirected": "Διευθύνω πάλιν"
+    "Redirected": "Διευθύνω πάλιν",
+    "AllSearchResultsHiddenByFilter": "Όλα τα αποτελέσματα αποκρύπτονται από το εφαρμοσμένο φίλτρο"
 }

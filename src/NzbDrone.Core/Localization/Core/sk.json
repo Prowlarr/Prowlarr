@@ -144,5 +144,6 @@
     "EditIndexerProxyImplementation": "Pridať Indexer - {implementationName}",
     "EditApplicationImplementation": "Pridať podmienku - {implementationName}",
     "UnableToAddANewAppProfilePleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
-    "BuiltIn": "Vstavaný"
+    "BuiltIn": "Vstavaný",
+    "AllSearchResultsHiddenByFilter": "Použitý filter skryje všetky výsledky"
 }

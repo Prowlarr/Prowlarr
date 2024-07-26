@@ -360,5 +360,6 @@
     "ProxyValidationBadRequest": "فشل اختبار الوكيل. رمز الحالة: {statusCode}",
     "Script": "النصي",
     "BuiltIn": "مدمج",
-    "PublishedDate": "تاريخ النشر"
+    "PublishedDate": "تاريخ النشر",
+    "AllSearchResultsHiddenByFilter": "يتم إخفاء جميع النتائج بواسطة عامل التصفية المطبق"
 }

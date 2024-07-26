@@ -694,5 +694,6 @@
     "Script": "脚本",
     "InfoUrl": "信息 URL",
     "PublishedDate": "发布日期",
-    "Redirected": "重定向"
+    "Redirected": "重定向",
+    "AllSearchResultsHiddenByFilter": "根据过滤条件所有结果已隐藏"
 }

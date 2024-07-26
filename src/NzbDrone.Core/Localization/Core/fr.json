@@ -766,5 +766,6 @@
     "Script": "Script",
     "InfoUrl": "URL d'informations",
     "Redirected": "Rediriger",
-    "PublishedDate": "Date de publication"
+    "PublishedDate": "Date de publication",
+    "AllSearchResultsHiddenByFilter": "Tous les résultats sont masqués par le filtre appliqué"
 }

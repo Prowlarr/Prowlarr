@@ -84,5 +84,6 @@
     "Link": "Tautan",
     "Id": "ID",
     "IndexerHDBitsSettingsCodecs": "Codec",
-    "ProxyValidationBadRequest": "Gagal menguji proxy. Kode Status: {statusCode}"
+    "ProxyValidationBadRequest": "Gagal menguji proxy. Kode Status: {statusCode}",
+    "AllSearchResultsHiddenByFilter": "Seluruh hasil disembunyikan karena penyaringan yang diterapkan"
 }

@@ -360,5 +360,6 @@
     "GrabRelease": "グラブリリース",
     "Script": "脚本",
     "BuiltIn": "ビルトイン",
-    "PublishedDate": "公開日"
+    "PublishedDate": "公開日",
+    "AllSearchResultsHiddenByFilter": "すべての結果は、適用されたフィルターによって非表示になります"
 }

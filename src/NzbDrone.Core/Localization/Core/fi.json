@@ -696,5 +696,6 @@
     "Script": "Skripti",
     "InfoUrl": "Tietojen URL",
     "PublishedDate": "Julkaisupäivä",
-    "Redirected": "Uudelleenohjaus"
+    "Redirected": "Uudelleenohjaus",
+    "AllSearchResultsHiddenByFilter": "Aktiivinen suodatin piilottaa kaikki tulokset."
 }

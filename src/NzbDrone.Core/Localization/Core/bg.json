@@ -360,5 +360,6 @@
     "ProxyValidationBadRequest": "Неуспешно тестване на прокси. Код на състоянието: {statusCode}",
     "BuiltIn": "Вграден",
     "Script": "Сценарий",
-    "PublishedDate": "Дата на публикуване"
+    "PublishedDate": "Дата на публикуване",
+    "AllSearchResultsHiddenByFilter": "Всички резултати са скрити от приложения филтър"
 }

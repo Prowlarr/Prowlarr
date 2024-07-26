@@ -363,5 +363,6 @@
     "GrabRelease": "คว้ารีลีส",
     "Script": "สคริปต์",
     "BuiltIn": "สร้างขึ้นใน",
-    "PublishedDate": "วันที่เผยแพร่"
+    "PublishedDate": "วันที่เผยแพร่",
+    "AllSearchResultsHiddenByFilter": "ผลลัพธ์ทั้งหมดถูกซ่อนโดยตัวกรองที่ใช้"
 }

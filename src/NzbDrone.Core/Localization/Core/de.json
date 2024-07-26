@@ -611,5 +611,6 @@
     "Any": "Beliebig",
     "BuiltIn": "Eingebaut",
     "PublishedDate": "Veröffentlichungsdatum",
-    "Redirected": "Umleiten"
+    "Redirected": "Umleiten",
+    "AllSearchResultsHiddenByFilter": "Alle Ergebnisse werden durch den angewendeten Filter ausgeblendet"
 }

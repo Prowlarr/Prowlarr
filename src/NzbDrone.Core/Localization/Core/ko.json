@@ -359,5 +359,6 @@
     "GrabRelease": "그랩 릴리스",
     "ProxyValidationBadRequest": "프록시를 테스트하지 못했습니다. StatusCode : {statusCode}",
     "BuiltIn": "내장",
-    "PublishedDate": "발행일"
+    "PublishedDate": "발행일",
+    "AllSearchResultsHiddenByFilter": "적용된 필터에 의해 모든 결과가 숨겨집니다."
 }

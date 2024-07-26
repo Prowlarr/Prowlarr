@@ -414,5 +414,9 @@
     "GrabRelease": "שחרור תפוס",
     "BuiltIn": "נִבנָה בְּ",
     "Script": "תַסרִיט",
-    "PublishedDate": "תאריך פרסום"
+    "PublishedDate": "תאריך פרסום",
+    "AddCategory": "הוסף קטגוריה",
+    "ActiveApps": "אפליקציות פעילות",
+    "ActiveIndexers": "אינדקסרים פעילים",
+    "AllSearchResultsHiddenByFilter": "כל התוצאות מוסתרות על ידי המסנן שהוחל"
 }

@@ -180,5 +180,6 @@
     "IndexerHDBitsSettingsCodecs": "Kodek",
     "Directory": "Direktorij",
     "BuiltIn": "Ugrađeno",
-    "Redirected": "Preusmjeri"
+    "Redirected": "Preusmjeri",
+    "AllSearchResultsHiddenByFilter": "Svi rezultati su skriveni zbog primjenjenog filtera"
 }

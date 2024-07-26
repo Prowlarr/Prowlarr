@@ -580,5 +580,6 @@
     "Script": "Szkript",
     "Any": "Bármi",
     "PublishedDate": "Közzététel dátuma",
-    "Redirected": "Átirányítás"
+    "Redirected": "Átirányítás",
+    "AllSearchResultsHiddenByFilter": "Az alkalmazott szűrők miatt, az összes keresési eredmény rejtve marad"
 }

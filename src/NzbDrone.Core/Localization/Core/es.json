@@ -768,5 +768,6 @@
     "InfoUrl": "Información de la URL",
     "PublishedDate": "Fecha de publicación",
     "AverageQueries": "Promedio de peticiones",
-    "AverageGrabs": "Promedio de capturas"
+    "AverageGrabs": "Promedio de capturas",
+    "AllSearchResultsHiddenByFilter": "Todos los resultados estan ocultos por el filtro aplicado"
 }

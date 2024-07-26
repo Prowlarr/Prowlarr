@@ -768,5 +768,6 @@
     "PublishedDate": "Data de Publicação",
     "Redirected": "Redirecionar",
     "AverageQueries": "Média de Consultas",
-    "AverageGrabs": "Média de Capturas"
+    "AverageGrabs": "Média de Capturas",
+    "AllSearchResultsHiddenByFilter": "Todos os resultados estão ocultos pelo filtro aplicado"
 }

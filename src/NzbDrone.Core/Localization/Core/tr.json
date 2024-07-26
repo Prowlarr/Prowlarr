@@ -531,5 +531,6 @@
     "Script": "Hazır Metin",
     "InfoUrl": "Bilgi URL'si",
     "PublishedDate": "Yayınlanma Tarihi",
-    "Any": "Herhangi"
+    "Any": "Herhangi",
+    "AllSearchResultsHiddenByFilter": "Tüm sonuçlar, uygulanan filtre tarafından gizlenir"
 }

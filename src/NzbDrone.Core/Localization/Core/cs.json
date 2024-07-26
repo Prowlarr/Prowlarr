@@ -422,5 +422,6 @@
     "Any": "Jakákoliv",
     "BuiltIn": "Vestavěný",
     "Script": "Skript",
-    "PublishedDate": "Datum zveřejnění"
+    "PublishedDate": "Datum zveřejnění",
+    "AllSearchResultsHiddenByFilter": "Všechny výsledky jsou schovány použitým filtrem"
 }

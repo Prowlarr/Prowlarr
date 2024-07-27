@@ -31,6 +31,8 @@ interface IndexerAppState
     AppSectionDeleteState,
     AppSectionSaveState {
   itemMap: Record<number, number>;
+
+  isTestingAll: boolean;
 }
 
 export type IndexerStatusAppState = AppSectionState<IndexerStatus>;

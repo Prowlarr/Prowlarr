@@ -248,7 +248,7 @@
     "GeneralSettings": "一般設定",
     "Grabbed": "掴んだ",
     "Health": "健康",
-    "HealthNoIssues": "構成に問題はありません",
+    "NoIssuesWithYourConfiguration": "構成に問題はありません",
     "HideAdvanced": "高度な非表示",
     "EnableInteractiveSearchHelpText": "インタラクティブ検索を使用する場合に使用されます",
     "Error": "エラー",

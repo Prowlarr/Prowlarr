@@ -154,7 +154,7 @@
     "Grabbed": "Opgehaalde",
     "Grabs": "Gegrepen",
     "Health": "Gezondheid",
-    "HealthNoIssues": "Geen problemen gevonden met uw configuratie",
+    "NoIssuesWithYourConfiguration": "Geen problemen gevonden met uw configuratie",
     "HideAdvanced": "Verberg Gevorderd",
     "History": "Geschiedenis",
     "HistoryCleanupDaysHelpText": "Zet op 0 om automatisch opschonen uit te schakelen",

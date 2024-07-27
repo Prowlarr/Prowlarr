@@ -150,7 +150,7 @@
     "GeneralSettings": "Ustawienia główne",
     "GeneralSettingsSummary": "Port, SSL, nazwa użytkownika / hasło, proxy, analizy i aktualizacje",
     "Grabbed": "Złapał",
-    "HealthNoIssues": "Żadnych problemów z konfiguracją",
+    "NoIssuesWithYourConfiguration": "Żadnych problemów z konfiguracją",
     "HideAdvanced": "Ukryj zaawansowane",
     "History": "Historia",
     "Hostname": "Nazwa hosta",

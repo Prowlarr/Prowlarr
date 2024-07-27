@@ -24,7 +24,9 @@ export interface ApplicationAppState
 export interface DownloadClientAppState
   extends AppSectionState<DownloadClient>,
     AppSectionDeleteState,
-    AppSectionSaveState {}
+    AppSectionSaveState {
+  isTestingAll: boolean;
+}
 
 export interface IndexerCategoryAppState
   extends AppSectionState<IndexerCategory>,

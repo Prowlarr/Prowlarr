@@ -86,7 +86,7 @@
     "Host": "Anfitrião",
     "History": "Histórico",
     "HideAdvanced": "Ocultar avançado",
-    "HealthNoIssues": "Não há problemas com suas definições",
+    "NoIssuesWithYourConfiguration": "Não há problemas com suas definições",
     "Health": "Estado de funcionamento",
     "Grabbed": "Capturado",
     "GeneralSettingsSummary": "Porta, SSL, nome de utilizador/palavra-passe, proxy, análises e actualizações",

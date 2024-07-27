@@ -279,7 +279,7 @@
     "EditIndexer": "인덱서 편집",
     "Filter": "필터",
     "Health": "건강",
-    "HealthNoIssues": "구성에 문제 없음",
+    "NoIssuesWithYourConfiguration": "구성에 문제 없음",
     "Info": "정보",
     "KeyboardShortcuts": "키보드 단축키",
     "MovieIndexScrollTop": "영화 색인 : 상단 스크롤",

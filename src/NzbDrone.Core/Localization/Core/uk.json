@@ -250,7 +250,7 @@
     "Enabled": "Увімкнено",
     "EnableInteractiveSearchHelpText": "Буде використано, коли використовується інтерактивний пошук",
     "Indexers": "Індексатори",
-    "HealthNoIssues": "Немає проблем із вашою конфігурацією",
+    "NoIssuesWithYourConfiguration": "Немає проблем із вашою конфігурацією",
     "IndexerFlags": "Прапори індексатора",
     "IndexerLongTermStatusAllUnavailableHealthCheckMessage": "Усі індексатори недоступні через збої більше 6 годин",
     "IndexerLongTermStatusUnavailableHealthCheckMessage": "Індексатори недоступні через збої більше 6 годин: {indexerNames}",

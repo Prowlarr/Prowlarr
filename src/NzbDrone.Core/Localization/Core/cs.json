@@ -45,7 +45,7 @@
     "DownloadClientStatusSingleClientHealthCheckMessage": "Stahování klientů není k dispozici z důvodu selhání: {downloadClientNames}",
     "Folder": "Složka",
     "Grabs": "Urvat",
-    "HealthNoIssues": "Žádné problémy s vaší konfigurací",
+    "NoIssuesWithYourConfiguration": "Žádné problémy s vaší konfigurací",
     "HideAdvanced": "Skrýt pokročilé",
     "Host": "Hostitel",
     "Hostname": "Název hostitele",

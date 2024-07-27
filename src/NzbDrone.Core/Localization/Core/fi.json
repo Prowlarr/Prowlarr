@@ -268,7 +268,7 @@
     "Grabs": "Kaappaukset",
     "Health": "Terveys",
     "Level": "Taso",
-    "HealthNoIssues": "Kokoonpanossasi ei ole ongelmia",
+    "NoIssuesWithYourConfiguration": "Kokoonpanossasi ei ole ongelmia",
     "HomePage": "Verkkosivusto",
     "Host": "Osoite",
     "Hostname": "Osoite",

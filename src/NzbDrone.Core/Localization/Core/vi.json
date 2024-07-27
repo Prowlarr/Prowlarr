@@ -256,7 +256,7 @@
     "Grabbed": "Nắm lấy",
     "Grabs": "Vồ lấy",
     "Health": "Sức khỏe",
-    "HealthNoIssues": "Không có vấn đề với cấu hình của bạn",
+    "NoIssuesWithYourConfiguration": "Không có vấn đề với cấu hình của bạn",
     "RestartRequiredHelpTextWarning": "Yêu cầu khởi động lại để có hiệu lực",
     "ShowSearch": "Hiển thị Tìm kiếm",
     "ShowSearchHelpText": "Hiển thị nút tìm kiếm khi di chuột",

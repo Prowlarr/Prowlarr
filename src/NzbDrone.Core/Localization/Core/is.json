@@ -219,7 +219,7 @@
     "EnableAutomaticSearchHelpText": "Verður notað þegar sjálfvirkar leitir eru framkvæmdar í HÍ eða af {appName}",
     "Filter": "Sía",
     "Fixed": "Fastur",
-    "HealthNoIssues": "Engin vandamál með stillingar þínar",
+    "NoIssuesWithYourConfiguration": "Engin vandamál með stillingar þínar",
     "Host": "Gestgjafi",
     "Hostname": "Gestgjafanafn",
     "IllRestartLater": "Ég byrja aftur seinna",

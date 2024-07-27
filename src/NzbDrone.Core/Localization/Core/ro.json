@@ -57,7 +57,7 @@
     "KeyboardShortcuts": "Scurtături din tastatură",
     "Info": "Info",
     "IndexerStatusUnavailableHealthCheckMessage": "Indexatoare indisponibile datorită erorilor: {indexerNames}",
-    "HealthNoIssues": "Nicio problemă de configurare",
+    "NoIssuesWithYourConfiguration": "Nicio problemă de configurare",
     "Error": "Eroare",
     "ConnectionLost": "Conexiune Pierdută",
     "Component": "Componentă",

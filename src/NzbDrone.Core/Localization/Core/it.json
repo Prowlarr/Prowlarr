@@ -130,7 +130,7 @@
     "Level": "Livello",
     "KeyboardShortcuts": "Scorciatoie Tastiera",
     "Info": "Info",
-    "HealthNoIssues": "La tua configurazione non presenta problemi",
+    "NoIssuesWithYourConfiguration": "La tua configurazione non presenta problemi",
     "Error": "Errore",
     "Enable": "Abilita",
     "DownloadClientSettings": "Impostazioni del Client di Download",

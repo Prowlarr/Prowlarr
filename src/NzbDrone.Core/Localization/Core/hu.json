@@ -78,7 +78,7 @@
     "Actions": "Teendők",
     "History": "Előzmény",
     "HideAdvanced": "Haladó Elrejtése",
-    "HealthNoIssues": "Nincs hiba a konfigurációval",
+    "NoIssuesWithYourConfiguration": "Nincs hiba a konfigurációval",
     "Health": "Egészség",
     "GeneralSettingsSummary": "Port, SSL, felhasználónév / jelszó, proxy, elemzések, és frissítések",
     "ForMoreInformationOnTheIndividualDownloadClients": "Ha többet szeretnél megtudni a különböző letöltési kliensekről, kattints az információs gombokra.",

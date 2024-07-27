@@ -124,7 +124,7 @@
     "FocusSearchBox": "التركيز على مربع البحث",
     "Folder": "مجلد",
     "Health": "الصحة",
-    "HealthNoIssues": "لا مشاكل مع التكوين الخاص بك",
+    "NoIssuesWithYourConfiguration": "لا مشاكل مع التكوين الخاص بك",
     "Host": "مضيف",
     "IllRestartLater": "سأعيد التشغيل لاحقًا",
     "IncludeHealthWarningsHelpText": "قم بتضمين التحذيرات الصحية",

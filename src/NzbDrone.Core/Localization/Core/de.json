@@ -156,7 +156,7 @@
     "Grabbed": "Erfasste",
     "Grabs": "Erfasse",
     "Health": "Zustandsüberwachung",
-    "HealthNoIssues": "Keine Probleme mit deiner Konfiguration",
+    "NoIssuesWithYourConfiguration": "Keine Probleme mit deiner Konfiguration",
     "HideAdvanced": "Erweiterte Ansicht",
     "History": "Verlauf",
     "HistoryCleanup": "Verlaufsbereinigung",

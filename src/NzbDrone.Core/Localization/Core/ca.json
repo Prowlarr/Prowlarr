@@ -267,7 +267,7 @@
     "Docker": "Docker",
     "Donations": "Donacions",
     "DownloadClientStatusSingleClientHealthCheckMessage": "Baixa els clients no disponibles a causa d'errors: {downloadClientNames}",
-    "HealthNoIssues": "No hi ha cap problema amb la configuració",
+    "NoIssuesWithYourConfiguration": "No hi ha cap problema amb la configuració",
     "HideAdvanced": "Amaga avançat",
     "History": "Història",
     "HomePage": "Pàgina d'inici",

@@ -740,7 +740,7 @@
   "UnsavedChanges": "Unsaved Changes",
   "UnselectAll": "Unselect All",
   "UpdateAutomaticallyHelpText": "Automatically download and install updates. You will still be able to install from System: Updates",
-  "UpdateAvailableHealthCheckMessage": "New update is available",
+  "UpdateAvailableHealthCheckMessage": "New update is available: {version}",
   "UpdateMechanismHelpText": "Use {appName}'s built-in updater or a script",
   "UpdateScriptPathHelpText": "Path to a custom script that takes an extracted update package and handle the remainder of the update process",
   "UpdateStartupNotWritableHealthCheckMessage": "Cannot install update because startup folder '{startupFolder}' is not writable by the user '{userName}'.",

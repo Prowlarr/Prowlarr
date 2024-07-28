@@ -65,7 +65,7 @@ module.exports = (env) => {
     output: {
       path: distFolder,
       publicPath: '/',
-      filename: '[name]-[contenthash].js',
+      filename: isProduction ? '[name]-[contenthash].js' : '[name].js',
       sourceMapFilename: '[file].map'
     },
 
@@ -90,7 +90,7 @@ module.exports = (env) => {
 
       new MiniCssExtractPlugin({
         filename: 'Content/styles.css',
-        chunkFilename: 'Content/[id]-[chunkhash].css'
+        chunkFilename: isProduction ? 'Content/[id]-[chunkhash].css' : 'Content/[id].css'
       }),
 
       new HtmlWebpackPlugin({
@@ -190,7 +190,7 @@ module.exports = (env) => {
               options: {
                 importLoaders: 1,
                 modules: {
-                  localIdentName: '[name]/[local]/[hash:base64:5]'
+                  localIdentName: isProduction ? '[name]/[local]/[hash:base64:5]' : '[name]/[local]'
                 }
               }
             },

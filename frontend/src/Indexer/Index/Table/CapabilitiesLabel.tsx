@@ -2,6 +2,7 @@ import { uniqBy } from 'lodash';
 import React from 'react';
 import Label from 'Components/Label';
 import { IndexerCapabilities } from 'Indexer/Indexer';
+import translate from 'Utilities/String/translate';
 
 interface CapabilitiesLabelProps {
   capabilities: IndexerCapabilities;
@@ -38,7 +39,7 @@ function CapabilitiesLabel(props: CapabilitiesLabelProps) {
         );
       })}
 
-      {filteredList.length === 0 ? <Label>{'None'}</Label> : null}
+      {filteredList.length === 0 ? <Label>{translate('None')}</Label> : null}
     </span>
   );
 }

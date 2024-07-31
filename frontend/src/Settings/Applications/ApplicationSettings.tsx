@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AppState from 'App/State/AppState';
 import { APP_INDEXER_SYNC } from 'Commands/commandNames';
@@ -56,7 +56,7 @@ function ApplicationSettings() {
         // @ts-ignore
         showSave={false}
         additionalButtons={
-          <Fragment>
+          <>
             <PageToolbarSeparator />
 
             <PageToolbarButton
@@ -78,7 +78,7 @@ function ApplicationSettings() {
               iconName={icons.MANAGE}
               onPress={onManageApplicationsPress}
             />
-          </Fragment>
+          </>
         }
       />
 

@@ -38,14 +38,12 @@ function IndexerStatusCell(props: IndexerStatusCellProps) {
 
   return (
     <Component className={className} {...otherProps}>
-      {
-        <Icon
-          className={styles.statusIcon}
-          kind={enabled ? enableKind : kinds.DEFAULT}
-          name={enabled ? enableIcon : icons.BLOCKLIST}
-          title={enabled ? enableTitle : translate('Disabled')}
-        />
-      }
+      <Icon
+        className={styles.statusIcon}
+        kind={enabled ? enableKind : kinds.DEFAULT}
+        name={enabled ? enableIcon : icons.BLOCKLIST}
+        title={enabled ? enableTitle : translate('Disabled')}
+      />
       {status ? (
         <Popover
           className={styles.indexerStatusTooltip}

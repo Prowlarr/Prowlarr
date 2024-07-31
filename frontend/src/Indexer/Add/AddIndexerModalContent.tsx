@@ -168,6 +168,34 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
     [setFilter]
   );
 
+  const onFilterProtocolsChange = useCallback(
+    ({ value }: { value: string[] }) => {
+      setFilterProtocols(value);
+    },
+    [setFilterProtocols]
+  );
+
+  const onFilterLanguagesChange = useCallback(
+    ({ value }: { value: string[] }) => {
+      setFilterLanguages(value);
+    },
+    [setFilterLanguages]
+  );
+
+  const onFilterPrivacyLevelsChange = useCallback(
+    ({ value }: { value: string[] }) => {
+      setFilterPrivacyLevels(value);
+    },
+    [setFilterPrivacyLevels]
+  );
+
+  const onFilterCategoriesChange = useCallback(
+    ({ value }: { value: number[] }) => {
+      setFilterCategories(value);
+    },
+    [setFilterCategories]
+  );
+
   const onIndexerSelect = useCallback(
     ({
       implementation,
@@ -304,9 +332,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
               name="indexerProtocols"
               value={filterProtocols}
               values={PROTOCOLS}
-              onChange={({ value }: { value: string[] }) =>
-                setFilterProtocols(value)
-              }
+              onChange={onFilterProtocolsChange}
             />
           </div>
 
@@ -319,9 +345,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
               name="indexerLanguages"
               value={filterLanguages}
               values={languages}
-              onChange={({ value }: { value: string[] }) =>
-                setFilterLanguages(value)
-              }
+              onChange={onFilterLanguagesChange}
             />
           </div>
 
@@ -331,9 +355,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
               name="indexerPrivacyLevels"
               value={filterPrivacyLevels}
               values={PRIVACY_LEVELS}
-              onChange={({ value }: { value: string[] }) =>
-                setFilterPrivacyLevels(value)
-              }
+              onChange={onFilterPrivacyLevelsChange}
             />
           </div>
 
@@ -345,9 +367,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
             <NewznabCategorySelectInputConnector
               name="indexerCategories"
               value={filterCategories}
-              onChange={({ value }: { value: number[] }) =>
-                setFilterCategories(value)
-              }
+              onChange={onFilterCategoriesChange}
             />
           </div>
         </div>

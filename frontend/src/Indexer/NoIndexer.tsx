@@ -28,7 +28,7 @@ function NoIndexer(props: NoIndexerProps) {
       </div>
 
       <div className={styles.buttonContainer}>
-        <Button onPress={onAddIndexerPress} kind={kinds.PRIMARY}>
+        <Button kind={kinds.PRIMARY} onPress={onAddIndexerPress}>
           {translate('AddNewIndexer')}
         </Button>
       </div>

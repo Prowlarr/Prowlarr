@@ -29,8 +29,8 @@ function AddIndexerModal({
     <Modal
       isOpen={isOpen}
       size={sizes.EXTRA_LARGE}
-      onModalClose={onModalClosePress}
       className={styles.modal}
+      onModalClose={onModalClosePress}
     >
       <AddIndexerModalContent
         {...otherProps}

@@ -83,8 +83,8 @@ function IndexerHistoryRow(props: IndexerHistoryRowProps) {
       <TableRowCell className={styles.details}>
         <IconButton
           name={icons.INFO}
-          onPress={onDetailsModalPress}
           title={translate('HistoryDetails')}
+          onPress={onDetailsModalPress}
         />
       </TableRowCell>
 

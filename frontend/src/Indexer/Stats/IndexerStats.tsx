@@ -230,9 +230,9 @@ function IndexerStats() {
             selectedFilterKey={selectedFilterKey}
             filters={filters}
             customFilters={customFilters}
-            onFilterSelect={onFilterSelect}
             filterModalConnectorComponent={IndexerStatsFilterModal}
             isDisabled={false}
+            onFilterSelect={onFilterSelect}
           />
         </PageToolbarSection>
       </PageToolbar>

@@ -46,11 +46,7 @@ const columnsSelector = createSelector(
   (columns) => columns
 );
 
-const Row: React.FC<ListChildComponentProps<RowItemData>> = ({
-  index,
-  style,
-  data,
-}) => {
+function Row({ index, style, data }: ListChildComponentProps<RowItemData>) {
   const { items, sortKey, columns, isSelectMode, onCloneIndexerPress } = data;
 
   if (index >= items.length) {
@@ -77,7 +73,7 @@ const Row: React.FC<ListChildComponentProps<RowItemData>> = ({
       />
     </div>
   );
-};
+}
 
 function getWindowScrollTopPosition() {
   return document.documentElement.scrollTop || document.body.scrollTop || 0;

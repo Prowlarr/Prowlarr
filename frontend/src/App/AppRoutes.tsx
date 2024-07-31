@@ -23,6 +23,10 @@ import Tasks from 'System/Tasks/Tasks';
 import UpdatesConnector from 'System/Updates/UpdatesConnector';
 import getPathWithUrlBase from 'Utilities/getPathWithUrlBase';
 
+function RedirectWithUrlBase() {
+  return <Redirect to={getPathWithUrlBase('/')} />;
+}
+
 function AppRoutes() {
   return (
     <Switch>
@@ -39,9 +43,7 @@ function AppRoutes() {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           addUrlBase={false}
-          render={() => {
-            return <Redirect to={getPathWithUrlBase('/')} />;
-          }}
+          render={RedirectWithUrlBase}
         />
       )}
 

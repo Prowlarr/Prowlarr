@@ -45,11 +45,12 @@ function About() {
             title={translate('PackageVersion')}
             data={
               packageAuthor ? (
-                <span>
-                  {' '}
-                  {packageVersion} {' by '}{' '}
-                  <InlineMarkdown data={packageAuthor} />{' '}
-                </span>
+                <InlineMarkdown
+                  data={translate('PackageVersionInfo', {
+                    packageVersion,
+                    packageAuthor,
+                  })}
+                />
               ) : (
                 packageVersion
               )
@@ -57,16 +58,16 @@ function About() {
           />
         )}
 
-        {isNetCore && (
+        {isNetCore ? (
           <DescriptionListItem
             title={translate('NetCore')}
             data={`Yes (${runtimeVersion})`}
           />
-        )}
+        ) : null}
 
-        {isDocker && (
-          <DescriptionListItem title={translate('Docker')} data={'Yes'} />
-        )}
+        {isDocker ? (
+          <DescriptionListItem title={translate('Docker')} data="Yes" />
+        ) : null}
 
         <DescriptionListItem
           title={translate('Database')}

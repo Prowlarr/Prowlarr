@@ -184,9 +184,9 @@ function SearchIndexRow(props: SearchIndexRowProps) {
         if (name === 'select') {
           return (
             <VirtualTableSelectCell
+              key={name}
               inputClassName={styles.checkInput}
               id={guid}
-              key={name}
               isSelected={isSelected}
               isDisabled={false}
               onSelectedChange={onSelectedChange}

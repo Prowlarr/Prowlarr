@@ -527,6 +527,7 @@
   "PackSeedTime": "Pack Seed Time",
   "PackSeedTimeHelpText": "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default",
   "PackageVersion": "Package Version",
+  "PackageVersionInfo": "{packageVersion} by {packageAuthor}",
   "PageSize": "Page Size",
   "PageSizeHelpText": "Number of items to show on each page",
   "Parameters": "Parameters",

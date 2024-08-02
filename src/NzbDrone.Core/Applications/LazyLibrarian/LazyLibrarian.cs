@@ -15,14 +15,12 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         private readonly ILazyLibrarianV1Proxy _lazyLibrarianV1Proxy;
         private readonly IConfigFileProvider _configFileProvider;
-        private readonly IIndexerFactory _indexerFactory;
 
         public LazyLibrarian(ILazyLibrarianV1Proxy lazyLibrarianV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
-            : base(appIndexerMapService, logger)
+            : base(appIndexerMapService, indexerFactory, logger)
         {
             _lazyLibrarianV1Proxy = lazyLibrarianV1Proxy;
             _configFileProvider = configFileProvider;
-            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -67,7 +65,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
 
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
@@ -111,7 +109,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
             var indexerProps = indexerMapping.RemoteIndexerName.Split(",");

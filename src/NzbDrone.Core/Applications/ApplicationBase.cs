@@ -11,6 +11,8 @@ namespace NzbDrone.Core.Applications
     public abstract class ApplicationBase<TSettings> : IApplication
         where TSettings : IProviderConfig, new()
     {
+        private readonly IIndexerFactory _indexerFactory;
+
         protected readonly IAppIndexerMapService _appIndexerMapService;
         protected readonly Logger _logger;
 
@@ -27,9 +29,10 @@ namespace NzbDrone.Core.Applications
 
         protected TSettings Settings => (TSettings)Definition.Settings;
 
-        public ApplicationBase(IAppIndexerMapService appIndexerMapService, Logger logger)
+        public ApplicationBase(IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
         {
             _appIndexerMapService = appIndexerMapService;
+            _indexerFactory = indexerFactory;
             _logger = logger;
         }
 
@@ -61,6 +64,18 @@ namespace NzbDrone.Core.Applications
         public virtual object RequestAction(string action, IDictionary<string, string> query)
         {
             return null;
+        }
+
+        protected IndexerCapabilities GetIndexerCapabilities(IndexerDefinition indexer)
+        {
+            try
+            {
+                return _indexerFactory.GetInstance(indexer).GetCapabilities();
+            }
+            catch (Exception)
+            {
+                return indexer.Capabilities;
+            }
         }
     }
 }

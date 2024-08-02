@@ -21,15 +21,13 @@ namespace NzbDrone.Core.Applications.Sonarr
         private readonly ICached<List<SonarrIndexer>> _schemaCache;
         private readonly ISonarrV3Proxy _sonarrV3Proxy;
         private readonly IConfigFileProvider _configFileProvider;
-        private readonly IIndexerFactory _indexerFactory;
 
         public Sonarr(ICacheManager cacheManager, ISonarrV3Proxy sonarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
-            : base(appIndexerMapService, logger)
+            : base(appIndexerMapService, indexerFactory, logger)
         {
             _schemaCache = cacheManager.GetCache<List<SonarrIndexer>>(GetType());
             _sonarrV3Proxy = sonarrV3Proxy;
             _configFileProvider = configFileProvider;
-            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -124,7 +122,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
 
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty() &&
                 indexerCapabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Empty())
@@ -168,7 +166,7 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 

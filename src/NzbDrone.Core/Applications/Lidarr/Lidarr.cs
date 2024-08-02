@@ -21,15 +21,13 @@ namespace NzbDrone.Core.Applications.Lidarr
         private readonly ILidarrV1Proxy _lidarrV1Proxy;
         private readonly ICached<List<LidarrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
-        private readonly IIndexerFactory _indexerFactory;
 
         public Lidarr(ICacheManager cacheManager, ILidarrV1Proxy lidarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
-            : base(appIndexerMapService, logger)
+            : base(appIndexerMapService, indexerFactory, logger)
         {
             _schemaCache = cacheManager.GetCache<List<LidarrIndexer>>(GetType());
             _lidarrV1Proxy = lidarrV1Proxy;
             _configFileProvider = configFileProvider;
-            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -120,7 +118,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
 
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
@@ -163,7 +161,7 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 

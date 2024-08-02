@@ -21,15 +21,13 @@ namespace NzbDrone.Core.Applications.Radarr
         private readonly IRadarrV3Proxy _radarrV3Proxy;
         private readonly ICached<List<RadarrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
-        private readonly IIndexerFactory _indexerFactory;
 
         public Radarr(ICacheManager cacheManager, IRadarrV3Proxy radarrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
-            : base(appIndexerMapService, logger)
+            : base(appIndexerMapService, indexerFactory, logger)
         {
             _schemaCache = cacheManager.GetCache<List<RadarrIndexer>>(GetType());
             _radarrV3Proxy = radarrV3Proxy;
             _configFileProvider = configFileProvider;
-            _indexerFactory = indexerFactory;
         }
 
         public override ValidationResult Test()
@@ -120,7 +118,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
         public override void AddIndexer(IndexerDefinition indexer)
         {
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
 
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
@@ -163,7 +161,7 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             _logger.Debug("Updating indexer {0} [{1}]", indexer.Name, indexer.Id);
 
-            var indexerCapabilities = _indexerFactory.GetInstance(indexer).GetCapabilities();
+            var indexerCapabilities = GetIndexerCapabilities(indexer);
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 

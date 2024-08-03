@@ -319,8 +319,8 @@ public class NorBitsParser : IParseIndexerResponse
                 release.Genres = genres.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
             }
 
-            var imdbLink = row.QuerySelector("a[href*=\"imdb.com/title/tt\"]")?.GetAttribute("href");
-            release.ImdbId = ParseUtil.GetImdbId(imdbLink) ?? 0;
+            var imdbId = ParseUtil.GetImdbId(row.QuerySelector("a[href*=\"imdb.com/title/tt\"]")?.GetAttribute("href")?.TrimEnd('/')?.Split('/')?.LastOrDefault());
+            release.ImdbId = imdbId ?? 0;
 
             if (row.QuerySelector("img[title=\"100% freeleech\"]") != null)
             {

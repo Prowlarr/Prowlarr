@@ -387,7 +387,7 @@ public class MTeamTpParser : IParseIndexerResponse
 
             if (torrent.Imdb.IsNotNullOrWhiteSpace())
             {
-                release.ImdbId = ParseUtil.GetImdbId(torrent.Imdb.Split('/').LastOrDefault()).GetValueOrDefault();
+                release.ImdbId = ParseUtil.GetImdbId(torrent.Imdb.TrimEnd('/').Split('/').LastOrDefault()).GetValueOrDefault();
             }
 
             if (torrent.Status?.CreatedDate != null &&

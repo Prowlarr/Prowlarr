@@ -338,8 +338,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     dlVolumeFactor = 0.25;
                 }
 
-                var imdbLink = row.QuerySelector("a[href*=\"www.imdb.com/title/\"]")?.GetAttribute("href");
-                var imdb = !string.IsNullOrWhiteSpace(imdbLink) ? ParseUtil.GetImdbId(imdbLink) : null;
+                var imdbId = ParseUtil.GetImdbId(row.QuerySelector("a[href*=\"www.imdb.com/title/\"]")?.GetAttribute("href")?.TrimEnd('/')?.Split('/')?.LastOrDefault());
 
                 var flags = new HashSet<IndexerFlag>();
 
@@ -358,7 +357,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     PosterUrl = poster,
                     PublishDate = publishDate,
                     Categories = _categories.MapTrackerCatToNewznab(cat),
-                    ImdbId = imdb ?? 0,
+                    ImdbId = imdbId ?? 0,
                     Size = size,
                     Grabs = grabs,
                     Seeders = seeders,

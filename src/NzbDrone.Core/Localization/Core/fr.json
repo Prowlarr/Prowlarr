@@ -339,7 +339,7 @@
     "Apps": "Applications",
     "Auth": "Auth",
     "Category": "Catégorie",
-    "Custom": "Customisé",
+    "Custom": "Personnaliser",
     "DeleteAppProfile": "Supprimer le profil de l'application",
     "Description": "Description",
     "Donations": "Dons",
@@ -383,7 +383,7 @@
     "HistoryCleanupDaysHelpText": "Définir sur 0 pour désactiver le nettoyage automatique",
     "HistoryCleanupDaysHelpTextWarning": "Les fichiers dans la corbeille plus anciens que le nombre de jours sélectionné seront nettoyés automatiquement",
     "OnGrab": "Récupéré à la sortie",
-    "OnHealthIssue": "Sur la question de la santé",
+    "OnHealthIssue": "Lors de problème de santé",
     "TestAllIndexers": "Testez tous les indexeurs",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent fourni par l'application qui a appelé l'API",
     "Database": "Base de données",
@@ -528,7 +528,7 @@
     "ConnectionLostReconnect": "{appName} essaiera de se connecter automatiquement, ou vous pouvez cliquer sur « Recharger » en bas.",
     "ConnectionLostToBackend": "{appName} a perdu sa connexion au backend et devra être rechargé pour fonctionner à nouveau.",
     "RecentChanges": "Changements récents",
-    "WhatsNew": "Quoi de neuf ?",
+    "WhatsNew": "Quoi de neuf ?",
     "minutes": "minutes",
     "DeleteAppProfileMessageText": "Voulez-vous vraiment supprimer le profil d'application « {name} » ?",
     "AddConnection": "Ajouter une connexion",
@@ -767,5 +767,7 @@
     "InfoUrl": "URL d'informations",
     "Redirected": "Rediriger",
     "PublishedDate": "Date de publication",
-    "AllSearchResultsHiddenByFilter": "Tous les résultats sont masqués par le filtre appliqué"
+    "AllSearchResultsHiddenByFilter": "Tous les résultats sont masqués par le filtre appliqué.",
+    "AverageGrabs": "Prises moyennes",
+    "AverageQueries": "Requêtes moyennes"
 }

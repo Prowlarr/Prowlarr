@@ -490,5 +490,6 @@
     "Any": "Quaisquer",
     "Script": "Script",
     "BuiltIn": "Incorporado",
-    "PublishedDate": "Data de publicação"
+    "PublishedDate": "Data de publicação",
+    "AllSearchResultsHiddenByFilter": "Todos os resultados foram ocultados pelo filtro aplicado"
 }

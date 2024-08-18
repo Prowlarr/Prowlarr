@@ -646,5 +646,6 @@
     "InfoUrl": "URL Info",
     "PublishedDate": "Data Pubblicazione",
     "Redirected": "Reindirizzamento",
-    "AllSearchResultsHiddenByFilter": "Tutti i risultati sono nascosti dal filtro"
+    "AllSearchResultsHiddenByFilter": "Tutti i risultati sono nascosti dal filtro",
+    "PackageVersionInfo": "{packageVersion} di {packageAuthor}"
 }

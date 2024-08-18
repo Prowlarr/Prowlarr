@@ -769,5 +769,7 @@
     "PublishedDate": "Date de publication",
     "AllSearchResultsHiddenByFilter": "Tous les résultats sont masqués par le filtre appliqué.",
     "AverageGrabs": "Prises moyennes",
-    "AverageQueries": "Requêtes moyennes"
+    "AverageQueries": "Requêtes moyennes",
+    "PackageVersionInfo": "{packageVersion} par {packageAuthor}",
+    "HealthMessagesInfoBox": "Vous pouvez trouver plus d'informations sur la cause de ces messages de contrôle de santé en cliquant sur le lien wiki (icône de livre) à la fin de la ligne, ou en vérifiant vos [journaux]({link}). Si vous rencontrez des difficultés pour interpréter ces messages, vous pouvez contacter notre support, via les liens ci-dessous."
 }

@@ -476,5 +476,6 @@
     "Script": "Script",
     "InfoUrl": "URL informații",
     "PublishedDate": "Data publicării",
-    "AllSearchResultsHiddenByFilter": "Toate rezultatele sunt ascunse de filtrul aplicat"
+    "AllSearchResultsHiddenByFilter": "Toate rezultatele sunt ascunse de filtrul aplicat",
+    "UpdateAvailableHealthCheckMessage": "O nouă versiune este disponibilă: {version}"
 }

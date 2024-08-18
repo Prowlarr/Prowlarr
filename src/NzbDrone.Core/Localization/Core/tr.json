@@ -532,5 +532,7 @@
     "InfoUrl": "Bilgi URL'si",
     "PublishedDate": "Yayınlanma Tarihi",
     "Any": "Herhangi",
-    "AllSearchResultsHiddenByFilter": "Tüm sonuçlar, uygulanan filtre tarafından gizlenir"
+    "AllSearchResultsHiddenByFilter": "Tüm sonuçlar, uygulanan filtre tarafından gizlenir",
+    "HealthMessagesInfoBox": "Satırın sonundaki wiki bağlantısını (kitap simgesi) tıklayarak veya [günlüklerinizi]({link}) kontrol ederek bu durum kontrolü mesajlarının nedeni hakkında daha fazla bilgi bulabilirsiniz. Bu mesajları yorumlamakta zorluk yaşıyorsanız aşağıdaki bağlantılardan destek ekibimize ulaşabilirsiniz.",
+    "PackageVersionInfo": "{packageAuthor} tarafından {packageVersion}"
 }

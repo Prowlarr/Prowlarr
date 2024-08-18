@@ -484,5 +484,6 @@
     "InfoUrl": "URL d'informació",
     "PublishedDate": "Data de publicació",
     "Redirected": "Redirecció",
-    "AllSearchResultsHiddenByFilter": "Tots els resultats estan ocults pel filtre aplicat"
+    "AllSearchResultsHiddenByFilter": "Tots els resultats estan ocults pel filtre aplicat",
+    "HealthMessagesInfoBox": "Podeu trobar més informació sobre la causa d'aquests missatges de comprovació de salut fent clic a l'enllaç wiki (icona del llibre) al final de la fila o consultant els vostres [registres]({link}). Si teniu problemes per a interpretar aquests missatges, podeu posar-vos en contacte amb el nostre suport als enllaços següents."
 }

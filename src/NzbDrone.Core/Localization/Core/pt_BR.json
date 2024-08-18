@@ -475,7 +475,7 @@
     "UnsavedChanges": "Alterações Não Salvas",
     "UnselectAll": "Desmarcar tudo",
     "UpdateAutomaticallyHelpText": "Baixe e instale atualizações automaticamente. Você ainda poderá instalar a partir do Sistema: Atualizações",
-    "UpdateAvailableHealthCheckMessage": "Nova atualização está disponível",
+    "UpdateAvailableHealthCheckMessage": "Nova atualização está disponível: {version}",
     "UpdateStartupNotWritableHealthCheckMessage": "Não é possível instalar a atualização porque a pasta de inicialização '{startupFolder}' não pode ser gravada pelo usuário '{userName}'.",
     "UpdateStartupTranslocationHealthCheckMessage": "Não é possível instalar a atualização porque a pasta de inicialização '{startupFolder}' está em uma pasta de translocação de aplicativo.",
     "UpdateUiNotWritableHealthCheckMessage": "Não é possível instalar a atualização porque a pasta de IU '{uiFolder}' não pode ser gravada pelo usuário '{userName}'.",
@@ -769,5 +769,7 @@
     "Redirected": "Redirecionar",
     "AverageQueries": "Média de Consultas",
     "AverageGrabs": "Média de Capturas",
-    "AllSearchResultsHiddenByFilter": "Todos os resultados estão ocultos pelo filtro aplicado"
+    "AllSearchResultsHiddenByFilter": "Todos os resultados da pesquisa são ocultados pelo filtro aplicado.",
+    "PackageVersionInfo": "{packageVersion} por {packageAuthor}",
+    "HealthMessagesInfoBox": "Para saber mais sobre a causa dessas mensagens de verificação de integridade, clique no link da wiki (ícone de livro) no final da linha ou verifique os [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, entre em contato com nosso suporte nos links abaixo."
 }

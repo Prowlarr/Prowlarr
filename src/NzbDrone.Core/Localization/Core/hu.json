@@ -581,5 +581,6 @@
     "Any": "Bármi",
     "PublishedDate": "Közzététel dátuma",
     "Redirected": "Átirányítás",
-    "AllSearchResultsHiddenByFilter": "Az alkalmazott szűrők miatt, az összes keresési eredmény rejtve marad"
+    "AllSearchResultsHiddenByFilter": "Az alkalmazott szűrők miatt, az összes keresési eredmény rejtve marad",
+    "HealthMessagesInfoBox": "Az állapotfelmérés okáról további információkat találhat, ha a sor végén található wikilinkre (könyv ikonra) kattint, vagy megnézi [logs] ({link}). Ha nehézségei vannak ezen üzenetek értelmezése során, forduljon ügyfélszolgálatunkhoz az alábbi linkeken."
 }

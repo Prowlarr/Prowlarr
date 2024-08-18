@@ -697,5 +697,7 @@
     "InfoUrl": "Tietojen URL",
     "PublishedDate": "Julkaisupäivä",
     "Redirected": "Uudelleenohjaus",
-    "AllSearchResultsHiddenByFilter": "Aktiivinen suodatin piilottaa kaikki tulokset."
+    "AllSearchResultsHiddenByFilter": "Aktiivinen suodatin piilottaa kaikki tulokset.",
+    "HealthMessagesInfoBox": "Saat lisätietoja näiden vakausviestien syistä painamalla rivin lopussa olevaa wikilinkkiä (kirjakuvake) tai tarkastelemalla [lokitietoja]({link}). Mikäli kohtaat ongelmia näiden viestien tulkinnassa, tavoitat tukemme alla olevilla linkkeillä.",
+    "PackageVersionInfo": "{packageVersion} julkaisijalta {packageAuthor}"
 }

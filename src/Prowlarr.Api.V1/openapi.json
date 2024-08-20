@@ -4177,6 +4177,9 @@
           "syncLevel": {
             "$ref": "#/components/schemas/ApplicationSyncLevel"
           },
+          "enable": {
+            "type": "boolean"
+          },
           "testCommand": {
             "type": "string",
             "nullable": true

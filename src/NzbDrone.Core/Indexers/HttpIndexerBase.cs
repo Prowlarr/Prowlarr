@@ -607,12 +607,7 @@ namespace NzbDrone.Core.Indexers
 
         protected virtual bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                return true;
-            }
-
-            return false;
+            return httpResponse.StatusCode == HttpStatusCode.Unauthorized;
         }
 
         protected virtual Task DoLogin()

@@ -7,6 +7,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation;
+using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -96,7 +97,23 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override IDictionary<string, string> GetCookies()
         {
-            return CookieUtil.CookieHeaderToDictionary("mam_id=" + Settings.MamId);
+            var cookies = base.GetCookies();
+
+            if (cookies is { Count: > 0 } && cookies.TryGetValue("mam_id", out var mamId) && mamId.IsNotNullOrWhiteSpace())
+            {
+                return cookies;
+            }
+
+            return CookieUtil.CookieHeaderToDictionary($"mam_id={Settings.MamId}");
+        }
+
+        protected override async Task<ValidationFailure> TestConnection()
+        {
+            UpdateCookies(null, null);
+
+            _logger.Debug("Cookies cleared.");
+
+            return await base.TestConnection().ConfigureAwait(false);
         }
 
         private IndexerCapabilities SetCapabilities()
@@ -359,11 +376,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly IndexerCapabilitiesCategories _categories;
         private readonly IIndexerHttpClient _httpClient;
         private readonly Logger _logger;
+
         private readonly ICached<string> _userClassCache;
         private readonly HashSet<string> _vipFreeleechUserClasses = new (StringComparer.OrdinalIgnoreCase)
         {
             "VIP",
-            "Elite VIP",
+            "Elite VIP"
         };
 
         public MyAnonamouseParser(MyAnonamouseSettings settings,
@@ -376,32 +394,35 @@ namespace NzbDrone.Core.Indexers.Definitions
             _categories = categories;
             _httpClient = httpClient;
             _logger = logger;
+
             _userClassCache = cacheManager.GetCache<string>(GetType());
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
+            var httpResponse = indexerResponse.HttpResponse;
+
             // Throw auth errors here before we try to parse
-            if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.Forbidden)
+            if (httpResponse.StatusCode == HttpStatusCode.Forbidden)
             {
                 throw new IndexerAuthException("[403 Forbidden] - mam_id expired or invalid");
             }
 
             // Throw common http errors here before we try to parse
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            if (httpResponse.StatusCode != HttpStatusCode.OK)
             {
                 // Remove cookie cache
                 CookiesUpdater(null, null);
 
-                throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
+                throw new IndexerException(indexerResponse, $"Unexpected response status {httpResponse.StatusCode} code from indexer request");
             }
 
-            if (!indexerResponse.HttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
+            if (!httpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
                 // Remove cookie cache
                 CookiesUpdater(null, null);
 
-                throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
+                throw new IndexerException(indexerResponse, $"Unexpected response header {httpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
             var releaseInfos = new List<ReleaseInfo>();
@@ -414,7 +435,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return releaseInfos.ToArray();
             }
 
-            var hasUserVip = HasUserVip();
+            var hasUserVip = HasUserVip(httpResponse.GetCookies());
 
             foreach (var item in jsonResponse.Data)
             {
@@ -482,10 +503,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 releaseInfos.Add(release);
             }
 
+            // Update cookies with the updated mam_id value received in the response
+            CookiesUpdater(httpResponse.GetCookies(), DateTime.Now.AddDays(30));
+
             return releaseInfos.ToArray();
         }
 
-        private bool HasUserVip()
+        private bool HasUserVip(Dictionary<string, string> cookies)
         {
             var cacheKey = "myanonamouse_user_class_" + _settings.ToJson().SHA256Hash();
 
@@ -496,11 +520,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var request = new HttpRequestBuilder(_settings.BaseUrl.Trim('/'))
                         .Resource("/jsonLoad.php")
                         .Accept(HttpAccept.Json)
+                        .SetCookies(cookies)
                         .Build();
 
-                    _logger.Debug("Fetching user data: " + request.Url.FullUri);
-
-                    request.Cookies.Add("mam_id", _settings.MamId);
+                    _logger.Debug("Fetching user data: {0}", request.Url.FullUri);
 
                     var response = _httpClient.Get(request);
                     var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseUserDataResponse>(response.Content);

@@ -771,5 +771,7 @@
     "AverageGrabs": "Média de Capturas",
     "AllSearchResultsHiddenByFilter": "Todos os resultados da pesquisa são ocultados pelo filtro aplicado.",
     "PackageVersionInfo": "{packageVersion} por {packageAuthor}",
-    "HealthMessagesInfoBox": "Para saber mais sobre a causa dessas mensagens de verificação de integridade, clique no link da wiki (ícone de livro) no final da linha ou verifique os [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, entre em contato com nosso suporte nos links abaixo."
+    "HealthMessagesInfoBox": "Para saber mais sobre a causa dessas mensagens de verificação de integridade, clique no link da wiki (ícone de livro) no final da linha ou verifique os [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, entre em contato com nosso suporte nos links abaixo.",
+    "LogSizeLimit": "Limite de Tamanho do Registro",
+    "LogSizeLimitHelpText": "Tamanho máximo do arquivo de registro em MB antes do arquivamento. O padrão é 1 MB."
 }

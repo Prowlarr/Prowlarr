@@ -144,7 +144,7 @@
     "ConnectionLost": "Connessione Persa",
     "Component": "Componente",
     "Columns": "Colonne",
-    "DeleteBackupMessageText": "Sei sicuro di voler cancellare il backup '{name}'?",
+    "DeleteBackupMessageText": "Sei sicuro di voler eliminare il backup '{name}'?",
     "CancelPendingTask": "Sei sicuro di voler cancellare questa operazione in sospeso?",
     "BranchUpdateMechanism": "Ramo utilizzato dal sistema di aggiornamento esterno",
     "BranchUpdate": "Branca da usare per aggiornare {appName}",

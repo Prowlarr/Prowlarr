@@ -498,5 +498,6 @@
     "Script": "Script",
     "PublishedDate": "Publicatie Datum",
     "Redirected": "Omleiden",
-    "AllSearchResultsHiddenByFilter": "Alle resultaten zijn verborgen door het toegepaste filter"
+    "AllSearchResultsHiddenByFilter": "Alle resultaten zijn verborgen door het toegepaste filter",
+    "Clone": "Kloon"
 }

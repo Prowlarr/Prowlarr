@@ -56,7 +56,7 @@
     "Mechanism": "Механизм",
     "NoBackupsAreAvailable": "Нет резервных копий",
     "DeleteDownloadClientMessageText": "Вы уверены, что хотите удалить клиент загрузки '{name}'?",
-    "Edit": "Редактирование",
+    "Edit": "Изменить",
     "Enable": "Включить",
     "Indexer": "Индексатор",
     "SettingsShortDateFormat": "Короткий формат даты",
@@ -372,7 +372,7 @@
     "ApplyTagsHelpTextHowToApplyIndexers": "Как применить теги к выбранным индексаторам",
     "ApplyTagsHelpTextReplace": "Заменить: заменить теги введенными тегами (оставьте поле пустым, чтобы удалить все теги)",
     "Track": "След",
-    "UpdateAvailableHealthCheckMessage": "Доступно новое обновление",
+    "UpdateAvailableHealthCheckMessage": "Доступно новое обновление: {version}",
     "More": "Более",
     "Publisher": "Издатель",
     "ConnectionLostReconnect": "{appName} попытается соединиться автоматически или нажмите кнопку внизу.",
@@ -531,5 +531,7 @@
     "Script": "Скрипт",
     "InfoUrl": "URL-адрес информации",
     "PublishedDate": "Дата публикации",
-    "AllSearchResultsHiddenByFilter": "Все результаты скрыты фильтром"
+    "AllSearchResultsHiddenByFilter": "Все результаты скрыты фильтром",
+    "HealthMessagesInfoBox": "Дополнительную информацию о причине появления этих сообщений о проверке работоспособности можно найти, щелкнув вики-ссылку (значок книги) в конце строки или проверив свои [журналы]({link}). Если у вас возникли трудности с пониманием этих сообщений, вы можете обратиться в нашу службу поддержки по ссылкам ниже.",
+    "PackageVersionInfo": "{packageVersion} от {packageAuthor}"
 }

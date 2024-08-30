@@ -509,7 +509,7 @@
     "DeleteSelectedDownloadClients": "Supprimer le(s) client(s) de téléchargement",
     "DeleteSelectedDownloadClientsMessageText": "Voulez-vous vraiment supprimer {count} client(s) de téléchargement sélectionné(s) ?",
     "StopSelecting": "Effacer la sélection",
-    "UpdateAvailableHealthCheckMessage": "Une nouvelle mise à jour est disponible",
+    "UpdateAvailableHealthCheckMessage": "Une nouvelle mise à jour est disponible : {version}",
     "AdvancedSettingsHiddenClickToShow": "Paramètres avancés masqués, cliquez pour afficher",
     "AdvancedSettingsShownClickToHide": "Paramètres avancés affichés, cliquez pour masquer",
     "AppsMinimumSeeders": "Apps avec le nombre minimum de seeders disponibles",
@@ -771,5 +771,7 @@
     "AverageGrabs": "Prises moyennes",
     "AverageQueries": "Requêtes moyennes",
     "PackageVersionInfo": "{packageVersion} par {packageAuthor}",
-    "HealthMessagesInfoBox": "Vous pouvez trouver plus d'informations sur la cause de ces messages de contrôle de santé en cliquant sur le lien wiki (icône de livre) à la fin de la ligne, ou en vérifiant vos [journaux]({link}). Si vous rencontrez des difficultés pour interpréter ces messages, vous pouvez contacter notre support, via les liens ci-dessous."
+    "HealthMessagesInfoBox": "Vous pouvez trouver plus d'informations sur la cause de ces messages de contrôle de santé en cliquant sur le lien wiki (icône de livre) à la fin de la ligne, ou en vérifiant vos [journaux]({link}). Si vous rencontrez des difficultés pour interpréter ces messages, vous pouvez contacter notre support, via les liens ci-dessous.",
+    "LogSizeLimit": "Limite de taille du journal",
+    "LogSizeLimitHelpText": "Taille maximale du fichier journal en Mo avant archivage. La valeur par défaut est de 1 Mo."
 }

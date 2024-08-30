@@ -771,5 +771,7 @@
     "AverageGrabs": "Promedio de capturas",
     "AllSearchResultsHiddenByFilter": "Todos los resultados están ocultos por el filtro aplicado.",
     "PackageVersionInfo": "{packageVersion} por {packageAuthor}",
-    "HealthMessagesInfoBox": "Puede encontrar más información sobre la causa de estos mensajes de comprobación de salud haciendo clic en el enlace wiki (icono de libro) al final de la fila, o comprobando sus [logs]({link}). Si tienes dificultades para interpretar estos mensajes, puedes ponerte en contacto con nuestro servicio de asistencia en los enlaces que aparecen a continuación."
+    "HealthMessagesInfoBox": "Puede encontrar más información sobre la causa de estos mensajes de comprobación de salud haciendo clic en el enlace wiki (icono de libro) al final de la fila, o comprobando sus [logs]({link}). Si tienes dificultades para interpretar estos mensajes, puedes ponerte en contacto con nuestro servicio de asistencia en los enlaces que aparecen a continuación.",
+    "LogSizeLimit": "Límite de tamaño de registro",
+    "LogSizeLimitHelpText": "Máximo tamaño de archivo de registro en MB antes de archivarlo. Predeterminado es 1MB."
 }

@@ -56,11 +56,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override async Task<IndexerDownloadResponse> Download(Uri link)
         {
-            if (Settings.Freeleech)
-            {
-                _logger.Debug($"Attempting to use freeleech token for {link.AbsoluteUri}");
+            var downloadLink = link.RemoveQueryParam("canUseToken");
 
-                var idMatch = TorrentIdRegex.Match(link.AbsoluteUri);
+            if (Settings.Freeleech && bool.TryParse(link.GetQueryParam("canUseToken"), out var canUseToken) && canUseToken)
+            {
+                _logger.Debug("Attempting to use freeleech token for {0}", downloadLink.AbsoluteUri);
+
+                var idMatch = TorrentIdRegex.Match(downloadLink.AbsoluteUri);
                 if (idMatch.Success)
                 {
                     var id = int.Parse(idMatch.Groups["id"].Value);
@@ -79,20 +81,20 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     if (resource.Success)
                     {
-                        _logger.Debug($"Successfully to used freeleech token for torrentid ${id}");
+                        _logger.Debug("Successfully to used freeleech token for torrentid {0}", id);
                     }
                     else
                     {
-                        _logger.Debug($"Failed to use freeleech token: ${resource.Error}");
+                        _logger.Debug("Failed to use freeleech token: {0}", resource.Error);
                     }
                 }
                 else
                 {
-                    _logger.Debug($"Could not get torrent id from link ${link.AbsoluteUri}, skipping freeleech");
+                    _logger.Debug("Could not get torrent id from link {0}, skipping freeleech", downloadLink.AbsoluteUri);
                 }
             }
 
-            return await base.Download(link).ConfigureAwait(false);
+            return await base.Download(downloadLink).ConfigureAwait(false);
         }
 
         protected override IDictionary<string, string> GetCookies()
@@ -485,8 +487,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                     release.Title += " [VIP]";
                 }
 
-                release.DownloadUrl = _settings.BaseUrl + "tor/download.php?tid=" + id;
-                release.InfoUrl = _settings.BaseUrl + "t/" + id;
+                var isFreeLeech = item.Free || item.PersonalFreeLeech || (hasUserVip && item.FreeVip);
+
+                release.DownloadUrl = GetDownloadUrl(id, !isFreeLeech);
+                release.InfoUrl = $"{_settings.BaseUrl}t/{id}";
                 release.Guid = release.InfoUrl;
                 release.Categories = _categories.MapTrackerCatToNewznab(item.Category);
                 release.PublishDate = DateTime.ParseExact(item.Added, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToLocalTime();
@@ -495,7 +499,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.Seeders = item.Seeders;
                 release.Peers = item.Leechers + release.Seeders;
                 release.Size = ParseUtil.GetBytes(item.Size);
-                release.DownloadVolumeFactor = item.Free ? 0 : hasUserVip && item.FreeVip ? 0 : 1;
+                release.DownloadVolumeFactor = isFreeLeech ? 0 : 1;
                 release.UploadVolumeFactor = 1;
                 release.MinimumRatio = 1;
                 release.MinimumSeedTime = 259200; // 72 hours
@@ -507,6 +511,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             CookiesUpdater(httpResponse.GetCookies(), DateTime.Now.AddDays(30));
 
             return releaseInfos.ToArray();
+        }
+
+        private string GetDownloadUrl(int torrentId, bool canUseToken)
+        {
+            var url = new HttpUri(_settings.BaseUrl)
+                .CombinePath("/tor/download.php")
+                .AddQueryParam("tid", torrentId);
+
+            if (_settings.Freeleech && canUseToken)
+            {
+                url = url.AddQueryParam("canUseToken", "true");
+            }
+
+            return url.FullUri;
         }
 
         private bool HasUserVip(Dictionary<string, string> cookies)
@@ -587,14 +605,19 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         [FieldOption(Label="All torrents", Hint = "Search everything")]
         All = 0,
+
         [FieldOption(Label="Only active", Hint = "Last update had 1+ seeders")]
         Active = 1,
+
         [FieldOption(Label="Freeleech", Hint = "Freeleech torrents")]
         Freeleech = 2,
+
         [FieldOption(Label="Freeleech or VIP", Hint = "Freeleech or VIP torrents")]
         FreeleechOrVip = 3,
+
         [FieldOption(Label="VIP", Hint = "VIP torrents")]
         Vip = 4,
+
         [FieldOption(Label="Not VIP", Hint = "Torrents not VIP")]
         NotVip = 5,
     }
@@ -611,6 +634,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Filetype { get; set; }
         public bool Vip { get; set; }
         public bool Free { get; set; }
+        [JsonProperty(PropertyName = "personal_freeleech")]
+        public bool PersonalFreeLeech { get; set; }
         [JsonProperty(PropertyName = "fl_vip")]
         public bool FreeVip { get; set; }
         public string Category { get; set; }

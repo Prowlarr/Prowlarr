@@ -16,6 +16,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -36,8 +37,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override bool SupportsPagination => true;
         public override int PageSize => 100;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+
         private readonly ICacheManager _cacheManager;
-        private static readonly Regex TorrentIdRegex = new Regex(@"tor/download.php\?tid=(?<id>\d+)$");
 
         public MyAnonamouse(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, ICacheManager cacheManager)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -59,39 +60,62 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var downloadLink = link.RemoveQueryParam("canUseToken");
 
-            if (Settings.Freeleech && bool.TryParse(link.GetQueryParam("canUseToken"), out var canUseToken) && canUseToken)
+            if (Settings.UseFreeleechWedge is (int)MyAnonamouseFreeleechWedgeAction.Preferred or (int)MyAnonamouseFreeleechWedgeAction.Required &&
+                bool.TryParse(link.GetQueryParam("canUseToken"), out var canUseToken) && canUseToken)
             {
-                _logger.Debug("Attempting to use freeleech token for {0}", downloadLink.AbsoluteUri);
+                _logger.Debug("Attempting to use freeleech wedge for {0}", downloadLink.AbsoluteUri);
 
-                var idMatch = TorrentIdRegex.Match(downloadLink.AbsoluteUri);
-                if (idMatch.Success)
+                if (int.TryParse(link.GetQueryParam("tid"), out var torrentId) && torrentId > 0)
                 {
-                    var id = int.Parse(idMatch.Groups["id"].Value);
                     var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
                     var freeleechUrl = Settings.BaseUrl + $"json/bonusBuy.php/{timestamp}";
 
-                    var freeleechRequest = new HttpRequestBuilder(freeleechUrl)
+                    var freeleechRequestBuilder = new HttpRequestBuilder(freeleechUrl)
+                        .Accept(HttpAccept.Json)
                         .AddQueryParam("spendtype", "personalFL")
-                        .AddQueryParam("torrentid", id)
-                        .AddQueryParam("timestamp", timestamp.ToString())
-                        .Build();
+                        .AddQueryParam("torrentid", torrentId)
+                        .AddQueryParam("timestamp", timestamp.ToString());
 
-                    var indexerReq = new IndexerRequest(freeleechRequest);
-                    var response = await FetchIndexerResponse(indexerReq).ConfigureAwait(false);
-                    var resource = Json.Deserialize<MyAnonamouseBuyPersonalFreeleechResponse>(response.Content);
+                    freeleechRequestBuilder.LogResponseContent = true;
+
+                    var cookies = GetCookies();
+
+                    if (cookies != null && cookies.Any())
+                    {
+                        freeleechRequestBuilder.SetCookies(Cookies);
+                    }
+
+                    var freeleechRequest = freeleechRequestBuilder.Build();
+
+                    var freeleechResponse = await _httpClient.ExecuteProxiedAsync(freeleechRequest, Definition).ConfigureAwait(false);
+
+                    var resource = Json.Deserialize<MyAnonamouseBuyPersonalFreeleechResponse>(freeleechResponse.Content);
 
                     if (resource.Success)
                     {
-                        _logger.Debug("Successfully to used freeleech token for torrentid {0}", id);
+                        _logger.Debug("Successfully used freeleech wedge for torrentid {0}.", torrentId);
+                    }
+                    else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This is already a personal freeleech"))
+                    {
+                        _logger.Debug("{0} is already a personal freeleech, continuing downloading: {1}", torrentId, resource.Error);
                     }
                     else
                     {
-                        _logger.Debug("Failed to use freeleech token: {0}", resource.Error);
+                        _logger.Warn("Failed to purchase freeleech wedge for {0}: {1}", torrentId, resource.Error);
+
+                        if (Settings.UseFreeleechWedge == (int)MyAnonamouseFreeleechWedgeAction.Preferred)
+                        {
+                            _logger.Debug("'Use Freeleech Wedge' option set to preferred, continuing downloading: '{0}'", downloadLink.AbsoluteUri);
+                        }
+                        else
+                        {
+                            throw new ReleaseUnavailableException($"Failed to buy freeleech wedge and 'Use Freeleech Wedge' is set to required, aborting download: '{downloadLink.AbsoluteUri}'");
+                        }
                     }
                 }
                 else
                 {
-                    _logger.Debug("Could not get torrent id from link {0}, skipping freeleech", downloadLink.AbsoluteUri);
+                    _logger.Warn("Could not get torrent id from link {0}, skipping use of freeleech wedge.", downloadLink.AbsoluteUri);
                 }
             }
 
@@ -535,7 +559,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .CombinePath("/tor/download.php")
                 .AddQueryParam("tid", torrentId);
 
-            if (_settings.Freeleech && canUseToken)
+            if (_settings.UseFreeleechWedge is (int)MyAnonamouseFreeleechWedgeAction.Preferred or (int)MyAnonamouseFreeleechWedgeAction.Required && canUseToken)
             {
                 url = url.AddQueryParam("canUseToken", "true");
             }
@@ -592,6 +616,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             SearchInSeries = false;
             SearchInFilenames = false;
             SearchLanguages = Array.Empty<int>();
+            UseFreeleechWedge = (int)MyAnonamouseFreeleechWedgeAction.Never;
         }
 
         [FieldDefinition(2, Type = FieldType.Textbox, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
@@ -600,20 +625,20 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Type = FieldType.Select, Label = "Search Type", SelectOptions = typeof(MyAnonamouseSearchType), HelpText = "Specify the desired search type")]
         public int SearchType { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Use Freeleech Wedges", HelpText = "Use freeleech wedges to make grabbed torrents personal freeleech")]
-        public bool Freeleech { get; set; }
-
-        [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Search in description", HelpText = "Search text in the description")]
+        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "Search in description", HelpText = "Search text in the description")]
         public bool SearchInDescription { get; set; }
 
-        [FieldDefinition(6, Type = FieldType.Checkbox, Label = "Search in series", HelpText = "Search text in the series")]
+        [FieldDefinition(5, Type = FieldType.Checkbox, Label = "Search in series", HelpText = "Search text in the series")]
         public bool SearchInSeries { get; set; }
 
-        [FieldDefinition(7, Type = FieldType.Checkbox, Label = "Search in filenames", HelpText = "Search text in the filenames")]
+        [FieldDefinition(6, Type = FieldType.Checkbox, Label = "Search in filenames", HelpText = "Search text in the filenames")]
         public bool SearchInFilenames { get; set; }
 
-        [FieldDefinition(8, Type = FieldType.Select, Label = "Search Languages", SelectOptions = typeof(MyAnonamouseSearchLanguages), HelpText = "Specify the desired languages. If unspecified, all options are used.")]
+        [FieldDefinition(7, Type = FieldType.Select, Label = "Search Languages", SelectOptions = typeof(MyAnonamouseSearchLanguages), HelpText = "Specify the desired languages. If unspecified, all options are used.")]
         public IEnumerable<int> SearchLanguages { get; set; }
+
+        [FieldDefinition(8, Type = FieldType.Select, Label = "Use Freeleech Wedges", SelectOptions = typeof(MyAnonamouseFreeleechWedgeAction), HelpText = "Use freeleech wedges to make grabbed torrents personal freeleech")]
+        public int UseFreeleechWedge { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
@@ -832,6 +857,18 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldOption(Label="Other")]
         Other = 47,
+    }
+
+    public enum MyAnonamouseFreeleechWedgeAction
+    {
+        [FieldOption(Label = "Never", Hint = "Do not buy as freeleech")]
+        Never = 0,
+
+        [FieldOption(Label = "Preferred", Hint = "Buy and use wedge if possible")]
+        Preferred = 1,
+
+        [FieldOption(Label = "Required", Hint = "Abort download if unable to buy wedge")]
+        Required = 2,
     }
 
     public class MyAnonamouseTorrent

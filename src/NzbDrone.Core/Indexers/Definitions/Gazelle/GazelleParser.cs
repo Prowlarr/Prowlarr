@@ -59,8 +59,10 @@ public class GazelleParser : IParseIndexerResponse
             {
                 foreach (var torrent in result.Torrents)
                 {
+                    var isFreeLeech = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech;
+
                     // skip releases that cannot be used with freeleech tokens when the option is enabled
-                    if (Settings.UseFreeleechToken && !torrent.CanUseToken)
+                    if (Settings.UseFreeleechToken && !torrent.CanUseToken && !isFreeLeech)
                     {
                         continue;
                     }
@@ -79,7 +81,7 @@ public class GazelleParser : IParseIndexerResponse
                     {
                         Guid = infoUrl,
                         InfoUrl = infoUrl,
-                        DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsPersonalFreeLeech),
+                        DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken && !isFreeLeech),
                         Title = WebUtility.HtmlDecode(title),
                         Container = torrent.Encoding,
                         Files = torrent.FileCount,
@@ -91,7 +93,7 @@ public class GazelleParser : IParseIndexerResponse
                         PublishDate = torrent.Time.ToUniversalTime(),
                         Scene = torrent.Scene,
                         PosterUrl = posterUrl,
-                        DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsPersonalFreeLeech ? 0 : 1,
+                        DownloadVolumeFactor = isFreeLeech ? 0 : 1,
                         UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1
                     };
 
@@ -110,8 +112,10 @@ public class GazelleParser : IParseIndexerResponse
             }
             else
             {
+                var isFreeLeech = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech;
+
                 // skip releases that cannot be used with freeleech tokens when the option is enabled
-                if (Settings.UseFreeleechToken && !result.CanUseToken)
+                if (Settings.UseFreeleechToken && !result.CanUseToken && !isFreeLeech)
                 {
                     continue;
                 }
@@ -124,7 +128,7 @@ public class GazelleParser : IParseIndexerResponse
                 {
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
-                    DownloadUrl = GetDownloadUrl(id, !result.IsFreeLeech && !result.IsNeutralLeech && !result.IsPersonalFreeLeech),
+                    DownloadUrl = GetDownloadUrl(id, result.CanUseToken && !isFreeLeech),
                     Title = groupName,
                     Size = long.Parse(result.Size),
                     Seeders = int.Parse(result.Seeders),
@@ -133,7 +137,7 @@ public class GazelleParser : IParseIndexerResponse
                     Grabs = result.Snatches,
                     PublishDate = long.TryParse(result.GroupTime, out var num) ? DateTimeOffset.FromUnixTimeSeconds(num).UtcDateTime : DateTimeUtil.FromFuzzyTime((string)result.GroupTime),
                     PosterUrl = posterUrl,
-                    DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsPersonalFreeLeech ? 0 : 1,
+                    DownloadVolumeFactor = isFreeLeech ? 0 : 1,
                     UploadVolumeFactor = result.IsNeutralLeech ? 0 : 1
                 };
 

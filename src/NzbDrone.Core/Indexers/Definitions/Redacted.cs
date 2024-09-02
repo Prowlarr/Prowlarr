@@ -263,12 +263,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                         var title = GetTitle(result, torrent);
                         var infoUrl = GetInfoUrl(result.GroupId, id);
+                        var isFreeLeech = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsFreeload || torrent.IsPersonalFreeLeech;
 
                         var release = new TorrentInfo
                         {
                             Guid = infoUrl,
                             InfoUrl = infoUrl,
-                            DownloadUrl = GetDownloadUrl(id, !torrent.IsFreeLeech && !torrent.IsNeutralLeech && !torrent.IsFreeload && !torrent.IsPersonalFreeLeech),
+                            DownloadUrl = GetDownloadUrl(id, torrent.CanUseToken && !isFreeLeech),
                             Title = WebUtility.HtmlDecode(title),
                             Artist = WebUtility.HtmlDecode(result.Artist),
                             Album = WebUtility.HtmlDecode(result.GroupName),
@@ -282,7 +283,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                             Scene = torrent.Scene,
                             Files = torrent.FileCount,
                             Grabs = torrent.Snatches,
-                            DownloadVolumeFactor = torrent.IsFreeLeech || torrent.IsNeutralLeech || torrent.IsFreeload || torrent.IsPersonalFreeLeech ? 0 : 1,
+                            DownloadVolumeFactor = isFreeLeech ? 0 : 1,
                             UploadVolumeFactor = torrent.IsNeutralLeech || torrent.IsFreeload ? 0 : 1
                         };
 
@@ -317,12 +318,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     var id = result.TorrentId;
                     var infoUrl = GetInfoUrl(result.GroupId, id);
+                    var isFreeLeech = result.IsFreeLeech || result.IsNeutralLeech || result.IsFreeload || result.IsPersonalFreeLeech;
 
                     var release = new TorrentInfo
                     {
                         Guid = infoUrl,
                         InfoUrl = infoUrl,
-                        DownloadUrl = GetDownloadUrl(id, !result.IsFreeLeech && !result.IsNeutralLeech && !result.IsFreeload && !result.IsPersonalFreeLeech),
+                        DownloadUrl = GetDownloadUrl(id, result.CanUseToken && !isFreeLeech),
                         Title = WebUtility.HtmlDecode(result.GroupName),
                         Size = long.Parse(result.Size),
                         Seeders = int.Parse(result.Seeders),
@@ -330,7 +332,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         PublishDate = DateTimeOffset.FromUnixTimeSeconds(ParseUtil.CoerceLong(result.GroupTime)).UtcDateTime,
                         Files = result.FileCount,
                         Grabs = result.Snatches,
-                        DownloadVolumeFactor = result.IsFreeLeech || result.IsNeutralLeech || result.IsFreeload || result.IsPersonalFreeLeech ? 0 : 1,
+                        DownloadVolumeFactor = isFreeLeech ? 0 : 1,
                         UploadVolumeFactor = result.IsNeutralLeech || result.IsFreeload ? 0 : 1
                     };
 

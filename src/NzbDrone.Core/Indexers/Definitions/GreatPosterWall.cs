@@ -168,8 +168,10 @@ public class GreatPosterWallParser : GazelleParser
         {
             foreach (var torrent in result.Torrents)
             {
+                var isFreeLeech = torrent.IsFreeleech || torrent.IsNeutralLeech || torrent.IsPersonalFreeleech;
+
                 // skip releases that cannot be used with freeleech tokens when the option is enabled
-                if (_settings.UseFreeleechToken && !torrent.CanUseToken)
+                if (_settings.UseFreeleechToken && !torrent.CanUseToken && !isFreeLeech)
                 {
                     continue;
                 }
@@ -181,7 +183,7 @@ public class GreatPosterWallParser : GazelleParser
                 {
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
-                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, !torrent.IsFreeleech && !torrent.IsNeutralLeech && !torrent.IsPersonalFreeleech),
+                    DownloadUrl = GetDownloadUrl(torrent.TorrentId, torrent.CanUseToken && !isFreeLeech),
                     Title = WebUtility.HtmlDecode(torrent.FileName).Trim(),
                     PosterUrl = GetPosterUrl(result.Cover),
                     PublishDate = new DateTimeOffset(time, TimeSpan.FromHours(8)).UtcDateTime, // Time is Chinese Time, add 8 hours difference from UTC
@@ -192,7 +194,7 @@ public class GreatPosterWallParser : GazelleParser
                     Grabs = torrent.Snatches,
                     Files = torrent.FileCount,
                     Scene = torrent.Scene,
-                    DownloadVolumeFactor = torrent.IsFreeleech || torrent.IsNeutralLeech || torrent.IsPersonalFreeleech ? 0 : 1,
+                    DownloadVolumeFactor = isFreeLeech ? 0 : 1,
                     UploadVolumeFactor = torrent.IsNeutralLeech ? 0 : 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800 // 48 hours

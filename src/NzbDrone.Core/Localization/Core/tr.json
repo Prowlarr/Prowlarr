@@ -518,7 +518,7 @@
     "OnApplicationUpdateHelpText": "Uygulama Güncellemesinde",
     "DeleteSelectedApplicationsMessageText": "Seçilen {count} içe aktarma listesini silmek istediğinizden emin misiniz?",
     "ProxyValidationBadRequest": "Proxy ile test edilemedi. DurumKodu: {statusCode}",
-    "UpdateAvailableHealthCheckMessage": "Yeni güncelleme mevcut",
+    "UpdateAvailableHealthCheckMessage": "Yeni güncelleme mevcut: {version}",
     "days": "gün",
     "Default": "Varsayılan",
     "GrabRelease": "Yayın Yakalama",

@@ -242,9 +242,16 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var torrentInfos = new List<ReleaseInfo>();
 
-            if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
+            var responseCode = indexerResponse.HttpResponse.StatusCode;
+
+            switch (responseCode)
             {
-                throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request", indexerResponse.HttpResponse.StatusCode);
+                case HttpStatusCode.OK:
+                    break;
+                case HttpStatusCode.Forbidden:
+                    throw new IndexerAuthException("You do not meet the login requirements: VPN with 2FA or ISP in home country.");
+                default:
+                    throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request", responseCode);
             }
 
             JsonRpcResponse<NebulanceResponse> jsonResponse;
@@ -257,7 +264,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 STJson.TryDeserialize<JsonRpcResponse<string>>(indexerResponse.HttpResponse.Content, out var response);
 
-                throw new IndexerException(indexerResponse, "Unexpected response from indexer request: {0}", ex, response?.Result ?? ex.Message);
+                throw new IndexerException(indexerResponse, "Unexpected JSON response from indexer request: {0}", ex, response?.Result ?? ex.Message);
             }
 
             if (jsonResponse.Error != null || jsonResponse.Result == null)
@@ -332,13 +339,13 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Time { get; set; }
 
-        [JsonProperty(PropertyName="age", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "age", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Age { get; set; }
 
-        [JsonProperty(PropertyName="tvmaze", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "tvmaze", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? TvMaze { get; set; }
 
-        [JsonProperty(PropertyName="imdb", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "imdb", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Imdb { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -347,10 +354,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] Tags { get; set; }
 
-        [JsonProperty(PropertyName="name", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "name", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName="release", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "release", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Release { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -359,10 +366,10 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Series { get; set; }
 
-        [JsonProperty(PropertyName="season", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "season", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Season { get; set; }
 
-        [JsonProperty(PropertyName="episode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "episode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? Episode { get; set; }
 
         public NebulanceQuery Clone()

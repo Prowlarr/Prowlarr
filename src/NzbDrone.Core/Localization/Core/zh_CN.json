@@ -1,6 +1,6 @@
 {
     "About": "关于",
-    "AcceptConfirmationModal": "接受确认模组",
+    "AcceptConfirmationModal": "接受确认对话框",
     "Actions": "动作",
     "Add": "添加",
     "AddApplication": "添加应用程序",
@@ -700,5 +700,16 @@
     "PackageVersionInfo": "{packageVersion} 由 {packageAuthor} 制作",
     "LabelIsRequired": "需要标签",
     "LogSizeLimit": "日志大小限制",
-    "LogSizeLimitHelpText": "存档前的最大日志文件大小（MB）。默认值为 1 MB。"
+    "LogSizeLimitHelpText": "存档前的最大日志文件大小（MB）。默认值为 1 MB。",
+    "NotificationsTelegramSettingsIncludeAppName": "标题中包含 {appName}",
+    "NotificationsTelegramSettingsIncludeAppNameHelpText": "可选，在消息标题前加上 {appName} 以区分来自不同应用的通知",
+    "NotificationsEmailSettingsUseEncryption": "启用加密",
+    "NotificationsEmailSettingsUseEncryptionHelpText": "是否优先使用加密（如果服务器已配置），始终使用通过SSL（仅端口465）或StartTLS（任何其他端口）进行加密，或从不使用加密",
+    "ClickToChangeQueryOptions": "单击以更改查询选项",
+    "ApplicationsLoadError": "无法加载应用程序列表",
+    "DownloadClientSettingsDefaultCategoryHelpText": "默认的备用分类，当发布资源没有匹配的分类时将使用此分类。为 {appName} 添加一个特定的分类，可以避免与非 {appName} 的无关下载发生冲突。分类是可选的，但强烈建议使用。",
+    "AverageGrabs": "平均抓取次数",
+    "AverageQueries": "平均查询次数",
+    "DefaultCategory": "默认分类",
+    "DownloadClientSettingsDefaultCategorySubFolderHelpText": "默认的备用分类，当发布资源没有匹配的分类时将使用此分类。为 {appName} 添加一个特定的分类，可以避免与非 {appName} 的无关下载发生冲突。分类是可选的，但强烈建议使用。启用分类后，会在输出目录中创建一个 [分类] 子目录。"
 }

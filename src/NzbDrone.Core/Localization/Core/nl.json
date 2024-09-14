@@ -499,5 +499,6 @@
     "PublishedDate": "Publicatie Datum",
     "Redirected": "Omleiden",
     "AllSearchResultsHiddenByFilter": "Alle resultaten zijn verborgen door het toegepaste filter",
-    "Clone": "Kloon"
+    "Clone": "Kloon",
+    "DownloadClientSettingsUrlBaseHelpText": "Voegt een voorvoegsel toe aan de {connectionName} url, zoals {url}"
 }

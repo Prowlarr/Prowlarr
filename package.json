@@ -38,6 +38,7 @@
     "chart.js": "4.4.4",
     "classnames": "2.5.1",
     "connected-react-router": "6.9.3",
+    "copy-to-clipboard": "3.3.3",
     "element-class": "0.2.2",
     "filesize": "10.1.6",
     "history": "4.10.1",

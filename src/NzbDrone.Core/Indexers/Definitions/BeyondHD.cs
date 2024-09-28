@@ -45,7 +45,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IParseIndexerResponse GetParser()
         {
-            return new BeyondHDParser(Capabilities.Categories);
+            return new BeyondHDParser(Settings, Capabilities.Categories);
         }
 
         protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
@@ -227,10 +227,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDParser : IParseIndexerResponse
     {
+        private readonly BeyondHDSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public BeyondHDParser(IndexerCapabilitiesCategories categories)
+        public BeyondHDParser(BeyondHDSettings settings, IndexerCapabilitiesCategories categories)
         {
+            _settings = settings;
             _categories = categories;
         }
 
@@ -264,6 +266,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in jsonResponse.Results)
             {
+                // Skip invalid results when freeleech or limited filtering is set
+                if ((_settings.FreeleechOnly && !row.Freeleech) || (_settings.LimitedOnly && !row.Limited))
+                {
+                    continue;
+                }
+
                 var details = row.InfoUrl;
                 var link = row.DownloadLink;
 

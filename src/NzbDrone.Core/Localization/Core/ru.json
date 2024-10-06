@@ -773,5 +773,16 @@
     "UnableToLoadDevelopmentSettings": "Не удалось загрузить настройки разработки",
     "VipExpiration": "Дата окончания VIP",
     "IndexerIPTorrentsSettingsCookieUserAgent": "Cookie User-Agent",
-    "AverageGrabs": "Среднее количество захватов"
+    "AverageGrabs": "Среднее количество захватов",
+    "IndexerSettingsPreferMagnetUrl": "Предпочитать Magnet URL",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Только Golden Popcorn",
+    "IndexerSettingsPreferMagnetUrlHelpText": "При включении этот индексатор предпочтёт использовать для загрузки magnet URL, с возможностью перехода на торрент-ссылки",
+    "IndexerAvistazSettingsPasswordHelpText": "Пароль веб-сайта",
+    "IndexerAvistazSettingsPidHelpText": "PID со страницы Мой аккаунт или Мой профиль",
+    "IndexerAvistazSettingsUsernameHelpTextWarning": "API этого индексатора доступен только для участников и выше рангом.",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Искать релизы только Golden Popcorn",
+    "PreferMagnetUrl": "Предпочитать Magnet URL",
+    "PreferMagnetUrlHelpText": "При включении этот индексатор предпочтёт использовать для загрузки magnet URL, с возможностью перехода на торрент-ссылки",
+    "IndexerAvistazSettingsFreeleechOnlyHelpText": "Искать только релизы freeleech",
+    "IndexerAvistazSettingsUsernameHelpText": "Имя пользователя сайта"
 }

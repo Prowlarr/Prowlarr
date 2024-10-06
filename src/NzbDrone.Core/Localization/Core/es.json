@@ -167,7 +167,7 @@
     "URLBase": "URL base",
     "Uptime": "Tiempo de actividad",
     "UpdateScriptPathHelpText": "Ruta a un script personalizado que toma un paquete de actualización extraído y gestiona el resto del proceso de actualización",
-    "UpdateMechanismHelpText": "Usar el actualizador integrado de {appName} o un script",
+    "UpdateMechanismHelpText": "Usa el actualizador integrado de {appName} o un script",
     "UpdateAutomaticallyHelpText": "Descargar e instalar actualizaciones automáticamente. Todavía puedes instalar desde Sistema: Actualizaciones",
     "UnableToLoadTags": "No se pueden cargar las Etiquetas",
     "UnableToLoadNotifications": "No se pueden cargar las Notificaciones",
@@ -773,5 +773,16 @@
     "PackageVersionInfo": "{packageVersion} por {packageAuthor}",
     "HealthMessagesInfoBox": "Puede encontrar más información sobre la causa de estos mensajes de comprobación de salud haciendo clic en el enlace wiki (icono de libro) al final de la fila, o comprobando sus [logs]({link}). Si tienes dificultades para interpretar estos mensajes, puedes ponerte en contacto con nuestro servicio de asistencia en los enlaces que aparecen a continuación.",
     "LogSizeLimit": "Límite de tamaño de registro",
-    "LogSizeLimitHelpText": "Máximo tamaño de archivo de registro en MB antes de archivarlo. Predeterminado es 1MB."
+    "LogSizeLimitHelpText": "Máximo tamaño de archivo de registro en MB antes de archivarlo. Predeterminado es 1MB.",
+    "PreferMagnetUrl": "Preferir URL magnet",
+    "IndexerSettingsPreferMagnetUrl": "Preferir URL magnet",
+    "IndexerSettingsPreferMagnetUrlHelpText": "Cuando está habilitado, este indexador preferirá el uso de URL magnet para capturas con alternativas a enlaces torrent",
+    "PreferMagnetUrlHelpText": "Cuando está habilitado, este indexador preferirá el uso de URL magnet para capturas con alternativas a enlaces torrent",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Solo Golden Popcorn",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Busca lanzamientos solo en Golden Popcorn",
+    "IndexerAvistazSettingsFreeleechOnlyHelpText": "Buscar solo lanzamientos freeleech",
+    "IndexerAvistazSettingsUsernameHelpText": "Nombre de usuario del sitio",
+    "IndexerAvistazSettingsUsernameHelpTextWarning": "Solo los miembros de rango y superiores pueden usar la API en este indexador.",
+    "IndexerAvistazSettingsPasswordHelpText": "Contraseña del sitio",
+    "IndexerAvistazSettingsPidHelpText": "PID de la página de Mi cuenta o Mi perfil"
 }

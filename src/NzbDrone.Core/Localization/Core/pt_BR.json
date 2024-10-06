@@ -773,5 +773,16 @@
     "PackageVersionInfo": "{packageVersion} por {packageAuthor}",
     "HealthMessagesInfoBox": "Para saber mais sobre a causa dessas mensagens de verificação de integridade, clique no link da wiki (ícone de livro) no final da linha ou verifique os [logs]({link}). Se tiver dificuldade em interpretar essas mensagens, entre em contato com nosso suporte nos links abaixo.",
     "LogSizeLimit": "Limite de Tamanho do Registro",
-    "LogSizeLimitHelpText": "Tamanho máximo do arquivo de registro em MB antes do arquivamento. O padrão é 1 MB."
+    "LogSizeLimitHelpText": "Tamanho máximo do arquivo de registro em MB antes do arquivamento. O padrão é 1 MB.",
+    "PreferMagnetUrlHelpText": "Quando ativado, este indexador preferirá o uso de URLs magnéticos para captura com substituto para links de torrent",
+    "IndexerSettingsPreferMagnetUrl": "Preferir URL Magnético",
+    "IndexerSettingsPreferMagnetUrlHelpText": "Quando ativado, este indexador preferirá o uso de URLs magnéticos para captura com substituto para links de torrent",
+    "PreferMagnetUrl": "Preferir URL Magnético",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Apenas Golden Popcorn",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Pesquisar somente lançamentos em Golden Popcorn",
+    "IndexerAvistazSettingsFreeleechOnlyHelpText": "Pesquisar apenas lançamentos freeleech",
+    "IndexerAvistazSettingsUsernameHelpText": "Nome de Usuário do Site",
+    "IndexerAvistazSettingsPasswordHelpText": "Senha do Site",
+    "IndexerAvistazSettingsPidHelpText": "PID da página Minha Conta ou Meu Perfil",
+    "IndexerAvistazSettingsUsernameHelpTextWarning": "Somente membros com rank e acima podem usar a API neste indexador."
 }

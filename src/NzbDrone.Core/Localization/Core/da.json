@@ -398,5 +398,8 @@
     "Script": "Manuskript",
     "BuiltIn": "Indbygget",
     "PublishedDate": "Udgivelsesdato",
-    "AllSearchResultsHiddenByFilter": "Alle resultater skjules af det anvendte filter"
+    "AllSearchResultsHiddenByFilter": "Alle resultater skjules af det anvendte filter",
+    "AddApplication": "Tilføj Applikation",
+    "AddCategory": "Tilføj Kategori",
+    "ActiveApps": "Aktive Apps"
 }

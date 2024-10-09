@@ -491,5 +491,6 @@
     "Script": "Script",
     "BuiltIn": "Incorporado",
     "PublishedDate": "Data de publicação",
-    "AllSearchResultsHiddenByFilter": "Todos os resultados foram ocultados pelo filtro aplicado"
+    "AllSearchResultsHiddenByFilter": "Todos os resultados foram ocultados pelo filtro aplicado",
+    "BlackholeFolderHelpText": "Pasta em que {appName} guardará o ficheiro {extension}."
 }

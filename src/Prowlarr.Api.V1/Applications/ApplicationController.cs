@@ -1,4 +1,5 @@
 using NzbDrone.Core.Applications;
+using NzbDrone.SignalR;
 using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.Applications
@@ -9,8 +10,8 @@ namespace Prowlarr.Api.V1.Applications
         public static readonly ApplicationResourceMapper ResourceMapper = new ();
         public static readonly ApplicationBulkResourceMapper BulkResourceMapper = new ();
 
-        public ApplicationController(ApplicationFactory applicationsFactory)
-            : base(applicationsFactory, "applications", ResourceMapper, BulkResourceMapper)
+        public ApplicationController(IBroadcastSignalRMessage signalRBroadcaster, ApplicationFactory applicationsFactory)
+            : base(signalRBroadcaster, applicationsFactory, "applications", ResourceMapper, BulkResourceMapper)
         {
         }
     }

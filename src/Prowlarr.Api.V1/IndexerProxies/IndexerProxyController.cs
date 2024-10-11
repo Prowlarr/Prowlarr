@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.IndexerProxies;
+using NzbDrone.SignalR;
 using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.IndexerProxies
@@ -11,8 +12,8 @@ namespace Prowlarr.Api.V1.IndexerProxies
         public static readonly IndexerProxyResourceMapper ResourceMapper = new ();
         public static readonly IndexerProxyBulkResourceMapper BulkResourceMapper = new ();
 
-        public IndexerProxyController(IndexerProxyFactory notificationFactory)
-            : base(notificationFactory, "indexerProxy", ResourceMapper, BulkResourceMapper)
+        public IndexerProxyController(IBroadcastSignalRMessage signalRBroadcaster, IndexerProxyFactory notificationFactory)
+            : base(signalRBroadcaster, notificationFactory, "indexerProxy", ResourceMapper, BulkResourceMapper)
         {
         }
 

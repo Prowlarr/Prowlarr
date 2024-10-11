@@ -4,14 +4,21 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Core.Datastore.Events;
+using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.ThingiProvider.Events;
 using NzbDrone.Core.Validation;
 using NzbDrone.Http.REST.Attributes;
+using NzbDrone.SignalR;
 using Prowlarr.Http.REST;
 
 namespace Prowlarr.Api.V1
 {
-    public abstract class ProviderControllerBase<TProviderResource, TBulkProviderResource, TProvider, TProviderDefinition> : RestController<TProviderResource>
+    public abstract class ProviderControllerBase<TProviderResource, TBulkProviderResource, TProvider, TProviderDefinition> : RestControllerWithSignalR<TProviderResource, TProviderDefinition>,
+        IHandle<ProviderAddedEvent<TProvider>>,
+        IHandle<ProviderUpdatedEvent<TProvider>>,
+        IHandle<ProviderDeletedEvent<TProvider>>
         where TProviderDefinition : ProviderDefinition, new()
         where TBulkProviderResource : ProviderBulkResource<TBulkProviderResource>, new()
         where TProvider : IProvider
@@ -21,11 +28,13 @@ namespace Prowlarr.Api.V1
         protected readonly ProviderResourceMapper<TProviderResource, TProviderDefinition> _resourceMapper;
         private readonly ProviderBulkResourceMapper<TBulkProviderResource, TProviderDefinition> _bulkResourceMapper;
 
-        protected ProviderControllerBase(IProviderFactory<TProvider,
+        protected ProviderControllerBase(IBroadcastSignalRMessage signalRBroadcaster,
+            IProviderFactory<TProvider,
             TProviderDefinition> providerFactory,
             string resource,
             ProviderResourceMapper<TProviderResource, TProviderDefinition> resourceMapper,
             ProviderBulkResourceMapper<TBulkProviderResource, TProviderDefinition> bulkResourceMapper)
+            : base(signalRBroadcaster)
         {
             _providerFactory = providerFactory;
             _resourceMapper = resourceMapper;
@@ -242,6 +251,24 @@ namespace Prowlarr.Api.V1
             var data = _providerFactory.RequestAction(providerDefinition, name, query);
 
             return Json(data);
+        }
+
+        [NonAction]
+        public void Handle(ProviderAddedEvent<TProvider> message)
+        {
+            BroadcastResourceChange(ModelAction.Created, message.Definition.Id);
+        }
+
+        [NonAction]
+        public void Handle(ProviderUpdatedEvent<TProvider> message)
+        {
+            BroadcastResourceChange(ModelAction.Updated, message.Definition.Id);
+        }
+
+        [NonAction]
+        public void Handle(ProviderDeletedEvent<TProvider> message)
+        {
+            BroadcastResourceChange(ModelAction.Deleted, message.ProviderId);
         }
 
         private void Validate(TProviderDefinition definition, bool includeWarnings)

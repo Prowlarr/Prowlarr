@@ -1,4 +1,5 @@
 using NzbDrone.Core.Download;
+using NzbDrone.SignalR;
 using Prowlarr.Http;
 
 namespace Prowlarr.Api.V1.DownloadClient
@@ -9,8 +10,8 @@ namespace Prowlarr.Api.V1.DownloadClient
         public static readonly DownloadClientResourceMapper ResourceMapper = new ();
         public static readonly DownloadClientBulkResourceMapper BulkResourceMapper = new ();
 
-        public DownloadClientController(IDownloadClientFactory downloadClientFactory)
-            : base(downloadClientFactory, "downloadclient", ResourceMapper, BulkResourceMapper)
+        public DownloadClientController(IBroadcastSignalRMessage signalRBroadcaster, IDownloadClientFactory downloadClientFactory)
+            : base(signalRBroadcaster, downloadClientFactory, "downloadclient", ResourceMapper, BulkResourceMapper)
         {
         }
     }

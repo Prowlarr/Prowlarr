@@ -141,6 +141,16 @@ class SignalRConnector extends Component {
     console.error(`signalR: Unable to find handler for ${name}`);
   };
 
+  handleApplications = ({ action, resource }) => {
+    const section = 'settings.applications';
+
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
+    } else if (action === 'deleted') {
+      this.props.dispatchRemoveItem({ section, id: resource.id });
+    }
+  };
+
   handleCommand = (body) => {
     if (body.action === 'sync') {
       this.props.dispatchFetchCommands();
@@ -150,13 +160,23 @@ class SignalRConnector extends Component {
     const resource = body.resource;
     const status = resource.status;
 
-    // Both sucessful and failed commands need to be
-    // completed, otherwise they spin until they timeout.
+    // Both successful and failed commands need to be
+    // completed, otherwise they spin until they time out.
 
     if (status === 'completed' || status === 'failed') {
       this.props.dispatchFinishCommand(resource);
     } else {
       this.props.dispatchUpdateCommand(resource);
+    }
+  };
+
+  handleDownloadclient = ({ action, resource }) => {
+    const section = 'settings.downloadClients';
+
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
+    } else if (action === 'deleted') {
+      this.props.dispatchRemoveItem({ section, id: resource.id });
     }
   };
 
@@ -168,14 +188,33 @@ class SignalRConnector extends Component {
     this.props.dispatchFetchIndexerStatus();
   };
 
-  handleIndexer = (body) => {
-    const action = body.action;
+  handleIndexer = ({ action, resource }) => {
     const section = 'indexers';
 
-    if (action === 'updated') {
-      this.props.dispatchUpdateItem({ section, ...body.resource });
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
     } else if (action === 'deleted') {
-      this.props.dispatchRemoveItem({ section, id: body.resource.id });
+      this.props.dispatchRemoveItem({ section, id: resource.id });
+    }
+  };
+
+  handleIndexerproxy = ({ action, resource }) => {
+    const section = 'settings.indexerProxies';
+
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
+    } else if (action === 'deleted') {
+      this.props.dispatchRemoveItem({ section, id: resource.id });
+    }
+  };
+
+  handleNotification = ({ action, resource }) => {
+    const section = 'settings.notifications';
+
+    if (action === 'created' || action === 'updated') {
+      this.props.dispatchUpdateItem({ section, ...resource });
+    } else if (action === 'deleted') {
+      this.props.dispatchRemoveItem({ section, id: resource.id });
     }
   };
 

@@ -72,7 +72,7 @@ namespace NzbDrone.Core.Jobs
                     new ScheduledTask
                     {
                         Interval = 6 * 60,
-                        TypeName = typeof(ApplicationCheckUpdateCommand).FullName
+                        TypeName = typeof(ApplicationUpdateCheckCommand).FullName
                     },
 
                     new ScheduledTask

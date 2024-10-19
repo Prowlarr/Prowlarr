@@ -20,7 +20,7 @@ using NzbDrone.Core.Update.Commands;
 
 namespace NzbDrone.Core.Update
 {
-    public class InstallUpdateService : IExecute<ApplicationCheckUpdateCommand>, IExecute<ApplicationUpdateCommand>, IHandle<ApplicationStartingEvent>
+    public class InstallUpdateService : IExecute<ApplicationUpdateCommand>, IExecute<ApplicationUpdateCheckCommand>, IHandle<ApplicationStartingEvent>
     {
         private readonly ICheckUpdateService _checkUpdateService;
         private readonly Logger _logger;
@@ -270,7 +270,7 @@ namespace NzbDrone.Core.Update
             return latestAvailable;
         }
 
-        public void Execute(ApplicationCheckUpdateCommand message)
+        public void Execute(ApplicationUpdateCheckCommand message)
         {
             if (GetUpdatePackage(message.Trigger) != null)
             {

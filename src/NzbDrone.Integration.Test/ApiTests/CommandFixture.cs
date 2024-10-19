@@ -10,7 +10,7 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_be_able_to_run_update_check()
         {
-            var response = Commands.Post(new SimpleCommandResource { Name = "applicationcheckupdate" });
+            var response = Commands.Post(new SimpleCommandResource { Name = "applicationupdatecheck" });
 
             response.Id.Should().NotBe(0);
         }

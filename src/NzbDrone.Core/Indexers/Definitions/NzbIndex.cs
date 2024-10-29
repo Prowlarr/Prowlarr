@@ -20,6 +20,7 @@ using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Site has removed API access.")]
     public class NzbIndex : UsenetIndexerBase<NzbIndexSettings>
     {
         public override string Name => "NZBIndex";

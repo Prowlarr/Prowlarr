@@ -794,5 +794,10 @@
     "InstallLatest": "Installer la dernière",
     "InstallMajorVersionUpdateMessageLink": "Veuillez consulter [{domain}]({url}) pour plus d'informations.",
     "InstallMajorVersionUpdate": "Installer la mise à jour",
-    "InstallMajorVersionUpdateMessage": "Cette mise à jour installera une nouvelle version majeure et pourrait ne pas être compatible avec votre système. Êtes-vous sûr de vouloir installer cette mise à jour ?"
+    "InstallMajorVersionUpdateMessage": "Cette mise à jour installera une nouvelle version majeure et pourrait ne pas être compatible avec votre système. Êtes-vous sûr de vouloir installer cette mise à jour ?",
+    "FailedToFetchSettings": "Échec de la récupération des paramètres",
+    "IndexerSettingsPreferMagnetUrlHelpText": "Si activé, cet indexeur privilégiera si possible l'usage de liens de type magnet aux liens torrent",
+    "PreferMagnetUrl": "Privilégier les liens de type magnet",
+    "IndexerAvistazSettingsPidHelpText": "PID de la page Mon compte ou Mon profil",
+    "IndexerAvistazSettingsPasswordHelpText": "Mot de passe du site"
 }

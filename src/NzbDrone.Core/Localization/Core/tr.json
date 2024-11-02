@@ -259,7 +259,7 @@
     "Indexer": "Dizinleyici",
     "DownloadClientStatusAllClientHealthCheckMessage": "Hatalar nedeniyle tüm indirme istemcileri kullanılamıyor",
     "EditIndexer": "Dizinleyiciyi Düzenle",
-    "Enable": "etkinleştirme",
+    "Enable": "Etkinleştir",
     "EnableInteractiveSearch": "Etkileşimli Aramayı Etkinleştir",
     "EnableRss": "RSS'yi etkinleştir",
     "EnableSSL": "SSL'yi etkinleştir",
@@ -551,5 +551,11 @@
     "Logout": "Çıkış",
     "UpdaterLogFiles": "Güncelleme Günlük Dosyaları",
     "WouldYouLikeToRestoreBackup": "'{name}' yedeğini geri yüklemek ister misiniz?",
-    "InstallLatest": "En Sonu Yükle"
+    "InstallLatest": "En Sonu Yükle",
+    "Install": "Kur",
+    "InstallMajorVersionUpdate": "Güncellemeyi Kur",
+    "InstallMajorVersionUpdateMessage": "Bu güncelleştirme yeni bir ana sürüm yükleyecek ve sisteminizle uyumlu olmayabilir. Bu güncelleştirmeyi yüklemek istediğinizden emin misiniz?",
+    "InstallMajorVersionUpdateMessageLink": "Daha fazla bilgi için lütfen [{domain}]({url}) adresini kontrol edin.",
+    "Season": "Sezon",
+    "Artist": "sanatçı"
 }

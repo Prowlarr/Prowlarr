@@ -372,5 +372,21 @@
     "ExternalUpdater": "{appName} được định cấu hình để sử dụng cơ chế cập nhật bên ngoài",
     "RestartReloadNote": "Lưu ý: {appName} sẽ tự động khởi động lại và tải lại giao diện người dùng trong quá trình khôi phục.",
     "UpdateAppDirectlyLoadError": "Không thể cập nhật {appName} trực tiếp,",
-    "InstallLatest": "Cài đặt mới nhất"
+    "InstallLatest": "Cài đặt mới nhất",
+    "AuthenticationMethodHelpTextWarning": "Vui lòng chọn một phương thức xác thực hợp lệ",
+    "AuthenticationRequiredPasswordHelpTextWarning": "Nhập mật khẩu mới",
+    "AuthenticationRequiredUsernameHelpTextWarning": "Nhập tên người dùng mới",
+    "UpdaterLogFiles": "Tệp nhật ký của trình cập nhật",
+    "UseSsl": "Dùng SSL",
+    "AppUpdatedVersion": "{appName} đã được cập nhật lên phiên bản `{version}`, để nhận được những thay đổi mới nhất, bạn cần tải lại {appName}",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Xác nhận mật khẩu mới",
+    "UpdateAvailableHealthCheckMessage": "Có cập nhật mới: {version}",
+    "AuthenticationRequiredWarning": "Để ngăn truy cập từ xa mà không cần xác thực, {appName} hiện yêu cầu bật xác thực. Bạn có thể tùy ý tắt xác thực từ các địa chỉ cục bộ.",
+    "AuthenticationRequired": "Bắt buộc phải xác thực",
+    "AuthenticationMethod": "Phương thức xác thực",
+    "AddDownloadClientImplementation": "Thêm trình tải xuống - {implementationName}",
+    "AddIndexerImplementation": "Thêm trình lập chỉ mục - {implementationName}",
+    "AddConnection": "Thêm kết nối",
+    "AddConnectionImplementation": "Thêm điều kiện - {implementationName}",
+    "AppUpdated": "{appName} đã cập nhật"
 }

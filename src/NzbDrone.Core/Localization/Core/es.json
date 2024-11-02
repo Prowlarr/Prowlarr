@@ -517,7 +517,7 @@
     "IndexerTagsHelpTextWarning": "Las etiquetas deben utilizarse con precaución, ya que pueden tener efectos no deseados. Un indexador con una etiqueta solo se sincronizará con aplicaciones que tengan la misma etiqueta.",
     "TVSearchTypes": "Tipos de búsqueda de TV",
     "DownloadClientAriaSettingsDirectoryHelpText": "Ubicación opcional en la que poner las descargas, dejar en blanco para usar la ubicación de Aria2 predeterminada",
-    "IndexerNoDefinitionCheckHealthCheckMessage": "Los indexadores no tienen definición y no funcionarán: {indexerNames}. Por favor elimínelos y (o) vuelva a añadirlos a {appName}.",
+    "IndexerNoDefinitionCheckHealthCheckMessage": "Los indexadores no tienen definición y no funcionarán: {indexerNames}. Por favor elimínalos y (o) vuelve a añadirlos a {appName}.",
     "IndexerProxy": "Proxy del Indexador",
     "IndexerObsoleteCheckMessage": "Los indexadores están obsoletos o se han actualizado: {0}. Por favor elimínelos y (o) vuelva a añadirlos a {appName}",
     "IncludeManualGrabsHelpText": "Incluir las Capturas Manuales realizadas en {appName}",
@@ -803,5 +803,6 @@
     "InstallLatest": "Instala el último",
     "InstallMajorVersionUpdateMessage": "Esta actualización instalará una nueva versión principal y podría no ser compatible con tu sistema. ¿Estás seguro que quieres instalar esta actualización?",
     "InstallMajorVersionUpdate": "Instalar actualización",
-    "InstallMajorVersionUpdateMessageLink": "Por favor revisa [{domain}]({url}) para más información."
+    "InstallMajorVersionUpdateMessageLink": "Por favor revisa [{domain}]({url}) para más información.",
+    "FailedToFetchSettings": "Error al recuperar la configuración"
 }

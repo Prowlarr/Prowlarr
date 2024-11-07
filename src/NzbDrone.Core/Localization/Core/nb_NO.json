@@ -131,7 +131,7 @@
     "ConnectionLostReconnect": "Radarr vil forsøke å koble til automatisk, eller du kan klikke oppdater nedenfor.",
     "ConnectionLostToBackend": "Radarr har mistet tilkoblingen til baksystemet og må lastes inn på nytt for å gjenopprette funksjonalitet.",
     "DeleteAppProfileMessageText": "Er du sikker på at du vil slette denne forsinkelsesprofilen?",
-    "AddConnection": "Legg til kobling",
+    "AddConnection": "Legg til tilkobling",
     "AuthBasic": "Grunnleggende (nettleser -popup)",
     "AuthForm": "Skjemaer (påloggingsside)",
     "DisabledForLocalAddresses": "Deaktivert for lokale adresser",
@@ -158,5 +158,7 @@
     "BuiltIn": "Bygget inn",
     "AllSearchResultsHiddenByFilter": "Alle resultatene er skjult av det anvendte filteret",
     "AptUpdater": "Bruk apt til å installere oppdateringen",
-    "Discord": "Discord"
+    "Discord": "Discord",
+    "AddCustomFilter": "Legg til eget filter",
+    "Clone": "Lukk"
 }

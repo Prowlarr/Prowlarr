@@ -147,5 +147,6 @@
     "BuiltIn": "Vstavaný",
     "AllSearchResultsHiddenByFilter": "Použitý filter skryje všetky výsledky",
     "AptUpdater": "Použiť apt pre inštaláciu aktualizácie",
-    "Discord": "Discord"
+    "Discord": "Discord",
+    "Clone": "Zatvoriť"
 }

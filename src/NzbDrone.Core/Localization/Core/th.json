@@ -373,5 +373,6 @@
     "NoEventsFound": "ไม่พบกิจกรรม",
     "RestartReloadNote": "หมายเหตุ: {appName} จะรีสตาร์ทและโหลด UI ใหม่โดยอัตโนมัติในระหว่างกระบวนการกู้คืน",
     "UpdateAppDirectlyLoadError": "ไม่สามารถอัปเดต {appName} ได้โดยตรง",
-    "InstallLatest": "ติดตั้งล่าสุด"
+    "InstallLatest": "ติดตั้งล่าสุด",
+    "Clone": "ปิด"
 }

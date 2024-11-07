@@ -410,5 +410,6 @@
     "ExternalUpdater": "{appName} er konfigureret til at bruge en ekstern opdateringsmekanisme",
     "RestartReloadNote": "Bemærk: {appName} genstarter automatisk og genindlæser brugergrænsefladen under gendannelsesprocessen.",
     "UpdateAppDirectlyLoadError": "Kan ikke opdatere {appName} direkte,",
-    "InstallLatest": "Installer senest"
+    "InstallLatest": "Installer senest",
+    "Clone": "Luk"
 }

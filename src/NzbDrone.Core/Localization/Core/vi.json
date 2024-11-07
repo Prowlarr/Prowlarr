@@ -388,5 +388,6 @@
     "AddIndexerImplementation": "Thêm trình lập chỉ mục - {implementationName}",
     "AddConnection": "Thêm kết nối",
     "AddConnectionImplementation": "Thêm điều kiện - {implementationName}",
-    "AppUpdated": "{appName} đã cập nhật"
+    "AppUpdated": "{appName} đã cập nhật",
+    "Clone": "Đóng"
 }

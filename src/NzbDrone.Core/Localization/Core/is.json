@@ -370,5 +370,6 @@
     "RestartReloadNote": "Athugið: {appName} mun sjálfkrafa endurræsa og endurhlaða notendaviðmiðið meðan á endurreisnarferlinu stendur.",
     "UpdateAppDirectlyLoadError": "Ekki er hægt að uppfæra {appName} beint,",
     "NoEventsFound": "Engir viðburðir fundust",
-    "InstallLatest": "Settu upp nýjustu"
+    "InstallLatest": "Settu upp nýjustu",
+    "Clone": "Lokaðu"
 }

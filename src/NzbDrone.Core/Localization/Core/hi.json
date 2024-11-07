@@ -368,5 +368,6 @@
     "NoEventsFound": "कोई घटना नहीं मिली",
     "RestartReloadNote": "नोट: रैडियर स्वचालित रूप से पुनः आरंभ करेगा और पुनर्स्थापना प्रक्रिया के दौरान UI को फिर से लोड करेगा।",
     "UpdateAppDirectlyLoadError": "सीधे {appName} अद्यतन करने में असमर्थ,",
-    "InstallLatest": "नवीनतम स्थापित करें"
+    "InstallLatest": "नवीनतम स्थापित करें",
+    "Clone": "बंद करे"
 }

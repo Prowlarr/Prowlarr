@@ -211,5 +211,6 @@
     "UnableToAddANewApplicationPleaseTryAgain": "Neuspješno dodavanje nove obavijesti, molimo pokušaj ponovno.",
     "EditApplicationImplementation": "Dodaj Vezu - {implementationName}",
     "AptUpdater": "Koristi apt kako bi instalirao ažuriranje",
-    "EditIndexerProxyImplementation": "Dodaj Indexer - {implementationName}"
+    "EditIndexerProxyImplementation": "Dodaj Indexer - {implementationName}",
+    "Clone": "Zatvori"
 }

@@ -424,5 +424,6 @@
     "UpdateAppDirectlyLoadError": "Nie można bezpośrednio zaktualizować {appName},",
     "AptUpdater": "Użyj apt, aby zainstalować aktualizację",
     "DockerUpdater": "zaktualizuj kontener Dockera, aby otrzymać aktualizację",
-    "InstallLatest": "Zainstaluj najnowsze"
+    "InstallLatest": "Zainstaluj najnowsze",
+    "Clone": "Zamknij"
 }

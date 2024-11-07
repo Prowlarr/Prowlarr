@@ -370,5 +370,6 @@
     "ErrorRestoringBackup": "خطأ في استعادة النسخة الاحتياطية",
     "ExternalUpdater": "تم تكوين {appName} لاستخدام آلية تحديث خارجية",
     "InstallLatest": "تثبيت الأحدث",
-    "AptUpdater": "استخدم apt لتثبيت التحديث"
+    "AptUpdater": "استخدم apt لتثبيت التحديث",
+    "Clone": "قريب"
 }

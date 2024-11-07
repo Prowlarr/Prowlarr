@@ -370,5 +370,6 @@
     "RestartReloadNote": "注：{appName}は、復元プロセス中にUIを自動的に再起動して再読み込みします。",
     "UpdateAppDirectlyLoadError": "{appName}を直接更新できません。",
     "AptUpdater": "aptを使用してアップデートをインストールします",
-    "InstallLatest": "最新のインストール"
+    "InstallLatest": "最新のインストール",
+    "Clone": "閉じる"
 }

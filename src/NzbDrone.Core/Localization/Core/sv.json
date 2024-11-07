@@ -458,5 +458,6 @@
     "AptUpdater": "Använd apt för att installera uppdateringen",
     "Download": "Ladda ner",
     "ExternalUpdater": "{appName} är konfigurerad för att använda en extern uppdateringsmekanism",
-    "InstallLatest": "Installera senaste"
+    "InstallLatest": "Installera senaste",
+    "Clone": "Avsluta"
 }

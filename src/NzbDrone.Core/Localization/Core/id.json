@@ -86,5 +86,7 @@
     "IndexerHDBitsSettingsCodecs": "Codec",
     "ProxyValidationBadRequest": "Gagal menguji proxy. Kode Status: {statusCode}",
     "AllSearchResultsHiddenByFilter": "Seluruh hasil disembunyikan karena penyaringan yang diterapkan",
-    "AptUpdater": "Gunakan apt untuk memasang pembaruan"
+    "AptUpdater": "Gunakan apt untuk memasang pembaruan",
+    "Clone": "Tutup",
+    "EnableSSL": "Aktifkan RSS"
 }

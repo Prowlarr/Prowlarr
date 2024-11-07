@@ -427,5 +427,6 @@
     "ExternalUpdater": "{appName} מוגדר להשתמש במנגנון עדכון חיצוני",
     "RestartReloadNote": "הערה: {appName} יופעל מחדש אוטומטית וטען מחדש את ממשק המשתמש במהלך תהליך השחזור.",
     "UpdateAppDirectlyLoadError": "לא ניתן לעדכן את {appName} ישירות,",
-    "AptUpdater": "השתמש ב- apt כדי להתקין את העדכון"
+    "AptUpdater": "השתמש ב- apt כדי להתקין את העדכון",
+    "Clone": "סגור"
 }

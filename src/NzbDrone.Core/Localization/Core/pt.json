@@ -501,5 +501,7 @@
     "NoEventsFound": "Nenhum evento encontrado",
     "RestartReloadNote": "Nota: o {appName} reiniciará e recarregará automaticamente a IU durante o processo de restauração.",
     "UpdateAppDirectlyLoadError": "Não foi possível atualizar o {appName} diretamente,",
-    "InstallLatest": "Instalar o mais recente"
+    "InstallLatest": "Instalar o mais recente",
+    "CurrentlyInstalled": "Atualmente instalado",
+    "Mixed": "Corrigido"
 }

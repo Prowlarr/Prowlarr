@@ -487,5 +487,9 @@
     "RestartReloadNote": "Notă: {appName} va reporni și reîncărca automat interfața de utilizare în timpul procesului de restaurare.",
     "AptUpdater": "Utilizați apt pentru a instala actualizarea",
     "InstallLatest": "Instalați cel mai recent",
-    "Clone": "Clonează"
+    "Clone": "Clonează",
+    "Stats": "Status",
+    "CurrentlyInstalled": "În prezent instalat",
+    "Mixed": "Fix",
+    "Season": "Motiv"
 }

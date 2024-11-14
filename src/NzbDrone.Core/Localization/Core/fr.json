@@ -800,5 +800,7 @@
     "PreferMagnetUrl": "Privilégier les liens de type magnet",
     "IndexerAvistazSettingsPidHelpText": "PID de la page Mon compte ou Mon profil",
     "IndexerAvistazSettingsPasswordHelpText": "Mot de passe du site",
-    "PreferMagnetUrlHelpText": "Si activé, cet indexeur privilégiera si possible l'usage de liens de type magnet aux liens torrent"
+    "PreferMagnetUrlHelpText": "Si activé, cet indexeur privilégiera si possible l'usage de liens de type magnet aux liens torrent",
+    "PreviouslyInstalled": "Installé précédemment",
+    "CurrentlyInstalled": "Actuellement installé"
 }

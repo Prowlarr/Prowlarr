@@ -510,5 +510,7 @@
     "UpdateAppDirectlyLoadError": "Kan {appName} niet rechtstreeks updaten,",
     "WouldYouLikeToRestoreBackup": "Wilt u de back-up {name} herstellen?",
     "Download": "Downloaden",
-    "InstallLatest": "Installeer Nieuwste Versie"
+    "InstallLatest": "Installeer Nieuwste Versie",
+    "CurrentlyInstalled": "Momenteel Geïnstalleerd",
+    "Mixed": "Opgelost"
 }

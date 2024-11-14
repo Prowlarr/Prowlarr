@@ -624,5 +624,7 @@
     "UpdaterLogFiles": "Updater-Protokolldateien",
     "WouldYouLikeToRestoreBackup": "Willst du das Backup '{name}' wiederherstellen?",
     "AptUpdater": "Verwenden Sie apt, um das Update zu installieren",
-    "InstallLatest": "Jetzt updaten"
+    "InstallLatest": "Jetzt updaten",
+    "CurrentlyInstalled": "Derzeit installiert",
+    "Mixed": "Behoben"
 }

@@ -537,7 +537,7 @@
     "PackageVersionInfo": "{packageAuthor} tarafından {packageVersion}",
     "LogSizeLimit": "Log Boyutu Sınırı",
     "LogSizeLimitHelpText": "Arşivlemeden önce MB cinsinden maksimum log dosya boyutu. Varsayılan 1 MB'tır.",
-    "AptUpdater": "Güncellemeyi yüklemek için apt kullanın",
+    "AptUpdater": "Güncellemeyi yüklemek için apt'ı kullanın",
     "Download": "İndir",
     "ErrorRestoringBackup": "Yedeği geri yüklerken hata",
     "ExternalUpdater": "{appName}, harici bir güncelleme mekanizması kullanacak şekilde yapılandırıldı",
@@ -557,5 +557,9 @@
     "InstallMajorVersionUpdateMessage": "Bu güncelleştirme yeni bir ana sürüm yükleyecek ve sisteminizle uyumlu olmayabilir. Bu güncelleştirmeyi yüklemek istediğinizden emin misiniz?",
     "InstallMajorVersionUpdateMessageLink": "Daha fazla bilgi için lütfen [{domain}]({url}) adresini kontrol edin.",
     "Season": "Sezon",
-    "Artist": "sanatçı"
+    "Artist": "sanatçı",
+    "Mixed": "Sabit",
+    "Stats": "Durum",
+    "CurrentlyInstalled": "Şu anda Yüklü",
+    "PreviouslyInstalled": "Önceden Yüklenmiş"
 }

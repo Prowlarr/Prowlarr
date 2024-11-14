@@ -371,5 +371,9 @@
     "ExternalUpdater": "تم تكوين {appName} لاستخدام آلية تحديث خارجية",
     "InstallLatest": "تثبيت الأحدث",
     "AptUpdater": "استخدم apt لتثبيت التحديث",
-    "Clone": "قريب"
+    "Clone": "قريب",
+    "Stats": "الحالة",
+    "CurrentlyInstalled": "مثبتة حاليا",
+    "Season": "السبب",
+    "Mixed": "ثابت"
 }

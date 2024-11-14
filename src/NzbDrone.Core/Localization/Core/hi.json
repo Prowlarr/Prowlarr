@@ -369,5 +369,9 @@
     "RestartReloadNote": "नोट: रैडियर स्वचालित रूप से पुनः आरंभ करेगा और पुनर्स्थापना प्रक्रिया के दौरान UI को फिर से लोड करेगा।",
     "UpdateAppDirectlyLoadError": "सीधे {appName} अद्यतन करने में असमर्थ,",
     "InstallLatest": "नवीनतम स्थापित करें",
-    "Clone": "बंद करे"
+    "Clone": "बंद करे",
+    "CurrentlyInstalled": "वर्तमान में स्थापित है",
+    "Mixed": "फिक्स्ड",
+    "Season": "कारण",
+    "Stats": "स्थिति"
 }

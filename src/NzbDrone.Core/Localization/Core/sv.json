@@ -459,5 +459,7 @@
     "Download": "Ladda ner",
     "ExternalUpdater": "{appName} är konfigurerad för att använda en extern uppdateringsmekanism",
     "InstallLatest": "Installera senaste",
-    "Clone": "Avsluta"
+    "Clone": "Avsluta",
+    "Mixed": "Fast",
+    "CurrentlyInstalled": "För närvarande installerad"
 }

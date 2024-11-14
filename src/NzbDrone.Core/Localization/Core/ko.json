@@ -401,5 +401,14 @@
     "AppProfileSelectHelpText": "앱 프로필은 애플리케이션 동기화에서 RSS, 자동 검색 및 대화형 검색 설정을 제어하는 데 사용됩니다",
     "EditIndexerImplementation": "인덱서 추가 - {implementationName}",
     "EditDownloadClientImplementation": "다운로드 클라이언트 추가 - {implementationName}",
-    "Clone": "닫기"
+    "Clone": "닫기",
+    "EditApplicationImplementation": "애플리케이션 추가 - {implementationName}",
+    "Season": "이유",
+    "EditConnectionImplementation": "연결 추가 - {implementationName}",
+    "EditSyncProfile": "동기화 프로필 추가",
+    "CurrentlyInstalled": "현재 설치됨",
+    "Mixed": "결정된",
+    "Stats": "상태",
+    "Applications": "어플리케이션",
+    "EditIndexerProxyImplementation": "인덱서 프록시 추가 - {implementationName}"
 }

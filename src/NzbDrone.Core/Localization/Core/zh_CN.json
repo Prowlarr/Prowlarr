@@ -730,5 +730,7 @@
     "Install": "安装",
     "InstallMajorVersionUpdate": "安装更新",
     "InstallMajorVersionUpdateMessage": "此更新将安装新的主要版本，这可能与您的系统不兼容。您确定要安装此更新吗？",
-    "InstallMajorVersionUpdateMessageLink": "请查看 [{domain}]({url}) 以获取更多信息。"
+    "InstallMajorVersionUpdateMessageLink": "请查看 [{domain}]({url}) 以获取更多信息。",
+    "CurrentlyInstalled": "已安装",
+    "PreviouslyInstalled": "上次安装"
 }

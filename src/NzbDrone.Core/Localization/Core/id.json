@@ -88,5 +88,6 @@
     "AllSearchResultsHiddenByFilter": "Seluruh hasil disembunyikan karena penyaringan yang diterapkan",
     "AptUpdater": "Gunakan apt untuk memasang pembaruan",
     "Clone": "Tutup",
-    "EnableSSL": "Aktifkan RSS"
+    "EnableSSL": "Aktifkan RSS",
+    "CurrentlyInstalled": "Saat Ini Terpasang"
 }

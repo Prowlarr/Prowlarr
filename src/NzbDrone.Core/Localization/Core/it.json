@@ -658,5 +658,8 @@
     "WouldYouLikeToRestoreBackup": "Vuoi ripristinare il backup '{name}'?",
     "UpdateAppDirectlyLoadError": "Impossibile aggiornare {appName} direttamente,",
     "AptUpdater": "Usa apt per installare l'aggiornamento",
-    "InstallLatest": "Installa il più recente"
+    "InstallLatest": "Installa il più recente",
+    "CurrentlyInstalled": "Attualmente Installato",
+    "PreviouslyInstalled": "Precedentemente Installato",
+    "Mixed": "Fissato"
 }

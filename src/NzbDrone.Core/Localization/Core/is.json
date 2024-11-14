@@ -371,5 +371,9 @@
     "UpdateAppDirectlyLoadError": "Ekki er hægt að uppfæra {appName} beint,",
     "NoEventsFound": "Engir viðburðir fundust",
     "InstallLatest": "Settu upp nýjustu",
-    "Clone": "Lokaðu"
+    "Clone": "Lokaðu",
+    "CurrentlyInstalled": "Nú sett upp",
+    "Stats": "Staða",
+    "Mixed": "Fastur",
+    "Season": "Ástæða"
 }

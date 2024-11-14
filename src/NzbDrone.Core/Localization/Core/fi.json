@@ -714,5 +714,8 @@
     "UpdateAppDirectlyLoadError": "{appName}ia ei voida päivittää suoraan,",
     "UpdaterLogFiles": "Päivittäjän lokitiedostot",
     "WouldYouLikeToRestoreBackup": "Haluatko palauttaa varmuuskopion \"{name}\"?",
-    "InstallLatest": "Asenna uusin"
+    "InstallLatest": "Asenna uusin",
+    "CurrentlyInstalled": "Nykyinen asennettu versio",
+    "PreviouslyInstalled": "Edellinen asennettu versio",
+    "Mixed": "Korjattu"
 }

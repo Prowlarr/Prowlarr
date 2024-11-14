@@ -425,5 +425,8 @@
     "AptUpdater": "Użyj apt, aby zainstalować aktualizację",
     "DockerUpdater": "zaktualizuj kontener Dockera, aby otrzymać aktualizację",
     "InstallLatest": "Zainstaluj najnowsze",
-    "Clone": "Zamknij"
+    "Clone": "Zamknij",
+    "Stats": "Status",
+    "CurrentlyInstalled": "Aktualnie zainstalowane",
+    "Mixed": "Naprawiony"
 }

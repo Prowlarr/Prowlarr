@@ -428,5 +428,9 @@
     "RestartReloadNote": "הערה: {appName} יופעל מחדש אוטומטית וטען מחדש את ממשק המשתמש במהלך תהליך השחזור.",
     "UpdateAppDirectlyLoadError": "לא ניתן לעדכן את {appName} ישירות,",
     "AptUpdater": "השתמש ב- apt כדי להתקין את העדכון",
-    "Clone": "סגור"
+    "Clone": "סגור",
+    "CurrentlyInstalled": "מותקן כעת",
+    "Stats": "סטָטוּס",
+    "Season": "סיבה",
+    "Mixed": "תוקן"
 }

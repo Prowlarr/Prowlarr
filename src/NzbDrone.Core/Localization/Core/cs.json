@@ -433,5 +433,8 @@
     "RestartReloadNote": "Poznámka: {appName} se během procesu obnovy automaticky restartuje a znovu načte uživatelské rozhraní.",
     "UpdateAppDirectlyLoadError": "{appName} nelze aktualizovat přímo,",
     "AptUpdater": "K instalaci aktualizace použijte apt",
-    "InstallLatest": "Nainstalujte nejnovější"
+    "InstallLatest": "Nainstalujte nejnovější",
+    "Stats": "Postavení",
+    "CurrentlyInstalled": "Aktuálně nainstalováno",
+    "Mixed": "Pevný"
 }

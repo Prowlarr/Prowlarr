@@ -371,5 +371,9 @@
     "UpdateAppDirectlyLoadError": "{appName}を直接更新できません。",
     "AptUpdater": "aptを使用してアップデートをインストールします",
     "InstallLatest": "最新のインストール",
-    "Clone": "閉じる"
+    "Clone": "閉じる",
+    "Mixed": "修繕",
+    "CurrentlyInstalled": "現在インストール中",
+    "Stats": "状態",
+    "Season": "理由"
 }

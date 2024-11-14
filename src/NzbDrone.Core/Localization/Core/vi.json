@@ -389,5 +389,13 @@
     "AddConnection": "Thêm kết nối",
     "AddConnectionImplementation": "Thêm điều kiện - {implementationName}",
     "AppUpdated": "{appName} đã cập nhật",
-    "Clone": "Đóng"
+    "Clone": "Đóng",
+    "EditIndexerImplementation": "Thêm điều kiện - {implementationName}",
+    "CurrentlyInstalled": "Mới cài đặt",
+    "EditApplicationImplementation": "Thêm điều kiện - {implementationName}",
+    "Stats": "Trạng thái",
+    "Season": "Lý do",
+    "Mixed": "đã sửa",
+    "EditConnectionImplementation": "Thêm điều kiện - {implementationName}",
+    "AddApplicationImplementation": "Thêm điều kiện - {implementationName}"
 }

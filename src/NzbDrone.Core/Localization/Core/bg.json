@@ -371,5 +371,8 @@
     "UpdateAppDirectlyLoadError": "Не може да се актуализира {appName} директно,",
     "AptUpdater": "Използвайте apt, за да инсталирате актуализацията",
     "InstallLatest": "Инсталирайте най-новите",
-    "Clone": "Близо"
+    "Clone": "Близо",
+    "ActiveApps": "Активни приложения",
+    "ActiveIndexers": "Активни индиксатори",
+    "AddApplication": "добави приложение"
 }

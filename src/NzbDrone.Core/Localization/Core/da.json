@@ -411,5 +411,8 @@
     "RestartReloadNote": "Bemærk: {appName} genstarter automatisk og genindlæser brugergrænsefladen under gendannelsesprocessen.",
     "UpdateAppDirectlyLoadError": "Kan ikke opdatere {appName} direkte,",
     "InstallLatest": "Installer senest",
-    "Clone": "Luk"
+    "Clone": "Luk",
+    "CurrentlyInstalled": "Aktuelt installeret",
+    "Stats": "Status",
+    "Mixed": "Fast"
 }

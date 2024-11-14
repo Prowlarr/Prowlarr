@@ -595,5 +595,7 @@
     "RestartReloadNote": "Megjegyzés: A {appName} automatikusan újraindítja és újratölti a felületet a visszaállítási folyamatban.",
     "UpdateAppDirectlyLoadError": "Nem lehetséges közvetlenül frissíteni a {appName}-t",
     "WouldYouLikeToRestoreBackup": "Szeretné visszaállítani a(z) „{name}” biztonsági másolatot?",
-    "InstallLatest": "Legfrissebb telepítése"
+    "InstallLatest": "Legfrissebb telepítése",
+    "CurrentlyInstalled": "Jelenleg telepítve",
+    "PreviouslyInstalled": "Korábban telepítve"
 }

@@ -25,7 +25,7 @@
     "ApiKey": "Chave da API",
     "ApiKeyValidationHealthCheckMessage": "Atualize sua chave de API para ter pelo menos {length} caracteres. Você pode fazer isso através das configurações ou do arquivo de configuração",
     "AppDataDirectory": "Diretório AppData",
-    "AppDataLocationHealthCheckMessage": "A atualização não será possível para evitar a exclusão de AppData",
+    "AppDataLocationHealthCheckMessage": "A atualização não será possível para evitar a exclusão de AppData na Atualização",
     "AppProfileInUse": "Perfil de aplicativo em uso",
     "AppProfileSelectHelpText": "Os perfis de aplicativos são usados para controlar as configurações de RSS, Pesquisa automática e Pesquisa interativa ao sincronizar o aplicativo",
     "AppSettingsSummary": "Aplicativos e configurações para configurar como {appName} interage com seus programas PVR",

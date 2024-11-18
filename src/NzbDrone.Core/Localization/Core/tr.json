@@ -47,7 +47,7 @@
     "ReleaseStatus": "Yayın Durumu",
     "ReleaseBranchCheckOfficialBranchMessage": "{0} şubesi geçerli bir {appName} sürüm dalı değil; güncelleme almayacaksınız",
     "Refresh": "Yenile",
-    "Queue": "Sırada",
+    "Queue": "Kuyruk",
     "Protocol": "Protokol",
     "Options": "Seçenekler",
     "NoChanges": "Değişiklikler yok",

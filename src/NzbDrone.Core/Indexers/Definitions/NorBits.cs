@@ -190,7 +190,21 @@ public class NorBitsRequestGenerator : IIndexerRequestGenerator
         }
         else if (!string.IsNullOrWhiteSpace(term))
         {
-            searchTerm = "search=" + term.UrlEncode(Encoding.GetEncoding(28591));
+            // Replace with the actual special chars in the http encoded string, as that's needed for the search
+            string encodedTerm = term.UrlEncode(Encoding.GetEncoding(28591));
+            Dictionary<string, string> replacements = new Dictionary<string, string>
+            {
+                { "%F8", "ø" },
+                { "%E5", "å" },
+                { "%E6", "æ" }
+            };
+            
+            foreach (var replacement in replacements)
+            {
+                encodedTerm = encodedTerm.Replace(replacement.Key, replacement.Value);
+            }
+            
+            searchTerm = "search=" + encodedTerm;
         }
 
         searchUrl += "?" + searchTerm + "&" + parameters.GetQueryString();

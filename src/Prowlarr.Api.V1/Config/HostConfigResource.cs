@@ -46,6 +46,7 @@ namespace Prowlarr.Api.V1.Config
         public int BackupInterval { get; set; }
         public int BackupRetention { get; set; }
         public int HistoryCleanupDays { get; set; }
+        public bool TrustCgnatIpAddresses { get; set; }
     }
 
     public static class HostConfigResourceMapper

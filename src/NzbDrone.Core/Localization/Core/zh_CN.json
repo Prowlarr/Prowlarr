@@ -24,7 +24,7 @@
     "ApiKey": "API 密钥",
     "ApiKeyValidationHealthCheckMessage": "请将API密钥更新为至少 {length} 个字符长。您可以通过设置或配置文件完成此操作",
     "AppDataDirectory": "AppData 目录",
-    "AppDataLocationHealthCheckMessage": "更新时无法阻止删除 AppData",
+    "AppDataLocationHealthCheckMessage": "为防止在更新时删除 AppData，更新将无法进行",
     "AppProfileInUse": "正在使用的应用程序配置文件",
     "AppProfileSelectHelpText": "应用程序配置用于控制应用程序同步设置 RSS、自动搜索和交互式搜索设置",
     "AppSettingsSummary": "配置{appName}与PVR程序交互方式的应用和设置",

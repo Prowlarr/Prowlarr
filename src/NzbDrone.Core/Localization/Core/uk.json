@@ -440,5 +440,6 @@
     "Mixed": "Виправлено",
     "CurrentlyInstalled": "В даний час встановлено",
     "Season": "Причина",
-    "Stats": "Статус"
+    "Stats": "Статус",
+    "CountIndexersSelected": "{count} індексер(-и) обрано"
 }

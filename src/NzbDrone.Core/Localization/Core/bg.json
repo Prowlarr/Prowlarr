@@ -374,5 +374,7 @@
     "Clone": "Близо",
     "ActiveApps": "Активни приложения",
     "ActiveIndexers": "Активни индиксатори",
-    "AddApplication": "добави приложение"
+    "AddApplication": "добави приложение",
+    "Season": "Причина",
+    "CurrentlyInstalled": "Понастоящем инсталиран"
 }

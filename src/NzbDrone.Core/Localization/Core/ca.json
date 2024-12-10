@@ -499,5 +499,6 @@
     "TheLogLevelDefault": "El nivell de registre per defecte és \"Info\" i es pot canviar a [Configuració general](/configuració/general)",
     "UpdateAppDirectlyLoadError": "No es pot actualitzar {appName} directament,",
     "WouldYouLikeToRestoreBackup": "Voleu restaurar la còpia de seguretat '{name}'?",
-    "InstallLatest": "Instal·la l'últim"
+    "InstallLatest": "Instal·la l'últim",
+    "CurrentlyInstalled": "Instal·lat actualment"
 }

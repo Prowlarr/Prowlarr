@@ -1,7 +1,7 @@
 {
     "ApplicationURL": "URL Aplikasi",
     "ApplicationUrlHelpText": "URL eksternal aplikasi termasuk http(s)://, port, dan dasar URL",
-    "AddDownloadClient": "Tambahkan Klien Pengunduhan",
+    "AddDownloadClient": "Tambahkan Download Client",
     "Added": "Ditambahkan",
     "AddIndexer": "Tambahkan Pengindeks",
     "Age": "Usia",

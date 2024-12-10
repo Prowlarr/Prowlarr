@@ -239,7 +239,7 @@
     "LogLevel": "Nível de registro em log",
     "LogLevelTraceHelpTextWarning": "O registro em log para rastreamento deve ser habilitado apenas temporariamente",
     "Logging": "Registro em log",
-    "Logs": "Logs",
+    "Logs": "Registros",
     "MIA": "Ausentes",
     "MaintenanceRelease": "Versão de manutenção: correções de bugs e outras melhorias. Consulte o Histórico de commit do Github para saber mais",
     "Manual": "Manual",

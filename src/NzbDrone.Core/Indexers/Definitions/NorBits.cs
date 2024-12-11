@@ -191,6 +191,14 @@ public class NorBitsRequestGenerator : IIndexerRequestGenerator
         else if (!string.IsNullOrWhiteSpace(term))
         {
             searchTerm = "search=" + term.UrlEncode(Encoding.GetEncoding(28591));
+
+            searchTerm = searchTerm
+            .Replace("%E6", "æ")
+            .Replace("%F8", "ø")
+            .Replace("%E5", "å")
+            .Replace("%C6", "Æ")
+            .Replace("%D8", "Ø")
+            .Replace("%C5", "Å");
         }
 
         searchUrl += "?" + searchTerm + "&" + parameters.GetQueryString();

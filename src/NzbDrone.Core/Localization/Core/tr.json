@@ -227,7 +227,7 @@
     "StartupDirectory": "Başlangıç Dizini",
     "SuggestTranslationChange": "Çeviri değişikliği önerin",
     "SystemTimeHealthCheckMessage": "Sistem saati 1 günden fazla kapalı. Zamanlanan görevler, saat düzeltilene kadar doğru çalışmayabilir",
-    "TableOptionsColumnsMessage": "Hangi sütunların görünür olduğunu ve hangi sırada görüneceklerini seçin",
+    "TableOptionsColumnsMessage": "Hangi sütunların görünür olacağını ve hangi sırayla görüneceğini seçin",
     "Title": "Başlık",
     "Today": "Bugün",
     "Tomorrow": "Yarın",

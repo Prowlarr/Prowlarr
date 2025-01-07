@@ -424,5 +424,9 @@
     "AdvancedSettingsHiddenClickToShow": "Avancerede indstillinger er skjult. Klik for at vise",
     "AdvancedSettingsShownClickToHide": "Avancerede indstillinger vises. Klik for at skjule",
     "ApiKeyValidationHealthCheckMessage": "Opdater din API-nøgle til at være på mindste {length} karakterer. Dette kan gøres i indstillingerne eller i konfigurationsfilen",
-    "AppProfileInUse": "App-profil i brug"
+    "AppProfileInUse": "App-profil i brug",
+    "Episode": "afsnit",
+    "Artist": "kunstner",
+    "Id": "ID",
+    "Encoding": "Indkodning"
 }

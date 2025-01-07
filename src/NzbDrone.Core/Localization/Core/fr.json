@@ -117,7 +117,7 @@
     "SystemTimeHealthCheckMessage": "L'heure du système est décalée de plus d'un jour. Les tâches planifiées peuvent ne pas s'exécuter correctement tant que l'heure ne sera pas corrigée",
     "SettingsShowRelativeDates": "Afficher les dates relatives",
     "UnsavedChanges": "Modifications non enregistrées",
-    "ShowSearchHelpText": "Afficher le bouton de recherche au survol",
+    "ShowSearchHelpText": "Affiche le bouton de recherche au survol",
     "ShowSearch": "Afficher la recherche",
     "SettingsTimeFormat": "Format de l'heure",
     "SettingsShowRelativeDatesHelpText": "Afficher les dates relatives (aujourd'hui, hier, etc.) ou absolues",
@@ -802,5 +802,9 @@
     "IndexerAvistazSettingsPasswordHelpText": "Mot de passe du site",
     "PreferMagnetUrlHelpText": "Si activé, cet indexeur privilégiera si possible l'usage de liens de type magnet aux liens torrent",
     "PreviouslyInstalled": "Installé précédemment",
-    "CurrentlyInstalled": "Actuellement installé"
+    "CurrentlyInstalled": "Actuellement installé",
+    "IndexerSettingsPreferMagnetUrl": "URL de préférence Magnet",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Popcorn doré uniquement",
+    "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Rechercher uniquement les versions Golden Popcorn",
+    "IndexerAvistazSettingsUsernameHelpTextWarning": "Seuls les membres de rang et supérieur peuvent utiliser l'API sur cet indexeur."
 }

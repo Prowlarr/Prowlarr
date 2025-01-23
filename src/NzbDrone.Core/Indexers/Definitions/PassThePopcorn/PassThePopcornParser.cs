@@ -56,6 +56,19 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
             {
                 foreach (var torrent in result.Torrents)
                 {
+                    // skip non-freeleech results when freeleech only is set
+                    var downloadVolumeFactor = torrent.FreeleechType?.ToUpperInvariant() switch
+                    {
+                        "FREELEECH" => 0,
+                        "HALF LEECH" => 0.5,
+                        _ => 1
+                    };
+
+                    if (_settings.FreeleechOnly && downloadVolumeFactor != 0.0)
+                    {
+                        continue;
+                    }
+
                     var id = torrent.Id;
                     var title = torrent.ReleaseName;
 
@@ -94,12 +107,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         ImdbId = result.ImdbId.IsNotNullOrWhiteSpace() ? int.Parse(result.ImdbId) : 0,
                         Scene = torrent.Scene,
                         IndexerFlags = flags,
-                        DownloadVolumeFactor = torrent.FreeleechType?.ToUpperInvariant() switch
-                        {
-                            "FREELEECH" => 0,
-                            "HALF LEECH" => 0.5,
-                            _ => 1
-                        },
+                        DownloadVolumeFactor = downloadVolumeFactor,
                         UploadVolumeFactor = 1,
                         MinimumRatio = 1,
                         MinimumSeedTime = 345600,

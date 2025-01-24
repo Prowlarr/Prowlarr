@@ -384,7 +384,7 @@
     "HistoryCleanupDaysHelpTextWarning": "Les fichiers dans la corbeille plus anciens que le nombre de jours sélectionné seront nettoyés automatiquement",
     "OnGrab": "Récupéré à la sortie",
     "OnHealthIssue": "Lors de problème de santé",
-    "TestAllIndexers": "Testez tous les indexeurs",
+    "TestAllIndexers": "Tester tous les indexeurs",
     "UserAgentProvidedByTheAppThatCalledTheAPI": "User-Agent fourni par l'application qui a appelé l'API",
     "Database": "Base de données",
     "HistoryCleanup": "Nettoyage de l'historique",

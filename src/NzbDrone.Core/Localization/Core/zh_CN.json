@@ -16,7 +16,7 @@
     "Added": "添加日期",
     "AddedToDownloadClient": "发布已添加档案到客户端",
     "AddingTag": "添加标签",
-    "Age": "年龄",
+    "Age": "寿命",
     "All": "全部",
     "AllIndexersHiddenDueToFilter": "由于应用了筛选器，所有索引器都被隐藏。",
     "Analytics": "分析",
@@ -735,5 +735,16 @@
     "PreviouslyInstalled": "上次安装",
     "FailedToFetchSettings": "设置同步失败",
     "DownloadClientSettingsPriorityItemHelpText": "抓取内容时优先使用",
-    "IndexerAlphaRatioSettingsExcludeScene": "排除场景"
+    "IndexerAlphaRatioSettingsExcludeScene": "排除场景",
+    "IndexerAlphaRatioSettingsExcludeSceneHelpText": "从结果中排除场景版本",
+    "IndexerAlphaRatioSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerBeyondHDSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerBeyondHDSettingsLimitedOnly": "仅限",
+    "IndexerBeyondHDSettingsApiKeyHelpText": "来自网站的API密钥(在我的安全 => API密钥)",
+    "IndexerAvistazSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerAvistazSettingsPasswordHelpText": "网站密码",
+    "IndexerAvistazSettingsPidHelpText": "我的帐户或个人资料页的PID",
+    "IndexerAvistazSettingsUsernameHelpText": "网站用户名",
+    "IndexerAvistazSettingsUsernameHelpTextWarning": "只有成员级别及以上才能使用此索引器上的API。",
+    "IndexerBeyondHDSettingsLimitedOnlyHelpText": "仅限免费搜索（有限UL）"
 }

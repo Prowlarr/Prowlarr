@@ -93,7 +93,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                     torrentInfos.Add(new TorrentInfo
                     {
                         Guid = $"PassThePopcorn-{id}",
-                        Title = title,
+                        Title = GetTitle(torrent, result),
                         Year = int.Parse(result.Year),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         DownloadUrl = GetDownloadUrl(id),
@@ -117,6 +117,55 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
             }
 
             return torrentInfos;
+        }
+
+        private static string GetTitle(PassThePopcornTorrent torrent, PassThePopcornMovie result)
+        {
+            var title = torrent.ReleaseName;
+
+            if (torrent.Container.ToUpperInvariant() is "M2TS" or "ISO" or "VOB IFO" || !torrent.ReleaseName.Contains(result.Year))
+            {
+                title = $"{result.Title} ({result.Year})";
+
+                var titleTags = new List<string>();
+
+                if (torrent.Resolution.IsNotNullOrWhiteSpace())
+                {
+                    titleTags.Add(torrent.Resolution);
+                }
+
+                if (torrent.Source.IsNotNullOrWhiteSpace())
+                {
+                    titleTags.Add(torrent.Source);
+                }
+
+                if (torrent.Codec.IsNotNullOrWhiteSpace())
+                {
+                    titleTags.Add(torrent.Codec);
+                }
+
+                if (torrent.Container.IsNotNullOrWhiteSpace())
+                {
+                    titleTags.Add(torrent.Container.ToUpperInvariant());
+                }
+
+                if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+                {
+                    titleTags.Add(torrent.RemasterTitle);
+                }
+
+                if (titleTags.Any())
+                {
+                    title += $" {string.Join(" / ", titleTags)}";
+                }
+
+                if (torrent.ReleaseGroup.IsNotNullOrWhiteSpace())
+                {
+                    title += $" -{torrent.ReleaseGroup}";
+                }
+            }
+
+            return title;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

@@ -631,5 +631,7 @@
     "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Hledat pouze vydání Golden Popcorn",
     "IndexerSettingsApiPathHelpText": "Cesta k api, obvykle {url}",
     "IndexerAvistazSettingsFreeleechOnlyHelpText": "Hledat pouze freeleech vydání",
-    "InitialFailure": "Úvodní selhání"
+    "InitialFailure": "Úvodní selhání",
+    "IndexerTorrentSyndikatSettingsApiKeyHelpText": "Klíč API stránky",
+    "SearchTypes": "Hledat typy"
 }

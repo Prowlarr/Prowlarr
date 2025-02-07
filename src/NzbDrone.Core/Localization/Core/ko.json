@@ -417,5 +417,9 @@
     "UsenetBlackholeNzbFolder": "Nzb 폴더",
     "UseSsl": "SSL 사용",
     "TorrentBlackholeTorrentFolder": "토렌트 폴더",
-    "DownloadClientPneumaticSettingsNzbFolder": "Nzb 폴더"
+    "DownloadClientPneumaticSettingsNzbFolder": "Nzb 폴더",
+    "UserAgentProvidedByTheAppThatCalledTheAPI": "API를 호출한 앱에서 제공하는 사용자 에이전트",
+    "days": "일",
+    "minutes": "분",
+    "Author": "저작자"
 }

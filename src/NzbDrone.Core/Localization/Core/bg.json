@@ -376,5 +376,16 @@
     "ActiveIndexers": "Активни индиксатори",
     "AddApplication": "добави приложение",
     "Season": "Причина",
-    "CurrentlyInstalled": "Понастоящем инсталиран"
+    "CurrentlyInstalled": "Понастоящем инсталиран",
+    "DownloadClientSettingsAddPaused": "Добави на пауза",
+    "Encoding": "Кодиране",
+    "Episode": "епизод",
+    "Applications": "Приложения",
+    "Publisher": "Издател",
+    "Id": "ИН",
+    "Theme": "Тема",
+    "Label": "Етикет",
+    "Categories": "Категории",
+    "Album": "албум",
+    "Artist": "изпълнител"
 }

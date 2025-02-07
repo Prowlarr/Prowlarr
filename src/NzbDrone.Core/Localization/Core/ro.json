@@ -444,7 +444,7 @@
     "DisabledForLocalAddresses": "Dezactivat pentru adresele locale",
     "None": "Nici unul",
     "ResetAPIKeyMessageText": "Sigur doriți să vă resetați cheia API?",
-    "AddApplicationImplementation": "Adăugați aplicație - {implementareName}",
+    "AddApplicationImplementation": "Adăugați aplicație - {implementationName}",
     "AddCategory": "Adăugați categorie",
     "AddConnection": "Adăugați conexiune",
     "AddConnectionImplementation": "Adăugați conexiune - {implementationName}",
@@ -491,5 +491,13 @@
     "Stats": "Status",
     "CurrentlyInstalled": "În prezent instalat",
     "Mixed": "Fix",
-    "Season": "Motiv"
+    "Season": "Motiv",
+    "ActiveIndexers": "Indexatorii activi",
+    "Any": "Oricare",
+    "AdvancedSettingsShownClickToHide": "Setări avansate afișate, click pentru a le ascunde",
+    "AdvancedSettingsHiddenClickToShow": "Setări avansate ascunse, click pentru afișare",
+    "ApiKeyValidationHealthCheckMessage": "Te rugăm să actualizezi cheia API astfel încât să aibă cel puțin {length} caractere. Poți face acest lucru din setări sau din fișierul de configurare",
+    "AddToDownloadClient": "Adaugă versiunea în clientul de descărcare",
+    "AddSyncProfile": "Adaugă profil de sincronizare",
+    "AddedToDownloadClient": "Versiune adăugată în client"
 }

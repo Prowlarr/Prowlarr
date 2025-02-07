@@ -746,5 +746,12 @@
     "IndexerAvistazSettingsPidHelpText": "我的帐户或个人资料页的PID",
     "IndexerAvistazSettingsUsernameHelpText": "网站用户名",
     "IndexerAvistazSettingsUsernameHelpTextWarning": "只有成员级别及以上才能使用此索引器上的API。",
-    "IndexerBeyondHDSettingsLimitedOnlyHelpText": "仅限免费搜索（有限UL）"
+    "IndexerBeyondHDSettingsLimitedOnlyHelpText": "仅限免费搜索（有限UL）",
+    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerIPTorrentsSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerHDBitsSettingsUsernameHelpText": "网站用户名",
+    "IndexerPassThePopcornSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerFileListSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerFileListSettingsUsernameHelpText": "网站用户名"
 }

@@ -500,5 +500,6 @@
     "UpdateAppDirectlyLoadError": "No es pot actualitzar {appName} directament,",
     "WouldYouLikeToRestoreBackup": "Voleu restaurar la còpia de seguretat '{name}'?",
     "InstallLatest": "Instal·la l'últim",
-    "CurrentlyInstalled": "Instal·lat actualment"
+    "CurrentlyInstalled": "Instal·lat actualment",
+    "DownloadClientSettingsAddPaused": "Afegeix pausats"
 }

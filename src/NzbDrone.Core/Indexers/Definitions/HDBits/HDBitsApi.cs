@@ -85,6 +85,9 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         [JsonProperty(PropertyName = "type_origin")]
         public int TypeOrigin { get; set; }
 
+        [JsonProperty(PropertyName = "type_exclusive")]
+        public int TypeExclusive { get; set; }
+
         [JsonProperty(PropertyName = "imdb")]
         public ImdbInfo ImdbInfo { get; set; }
 

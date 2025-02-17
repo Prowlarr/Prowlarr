@@ -62,16 +62,8 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 }
 
                 var id = result.Id;
-                var internalRelease = result.TypeOrigin == 1;
 
-                var flags = new HashSet<IndexerFlag>();
-
-                if (internalRelease)
-                {
-                    flags.Add(IndexerFlag.Internal);
-                }
-
-                releaseInfos.Add(new HDBitsInfo
+                releaseInfos.Add(new TorrentInfo
                 {
                     Guid = $"HDBits-{id}",
                     Title = GetTitle(result),
@@ -85,20 +77,17 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                     Files = (int)result.NumFiles,
                     Peers = result.Leechers + result.Seeders,
                     PublishDate = result.Added.ToUniversalTime(),
-                    Internal = internalRelease,
                     Year = result.ImdbInfo?.Year ?? 0,
                     ImdbId = result.ImdbInfo?.Id ?? 0,
                     TvdbId = result.TvdbInfo?.Id ?? 0,
                     DownloadVolumeFactor = GetDownloadVolumeFactor(result),
                     UploadVolumeFactor = GetUploadVolumeFactor(result),
-                    IndexerFlags = flags
+                    IndexerFlags = GetIndexerFlags(result)
                 });
             }
 
             return releaseInfos.ToArray();
         }
-
-        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
         private string GetTitle(TorrentQueryResponse item)
         {
@@ -106,6 +95,23 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             return item.TypeCategory != 7 && item.TypeMedium != 1 && _settings.UseFilenames && item.FileName.IsNotNullOrWhiteSpace()
                 ? item.FileName.Replace(".torrent", "", StringComparison.InvariantCultureIgnoreCase)
                 : item.Name;
+        }
+
+        private static HashSet<IndexerFlag> GetIndexerFlags(TorrentQueryResponse item)
+        {
+            var flags = new HashSet<IndexerFlag>();
+
+            if (item.TypeOrigin == 1)
+            {
+                flags.Add(IndexerFlag.Internal);
+            }
+
+            if (item.TypeExclusive == 1)
+            {
+                flags.Add(IndexerFlag.Exclusive);
+            }
+
+            return flags;
         }
 
         private double GetDownloadVolumeFactor(TorrentQueryResponse item)
@@ -154,5 +160,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
             return url.FullUri;
         }
+
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 }

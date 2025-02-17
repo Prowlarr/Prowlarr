@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return FilterReleasesByQuery(cleanReleases, searchCriteria).ToList();
         }
 
-        private IndexerCapabilities SetCapabilities()
+        private static IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
@@ -69,7 +69,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 },
                 Flags = new List<IndexerFlag>
                 {
-                    IndexerFlag.Internal
+                    IndexerFlag.Internal,
+                    IndexerFlag.Exclusive,
                 }
             };
 
@@ -275,13 +276,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var details = row.InfoUrl;
                 var link = row.DownloadLink;
 
-                var flags = new HashSet<IndexerFlag>();
-
-                if (row.Internal)
-                {
-                    flags.Add(IndexerFlag.Internal);
-                }
-
                 var release = new TorrentInfo
                 {
                     Title = row.Name,
@@ -291,7 +285,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Guid = details,
                     Categories = _categories.MapTrackerCatDescToNewznab(row.Category),
                     PublishDate = DateTime.Parse(row.CreatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
-                    IndexerFlags = flags,
+                    IndexerFlags = GetIndexerFlags(row),
                     Size = row.Size,
                     Grabs = row.Grabs,
                     Seeders = row.Seeders,
@@ -317,6 +311,23 @@ namespace NzbDrone.Core.Indexers.Definitions
             return releaseInfos
                 .OrderByDescending(o => o.PublishDate)
                 .ToArray();
+        }
+
+        private static HashSet<IndexerFlag> GetIndexerFlags(BeyondHDTorrent item)
+        {
+            var flags = new HashSet<IndexerFlag>();
+
+            if (item.Internal)
+            {
+                flags.Add(IndexerFlag.Internal);
+            }
+
+            if (item.Exclusive)
+            {
+                flags.Add(IndexerFlag.Exclusive);
+            }
+
+            return flags;
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
@@ -477,6 +488,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public bool Promo75 { get; set; }
 
         public bool Limited { get; set; }
+
+        public bool Exclusive { get; set; }
 
         public bool Internal { get; set; }
     }

@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
             return new HDBitsParser(Settings, Capabilities.Categories);
         }
 
-        private IndexerCapabilities SetCapabilities()
+        private static IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
@@ -43,6 +43,11 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 MovieSearchParams = new List<MovieSearchParam>
                 {
                     MovieSearchParam.Q, MovieSearchParam.ImdbId
+                },
+                Flags = new List<IndexerFlag>
+                {
+                    IndexerFlag.Internal,
+                    IndexerFlag.Exclusive,
                 }
             };
 

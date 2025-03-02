@@ -23,6 +23,7 @@ function PageToolbarButton(props) {
         isDisabled && styles.isDisabled
       )}
       isDisabled={isDisabled || isSpinning}
+      title={label}
       {...otherProps}
     >
       <Icon

@@ -141,6 +141,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             var pageableRequests = new IndexerPageableRequestChain();
 
             var variables = GetQueryVariableDefaults(searchCriteria);
+            variables[".Query.Year"] = searchCriteria.Year?.ToString() ?? null;
 
             pageableRequests.Add(GetRequest(variables, searchCriteria));
 
@@ -162,7 +163,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
             //Movie
             variables[".Query.Movie"] = null;
-            variables[".Query.Year"] = null;
             variables[".Query.IMDBID"] = null;
             variables[".Query.IMDBIDShort"] = null;
             variables[".Query.TMDBID"] = null;

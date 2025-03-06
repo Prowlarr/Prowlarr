@@ -39,6 +39,10 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
                 .Callback<TvSearchCriteria>(s => result.Add(s))
                 .Returns(Task.FromResult(new IndexerPageableQueryResult()));
 
+            _mockIndexer.Setup(v => v.Fetch(It.IsAny<BasicSearchCriteria>()))
+                .Callback<BasicSearchCriteria>(s => result.Add(s))
+                .Returns(Task.FromResult(new IndexerPageableQueryResult()));
+
             return result;
         }
 
@@ -86,6 +90,26 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             criteria.Count.Should().Be(1);
             criteria[0].ImdbId.Should().Be(expected);
+        }
+
+        [TestCase(2025, 2025)]
+        [TestCase(null, null)]
+        public void should_use_year_basic_search_criteria(int? input, int? expected)
+        {
+            var allCriteria = WatchForSearchCriteria();
+
+            var request = new NewznabRequest
+            {
+                t = "",
+                year = input
+            };
+
+            Subject.Search(request, new List<int> { 1 }, false);
+
+            var criteria = allCriteria.OfType<BasicSearchCriteria>().ToList();
+
+            criteria.Count.Should().Be(1);
+            criteria[0].Year.Should().Be(expected);
         }
     }
 }

@@ -229,6 +229,21 @@ namespace NzbDrone.Core.IndexerSearch
                     q = q.Replace(match.Value, "").Trim();
                 }
             }
+
+            if (t == "search")
+            {
+                var matches = BookRegex.Matches(q);
+
+                foreach (Match match in matches)
+                {
+                    if (match.Groups["year"].Success)
+                    {
+                        year = int.TryParse(match.Groups["year"].Value, out var parsedYear) ? parsedYear : null;
+                    }
+
+                    q = q.Replace(match.Value, "").Trim();
+                }
+            }
         }
     }
 }

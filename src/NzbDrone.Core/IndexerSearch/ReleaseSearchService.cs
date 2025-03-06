@@ -124,6 +124,7 @@ namespace NzbDrone.Core.IndexerSearch
         private async Task<NewznabResults> BasicSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
             var searchSpec = Get<BasicSearchCriteria>(request, indexerIds, interactiveSearch);
+            searchSpec.Year = request.year;
 
             var releases = await Dispatch(indexer => indexer.Fetch(searchSpec), searchSpec);
 

@@ -753,5 +753,6 @@
     "IndexerHDBitsSettingsUsernameHelpText": "网站用户名",
     "IndexerPassThePopcornSettingsFreeleechOnlyHelpText": "只搜索免费发布",
     "IndexerFileListSettingsFreeleechOnlyHelpText": "只搜索免费发布",
-    "IndexerFileListSettingsUsernameHelpText": "网站用户名"
+    "IndexerFileListSettingsUsernameHelpText": "网站用户名",
+    "IndexerBeyondHDSettingsRefundOnlyHelpText": "Search refund only"
 }

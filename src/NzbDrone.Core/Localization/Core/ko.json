@@ -421,5 +421,7 @@
     "UserAgentProvidedByTheAppThatCalledTheAPI": "API를 호출한 앱에서 제공하는 사용자 에이전트",
     "days": "일",
     "minutes": "분",
-    "Author": "저작자"
+    "Author": "저작자",
+    "Categories": "카테고리",
+    "SeedRatio": "종자 비율"
 }

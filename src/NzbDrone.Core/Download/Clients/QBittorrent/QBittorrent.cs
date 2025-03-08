@@ -8,6 +8,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -30,8 +31,9 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
                            IConfigService configService,
                            IDiskProvider diskProvider,
                            ICacheManager cacheManager,
+                           ILocalizationService localizationService,
                            Logger logger)
-            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, localizationService, logger)
         {
             _proxySelector = proxySelector;
 

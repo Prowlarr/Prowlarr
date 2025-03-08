@@ -5,6 +5,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
@@ -19,8 +20,9 @@ namespace NzbDrone.Core.Download
         protected UsenetClientBase(IHttpClient httpClient,
                                    IConfigService configService,
                                    IDiskProvider diskProvider,
+                                   ILocalizationService localizationService,
                                    Logger logger)
-            : base(configService, diskProvider, logger)
+            : base(configService, diskProvider, localizationService, logger)
         {
             _httpClient = httpClient;
         }

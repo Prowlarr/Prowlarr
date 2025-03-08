@@ -8,6 +8,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 
@@ -17,8 +18,9 @@ namespace NzbDrone.Core.Download.Clients.Pneumatic
     {
         public Pneumatic(IConfigService configService,
                          IDiskProvider diskProvider,
+                         ILocalizationService localizationService,
                          Logger logger)
-            : base(configService, diskProvider, logger)
+            : base(configService, diskProvider, localizationService, logger)
         {
         }
 

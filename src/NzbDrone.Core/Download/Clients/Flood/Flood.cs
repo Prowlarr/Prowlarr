@@ -8,6 +8,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.Flood.Models;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 
@@ -22,8 +23,9 @@ namespace NzbDrone.Core.Download.Clients.Flood
                         ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
+                        ILocalizationService localizationService,
                         Logger logger)
-            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, localizationService, logger)
         {
             _proxy = proxy;
         }

@@ -7,6 +7,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Download.Clients.Blackhole
@@ -16,8 +17,9 @@ namespace NzbDrone.Core.Download.Clients.Blackhole
         public UsenetBlackhole(IHttpClient httpClient,
                                IConfigService configService,
                                IDiskProvider diskProvider,
+                               ILocalizationService localizationService,
                                Logger logger)
-            : base(httpClient, configService, diskProvider, logger)
+            : base(httpClient, configService, diskProvider, localizationService, logger)
         {
         }
 

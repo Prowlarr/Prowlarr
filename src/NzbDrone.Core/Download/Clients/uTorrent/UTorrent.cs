@@ -7,7 +7,9 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Download.Clients.UTorrent
@@ -21,8 +23,9 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
                         ISeedConfigProvider seedConfigProvider,
                         IConfigService configService,
                         IDiskProvider diskProvider,
+                        ILocalizationService localizationService,
                         Logger logger)
-            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, localizationService, logger)
         {
             _proxy = proxy;
         }
@@ -72,6 +75,9 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
         }
 
         public override string Name => "uTorrent";
+
+        public override ProviderMessage Message => new (_localizationService.GetLocalizedString("DownloadClientUTorrentProviderMessage"), ProviderMessageType.Warning);
+
         public override bool SupportsCategories => true;
 
         protected override void Test(List<ValidationFailure> failures)

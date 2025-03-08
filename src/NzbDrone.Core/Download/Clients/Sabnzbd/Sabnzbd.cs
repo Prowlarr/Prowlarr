@@ -9,6 +9,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Validation;
 
@@ -22,8 +23,9 @@ namespace NzbDrone.Core.Download.Clients.Sabnzbd
                        IHttpClient httpClient,
                        IConfigService configService,
                        IDiskProvider diskProvider,
+                       ILocalizationService localizationService,
                        Logger logger)
-            : base(httpClient, configService, diskProvider, logger)
+            : base(httpClient, configService, diskProvider, localizationService, logger)
         {
             _proxy = proxy;
         }

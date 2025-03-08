@@ -8,6 +8,7 @@ using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -19,6 +20,7 @@ namespace NzbDrone.Core.Download
     {
         protected readonly IConfigService _configService;
         protected readonly IDiskProvider _diskProvider;
+        protected readonly ILocalizationService _localizationService;
         protected readonly Logger _logger;
 
         public abstract string Name { get; }
@@ -40,10 +42,12 @@ namespace NzbDrone.Core.Download
 
         protected DownloadClientBase(IConfigService configService,
             IDiskProvider diskProvider,
+            ILocalizationService localizationService,
             Logger logger)
         {
             _configService = configService;
             _diskProvider = diskProvider;
+            _localizationService = localizationService;
             _logger = logger;
         }
 

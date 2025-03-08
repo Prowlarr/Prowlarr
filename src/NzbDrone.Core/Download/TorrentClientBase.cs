@@ -8,6 +8,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
@@ -24,8 +25,9 @@ namespace NzbDrone.Core.Download
                                     ISeedConfigProvider seedConfigProvider,
                                     IConfigService configService,
                                     IDiskProvider diskProvider,
+                                    ILocalizationService localizationService,
                                     Logger logger)
-            : base(configService, diskProvider, logger)
+            : base(configService, diskProvider, localizationService, logger)
         {
             _torrentFileInfoReader = torrentFileInfoReader;
             _seedConfigProvider = seedConfigProvider;

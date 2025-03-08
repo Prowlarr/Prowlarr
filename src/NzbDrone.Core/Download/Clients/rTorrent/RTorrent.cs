@@ -10,6 +10,7 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Download.Clients.rTorrent;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
@@ -27,8 +28,9 @@ namespace NzbDrone.Core.Download.Clients.RTorrent
                         IConfigService configService,
                         IDiskProvider diskProvider,
                         IRTorrentDirectoryValidator rTorrentDirectoryValidator,
+                        ILocalizationService localizationService,
                         Logger logger)
-            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
+            : base(torrentFileInfoReader, seedConfigProvider, configService, diskProvider, localizationService, logger)
         {
             _proxy = proxy;
             _rTorrentDirectoryValidator = rTorrentDirectoryValidator;

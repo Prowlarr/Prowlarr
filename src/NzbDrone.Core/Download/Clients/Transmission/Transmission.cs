@@ -5,6 +5,7 @@ using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers;
+using NzbDrone.Core.Localization;
 
 namespace NzbDrone.Core.Download.Clients.Transmission
 {
@@ -15,8 +16,9 @@ namespace NzbDrone.Core.Download.Clients.Transmission
                             ISeedConfigProvider seedConfigProvider,
                             IConfigService configService,
                             IDiskProvider diskProvider,
+                            ILocalizationService localizationService,
                             Logger logger)
-            : base(proxy, torrentFileInfoReader, seedConfigProvider, configService, diskProvider, logger)
+            : base(proxy, torrentFileInfoReader, seedConfigProvider, configService, diskProvider, localizationService, logger)
         {
         }
 

@@ -21,6 +21,7 @@ namespace Prowlarr.Api.V1.Indexers
                 .ValidId()
                 .SetValidator(appProfileExistsValidator);
 
+            SharedValidator.RuleFor(c => c.Priority).InclusiveBetween(1, 50);
             SharedValidator.RuleFor(c => c.DownloadClientId).SetValidator(downloadClientExistsValidator);
         }
     }

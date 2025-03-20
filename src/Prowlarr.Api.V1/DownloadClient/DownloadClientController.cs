@@ -1,3 +1,4 @@
+using FluentValidation;
 using NzbDrone.Core.Download;
 using NzbDrone.SignalR;
 using Prowlarr.Http;
@@ -13,6 +14,7 @@ namespace Prowlarr.Api.V1.DownloadClient
         public DownloadClientController(IBroadcastSignalRMessage signalRBroadcaster, IDownloadClientFactory downloadClientFactory)
             : base(signalRBroadcaster, downloadClientFactory, "downloadclient", ResourceMapper, BulkResourceMapper)
         {
+            SharedValidator.RuleFor(c => c.Priority).InclusiveBetween(1, 50);
         }
     }
 }

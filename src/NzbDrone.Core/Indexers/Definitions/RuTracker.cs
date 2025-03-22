@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             "https://rutracker.net/",
             "https://rutracker.nl/"
         };
-        public override string Description => "RuTracker.org is a Semi-Private Russian torrent site with a thriving file-sharing community";
+        public override string Description => "RuTracker.org is a RUSSIAN Semi-Private site with a thriving file-sharing community";
         public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.GetEncoding("windows-1251");
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
@@ -144,6 +144,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 SupportsRawSearch = true
             };
 
+            // Note: When refreshing the categories use the tracker.php page and NOT the search.php page!
             caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.Movies, "Наше кино");
             caps.Categories.AddCategoryMapping(941, NewznabStandardCategory.Movies, "|- Кино СССР");
             caps.Categories.AddCategoryMapping(1666, NewznabStandardCategory.Movies, "|- Детские отечественные фильмы");
@@ -1751,7 +1752,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title = Regex.Replace(title, @"(\([\p{IsCyrillic}\W]+)\s/\s(.+?)\)", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
                 // Remove VO, MVO and DVO from titles
-                var vo = new Regex(@".VO\s\(.+?\)");
+                var vo = new Regex(@"((?:\dx\s)?(?:[A-Z])?VO\s\(.+?\))");
                 title = vo.Replace(title, string.Empty);
 
                 // Remove R5 and (R5) from release names
@@ -1759,7 +1760,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title = r5.Replace(title, "$1");
 
                 // Remove Sub languages from release names
-                title = Regex.Replace(title, @"(\bSub\b.*$|\b[\+]*Sub[\+]*\b)", string.Empty);
+                title = Regex.Replace(title, @"(\bSub\b[^+]*\b|\b[\+]*Sub[\+]*\b)", string.Empty);
             }
 
             // language fix: all rutracker releases contains russian track

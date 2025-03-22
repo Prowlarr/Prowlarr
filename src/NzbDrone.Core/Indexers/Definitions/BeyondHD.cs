@@ -304,6 +304,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 172800, // 120 hours
+                    Languages = row.Audios?.Split(",", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(),
+                    Subs = row.Subtitles?.Split(",", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>(),
                 };
 
                 // BHD can return crazy values for tmdb
@@ -470,8 +472,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [JsonPropertyName("times_completed")]
         public int Grabs { get; set; }
+
         public int Seeders { get; set; }
         public int Leechers { get; set; }
+
+        public string Audios { get; set; }
+        public string Subtitles { get; set; }
 
         [JsonPropertyName("created_at")]
         public string CreatedAt { get; set; }

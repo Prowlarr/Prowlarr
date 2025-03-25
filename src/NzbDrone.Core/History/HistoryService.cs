@@ -224,7 +224,7 @@ namespace NzbDrone.Core.History
 
             if (message.Release.PublishDate != DateTime.MinValue)
             {
-                history.Data.Add("PublishedDate", message.Release.PublishDate.ToString("s") + "Z");
+                history.Data.Add("PublishedDate", message.Release.PublishDate.ToUniversalTime().ToString("s") + "Z");
             }
 
             _historyRepository.Insert(history);

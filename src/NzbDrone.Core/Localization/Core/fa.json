@@ -1,4 +1,13 @@
 {
     "ApiKey": "کلید API",
-    "NetCore": ".NET"
+    "NetCore": ".NET",
+    "Add": "افزودن",
+    "About": "درباره",
+    "Actions": "اقدامات",
+    "Docker": "Docker",
+    "AddConnection": "افزودن پیوند",
+    "AddConnectionImplementation": "افزودن پیوند - {implementationName}",
+    "AddDownloadClientImplementation": "افزودن کلاینت دانلود - {implementationName}",
+    "Torrents": "تورنت ها",
+    "Usenet": "Usenet"
 }

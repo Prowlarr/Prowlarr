@@ -160,5 +160,6 @@
     "AptUpdater": "Bruk apt til å installere oppdateringen",
     "Discord": "Discord",
     "AddCustomFilter": "Legg til eget filter",
-    "Clone": "Lukk"
+    "Clone": "Lukk",
+    "AddDownloadClientImplementation": "Ny Nedlastingsklient - {implementationName}"
 }

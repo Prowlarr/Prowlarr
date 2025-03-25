@@ -806,5 +806,6 @@
     "IndexerGazelleGamesSettingsApiKeyHelpTextWarning": "Kullanıcı ve Torrent izinlerine sahip olmalısınız",
     "IndexerGazelleGamesSettingsSearchGroupNamesHelpText": "Grup adlarına göre sürüm ara",
     "IndexerHealthCheckNoIndexers": "Hiçbir indeksleyici etkinleştirilmedi, {appName} arama sonuçlarını döndürmeyecek",
-    "QueryType": "Sorgu Türü"
+    "QueryType": "Sorgu Türü",
+    "DownloadClientUTorrentProviderMessage": "uTorrent'in kripto para madenciliği, kötü amaçlı yazılım ve reklam içerme geçmişi vardır, bu nedenle farklı bir istemci seçmenizi önemle tavsiye ederiz."
 }

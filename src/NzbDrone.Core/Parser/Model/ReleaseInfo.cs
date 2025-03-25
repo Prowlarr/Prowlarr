@@ -9,6 +9,7 @@ namespace NzbDrone.Core.Parser.Model
     {
         public ReleaseInfo()
         {
+            Genres = new List<string>();
             IndexerFlags = new HashSet<IndexerFlag>();
             Categories = new List<IndexerCategory>();
             Languages = new List<string>();

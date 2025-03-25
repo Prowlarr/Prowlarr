@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
@@ -38,7 +39,31 @@ namespace NzbDrone.Core.Notifications.CustomScript
 
         public override string Link => "https://wiki.servarr.com/prowlarr/settings#connections";
 
-        public override ProviderMessage Message => new ProviderMessage("Testing will execute the script with the EventType set to Test, ensure your script handles this correctly", ProviderMessageType.Warning);
+        public override ProviderMessage Message => new ("Testing will execute the script with the EventType set to Test, ensure your script handles this correctly", ProviderMessageType.Warning);
+
+        public override void OnGrab(GrabMessage message)
+        {
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Prowlarr_EventType", "Grab");
+            environmentVariables.Add("Prowlarr_InstanceName", _configFileProvider.InstanceName);
+            environmentVariables.Add("Prowlarr_ApplicationUrl", _configService.ApplicationUrl);
+            environmentVariables.Add("Prowlarr_Release_Title", message.Release.Title);
+            environmentVariables.Add("Prowlarr_Release_Indexer", message.Release.Indexer ?? string.Empty);
+            environmentVariables.Add("Prowlarr_Release_Size", message.Release.Size.ToString());
+            environmentVariables.Add("Prowlarr_Release_Genres", string.Join("|", message.Release.Genres));
+            environmentVariables.Add("Prowlarr_Release_Categories", string.Join("|", message.Release.Categories.Select(f => f.Name)));
+            environmentVariables.Add("Prowlarr_Release_IndexerFlags", string.Join("|", message.Release.IndexerFlags.Select(f => f.Name)));
+            environmentVariables.Add("Prowlarr_Release_PublishDate", message.Release.PublishDate.ToUniversalTime().ToString("s") + "Z");
+            environmentVariables.Add("Prowlarr_Download_Client", message.DownloadClientName ?? string.Empty);
+            environmentVariables.Add("Prowlarr_Download_Client_Type", message.DownloadClientType ?? string.Empty);
+            environmentVariables.Add("Prowlarr_Download_Id", message.DownloadId ?? string.Empty);
+            environmentVariables.Add("Prowlarr_Source", message.Source ?? string.Empty);
+            environmentVariables.Add("Prowlarr_Host", message.Host ?? string.Empty);
+            environmentVariables.Add("Prowlarr_Redirect", message.Redirect.ToString());
+
+            ExecuteScript(environmentVariables);
+        }
 
         public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
         {
@@ -129,11 +154,6 @@ namespace NzbDrone.Core.Notifications.CustomScript
             _logger.Debug("Script Output: \r\n{0}", string.Join("\r\n", processOutput.Lines));
 
             return processOutput;
-        }
-
-        private bool ValidatePathParent(string possibleParent, string path)
-        {
-            return possibleParent.IsParentPath(path);
         }
     }
 }

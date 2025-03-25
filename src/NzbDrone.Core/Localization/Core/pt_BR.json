@@ -806,5 +806,6 @@
     "InstallMajorVersionUpdateMessageLink": "Verifique [{domain}]({url}) para obter mais informações.",
     "FailedToFetchSettings": "Falha ao obter configurações",
     "CurrentlyInstalled": "Atualmente instalado",
-    "PreviouslyInstalled": "Instalado anteriormente"
+    "PreviouslyInstalled": "Instalado anteriormente",
+    "DownloadClientUTorrentProviderMessage": "O uTorrent tem um histórico de incluir criptomineradores, malware e anúncios, recomendamos que você escolha outro cliente de download."
 }

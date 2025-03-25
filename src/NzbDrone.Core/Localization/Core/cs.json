@@ -633,5 +633,10 @@
     "IndexerAvistazSettingsFreeleechOnlyHelpText": "Hledat pouze freeleech vydání",
     "InitialFailure": "Úvodní selhání",
     "IndexerTorrentSyndikatSettingsApiKeyHelpText": "Klíč API stránky",
-    "SearchTypes": "Hledat typy"
+    "SearchTypes": "Hledat typy",
+    "NotificationTriggersHelpText": "Vyber, které události mají vyvolat toto upozornění",
+    "IndexerSettingsBaseUrl": "Základní URL",
+    "DownloadClientUTorrentProviderMessage": "uTorrent má historii zahrnování kryptoměnových těžařů, malwaru a reklam, důrazně vám doporučujeme zvolit jiného klienta.",
+    "IndexerSettingsBaseUrlHelpText": "Vyberte, jakou základní URL bude {appName} používat pro požadavky na web",
+    "IndexerSettingsPackSeedTimeIndexerHelpText": "Doba, po kterou by měl být balíček (sezóna nebo diskografie) torrentu seedován před zastavením, prázdné pole znamená výchozí nastavení aplikace"
 }

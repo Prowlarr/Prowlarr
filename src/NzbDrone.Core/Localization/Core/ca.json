@@ -501,5 +501,11 @@
     "WouldYouLikeToRestoreBackup": "Voleu restaurar la còpia de seguretat '{name}'?",
     "InstallLatest": "Instal·la l'últim",
     "CurrentlyInstalled": "Instal·lat actualment",
-    "DownloadClientSettingsAddPaused": "Afegeix pausats"
+    "DownloadClientSettingsAddPaused": "Afegeix pausats",
+    "Install": "Instal·la",
+    "DownloadClientFloodSettingsAdditionalTags": "Etiquetes addicionals",
+    "DownloadClientFreeboxSettingsApiUrl": "URL de l'API",
+    "DownloadClientFreeboxSettingsAppId": "Identificador de l'aplicació",
+    "PreviouslyInstalled": "Instal·lat anteriorment",
+    "PasswordConfirmation": "Confirmeu la contrasenya"
 }

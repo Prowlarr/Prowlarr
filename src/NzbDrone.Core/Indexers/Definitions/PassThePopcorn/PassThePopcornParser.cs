@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                     // skip non-freeleech results when freeleech only is set
                     var downloadVolumeFactor = torrent.FreeleechType?.ToUpperInvariant() switch
                     {
-                        "FREELEECH" => 0,
+                        "FREELEECH" or "NEUTRAL LEECH" => 0,
                         "HALF LEECH" => 0.5,
                         _ => 1
                     };
@@ -91,6 +91,12 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         categories.Add(NewznabStandardCategory.TV);
                     }
 
+                    var uploadVolumeFactor = torrent.FreeleechType?.ToUpperInvariant() switch
+                    {
+                        "NEUTRAL LEECH" => 0,
+                        _ => 1
+                    };
+
                     torrentInfos.Add(new TorrentInfo
                     {
                         Guid = $"PassThePopcorn-{id}",
@@ -108,7 +114,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         Scene = torrent.Scene,
                         IndexerFlags = flags,
                         DownloadVolumeFactor = downloadVolumeFactor,
-                        UploadVolumeFactor = 1,
+                        UploadVolumeFactor = uploadVolumeFactor,
                         MinimumRatio = 1,
                         MinimumSeedTime = 345600,
                         Genres = result.Tags ?? new List<string>(),

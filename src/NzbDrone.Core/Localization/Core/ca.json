@@ -507,5 +507,10 @@
     "DownloadClientFreeboxSettingsApiUrl": "URL de l'API",
     "DownloadClientFreeboxSettingsAppId": "Identificador de l'aplicació",
     "PreviouslyInstalled": "Instal·lat anteriorment",
-    "PasswordConfirmation": "Confirmeu la contrasenya"
+    "PasswordConfirmation": "Confirmeu la contrasenya",
+    "IndexerHDBitsSettingsOriginsHelpText": "Si no s'especifica, s'utilitzen totes les opcions.",
+    "MinimumSeeders": "Seeders mínims",
+    "SeedRatio": "Ràtio de la llavor",
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "Si un torrent està bloquejat per un hash, pot ser que no es rebutgi correctament durant el RSS/Search per a alguns indexadors, habilitant això permetrà que es rebutgi després que s'agafi el torrent, però abans que s'enviï al client.",
+    "SeedTime": "Temps de la llavor"
 }

@@ -806,5 +806,6 @@
     "IndexerSettingsPreferMagnetUrl": "URL de préférence Magnet",
     "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Popcorn doré uniquement",
     "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Rechercher uniquement les versions Golden Popcorn",
-    "IndexerAvistazSettingsUsernameHelpTextWarning": "Seuls les membres de rang et supérieur peuvent utiliser l'API sur cet indexeur."
+    "IndexerAvistazSettingsUsernameHelpTextWarning": "Seuls les membres de rang et supérieur peuvent utiliser l'API sur cet indexeur.",
+    "DownloadClientUTorrentProviderMessage": "uTorrent a un historique d'inclusion de cryptomineurs, de logiciels malveillants et de publicités. Nous vous recommandons fortement de choisir un autre client."
 }

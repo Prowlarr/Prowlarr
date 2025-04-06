@@ -806,5 +806,6 @@
     "InstallMajorVersionUpdateMessage": "Это обновление установит новую версию, которая может не поддерживаться вашей системой. Вы уверены, что хотите установить это обновление?",
     "FailedToFetchSettings": "Не удалось загрузить настройки",
     "CurrentlyInstalled": "Установлено",
-    "PreviouslyInstalled": "Ранее установленный"
+    "PreviouslyInstalled": "Ранее установленный",
+    "DownloadClientUTorrentProviderMessage": "Мы настоятельно советуем не использовать uTorrent, т.к. он известен как программа-шифровальщик и в целом вредоносное ПО."
 }

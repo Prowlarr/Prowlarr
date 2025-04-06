@@ -441,5 +441,13 @@
     "CurrentlyInstalled": "В даний час встановлено",
     "Season": "Причина",
     "Stats": "Статус",
-    "CountIndexersSelected": "{count} індексер(-и) обрано"
+    "CountIndexersSelected": "{count} індексер(-и) обрано",
+    "SeedRatio": "Коефіцієнт роздачі",
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "Якщо торрент заблоковано хешем, він може не бути належним чином відхилений під час RSS/пошуку для деяких індексаторів. Увімкнення цього параметра дозволить відхилити його після захоплення торента, але до його відправки клієнту.",
+    "MinimumSeeders": "Мінімум сидерів (роздаючих)",
+    "SeedTime": "Час сидіння",
+    "Author": "Автор",
+    "OnHealthRestoredHelpText": "При відновленні стану",
+    "IndexerHDBitsSettingsOriginsHelpText": "Якщо не вказано, використовуються всі параметри.",
+    "days": "дні(в)"
 }

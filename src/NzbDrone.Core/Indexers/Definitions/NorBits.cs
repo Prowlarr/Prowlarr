@@ -27,7 +27,7 @@ public class NorBits : TorrentIndexerBase<NorBitsSettings>
     public override string[] IndexerUrls => new[] { "https://norbits.net/" };
     public override string Description => "NorBits is a Norwegian Private site for MOVIES / TV / GENERAL";
     public override string Language => "nb-NO";
-    public override Encoding Encoding => Encoding.GetEncoding("iso-8859-1");
+    public override Encoding Encoding => Encoding.UTF8;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 

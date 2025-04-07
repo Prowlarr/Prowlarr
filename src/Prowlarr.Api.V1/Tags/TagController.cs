@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Core.Datastore.Events;
 using NzbDrone.Core.Messaging.Events;
@@ -20,6 +21,8 @@ namespace Prowlarr.Api.V1.Tags
             : base(signalRBroadcaster)
         {
             _tagService = tagService;
+
+            SharedValidator.RuleFor(c => c.Label).NotEmpty();
         }
 
         public override TagResource GetResourceById(int id)

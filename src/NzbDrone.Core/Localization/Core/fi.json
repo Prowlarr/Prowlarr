@@ -207,7 +207,7 @@
     "StartTypingOrSelectAPathBelow": "Aloita kirjoitus tai valitse sijainti alta",
     "StartupDirectory": "Käynnistyskansio",
     "TableOptions": "Taulukkonäkymän asetukset",
-    "TableOptionsColumnsMessage": "Valitse näytettävät sarakkeet ja niiden järjestys",
+    "TableOptionsColumnsMessage": "Valitse näytettävät sarakkeet ja niiden järjestys.",
     "TagsHelpText": "Käytetään vähintään yhdellä täsmäävällä tunnisteella merkityille hakupalveluille.",
     "UnableToAddANewAppProfilePleaseTryAgain": "Virhe lisättäessä sovellusprofiilia. Yritä uudelleen.",
     "UnableToAddANewNotificationPleaseTryAgain": "Ilmoituspalvelun lisääminen epäonnistui. Yritä uudelleen.",
@@ -805,6 +805,6 @@
     "IndexerPassThePopcornSettingsGoldenPopcornOnly": "Vain \"Golden Popcorn\"",
     "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Etsi vain ns. kultaisella pocornilla merkittyjä julkaisuja.",
     "IndexerSettingsFreeleechOnly": "Vain \"Freeleech\"",
-    "IndexerSettingsCookieHelpText": "Jos sivusto vaatii kirjautumisevästeen, se on noudettava selaimen kautta.",
+    "IndexerSettingsCookieHelpText": "Jos sivusto vaatii kirjautumisevästeen, on se noudettava selaimen avulla.",
     "IndexerAvistazSettingsPasswordHelpText": "Sivuston salasana"
 }

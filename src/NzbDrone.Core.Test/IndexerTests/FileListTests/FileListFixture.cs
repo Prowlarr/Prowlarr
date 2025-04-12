@@ -55,7 +55,7 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             torrentInfo.InfoUrl.Should().Be("https://filelist.io/details.php?id=665873");
             torrentInfo.CommentUrl.Should().BeNullOrEmpty();
             torrentInfo.Indexer.Should().Be(Subject.Definition.Name);
-            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2020-01-25 20:20:19"));
+            torrentInfo.PublishDate.Should().Be(DateTime.Parse("2020-01-25 19:20:19"));
             torrentInfo.Size.Should().Be(8300512414);
             torrentInfo.InfoHash.Should().Be(null);
             torrentInfo.MagnetUrl.Should().Be(null);

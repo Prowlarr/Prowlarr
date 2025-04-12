@@ -20,7 +20,7 @@ public class SecretCinema : GazelleBase<GazelleSettings>
 {
     public override string Name => "Secret Cinema";
     public override string[] IndexerUrls => new[] { "https://secret-cinema.pw/" };
-    public override string Description => "A tracker for rare movies.";
+    public override string Description => "Secret Cinema is a Private ratioless site for rare MOVIES.";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -151,7 +151,7 @@ public class SecretCinemaParser : IParseIndexerResponse
 
                         if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
                         {
-                            release.Title += $" [{torrent.RemasterTitle.Trim()}]";
+                            release.Title += $" [{WebUtility.HtmlDecode(torrent.RemasterTitle).Trim()}]";
                         }
 
                         // Replace media formats with standards

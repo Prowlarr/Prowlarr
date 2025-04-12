@@ -38,7 +38,7 @@ dotnet clean $slnFile -c Release
 dotnet msbuild -restore $slnFile -p:Configuration=Debug -p:Platform=$platform -p:RuntimeIdentifiers=$RUNTIME -t:PublishAllRids
 
 dotnet new tool-manifest
-dotnet tool install --version 7.3.2 Swashbuckle.AspNetCore.Cli
+dotnet tool install --version 8.1.1 Swashbuckle.AspNetCore.Cli
 
 dotnet tool run swagger tofile --output ./src/Prowlarr.Api.V1/openapi.json "$outputFolder/$FRAMEWORK/$RUNTIME/$application" v1 &
 

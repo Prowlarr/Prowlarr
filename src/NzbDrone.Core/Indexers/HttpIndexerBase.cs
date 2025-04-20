@@ -250,7 +250,11 @@ namespace NzbDrone.Core.Indexers
             {
                 var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
-                if (response.StatusCode is HttpStatusCode.MovedPermanently or HttpStatusCode.Found or HttpStatusCode.SeeOther)
+                if (response.StatusCode is HttpStatusCode.MovedPermanently
+                    or HttpStatusCode.Found
+                    or HttpStatusCode.SeeOther
+                    or HttpStatusCode.TemporaryRedirect
+                    or HttpStatusCode.PermanentRedirect)
                 {
                     var autoRedirectChain = new List<string> { request.Url.ToString() };
 

@@ -105,7 +105,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
                     catch (Exception ex)
                     {
-                        _logger.Trace(ex, "Failed to parse JSON rows count.");
+                        _logger.Debug(ex, "Failed to parse JSON rows count.");
                     }
                 }
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AngleSharp.Dom;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -214,19 +215,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             if (selector.Selector != null)
             {
                 var selectorSelector = ApplyGoTemplateText(selector.Selector.TrimStart('.'), variables);
-                selectorSelector = JsonParseFieldSelector(parentObj, selectorSelector);
+                var fieldSelector = JsonParseFieldSelector(parentObj, selectorSelector);
 
                 JToken selection = null;
-                if (selectorSelector != null)
+                if (fieldSelector != null)
                 {
-                    selection = parentObj.SelectToken(selectorSelector);
+                    selection = parentObj.SelectToken(fieldSelector);
                 }
 
                 if (selection == null)
                 {
                     if (required)
                     {
-                        throw new Exception(string.Format("Selector \"{0}\" didn't match {1}", selectorSelector, parentObj.ToString()));
+                        throw new Exception($"Selector \"{selectorSelector}\" didn't match {parentObj.ToString(Formatting.None)}");
                     }
 
                     return null;
@@ -234,7 +235,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                 if (selection.Type is JTokenType.Array)
                 {
-                    // turn this json array into a comma delimited string
+                    // turn this json array into a comma-delimited string
                     var valueArray = selection.Value<JArray>();
                     value = string.Join(",", valueArray);
                 }
@@ -259,7 +260,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {parentObj}");
+                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {parentObj.ToString(Formatting.None)}");
                     }
 
                     return null;

@@ -78,6 +78,6 @@ Thank you to [<img src="https://resources.jetbrains.com/storage/products/company
 ### License
 
 - [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)
-- Copyright 2010-2024
+- Copyright 2010-2025
 
 Icon Credit - [Box vector created by freepik - www.freepik.com](https://www.freepik.com/vectors/box)

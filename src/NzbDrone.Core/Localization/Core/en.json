@@ -724,7 +724,7 @@
   "TestAllApps": "Test All Apps",
   "TestAllClients": "Test All Clients",
   "TestAllIndexers": "Test All Indexers",
-  "TheLogLevelDefault": "The log level defaults to 'Info' and can be changed in [General Settings](/settings/general)",
+  "TheLogLevelDefault": "The log level defaults to 'Debug' and can be changed in [General Settings](/settings/general)",
   "Theme": "Theme",
   "ThemeHelpText": "Change Application UI Theme, 'Auto' Theme will use your OS Theme to set Light or Dark mode. Inspired by {inspiredBy}.",
   "Time": "Time",

@@ -806,5 +806,6 @@
     "IndexerPassThePopcornSettingsGoldenPopcornOnlyHelpText": "Etsi vain ns. kultaisella pocornilla merkittyjä julkaisuja.",
     "IndexerSettingsFreeleechOnly": "Vain \"Freeleech\"",
     "IndexerSettingsCookieHelpText": "Jos sivusto vaatii kirjautumisevästeen, on se noudettava selaimen avulla.",
-    "IndexerAvistazSettingsPasswordHelpText": "Sivuston salasana"
+    "IndexerAvistazSettingsPasswordHelpText": "Sivuston salasana",
+    "DownloadClientUTorrentProviderMessage": "Koska uTorrent on tunnettu crypto-, haitta- and mainossisällöstä ja sovelluksista, suosittelemme qBittorrentin, Delugen ja ruTorrentin kaltaisten vaihtoehtojen käyttämistä."
 }

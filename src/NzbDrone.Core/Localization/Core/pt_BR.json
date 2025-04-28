@@ -794,7 +794,7 @@
     "LogFilesLocation": "Os arquivos de log estão localizados em: {location}",
     "Logout": "Sair",
     "NoEventsFound": "Nenhum evento encontrado",
-    "TheLogLevelDefault": "O nível de registro é padronizado como 'Info' e pode ser alterado em [Configurações Gerais](/settings/general)",
+    "TheLogLevelDefault": "O nível de log padrão é ' Debug ' e pode ser alterado em [ Configurações gerais](/ configurações/geral)",
     "UpdateAppDirectlyLoadError": "Incapaz de atualizar o {appName} diretamente,",
     "UpdaterLogFiles": "Arquivos de log do atualizador",
     "WouldYouLikeToRestoreBackup": "Gostaria de restaurar o backup '{name}'?",

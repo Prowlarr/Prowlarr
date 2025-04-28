@@ -503,5 +503,10 @@
     "UpdateAppDirectlyLoadError": "Não foi possível atualizar o {appName} diretamente,",
     "InstallLatest": "Instalar o mais recente",
     "CurrentlyInstalled": "Atualmente instalado",
-    "Mixed": "Corrigido"
+    "Mixed": "Corrigido",
+    "FailedToFetchSettings": "Falha ao obter as definições",
+    "FailedToFetchUpdates": "Falha a obter atualizações",
+    "External": "Externo",
+    "Categories": "Categorias",
+    "days": "dias"
 }

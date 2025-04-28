@@ -161,5 +161,6 @@
     "Discord": "Discord",
     "AddCustomFilter": "Legg til eget filter",
     "Clone": "Lukk",
-    "AddDownloadClientImplementation": "Ny Nedlastingsklient - {implementationName}"
+    "AddDownloadClientImplementation": "Ny Nedlastingsklient - {implementationName}",
+    "History": "Historikk"
 }

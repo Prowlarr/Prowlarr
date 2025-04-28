@@ -148,7 +148,8 @@ namespace NzbDrone.Core.Indexers.Newznab
                 SupportsSearch = SupportsSearch,
                 SupportsRedirect = SupportsRedirect,
                 SupportsPagination = SupportsPagination,
-                Capabilities = caps
+                Capabilities = caps,
+                Redirect = true
             };
         }
 

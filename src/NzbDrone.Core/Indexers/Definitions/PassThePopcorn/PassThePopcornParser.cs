@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
-using System.Text.RegularExpressions;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
@@ -14,8 +13,6 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
     public class PassThePopcornParser : IParseIndexerResponse
     {
         private readonly PassThePopcornSettings _settings;
-
-        private static Regex SeasonRegex => new (@"\bS\d{2,3}(E\d{2,3})?\b", RegexOptions.Compiled);
 
         public PassThePopcornParser(PassThePopcornSettings settings)
         {
@@ -84,13 +81,6 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         flags.Add(PassThePopcornFlag.Approved);
                     }
 
-                    var categories = new List<IndexerCategory> { NewznabStandardCategory.Movies };
-
-                    if (title != null && SeasonRegex.Match(title).Success)
-                    {
-                        categories.Add(NewznabStandardCategory.TV);
-                    }
-
                     var uploadVolumeFactor = torrent.FreeleechType?.ToUpperInvariant() switch
                     {
                         "NEUTRAL LEECH" => 0,
@@ -104,7 +94,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         Year = int.Parse(result.Year),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
-                        Categories = categories,
+                        Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
                         Size = long.Parse(torrent.Size),
                         Grabs = int.Parse(torrent.Snatched),
                         Seeders = int.Parse(torrent.Seeders),

@@ -195,7 +195,7 @@ namespace NzbDrone.Core.Indexers
             }
             else if (settings.BaseUrl.IsNotNullOrWhiteSpace() && LegacyUrls.Contains(settings.BaseUrl))
             {
-                _logger.Debug(string.Format("Changing legacy site link from {0} to {1}", settings.BaseUrl, defaultLink));
+                _logger.Debug("Changing legacy site link from {0} to {1}", settings.BaseUrl, defaultLink);
                 settings.BaseUrl = defaultLink;
             }
 

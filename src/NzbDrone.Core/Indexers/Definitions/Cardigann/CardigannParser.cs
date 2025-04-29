@@ -226,7 +226,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     {
                         results = ApplyFilters(results, search.Preprocessingfilters, variables);
                         searchResultDocument = searchResultParser.ParseDocument(results);
-                        _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
+                        _logger.Trace("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results);
                     }
 
                     var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);
@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     {
                         results = ApplyFilters(results, search.Preprocessingfilters, variables);
                         searchResultDocument = searchResultParser.ParseDocument(results);
-                        _logger.Trace(string.Format("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results));
+                        _logger.Trace("CardigannIndexer ({0}): result after preprocessingfilters: {1}", _definition.Id, results);
                     }
 
                     var rowsSelector = ApplyGoTemplateText(search.Rows.Selector, variables);

@@ -739,7 +739,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     case "hexdump":
                         // this is mainly for debugging invisible special char related issues
                         var hexData = string.Join("", data.Select(c => c + "(" + ((int)c).ToString("X2") + ")"));
-                        _logger.Debug(string.Format("CardigannIndexer ({0}): strdump: {1}", _definition.Id, hexData));
+                        _logger.Debug("CardigannIndexer ({0}): strdump: {1}", _definition.Id, hexData);
                         break;
                     case "strdump":
                         // for debugging
@@ -915,7 +915,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
                         break;
                     default:
-                        _logger.Error(string.Format("CardigannIndexer ({0}): Unsupported selector: {1}", _definition.Id, rowSelector));
+                        _logger.Error("CardigannIndexer ({0}): Unsupported selector: {1}", _definition.Id, rowSelector);
                         continue;
                 }
             }

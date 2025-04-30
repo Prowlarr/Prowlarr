@@ -255,6 +255,11 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerHttpResponse.StatusCode} code from indexer request");
             }
 
+            if (indexerHttpResponse.Headers.ContentType.Contains("text/html"))
+            {
+                throw new IndexerException(indexerResponse, $"Indexer responded with HTML content. {(indexerHttpResponse.Content.ContainsIgnoreCase("site maintenance") ? "Site is under maintenance." : "Site is likely blocked or unavailable.")}");
+            }
+
             if (!indexerHttpResponse.Headers.ContentType.Contains(HttpAccept.Json.Value))
             {
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerHttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");

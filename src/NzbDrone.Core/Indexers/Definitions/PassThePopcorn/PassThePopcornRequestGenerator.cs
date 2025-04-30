@@ -78,6 +78,8 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                 { "action", "advanced" },
                 { "json", "noredirect" },
                 { "grouping", "0" },
+                { "order_by", "time" },
+                { "order_way", "desc" },
                 { "searchstr", searchTerm }
             };
 

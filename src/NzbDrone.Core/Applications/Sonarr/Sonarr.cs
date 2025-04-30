@@ -125,10 +125,17 @@ namespace NzbDrone.Core.Applications.Sonarr
         {
             var indexerCapabilities = GetIndexerCapabilities(indexer);
 
+            if (!indexerCapabilities.TvSearchAvailable)
+            {
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to missing TV search support by the indexer", indexer.Name, indexer.Id);
+
+                return;
+            }
+
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty() &&
                 indexerCapabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Empty())
             {
-                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
                 return;
             }
@@ -183,7 +190,7 @@ namespace NzbDrone.Core.Applications.Sonarr
                 {
                     _logger.Debug("Syncing remote indexer with current settings");
 
-                    if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexerCapabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
+                    if (indexerCapabilities.TvSearchAvailable && (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexerCapabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any()))
                     {
                         // Retain user fields not-affiliated with Prowlarr
                         sonarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => sonarrIndexer.Fields.All(s => s.Name != f.Name)));
@@ -210,7 +217,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexerCapabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any())
+                if (indexerCapabilities.TvSearchAvailable && (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any() || indexerCapabilities.Categories.SupportedCategories(Settings.AnimeSyncCategories.ToArray()).Any()))
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Sonarr", indexer.Name, indexer.Id);
                     sonarrIndexer.Id = 0;

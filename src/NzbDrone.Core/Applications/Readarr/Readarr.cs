@@ -121,9 +121,16 @@ namespace NzbDrone.Core.Applications.Readarr
         {
             var indexerCapabilities = GetIndexerCapabilities(indexer);
 
+            if (!indexerCapabilities.BookSearchAvailable)
+            {
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to missing book search support by the indexer", indexer.Name, indexer.Id);
+
+                return;
+            }
+
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
-                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
                 return;
             }
@@ -178,7 +185,7 @@ namespace NzbDrone.Core.Applications.Readarr
                 {
                     _logger.Debug("Syncing remote indexer with current settings");
 
-                    if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    if (indexerCapabilities.BookSearchAvailable && indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
                         readarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => readarrIndexer.Fields.All(s => s.Name != f.Name)));
@@ -204,7 +211,7 @@ namespace NzbDrone.Core.Applications.Readarr
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                if (indexerCapabilities.BookSearchAvailable && indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Readarr", indexer.Name, indexer.Id);
                     readarrIndexer.Id = 0;

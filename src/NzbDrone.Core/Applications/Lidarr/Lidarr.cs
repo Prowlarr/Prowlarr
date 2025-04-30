@@ -121,9 +121,16 @@ namespace NzbDrone.Core.Applications.Lidarr
         {
             var indexerCapabilities = GetIndexerCapabilities(indexer);
 
+            if (!indexerCapabilities.MusicSearchAvailable)
+            {
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to missing music search support by the indexer", indexer.Name, indexer.Id);
+
+                return;
+            }
+
             if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Empty())
             {
-                _logger.Trace("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to no app Sync Categories supported by the indexer", indexer.Name, indexer.Id);
 
                 return;
             }
@@ -178,7 +185,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                 {
                     _logger.Debug("Syncing remote indexer with current settings");
 
-                    if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    if (indexerCapabilities.MusicSearchAvailable && indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
                         lidarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => lidarrIndexer.Fields.All(s => s.Name != f.Name)));
@@ -204,7 +211,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                if (indexerCapabilities.MusicSearchAvailable && indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Lidarr", indexer.Name, indexer.Id);
                     lidarrIndexer.Id = 0;

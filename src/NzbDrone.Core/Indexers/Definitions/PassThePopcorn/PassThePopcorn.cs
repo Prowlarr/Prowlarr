@@ -1,8 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common;
+using NzbDrone.Common.Cache;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 {
@@ -17,16 +24,19 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
         public override bool SupportsPagination => true;
         public override int PageSize => 50;
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(4);
-
         public override IndexerCapabilities Capabilities => SetCapabilities();
+
+        private readonly ICached<IndexerQueryResult> _queryResultCache;
 
         public PassThePopcorn(IIndexerHttpClient httpClient,
             IEventAggregator eventAggregator,
             IIndexerStatusService indexerStatusService,
             IConfigService configService,
+            ICacheManager cacheManager,
             Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
+            _queryResultCache = cacheManager.GetCache<IndexerQueryResult>(GetType(), "QueryResults");
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
@@ -65,6 +75,38 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Movies, "Movie Collection");
 
             return caps;
+        }
+
+        protected string BuildQueryResultCacheKey(IndexerRequest request)
+        {
+            return HashUtil.ComputeSha256Hash($"{request.HttpRequest.Url.FullUri}::{Settings.ToJson()}");
+        }
+
+        protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
+        {
+            var cacheKey = BuildQueryResultCacheKey(request);
+            var queryResult = _queryResultCache.Find(cacheKey);
+
+            if (queryResult != null)
+            {
+                queryResult.Cached = true;
+
+                return queryResult;
+            }
+
+            _queryResultCache.ClearExpired();
+
+            queryResult = await base.FetchPage(request, parser);
+            _queryResultCache.Set(cacheKey, queryResult, TimeSpan.FromMinutes(5));
+
+            return queryResult;
+        }
+
+        protected override IList<ReleaseInfo> CleanupReleases(IEnumerable<ReleaseInfo> releases, SearchCriteriaBase searchCriteria)
+        {
+            var cleanReleases = base.CleanupReleases(releases, searchCriteria);
+
+            return cleanReleases.Select(r => (ReleaseInfo)r.Clone()).ToList();
         }
     }
 

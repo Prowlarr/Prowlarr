@@ -14,6 +14,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
     public class PassThePopcornMovie
     {
         public string GroupId { get; set; }
+        public string CategoryId { get; set; }
         public string Title { get; set; }
         public string Year { get; set; }
         public string Cover { get; set; }

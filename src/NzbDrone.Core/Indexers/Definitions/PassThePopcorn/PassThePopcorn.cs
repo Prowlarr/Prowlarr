@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 
         public override IParseIndexerResponse GetParser()
         {
-            return new PassThePopcornParser(Settings);
+            return new PassThePopcornParser(Settings, Capabilities.Categories);
         }
 
         private IndexerCapabilities SetCapabilities()

@@ -13,10 +13,12 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
     public class PassThePopcornParser : IParseIndexerResponse
     {
         private readonly PassThePopcornSettings _settings;
+        private readonly IndexerCapabilitiesCategories _categories;
 
-        public PassThePopcornParser(PassThePopcornSettings settings)
+        public PassThePopcornParser(PassThePopcornSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
+            _categories = categories;
         }
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -94,7 +96,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         Year = int.Parse(result.Year),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
                         DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
-                        Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies },
+                        Categories = _categories.MapTrackerCatToNewznab(result.CategoryId),
                         Size = long.Parse(torrent.Size),
                         Grabs = int.Parse(torrent.Snatched),
                         Seeders = int.Parse(torrent.Seeders),

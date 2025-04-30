@@ -227,7 +227,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception($"Selector \"{selectorSelector}\" didn't match {parentObj.ToString(Formatting.None)}");
+                        var jsonContent = parentObj.ToString(Formatting.None);
+
+                        throw new Exception($"Selector \"{selectorSelector}\" didn't match JSON content").WithData("JsonContent", jsonContent[..Math.Min(jsonContent.Length, 5 * 1024)]);
                     }
 
                     return null;
@@ -260,7 +262,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     if (required)
                     {
-                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched {parentObj.ToString(Formatting.None)}");
+                        var jsonContent = parentObj.ToString(Formatting.None);
+
+                        throw new Exception($"None of the case selectors \"{string.Join(",", selector.Case)}\" matched JSON content").WithData("JsonContent", jsonContent[..Math.Min(jsonContent.Length, 5 * 1024)]);
                     }
 
                     return null;

@@ -544,7 +544,7 @@
     "LogFilesLocation": "Log kayıtlarının bulunduğu konum: {location}",
     "NoEventsFound": "Etkinlik bulunamadı",
     "RestartReloadNote": "Not: {appName} geri yükleme işlemi sırasında otomatik olarak yeniden başlatılacak ve kullanıcı arayüzünü yeniden yükleyecektir.",
-    "TheLogLevelDefault": "Log seviyesi varsayılan olarak 'Bilgi' şeklindedir ve [Genel Ayarlar](/ayarlar/genel) bölümünden değiştirilebilir",
+    "TheLogLevelDefault": "Günlük düzeyi varsayılan olarak 'Hata Ayıklama'dır ve [Genel Ayarlar](/ayarlar/genel) bölümünden değiştirilebilir",
     "UpdateAppDirectlyLoadError": "{appName} doğrudan güncellenemiyor,",
     "DockerUpdater": "Güncellemeyi almak için docker konteynerini güncelleyin",
     "FailedToFetchUpdates": "Güncellemeler alınamadı",

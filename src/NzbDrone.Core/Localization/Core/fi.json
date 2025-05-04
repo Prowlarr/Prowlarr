@@ -710,7 +710,7 @@
     "Logout": "Kirjaudu ulos",
     "NoEventsFound": "Tapahtumia ei löytynyt",
     "RestartReloadNote": "Huomioi: {appName} käynnistyy palautusprosessin aikana automaattisesti uudelleen.",
-    "TheLogLevelDefault": "Lokikirjauksen oletusarvoinen laajuus on \"Informatiivinen\". Laajuutta voidaan muuttaa [Yleisistä asetuksista](/settings/general).",
+    "TheLogLevelDefault": "Lokikirjauksen oletusarvoinen laajuus on \"Vianselvitys\". Laajuutta voidaan muuttaa [Yleisistä asetuksista](/settings/general).",
     "UpdateAppDirectlyLoadError": "{appName}ia ei voida päivittää suoraan,",
     "UpdaterLogFiles": "Päivittäjän lokitiedostot",
     "WouldYouLikeToRestoreBackup": "Haluatko palauttaa varmuuskopion \"{name}\"?",
@@ -807,5 +807,5 @@
     "IndexerSettingsFreeleechOnly": "Vain \"Freeleech\"",
     "IndexerSettingsCookieHelpText": "Jos sivusto vaatii kirjautumisevästeen, on se noudettava selaimen avulla.",
     "IndexerAvistazSettingsPasswordHelpText": "Sivuston salasana",
-    "DownloadClientUTorrentProviderMessage": "Koska uTorrent on tunnettu crypto-, haitta- and mainossisällöstä ja sovelluksista, suosittelemme qBittorrentin, Delugen ja ruTorrentin kaltaisten vaihtoehtojen käyttämistä."
+    "DownloadClientUTorrentProviderMessage": "Koska uTorrent on tullut tunnetuksi kryptolouhinnasta sekä haitta- ja mainossisällöstä, suosittelemme valitsemaan jonkin muun työkalun."
 }

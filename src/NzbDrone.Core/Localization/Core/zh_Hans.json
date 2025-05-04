@@ -3,5 +3,7 @@
     "Add": "添加",
     "Analytics": "分析",
     "Username": "用户名",
-    "AcceptConfirmationModal": "中文"
+    "AcceptConfirmationModal": "中文",
+    "Backup": "备份",
+    "BackupNow": "立即备份"
 }

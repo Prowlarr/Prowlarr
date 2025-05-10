@@ -18,6 +18,12 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
     {
         private static readonly PassThePopcornSettingsValidator Validator = new ();
 
+        public PassThePopcornSettings()
+        {
+            BaseSettings.QueryLimit = 150;
+            BaseSettings.LimitsUnit = (int)IndexerLimitsUnit.Hour;
+        }
+
         [FieldDefinition(2, Label = "IndexerSettingsApiUser", HelpText = "IndexerPassThePopcornSettingsApiUserHelpText", Privacy = PrivacyLevel.UserName)]
         public string APIUser { get; set; }
 

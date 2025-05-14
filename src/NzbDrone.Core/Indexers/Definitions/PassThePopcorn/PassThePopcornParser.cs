@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -95,7 +96,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         Title = title,
                         Year = int.Parse(result.Year),
                         InfoUrl = GetInfoUrl(result.GroupId, id),
-                        DownloadUrl = GetDownloadUrl(id, jsonResponse.AuthKey, jsonResponse.PassKey),
+                        DownloadUrl = GetDownloadUrl(id),
                         Categories = _categories.MapTrackerCatToNewznab(result.CategoryId),
                         Size = long.Parse(torrent.Size),
                         Grabs = int.Parse(torrent.Snatched),
@@ -109,7 +110,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                         UploadVolumeFactor = uploadVolumeFactor,
                         MinimumRatio = 1,
                         MinimumSeedTime = 345600,
-                        Genres = result.Tags ?? new List<string>(),
+                        Genres = result.Tags?.ToList() ?? new List<string>(),
                         PosterUrl = GetPosterUrl(result.Cover)
                     });
                 }
@@ -120,14 +121,12 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-        private string GetDownloadUrl(int torrentId, string authKey, string passKey)
+        private string GetDownloadUrl(int torrentId)
         {
             var url = new HttpUri(_settings.BaseUrl)
                 .CombinePath("/torrents.php")
                 .AddQueryParam("action", "download")
-                .AddQueryParam("id", torrentId)
-                .AddQueryParam("authkey", authKey)
-                .AddQueryParam("torrent_pass", passKey);
+                .AddQueryParam("id", torrentId);
 
             return url.FullUri;
         }

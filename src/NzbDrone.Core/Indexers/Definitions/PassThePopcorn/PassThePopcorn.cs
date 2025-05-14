@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Messaging.Events;
 
@@ -37,6 +39,18 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
         public override IParseIndexerResponse GetParser()
         {
             return new PassThePopcornParser(Settings, Capabilities.Categories);
+        }
+
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri);
+
+            var request = requestBuilder
+                .SetHeader("ApiUser", Settings.APIUser)
+                .SetHeader("ApiKey", Settings.APIKey)
+                .Build();
+
+            return Task.FromResult(request);
         }
 
         private IndexerCapabilities SetCapabilities()

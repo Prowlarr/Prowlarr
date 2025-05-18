@@ -431,7 +431,7 @@
     "Season": "Temporada",
     "Theme": "Tema",
     "Track": "Rastreio",
-    "UpdateAvailableHealthCheckMessage": "Nova atualização disponível",
+    "UpdateAvailableHealthCheckMessage": "Nova atualização disponível: {version}",
     "Label": "Rótulo",
     "ConnectionLostReconnect": "O {appName} tentará ligar-se automaticamente, ou você pode clicar em Recarregar abaixo.",
     "ConnectionLostToBackend": "O {appName} perdeu a ligação com o back-end e precisará ser recarregado para restaurar a funcionalidade.",

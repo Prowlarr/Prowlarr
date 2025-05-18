@@ -481,7 +481,7 @@
     "Genre": "Műfajok",
     "Theme": "Téma",
     "Track": "Dal",
-    "UpdateAvailableHealthCheckMessage": "Új frissítés elérhető",
+    "UpdateAvailableHealthCheckMessage": "Új frissítés elérhető: {version}",
     "Year": "Év",
     "Book": "Könyv",
     "Season": "Évad",

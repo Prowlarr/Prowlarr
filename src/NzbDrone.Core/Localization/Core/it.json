@@ -482,7 +482,7 @@
     "More": "Altro",
     "Season": "Stagione",
     "Year": "Anno",
-    "UpdateAvailableHealthCheckMessage": "Nuovo aggiornamento disponibile",
+    "UpdateAvailableHealthCheckMessage": "Nuovo aggiornamento disponibile: {version}",
     "Author": "Autore",
     "ApplyChanges": "Applica Cambiamenti",
     "ApiKeyValidationHealthCheckMessage": "Aggiorna la tua chiave API in modo che abbia una lunghezza di almeno {length} caratteri. Puoi farlo dalle impostazioni o dal file di configurazione",

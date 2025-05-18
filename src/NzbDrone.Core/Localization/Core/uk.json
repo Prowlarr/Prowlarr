@@ -353,7 +353,7 @@
     "More": "Більше",
     "Track": "Трасувати",
     "Year": "Рік",
-    "UpdateAvailableHealthCheckMessage": "Доступне нове оновлення",
+    "UpdateAvailableHealthCheckMessage": "Доступне нове оновлення: {version}",
     "Genre": "Жанри",
     "ConnectionLostReconnect": "{appName} спробує підключитися автоматично, або ви можете натиснути «Перезавантажити» нижче.",
     "ConnectionLostToBackend": "{appName} втратив з’єднання з серверною частиною, і його потрібно перезавантажити, щоб відновити роботу.",

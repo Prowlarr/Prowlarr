@@ -485,7 +485,7 @@
     "Theme": "Θέμα",
     "Track": "Ιχνος",
     "Year": "Ετος",
-    "UpdateAvailableHealthCheckMessage": "Νέα ενημέρωση είναι διαθέσιμη",
+    "UpdateAvailableHealthCheckMessage": "Νέα ενημέρωση είναι διαθέσιμη: {version}",
     "Artist": "Καλλιτέχνης",
     "Author": "Συγγραφέας",
     "Book": "Βιβλίο",

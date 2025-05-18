@@ -619,7 +619,7 @@
     "ExternalUpdater": "{appName} ist so konfiguriert, dass es einen externen Aktualisierungsmechanismus verwendet",
     "NoEventsFound": "Keine Ereignisse gefunden",
     "RestartReloadNote": "Hinweis: {appName} startet während des Wiederherstellungsvorgangs automatisch neu und lädt die Benutzeroberfläche neu.",
-    "TheLogLevelDefault": "Die Protokollebene ist standardmäßig auf „Info“ eingestellt und kann unter „Allgemeine Einstellungen“ (/settings/general) geändert werden.",
+    "TheLogLevelDefault": "Die Protokollebene ist standardmäßig auf „Debug“ eingestellt und kann unter „Allgemeine Einstellungen“ (/settings/general) geändert werden.",
     "UpdateAppDirectlyLoadError": "{appName} kann nicht direkt aktualisiert werden.",
     "UpdaterLogFiles": "Updater-Protokolldateien",
     "WouldYouLikeToRestoreBackup": "Willst du das Backup '{name}' wiederherstellen?",

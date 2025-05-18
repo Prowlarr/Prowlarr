@@ -438,7 +438,7 @@
     "DownloadClientPriorityHelpText": "Geef prioriteit aan meerdere downloaders. Round-Robin wordt gebruikt voor downloaders met dezelfde prioriteit.",
     "Genre": "Genres",
     "Year": "Jaar",
-    "UpdateAvailableHealthCheckMessage": "Nieuwe update is beschikbaar",
+    "UpdateAvailableHealthCheckMessage": "Nieuwe update is beschikbaar: {version}",
     "Label": "Label",
     "Publisher": "Uitgever",
     "ApplyChanges": "Pas Wijzigingen Toe",

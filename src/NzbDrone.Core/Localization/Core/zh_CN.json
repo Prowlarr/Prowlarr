@@ -464,7 +464,7 @@
     "UnsavedChanges": "未保存更改",
     "UnselectAll": "取消全选",
     "UpdateAutomaticallyHelpText": "自动下载并安装更新。您还可以在「“系统”->“更新”」中安装",
-    "UpdateAvailableHealthCheckMessage": "有新的更新可用",
+    "UpdateAvailableHealthCheckMessage": "有新的更新可用: {version}",
     "UpdateStartupNotWritableHealthCheckMessage": "无法安装更新，因为用户“{userName}”对于启动文件夹“{startupFolder}”没有写入权限。",
     "UpdateStartupTranslocationHealthCheckMessage": "无法安装更新，因为启动文件夹“{0}”在一个应用程序迁移文件夹。Cannot install update because startup folder '{startupFolder}' is in an App Translocation folder.",
     "UpdateUiNotWritableHealthCheckMessage": "无法安装升级，因为用户“{userName}”不可写入界面文件夹“{uiFolder}”。",

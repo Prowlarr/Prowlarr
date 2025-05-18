@@ -357,7 +357,7 @@
     "DeleteSelectedIndexersMessageText": "Czy na pewno chcesz usunąć indeksator „{0}”?",
     "DownloadClientPriorityHelpText": "Nadaj priorytet wielu klientom pobierania. W przypadku klientów o tym samym priorytecie używane jest działanie okrężne.",
     "Track": "Ślad",
-    "UpdateAvailableHealthCheckMessage": "Dostępna jest aktualizacja",
+    "UpdateAvailableHealthCheckMessage": "Dostępna jest aktualizacja: {version}",
     "Genre": "Gatunki",
     "ApplyChanges": "Zastosuj zmiany",
     "ApiKeyValidationHealthCheckMessage": "Zaktualizuj swój klucz API aby był długi na co najmniej {length} znaków. Możesz to zrobić poprzez ustawienia lub plik konfiguracyjny",

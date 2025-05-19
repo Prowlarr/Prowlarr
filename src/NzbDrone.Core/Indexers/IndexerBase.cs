@@ -208,6 +208,12 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
+                // Ensure Redirect is true for Usenet protocols
+                if (Protocol == DownloadProtocol.Usenet || (SupportsRedirect && Redirect))
+                {
+                    failures.Add(new ValidationFailure("Redirect", "Redirect must be enabled for Usenet indexers"));
+                }
+
                 Test(failures).GetAwaiter().GetResult();
             }
             catch (Exception ex)

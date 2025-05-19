@@ -262,8 +262,8 @@ namespace NzbDrone.Api.V1.Indexers
                 throw new BadRequestException("Failed to normalize provided link");
             }
 
-            // If Indexer is set to download via Redirect then just redirect to the link
-            if (indexer.SupportsRedirect && indexerDef.Redirect)
+            // If Indexer is set to download via Redirect then just redirect to the link unless it's a Usenet indexer at which point it forces Redirect.
+            if (indexer.Protocol == DownloadProtocol.Usenet || (indexer.SupportsRedirect && indexerDef.Redirect))
             {
                 _downloadService.RecordRedirect(unprotectedLink, id, source, host, file);
                 return RedirectPermanent(unprotectedLink);

@@ -65,16 +65,29 @@ class VirtualTable extends Component {
 
     if (this._grid && scrollTop !== undefined && scrollTop !== 0 && !scrollRestored) {
       this.setState({ scrollRestored: true });
-      this._grid.scrollToPosition({ scrollTop });
+      this._gridScrollToPosition({ scrollTop });
     }
 
     if (scrollIndex != null && scrollIndex !== prevProps.scrollIndex) {
-      this._grid.scrollToCell({
+      this._gridScrollToCell({
         rowIndex: scrollIndex,
         columnIndex: 0
       });
     }
   }
+
+  _gridScrollToCell = ({ rowIndex = 0, columnIndex = 0 }) => {
+    const scrollOffset = this._grid.getOffsetForCell({
+      rowIndex,
+      columnIndex
+    });
+
+    this._gridScrollToPosition(scrollOffset);
+  };
+
+  _gridScrollToPosition = ({ scrollTop = 0, scrollLeft = 0 }) => {
+    this.props.scroller?.scrollTo({ top: scrollTop, left: scrollLeft });
+  };
 
   //
   // Control

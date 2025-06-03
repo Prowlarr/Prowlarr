@@ -73,7 +73,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies, "Feature Film");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Movies, "Short Film");
-            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.TV, "Miniseries");
+            caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.Movies, "Miniseries");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.Movies, "Stand-up Comedy");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.Movies, "Live Performance");
             caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.Movies, "Movie Collection");

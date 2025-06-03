@@ -121,9 +121,9 @@ namespace NzbDrone.Core.Applications.Radarr
         {
             var indexerCapabilities = GetIndexerCapabilities(indexer);
 
-            if (!indexerCapabilities.MovieSearchAvailable)
+            if (!indexerCapabilities.MovieSearchAvailable && !indexerCapabilities.SearchAvailable)
             {
-                _logger.Debug("Skipping add for indexer {0} [{1}] due to missing movie search support by the indexer", indexer.Name, indexer.Id);
+                _logger.Debug("Skipping add for indexer {0} [{1}] due to missing movie or basic search support by the indexer", indexer.Name, indexer.Id);
 
                 return;
             }
@@ -183,7 +183,8 @@ namespace NzbDrone.Core.Applications.Radarr
 
                 if (!radarrIndexer.Equals(remoteIndexer) || forceSync)
                 {
-                    if (indexerCapabilities.MovieSearchAvailable && indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                    if ((indexerCapabilities.MovieSearchAvailable || indexerCapabilities.SearchAvailable) &&
+                        indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
                         // Retain user fields not-affiliated with Prowlarr
                         radarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => radarrIndexer.Fields.All(s => s.Name != f.Name)));
@@ -209,7 +210,8 @@ namespace NzbDrone.Core.Applications.Radarr
             {
                 _appIndexerMapService.Delete(indexerMapping.Id);
 
-                if (indexerCapabilities.MovieSearchAvailable && indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
+                if ((indexerCapabilities.MovieSearchAvailable || indexerCapabilities.SearchAvailable) &&
+                    indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                 {
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Radarr", indexer.Name, indexer.Id);
                     radarrIndexer.Id = 0;

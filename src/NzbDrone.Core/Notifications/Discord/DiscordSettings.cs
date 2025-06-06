@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Notifications.Discord
             };
         }
 
-        private static readonly DiscordSettingsValidator Validator = new ();
+        private static readonly DiscordSettingsValidator Validator = new();
 
         [FieldDefinition(0, Label = "Webhook URL", HelpText = "Discord channel webhook url")]
         public string WebHookUrl { get; set; }

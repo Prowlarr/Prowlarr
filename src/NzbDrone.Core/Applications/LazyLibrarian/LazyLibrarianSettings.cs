@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
     public class LazyLibrarianSettings : IApplicationSettings
     {
-        private static readonly LazyLibrarianSettingsValidator Validator = new ();
+        private static readonly LazyLibrarianSettingsValidator Validator = new();
 
         public LazyLibrarianSettings()
         {

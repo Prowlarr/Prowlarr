@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Applications.Radarr
 
     public class RadarrSettings : IApplicationSettings
     {
-        private static readonly RadarrSettingsValidator Validator = new ();
+        private static readonly RadarrSettingsValidator Validator = new();
 
         public RadarrSettings()
         {

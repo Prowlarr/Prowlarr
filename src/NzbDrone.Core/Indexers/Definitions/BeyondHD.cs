@@ -360,7 +360,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class BeyondHDSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly BeyondHDSettingsValidator Validator = new ();
+        private static readonly BeyondHDSettingsValidator Validator = new();
 
         public BeyondHDSettings()
         {

@@ -135,12 +135,12 @@ namespace NzbDrone.Core.Notifications.Discord
                 Color = (int)DiscordColors.Standard,
                 Fields = new List<DiscordField>
                 {
-                    new ()
+                    new()
                     {
                         Name = "Previous Version",
                         Value = updateMessage.PreviousVersion.ToString()
                     },
-                    new ()
+                    new()
                     {
                         Name = "New Version",
                         Value = updateMessage.NewVersion.ToString()

@@ -226,7 +226,7 @@ public class LibbleRequestGenerator : IIndexerRequestGenerator
 public class LibbleParser : IParseIndexerResponse
 {
     private readonly LibbleSettings _settings;
-    private static Regex ReleaseYearRegex => new (@"\[(\d{4})\]$", RegexOptions.Compiled);
+    private static Regex ReleaseYearRegex => new(@"\[(\d{4})\]$", RegexOptions.Compiled);
 
     public LibbleParser(LibbleSettings settings)
     {

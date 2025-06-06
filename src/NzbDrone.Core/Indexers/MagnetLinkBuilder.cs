@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Indexers
 {
     public static class MagnetLinkBuilder
     {
-        private static readonly List<string> Trackers = new ()
+        private static readonly List<string> Trackers = new()
         {
             "http://tracker.opentrackr.org:1337/announce",
             "udp://tracker.auctor.tv:6969/announce",

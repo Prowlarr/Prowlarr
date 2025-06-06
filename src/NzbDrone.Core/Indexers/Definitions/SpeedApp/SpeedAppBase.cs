@@ -302,7 +302,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SpeedAppSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly SpeedAppSettingsValidator Validator = new ();
+        private static readonly SpeedAppSettingsValidator Validator = new();
 
         public SpeedAppSettings()
         {

@@ -16,16 +16,16 @@ namespace NzbDrone.Core.Indexers.Settings
 
     public class NoAuthTorrentBaseSettings : ITorrentIndexerSettings
     {
-        private static readonly NoAuthSettingsValidator<NoAuthTorrentBaseSettings> Validator = new ();
+        private static readonly NoAuthSettingsValidator<NoAuthTorrentBaseSettings> Validator = new();
 
         [FieldDefinition(1, Label = "IndexerSettingsBaseUrl", Type = FieldType.Select, SelectOptionsProviderAction = "getUrls", HelpText = "IndexerSettingsBaseUrlHelpText")]
         public string BaseUrl { get; set; }
 
         [FieldDefinition(20)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+        public IndexerBaseSettings BaseSettings { get; set; } = new();
 
         [FieldDefinition(21)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new();
 
         public virtual NzbDroneValidationResult Validate()
         {

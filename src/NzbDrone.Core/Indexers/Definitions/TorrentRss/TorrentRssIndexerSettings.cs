@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
 
     public class TorrentRssIndexerSettings : ITorrentIndexerSettings
     {
-        private static readonly TorrentRssIndexerSettingsValidator Validator = new ();
+        private static readonly TorrentRssIndexerSettingsValidator Validator = new();
 
         public TorrentRssIndexerSettings()
         {
@@ -38,10 +38,10 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentRss
         public double? DefaultReleaseSize { get; set; }
 
         [FieldDefinition(20)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+        public IndexerBaseSettings BaseSettings { get; set; } = new();
 
         [FieldDefinition(21)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new();
 
         public NzbDroneValidationResult Validate()
         {

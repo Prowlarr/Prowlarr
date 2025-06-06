@@ -76,7 +76,7 @@ namespace NzbDrone.Core.Download.Clients.UTorrent
 
         public override string Name => "uTorrent";
 
-        public override ProviderMessage Message => new (_localizationService.GetLocalizedString("DownloadClientUTorrentProviderMessage"), ProviderMessageType.Warning);
+        public override ProviderMessage Message => new(_localizationService.GetLocalizedString("DownloadClientUTorrentProviderMessage"), ProviderMessageType.Warning);
 
         public override bool SupportsCategories => true;
 

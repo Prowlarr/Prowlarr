@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
     public class BroadcastheNetSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly BroadcastheNetSettingsValidator Validator = new ();
+        private static readonly BroadcastheNetSettingsValidator Validator = new();
 
         public BroadcastheNetSettings()
         {

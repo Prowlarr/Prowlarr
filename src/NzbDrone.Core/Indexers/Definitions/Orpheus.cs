@@ -445,7 +445,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class OrpheusSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly OrpheusSettingsValidator Validator = new ();
+        private static readonly OrpheusSettingsValidator Validator = new();
 
         public OrpheusSettings()
         {

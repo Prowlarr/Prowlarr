@@ -209,8 +209,8 @@ public class ShazbatParser : IParseIndexerResponse
     private readonly IIndexerHttpClient _httpClient;
     private readonly Logger _logger;
 
-    private readonly Regex _torrentInfoRegex = new (@"\((?<size>\d+)\):(?<seeders>\d+) \/ :(?<leechers>\d+)$", RegexOptions.Compiled);
-    private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
+    private readonly Regex _torrentInfoRegex = new(@"\((?<size>\d+)\):(?<seeders>\d+) \/ :(?<leechers>\d+)$", RegexOptions.Compiled);
+    private readonly HashSet<string> _hdResolutions = new() { "1080p", "1080i", "720p" };
 
     public ShazbatParser(ProviderDefinition definition, ShazbatSettings settings, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
     {
@@ -393,7 +393,7 @@ public class ShazbatSettingsValidator : UserPassBaseSettingsValidator<ShazbatSet
 
 public class ShazbatSettings : UserPassTorrentBaseSettings
 {
-    private static readonly ShazbatSettingsValidator Validator = new ();
+    private static readonly ShazbatSettingsValidator Validator = new();
 
     [FieldDefinition(4, Type = FieldType.Number, Label = "Show Pages Fetch Limit", HelpText = "The number of show pages should Prowlarr fetch when searching. Default: 2.")]
     public int? ShowPagesFetchLimit { get; set; }

@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Settings
 
     public class CookieTorrentBaseSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly CookieBaseSettingsValidator<CookieTorrentBaseSettings> Validator = new ();
+        private static readonly CookieBaseSettingsValidator<CookieTorrentBaseSettings> Validator = new();
 
         public CookieTorrentBaseSettings()
         {

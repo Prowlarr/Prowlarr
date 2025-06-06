@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
         private readonly HDBitsSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private readonly List<int> _halfLeechMediums = new () { (int)HdBitsMedium.Bluray, (int)HdBitsMedium.Remux, (int)HdBitsMedium.Capture };
+        private readonly List<int> _halfLeechMediums = new() { (int)HdBitsMedium.Bluray, (int)HdBitsMedium.Remux, (int)HdBitsMedium.Capture };
 
         public HDBitsParser(HDBitsSettings settings, IndexerCapabilitiesCategories categories)
         {

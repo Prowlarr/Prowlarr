@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
     public class SonarrSettings : IApplicationSettings
     {
-        private static readonly SonarrSettingsValidator Validator = new ();
+        private static readonly SonarrSettingsValidator Validator = new();
 
         public SonarrSettings()
         {

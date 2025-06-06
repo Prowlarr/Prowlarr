@@ -396,7 +396,7 @@ public class PreToMeSettingsValidator : UserPassBaseSettingsValidator<PreToMeSet
 
 public class PreToMeSettings : UserPassTorrentBaseSettings
 {
-    private static readonly PreToMeSettingsValidator Validator = new ();
+    private static readonly PreToMeSettingsValidator Validator = new();
 
     [FieldDefinition(4, Label = "Pin", HelpText = "Site Pin", Privacy = PrivacyLevel.Password)]
     public string Pin { get; set; }

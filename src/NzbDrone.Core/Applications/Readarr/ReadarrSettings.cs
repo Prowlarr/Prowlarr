@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Applications.Readarr
 
     public class ReadarrSettings : IApplicationSettings
     {
-        private static readonly ReadarrSettingsValidator Validator = new ();
+        private static readonly ReadarrSettingsValidator Validator = new();
 
         public ReadarrSettings()
         {

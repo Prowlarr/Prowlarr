@@ -241,7 +241,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SceneHDSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly SceneHDSettingsValidator Validator = new ();
+        private static readonly SceneHDSettingsValidator Validator = new();
 
         public SceneHDSettings()
         {

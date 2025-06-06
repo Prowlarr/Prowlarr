@@ -29,6 +29,6 @@ namespace NzbDrone.Core.Indexers
         public int AppProfileId { get; set; }
         public LazyLoaded<AppSyncProfile> AppProfile { get; set; }
 
-        public List<SettingsField> ExtraFields { get; set; } = new ();
+        public List<SettingsField> ExtraFields { get; set; } = new();
     }
 }

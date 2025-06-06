@@ -290,7 +290,7 @@ public class XSpeedsParser : IParseIndexerResponse
     private readonly XSpeedsSettings _settings;
     private readonly IndexerCapabilitiesCategories _categories;
 
-    private readonly Regex _dateAddedRegex = new (@"\d{2}-\d{2}-\d{4} \d{2}:\d{2}", RegexOptions.Compiled);
+    private readonly Regex _dateAddedRegex = new(@"\d{2}-\d{2}-\d{4} \d{2}:\d{2}", RegexOptions.Compiled);
 
     public XSpeedsParser(XSpeedsSettings settings, IndexerCapabilitiesCategories categories)
     {

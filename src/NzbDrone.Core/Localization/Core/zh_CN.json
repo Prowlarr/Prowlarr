@@ -754,5 +754,6 @@
     "IndexerPassThePopcornSettingsFreeleechOnlyHelpText": "只搜索免费发布",
     "IndexerFileListSettingsFreeleechOnlyHelpText": "只搜索免费发布",
     "IndexerFileListSettingsUsernameHelpText": "网站用户名",
-    "IndexerBeyondHDSettingsRefundOnlyHelpText": "Search refund only"
+    "IndexerBeyondHDSettingsRefundOnlyHelpText": "Search refund only",
+    "DownloadClientUTorrentProviderMessage": "由于uTorrent以加密软件、恶意软件和广告而闻名，我们建议切换到更好的客户端，例如qBittorrent、Deluge或ruTorrent。"
 }

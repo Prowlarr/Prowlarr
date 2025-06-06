@@ -7,8 +7,8 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
 {
     public abstract class SearchCriteriaBase
     {
-        private static readonly Regex StandardizeDashesRegex = new (@"\p{Pd}+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex StandardizeSingleQuotesRegex = new (@"[\u0060\u00B4\u2018\u2019]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex StandardizeDashesRegex = new(@"\p{Pd}+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex StandardizeSingleQuotesRegex = new(@"[\u0060\u00B4\u2018\u2019]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public virtual bool InteractiveSearch { get; set; }
         public List<int> IndexerIds { get; set; }

@@ -252,7 +252,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly IIndexerHttpClient _httpClient;
         private readonly Logger _logger;
 
-        private static Dictionary<string, string> CategoriesMap => new ()
+        private static Dictionary<string, string> CategoriesMap => new()
         {
             { "/anime_tv/full", "14" },
             { "/anime_tv/anime_ongoing", "10" },

@@ -35,7 +35,7 @@ namespace NzbDrone.Common.Test.Http
         private string _httpBinHost;
         private string _httpBinHost2;
 
-        private System.Net.Http.HttpClient _httpClient = new ();
+        private System.Net.Http.HttpClient _httpClient = new();
 
         [OneTimeSetUp]
         public void FixtureSetUp()

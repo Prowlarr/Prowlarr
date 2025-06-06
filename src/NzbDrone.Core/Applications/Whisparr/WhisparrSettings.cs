@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Applications.Whisparr
 
     public class WhisparrSettings : IApplicationSettings
     {
-        private static readonly WhisparrSettingsValidator Validator = new ();
+        private static readonly WhisparrSettingsValidator Validator = new();
 
         public WhisparrSettings()
         {

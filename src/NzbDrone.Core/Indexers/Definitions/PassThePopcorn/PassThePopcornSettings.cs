@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 
     public class PassThePopcornSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly PassThePopcornSettingsValidator Validator = new ();
+        private static readonly PassThePopcornSettingsValidator Validator = new();
 
         public PassThePopcornSettings()
         {

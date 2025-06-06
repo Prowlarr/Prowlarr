@@ -137,7 +137,7 @@ namespace NzbDrone.Test.Common
 
         private void Start(string outputProwlarrConsoleExe)
         {
-            StringDictionary envVars = new ();
+            StringDictionary envVars = new();
             if (PostgresOptions?.Host != null)
             {
                 envVars.Add("Prowlarr__Postgres__Host", PostgresOptions.Host);

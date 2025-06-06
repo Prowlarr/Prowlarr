@@ -9,7 +9,7 @@ namespace NzbDrone.Common.Http
     {
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie
         // NOTE: we are not checking non-ascii characters and we should
-        private static readonly Regex CookieRegex = new (@"([^\(\)<>@,;:\\""/\[\]\?=\{\}\s]+)=([^,;\\""\s]+)");
+        private static readonly Regex CookieRegex = new(@"([^\(\)<>@,;:\\""/\[\]\?=\{\}\s]+)=([^,;\\""\s]+)");
         private static readonly string[] FilterProps = { "COMMENT", "COMMENTURL", "DISCORD", "DOMAIN", "EXPIRES", "MAX-AGE", "PATH", "PORT", "SECURE", "VERSION", "HTTPONLY", "SAMESITE" };
         private static readonly char[] InvalidKeyChars = { '(', ')', '<', '>', '@', ',', ';', ':', '\\', '"', '/', '[', ']', '?', '=', '{', '}', ' ', '\t', '\n' };
         private static readonly char[] InvalidValueChars = { '"', ',', ';', '\\', ' ', '\t', '\n' };

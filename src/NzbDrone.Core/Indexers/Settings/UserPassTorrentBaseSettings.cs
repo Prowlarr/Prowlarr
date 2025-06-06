@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Indexers.Settings
 
     public class UserPassTorrentBaseSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly UserPassBaseSettingsValidator<UserPassTorrentBaseSettings> Validator = new ();
+        private static readonly UserPassBaseSettingsValidator<UserPassTorrentBaseSettings> Validator = new();
 
         public UserPassTorrentBaseSettings()
         {

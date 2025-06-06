@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Notifications.Pushcut
 
     public class PushcutSettings : IProviderConfig
     {
-        private static readonly PushcutSettingsValidator Validator = new ();
+        private static readonly PushcutSettingsValidator Validator = new();
 
         [FieldDefinition(0, Label = "Notification name", Type = FieldType.Textbox, HelpText = "Notification name from Notifications tab of the Pushcut app.")]
         public string NotificationName { get; set; }

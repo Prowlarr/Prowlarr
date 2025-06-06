@@ -33,7 +33,7 @@ namespace NzbDrone.Core.IndexerVersions
         private const int DEFINITION_VERSION = 11;
 
         // Used when moving yml to C#
-        private readonly List<string> _definitionBlocklist = new ()
+        private readonly List<string> _definitionBlocklist = new()
         {
             "aither",
             "animeworld",
@@ -251,8 +251,8 @@ namespace NzbDrone.Core.IndexerVersions
             {
                 definition.Settings = new List<SettingsField>
                 {
-                    new () { Name = "username", Label = "Username", Type = "text" },
-                    new () { Name = "password", Label = "Password", Type = "password" }
+                    new() { Name = "username", Label = "Username", Type = "text" },
+                    new() { Name = "password", Label = "Password", Type = "password" }
                 };
             }
 

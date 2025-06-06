@@ -84,7 +84,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
 
     public class PassThePopcornFlag : IndexerFlag
     {
-        public static IndexerFlag Golden => new ("golden", "Release follows Golden Popcorn quality rules");
-        public static IndexerFlag Approved => new ("approved", "Release approved by PTP staff");
+        public static IndexerFlag Golden => new("golden", "Release follows Golden Popcorn quality rules");
+        public static IndexerFlag Approved => new("approved", "Release approved by PTP staff");
     }
 }

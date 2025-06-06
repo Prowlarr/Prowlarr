@@ -11,7 +11,7 @@ public class GazelleSettingsValidator<T> : UserPassBaseSettingsValidator<T>
 
 public class GazelleSettings : UserPassTorrentBaseSettings
 {
-    private static readonly GazelleSettingsValidator<GazelleSettings> Validator = new ();
+    private static readonly GazelleSettingsValidator<GazelleSettings> Validator = new();
 
     public string AuthKey { get; set; }
     public string PassKey { get; set; }

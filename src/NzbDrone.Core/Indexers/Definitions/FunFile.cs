@@ -228,7 +228,7 @@ public class FunFileParser : IParseIndexerResponse
     private readonly UserPassTorrentBaseSettings _settings;
     private readonly IndexerCapabilitiesCategories _categories;
 
-    private readonly List<string> _validTagList = new ()
+    private readonly List<string> _validTagList = new()
     {
         "action",
         "adventure",

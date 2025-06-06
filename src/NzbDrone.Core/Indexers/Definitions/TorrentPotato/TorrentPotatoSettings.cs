@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
 
     public class TorrentPotatoSettings : ITorrentIndexerSettings
     {
-        private static readonly TorrentPotatoSettingsValidator Validator = new ();
+        private static readonly TorrentPotatoSettingsValidator Validator = new();
 
         [FieldDefinition(0, Label = "API URL", HelpText = "URL to TorrentPotato API")]
         public string BaseUrl { get; set; }
@@ -31,10 +31,10 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
         public string Passkey { get; set; }
 
         [FieldDefinition(20)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+        public IndexerBaseSettings BaseSettings { get; set; } = new();
 
         [FieldDefinition(21)]
-        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new ();
+        public IndexerTorrentBaseSettings TorrentBaseSettings { get; set; } = new();
 
         public virtual NzbDroneValidationResult Validate()
         {

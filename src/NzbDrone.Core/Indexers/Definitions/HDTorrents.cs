@@ -234,8 +234,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private readonly Regex _posterRegex = new (@"src=\\'./([^']+)\\'", RegexOptions.IgnoreCase);
-        private readonly HashSet<string> _freeleechRanks = new (StringComparer.OrdinalIgnoreCase)
+        private readonly Regex _posterRegex = new(@"src=\\'./([^']+)\\'", RegexOptions.IgnoreCase);
+        private readonly HashSet<string> _freeleechRanks = new(StringComparer.OrdinalIgnoreCase)
         {
             "VIP",
             "Uploader",

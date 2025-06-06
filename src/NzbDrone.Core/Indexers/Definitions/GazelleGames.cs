@@ -369,7 +369,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly GazelleGamesSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private static Regex YearRegex => new (@"\b(?:19|20|21)\d{2}\b", RegexOptions.Compiled);
+        private static Regex YearRegex => new(@"\b(?:19|20|21)\d{2}\b", RegexOptions.Compiled);
 
         public GazelleGamesParser(GazelleGamesSettings settings, IndexerCapabilitiesCategories categories)
         {
@@ -553,7 +553,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class GazelleGamesSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly GazelleGamesSettingsValidator Validator = new ();
+        private static readonly GazelleGamesSettingsValidator Validator = new();
 
         public GazelleGamesSettings()
         {

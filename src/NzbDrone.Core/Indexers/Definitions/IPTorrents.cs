@@ -424,7 +424,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class IPTorrentsSettings : CookieTorrentBaseSettings
     {
-        private static readonly IPTorrentsValidator Validator = new ();
+        private static readonly IPTorrentsValidator Validator = new();
 
         [FieldDefinition(3, Label = "IndexerIPTorrentsSettingsCookieUserAgent", Type = FieldType.Textbox, HelpText = "IndexerIPTorrentsSettingsCookieUserAgentHelpText")]
         public string UserAgent { get; set; }

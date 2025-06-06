@@ -8,7 +8,7 @@ namespace NzbDrone.Core.Parser
 {
     public static class ParseUtil
     {
-        private static readonly Regex ImdbIdRegex = new (@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
+        private static readonly Regex ImdbIdRegex = new(@"^(?:tt)?(\d{1,8})$", RegexOptions.Compiled);
 
         public static string NormalizeMultiSpaces(string s) =>
             new Regex(@"\s+").Replace(s.Trim(), " ");

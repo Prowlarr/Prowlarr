@@ -75,7 +75,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseRequestGenerator : IIndexerRequestGenerator
     {
-        private static readonly Regex ResolutionRegex = new (@"\d{3,4}p", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex ResolutionRegex = new(@"\d{3,4}p", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private readonly NoAuthTorrentBaseSettings _settings;
 
@@ -172,7 +172,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class SubsPleaseParser : IParseIndexerResponse
     {
-        private static readonly Regex RegexSize = new (@"\&xl=(?<size>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex RegexSize = new(@"\&xl=(?<size>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private readonly NoAuthTorrentBaseSettings _settings;
 

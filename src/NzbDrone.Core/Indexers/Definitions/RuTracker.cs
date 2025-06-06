@@ -1579,7 +1579,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly RuTrackerSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private readonly RuTrackerTitleParser _titleParser = new ();
+        private readonly RuTrackerTitleParser _titleParser = new();
 
         public RuTrackerParser(RuTrackerSettings settings, IndexerCapabilitiesCategories categories)
         {
@@ -1696,22 +1696,22 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class RuTrackerTitleParser
     {
-        private static readonly List<Regex> FindTagsInTitlesRegexList = new ()
+        private static readonly List<Regex> FindTagsInTitlesRegexList = new()
         {
             new Regex(@"\((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!))\)"),
             new Regex(@"\[(?>\[(?<c>)|[^\[\]]+|\](?<-c>))*(?(c)(?!))\]")
         };
 
-        private readonly Regex _stripCyrillicRegex = new (@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _stripCyrillicRegex = new(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private readonly Regex _tvTitleCommaRegex = new (@"\s(\d+),(\d+)", RegexOptions.Compiled);
-        private readonly Regex _tvTitleCyrillicXRegex = new (@"([\s-])Х+([\s\)\]])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleCommaRegex = new(@"\s(\d+),(\d+)", RegexOptions.Compiled);
+        private readonly Regex _tvTitleCyrillicXRegex = new(@"([\s-])Х+([\s\)\]])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private readonly Regex _tvTitleRusSeasonEpisodeOfRegex = new (@"Сезон\s*[:]*\s+(\d+).+(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _tvTitleRusSeasonEpisodeRegex = new (@"Сезон\s*[:]*\s+(\d+).+(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _tvTitleRusSeasonRegex = new (@"Сезон\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _tvTitleRusEpisodeOfRegex = new (@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _tvTitleRusEpisodeRegex = new (@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusSeasonEpisodeOfRegex = new(@"Сезон\s*[:]*\s+(\d+).+(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusSeasonEpisodeRegex = new(@"Сезон\s*[:]*\s+(\d+).+(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusSeasonRegex = new(@"Сезон\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusEpisodeOfRegex = new(@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusEpisodeRegex = new(@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string Parse(string title,
                             ICollection<IndexerCategory> categories,

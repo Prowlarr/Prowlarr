@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Xthor
 
     public class XthorSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly XthorSettingsValidator Validator = new ();
+        private static readonly XthorSettingsValidator Validator = new();
 
         public XthorSettings()
         {

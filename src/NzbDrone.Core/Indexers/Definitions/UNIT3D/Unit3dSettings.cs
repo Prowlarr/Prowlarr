@@ -15,7 +15,7 @@ namespace NzbDrone.Core.Indexers.Definitions.UNIT3D
 
     public class Unit3dSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly Unit3dSettingsValidator Validator = new ();
+        private static readonly Unit3dSettingsValidator Validator = new();
 
         [FieldDefinition(2, Label = "ApiKey", HelpText = "Site API Key generated in My Security", Privacy = PrivacyLevel.ApiKey)]
         public string ApiKey { get; set; }

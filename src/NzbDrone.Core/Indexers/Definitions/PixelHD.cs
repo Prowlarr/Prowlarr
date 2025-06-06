@@ -242,7 +242,7 @@ public class PixelHDSettingsValidator : CookieBaseSettingsValidator<PixelHDSetti
 
 public class PixelHDSettings : CookieTorrentBaseSettings
 {
-    private static readonly PixelHDSettingsValidator Validator = new ();
+    private static readonly PixelHDSettingsValidator Validator = new();
 
     [FieldDefinition(3, Label = "Cookie User-Agent", Type = FieldType.Textbox, HelpText = "User-Agent associated with cookie used from Browser")]
     public string UserAgent { get; set; }

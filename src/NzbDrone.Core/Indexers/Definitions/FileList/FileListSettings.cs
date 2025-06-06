@@ -16,7 +16,7 @@ public class FileListSettingsValidator : NoAuthSettingsValidator<FileListSetting
 
 public class FileListSettings : NoAuthTorrentBaseSettings
 {
-    private static readonly FileListSettingsValidator Validator = new ();
+    private static readonly FileListSettingsValidator Validator = new();
 
     public FileListSettings()
     {

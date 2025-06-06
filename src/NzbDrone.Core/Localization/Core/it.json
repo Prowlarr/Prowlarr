@@ -661,5 +661,11 @@
     "InstallLatest": "Installa il più recente",
     "CurrentlyInstalled": "Attualmente Installato",
     "PreviouslyInstalled": "Precedentemente Installato",
-    "Mixed": "Fissato"
+    "Mixed": "Fissato",
+    "ApplicationTagsHelpText": "Sincronizza gli indexer con questa applicazione se hanno uno o più tag corrispondenti. Se non sono elencati tag, nessun indexer verrà escluso dalla sincronizzazione a causa dei propri tag.",
+    "ApplicationTagsHelpTextWarning": "I tag devono essere usati con cautela, poiché possono avere effetti indesiderati. Un'app con un tag si sincronizzerà solo con gli indexer che hanno lo stesso tag.",
+    "AuthQueries": "Query di autenticazione",
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "Se un torrent è bloccato tramite hash, potrebbe non essere correttamente rifiutato durante l’uso di RSS/Ricerca con alcuni indexer. Abilitando questa opzione, il torrent verrà rifiutato dopo essere stato acquisito, ma prima di essere inviato al client.",
+    "AppsMinimumSeedersHelpText": "Numero minimo di seeders richiesti dall’applicazione affinché l’indexer possa acquisire il torrent; se vuoto, viene utilizzato il valore predefinito del profilo di sincronizzazione",
+    "IndexerSettingsAppsMinimumSeedersHelpText": "Numero minimo di seeders richiesti dall’applicazione affinché l’indexer possa acquisire il torrent; se vuoto, viene utilizzato il valore predefinito del profilo di sincronizzazione"
 }

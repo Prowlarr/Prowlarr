@@ -1111,7 +1111,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly NzbIndexSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private static readonly Regex ParseTitleRegex = new (@"\""(?<title>[^:\/]*?)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))?\""", RegexOptions.Compiled);
+        private static readonly Regex ParseTitleRegex = new(@"\""(?<title>[^:\/]*?)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))?\""", RegexOptions.Compiled);
 
         public NzbIndexParser(NzbIndexSettings settings, IndexerCapabilitiesCategories categories)
         {
@@ -1181,7 +1181,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NzbIndexSettings : IIndexerSettings
     {
-        private static readonly NzbIndexSettingsValidator Validator = new ();
+        private static readonly NzbIndexSettingsValidator Validator = new();
 
         public NzbIndexSettings()
         {
@@ -1195,7 +1195,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string ApiKey { get; set; }
 
         [FieldDefinition(3)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+        public IndexerBaseSettings BaseSettings { get; set; } = new();
 
         public NzbDroneValidationResult Validate()
         {

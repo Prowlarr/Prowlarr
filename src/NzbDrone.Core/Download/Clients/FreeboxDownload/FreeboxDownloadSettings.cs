@@ -36,7 +36,7 @@ namespace NzbDrone.Core.Download.Clients.FreeboxDownload
 
     public class FreeboxDownloadSettings : IProviderConfig
     {
-        private static readonly FreeboxDownloadSettingsValidator Validator = new ();
+        private static readonly FreeboxDownloadSettingsValidator Validator = new();
 
         public FreeboxDownloadSettings()
         {

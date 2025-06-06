@@ -328,7 +328,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class TorrentSyndikatSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly TorrentSyndikatSettingsValidator Validator = new ();
+        private static readonly TorrentSyndikatSettingsValidator Validator = new();
 
         public TorrentSyndikatSettings()
         {

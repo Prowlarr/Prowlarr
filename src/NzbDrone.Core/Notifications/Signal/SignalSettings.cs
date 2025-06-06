@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Notifications.Signal
 
     public class SignalSettings : IProviderConfig
     {
-        private static readonly SignalSettingsValidator Validator = new ();
+        private static readonly SignalSettingsValidator Validator = new();
 
         [FieldDefinition(0, Label = "Host", Type = FieldType.Textbox, HelpText = "localhost")]
         public string Host { get; set; }

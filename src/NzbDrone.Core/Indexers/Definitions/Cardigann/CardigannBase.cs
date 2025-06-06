@@ -27,8 +27,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         protected virtual string SiteLink { get; private set; }
 
-        protected readonly IndexerCapabilitiesCategories _categories = new ();
-        protected readonly List<string> _defaultCategories = new ();
+        protected readonly IndexerCapabilitiesCategories _categories = new();
+        protected readonly List<string> _defaultCategories = new();
 
         protected readonly string[] OptionalFields = new string[] { "imdb", "imdbid", "tmdbid", "rageid", "tvdbid", "tvmazeid", "traktid", "doubanid", "poster", "banner", "description", "genre" };
 

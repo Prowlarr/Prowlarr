@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Applications.Sonarr
 
     public class SonarrV3Proxy : ISonarrV3Proxy
     {
-        private static Version MinimumApplicationVersion => new (3, 0, 5, 0);
+        private static Version MinimumApplicationVersion => new(3, 0, 5, 0);
 
         private const string AppApiRoute = "/api/v3";
         private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";

@@ -427,7 +427,7 @@ public class MTeamTpValidator : NoAuthSettingsValidator<MTeamTpSettings>
 
 public class MTeamTpSettings : NoAuthTorrentBaseSettings
 {
-    private static readonly MTeamTpValidator Validator = new ();
+    private static readonly MTeamTpValidator Validator = new();
 
     [FieldDefinition(2, Label = "ApiKey", HelpText = "IndexerMTeamTpSettingsApiKeyHelpText", Privacy = PrivacyLevel.ApiKey)]
     public string ApiKey { get; set; }

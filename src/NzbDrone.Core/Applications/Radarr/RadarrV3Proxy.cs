@@ -23,8 +23,8 @@ namespace NzbDrone.Core.Applications.Radarr
 
     public class RadarrV3Proxy : IRadarrV3Proxy
     {
-        private static Version MinimumApplicationV4Version => new (4, 0, 4, 0);
-        private static Version MinimumApplicationV3Version => new (3, 1, 1, 0);
+        private static Version MinimumApplicationV4Version => new(4, 0, 4, 0);
+        private static Version MinimumApplicationV3Version => new(3, 1, 1, 0);
 
         private const string AppApiRoute = "/api/v3";
         private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";

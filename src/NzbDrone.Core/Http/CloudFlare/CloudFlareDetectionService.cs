@@ -10,7 +10,7 @@ namespace NzbDrone.Core.Http.CloudFlare
 {
     public class CloudFlareDetectionService
     {
-        private static readonly HashSet<string> CloudflareServerNames = new () { "cloudflare", "cloudflare-nginx", "ddos-guard" };
+        private static readonly HashSet<string> CloudflareServerNames = new() { "cloudflare", "cloudflare-nginx", "ddos-guard" };
         private readonly Logger _logger;
 
         public CloudFlareDetectionService(Logger logger)

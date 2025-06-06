@@ -49,7 +49,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
     public class NewznabSettings : IIndexerSettings
     {
-        private static readonly NewznabSettingsValidator Validator = new ();
+        private static readonly NewznabSettingsValidator Validator = new();
 
         public NewznabSettings()
         {
@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers.Newznab
         public string VipExpiration { get; set; }
 
         [FieldDefinition(7)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+        public IndexerBaseSettings BaseSettings { get; set; } = new();
 
         public NewznabCapabilitiesSettings Capabilities { get; set; }
 

@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
     public class LidarrSettings : IApplicationSettings
     {
-        private static readonly LidarrSettingsValidator Validator = new ();
+        private static readonly LidarrSettingsValidator Validator = new();
 
         public LidarrSettings()
         {

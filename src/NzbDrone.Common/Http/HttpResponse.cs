@@ -9,7 +9,7 @@ namespace NzbDrone.Common.Http
 {
     public class HttpResponse
     {
-        private static readonly Regex RegexRefresh = new ("^(.*?url)=(.*?)(?:;|$)", RegexOptions.Compiled);
+        private static readonly Regex RegexRefresh = new("^(.*?url)=(.*?)(?:;|$)", RegexOptions.Compiled);
 
         public HttpResponse(HttpRequest request, HttpHeader headers, CookieCollection cookies, byte[] binaryData, long elapsedTime = 0, HttpStatusCode statusCode = HttpStatusCode.OK, Version version = null)
         {

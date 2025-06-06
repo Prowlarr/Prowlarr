@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Applications.Lidarr
 
     public class LidarrV1Proxy : ILidarrV1Proxy
     {
-        private static Version MinimumApplicationVersion => new (1, 0, 2, 0);
+        private static Version MinimumApplicationVersion => new(1, 0, 2, 0);
 
         private const string AppApiRoute = "/api/v1";
         private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";

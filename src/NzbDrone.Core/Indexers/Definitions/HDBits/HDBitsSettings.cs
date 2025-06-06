@@ -18,7 +18,7 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
 
     public class HDBitsSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly HDBitsSettingsValidator Validator = new ();
+        private static readonly HDBitsSettingsValidator Validator = new();
 
         public HDBitsSettings()
         {

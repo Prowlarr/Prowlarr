@@ -120,7 +120,7 @@ public class GreatPosterWallParser : GazelleParser
     private readonly GreatPosterWallSettings _settings;
     private readonly Logger _logger;
 
-    private readonly HashSet<string> _hdResolutions = new () { "1080p", "1080i", "720p" };
+    private readonly HashSet<string> _hdResolutions = new() { "1080p", "1080i", "720p" };
 
     public GreatPosterWallParser(GreatPosterWallSettings settings, IndexerCapabilities capabilities, Logger logger)
         : base(settings, capabilities)
@@ -272,7 +272,7 @@ public class GreatPosterWallParser : GazelleParser
 
 public class GreatPosterWallSettings : GazelleUserPassOrCookieSettings
 {
-    private static readonly GazelleUserPassOrCookieValidator<GreatPosterWallSettings> Validator = new ();
+    private static readonly GazelleUserPassOrCookieValidator<GreatPosterWallSettings> Validator = new();
 
     [FieldDefinition(6, Label = "Freeleech Only", Type = FieldType.Checkbox, HelpText = "Search freeleech torrents only")]
     public bool FreeleechOnly { get; set; }

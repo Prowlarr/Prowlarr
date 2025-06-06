@@ -323,7 +323,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly PornoLabSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
         private readonly Logger _logger;
-        private static readonly Regex StripRussianRegex = new (@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)");
+        private static readonly Regex StripRussianRegex = new(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)");
 
         public PornoLabParser(PornoLabSettings settings, IndexerCapabilitiesCategories categories, Logger logger)
         {

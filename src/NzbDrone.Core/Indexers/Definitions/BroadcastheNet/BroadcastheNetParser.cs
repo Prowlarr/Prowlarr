@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 {
     public class BroadcastheNetParser : IParseIndexerResponse
     {
-        private static readonly Regex RegexProtocol = new ("^https?:", RegexOptions.Compiled);
+        private static readonly Regex RegexProtocol = new("^https?:", RegexOptions.Compiled);
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 

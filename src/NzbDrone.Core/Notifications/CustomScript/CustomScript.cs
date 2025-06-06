@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Notifications.CustomScript
 
         public override string Link => "https://wiki.servarr.com/prowlarr/settings#connections";
 
-        public override ProviderMessage Message => new ("Testing will execute the script with the EventType set to Test, ensure your script handles this correctly", ProviderMessageType.Warning);
+        public override ProviderMessage Message => new("Testing will execute the script with the EventType set to Test, ensure your script handles this correctly", ProviderMessageType.Warning);
 
         public override void OnGrab(GrabMessage message)
         {

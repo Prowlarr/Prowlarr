@@ -118,7 +118,7 @@ namespace NzbDrone.Api.V1.Indexers
                         {
                             Releases = new List<ReleaseInfo>
                             {
-                                new ()
+                                new()
                                 {
                                     Title = "Test Release",
                                     Guid = "https://prowlarr.com",

@@ -19,7 +19,7 @@ public class GazelleUserPassOrCookieValidator<T> : NoAuthSettingsValidator<T>
 
 public class GazelleUserPassOrCookieSettings : GazelleSettings
 {
-    private static readonly GazelleUserPassOrCookieValidator<GazelleUserPassOrCookieSettings> Validator = new ();
+    private static readonly GazelleUserPassOrCookieValidator<GazelleUserPassOrCookieSettings> Validator = new();
 
     [FieldDefinition(4, Label = "Cookie", HelpText = "Use the Cookie field only if 2FA is enabled for your account, leave it empty otherwise.", HelpLink = "https://wiki.servarr.com/useful-tools#finding-cookies", Privacy = PrivacyLevel.Password)]
     public string Cookie { get; set; }

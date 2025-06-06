@@ -456,7 +456,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class RedactedSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly RedactedSettingsValidator Validator = new ();
+        private static readonly RedactedSettingsValidator Validator = new();
 
         public RedactedSettings()
         {

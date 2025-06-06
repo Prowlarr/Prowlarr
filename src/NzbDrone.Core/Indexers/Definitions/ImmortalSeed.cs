@@ -257,7 +257,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly ImmortalSeedSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        private readonly Regex _dateAddedRegex = new (@"\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AaPp][Mm]", RegexOptions.Compiled);
+        private readonly Regex _dateAddedRegex = new(@"\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AaPp][Mm]", RegexOptions.Compiled);
 
         public ImmortalSeedParser(ImmortalSeedSettings settings, IndexerCapabilitiesCategories categories)
         {

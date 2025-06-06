@@ -16,7 +16,7 @@ namespace NzbDrone.Core.Indexers.Headphones
 
     public class HeadphonesSettings : IIndexerSettings
     {
-        private static readonly HeadphonesSettingsValidator Validator = new ();
+        private static readonly HeadphonesSettingsValidator Validator = new();
 
         public HeadphonesSettings()
         {
@@ -38,7 +38,7 @@ namespace NzbDrone.Core.Indexers.Headphones
         public string Password { get; set; }
 
         [FieldDefinition(4)]
-        public IndexerBaseSettings BaseSettings { get; set; } = new ();
+        public IndexerBaseSettings BaseSettings { get; set; } = new();
 
         public virtual NzbDroneValidationResult Validate()
         {

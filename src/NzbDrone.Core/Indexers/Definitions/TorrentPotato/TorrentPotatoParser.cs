@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Definitions.TorrentPotato
 {
     public class TorrentPotatoParser : IParseIndexerResponse
     {
-        private static readonly Regex RegexGuid = new (@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
+        private static readonly Regex RegexGuid = new(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
 
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {

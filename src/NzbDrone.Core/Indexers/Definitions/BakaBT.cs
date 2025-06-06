@@ -234,7 +234,7 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private readonly BakaBTSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
-        private readonly List<IndexerCategory> _defaultCategories = new () { NewznabStandardCategory.TVAnime };
+        private readonly List<IndexerCategory> _defaultCategories = new() { NewznabStandardCategory.TVAnime };
 
         public BakaBTParser(BakaBTSettings settings, IndexerCapabilitiesCategories categories)
         {

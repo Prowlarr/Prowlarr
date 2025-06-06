@@ -247,7 +247,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class KnabenParser : IParseIndexerResponse
     {
-        private static readonly Regex DateTimezoneRegex = new (@"[+-]\d{2}:\d{2}$", RegexOptions.Compiled);
+        private static readonly Regex DateTimezoneRegex = new(@"[+-]\d{2}:\d{2}$", RegexOptions.Compiled);
 
         private readonly IndexerCapabilitiesCategories _categories;
 

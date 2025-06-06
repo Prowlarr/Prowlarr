@@ -19,7 +19,7 @@ namespace NzbDrone.Core.Applications.Mylar
 
     public class MylarSettings : IApplicationSettings
     {
-        private static readonly MylarSettingsValidator Validator = new ();
+        private static readonly MylarSettingsValidator Validator = new();
 
         public MylarSettings()
         {

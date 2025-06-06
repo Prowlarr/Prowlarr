@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
     public class AvistazSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly AvistazSettingsValidator Validator = new ();
+        private static readonly AvistazSettingsValidator Validator = new();
 
         public AvistazSettings()
         {

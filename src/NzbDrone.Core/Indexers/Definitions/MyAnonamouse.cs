@@ -258,7 +258,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class MyAnonamouseRequestGenerator : IIndexerRequestGenerator
     {
-        private static readonly Regex SanitizeSearchQueryRegex = new ("[^\\w]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex SanitizeSearchQueryRegex = new("[^\\w]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private readonly MyAnonamouseSettings _settings;
         private readonly IndexerCapabilities _capabilities;
@@ -417,7 +417,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly Logger _logger;
 
         private readonly ICached<string> _userClassCache;
-        private readonly HashSet<string> _vipFreeleechUserClasses = new (StringComparer.OrdinalIgnoreCase)
+        private readonly HashSet<string> _vipFreeleechUserClasses = new(StringComparer.OrdinalIgnoreCase)
         {
             "VIP",
             "Elite VIP"
@@ -613,7 +613,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class MyAnonamouseSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly MyAnonamouseSettingsValidator Validator = new ();
+        private static readonly MyAnonamouseSettingsValidator Validator = new();
 
         public MyAnonamouseSettings()
         {

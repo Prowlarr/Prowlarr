@@ -149,7 +149,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly AnimeBytesSettings _settings;
         private readonly IndexerCapabilities _capabilities;
 
-        private static Regex YearRegex => new (@"\b((?:19|20)\d{2})$", RegexOptions.Compiled);
+        private static Regex YearRegex => new(@"\b((?:19|20)\d{2})$", RegexOptions.Compiled);
 
         public AnimeBytesRequestGenerator(AnimeBytesSettings settings, IndexerCapabilities capabilities)
         {
@@ -290,16 +290,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesParser : IParseIndexerResponse
     {
-        private static readonly HashSet<string> ExcludedProperties = new (StringComparer.OrdinalIgnoreCase) { "Freeleech" };
-        private static readonly HashSet<string> RemuxResolutions = new (StringComparer.OrdinalIgnoreCase) { "1080i", "1080p", "2160p", "4K" };
-        private static readonly HashSet<string> CommonReleaseGroupsProperties = new (StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> ExcludedProperties = new(StringComparer.OrdinalIgnoreCase) { "Freeleech" };
+        private static readonly HashSet<string> RemuxResolutions = new(StringComparer.OrdinalIgnoreCase) { "1080i", "1080p", "2160p", "4K" };
+        private static readonly HashSet<string> CommonReleaseGroupsProperties = new(StringComparer.OrdinalIgnoreCase)
         {
             "Softsubs",
             "Hardsubs",
             "RAW",
             "Translated"
         };
-        private static readonly HashSet<string> ExcludedFileExtensions = new (StringComparer.OrdinalIgnoreCase) { ".mka", ".mds", ".md5", ".nfo", ".sfv", ".ass", ".mks", ".srt", ".ssa", ".sup", ".jpeg", ".jpg", ".png", ".otf", ".ttf" };
+        private static readonly HashSet<string> ExcludedFileExtensions = new(StringComparer.OrdinalIgnoreCase) { ".mka", ".mds", ".md5", ".nfo", ".sfv", ".ass", ".mks", ".srt", ".ssa", ".sup", ".jpeg", ".jpg", ".png", ".otf", ".ttf" };
 
         private static readonly string[] PropertiesSeparator = { " | ", " / " };
 
@@ -712,7 +712,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AnimeBytesSettings : NoAuthTorrentBaseSettings
     {
-        private static readonly AnimeBytesSettingsValidator Validator = new ();
+        private static readonly AnimeBytesSettingsValidator Validator = new();
 
         public AnimeBytesSettings()
         {

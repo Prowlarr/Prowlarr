@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Rarbg
 {
     public class RarbgParser : IParseIndexerResponse
     {
-        private static readonly Regex RegexGuid = new (@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
+        private static readonly Regex RegexGuid = new(@"^magnet:\?xt=urn:btih:([a-f0-9]+)", RegexOptions.Compiled);
 
         private readonly IndexerCapabilities _capabilities;
         private readonly Logger _logger;

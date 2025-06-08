@@ -7,12 +7,11 @@ namespace NzbDrone.Automation.Test.PageModel
 {
     public class PageBase
     {
-        private readonly WebDriver _driver;
+        private readonly IWebDriver _driver;
 
-        public PageBase(WebDriver driver)
+        public PageBase(IWebDriver driver)
         {
             _driver = driver;
-            driver.Manage().Window.Maximize();
         }
 
         public IWebElement FindByClass(string className, int timeout = 5)

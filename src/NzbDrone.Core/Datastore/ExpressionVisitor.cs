@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Datastore
             switch (expression.NodeType)
             {
                 case ExpressionType.Lambda:
-                    return VisitLamda((LambdaExpression)expression);
+                    return VisitLambda((LambdaExpression)expression);
                 case ExpressionType.ArrayLength:
                 case ExpressionType.Convert:
                 case ExpressionType.ConvertChecked:
@@ -87,7 +87,7 @@ namespace NzbDrone.Core.Datastore
         }
 
         /// <summary>
-        /// Visits the memeber access expression. To be implemented by user.
+        /// Visits the member access expression. To be implemented by user.
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -130,11 +130,11 @@ namespace NzbDrone.Core.Datastore
         }
 
         /// <summary>
-        /// Visits the lamda expression.
+        /// Visits the lambda expression.
         /// </summary>
         /// <param name="lambdaExpression"></param>
         /// <returns></returns>
-        protected virtual Expression VisitLamda(LambdaExpression lambdaExpression)
+        protected virtual Expression VisitLambda(LambdaExpression lambdaExpression)
         {
             Visit(lambdaExpression.Body);
             return lambdaExpression;

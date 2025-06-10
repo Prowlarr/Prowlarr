@@ -1203,7 +1203,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     Encoding = _encoding
                 };
 
-                // Add FormData for searchs that POST
+                // Add FormData for searches that POST
                 if (method == HttpMethod.Post)
                 {
                     foreach (var param in queryCollection)

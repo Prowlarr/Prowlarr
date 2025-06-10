@@ -95,7 +95,7 @@ namespace Prowlarr.Http.Extensions
             var scheme = request.Scheme;
             var port = request.HttpContext.Request.Host.Port;
 
-            // Check for protocol headers added by reverse proxys
+            // Check for protocol headers added by reverse proxies
             // X-Forwarded-Proto: A de facto standard for identifying the originating protocol of an HTTP request
             var xForwardedProto = request.Headers.Where(x => x.Key == "X-Forwarded-Proto").Select(x => x.Value).FirstOrDefault();
 

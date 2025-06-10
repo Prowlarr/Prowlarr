@@ -97,7 +97,7 @@ namespace NzbDrone.Common.Http
                     // Save to add to final response
                     var responseCookies = response.Cookies;
 
-                    // Update cookiecontainer for next request with any cookies recieved on last request
+                    // Update cookie container for next request with any cookies received on last request
                     var responseContainer = HandleRedirectCookies(request, response);
 
                     response = await ExecuteRequestAsync(request, responseContainer);

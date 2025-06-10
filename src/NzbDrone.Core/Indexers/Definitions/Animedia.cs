@@ -237,13 +237,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return _categories.MapTrackerCatDescToNewznab("OVA/ONA/Special");
             }
 
-            // Check movies then, cause some of releases could be movies dorama and should go to movies category
+            // Check movies then, cause some of the releases could be movies dorama and should go to movies category
             if (CategorieMovieRegex.IsMatch(rName) || CategorieMovieRegex.IsMatch(rDesc))
             {
                 return _categories.MapTrackerCatDescToNewznab("Movies");
             }
 
-            // Check dorama. Most of doramas are flaged as doramas in type info, but type info could have a lot of types at same time (movie, etc)
+            // Check dorama. Most of doramas are flagged as doramas in type info, but type info could have a lot of types at same time (movie, etc)
             if (CategorieDoramaRegex.IsMatch(rName) || CategorieDoramaRegex.IsMatch(type))
             {
                 return _categories.MapTrackerCatDescToNewznab("Dorama");

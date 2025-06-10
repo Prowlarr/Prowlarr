@@ -138,7 +138,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else if (!string.IsNullOrWhiteSpace(searchString))
             {
-                // Suffix the first occurence of `s01` surrounded by whitespace with *
+                // Suffix the first occurrence of `s01` surrounded by whitespace with *
                 // That way we also search for single episodes in a whole season search
                 var regex = new Regex(@"(^|\s)(s\d{2})(\s|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
                 queryCollection.Add("searchstring", regex.Replace(searchString.Trim(), @"$1$2*$3"));

@@ -710,15 +710,15 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                         var diacriticsOp = (string)filter.Args;
                         if (diacriticsOp == "replace")
                         {
-                            // Should replace diacritics charcaters with their base character
+                            // Should replace diacritics characters with their base character
                             // It's not perfect, e.g. "ŠĐĆŽ - šđčćž" becomes "SĐCZ-sđccz"
                             var stFormD = data.Normalize(NormalizationForm.FormD);
                             var len = stFormD.Length;
                             var sb = new StringBuilder();
                             for (var i = 0; i < len; i++)
                             {
-                                var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(stFormD[i]);
-                                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                                var uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[i]);
+                                if (uc != UnicodeCategory.NonSpacingMark)
                                 {
                                     sb.Append(stFormD[i]);
                                 }
@@ -779,7 +779,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 return headers;
             }
 
-            // FIXME: fix jackett header handling (allow it to specifiy the same header multipe times)
+            // FIXME: fix jackett header handling (allow it to specify the same header multiple times)
             foreach (var header in customHeaders)
             {
                 headers.Add(header.Key, ApplyGoTemplateText(header.Value[0], variables));

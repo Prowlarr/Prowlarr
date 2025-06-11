@@ -224,24 +224,28 @@ namespace NzbDrone.Core.Indexers.Newznab
                 foreach (var xmlCategory in xmlCategories.Elements("category"))
                 {
                     var parentName = xmlCategory.Attribute("name").Value;
-                    var parentNameLower = parentName?.ToLowerInvariant();
                     var parentId = int.Parse(xmlCategory.Attribute("id").Value);
 
-                    var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentNameLower.Contains(x.Name.ToLower()));
+                    var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentName.Equals(x.Name, StringComparison.OrdinalIgnoreCase));
 
-                    if (mappedCat == null)
+                    if (mappedCat is null)
                     {
-                        // Try to find name and Id in AllCats for sub cats that are mapped as parents
-                        mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == parentId && x.Name.ToLower().Contains(parentNameLower));
+                        // Try to find name and ID in AllCats for sub cats that are mapped as parents
+                        mappedCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == parentId && x.Name.Contains(parentName, StringComparison.OrdinalIgnoreCase));
                     }
 
-                    if (mappedCat == null)
+                    if (mappedCat is null)
+                    {
+                        mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentName.Contains(x.Name, StringComparison.OrdinalIgnoreCase));
+                    }
+
+                    if (mappedCat is null)
                     {
                         // Try by parent id if name fails
                         mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => x.Id == parentId);
                     }
 
-                    if (mappedCat == null)
+                    if (mappedCat is null)
                     {
                         // Fallback to Other
                         mappedCat = NewznabStandardCategory.Other;

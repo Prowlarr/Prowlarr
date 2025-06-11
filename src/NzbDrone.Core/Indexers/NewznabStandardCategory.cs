@@ -92,7 +92,6 @@ namespace NzbDrone.Core.Indexers
 
         public static readonly IndexerCategory[] ParentCats =
         {
-            ZedOther,
             Console,
             Movies,
             Audio,
@@ -100,7 +99,8 @@ namespace NzbDrone.Core.Indexers
             TV,
             XXX,
             Books,
-            Other
+            Other,
+            ZedOther
         };
 
         public static readonly IndexerCategory[] AllCats =

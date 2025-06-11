@@ -83,17 +83,18 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
             bookCats.Should().Contain("8000");
         }
 
-        [Test]
-        public void should_find_sub_categories_as_main_categories()
+        [TestCase(5070)]
+        [TestCase(2020)]
+        public void should_find_sub_categories_as_main_categories(int category)
         {
             GivenCapsResponse(ReadAllText("Files/Indexers/Torznab/torznab_animetosho_caps.xml"));
 
             var caps = Subject.GetCapabilities(_settings, _definition);
 
-            var bookCats = caps.Categories.MapTrackerCatToNewznab("5070");
+            var indexerCategories = caps.Categories.MapTrackerCatToNewznab(category.ToString());
 
-            bookCats.Count.Should().Be(2);
-            bookCats.First().Id.Should().Be(5070);
+            indexerCategories.Count.Should().Be(2);
+            indexerCategories.First().Id.Should().Be(category);
         }
 
         [Test]

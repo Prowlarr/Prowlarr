@@ -23,7 +23,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="5.5.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
-    <PackageReference Include="MonoTorrent" Version="2.0.7" />
+    <PackageReference Include="MonoTorrent" Version="3.0.2" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
     <PackageReference Include="AngleSharp" Version="1.5.2" />
   </ItemGroup>

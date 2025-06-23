@@ -11,7 +11,7 @@ namespace NzbDrone.Core.Download
     {
         public string GetHashFromTorrentFile(byte[] fileContents)
         {
-            return Torrent.Load(fileContents).InfoHash.ToHex();
+            return Torrent.Load(fileContents).InfoHashes.V1OrV2.ToHex();
         }
     }
 }

@@ -399,6 +399,7 @@ namespace NzbDrone.Core.Indexers
             var result = new IndexerPageableQueryResult();
             var url = string.Empty;
             var minimumBackoff = TimeSpan.FromHours(1);
+            IndexerRequest lastRequest = null;
 
             try
             {
@@ -425,6 +426,7 @@ namespace NzbDrone.Core.Indexers
                         {
                             url = request.Url.FullUri;
 
+                            lastRequest = request;
                             var page = await FetchPage(request, parser);
 
                             pageSize = pageSize == 1 ? page.Releases.Count : pageSize;
@@ -469,6 +471,12 @@ namespace NzbDrone.Core.Indexers
                 else
                 {
                     _logger.Warn(webException, "{0} {1} {2}", this, url, webException.Message);
+                }
+
+                if (lastRequest != null && lastRequest.HttpRequest != null)
+                {
+                    _logger.Info($"Forcing refresh of http client because of failed request.");
+                    _httpClient.ForceHttpClientRefresh(lastRequest.HttpRequest);
                 }
             }
             catch (TooManyRequestsException ex)

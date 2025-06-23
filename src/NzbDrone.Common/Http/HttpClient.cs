@@ -36,6 +36,8 @@ namespace NzbDrone.Common.Http
         Task<HttpResponse> PostAsync(HttpRequest request);
         Task<HttpResponse<T>> PostAsync<T>(HttpRequest request)
             where T : new();
+
+        void ForceHttpClientRefresh(HttpRequest request);
     }
 
     public class HttpClient : IHttpClient
@@ -135,6 +137,15 @@ namespace NzbDrone.Common.Http
         public HttpResponse Execute(HttpRequest request)
         {
             return ExecuteAsync(request).GetAwaiter().GetResult();
+        }
+
+        public void ForceHttpClientRefresh(HttpRequest request)
+        {
+            // Clear the cookie container cache to force a new CookieContainer to be created
+            lock (_httpDispatcher)
+            {
+                _httpDispatcher.ForceHttpClientRefresh(request);
+            }
         }
 
         private static bool RequestRequiresForceGet(HttpStatusCode statusCode, HttpMethod requestMethod)

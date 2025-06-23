@@ -171,6 +171,17 @@ namespace NzbDrone.Common.Http.Dispatchers
             }
         }
 
+        public void ForceHttpClientRefresh(HttpRequest request)
+        {
+            var requestUri = request.Url as HttpUri;
+            var requestProxy = request.ProxySettings;
+            var proxySettings = requestProxy ?? _proxySettingsProvider.GetProxySettings(requestUri);
+
+            var key = proxySettings?.Key ?? NO_PROXY_KEY;
+            _httpClientCache.Remove(key);
+            _httpClientCache.Set(key, CreateHttpClient(proxySettings));
+        }
+
         protected virtual System.Net.Http.HttpClient GetClient(HttpUri uri, HttpProxySettings requestProxy)
         {
             var proxySettings = requestProxy ?? _proxySettingsProvider.GetProxySettings(uri);

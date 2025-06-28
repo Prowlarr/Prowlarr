@@ -2,27 +2,22 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using NLog;
-using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration;
 
 namespace Prowlarr.Http.Authentication
 {
     public class UiAuthorizationPolicyProvider : IAuthorizationPolicyProvider
     {
-        private const string PolicyName = "UI";
+        private const string POLICY_NAME = "UI";
         private readonly IConfigFileProvider _config;
-        private readonly Logger _logger;
 
         public DefaultAuthorizationPolicyProvider FallbackPolicyProvider { get; }
 
         public UiAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options,
-            IConfigFileProvider config,
-            Logger logger)
+            IConfigFileProvider config)
         {
             FallbackPolicyProvider = new DefaultAuthorizationPolicyProvider(options);
             _config = config;
-            _logger = logger;
         }
 
         public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => FallbackPolicyProvider.GetDefaultPolicyAsync();
@@ -31,21 +26,9 @@ namespace Prowlarr.Http.Authentication
 
         public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
-            if (policyName.Equals(PolicyName, StringComparison.OrdinalIgnoreCase))
+            if (policyName.Equals(POLICY_NAME, StringComparison.OrdinalIgnoreCase))
             {
-                var authenticationMethod = _config.AuthenticationMethod;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-                if (authenticationMethod == AuthenticationType.Basic)
-#pragma warning restore CS0618 // Type or member is obsolete
-                {
-                    _logger.Error("Basic authentication method was removed, use Forms authentication instead.");
-
-                    authenticationMethod = AuthenticationType.Forms;
-                }
-
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(authenticationMethod.ToString())
+                var policy = new AuthorizationPolicyBuilder(_config.AuthenticationMethod.ToString())
                     .AddRequirements(new BypassableDenyAnonymousAuthorizationRequirement());
 
                 return Task.FromResult(policy.Build());

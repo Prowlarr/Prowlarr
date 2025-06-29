@@ -396,7 +396,7 @@
     "AddRemoveOnly": "Sadece Ekle ve Kaldır",
     "AddSyncProfile": "Eşitleme Profili Ekle",
     "AddDownloadClientToProwlarr": "İndirme istemcisi eklemek, görsel arayüz üzerinde manuel arama yaparak indirilecek içeriği {appName} uygulamasına direkt olarak eklemenize olanak sağlar.",
-    "AddApplication": "Uygulama Ekle",
+    "AddApplication": "Add Application",
     "AddCategory": "Kategori Ekle",
     "AddNewIndexer": "Yeni İndekleyici Ekle",
     "ActiveApps": "Aktif Uygulamalar",

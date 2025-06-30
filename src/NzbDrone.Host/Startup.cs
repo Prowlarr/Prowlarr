@@ -51,7 +51,7 @@ namespace NzbDrone.Host
                 b.ClearProviders();
                 b.SetMinimumLevel(LogLevel.Trace);
                 b.AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
-                b.AddFilter("Prowlarr.Http.Authentication", LogLevel.Information);
+                b.AddFilter("Prowlarr.Http.Authentication.ApiKeyAuthenticationHandler", LogLevel.Information);
                 b.AddFilter("Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager", LogLevel.Error);
                 b.AddNLog();
             });

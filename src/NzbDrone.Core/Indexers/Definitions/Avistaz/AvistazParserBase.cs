@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     InfoUrl = details,
                     Guid = details,
                     Categories = cats,
-                    PublishDate = DateTime.Parse($"{row.CreatedAt} {TimezoneOffset}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                    PublishDate = DateTime.Parse(row.CreatedAtIso, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                     Size = row.FileSize,
                     Files = row.FileCount,
                     Grabs = row.Completed,

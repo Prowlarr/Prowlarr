@@ -37,11 +37,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
         }
 
-        public override IParseIndexerResponse GetParser()
-        {
-            return new AvistaZParser();
-        }
-
         protected override IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
@@ -80,10 +75,5 @@ namespace NzbDrone.Core.Indexers.Definitions
                 ? $"E{searchCriteria.Episode}"
                 : $"{searchCriteria.EpisodeSearchString}";
         }
-    }
-
-    public class AvistaZParser : AvistazParserBase
-    {
-        protected override string TimezoneOffset => "+02:00";
     }
 }

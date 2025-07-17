@@ -668,7 +668,7 @@
     "DownloadClientFreeboxSettingsPortHelpText": "Freebox-liittymän portti. Oletus on {port}.",
     "DownloadClientPneumaticSettingsNzbFolder": "NZB-kansio",
     "DownloadClientQbittorrentSettingsSequentialOrder": "Peräkkäinen järjestys",
-    "CustomFilter": "Oma suodatin",
+    "CustomFilter": "Mukautettu suodatin",
     "DownloadClientFreeboxSettingsAppIdHelpText": "Freebox-rajapinnan käyttöoikeutta määritettäessä käytettävä App ID -sovellustunniste.",
     "DownloadClientFreeboxSettingsAppToken": "Sovellustietue",
     "DownloadClientNzbgetSettingsAddPausedHelpText": "Tämä vaatii vähintään NzbGetin version 16.0.",

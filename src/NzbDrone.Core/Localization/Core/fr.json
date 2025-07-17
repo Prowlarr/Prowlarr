@@ -785,7 +785,7 @@
     "Logout": "Se déconnecter",
     "NoEventsFound": "Aucun événement trouvé",
     "RestartReloadNote": "Remarque : {appName} redémarrera et rechargera automatiquement l'interface utilisateur pendant le processus de restauration.",
-    "TheLogLevelDefault": "Le niveau de journalisation est par défaut à « Information » et peut être modifié dans les [paramètres généraux](/settings/general)",
+    "TheLogLevelDefault": "Le niveau de journalisation est par défaut à «Debug» et peut être modifié dans les [paramètres généraux](/settings/general)",
     "UpdateAppDirectlyLoadError": "Impossible de mettre à jour directement {appName},",
     "UpdaterLogFiles": "Journaux du programme de mise à jour",
     "WouldYouLikeToRestoreBackup": "Souhaitez-vous restaurer la sauvegarde « {name} » ?",

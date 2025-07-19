@@ -14,7 +14,6 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 {
     public class AvistazParserBase : IParseIndexerResponse
     {
-        protected virtual string TimezoneOffset => "-04:00"; // Avistaz does not specify a timezone & returns server time
         private readonly HashSet<string> _hdResolutions = new() { "1080p", "1080i", "720p" };
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
@@ -66,7 +65,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                     InfoUrl = details,
                     Guid = details,
                     Categories = cats,
-                    PublishDate = DateTime.Parse($"{row.CreatedAt} {TimezoneOffset}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
+                    PublishDate = DateTime.Parse(row.CreatedAtIso, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal),
                     Size = row.FileSize,
                     Files = row.FileCount,
                     Grabs = row.Completed,

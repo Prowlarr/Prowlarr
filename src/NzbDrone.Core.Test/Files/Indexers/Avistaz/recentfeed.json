@@ -149,7 +149,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 23:26:21"
+      "created_at": "2021-11-14 23:26:21",
+      "created_at_iso": "2021-11-14T23:26:21+02:00"
     },
     {
       "id": 187239,
@@ -195,7 +196,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 23:11:49"
+      "created_at": "2021-11-14 23:11:49",
+      "created_at_iso": "2021-11-14T23:11:49+02:00"
     },
     {
       "id": 187238,
@@ -241,7 +243,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 23:09:11"
+      "created_at": "2021-11-14 23:09:11",
+      "created_at_iso": "2021-11-14T23:09:11+02:00"
     },
     {
       "id": 187237,
@@ -287,7 +290,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 23:05:30"
+      "created_at": "2021-11-14 23:05:30",
+      "created_at_iso": "2021-11-14T23:05:30+02:00"
     },
     {
       "id": 187236,
@@ -333,7 +337,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 22:59:26"
+      "created_at": "2021-11-14 22:59:26",
+      "created_at_iso": "2021-11-14T22:59:26+02:00"
     },
     {
       "id": 187234,
@@ -379,7 +384,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 22:38:33"
+      "created_at": "2021-11-14 22:38:33",
+      "created_at_iso": "2021-11-14T22:38:33+02:00"
     },
     {
       "id": 187233,
@@ -425,7 +431,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 22:35:13"
+      "created_at": "2021-11-14 22:35:13",
+      "created_at_iso": "2021-11-14T22:35:13+02:00"
     },
     {
       "id": 187231,
@@ -452,7 +459,7 @@
         "imdb": "tt1143942",
         "tmdb": "83665",
         "tvdb": null,
-        "title": "Kaiky\u00f4",
+        "title": "Kaikyô",
         "tv_season": 1,
         "tv_episode": null,
         "tv_full_season": true,
@@ -471,7 +478,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 18:02:28"
+      "created_at": "2021-11-14 18:02:28",
+      "created_at_iso": "2021-11-14T18:02:28+02:00"
     },
     {
       "id": 187229,
@@ -517,7 +525,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 15:41:55"
+      "created_at": "2021-11-14 15:41:55",
+      "created_at_iso": "2021-11-14T15:41:55+02:00"
     },
     {
       "id": 187225,
@@ -583,7 +592,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 13:49:11"
+      "created_at": "2021-11-14 13:49:11",
+      "created_at_iso": "2021-11-14T13:49:11+02:00"
     },
     {
       "id": 187224,
@@ -633,7 +643,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 13:15:51"
+      "created_at": "2021-11-14 13:15:51",
+      "created_at_iso": "2021-11-14T13:15:51+02:00"
     },
     {
       "id": 187223,
@@ -679,7 +690,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 12:56:09"
+      "created_at": "2021-11-14 12:56:09",
+      "created_at_iso": "2021-11-14T12:56:09+02:00"
     },
     {
       "id": 187221,
@@ -720,7 +732,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 11:47:24"
+      "created_at": "2021-11-14 11:47:24",
+      "created_at_iso": "2021-11-14T11:47:24+02:00"
     },
     {
       "id": 187219,
@@ -798,7 +811,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 10:59:37"
+      "created_at": "2021-11-14 10:59:37",
+      "created_at_iso": "2021-11-14T10:59:37+02:00"
     },
     {
       "id": 187218,
@@ -876,7 +890,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 10:58:36"
+      "created_at": "2021-11-14 10:58:36",
+      "created_at_iso": "2021-11-14T10:58:36+02:00"
     },
     {
       "id": 187216,
@@ -917,7 +932,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 10:31:45"
+      "created_at": "2021-11-14 10:31:45",
+      "created_at_iso": "2021-11-14T10:31:45+02:00"
     },
     {
       "id": 187215,
@@ -967,7 +983,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 10:31:44"
+      "created_at": "2021-11-14 10:31:44",
+      "created_at_iso": "2021-11-14T10:31:44+02:00"
     },
     {
       "id": 187214,
@@ -1008,7 +1025,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 10:31:43"
+      "created_at": "2021-11-14 10:31:43",
+      "created_at_iso": "2021-11-14T10:31:43+02:00"
     },
     {
       "id": 187213,
@@ -1049,7 +1067,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 10:31:42"
+      "created_at": "2021-11-14 10:31:42",
+      "created_at_iso": "2021-11-14T10:31:42+02:00"
     },
     {
       "id": 187212,
@@ -1095,7 +1114,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 10:28:11"
+      "created_at": "2021-11-14 10:28:11",
+      "created_at_iso": "2021-11-14T10:28:11+02:00"
     },
     {
       "id": 187210,
@@ -1136,7 +1156,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 10:28:10"
+      "created_at": "2021-11-14 10:28:10",
+      "created_at_iso": "2021-11-14T10:28:10+02:00"
     },
     {
       "id": 187211,
@@ -1182,7 +1203,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 10:28:10"
+      "created_at": "2021-11-14 10:28:10",
+      "created_at_iso": "2021-11-14T10:28:10+02:00"
     },
     {
       "id": 187209,
@@ -1223,7 +1245,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 10:28:09"
+      "created_at": "2021-11-14 10:28:09",
+      "created_at_iso": "2021-11-14T10:28:09+02:00"
     },
     {
       "id": 187208,
@@ -1269,7 +1292,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 09:24:47"
+      "created_at": "2021-11-14 09:24:47",
+      "created_at_iso": "2021-11-14T09:24:47+02:00"
     },
     {
       "id": 187207,
@@ -1319,7 +1343,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 09:24:46"
+      "created_at": "2021-11-14 09:24:46",
+      "created_at_iso": "2021-11-14T09:24:46+02:00"
     },
     {
       "id": 187206,
@@ -1360,7 +1385,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:24:45"
+      "created_at": "2021-11-14 09:24:45",
+      "created_at_iso": "2021-11-14T09:24:45+02:00"
     },
     {
       "id": 187205,
@@ -1401,7 +1427,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:24:44"
+      "created_at": "2021-11-14 09:24:44",
+      "created_at_iso": "2021-11-14T09:24:44+02:00"
     },
     {
       "id": 187204,
@@ -1447,7 +1474,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 09:20:56"
+      "created_at": "2021-11-14 09:20:56",
+      "created_at_iso": "2021-11-14T09:20:56+02:00"
     },
     {
       "id": 187203,
@@ -1488,7 +1516,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:20:55"
+      "created_at": "2021-11-14 09:20:55",
+      "created_at_iso": "2021-11-14T09:20:55+02:00"
     },
     {
       "id": 187202,
@@ -1529,7 +1558,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:20:54"
+      "created_at": "2021-11-14 09:20:54",
+      "created_at_iso": "2021-11-14T09:20:54+02:00"
     },
     {
       "id": 187201,
@@ -1570,7 +1600,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:20:53"
+      "created_at": "2021-11-14 09:20:53",
+      "created_at_iso": "2021-11-14T09:20:53+02:00"
     },
     {
       "id": 187200,
@@ -1611,7 +1642,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:17:35"
+      "created_at": "2021-11-14 09:17:35",
+      "created_at_iso": "2021-11-14T09:17:35+02:00"
     },
     {
       "id": 187199,
@@ -1652,7 +1684,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:17:34"
+      "created_at": "2021-11-14 09:17:34",
+      "created_at_iso": "2021-11-14T09:17:34+02:00"
     },
     {
       "id": 187197,
@@ -1718,7 +1751,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 09:14:24"
+      "created_at": "2021-11-14 09:14:24",
+      "created_at_iso": "2021-11-14T09:14:24+02:00"
     },
     {
       "id": 187196,
@@ -1764,7 +1798,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 09:08:42"
+      "created_at": "2021-11-14 09:08:42",
+      "created_at_iso": "2021-11-14T09:08:42+02:00"
     },
     {
       "id": 187195,
@@ -1805,7 +1840,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-14 09:08:29"
+      "created_at": "2021-11-14 09:08:29",
+      "created_at_iso": "2021-11-14T09:08:29+02:00"
     },
     {
       "id": 187191,
@@ -1814,7 +1850,7 @@
       "type_id": 2,
       "type": "TV-Show",
       "info_hash": "(removed)",
-      "file_name": "Beware of Your Bosom Buddies \u78a7\u8840\u6d17\u94f6\u67aa (1984) 720p Complete WEB-DL AAC H.264-CARMEE",
+      "file_name": "Beware of Your Bosom Buddies 碧血洗银枪 (1984) 720p Complete WEB-DL AAC H.264-CARMEE",
       "file_size": 4075094335,
       "file_count": 5,
       "seed": 7,
@@ -1832,7 +1868,7 @@
         "imdb": null,
         "tmdb": "107936",
         "tvdb": null,
-        "title": "\u78a7\u8840\u6d17\u94f6\u67aa",
+        "title": "碧血洗银枪",
         "tv_season": null,
         "tv_episode": null,
         "tv_full_season": false,
@@ -1859,7 +1895,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 07:34:25"
+      "created_at": "2021-11-14 07:34:25",
+      "created_at_iso": "2021-11-14T07:34:25+02:00"
     },
     {
       "id": 187190,
@@ -1929,7 +1966,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 07:24:31"
+      "created_at": "2021-11-14 07:24:31",
+      "created_at_iso": "2021-11-14T07:24:31+02:00"
     },
     {
       "id": 187189,
@@ -1999,7 +2037,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 07:24:26"
+      "created_at": "2021-11-14 07:24:26",
+      "created_at_iso": "2021-11-14T07:24:26+02:00"
     },
     {
       "id": 187188,
@@ -2073,7 +2112,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 07:12:25"
+      "created_at": "2021-11-14 07:12:25",
+      "created_at_iso": "2021-11-14T07:12:25+02:00"
     },
     {
       "id": 187169,
@@ -2147,7 +2187,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 01:18:23"
+      "created_at": "2021-11-14 01:18:23",
+      "created_at_iso": "2021-11-14T01:18:23+02:00"
     },
     {
       "id": 187168,
@@ -2193,7 +2234,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 00:57:43"
+      "created_at": "2021-11-14 00:57:43",
+      "created_at_iso": "2021-11-14T00:57:43+02:00"
     },
     {
       "id": 187167,
@@ -2239,7 +2281,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 00:42:20"
+      "created_at": "2021-11-14 00:42:20",
+      "created_at_iso": "2021-11-14T00:42:20+02:00"
     },
     {
       "id": 187165,
@@ -2285,7 +2328,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-14 00:03:50"
+      "created_at": "2021-11-14 00:03:50",
+      "created_at_iso": "2021-11-14T00:03:50+02:00"
     },
     {
       "id": 187164,
@@ -2355,7 +2399,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 23:07:25"
+      "created_at": "2021-11-13 23:07:25",
+      "created_at_iso": "2021-11-13T23:07:25+02:00"
     },
     {
       "id": 187163,
@@ -2382,7 +2427,7 @@
         "imdb": null,
         "tmdb": "138573",
         "tvdb": null,
-        "title": "\u51b2\u51fb",
+        "title": "冲击",
         "tv_season": null,
         "tv_episode": null,
         "tv_full_season": false,
@@ -2396,7 +2441,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 22:46:14"
+      "created_at": "2021-11-13 22:46:14",
+      "created_at_iso": "2021-11-13T22:46:14+02:00"
     },
     {
       "id": 187162,
@@ -2454,7 +2500,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 22:10:28"
+      "created_at": "2021-11-13 22:10:28",
+      "created_at_iso": "2021-11-13T22:10:28+02:00"
     },
     {
       "id": 187158,
@@ -2500,7 +2547,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 20:58:54"
+      "created_at": "2021-11-13 20:58:54",
+      "created_at_iso": "2021-11-13T20:58:54+02:00"
     },
     {
       "id": 187157,
@@ -2546,7 +2594,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 20:58:52"
+      "created_at": "2021-11-13 20:58:52",
+      "created_at_iso": "2021-11-13T20:58:52+02:00"
     },
     {
       "id": 187156,
@@ -2592,7 +2641,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 20:58:49"
+      "created_at": "2021-11-13 20:58:49",
+      "created_at_iso": "2021-11-13T20:58:49+02:00"
     },
     {
       "id": 187155,
@@ -2638,7 +2688,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 19:53:29"
+      "created_at": "2021-11-13 19:53:29",
+      "created_at_iso": "2021-11-13T19:53:29+02:00"
     },
     {
       "id": 187150,
@@ -2684,7 +2735,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 17:04:28"
+      "created_at": "2021-11-13 17:04:28",
+      "created_at_iso": "2021-11-13T17:04:28+02:00"
     },
     {
       "id": 187149,
@@ -2730,7 +2782,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 17:04:26"
+      "created_at": "2021-11-13 17:04:26",
+      "created_at_iso": "2021-11-13T17:04:26+02:00"
     },
     {
       "id": 187148,
@@ -2776,7 +2829,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 17:04:23"
+      "created_at": "2021-11-13 17:04:23",
+      "created_at_iso": "2021-11-13T17:04:23+02:00"
     },
     {
       "id": 187147,
@@ -2822,7 +2876,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 17:04:11"
+      "created_at": "2021-11-13 17:04:11",
+      "created_at_iso": "2021-11-13T17:04:11+02:00"
     },
     {
       "id": 187146,
@@ -2868,7 +2923,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:59:50"
+      "created_at": "2021-11-13 16:59:50",
+      "created_at_iso": "2021-11-13T16:59:50+02:00"
     },
     {
       "id": 187145,
@@ -2914,7 +2970,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:57:51"
+      "created_at": "2021-11-13 16:57:51",
+      "created_at_iso": "2021-11-13T16:57:51+02:00"
     },
     {
       "id": 187144,
@@ -2960,7 +3017,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:54:53"
+      "created_at": "2021-11-13 16:54:53",
+      "created_at_iso": "2021-11-13T16:54:53+02:00"
     },
     {
       "id": 187143,
@@ -3006,7 +3064,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:54:51"
+      "created_at": "2021-11-13 16:54:51",
+      "created_at_iso": "2021-11-13T16:54:51+02:00"
     },
     {
       "id": 187142,
@@ -3052,7 +3111,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:54:49"
+      "created_at": "2021-11-13 16:54:49",
+      "created_at_iso": "2021-11-13T16:54:49+02:00"
     },
     {
       "id": 187141,
@@ -3098,7 +3158,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:54:46"
+      "created_at": "2021-11-13 16:54:46",
+      "created_at_iso": "2021-11-13T16:54:46+02:00"
     },
     {
       "id": 187140,
@@ -3144,7 +3205,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:54:43"
+      "created_at": "2021-11-13 16:54:43",
+      "created_at_iso": "2021-11-13T16:54:43+02:00"
     },
     {
       "id": 187139,
@@ -3190,7 +3252,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:03:36"
+      "created_at": "2021-11-13 16:03:36",
+      "created_at_iso": "2021-11-13T16:03:36+02:00"
     },
     {
       "id": 187138,
@@ -3236,7 +3299,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 16:03:31"
+      "created_at": "2021-11-13 16:03:31",
+      "created_at_iso": "2021-11-13T16:03:31+02:00"
     },
     {
       "id": 187137,
@@ -3282,7 +3346,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 14:47:56"
+      "created_at": "2021-11-13 14:47:56",
+      "created_at_iso": "2021-11-13T14:47:56+02:00"
     },
     {
       "id": 187136,
@@ -3328,7 +3393,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 13:54:18"
+      "created_at": "2021-11-13 13:54:18",
+      "created_at_iso": "2021-11-13T13:54:18+02:00"
     },
     {
       "id": 187135,
@@ -3378,7 +3444,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 13:01:47"
+      "created_at": "2021-11-13 13:01:47",
+      "created_at_iso": "2021-11-13T13:01:47+02:00"
     },
     {
       "id": 187134,
@@ -3424,7 +3491,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 12:57:53"
+      "created_at": "2021-11-13 12:57:53",
+      "created_at_iso": "2021-11-13T12:57:53+02:00"
     },
     {
       "id": 187133,
@@ -3470,7 +3538,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 12:48:57"
+      "created_at": "2021-11-13 12:48:57",
+      "created_at_iso": "2021-11-13T12:48:57+02:00"
     },
     {
       "id": 187132,
@@ -3528,7 +3597,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 12:10:57"
+      "created_at": "2021-11-13 12:10:57",
+      "created_at_iso": "2021-11-13T12:10:57+02:00"
     },
     {
       "id": 187131,
@@ -3569,7 +3639,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 11:35:53"
+      "created_at": "2021-11-13 11:35:53",
+      "created_at_iso": "2021-11-13T11:35:53+02:00"
     },
     {
       "id": 187130,
@@ -3615,7 +3686,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 11:03:19"
+      "created_at": "2021-11-13 11:03:19",
+      "created_at_iso": "2021-11-13T11:03:19+02:00"
     },
     {
       "id": 187129,
@@ -3656,7 +3728,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 11:02:54"
+      "created_at": "2021-11-13 11:02:54",
+      "created_at_iso": "2021-11-13T11:02:54+02:00"
     },
     {
       "id": 187128,
@@ -3706,7 +3779,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 11:00:29"
+      "created_at": "2021-11-13 11:00:29",
+      "created_at_iso": "2021-11-13T11:00:29+02:00"
     },
     {
       "id": 187127,
@@ -3752,7 +3826,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 10:57:36"
+      "created_at": "2021-11-13 10:57:36",
+      "created_at_iso": "2021-11-13T10:57:36+02:00"
     },
     {
       "id": 187126,
@@ -3802,7 +3877,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 10:55:31"
+      "created_at": "2021-11-13 10:55:31",
+      "created_at_iso": "2021-11-13T10:55:31+02:00"
     },
     {
       "id": 187125,
@@ -3848,7 +3924,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 10:53:16"
+      "created_at": "2021-11-13 10:53:16",
+      "created_at_iso": "2021-11-13T10:53:16+02:00"
     },
     {
       "id": 187124,
@@ -3889,7 +3966,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 10:23:32"
+      "created_at": "2021-11-13 10:23:32",
+      "created_at_iso": "2021-11-13T10:23:32+02:00"
     },
     {
       "id": 187123,
@@ -3939,7 +4017,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 10:23:31"
+      "created_at": "2021-11-13 10:23:31",
+      "created_at_iso": "2021-11-13T10:23:31+02:00"
     },
     {
       "id": 187122,
@@ -3980,7 +4059,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 10:23:30"
+      "created_at": "2021-11-13 10:23:30",
+      "created_at_iso": "2021-11-13T10:23:30+02:00"
     },
     {
       "id": 187121,
@@ -4021,7 +4101,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 10:23:29"
+      "created_at": "2021-11-13 10:23:29",
+      "created_at_iso": "2021-11-13T10:23:29+02:00"
     },
     {
       "id": 187120,
@@ -4067,7 +4148,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 10:15:29"
+      "created_at": "2021-11-13 10:15:29",
+      "created_at_iso": "2021-11-13T10:15:29+02:00"
     },
     {
       "id": 187119,
@@ -4113,7 +4195,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 10:15:28"
+      "created_at": "2021-11-13 10:15:28",
+      "created_at_iso": "2021-11-13T10:15:28+02:00"
     },
     {
       "id": 187118,
@@ -4154,7 +4237,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 10:15:27"
+      "created_at": "2021-11-13 10:15:27",
+      "created_at_iso": "2021-11-13T10:15:27+02:00"
     },
     {
       "id": 187117,
@@ -4195,7 +4279,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 10:15:26"
+      "created_at": "2021-11-13 10:15:26",
+      "created_at_iso": "2021-11-13T10:15:26+02:00"
     },
     {
       "id": 187116,
@@ -4236,7 +4321,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:54:52"
+      "created_at": "2021-11-13 09:54:52",
+      "created_at_iso": "2021-11-13T09:54:52+02:00"
     },
     {
       "id": 187115,
@@ -4286,7 +4372,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 09:54:51"
+      "created_at": "2021-11-13 09:54:51",
+      "created_at_iso": "2021-11-13T09:54:51+02:00"
     },
     {
       "id": 187114,
@@ -4327,7 +4414,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:54:50"
+      "created_at": "2021-11-13 09:54:50",
+      "created_at_iso": "2021-11-13T09:54:50+02:00"
     },
     {
       "id": 187113,
@@ -4368,7 +4456,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:54:48"
+      "created_at": "2021-11-13 09:54:48",
+      "created_at_iso": "2021-11-13T09:54:48+02:00"
     },
     {
       "id": 187112,
@@ -4409,7 +4498,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:50:35"
+      "created_at": "2021-11-13 09:50:35",
+      "created_at_iso": "2021-11-13T09:50:35+02:00"
     },
     {
       "id": 187111,
@@ -4463,7 +4553,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 09:50:34"
+      "created_at": "2021-11-13 09:50:34",
+      "created_at_iso": "2021-11-13T09:50:34+02:00"
     },
     {
       "id": 187110,
@@ -4504,7 +4595,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:50:32"
+      "created_at": "2021-11-13 09:50:32",
+      "created_at_iso": "2021-11-13T09:50:32+02:00"
     },
     {
       "id": 187109,
@@ -4545,7 +4637,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:50:31"
+      "created_at": "2021-11-13 09:50:31",
+      "created_at_iso": "2021-11-13T09:50:31+02:00"
     },
     {
       "id": 187107,
@@ -4586,7 +4679,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:44:55"
+      "created_at": "2021-11-13 09:44:55",
+      "created_at_iso": "2021-11-13T09:44:55+02:00"
     },
     {
       "id": 187106,
@@ -4632,7 +4726,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 09:44:54"
+      "created_at": "2021-11-13 09:44:54",
+      "created_at_iso": "2021-11-13T09:44:54+02:00"
     },
     {
       "id": 187105,
@@ -4673,7 +4768,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:44:53"
+      "created_at": "2021-11-13 09:44:53",
+      "created_at_iso": "2021-11-13T09:44:53+02:00"
     },
     {
       "id": 187104,
@@ -4714,7 +4810,8 @@
       ],
       "subtitle": null,
       "music_type": null,
-      "created_at": "2021-11-13 09:44:51"
+      "created_at": "2021-11-13 09:44:51",
+      "created_at_iso": "2021-11-13T09:44:51+02:00"
     },
     {
       "id": 187103,
@@ -4760,7 +4857,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 09:40:07"
+      "created_at": "2021-11-13 09:40:07",
+      "created_at_iso": "2021-11-13T09:40:07+02:00"
     },
     {
       "id": 187102,
@@ -4810,7 +4908,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 09:39:53"
+      "created_at": "2021-11-13 09:39:53",
+      "created_at_iso": "2021-11-13T09:39:53+02:00"
     },
     {
       "id": 187101,
@@ -4856,7 +4955,8 @@
         }
       ],
       "music_type": null,
-      "created_at": "2021-11-13 09:39:52"
+      "created_at": "2021-11-13 09:39:52",
+      "created_at_iso": "2021-11-13T09:39:52+02:00"
     }
   ],
   "first_page_url": "https:\/\/avistaz.to\/api\/v1\/jackett\/torrents?type=2&page=1",

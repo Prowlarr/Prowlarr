@@ -15,6 +15,9 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         [JsonPropertyName("created_at")]
         public string CreatedAt { get; set; }
 
+        [JsonPropertyName("created_at_iso")]
+        public string CreatedAtIso { get; set; }
+
         [JsonPropertyName("file_name")]
         public string FileName { get; set; }
 

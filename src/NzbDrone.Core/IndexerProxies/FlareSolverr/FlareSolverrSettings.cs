@@ -28,6 +28,8 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
         [FieldDefinition(2, Label = "Request Timeout", Advanced = true, HelpText = "FlareSolverr maxTimeout Request Parameter", Unit = "seconds")]
         public int RequestTimeout { get; set; }
+        [FieldDefinition(3, Label = "Session id", Advanced = true, HelpText = "The session ID that you want to be assigned to the instance")]
+        public string SessionId { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

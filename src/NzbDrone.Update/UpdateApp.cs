@@ -121,6 +121,7 @@ namespace NzbDrone.Update
                 Logger.Debug("Using executing application: {0}", startupContext.ExecutingApplication);
                 exeFileInfo = new FileInfo(startupContext.ExecutingApplication);
             }
+            
             Logger.Debug("Executable location: {0}", exeFileInfo.FullName);
             return exeFileInfo.DirectoryName;
         }

@@ -110,15 +110,16 @@ namespace NzbDrone.Update
 
         private string GetInstallationDirectory(UpdateStartupContext startupContext)
         {
+            FileInfo exeFileInfo;
             if (startupContext.ExecutingApplication.IsNullOrWhiteSpace())
             {
                 Logger.Debug("Using process ID to find installation directory: {0}", startupContext.ProcessId);
-                var exeFileInfo = new FileInfo(_processProvider.GetProcessById(startupContext.ProcessId).StartPath);
+                exeFileInfo = new FileInfo(_processProvider.GetProcessById(startupContext.ProcessId).StartPath);
             }
             else
             {
                 Logger.Debug("Using executing application: {0}", startupContext.ExecutingApplication);
-                var exeFileInfo = new FileInfo(startupContext.ExecutingApplication);
+                exeFileInfo = new FileInfo(startupContext.ExecutingApplication);
             }
             Logger.Debug("Executable location: {0}", exeFileInfo.FullName);
             return exeFileInfo.DirectoryName;

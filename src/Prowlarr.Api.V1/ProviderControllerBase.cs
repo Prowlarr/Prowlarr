@@ -271,7 +271,7 @@ namespace Prowlarr.Api.V1
             BroadcastResourceChange(ModelAction.Deleted, message.ProviderId);
         }
 
-        private void Validate(TProviderDefinition definition, bool includeWarnings)
+        protected virtual void Validate(TProviderDefinition definition, bool includeWarnings)
         {
             var validationResult = definition.Settings.Validate();
 

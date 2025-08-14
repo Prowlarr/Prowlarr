@@ -33,6 +33,7 @@
 
 .scroller {
   flex: 1 1 auto;
+  min-height: 400px;
 }
 
 .filterRow {
@@ -57,29 +58,68 @@
   font-weight: bold;
 }
 
+.filtersToggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--textColor);
+}
+
+.filtersToggle:hover {
+  background-color: var(--hoverBackgroundColor);
+}
+
+.filterRowCollapsed {
+  display: none !important;
+}
+
 @media only screen and (max-width: $breakpointSmall) {
   .filterInput {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 
-  .alert {
+  .notice {
     display: none;
+  }
+
+  .filtersToggle {
+    display: flex;
   }
 
   .filterRow {
     display: block;
     margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--cardBackgroundColor);
+    border-radius: 4px;
+    border: 1px solid var(--borderColor);
   }
 
   .filterContainer {
     margin-right: 0;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+  }
+
+  .filterContainer:last-child {
+    margin-bottom: 0;
   }
 
   .scroller {
-    margin-right: -30px;
-    margin-bottom: -30px;
-    margin-left: -30px;
+    margin-right: -15px;
+    margin-bottom: -15px;
+    margin-left: -15px;
+    min-height: 300px;
+  }
+
+  .modalBody {
+    padding: 15px;
   }
 }
 

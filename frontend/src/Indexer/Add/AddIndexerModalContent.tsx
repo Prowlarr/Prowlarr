@@ -209,7 +209,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
     [setFilterCategories]
   );
 
-  const onToggleFilters = useCallback(() => {
+  const handleToggleFilters = useCallback(() => {
     setIsFiltersCollapsed(!isFiltersCollapsed);
   }, [isFiltersCollapsed]);
 
@@ -339,7 +339,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
           onChange={onFilterChange}
         />
 
-        <Button className={styles.filtersToggle} onPress={onToggleFilters}>
+        <Button className={styles.filtersToggle} onPress={handleToggleFilters}>
           <Icon name={isFiltersCollapsed ? icons.EXPAND : icons.COLLAPSE} />
           {translate('Filters')}
         </Button>

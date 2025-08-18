@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { some } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +8,7 @@ import Alert from 'Components/Alert';
 import EnhancedSelectInput from 'Components/Form/EnhancedSelectInput';
 import NewznabCategorySelectInputConnector from 'Components/Form/NewznabCategorySelectInputConnector';
 import TextInput from 'Components/Form/TextInput';
+import Icon from 'Components/Icon';
 import Button from 'Components/Link/Button';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import ModalBody from 'Components/Modal/ModalBody';
@@ -16,7 +18,7 @@ import ModalHeader from 'Components/Modal/ModalHeader';
 import Scroller from 'Components/Scroller/Scroller';
 import Table from 'Components/Table/Table';
 import TableBody from 'Components/Table/TableBody';
-import { kinds, scrollDirections } from 'Helpers/Props';
+import { icons, kinds, scrollDirections } from 'Helpers/Props';
 import Indexer, { IndexerCategory } from 'Indexer/Indexer';
 import {
   fetchIndexerSchema,
@@ -25,6 +27,7 @@ import {
 } from 'Store/Actions/indexerActions';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
+import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import { SortCallback } from 'typings/callbacks';
 import sortByProp from 'Utilities/Array/sortByProp';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
@@ -111,7 +114,8 @@ function createAddIndexersSelector() {
   return createSelector(
     createClientSideCollectionSelector('indexers.schema'),
     createAllIndexersSelector(),
-    (indexers: IndexerAppState, allIndexers) => {
+    createDimensionsSelector(),
+    (indexers: IndexerAppState, allIndexers, dimensions) => {
       const { isFetching, isPopulated, error, items, sortDirection, sortKey } =
         indexers;
 
@@ -130,6 +134,7 @@ function createAddIndexersSelector() {
         indexers: indexerList,
         sortKey,
         sortDirection,
+        isSmallScreen: dimensions.isSmallScreen,
       };
     }
   );
@@ -143,8 +148,15 @@ interface AddIndexerModalContentProps {
 function AddIndexerModalContent(props: AddIndexerModalContentProps) {
   const { onSelectIndexer, onModalClose } = props;
 
-  const { isFetching, isPopulated, error, indexers, sortKey, sortDirection } =
-    useSelector(createAddIndexersSelector());
+  const {
+    isFetching,
+    isPopulated,
+    error,
+    indexers,
+    sortKey,
+    sortDirection,
+    isSmallScreen,
+  } = useSelector(createAddIndexersSelector());
   const dispatch = useDispatch();
 
   const [filter, setFilter] = useState('');
@@ -152,6 +164,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
   const [filterLanguages, setFilterLanguages] = useState<string[]>([]);
   const [filterPrivacyLevels, setFilterPrivacyLevels] = useState<string[]>([]);
   const [filterCategories, setFilterCategories] = useState<number[]>([]);
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(isSmallScreen);
 
   useEffect(
     () => {
@@ -195,6 +208,10 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
     },
     [setFilterCategories]
   );
+
+  const handleToggleFilters = useCallback(() => {
+    setIsFiltersCollapsed(!isFiltersCollapsed);
+  }, [isFiltersCollapsed]);
 
   const onIndexerSelect = useCallback(
     ({
@@ -322,7 +339,17 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
           onChange={onFilterChange}
         />
 
-        <div className={styles.filterRow}>
+        <Button className={styles.filtersToggle} onPress={handleToggleFilters}>
+          <Icon name={isFiltersCollapsed ? icons.EXPAND : icons.COLLAPSE} />
+          {translate('Filters')}
+        </Button>
+
+        <div
+          className={classNames(
+            styles.filterRow,
+            isFiltersCollapsed && styles.filterRowCollapsed
+          )}
+        >
           <div className={styles.filterContainer}>
             <label className={styles.filterLabel}>
               {translate('Protocol')}

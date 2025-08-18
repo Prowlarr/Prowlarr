@@ -1749,7 +1749,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // rutracker movies titles look like: russian name / english name (russian director / english director) other stuff
                 // Ирландец / The Irishman (Мартин Скорсезе / Martin Scorsese) [2019, США, криминал, драма, биография, WEB-DL 1080p] Dub (Пифагор) + MVO (Jaskier) + AVO (Юрий Сербин) + Sub Rus, Eng + Original Eng
                 // this part should be removed: (Мартин Скорсезе / Martin Scorsese)
-                title = Regex.Replace(title, @"(\([\p{IsCyrillic}\W]+)\s/\s(.+?)\)", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                title = Regex.Replace(title, @"(\([\p{IsCyrillic}\W]+)(?:\s/\s(.+?))?\)", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
                 // Remove VO, MVO and DVO from titles
                 var vo = new Regex(@"((?:\dx\s)?(?:[A-Z])?VO\s\(.+?\))");

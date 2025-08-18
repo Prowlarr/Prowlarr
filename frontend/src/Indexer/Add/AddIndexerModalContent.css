@@ -76,10 +76,6 @@
   background-color: var(--hoverBackgroundColor);
 }
 
-.filterRowCollapsed {
-  display: none !important;
-}
-
 @media only screen and (max-width: $breakpointSmall) {
   .filterInput {
     margin-bottom: 8px;
@@ -100,6 +96,10 @@
     border: 1px solid var(--borderColor);
     border-radius: 4px;
     background-color: var(--cardBackgroundColor);
+  }
+
+  .filterRowCollapsed {
+    display: none !important;
   }
 
   .filterContainer {

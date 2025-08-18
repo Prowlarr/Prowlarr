@@ -27,7 +27,6 @@ import {
 } from 'Store/Actions/indexerActions';
 import createAllIndexersSelector from 'Store/Selectors/createAllIndexersSelector';
 import createClientSideCollectionSelector from 'Store/Selectors/createClientSideCollectionSelector';
-import createDimensionsSelector from 'Store/Selectors/createDimensionsSelector';
 import { SortCallback } from 'typings/callbacks';
 import sortByProp from 'Utilities/Array/sortByProp';
 import getErrorMessage from 'Utilities/Object/getErrorMessage';
@@ -114,8 +113,7 @@ function createAddIndexersSelector() {
   return createSelector(
     createClientSideCollectionSelector('indexers.schema'),
     createAllIndexersSelector(),
-    createDimensionsSelector(),
-    (indexers: IndexerAppState, allIndexers, dimensions) => {
+    (indexers: IndexerAppState, allIndexers) => {
       const { isFetching, isPopulated, error, items, sortDirection, sortKey } =
         indexers;
 
@@ -134,7 +132,6 @@ function createAddIndexersSelector() {
         indexers: indexerList,
         sortKey,
         sortDirection,
-        isSmallScreen: dimensions.isSmallScreen,
       };
     }
   );
@@ -148,15 +145,8 @@ interface AddIndexerModalContentProps {
 function AddIndexerModalContent(props: AddIndexerModalContentProps) {
   const { onSelectIndexer, onModalClose } = props;
 
-  const {
-    isFetching,
-    isPopulated,
-    error,
-    indexers,
-    sortKey,
-    sortDirection,
-    isSmallScreen,
-  } = useSelector(createAddIndexersSelector());
+  const { isFetching, isPopulated, error, indexers, sortKey, sortDirection } =
+    useSelector(createAddIndexersSelector());
   const dispatch = useDispatch();
 
   const [filter, setFilter] = useState('');
@@ -164,7 +154,7 @@ function AddIndexerModalContent(props: AddIndexerModalContentProps) {
   const [filterLanguages, setFilterLanguages] = useState<string[]>([]);
   const [filterPrivacyLevels, setFilterPrivacyLevels] = useState<string[]>([]);
   const [filterCategories, setFilterCategories] = useState<number[]>([]);
-  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(isSmallScreen);
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useState(true);
 
   useEffect(
     () => {

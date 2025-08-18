@@ -7,6 +7,8 @@ interface CssExports {
   'filterInput': string;
   'filterLabel': string;
   'filterRow': string;
+  'filterRowCollapsed': string;
+  'filtersToggle': string;
   'indexers': string;
   'modalBody': string;
   'modalFooter': string;

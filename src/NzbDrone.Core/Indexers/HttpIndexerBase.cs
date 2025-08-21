@@ -503,14 +503,14 @@ namespace NzbDrone.Core.Indexers
             catch (IndexerAuthException ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn(ex, "Invalid Credentials for {0} {1}", this, url);
+                _logger.Warn(ex, "Invalid Credentials for {0} [{1}]", this, url);
             }
             catch (CloudFlareProtectionException ex)
             {
                 result.Queries.Add(new IndexerQueryResult { Response = ex.Response });
                 _indexerStatusService.RecordFailure(Definition.Id);
                 ex.WithData("FeedUrl", url);
-                _logger.Error(ex, "Cloudflare protection detected for {0}, Flaresolverr may be required.", this);
+                _logger.Error(ex, "Cloudflare protection detected for [{0}], Flaresolverr may be required.", this);
             }
             catch (IndexerException ex)
             {
@@ -521,18 +521,18 @@ namespace NzbDrone.Core.Indexers
             catch (HttpRequestException ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn(ex, "Unable to connect to indexer {0}. This is typically caused by DNS/SSL issues. Check DNS settings, ensure IPv6 is working or disabled, and consider using different DNS servers or a VPN. See: https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues", url);
+                _logger.Warn(ex, "Unable to connect to indexer [{0}]. This is typically caused by DNS/SSL issues. Check DNS settings, ensure IPv6 is working or disabled, and consider using different DNS servers or a VPN. See: 'https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues'", url);
             }
             catch (TaskCanceledException ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout. {0}", url);
+                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout. [{0}]", url);
             }
             catch (Exception ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
                 ex.WithData("FeedUrl", url);
-                _logger.Error(ex, "An error occurred while processing indexer feed. {0}", url);
+                _logger.Error(ex, "An error occurred while processing indexer feed. [{0}]", url);
             }
 
             result.Releases = CleanupReleases(releases, searchCriteria);
@@ -816,7 +816,7 @@ namespace NzbDrone.Core.Indexers
             {
                 _logger.Warn(ex, "Unable to connect to indexer");
 
-                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to indexer. This is typically caused by DNS/SSL issues. Check DNS settings, ensure IPv6 is working or disabled, consider using different DNS servers, or try a VPN/proxy if needed. See: https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues " + ex.Message)
+                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to indexer. This is typically caused by DNS/SSL issues. Check DNS settings, ensure IPv6 is working or disabled, consider using different DNS servers, or try a VPN/proxy if needed. See: 'https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues' " + ex.Message)
                 {
                     DetailedDescription = ex.InnerException?.Message
                 };

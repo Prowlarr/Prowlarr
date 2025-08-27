@@ -491,7 +491,7 @@
     "EnableRssHelpText": "Povolit kanál RSS pro indexer",
     "DeleteApplication": "Odstranit aplikaci",
     "DeleteSelectedApplications": "Odstranit vybrané aplikace",
-    "DeleteSelectedIndexers": "Odstranit vybrané indexery",
+    "DeleteSelectedIndexers": "Smazat vybrané indexery",
     "DevelopmentSettings": "Nastavení pro vývoj",
     "DisabledUntil": "Zakázáno do",
     "DownloadClientCategory": "Kategorie klienta pro stahování",
@@ -639,5 +639,10 @@
     "DownloadClientUTorrentProviderMessage": "uTorrent má historii zahrnování kryptoměnových těžařů, malwaru a reklam, důrazně vám doporučujeme zvolit jiného klienta.",
     "IndexerSettingsBaseUrlHelpText": "Vyberte, jakou základní URL bude {appName} používat pro požadavky na web",
     "IndexerSettingsPackSeedTimeIndexerHelpText": "Doba, po kterou by měl být balíček (sezóna nebo diskografie) torrentu seedován před zastavením, prázdné pole znamená výchozí nastavení aplikace",
-    "PackSeedTimeHelpText": "Doba, po kterou by měl být balíček (sezóna nebo diskografie) torrentu seedován před zastavením, prázdné pole znamená výchozí nastavení aplikace"
+    "PackSeedTimeHelpText": "Doba, po kterou by měl být balíček (sezóna nebo diskografie) torrentu seedován před zastavením, prázdné pole znamená výchozí nastavení aplikace",
+    "OnApplicationUpdateHelpText": "Při aktualizaci aplikace",
+    "SeedTime": "Doba sdílení",
+    "OnHealthRestoredHelpText": "Při obnovení zdraví",
+    "SeedRatio": "Poměr sdílení",
+    "ThemeHelpText": "Změnit motiv UI, možnost „Auto“ kopíruje nastavení OS pro výběr tmavého nebo světlého režimu. Inspirováno {inspiredBy}."
 }

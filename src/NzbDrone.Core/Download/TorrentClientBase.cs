@@ -148,6 +148,15 @@ namespace NzbDrone.Core.Download
 
             var filename = string.Format("{0}.torrent", StringUtil.CleanFileName(release.Title));
             var hash = _torrentFileInfoReader.GetHashFromTorrentFile(torrentFile);
+            
+            // If we couldn't extract infohash from torrent file (e.g., Unit3d sites with missing infohash)
+            // fall back to using the infohash from the release info
+            if (string.IsNullOrWhiteSpace(hash) && !string.IsNullOrWhiteSpace(release.InfoHash))
+            {
+                hash = release.InfoHash;
+                _logger.Debug("Could not extract infohash from torrent file, using infohash from release info: {0}", hash);
+            }
+            
             var actualHash = AddFromTorrentFile(release, hash, filename, torrentFile);
 
             if (actualHash.IsNotNullOrWhiteSpace() && hash != actualHash)

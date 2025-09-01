@@ -11,10 +11,17 @@ namespace NzbDrone.Core.Indexers.Definitions.FileList;
 public class FileList : TorrentIndexerBase<FileListSettings>
 {
     public override string Name => "FileList.io";
-    public override string[] IndexerUrls => new[] { "https://filelist.io/" };
+    public override string[] IndexerUrls => new[]
+    {
+        "https://filelist.io/",
+        "https://thefl.org/",
+    };
     public override string[] LegacyUrls => new[]
     {
         "https://filelist.io",
+        "https://filelist.ro/",
+        "http://filelist.ro/",
+        "http://flro.org/",
         "https://flro.org/"
     };
     public override string Description => "FileList (FL) is a ROMANIAN Private Torrent Tracker for 0DAY / GENERAL";
@@ -105,6 +112,7 @@ public class FileList : TorrentIndexerBase<FileListSettings>
         caps.Categories.AddCategoryMapping(27, NewznabStandardCategory.TVUHD, "Seriale 4K");
         caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.MoviesForeign, "RO Dubbed");
         caps.Categories.AddCategoryMapping(28, NewznabStandardCategory.TVForeign, "RO Dubbed");
+        caps.Categories.AddCategoryMapping(31, NewznabStandardCategory.TVForeign, "K-Drama");
 
         return caps;
     }

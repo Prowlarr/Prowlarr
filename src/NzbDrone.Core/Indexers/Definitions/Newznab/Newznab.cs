@@ -100,7 +100,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("Miatrix", GetSettings("https://www.miatrix.com"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("Newz69", GetSettings("https://newz69.keagaming.com"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("NinjaCentral", GetSettings("https://ninjacentral.co.za"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
-                yield return GetDefinition("Nzb.su", GetSettings("https://api.nzb.su"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
+                yield return GetDefinition("Nzb.su", GetSettings("https://api.nzb.life"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("NZBCat", GetSettings("https://nzb.cat"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000 });
                 yield return GetDefinition("NZBFinder", GetSettings("https://nzbfinder.ws"), categories: new[] { 2000, 3000, 5000, 6000, 7000 });
                 yield return GetDefinition("NZBgeek", GetSettings("https://api.nzbgeek.info"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });

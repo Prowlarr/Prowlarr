@@ -11,11 +11,11 @@ namespace NzbDrone.Core.Indexers.Torznab
 {
     public class TorznabSettingsValidator : AbstractValidator<TorznabSettings>
     {
-        private static readonly string[] ApiKeyWhiteList = Array.Empty<string>();
+        private static readonly string[] ApiKeyAllowList = Array.Empty<string>();
 
         private static bool ShouldHaveApiKey(TorznabSettings settings)
         {
-            return settings.BaseUrl != null && ApiKeyWhiteList.Any(c => settings.BaseUrl.ToLowerInvariant().Contains(c));
+            return settings.BaseUrl != null && ApiKeyAllowList.Any(c => settings.BaseUrl.ToLowerInvariant().Contains(c));
         }
 
         private static readonly Regex AdditionalParametersRegex = new Regex(@"(&.+?\=.+?)+", RegexOptions.Compiled);

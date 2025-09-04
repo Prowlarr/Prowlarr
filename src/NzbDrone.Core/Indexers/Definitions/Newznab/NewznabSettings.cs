@@ -9,10 +9,10 @@ namespace NzbDrone.Core.Indexers.Newznab
 {
     public class NewznabSettingsValidator : AbstractValidator<NewznabSettings>
     {
-        private static readonly string[] ApiKeyWhiteList =
+        private static readonly string[] ApiKeyAllowList =
         {
             "nzbs.org",
-            "nzb.su",
+            "nzb.life",
             "dognzb.cr",
             "nzbplanet.net",
             "nzbid.org",
@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
         private static bool ShouldHaveApiKey(NewznabSettings settings)
         {
-            return settings.BaseUrl != null && ApiKeyWhiteList.Any(c => settings.BaseUrl.ToLowerInvariant().Contains(c));
+            return settings.BaseUrl != null && ApiKeyAllowList.Any(c => settings.BaseUrl.ToLowerInvariant().Contains(c));
         }
 
         private static readonly Regex AdditionalParametersRegex = new Regex(@"(&.+?\=.+?)+", RegexOptions.Compiled);

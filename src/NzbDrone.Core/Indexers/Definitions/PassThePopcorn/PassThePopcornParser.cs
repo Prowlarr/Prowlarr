@@ -35,6 +35,16 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                     throw new RequestLimitReachedException(indexerResponse, "PTP Query Limit Reached. Please try again later.");
                 }
 
+                if (httpResponse.StatusCode == HttpStatusCode.TooManyRequests && indexerResponse.Content.Contains("We are not a TV indexer"))
+                {
+                    throw new IndexerException(indexerResponse, "Invalid indexer request: We are not a TV indexer", HttpStatusCode.BadRequest);
+                }
+
+                if (httpResponse.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    throw new RequestLimitReachedException(indexerResponse, "PTP Request Limit Reached. Please try again later.");
+                }
+
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
             }
 

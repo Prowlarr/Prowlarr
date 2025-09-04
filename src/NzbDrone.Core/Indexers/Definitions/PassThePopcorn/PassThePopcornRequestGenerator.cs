@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -115,6 +116,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
             var request = new IndexerRequest(searchUrl, HttpAccept.Json);
             request.HttpRequest.Headers.Add("ApiUser", _settings.APIUser);
             request.HttpRequest.Headers.Add("ApiKey", _settings.APIKey);
+            request.HttpRequest.SuppressHttpErrorStatusCodes = new[] { HttpStatusCode.TooManyRequests };
 
             yield return request;
         }

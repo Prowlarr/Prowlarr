@@ -426,6 +426,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 {
                     ((TorrentInfo)c).InfoHash = MagnetLinkBuilder.GetInfoHashFromMagnet(((TorrentInfo)c).MagnetUrl);
                 }
+
+                // Add Internal flag if description starts with Internal
+                if (c.Description.IsNotNullOrWhiteSpace() && c.Description.StartsWith("Internal"))
+                {
+                    c.IndexerFlags.Add(IndexerFlag.Internal);
+                }
             });
 
             _logger.Trace("Cardigann ({0}): Got {1} releases", _definition.Id, releases.Count);

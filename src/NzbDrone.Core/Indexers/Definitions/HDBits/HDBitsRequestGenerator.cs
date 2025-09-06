@@ -138,11 +138,6 @@ namespace NzbDrone.Core.Indexers.Definitions.HDBits
                 query.Origin = Settings.Origins.ToArray();
             }
 
-            if (Settings.Exclusive.Any())
-            {
-                query.Exclusive = Settings.Exclusive.ToArray();
-            }
-
             if (searchCriteria.Categories?.Length > 0)
             {
                 query.Category = Capabilities.Categories

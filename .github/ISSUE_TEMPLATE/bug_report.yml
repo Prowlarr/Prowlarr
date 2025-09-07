@@ -14,7 +14,7 @@ body:
     label: I attest this is not related to a Cardigann YML Indexer.
     description: Please search to see if this is for a tracker [that is yml-based (Cardigann)](https://github.com/Prowlarr/indexers) these are synced to Prowlarr/Indexers from Jackett/Jackett.
     options:
-    - label: I attest I have searched the existing open and closed issues
+    - label: I confirm this is not related to a Cardigann YML Indexer
       required: true
 - type: textarea
   attributes:

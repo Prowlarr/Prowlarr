@@ -662,5 +662,13 @@
     "DownloadClientFloodSettingsTagsHelpText": "Initiële tags van een download. Om herkend te worden, moet een download alle initiële tags hebben. Dit voorkomt conflicten met niet-gerelateerde downloads.",
     "IndexerNewznabSettingsVipExpirationHelpText": "Voer de datum in (jjjj-mm-dd) voor VIP-vervaldatum of laat leeg. {appName} zal 1 week voor het verstrijken van de VIP-periode een melding geven",
     "DownloadClientSettingsDefaultCategorySubFolderHelpText": "Standaard fallback-categorie als er geen gekoppelde categorie bestaat voor een release. Het toevoegen van een categorie specifiek voor {appName} voorkomt conflicten met niet-gerelateerde downloads die niet van {appName} zijn. Het gebruik van een categorie is optioneel, maar wordt sterk aanbevolen. Er wordt een [categorie]-submap aangemaakt in de uitvoermap.",
-    "IndexerPassThePopcornSettingsApiUserHelpText": "Deze instellingen vind je in je PassThePopcorn beveiligingsinstellingen (Profiel bewerken > Beveiliging)."
+    "IndexerPassThePopcornSettingsApiUserHelpText": "Deze instellingen vind je in je PassThePopcorn beveiligingsinstellingen (Profiel bewerken > Beveiliging).",
+    "IndexerGazelleGamesSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases",
+    "UsenetBlackholeNzbFolder": "Nzb map",
+    "IndexerSettingsAppsMinimumSeedersHelpText": "Minimum aantal vereiste seeders door de applicaties voordat de indexer iets ophaalt. Leeg laten gebruikt de standaardwaarde van het synchronisatieprofiel",
+    "IndexerBeyondHDSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases",
+    "IndexerTorrentSyndikatSettingsApiKeyHelpText": "Site API-sleutel",
+    "SearchTypes": "Zoek types",
+    "IndexerAlphaRatioSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases",
+    "IndexerAvistazSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases"
 }

@@ -74,7 +74,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             else if (DateTime.TryParseExact($"{searchCriteria.Season} {searchCriteria.Episode}", "yyyy MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var showDate))
             {
                 // Daily Episode
-                parameters.Name = showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture);
+                parameters.Name = showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture) + "%";
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }

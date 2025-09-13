@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             query.Tvrage.Should().BeNull();
             query.Search.Should().BeNull();
             query.Category.Should().Be("Episode");
-            query.Name.Should().Be("2023.01.03");
+            query.Name.Should().Be("2023.01.03%");
         }
 
         [Test]
@@ -275,7 +275,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             query.Tvrage.Should().BeNull();
             query.Search.Should().Be("The%Late%Show%with%Stephen%Colbert");
             query.Category.Should().Be("Episode");
-            query.Name.Should().Be("2023.01.03");
+            query.Name.Should().Be("2023.01.03%");
         }
 
         private static BroadcastheNetTorrentQuery ParseTorrentQueryFromRequest(HttpRequest httpRequest)

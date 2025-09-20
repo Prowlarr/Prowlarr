@@ -669,7 +669,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var advancedSeasonRegex = new Regex(@"\b(?:(?<season>\d+)(?:st|nd|rd|th) Season|Season (?<season>\d+))\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var seasonCharactersRegex = new Regex(@"(I{2,})$", RegexOptions.Compiled);
-            var seasonNumberRegex = new Regex(@"\b(?<!Part[- ._])(?<!\d[/])(?:S)?(?<season>[2-9])$", RegexOptions.Compiled);
+            var seasonNumberRegex = new Regex(@"\b(?<!(Part|No\.)[- ._])(?<!\d[/])(?<!\#)(?:S)?(?<season>[2-9])$", RegexOptions.Compiled);
 
             foreach (var title in titles)
             {

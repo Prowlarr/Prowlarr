@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Format>opencover</Format>
+          <Format>cobertura</Format>
           <Exclude>[Prowlarr.*.Test]*,[Prowlarr.Test.*]*,[Prowlarr.Api*]*</Exclude>
         </Configuration>
       </DataCollector>

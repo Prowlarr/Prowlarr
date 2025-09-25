@@ -5,6 +5,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
+[Obsolete("Moved to YML for Cardigann")]
 public class CGPeers : GazelleBase<GazelleSettings>
 {
     public override string Name => "CGPeers";

@@ -12,7 +12,7 @@ namespace NzbDrone.Core.Datastore.Migration
                 .AddColumn("Successful").AsBoolean().NotNullable().WithDefaultValue(true);
 
             // Postgres added after this, not needed
-            IfDatabase("sqlite").Execute.Sql("UPDATE \"History\" SET \"Successful\" = (json_extract(\"History\".\"Data\",'$.successful') == 'True' );");
+            IfDatabase(ProcessorId.SQLite).Execute.Sql("UPDATE \"History\" SET \"Successful\" = (json_extract(\"History\".\"Data\",'$.successful') == 'True' );");
         }
     }
 }

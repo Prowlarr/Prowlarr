@@ -27,7 +27,8 @@ namespace NzbDrone.Core.Indexers.Definitions;
 public class Shazbat : TorrentIndexerBase<ShazbatSettings>
 {
     public override string Name => "Shazbat";
-    public override string[] IndexerUrls => new[] { "https://www.shazbat.tv/" };
+    public override string[] IndexerUrls => new[] { "https://www.shazbat.tube/" };
+    public override string[] LegacyUrls => new[] { "https://www.shazbat.tv/" };
     public override string Description => "Shazbat is a PRIVATE Torrent Tracker with highly curated TV content";
     public override string Language => "en-US";
     public override Encoding Encoding => Encoding.UTF8;

@@ -138,8 +138,8 @@ PackageLinux()
     echo "Adding Prowlarr.Mono to UpdatePackage"
     cp $folder/Prowlarr.Mono.* $folder/Prowlarr.Update
     if [ "$framework" = "net10.0" ]; then
-        cp $folder/Mono.Posix.NETStandard.* $folder/Prowlarr.Update
-        cp $folder/libMonoPosixHelper.* $folder/Prowlarr.Update
+        cp $folder/Openur.Mono.Unix.* $folder/Prowlarr.Update
+        cp $folder/libMono.Unix.* $folder/Prowlarr.Update
     fi
 
     ProgressEnd "Creating $runtime Package for $framework"
@@ -166,8 +166,8 @@ PackageMacOS()
     echo "Adding Prowlarr.Mono to UpdatePackage"
     cp $folder/Prowlarr.Mono.* $folder/Prowlarr.Update
     if [ "$framework" = "net10.0" ]; then
-        cp $folder/Mono.Posix.NETStandard.* $folder/Prowlarr.Update
-        cp $folder/libMonoPosixHelper.* $folder/Prowlarr.Update
+        cp $folder/Openur.Mono.Unix.* $folder/Prowlarr.Update
+        cp $folder/libMono.Unix.* $folder/Prowlarr.Update
     fi
 
     ProgressEnd 'Creating MacOS Package'
@@ -210,8 +210,8 @@ PackageWindows()
 
     echo "Removing Prowlarr.Mono"
     rm -f $folder/Prowlarr.Mono.*
-    rm -f $folder/Mono.Posix.NETStandard.*
-    rm -f $folder/libMonoPosixHelper.*
+    rm -f $folder/Openur.Mono.Unix.*
+    rm -f $folder/libMono.Unix.*
 
     echo "Adding Prowlarr.Windows to UpdatePackage"
     cp $folder/Prowlarr.Windows.* $folder/Prowlarr.Update

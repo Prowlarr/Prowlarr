@@ -16,6 +16,7 @@
     <PackageReference Include="Servarr.FluentMigrator.Runner" Version="3.3.2.9" />
     <PackageReference Include="Servarr.FluentMigrator.Runner.Postgres" Version="3.3.2.9" />
     <PackageReference Include="Servarr.FluentMigrator.Runner.SQLite" Version="3.3.2.9" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
     <PackageReference Include="FluentValidation" Version="9.5.4" />

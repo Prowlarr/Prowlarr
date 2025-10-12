@@ -36,6 +36,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Error,
+                HealthCheckReason.IndexerNoDefinition,
                 _localizationService.GetLocalizedString("IndexerNoDefinitionCheckHealthCheckMessage", new Dictionary<string, object>
                 {
                     { "indexerNames", string.Join(", ", noDefinitionIndexers.Select(v => v.Definition.Name).ToArray()) }

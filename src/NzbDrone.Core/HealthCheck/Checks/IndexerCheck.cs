@@ -27,7 +27,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
 
             if (enabled.Empty())
             {
-                return new HealthCheck(GetType(), HealthCheckResult.Error, _localizationService.GetLocalizedString("IndexerHealthCheckNoIndexers"));
+                return new HealthCheck(GetType(),
+                    HealthCheckResult.Error,
+                    HealthCheckReason.IndexerCheckNoAvailableIndexers,
+                    _localizationService.GetLocalizedString("IndexerHealthCheckNoIndexers"));
             }
 
             return new HealthCheck(GetType());

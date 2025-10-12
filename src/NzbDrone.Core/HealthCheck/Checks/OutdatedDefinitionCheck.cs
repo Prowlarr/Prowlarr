@@ -36,13 +36,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 return new HealthCheck(GetType());
             }
 
-            var healthType = HealthCheckResult.Warning;
-            var healthMessage = string.Format(_localizationService.GetLocalizedString("IndexerObsoleteCheckMessage"),
-                string.Join(", ", oldIndexers.Select(v => v.Definition.Name)));
-
             return new HealthCheck(GetType(),
-                healthType,
-                healthMessage,
+                HealthCheckResult.Warning,
+                HealthCheckReason.OutdatedDefinitions,
+                string.Format(_localizationService.GetLocalizedString("IndexerObsoleteCheckMessage"), string.Join(", ", oldIndexers.Select(v => v.Definition.Name))),
                 "#indexers-are-obsolete");
         }
 

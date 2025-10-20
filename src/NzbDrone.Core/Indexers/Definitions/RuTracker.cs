@@ -1541,7 +1541,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 if (season != 0)
                 {
-                    searchString += " Сезон: " + season;
+                    searchString += " ТВ | Сезон: " + season;
                 }
 
                 parameters.Set("nm", searchString);
@@ -1712,6 +1712,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly Regex _tvTitleRusSeasonRegex = new(@"Сезон\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _tvTitleRusEpisodeOfRegex = new(@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)\s*из\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _tvTitleRusEpisodeRegex = new(@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusSeasonAnimeRegex = new(@"ТВ[-]*(?:(\d+))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _tvTitleRusEpisodeAnimeOfRegex = new(@"\[(\d+(\+\d+)?)\s+из\s+(\d+(\+\d+)?)\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string Parse(string title,
                             ICollection<IndexerCategory> categories,
@@ -1736,6 +1738,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title = _tvTitleRusSeasonRegex.Replace(title, "S$1");
                 title = _tvTitleRusEpisodeOfRegex.Replace(title, "E$1 of $2");
                 title = _tvTitleRusEpisodeRegex.Replace(title, "E$1");
+                title = _tvTitleRusSeasonAnimeRegex.Replace(title, "S$1");
+                title = _tvTitleRusEpisodeAnimeOfRegex.Replace(title, "E$1 of $3");
             }
             else if (IsAnyMovieCategory(categories))
             {

@@ -63,7 +63,23 @@ namespace NzbDrone.Common.Composition
 
         private static IntPtr LoadSqliteNativeLib(string libraryName, Assembly assembly, DllImportSearchPath? dllImportSearchPath)
         {
-            var mappedName = OsInfo.IsLinux && libraryName == "sqlite3" ? "libsqlite3.so.0" : libraryName;
+            ArgumentException.ThrowIfNullOrWhiteSpace(libraryName);
+
+            var mappedName = libraryName;
+
+            if (libraryName is "sqlite3" or "e_sqlite3")
+            {
+                if (OsInfo.IsLinux)
+                {
+                    if (NativeLibrary.TryLoad(libraryName, assembly, dllImportSearchPath, out var libHandle))
+                    {
+                        return libHandle;
+                    }
+
+                    mappedName = "libsqlite3.so.0";
+                }
+            }
+
             return NativeLibrary.Load(mappedName, assembly, dllImportSearchPath);
         }
     }

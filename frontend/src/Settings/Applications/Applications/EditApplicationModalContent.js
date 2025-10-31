@@ -39,6 +39,9 @@ const syncLevelOptions = [
   }
 ];
 
+const DEPRECATED_APPLICATIONS = ['Readarr'];
+const OBSOLETE_APPLICATIONS = [];
+
 function EditApplicationModalContent(props) {
   const {
     advancedSettings,
@@ -60,6 +63,7 @@ function EditApplicationModalContent(props) {
 
   const {
     id,
+    implementation,
     implementationName,
     name,
     syncLevel,
@@ -67,6 +71,9 @@ function EditApplicationModalContent(props) {
     fields,
     message
   } = item;
+
+  const isDeprecated = DEPRECATED_APPLICATIONS.includes(implementation);
+  const isObsolete = OBSOLETE_APPLICATIONS.includes(implementation);
 
   return (
     <ModalContent onModalClose={onModalClose}>
@@ -90,6 +97,28 @@ function EditApplicationModalContent(props) {
         {
           !isFetching && !error &&
             <Form {...otherProps}>
+              {
+                isDeprecated &&
+                  <Alert
+                    className={styles.message}
+                    kind={kinds.WARNING}
+                  >
+                    <div>{translate('DeprecatedApplicationTitle', { applicationName: implementationName })}</div>
+                    <div>{translate('DeprecatedApplicationMessage', { applicationName: implementationName })}</div>
+                  </Alert>
+              }
+
+              {
+                isObsolete &&
+                  <Alert
+                    className={styles.message}
+                    kind={kinds.DANGER}
+                  >
+                    <div>{translate('ObsoleteApplicationTitle', { applicationName: implementationName })}</div>
+                    <div>{translate('ObsoleteApplicationMessage', { applicationName: implementationName })}</div>
+                  </Alert>
+              }
+
               {
                 !!message &&
                   <Alert

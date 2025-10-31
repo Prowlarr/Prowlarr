@@ -10,6 +10,9 @@ import translate from 'Utilities/String/translate';
 import EditApplicationModalConnector from './EditApplicationModalConnector';
 import styles from './Application.css';
 
+const DEPRECATED_APPLICATIONS = ['Readarr'];
+const OBSOLETE_APPLICATIONS = [];
+
 class Application extends Component {
 
   //
@@ -61,10 +64,13 @@ class Application extends Component {
       syncLevel,
       fields,
       tags,
-      tagList
+      tagList,
+      implementation
     } = this.props;
 
     const applicationUrl = fields.find((field) => field.name === 'baseUrl')?.value;
+    const isDeprecated = DEPRECATED_APPLICATIONS.includes(implementation);
+    const isObsolete = OBSOLETE_APPLICATIONS.includes(implementation);
 
     return (
       <Card
@@ -87,6 +93,26 @@ class Application extends Component {
               /> : null
           }
         </div>
+
+        {
+          isDeprecated &&
+            <Label
+              kind={kinds.WARNING}
+              title={translate('DeprecatedApplicationMessage', { applicationName: implementation })}
+            >
+              {translate('Deprecated')}
+            </Label>
+        }
+
+        {
+          isObsolete &&
+            <Label
+              kind={kinds.DANGER}
+              title={translate('ObsoleteApplicationMessage', { applicationName: implementation })}
+            >
+              {translate('Obsolete')}
+            </Label>
+        }
 
         {
           syncLevel === 'addOnly' &&
@@ -141,6 +167,7 @@ class Application extends Component {
 Application.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
+  implementation: PropTypes.string.isRequired,
   enable: PropTypes.bool.isRequired,
   syncLevel: PropTypes.string.isRequired,
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,

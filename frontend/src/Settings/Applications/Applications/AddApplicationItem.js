@@ -1,13 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Label from 'Components/Label';
 import Button from 'Components/Link/Button';
 import Link from 'Components/Link/Link';
 import Menu from 'Components/Menu/Menu';
 import MenuContent from 'Components/Menu/MenuContent';
-import { sizes } from 'Helpers/Props';
+import { kinds, sizes } from 'Helpers/Props';
 import translate from 'Utilities/String/translate';
 import AddApplicationPresetMenuItem from './AddApplicationPresetMenuItem';
 import styles from './AddApplicationItem.css';
+
+const DEPRECATED_APPLICATIONS = ['Readarr'];
+const OBSOLETE_APPLICATIONS = [];
 
 class AddApplicationItem extends Component {
 
@@ -36,6 +40,8 @@ class AddApplicationItem extends Component {
     } = this.props;
 
     const hasPresets = !!presets && !!presets.length;
+    const isDeprecated = DEPRECATED_APPLICATIONS.includes(implementation);
+    const isObsolete = OBSOLETE_APPLICATIONS.includes(implementation);
 
     return (
       <div
@@ -49,6 +55,24 @@ class AddApplicationItem extends Component {
         <div className={styles.overlay}>
           <div className={styles.name}>
             {implementationName}
+            {
+              isDeprecated &&
+                <Label
+                  kind={kinds.WARNING}
+                  title={translate('DeprecatedApplicationMessage', { applicationName: implementationName })}
+                >
+                  {translate('Deprecated')}
+                </Label>
+            }
+            {
+              isObsolete &&
+                <Label
+                  kind={kinds.DANGER}
+                  title={translate('ObsoleteApplicationMessage', { applicationName: implementationName })}
+                >
+                  {translate('Obsolete')}
+                </Label>
+            }
           </div>
 
           <div className={styles.actions}>

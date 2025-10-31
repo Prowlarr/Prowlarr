@@ -14,6 +14,7 @@ using NzbDrone.Core.Indexers;
 
 namespace NzbDrone.Core.Applications.Readarr
 {
+    [Obsolete("Readarr is deprecated and will be removed in a future version")]
     public class Readarr : ApplicationBase<ReadarrSettings>
     {
         public override string Name => "Readarr";

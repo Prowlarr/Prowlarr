@@ -159,7 +159,7 @@ namespace NzbDrone.Core.Applications.Lidarr
                     case HttpStatusCode.BadRequest:
                         if (ex.Response.Content.Contains("Query successful, but no results in the configured categories were returned from your indexer.", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            _logger.Warn(ex, "No Results in configured categories. See FAQ Entry: Prowlarr will not sync X Indexer to App");
+                            _logger.Warn(ex, "No Results in configured categories. See FAQ Entry: https://wiki.servarr.com/prowlarr/faq#prowlarr-will-not-sync-x-indexer-to-app");
                             break;
                         }
 

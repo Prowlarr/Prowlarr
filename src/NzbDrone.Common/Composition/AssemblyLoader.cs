@@ -14,7 +14,6 @@ namespace NzbDrone.Common.Composition
         static AssemblyLoader()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ContainerResolveEventHandler);
-            RegisterSQLiteResolver();
         }
 
         public static IList<Assembly> Load(IList<string> assemblyNames)
@@ -22,6 +21,10 @@ namespace NzbDrone.Common.Composition
             var toLoad = assemblyNames.ToList();
             toLoad.Add("Prowlarr.Common");
             toLoad.Add(OsInfo.IsWindows ? "Prowlarr.Windows" : "Prowlarr.Mono");
+
+            var toRegisterResolver = new List<string> { "System.Data.SQLite" };
+            toRegisterResolver.AddRange(assemblyNames.Intersect(new[] { "Prowlarr.Core" }));
+            RegisterNativeResolver(toRegisterResolver);
 
             var startupPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -43,27 +46,46 @@ namespace NzbDrone.Common.Composition
             return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
         }
 
-        public static void RegisterSQLiteResolver()
+        public static void RegisterNativeResolver(IEnumerable<string> assemblyNames)
         {
-            // This ensures we look for sqlite3 using libsqlite3.so.0 on Linux and not libsqlite3.so which
-            // is less likely to exist.
-            var sqliteAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "System.Data.SQLite.dll"));
+            foreach (var name in assemblyNames)
+            {
+                // This ensures we look for sqlite3 using libsqlite3.so.0 on Linux and not libsqlite3.so which
+                // is less likely to exist.
+                var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{name}.dll"));
 
-            try
-            {
-                NativeLibrary.SetDllImportResolver(sqliteAssembly, LoadSqliteNativeLib);
-            }
-            catch (InvalidOperationException)
-            {
-                // This can only be set once per assembly
-                // Catch required for NzbDrone.Host tests
+                try
+                {
+                    NativeLibrary.SetDllImportResolver(assembly, LoadNativeLib);
+                }
+                catch (InvalidOperationException)
+                {
+                    // This can only be set once per assembly
+                    // Catch required for NzbDrone.Host tests
+                }
             }
         }
 
-        private static IntPtr LoadSqliteNativeLib(string libraryName, Assembly assembly, DllImportSearchPath? dllImportSearchPath)
+        private static IntPtr LoadNativeLib(string libraryName, Assembly assembly, DllImportSearchPath? dllImportSearchPath)
         {
-            var mappedName = OsInfo.IsLinux && libraryName == "sqlite3" ? "libsqlite3.so.0" : libraryName;
+            ArgumentException.ThrowIfNullOrWhiteSpace(libraryName);
+
+            var mappedName = libraryName;
+
+            if (libraryName is "sqlite3" or "e_sqlite3")
+            {
+                if (OsInfo.IsLinux)
+                {
+                    if (NativeLibrary.TryLoad(libraryName, assembly, dllImportSearchPath, out var libHandle))
+                    {
+                        return libHandle;
+                    }
+
+                    mappedName = "libsqlite3.so.0";
+                }
+            }
+
             return NativeLibrary.Load(mappedName, assembly, dllImportSearchPath);
         }
     }

@@ -51,7 +51,7 @@ namespace NzbDrone.Test.Common.AutoMoq
 
             if (behavior != MockBehavior.Default && mock.Behavior == MockBehavior.Default)
             {
-                throw new InvalidOperationException("Unable to change be behaviour of a an existing mock.");
+                throw new InvalidOperationException("Unable to change be behaviour of an existing mock.");
             }
 
             return mock;
@@ -139,7 +139,7 @@ namespace NzbDrone.Test.Common.AutoMoq
 
             LoadPlatformLibrary();
 
-            AssemblyLoader.RegisterSQLiteResolver();
+            AssemblyLoader.RegisterNativeResolver(new[] { "System.Data.SQLite", "Prowlarr.Core" });
         }
 
         private Mock<T> TheRegisteredMockForThisType<T>(Type type)

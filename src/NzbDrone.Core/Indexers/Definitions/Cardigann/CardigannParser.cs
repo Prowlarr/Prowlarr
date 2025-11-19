@@ -666,15 +666,15 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     break;
                 case "languages":
                     release.Languages ??= new List<string>();
-                    char[] delimitersL = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
-                    var releaseLanguages = release.Languages.Union(value.Split(delimitersL, StringSplitOptions.RemoveEmptyEntries));
+                    char[] delimitersL = { ',' };
+                    var releaseLanguages = release.Languages.Union(value.Split(delimitersL, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries));
                     release.Languages = releaseLanguages.Select(x => x.Replace("_", " ")).ToList();
                     value = string.Join(",", release.Languages);
                     break;
                 case "subs":
                     release.Subs ??= new List<string>();
-                    char[] delimitersS = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
-                    var releaseSubs = release.Subs.Union(value.Split(delimitersS, StringSplitOptions.RemoveEmptyEntries));
+                    char[] delimitersS = { ',' };
+                    var releaseSubs = release.Subs.Union(value.Split(delimitersS, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries));
                     release.Subs = releaseSubs.Select(x => x.Replace("_", " ")).ToList();
                     value = string.Join(",", release.Subs);
                     break;

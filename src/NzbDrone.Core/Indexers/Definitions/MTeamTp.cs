@@ -131,39 +131,37 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
         caps.Categories.AddCategoryMapping(439, NewznabStandardCategory.MoviesHD, "Movie(電影)/Remux");
         caps.Categories.AddCategoryMapping(403, NewznabStandardCategory.TVSD, "TV Series(影劇/綜藝)/SD");
         caps.Categories.AddCategoryMapping(402, NewznabStandardCategory.TVHD, "TV Series(影劇/綜藝)/HD");
-        caps.Categories.AddCategoryMapping(435, NewznabStandardCategory.TVSD, "TV Series(影劇/綜藝)/DVDiSo");
         caps.Categories.AddCategoryMapping(438, NewznabStandardCategory.TVHD, "TV Series(影劇/綜藝)/BD");
+        caps.Categories.AddCategoryMapping(435, NewznabStandardCategory.TVSD, "TV Series(影劇/綜藝)/DVDiSo");
         caps.Categories.AddCategoryMapping(404, NewznabStandardCategory.TVDocumentary, "紀錄教育");
+        caps.Categories.AddCategoryMapping(434, NewznabStandardCategory.Audio, "Music(無損)");
+        caps.Categories.AddCategoryMapping(406, NewznabStandardCategory.AudioVideo, "MV(演唱)");
+        caps.Categories.AddCategoryMapping(423, NewznabStandardCategory.PCGames, "PCGame(PC遊戲)");
+        caps.Categories.AddCategoryMapping(448, NewznabStandardCategory.ConsoleOther, "TvGame(TV遊戲)");
         caps.Categories.AddCategoryMapping(405, NewznabStandardCategory.TVAnime, "Anime(動畫)");
         caps.Categories.AddCategoryMapping(407, NewznabStandardCategory.TVSport, "Sports(運動)");
-        caps.Categories.AddCategoryMapping(422, NewznabStandardCategory.PC0day, "Software(軟體)");
-        caps.Categories.AddCategoryMapping(423, NewznabStandardCategory.PCGames, "PCGame(PC遊戲)");
         caps.Categories.AddCategoryMapping(427, NewznabStandardCategory.BooksEBook, "Study/Edu ebook(教育書面)");
-        caps.Categories.AddCategoryMapping(441, NewznabStandardCategory.BooksOther, "Study/Edu video(教育影片)");
+        caps.Categories.AddCategoryMapping(422, NewznabStandardCategory.PC0day, "Software(軟體)");
         caps.Categories.AddCategoryMapping(442, NewznabStandardCategory.AudioAudiobook, "Study/Edu audio(教育音檔)");
+        caps.Categories.AddCategoryMapping(451, NewznabStandardCategory.MoviesOther, "教育影片");
         caps.Categories.AddCategoryMapping(409, NewznabStandardCategory.Other, "Misc(其他)");
-
-        // music
-        caps.Categories.AddCategoryMapping(406, NewznabStandardCategory.AudioVideo, "MV(演唱)");
-        caps.Categories.AddCategoryMapping(408, NewznabStandardCategory.AudioOther, "Music(AAC/ALAC)");
-        caps.Categories.AddCategoryMapping(434, NewznabStandardCategory.Audio, "Music(無損)");
 
         // adult
         caps.Categories.AddCategoryMapping(410, NewznabStandardCategory.XXX, "AV(有碼)/HD Censored");
-        caps.Categories.AddCategoryMapping(429, NewznabStandardCategory.XXX, "AV(無碼)/HD Uncensored");
         caps.Categories.AddCategoryMapping(424, NewznabStandardCategory.XXXSD, "AV(有碼)/SD Censored");
-        caps.Categories.AddCategoryMapping(430, NewznabStandardCategory.XXXSD, "AV(無碼)/SD Uncensored");
-        caps.Categories.AddCategoryMapping(426, NewznabStandardCategory.XXXDVD, "AV(無碼)/DVDiSo Uncensored");
         caps.Categories.AddCategoryMapping(437, NewznabStandardCategory.XXXDVD, "AV(有碼)/DVDiSo Censored");
         caps.Categories.AddCategoryMapping(431, NewznabStandardCategory.XXX, "AV(有碼)/Blu-Ray Censored");
+        caps.Categories.AddCategoryMapping(429, NewznabStandardCategory.XXX, "AV(無碼)/HD Uncensored");
+        caps.Categories.AddCategoryMapping(430, NewznabStandardCategory.XXXSD, "AV(無碼)/SD Uncensored");
+        caps.Categories.AddCategoryMapping(426, NewznabStandardCategory.XXXDVD, "AV(無碼)/DVDiSo Uncensored");
         caps.Categories.AddCategoryMapping(432, NewznabStandardCategory.XXX, "AV(無碼)/Blu-Ray Uncensored");
         caps.Categories.AddCategoryMapping(436, NewznabStandardCategory.XXX, "AV(網站)/0Day");
+        caps.Categories.AddCategoryMapping(440, NewznabStandardCategory.XXX, "AV(Gay)/HD");
         caps.Categories.AddCategoryMapping(425, NewznabStandardCategory.XXX, "IV(寫真影集)/Video Collection");
         caps.Categories.AddCategoryMapping(433, NewznabStandardCategory.XXXImageSet, "IV(寫真圖集)/Picture Collection");
         caps.Categories.AddCategoryMapping(411, NewznabStandardCategory.XXX, "H-Game(遊戲)");
         caps.Categories.AddCategoryMapping(412, NewznabStandardCategory.XXX, "H-Anime(動畫)");
         caps.Categories.AddCategoryMapping(413, NewznabStandardCategory.XXX, "H-Comic(漫畫)");
-        caps.Categories.AddCategoryMapping(440, NewznabStandardCategory.XXX, "AV(Gay)/HD");
 
         return caps;
     }
@@ -180,7 +178,7 @@ public class MTeamTpRequestGenerator : IIndexerRequestGenerator
     private readonly IndexerCapabilities _capabilities;
     private readonly string _apiUrl;
 
-    private readonly int[] _trackerAdultCategories = { 410, 429, 424, 430, 426, 437, 431, 432, 436, 425, 433, 411, 412, 413, 440 };
+    private readonly int[] _trackerAdultCategories = { 410, 424, 437, 431, 429, 430, 426, 432, 436, 440, 425, 433, 411, 412, 413 };
 
     public MTeamTpRequestGenerator(MTeamTpSettings settings, IndexerCapabilities capabilities, string apiUrl)
     {

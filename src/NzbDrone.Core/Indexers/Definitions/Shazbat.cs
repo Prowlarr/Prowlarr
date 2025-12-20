@@ -92,9 +92,9 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
         _logger.Debug("Authentication succeeded.");
     }
 
-    protected override bool CheckIfLoginNeeded(HttpResponse response)
+    protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
     {
-        return response.Content.ContainsIgnoreCase("sign in now");
+        return (httpResponse.HasHttpRedirect && httpResponse.RedirectUrl.ContainsIgnoreCase("login")) || httpResponse.Content.ContainsIgnoreCase("sign in now");
     }
 
     private IndexerCapabilities SetCapabilities()
@@ -202,7 +202,7 @@ public class ShazbatRequestGenerator : IIndexerRequestGenerator
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 }
 
-public class ShazbatParser : IParseIndexerResponse
+public partial class ShazbatParser : IParseIndexerResponse
 {
     private readonly ProviderDefinition _definition;
     private readonly ShazbatSettings _settings;
@@ -210,8 +210,10 @@ public class ShazbatParser : IParseIndexerResponse
     private readonly IIndexerHttpClient _httpClient;
     private readonly Logger _logger;
 
-    private readonly Regex _torrentInfoRegex = new(@"\((?<size>\d+)\):(?<seeders>\d+) \/ :(?<leechers>\d+)$", RegexOptions.Compiled);
-    private readonly HashSet<string> _hdResolutions = new() { "1080p", "1080i", "720p" };
+    private readonly HashSet<string> _hdResolutions = ["1080p", "1080i", "720p"];
+
+    [GeneratedRegex(@"\((?<size>\d+)\)\s*:(?<seeders>\d+) \/ :(?<leechers>\d+)$", RegexOptions.Compiled)]
+    private static partial Regex TorrentInfoRegex();
 
     public ShazbatParser(ProviderDefinition definition, ShazbatSettings settings, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
     {
@@ -278,7 +280,8 @@ public class ShazbatParser : IParseIndexerResponse
                 var releaseRequest = new IndexerRequest(showRequest);
                 var releaseResponse = new IndexerResponse(releaseRequest, _httpClient.ExecuteProxied(releaseRequest.HttpRequest, _definition));
 
-                if ((releaseResponse.HttpResponse.HasHttpRedirect && releaseResponse.HttpResponse.RedirectUrl.Contains("login")) || releaseResponse.HttpResponse.Content.ContainsIgnoreCase("sign in now"))
+                if ((releaseResponse.HttpResponse.HasHttpRedirect && releaseResponse.HttpResponse.RedirectUrl.ContainsIgnoreCase("login")) ||
+                    releaseResponse.HttpResponse.Content.ContainsIgnoreCase("sign in now"))
                 {
                     // Remove cookie cache
                     CookiesUpdater(null, null);
@@ -324,13 +327,15 @@ public class ShazbatParser : IParseIndexerResponse
             var title = ParseTitle(row.QuerySelector("td:nth-of-type(3)"));
 
             var infoString = row.QuerySelector("td:nth-of-type(4)")?.TextContent.Trim() ?? string.Empty;
-            var matchInfo = _torrentInfoRegex.Match(infoString);
+            var matchInfo = TorrentInfoRegex().Match(infoString);
             var size = matchInfo.Groups["size"].Success && long.TryParse(matchInfo.Groups["size"].Value, out var outSize) ? outSize : 0;
             var seeders = matchInfo.Groups["seeders"].Success && int.TryParse(matchInfo.Groups["seeders"].Value, out var outSeeders) ? outSeeders : 0;
             var leechers = matchInfo.Groups["leechers"].Success && int.TryParse(matchInfo.Groups["leechers"].Value, out var outLeechers) ? outLeechers : 0;
 
             var dateTimestamp = row.QuerySelector(".datetime[data-timestamp]")?.GetAttribute("data-timestamp");
-            publishDate = dateTimestamp != null && ParseUtil.TryCoerceLong(dateTimestamp, out var timestamp) ? DateTimeUtil.UnixTimestampToDateTime(timestamp) : publishDate.AddMinutes(-1);
+            publishDate = dateTimestamp != null && ParseUtil.TryCoerceLong(dateTimestamp, out var timestamp)
+                ? DateTimeUtil.UnixTimestampToDateTime(timestamp)
+                : publishDate.AddMinutes(-1);
 
             var release = new TorrentInfo
             {
@@ -364,10 +369,10 @@ public class ShazbatParser : IParseIndexerResponse
         return title?.TextContent.Trim();
     }
 
-    protected virtual List<IndexerCategory> ParseCategories(string title)
+    private List<IndexerCategory> ParseCategories(string title)
     {
-        var categories = new List<IndexerCategory>
-        {
+        return
+        [
             NewznabStandardCategory.TV,
             title switch
             {
@@ -375,9 +380,7 @@ public class ShazbatParser : IParseIndexerResponse
                 _ when title.Contains("2160p") => NewznabStandardCategory.TVUHD,
                 _ => NewznabStandardCategory.TVSD
             }
-        };
-
-        return categories;
+        ];
     }
 
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

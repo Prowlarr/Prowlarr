@@ -69,8 +69,8 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
             .AddFormParameter("referer", "")
             .AddFormParameter("query", "")
             .AddFormParameter("tv_timezone", "0")
-            .AddFormParameter("tv_login", Settings.Username)
-            .AddFormParameter("tv_password", Settings.Password)
+            .AddFormParameter("username", Settings.Username)
+            .AddFormParameter("password", Settings.Password)
             .SetHeader("Content-Type", "application/x-www-form-urlencoded")
             .SetHeader("Referer", loginUrl)
             .Build();
@@ -278,7 +278,7 @@ public class ShazbatParser : IParseIndexerResponse
                 var releaseRequest = new IndexerRequest(showRequest);
                 var releaseResponse = new IndexerResponse(releaseRequest, _httpClient.ExecuteProxied(releaseRequest.HttpRequest, _definition));
 
-                if (releaseResponse.HttpResponse.Content.ContainsIgnoreCase("sign in now"))
+                if ((releaseResponse.HttpResponse.HasHttpRedirect && releaseResponse.HttpResponse.RedirectUrl.Contains("login")) || releaseResponse.HttpResponse.Content.ContainsIgnoreCase("sign in now"))
                 {
                     // Remove cookie cache
                     CookiesUpdater(null, null);
@@ -330,7 +330,7 @@ public class ShazbatParser : IParseIndexerResponse
             var leechers = matchInfo.Groups["leechers"].Success && int.TryParse(matchInfo.Groups["leechers"].Value, out var outLeechers) ? outLeechers : 0;
 
             var dateTimestamp = row.QuerySelector(".datetime[data-timestamp]")?.GetAttribute("data-timestamp");
-            publishDate = dateTimestamp != null && ParseUtil.TryCoerceDouble(dateTimestamp, out var timestamp) ? DateTimeUtil.UnixTimestampToDateTime(timestamp) : publishDate.AddMinutes(-1);
+            publishDate = dateTimestamp != null && ParseUtil.TryCoerceLong(dateTimestamp, out var timestamp) ? DateTimeUtil.UnixTimestampToDateTime(timestamp) : publishDate.AddMinutes(-1);
 
             var release = new TorrentInfo
             {

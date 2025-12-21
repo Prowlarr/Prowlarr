@@ -13,9 +13,9 @@
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
     <PackageReference Include="Polly" Version="8.8.0" />
-    <PackageReference Include="FluentMigrator.Runner.Core" Version="6.2.0" />
-    <PackageReference Include="FluentMigrator.Runner.Postgres" Version="6.2.0" />
-    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="6.2.0" />
+    <PackageReference Include="FluentMigrator.Runner.Core" Version="7.2.0" />
+    <PackageReference Include="FluentMigrator.Runner.Postgres" Version="7.2.0" />
+    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="7.2.0" />
     <PackageReference Include="FluentValidation" Version="9.5.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="5.5.1" />

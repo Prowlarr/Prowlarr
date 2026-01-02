@@ -66,6 +66,7 @@ public class PreToMe : TorrentIndexerBase<PreToMeSettings>
         };
 
         var authLoginRequest = requestBuilder
+            .SetEncoding(Encoding)
             .SetCookies(loginPage.GetCookies())
             .AddFormParameter("username", Settings.Username)
             .AddFormParameter("password", Settings.Password)

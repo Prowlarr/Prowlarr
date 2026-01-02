@@ -91,6 +91,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             Cookies = null;
 
             var authLoginRequest = requestBuilder.Post()
+                .SetEncoding(Encoding)
                 .AddFormParameter("login_username", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "Login")

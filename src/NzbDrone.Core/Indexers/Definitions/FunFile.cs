@@ -58,6 +58,7 @@ public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
         };
 
         var authLoginRequest = requestBuilder
+            .SetEncoding(Encoding)
             .AddFormParameter("username", Settings.Username)
             .AddFormParameter("password", Settings.Password)
             .AddFormParameter("returnto", "")

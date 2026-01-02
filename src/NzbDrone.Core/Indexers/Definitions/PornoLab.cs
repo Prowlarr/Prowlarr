@@ -57,6 +57,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             var authLoginRequest = requestBuilder
+                .SetEncoding(Encoding)
                 .AddFormParameter("login_username", Settings.Username)
                 .AddFormParameter("login_password", Settings.Password)
                 .AddFormParameter("login", "Login")

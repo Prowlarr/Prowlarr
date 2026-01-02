@@ -231,7 +231,7 @@ namespace NzbDrone.Common.Http
             }
             else
             {
-                var parameters = FormData.Select(v => string.Format("{0}={1}", v.Name, Uri.EscapeDataString(Encoding.GetString(v.ContentData))));
+                var parameters = FormData.Select(v => string.Format("{0}={1}", v.Name, Encoding.GetString(v.ContentData).UrlEncode(Encoding)));
                 var urlencoded = string.Join("&", parameters);
                 var body = Encoding.GetBytes(urlencoded);
 

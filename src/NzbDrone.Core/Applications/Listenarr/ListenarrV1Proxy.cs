@@ -24,7 +24,7 @@ namespace NzbDrone.Core.Applications.Listenarr
 
     public class ListenarrV1Proxy : IListenarrV1Proxy
     {
-        private static Version MinimumApplicationVersion => new(0, 2, 46, 0);
+        private static Version MinimumApplicationVersion => new(0, 2, 47, 0);
 
         private const string AppApiRoute = "/api/v1";
         private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";

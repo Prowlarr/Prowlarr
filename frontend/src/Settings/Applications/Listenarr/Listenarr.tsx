@@ -1,6 +1,6 @@
 import React from 'react';
-import { Application } from 'Settings/Applications/Application';
 import ProviderSettingsModal from 'Settings/Applications/ProviderSettingsModal';
+import Application from 'typings/Application';
 
 interface ListenarrProps {
   selectedApplication: Application;

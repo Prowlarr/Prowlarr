@@ -10,6 +10,9 @@ function createMapStateToProps() {
     (state, { value }) => value,
     (state, { values }) => values,
     (tags, tagList) => {
+      tags = tags || [];
+      tagList = tagList || [];
+
       const sortedTags = _.sortBy(tagList, 'value');
 
       return {

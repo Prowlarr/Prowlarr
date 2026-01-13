@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Cache;
 using NzbDrone.Core.Applications;
 using NzbDrone.Core.Applications.Listenarr;
 using NzbDrone.Core.Configuration;
@@ -33,6 +34,14 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
             };
 
             Mocker.GetMock<IConfigFileProvider>().SetupGet(c => c.ApiKey).Returns("abc");
+
+            // Ensure cache calls execute factory each time during tests to avoid stale cached values
+            // Use ICached<List<ListenarrIndexer>> mock via dynamic mocking to avoid depending on concrete implementation
+            var cached = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cached.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                  .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());
+
+            Mocker.GetMock<ICacheManager>().Setup(m => m.GetCache<System.Collections.Generic.List<ListenarrIndexer>>(It.IsAny<Type>())).Returns(cached.Object);
         }
 
         [Test]
@@ -86,34 +95,184 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         }
 
         [Test]
-        public void Test_should_fail_when_status_null()
+        public void Test_should_call_testconnection_and_return_success_when_valid()
         {
             // Arrange
-            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetStatus(It.IsAny<ListenarrSettings>())).Returns((ListenarrStatus)null);
+            var schema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "baseUrl", Value = "" },
+                        new ListenarrField { Name = "apiPath", Value = "" },
+                        new ListenarrField { Name = "apiKey", Value = "" },
+                        new ListenarrField { Name = "categories", Value = new List<int>() }
+                    }
+                }
+            };
+
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(schema);
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.TestConnection(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>())).Returns((FluentValidation.Results.ValidationFailure)null).Verifiable();
+
+            // Ensure the private schema cache will execute the factory so it invokes our mocked proxy
+            var cachedForTest = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cachedForTest.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                         .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());
+            typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetField("_schemaCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Subject, cachedForTest.Object);
 
             // Act
             var result = Subject.Test();
 
             // Assert
-            result.IsValid.Should().BeFalse();
-            result.Errors.Should().ContainSingle(e => e.ErrorMessage.Contains("Unable to connect to Listenarr"));
+            result.IsValid.Should().BeTrue();
+            Mocker.GetMock<IListenarrV1Proxy>().Verify(m => m.TestConnection(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>()), Times.Once);
         }
 
         [Test]
-        public void Test_should_fail_on_exception()
+        public void Test_should_retry_and_use_fresh_schema_when_cached_schema_is_incomplete()
         {
             // Arrange
-            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetStatus(It.IsAny<ListenarrSettings>())).Throws(new Exception("boom"));
+            var cachedSchema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "apiKey", Value = "" }
+                    }
+                }
+            };
+
+            var freshSchema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "baseUrl", Value = "" },
+                        new ListenarrField { Name = "apiPath", Value = "" },
+                        new ListenarrField { Name = "apiKey", Value = "" },
+                        new ListenarrField { Name = "categories", Value = new List<int>() }
+                    }
+                }
+            };
+
+            // Cache returns stale schema
+            var cachedForTest = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cachedForTest.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                         .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => cachedSchema);
+
+            typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetField("_schemaCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Subject, cachedForTest.Object);
+
+            // Proxy will return fresh schema when direct fetched
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(freshSchema);
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.TestConnection(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>())).Returns((FluentValidation.Results.ValidationFailure)null);
+
+            // Act
+            var result = Subject.Test();
+
+            // Assert
+            result.IsValid.Should().BeTrue();
+            Mocker.GetMock<IListenarrV1Proxy>().Verify(m => m.GetIndexerSchema(It.IsAny<ListenarrSettings>()), Times.AtLeastOnce);
+        }
+
+        [Test]
+        public void Test_should_handle_exception_from_testconnection()
+        {
+            // Arrange
+            var schema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "baseUrl", Value = "" },
+                        new ListenarrField { Name = "apiPath", Value = "" },
+                        new ListenarrField { Name = "apiKey", Value = "" },
+                        new ListenarrField { Name = "categories", Value = new List<int>() }
+                    }
+                }
+            };
+
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(schema);
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.TestConnection(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>())).Throws(new Exception("boom"));
+
+            // Ensure the private schema cache will execute the factory so it invokes our mocked proxy
+            var cachedForTest = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cachedForTest.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                         .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());
+            typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetField("_schemaCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Subject, cachedForTest.Object);
 
             // Act
             var result = Subject.Test();
 
             // Assert
             result.IsValid.Should().BeFalse();
-            result.Errors.Should().ContainSingle(e => e.ErrorMessage.Contains("Unable to send test message"));
+            result.Errors.Should().ContainSingle(e => e.ErrorMessage.Contains("Unable to complete application test"));
+            ExceptionVerification.ExpectedWarns(1);
+        }
 
-            // expected error was logged
-            ExceptionVerification.ExpectedErrors(1);
+        [Test]
+        public void Test_should_fail_when_schema_missing()
+        {
+            // Arrange
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(new List<ListenarrIndexer>());
+
+            // Act & Assert
+            try
+            {
+                var result = Subject.Test();
+                result.IsValid.Should().BeFalse();
+                result.Errors.Should().ContainSingle(e => e.ErrorMessage.Contains("indexer schema"));
+            }
+            finally
+            {
+                // Consume expected warnings even if Subject.Test throws or an assert fails so teardown does not fail
+                ExceptionVerification.IgnoreWarns();
+            }
+        }
+
+        [Test]
+        public void Test_should_fail_when_schema_missing_required_fields()
+        {
+            // Arrange
+            var schema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "apiKey", Value = "" }
+                    }
+                }
+            };
+
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(schema);
+
+            // Ensure the private schema cache will execute the factory so it invokes our mocked proxy
+            var cachedForTest = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cachedForTest.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                         .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());
+            typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetField("_schemaCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Subject, cachedForTest.Object);
+
+            // Act & Assert
+            try
+            {
+                var result = Subject.Test();
+                result.IsValid.Should().BeFalse();
+                result.Errors.Should().ContainSingle(e => e.ErrorMessage.Contains("missing required fields"));
+            }
+            finally
+            {
+                // Consume expected warnings even if Subject.Test throws or an assert fails so teardown does not fail
+                ExceptionVerification.IgnoreWarns();
+            }
         }
 
         [Test]
@@ -138,7 +297,29 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
 
             Mocker.GetMock<IIndexerFactory>().Setup(m => m.GetInstance(It.IsAny<IndexerDefinition>())).Returns(mockIndexer.Object);
 
+            var schema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "baseUrl", Value = "" },
+                        new ListenarrField { Name = "apiPath", Value = "" },
+                        new ListenarrField { Name = "apiKey", Value = "" },
+                        new ListenarrField { Name = "categories", Value = new List<int>() }
+                    }
+                }
+            };
+
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(schema);
             Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.AddIndexer(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>())).Returns(new ListenarrIndexer { Id = 501 });
+
+            // Ensure the private schema cache will execute the factory so it invokes our mocked proxy
+            var cachedForTest = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cachedForTest.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                         .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());
+            typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetField("_schemaCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Subject, cachedForTest.Object);
 
             // pre-check
             indexerDefinition.Capabilities.Categories.SupportedCategories(((ListenarrSettings)Subject.Definition.Settings).SyncCategories.ToArray()).Should().NotBeEmpty();

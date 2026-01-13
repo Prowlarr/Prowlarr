@@ -1,5 +1,5 @@
 import React from 'react';
-import ProviderSettingsModal from 'Settings/Applications/ProviderSettingsModal';
+import EditApplicationModalConnector from 'Settings/Applications/Applications/EditApplicationModalConnector';
 import Application from 'typings/Application';
 
 interface ListenarrProps {
@@ -9,9 +9,9 @@ interface ListenarrProps {
 
 function Listenarr({ selectedApplication, onModalClose }: ListenarrProps) {
   return (
-    <ProviderSettingsModal
-      providerData={selectedApplication}
-      section="applications"
+    <EditApplicationModalConnector
+      isOpen={true}
+      item={selectedApplication}
       onModalClose={onModalClose}
     />
   );

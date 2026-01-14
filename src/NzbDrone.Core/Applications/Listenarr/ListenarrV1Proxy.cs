@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using FluentValidation.Results;
@@ -64,26 +65,12 @@ namespace NzbDrone.Core.Applications.Listenarr
         {
             try
             {
-                var request = BuildRequest(settings, $"{AppIndexerApiRoute}/{indexerId}", HttpMethod.Get);
-                return Execute<ListenarrIndexer>(request);
+                var fallback = BuildRequest(settings, $"{AppApiRoute}/indexers/{indexerId}", HttpMethod.Get);
+                return Execute<ListenarrIndexer>(fallback);
             }
-            catch (HttpException ex)
+            catch (HttpException)
             {
-                if (ex.Response.StatusCode != HttpStatusCode.NotFound)
-                {
-                    throw;
-                }
-
-                // Try plural form as a fallback
-                try
-                {
-                    var fallback = BuildRequest(settings, $"{AppApiRoute}/indexers/{indexerId}", HttpMethod.Get);
-                    return Execute<ListenarrIndexer>(fallback);
-                }
-                catch (HttpException)
-                {
-                    return null;
-                }
+                return null;
             }
         }
 
@@ -293,6 +280,35 @@ namespace NzbDrone.Core.Applications.Listenarr
 
         public ListenarrIndexer AddIndexer(ListenarrIndexer indexer, ListenarrSettings settings)
         {
+            // Defensive check: avoid creating duplicates if an indexer with the same baseUrl already exists on the remote app.
+            try
+            {
+                var incomingBaseUrl = indexer?.Fields?.FirstOrDefault(f => f.Name == "baseUrl")?.Value as string;
+                if (!string.IsNullOrWhiteSpace(incomingBaseUrl))
+                {
+                    var existing = GetIndexers(settings);
+                    if (existing != null)
+                    {
+                        var match = existing.FirstOrDefault(e =>
+                            string.Equals(
+                                (e.Fields?.FirstOrDefault(f => f.Name == "baseUrl")?.Value as string)?.TrimEnd('/'),
+                                incomingBaseUrl.TrimEnd('/'),
+                                StringComparison.InvariantCultureIgnoreCase));
+
+                        if (match != null)
+                        {
+                            _logger.Debug("Found existing remote indexer matching baseUrl; skipping add and returning existing id {0}", match.Id);
+                            return match;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // If the existence check fails for any reason, proceed with the add flow and let any resulting errors bubble up.
+                _logger.Debug(ex, "Failed to run pre-flight existence check before AddIndexer; proceeding to create");
+            }
+
             var request = BuildRequest(settings, $"{AppIndexerApiRoute}", HttpMethod.Post);
 
             request.SetContent(indexer.ToJson());

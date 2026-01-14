@@ -391,7 +391,7 @@ namespace NzbDrone.Core.Applications.Listenarr
             if (id == 0)
             {
                 // Ensuring backward compatibility with older versions on first sync
-                syncFields.AddRange(new List<string> { "earlyReleaseLimit", "additionalParameters" });
+                syncFields.AddRange(new List<string> { "additionalParameters" });
             }
 
             var newznab = schemas.FirstOrDefault(i => i.Implementation == "Newznab");

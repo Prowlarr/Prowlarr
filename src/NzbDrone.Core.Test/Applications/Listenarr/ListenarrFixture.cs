@@ -27,9 +27,9 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
                 Settings = new ListenarrSettings
                 {
                     ProwlarrUrl = "http://localhost:9696",
-                    BaseUrl = "http://localhost:5000",
+                    BaseUrl = "http://localhost:4545",
                     ApiKey = "abc",
-                    SyncCategories = new List<int> { NewznabStandardCategory.Movies.Id }
+                    SyncCategories = new List<int> { NewznabStandardCategory.AudioAudiobook.Id }
                 }
             };
 
@@ -223,18 +223,14 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
             // Arrange
             Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(new List<ListenarrIndexer>());
 
-            // Act & Assert
-            try
-            {
-                var result = Subject.Test();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().ContainSingle(e => e.ErrorMessage.Contains("indexer schema"));
-            }
-            finally
-            {
-                // Consume expected warnings even if Subject.Test throws or an assert fails so teardown does not fail
-                ExceptionVerification.IgnoreWarns();
-            }
+            // Act & Assert - call private BuildListenarrIndexer to assert it throws
+            var method = typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetMethod("BuildListenarrIndexer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var indexerDef = new IndexerDefinition { Id = 1, Name = "Test", Protocol = DownloadProtocol.Usenet, Capabilities = new IndexerCapabilities() };
+
+            var ex = Assert.Throws<System.Reflection.TargetInvocationException>(() => method.Invoke(Subject, new object[] { indexerDef, indexerDef.Capabilities, DownloadProtocol.Usenet, 0 }));
+            Assert.IsInstanceOf<ApplicationException>(ex.InnerException);
+            Assert.That(ex.InnerException.Message, Does.Contain("indexer schemas"));
+            ExceptionVerification.ExpectedWarns(1);
         }
 
         [Test]
@@ -290,7 +286,7 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
             };
 
             // Add a category that matches Settings.SyncCategories
-            indexerDefinition.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.Movies);
+            indexerDefinition.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.AudioAudiobook);
 
             var mockIndexer = new Mock<IIndexer>();
             mockIndexer.Setup(i => i.GetCapabilities()).Returns(indexerDefinition.Capabilities);
@@ -329,6 +325,76 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
 
             // Assert
             Mocker.GetMock<IListenarrV1Proxy>().Verify(m => m.AddIndexer(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>()), Times.Once());
+            Mocker.GetMock<IAppIndexerMapService>().Verify(m => m.Insert(It.Is<AppIndexerMap>(a => a.IndexerId == 12 && a.RemoteIndexerId == 501)), Times.Once());
+        }
+
+        [Test]
+        public void AddIndexer_should_use_existing_remote_indexer_if_baseUrl_matches()
+        {
+            // Arrange
+            var indexerDefinition = new IndexerDefinition
+            {
+                Id = 12,
+                Name = "TestIndexer",
+                Protocol = DownloadProtocol.Usenet,
+                Capabilities = new IndexerCapabilities(),
+                Enable = true,
+                AppProfile = new LazyLoaded<AppSyncProfile>(new AppSyncProfile { EnableRss = true, EnableAutomaticSearch = true, EnableInteractiveSearch = true })
+            };
+
+            indexerDefinition.Capabilities.Categories.AddCategoryMapping(1, NewznabStandardCategory.AudioAudiobook);
+
+            var mockIndexer = new Mock<IIndexer>();
+            mockIndexer.Setup(i => i.GetCapabilities()).Returns(indexerDefinition.Capabilities);
+
+            Mocker.GetMock<IIndexerFactory>().Setup(m => m.GetInstance(It.IsAny<IndexerDefinition>())).Returns(mockIndexer.Object);
+
+            var schema = new List<ListenarrIndexer>
+            {
+                new ListenarrIndexer
+                {
+                    Implementation = "Newznab",
+                    Fields = new List<ListenarrField>
+                    {
+                        new ListenarrField { Name = "baseUrl", Value = "" },
+                        new ListenarrField { Name = "apiPath", Value = "" },
+                        new ListenarrField { Name = "apiKey", Value = "" },
+                        new ListenarrField { Name = "categories", Value = new List<int>() }
+                    }
+                }
+            };
+
+            // Existing remote indexer with matching baseUrl
+            var existing = new ListenarrIndexer
+            {
+                Id = 501,
+                Implementation = "Newznab",
+                Fields = new List<ListenarrField>
+                {
+                    new ListenarrField { Name = "baseUrl", Value = $"{((ListenarrSettings)Subject.Definition.Settings).ProwlarrUrl.TrimEnd('/')}/12/" },
+                    new ListenarrField { Name = "apiPath", Value = "/api" },
+                    new ListenarrField { Name = "apiKey", Value = "abc" },
+                    new ListenarrField { Name = "categories", Value = new List<int>() }
+                }
+            };
+
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexerSchema(It.IsAny<ListenarrSettings>())).Returns(schema);
+            Mocker.GetMock<IListenarrV1Proxy>().Setup(c => c.GetIndexers(It.IsAny<ListenarrSettings>())).Returns(new List<ListenarrIndexer> { existing });
+
+            // Ensure the private schema cache will execute the factory so it invokes our mocked proxy
+            var cachedForTest = new Mock<ICached<System.Collections.Generic.List<ListenarrIndexer>>>();
+            cachedForTest.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<System.Collections.Generic.List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
+                         .Returns<string, Func<System.Collections.Generic.List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());
+            typeof(NzbDrone.Core.Applications.Listenarr.Listenarr).GetField("_schemaCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Subject, cachedForTest.Object);
+
+            // pre-check
+            indexerDefinition.Capabilities.Categories.SupportedCategories(((ListenarrSettings)Subject.Definition.Settings).SyncCategories.ToArray()).Should().NotBeEmpty();
+
+            // Act
+            Subject.AddIndexer(indexerDefinition);
+
+            // Assert - AddIndexer should not be called because remote already exists
+            Mocker.GetMock<IListenarrV1Proxy>().Verify(m => m.AddIndexer(It.IsAny<ListenarrIndexer>(), It.IsAny<ListenarrSettings>()), Times.Never());
             Mocker.GetMock<IAppIndexerMapService>().Verify(m => m.Insert(It.Is<AppIndexerMap>(a => a.IndexerId == 12 && a.RemoteIndexerId == 501)), Times.Once());
         }
     }

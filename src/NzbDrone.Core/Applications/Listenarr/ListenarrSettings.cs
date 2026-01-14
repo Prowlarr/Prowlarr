@@ -23,7 +23,7 @@ namespace NzbDrone.Core.Applications.Listenarr
         public ListenarrSettings()
         {
             ProwlarrUrl = "http://localhost:9696";
-            BaseUrl = "http://localhost:5000";
+            BaseUrl = "http://localhost:4545";
             SyncCategories = new[] { 3030 };
         }
 

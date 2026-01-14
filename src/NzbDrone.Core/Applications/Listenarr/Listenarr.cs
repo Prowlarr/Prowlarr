@@ -142,6 +142,28 @@ namespace NzbDrone.Core.Applications.Listenarr
 
             var listenarrIndexer = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol);
 
+            // If an existing remote indexer already points to this app indexer (matching baseUrl or name), insert mapping and skip adding
+            try
+            {
+                var remoteIndexers = _listenarrV1Proxy.GetIndexers(Settings);
+                var baseUrl = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
+
+                var match = remoteIndexers.FirstOrDefault(r =>
+                    ((string)r.Fields.FirstOrDefault(f => f.Name == "baseUrl")?.Value ?? "").Equals(baseUrl, StringComparison.InvariantCultureIgnoreCase)
+                    || (r.Name?.Contains(indexer.Name, StringComparison.InvariantCultureIgnoreCase) == true));
+
+                if (match != null)
+                {
+                    _logger.Debug("Found existing remote indexer for {0} as {1} [{2}], inserting mapping", indexer.Name, match.Name, match.Id);
+                    _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = match.Id });
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Error while attempting to discover existing remote indexer for {0} [{1}]", indexer.Name, indexer.Id);
+            }
+
             var remoteIndexer = _listenarrV1Proxy.AddIndexer(listenarrIndexer, Settings);
 
             if (remoteIndexer == null)

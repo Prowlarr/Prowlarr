@@ -16,9 +16,9 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         public void GetIndexers_should_deserialize_json_and_set_api_key_header()
         {
             // Arrange
-            var settings = new ListenarrSettings { BaseUrl = "http://localhost:5000", ApiKey = "abc123" };
+            var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
-            var json = "[ { \"id\": 42, \"name\": \"Test\", \"implementation\": \"Newznab\", \"fields\": [ { \"name\": \"baseUrl\", \"value\": \"http://localhost:5000/1/api\" }, { \"name\": \"apiKey\", \"value\": \"x\" } ] } ]";
+            var json = "[ { \"id\": 42, \"name\": \"Test\", \"implementation\": \"Newznab\", \"fields\": [ { \"name\": \"baseUrl\", \"value\": \"http://localhost:4545/1/api\" }, { \"name\": \"apiKey\", \"value\": \"x\" } ] } ]";
 
             HttpRequest capturedRequest = null;
 
@@ -46,7 +46,7 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         public void GetIndexerSchema_should_handle_single_object_response_with_fields_object()
         {
             // Arrange
-            var settings = new ListenarrSettings { BaseUrl = "http://localhost:5000", ApiKey = "abc123" };
+            var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
             // Schema returned as an object with fields as an object (name -> definition)
             var json = "{ \"id\": 1, \"implementation\": \"Newznab\", \"fields\": { \"baseUrl\": { \"type\": \"text\" }, \"apiKey\": { \"type\": \"text\" } } }";
@@ -71,7 +71,7 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         public void GetIndexerSchema_should_expand_implementations_array_into_multiple_schemas()
         {
             // Arrange
-            var settings = new ListenarrSettings { BaseUrl = "http://localhost:5000", ApiKey = "abc123" };
+            var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
             var json = "{ \"fields\": [ { \"name\": \"baseUrl\", \"type\": \"text\" } ], \"implementations\": [\"Newznab\",\"Torznab\"] }";
 
@@ -93,7 +93,7 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         public void Execute_should_throw_application_exception_when_unauthorized()
         {
             // Arrange
-            var settings = new ListenarrSettings { BaseUrl = "http://localhost:5000", ApiKey = "bad" };
+            var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "bad" };
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(c => c.Execute(It.IsAny<HttpRequest>()))

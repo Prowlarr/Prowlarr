@@ -57,7 +57,7 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         {
             var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
-            var json = "[ { \"id\": 1, \"implementation\": \"Newznab\", \"fields\": { \"baseUrl\": { \"type\": \"text\" }, \"apiKey\": { \"type\": \"text\" } } } ]";
+            var json = "[ { \"id\": 1, \"implementation\": \"Newznab\", \"fields\": [ { \"name\": \"baseUrl\", \"type\": \"text\" }, { \"name\": \"apiKey\", \"type\": \"text\" } ] } ]";
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(c => c.Execute(It.IsAny<HttpRequest>()))

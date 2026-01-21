@@ -327,7 +327,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                     if ((indexerCapabilities.MusicSearchAvailable || indexerCapabilities.SearchAvailable) &&
                         indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
-
                         if (remoteIndexer.Fields != null)
                         {
                             listenarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => listenarrIndexer.Fields.All(s => s.Name != f.Name)));

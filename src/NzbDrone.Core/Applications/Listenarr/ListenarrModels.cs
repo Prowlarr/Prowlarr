@@ -17,6 +17,7 @@ namespace NzbDrone.Core.Applications.Listenarr
         public string Name { get; set; }
         public string ImplementationName { get; set; }
         public string Implementation { get; set; }
+        public List<string> Implementations { get; set; }
         public string ConfigContract { get; set; }
         public string InfoLink { get; set; }
         public int? DownloadClientId { get; set; }

@@ -416,8 +416,8 @@ namespace NzbDrone.Core.Applications.Listenarr
                 syncFields.AddRange(new List<string> { "additionalParameters" });
             }
 
-            var newznab = schemas.FirstOrDefault(i => i.Implementation == "Newznab");
-            var torznab = schemas.FirstOrDefault(i => i.Implementation == "Torznab");
+            var newznab = schemas.FirstOrDefault(i => string.Equals(i.Implementation, "Newznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Newznab", StringComparison.InvariantCultureIgnoreCase))));
+            var torznab = schemas.FirstOrDefault(i => string.Equals(i.Implementation, "Torznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Torznab", StringComparison.InvariantCultureIgnoreCase))));
 
             if (newznab == null && torznab == null)
             {
@@ -464,8 +464,8 @@ namespace NzbDrone.Core.Applications.Listenarr
 
                     if (freshSchemas != null && freshSchemas.Any())
                     {
-                        var freshNewznab = freshSchemas.FirstOrDefault(i => i.Implementation == "Newznab");
-                        var freshTorznab = freshSchemas.FirstOrDefault(i => i.Implementation == "Torznab");
+                        var freshNewznab = freshSchemas.FirstOrDefault(i => string.Equals(i.Implementation, "Newznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Newznab", StringComparison.InvariantCultureIgnoreCase))));
+                        var freshTorznab = freshSchemas.FirstOrDefault(i => string.Equals(i.Implementation, "Torznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Torznab", StringComparison.InvariantCultureIgnoreCase))));
 
                         var freshSchema = protocol == DownloadProtocol.Usenet ? freshNewznab ?? freshTorznab : freshTorznab ?? freshNewznab;
 

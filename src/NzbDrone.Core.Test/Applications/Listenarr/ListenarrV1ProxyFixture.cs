@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Applications.Listenarr;
 using NzbDrone.Test.Common;
 
@@ -15,10 +16,22 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         [Test]
         public void GetIndexers_should_deserialize_json_and_set_api_key_header()
         {
-            // Arrange
             var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
-            var json = "[ { \"id\": 42, \"name\": \"Test\", \"implementation\": \"Newznab\", \"fields\": [ { \"name\": \"baseUrl\", \"value\": \"http://localhost:4545/1/api\" }, { \"name\": \"apiKey\", \"value\": \"x\" } ] } ]";
+            var responseJson = new[]
+            {
+                new
+                {
+                    Id = "42",
+                    Name = "Test",
+                    Implementation = "Newznab",
+                    Fields = new[]
+                    {
+                        new { name = "baseUrl", value = "http://localhost:4545/1/api" },
+                        new { name = "apiKey", value = "x" },
+                    }
+                }
+            }.ToJson();
 
             HttpRequest capturedRequest = null;
 
@@ -27,38 +40,31 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
                 .Returns<HttpRequest>(req =>
                 {
                     capturedRequest = req;
-                    return new HttpResponse(req, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), json, 0, HttpStatusCode.OK, new Version("1.0"));
+                    return new HttpResponse(req, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), System.Text.Encoding.UTF8.GetBytes(responseJson), 0, HttpStatusCode.OK, new Version("1.0"));
                 });
 
-            // Act
             var result = Subject.GetIndexers(settings);
 
-            // Assert
             result.Should().NotBeNull();
             result.Count.Should().Be(1);
             capturedRequest.Headers.GetSingleValue("X-Api-Key").Should().Be("abc123");
 
-            // Accept either singular /api/v1/indexer or legacy /api/indexer in requests
             (capturedRequest.Url.ToString().Contains("/api/indexer") || capturedRequest.Url.ToString().Contains("/api/v1/indexer")).Should().BeTrue();
         }
 
         [Test]
         public void GetIndexerSchema_should_handle_single_object_response_with_fields_object()
         {
-            // Arrange
             var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
-            // Schema returned as an object with fields as an object (name -> definition)
-            var json = "{ \"id\": 1, \"implementation\": \"Newznab\", \"fields\": { \"baseUrl\": { \"type\": \"text\" }, \"apiKey\": { \"type\": \"text\" } } }";
+            var json = "[ { \"id\": 1, \"implementation\": \"Newznab\", \"fields\": { \"baseUrl\": { \"type\": \"text\" }, \"apiKey\": { \"type\": \"text\" } } } ]";
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(c => c.Execute(It.IsAny<HttpRequest>()))
                 .Returns<HttpRequest>(req => new HttpResponse(req, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), json, 0, HttpStatusCode.OK, new Version("1.0")));
 
-            // Act
             var result = Subject.GetIndexerSchema(settings);
 
-            // Assert
             result.Should().NotBeNull();
             result.Count.Should().Be(1);
             result[0].Fields.Should().NotBeNull();
@@ -68,41 +74,36 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
         }
 
         [Test]
-        public void GetIndexerSchema_should_expand_implementations_array_into_multiple_schemas()
+        public void GetIndexerSchema_should_preserve_implementations_array_as_list()
         {
-            // Arrange
             var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "abc123" };
 
-            var json = "{ \"fields\": [ { \"name\": \"baseUrl\", \"type\": \"text\" } ], \"implementations\": [\"Newznab\",\"Torznab\"] }";
+            var json = "[ { \"fields\": [ { \"name\": \"baseUrl\", \"type\": \"text\" } ], \"implementations\": [\"Newznab\",\"Torznab\"] } ]";
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(c => c.Execute(It.IsAny<HttpRequest>()))
                 .Returns<HttpRequest>(req => new HttpResponse(req, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), json, 0, HttpStatusCode.OK, new Version("1.0")));
 
-            // Act
             var result = Subject.GetIndexerSchema(settings);
 
-            // Assert
             result.Should().NotBeNull();
-            result.Count.Should().Be(2);
-            result.Should().Contain(r => r.Implementation == "Newznab");
-            result.Should().Contain(r => r.Implementation == "Torznab");
+            result.Count.Should().Be(1);
+            result[0].Implementations.Should().NotBeNull();
+            result[0].Implementations.Should().Contain("Newznab");
+            result[0].Implementations.Should().Contain("Torznab");
         }
 
         [Test]
         public void Execute_should_throw_application_exception_when_unauthorized()
         {
-            // Arrange
             var settings = new ListenarrSettings { BaseUrl = "http://localhost:4545", ApiKey = "bad" };
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(c => c.Execute(It.IsAny<HttpRequest>()))
                 .Throws(new HttpException(new HttpResponse(new HttpRequest("http://localhost/"), new HttpHeader(), new CookieCollection(), "unauthorized", 0, HttpStatusCode.Unauthorized, new Version("1.0"))));
 
-            // Act / Assert
             Assert.Throws<NzbDrone.Common.Http.HttpException>(() => Subject.GetIndexers(settings));
 
-            // No warning is logged by GetIndexers on unauthorized (it throws before the API-key-specific log path)
             ExceptionVerification.ExpectedWarns(0);
         }
     }

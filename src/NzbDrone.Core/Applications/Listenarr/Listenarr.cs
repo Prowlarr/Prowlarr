@@ -498,49 +498,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                 field.Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
             }
 
-            if (indexer.Protocol == DownloadProtocol.Torrent)
-            {
-                var torrentSettings = indexer.Settings as ITorrentIndexerSettings;
-
-                var appMinimumSeeders = torrentSettings?.TorrentBaseSettings.AppMinimumSeeders ?? indexer.AppProfile?.Value?.MinimumSeeders ?? 0;
-
-                field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "minimumSeeders");
-                if (field != null)
-                {
-                    field.Value = appMinimumSeeders;
-                }
-
-                field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio");
-                if (field != null)
-                {
-                    field.Value = torrentSettings?.TorrentBaseSettings.SeedRatio;
-                }
-
-                field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime");
-                if (field != null)
-                {
-                    field.Value = torrentSettings?.TorrentBaseSettings.SeedTime;
-                }
-
-                if (listenarrIndexer.Fields.Any(x => x.Name == "seedCriteria.discographySeedTime"))
-                {
-                    field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "seedCriteria.discographySeedTime");
-                    if (field != null)
-                    {
-                        field.Value = torrentSettings?.TorrentBaseSettings.PackSeedTime ?? torrentSettings?.TorrentBaseSettings.SeedTime;
-                    }
-                }
-
-                if (listenarrIndexer.Fields.Any(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing"))
-                {
-                    field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "rejectBlocklistedTorrentHashesWhileGrabbing");
-                    if (field != null)
-                    {
-                        field.Value = Settings.SyncRejectBlocklistedTorrentHashesWhileGrabbing;
-                    }
-                }
-            }
-
             return listenarrIndexer;
         }
     }

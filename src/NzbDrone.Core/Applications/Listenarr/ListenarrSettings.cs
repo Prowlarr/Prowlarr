@@ -39,9 +39,6 @@ namespace NzbDrone.Core.Applications.Listenarr
         [FieldDefinition(3, Label = "Sync Categories", Type = FieldType.Select, SelectOptions = typeof(NewznabCategoryFieldConverter), HelpText = "Only Indexers that support these categories will be synced", Advanced = true)]
         public IEnumerable<int> SyncCategories { get; set; }
 
-        [FieldDefinition(4, Type = FieldType.Checkbox, Label = "ApplicationSettingsSyncRejectBlocklistedTorrentHashes", HelpText = "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
-        public bool SyncRejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
-
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

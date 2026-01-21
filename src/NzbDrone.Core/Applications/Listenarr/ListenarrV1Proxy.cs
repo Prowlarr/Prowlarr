@@ -111,47 +111,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                     return new List<ListenarrIndexer> { obj.ToObject<ListenarrIndexer>() };
                 }
 
-            if (token.Type == Newtonsoft.Json.Linq.JTokenType.Array)
-                {
-                    var list = new List<ListenarrIndexer>();
-
-                    foreach (var item in (Newtonsoft.Json.Linq.JArray)token)
-                    {
-                        if (item.Type != Newtonsoft.Json.Linq.JTokenType.Object)
-                        {
-                            throw new JsonReaderException("Unexpected JSON token while parsing Listenarr schema array");
-                        }
-
-                        var obj = (Newtonsoft.Json.Linq.JObject)item;
-
-                        if (obj["fields"] is Newtonsoft.Json.Linq.JObject fieldsObj2)
-                        {
-                            var fieldsArray = new Newtonsoft.Json.Linq.JArray();
-
-                            foreach (var prop in fieldsObj2.Properties())
-                            {
-                                if (prop.Value.Type == Newtonsoft.Json.Linq.JTokenType.Object)
-                                {
-                                    var fieldItem = (Newtonsoft.Json.Linq.JObject)prop.Value;
-                                    fieldItem["name"] = prop.Name;
-                                    fieldsArray.Add(fieldItem);
-                                }
-                                else
-                                {
-                                    var fieldItem = new Newtonsoft.Json.Linq.JObject { ["name"] = prop.Name, ["value"] = prop.Value };
-                                    fieldsArray.Add(fieldItem);
-                                }
-                            }
-
-                            obj["fields"] = fieldsArray;
-                        }
-
-                        list.Add(obj.ToObject<ListenarrIndexer>());
-                    }
-
-                    return list;
-                }
-
             throw new JsonReaderException("Unexpected JSON token while parsing Listenarr schema");
         }
 

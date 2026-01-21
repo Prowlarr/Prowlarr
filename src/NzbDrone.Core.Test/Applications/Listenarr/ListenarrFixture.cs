@@ -35,8 +35,6 @@ namespace NzbDrone.Core.Test.Applications.Listenarr
 
             Mocker.GetMock<IConfigFileProvider>().SetupGet(c => c.ApiKey).Returns("abc");
 
-            // Ensure cache calls execute factory each time during tests to avoid stale cached values
-            // Use ICached<List<ListenarrIndexer>> mock via dynamic mocking to avoid depending on concrete implementation
             var cached = new Mock<ICached<List<ListenarrIndexer>>>();
             cached.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<Func<List<ListenarrIndexer>>>(), It.IsAny<TimeSpan>()))
                   .Returns<string, Func<List<ListenarrIndexer>>, TimeSpan>((k, f, t) => f());

@@ -47,9 +47,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                 testIndexer.Capabilities.Categories.AddCategoryMapping(1, cat);
             }
 
-            // Call the application's TestConnection directly, consistent with other application implementations.
-            // Some applications do not expose a reliable system status endpoint, so we rely on the indexer test itself
-            // to provide actionable feedback (auth, version, connectivity etc.).
             try
             {
                 failures.AddIfNotNull(_listenarrV1Proxy.TestConnection(BuildListenarrIndexer(testIndexer, testIndexer.Capabilities, DownloadProtocol.Usenet), Settings));
@@ -112,7 +109,6 @@ namespace NzbDrone.Core.Applications.Listenarr
 
                 if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                 {
-                    // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
                     mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerId = indexer.Id });
                 }
             }
@@ -142,7 +138,6 @@ namespace NzbDrone.Core.Applications.Listenarr
 
             var listenarrIndexer = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol);
 
-            // If an existing remote indexer already points to this app indexer (matching baseUrl or name), insert mapping and skip adding
             try
             {
                 var remoteIndexers = _listenarrV1Proxy.GetIndexers(Settings);
@@ -198,7 +193,6 @@ namespace NzbDrone.Core.Applications.Listenarr
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 
-            // If there is no mapping, treat this as an add instead of an update
             if (indexerMapping == null)
             {
                 if ((indexerCapabilities.MusicSearchAvailable || indexerCapabilities.SearchAvailable) &&
@@ -225,7 +219,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                     }
                     else
                     {
-                        // If add returned null or failed, try to discover existing remote indexer by baseUrl or name
                         try
                         {
                             var remoteIndexers = _listenarrV1Proxy.GetIndexers(Settings);
@@ -259,7 +252,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                 return;
             }
 
-            // If mapping exists but contains an invalid remote id (0), remove and re-add if possible
             if (indexerMapping.RemoteIndexerId == 0)
             {
                 _logger.Warn("Mapping for indexer {0} contains invalid remote id 0, removing mapping and re-adding if possible", indexer.Id);
@@ -335,30 +327,25 @@ namespace NzbDrone.Core.Applications.Listenarr
                     if ((indexerCapabilities.MusicSearchAvailable || indexerCapabilities.SearchAvailable) &&
                         indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
-                        // Retain user fields not-affiliated with Prowlarr
+
                         if (remoteIndexer.Fields != null)
                         {
                             listenarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => listenarrIndexer.Fields.All(s => s.Name != f.Name)));
                         }
 
-                        // Retain user tags not-affiliated with Prowlarr
                         if (remoteIndexer.Tags != null)
                         {
                             listenarrIndexer.Tags.UnionWith(remoteIndexer.Tags);
                         }
 
-                        // Retain user settings not-affiliated with Prowlarr
                         listenarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
 
-                        // Ensure ID is in sync with remote before updating
                         listenarrIndexer.Id = remoteIndexer.Id;
 
-                        // Update the indexer if it still has categories that match
                         _listenarrV1Proxy.UpdateIndexer(listenarrIndexer, Settings);
                     }
                     else
                     {
-                        // Else remove it, it no longer should be used
                         _listenarrV1Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
                         _appIndexerMapService.Delete(indexerMapping.Id);
                     }
@@ -389,10 +376,8 @@ namespace NzbDrone.Core.Applications.Listenarr
             var schemas = _schemaCache.Get(cacheKey, () => _listenarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
             var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime", "rejectBlocklistedTorrentHashesWhileGrabbing" };
 
-            // Validate schema presence and contents. Listenarr can sometimes return no schema or an unexpected shape
             if (schemas == null || !schemas.Any())
             {
-                // Try refreshing schemas directly from proxy in case the cache is empty or stale
                 try
                 {
                     schemas = _listenarrV1Proxy.GetIndexerSchema(Settings);
@@ -412,7 +397,6 @@ namespace NzbDrone.Core.Applications.Listenarr
 
             if (id == 0)
             {
-                // Ensuring backward compatibility with older versions on first sync
                 syncFields.AddRange(new List<string> { "additionalParameters" });
             }
 
@@ -449,7 +433,6 @@ namespace NzbDrone.Core.Applications.Listenarr
 
             listenarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
-            // Validate required fields exist to avoid NullReferenceExceptions when accessing their values
             var requiredFieldNames = new List<string> { "baseUrl", "apiPath", "apiKey", "categories" };
             var missing = requiredFieldNames.Where(f => listenarrIndexer.Fields.All(x => x.Name != f)).ToList();
 
@@ -457,7 +440,6 @@ namespace NzbDrone.Core.Applications.Listenarr
             {
                 _logger.Debug("Cached schema is missing required fields [{0}]. Attempting to refresh schema from proxy", string.Join(", ", missing));
 
-                // Try a single direct refresh from the proxy in case cache is stale
                 try
                 {
                     var freshSchemas = _listenarrV1Proxy.GetIndexerSchema(Settings);

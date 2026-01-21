@@ -95,7 +95,6 @@ namespace NzbDrone.Core.Applications.Listenarr
                             }
                             else
                             {
-                                // Primitive -> wrap into value
                                 var item = new Newtonsoft.Json.Linq.JObject { ["name"] = prop.Name, ["value"] = prop.Value };
                                 fieldsArray.Add(item);
                             }
@@ -248,7 +247,6 @@ namespace NzbDrone.Core.Applications.Listenarr
             }
             catch (HttpException)
             {
-                // Bubble HttpExceptions to be handled by the caller similar to other proxies
                 throw;
             }
         }

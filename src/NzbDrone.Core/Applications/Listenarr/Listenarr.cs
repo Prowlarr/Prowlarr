@@ -90,17 +90,17 @@ namespace NzbDrone.Core.Applications.Listenarr
 
         public override List<AppIndexerMap> GetIndexerMappings()
         {
-            var indexers = (_listenarrV1Proxy.GetIndexers(Settings) ?? new List<ListenarrIndexer>())
+            var indexers = _listenarrV1Proxy.GetIndexers(Settings)
                 .Where(i => i.Implementation is "Newznab" or "Torznab");
 
             var mappings = new List<AppIndexerMap>();
 
             foreach (var indexer in indexers)
             {
-                var baseUrl = (string)indexer.Fields?.FirstOrDefault(x => x.Name == "baseUrl")?.Value ?? string.Empty;
+                var baseUrl = (string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl")?.Value ?? string.Empty;
 
                 if (!baseUrl.StartsWith(Settings.ProwlarrUrl.TrimEnd('/')) &&
-                    (string)indexer.Fields?.FirstOrDefault(x => x.Name == "apiKey")?.Value != _configFileProvider.ApiKey)
+                    (string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value != _configFileProvider.ApiKey)
                 {
                     continue;
                 }
@@ -109,6 +109,7 @@ namespace NzbDrone.Core.Applications.Listenarr
 
                 if (match.Groups["indexer"].Success && int.TryParse(match.Groups["indexer"].Value, out var indexerId))
                 {
+                    // Add parsed mapping if it's mapped to a Indexer in this Prowlarr instance
                     mappings.Add(new AppIndexerMap { IndexerId = indexerId, RemoteIndexerId = indexer.Id });
                 }
             }
@@ -137,27 +138,6 @@ namespace NzbDrone.Core.Applications.Listenarr
             _logger.Trace("Adding indexer {0} [{1}]", indexer.Name, indexer.Id);
 
             var listenarrIndexer = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol);
-
-            try
-            {
-                var remoteIndexers = _listenarrV1Proxy.GetIndexers(Settings);
-                var baseUrl = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
-
-                var match = remoteIndexers.FirstOrDefault(r =>
-                    ((string)r.Fields.FirstOrDefault(f => f.Name == "baseUrl")?.Value ?? "").Equals(baseUrl, StringComparison.InvariantCultureIgnoreCase)
-                    || (r.Name?.Contains(indexer.Name, StringComparison.InvariantCultureIgnoreCase) == true));
-
-                if (match != null)
-                {
-                    _logger.Debug("Found existing remote indexer for {0} as {1} [{2}], inserting mapping", indexer.Name, match.Name, match.Id);
-                    _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = match.Id });
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Warn(ex, "Error while attempting to discover existing remote indexer for {0} [{1}]", indexer.Name, indexer.Id);
-            }
 
             var remoteIndexer = _listenarrV1Proxy.AddIndexer(listenarrIndexer, Settings);
 
@@ -193,126 +173,7 @@ namespace NzbDrone.Core.Applications.Listenarr
             var appMappings = _appIndexerMapService.GetMappingsForApp(Definition.Id);
             var indexerMapping = appMappings.FirstOrDefault(m => m.IndexerId == indexer.Id);
 
-            if (indexerMapping == null)
-            {
-                if ((indexerCapabilities.MusicSearchAvailable || indexerCapabilities.SearchAvailable) &&
-                    indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
-                {
-                    _logger.Debug("No mapping found for {0} [{1}], adding to Listenarr", indexer.Name, indexer.Id);
-
-                    var listenarrIndexerToAdd = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol);
-                    listenarrIndexerToAdd.Id = 0;
-                    ListenarrIndexer newRemoteIndexer = null;
-
-                    try
-                    {
-                        newRemoteIndexer = _listenarrV1Proxy.AddIndexer(listenarrIndexerToAdd, Settings);
-                    }
-                    catch (HttpException ex)
-                    {
-                        _logger.Warn(ex, "Failed to add indexer {0} [{1}] to Listenarr: {2}", indexer.Name, indexer.Id, ex.Response?.StatusCode);
-                    }
-
-                    if (newRemoteIndexer != null)
-                    {
-                        _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
-                    }
-                    else
-                    {
-                        try
-                        {
-                            var remoteIndexers = _listenarrV1Proxy.GetIndexers(Settings);
-                            var baseUrl = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
-
-                            var match = remoteIndexers.FirstOrDefault(r =>
-                                ((string)r.Fields.FirstOrDefault(f => f.Name == "baseUrl")?.Value ?? "").Equals(baseUrl, StringComparison.InvariantCultureIgnoreCase)
-                                || (r.Name?.Contains(indexer.Name, StringComparison.InvariantCultureIgnoreCase) == true));
-
-                            if (match != null)
-                            {
-                                _logger.Debug("Found existing remote indexer for {0} as {1} [{2}], inserting mapping", indexer.Name, match.Name, match.Id);
-                                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = match.Id });
-                            }
-                            else
-                            {
-                                _logger.Debug("No remote indexer found for {0} after failing to add; skipping mapping", indexer.Name);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Warn(ex, "Error while attempting to discover existing remote indexer for {0} [{1}]", indexer.Name, indexer.Id);
-                        }
-                    }
-                }
-                else
-                {
-                    _logger.Debug("No mapping found for {0} [{1}], skipping add due to indexer capabilities", indexer.Name, indexer.Id);
-                }
-
-                return;
-            }
-
-            if (indexerMapping.RemoteIndexerId == 0)
-            {
-                _logger.Warn("Mapping for indexer {0} contains invalid remote id 0, removing mapping and re-adding if possible", indexer.Id);
-                _appIndexerMapService.Delete(indexerMapping.Id);
-
-                if ((indexerCapabilities.MusicSearchAvailable || indexerCapabilities.SearchAvailable) &&
-                    indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
-                {
-                    var listenarrIndexerToAdd = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol);
-                    listenarrIndexerToAdd.Id = 0;
-                    ListenarrIndexer newRemoteIndexer = null;
-
-                    try
-                    {
-                        newRemoteIndexer = _listenarrV1Proxy.AddIndexer(listenarrIndexerToAdd, Settings);
-                    }
-                    catch (HttpException ex)
-                    {
-                        _logger.Warn(ex, "Failed to add indexer {0} [{1}] to Listenarr: {2}", indexer.Name, indexer.Id, ex.Response?.StatusCode);
-                    }
-
-                    if (newRemoteIndexer != null)
-                    {
-                        _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
-                    }
-                    else
-                    {
-                        try
-                        {
-                            var remoteIndexers = _listenarrV1Proxy.GetIndexers(Settings);
-                            var baseUrl = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
-
-                            var match = remoteIndexers.FirstOrDefault(r =>
-                                ((string)r.Fields.FirstOrDefault(f => f.Name == "baseUrl")?.Value ?? "").Equals(baseUrl, StringComparison.InvariantCultureIgnoreCase)
-                                || (r.Name?.Contains(indexer.Name, StringComparison.InvariantCultureIgnoreCase) == true));
-
-                            if (match != null)
-                            {
-                                _logger.Debug("Found existing remote indexer for {0} as {1} [{2}], inserting mapping", indexer.Name, match.Name, match.Id);
-                                _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = match.Id });
-                            }
-                            else
-                            {
-                                _logger.Debug("No remote indexer found for {0} after failing to add; skipping mapping", indexer.Name);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Warn(ex, "Error while attempting to discover existing remote indexer for {0} [{1}]", indexer.Name, indexer.Id);
-                        }
-                    }
-                }
-                else
-                {
-                    _logger.Debug("Skipping re-add due to indexer capabilities for {0} [{1}]", indexer.Name, indexer.Id);
-                }
-
-                return;
-            }
-
-            var listenarrIndexer = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol, indexerMapping.RemoteIndexerId);
+            var listenarrIndexer = BuildListenarrIndexer(indexer, indexerCapabilities, indexer.Protocol, indexerMapping?.RemoteIndexerId ?? 0);
 
             var remoteIndexer = _listenarrV1Proxy.GetIndexer(indexerMapping.RemoteIndexerId, Settings);
 
@@ -327,24 +188,21 @@ namespace NzbDrone.Core.Applications.Listenarr
                     if ((indexerCapabilities.MusicSearchAvailable || indexerCapabilities.SearchAvailable) &&
                         indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()).Any())
                     {
-                        if (remoteIndexer.Fields != null)
-                        {
-                            listenarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => listenarrIndexer.Fields.All(s => s.Name != f.Name)));
-                        }
+                        // Retain user fields not-affiliated with Prowlarr
+                        listenarrIndexer.Fields.AddRange(remoteIndexer.Fields.Where(f => listenarrIndexer.Fields.All(s => s.Name != f.Name)));
 
-                        if (remoteIndexer.Tags != null)
-                        {
-                            listenarrIndexer.Tags.UnionWith(remoteIndexer.Tags);
-                        }
+                        // Retain user tags not-affiliated with Prowlarr
+                        listenarrIndexer.Tags.UnionWith(remoteIndexer.Tags);
 
+                        // Retain user settings not-affiliated with Prowlarr
                         listenarrIndexer.DownloadClientId = remoteIndexer.DownloadClientId;
 
-                        listenarrIndexer.Id = remoteIndexer.Id;
-
+                        // Update the indexer if it still has categories that match
                         _listenarrV1Proxy.UpdateIndexer(listenarrIndexer, Settings);
                     }
                     else
                     {
+                        // Else remove it, it no longer should be used
                         _listenarrV1Proxy.RemoveIndexer(remoteIndexer.Id, Settings);
                         _appIndexerMapService.Delete(indexerMapping.Id);
                     }
@@ -360,11 +218,11 @@ namespace NzbDrone.Core.Applications.Listenarr
                     _logger.Debug("Remote indexer not found, re-adding {0} [{1}] to Listenarr", indexer.Name, indexer.Id);
                     listenarrIndexer.Id = 0;
                     var newRemoteIndexer = _listenarrV1Proxy.AddIndexer(listenarrIndexer, Settings);
-
-                    if (newRemoteIndexer != null)
-                    {
-                        _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
-                    }
+                    _appIndexerMapService.Insert(new AppIndexerMap { AppId = Definition.Id, IndexerId = indexer.Id, RemoteIndexerId = newRemoteIndexer.Id });
+                }
+                else
+                {
+                    _logger.Debug("Remote indexer not found for {0} [{1}], skipping re-add to Listenarr due to indexer capabilities", indexer.Name, indexer.Id);
                 }
             }
         }
@@ -373,56 +231,20 @@ namespace NzbDrone.Core.Applications.Listenarr
         {
             var cacheKey = $"{Settings.BaseUrl}";
             var schemas = _schemaCache.Get(cacheKey, () => _listenarrV1Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
-            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "seedCriteria.discographySeedTime", "rejectBlocklistedTorrentHashesWhileGrabbing" };
+            var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime" };
 
-            if (schemas == null || !schemas.Any())
-            {
-                try
-                {
-                    schemas = _listenarrV1Proxy.GetIndexerSchema(Settings);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to fetch indexer schemas from Listenarr at {0}", Settings.BaseUrl);
-                    schemas = null;
-                }
-            }
+            var newznab = schemas.First(i => i.Implementation == "Newznab");
+            var torznab = schemas.First(i => i.Implementation == "Torznab");
 
-            if (schemas == null || !schemas.Any())
-            {
-                _logger.Warn("No indexer schemas were returned from Listenarr at {0}", Settings.BaseUrl);
-                throw new ApplicationException("Listenarr returned no indexer schemas. Ensure Listenarr exposes '/api/v1/indexer/schema' and that it returns a JSON array of schemas containing 'Newznab' or 'Torznab'.");
-            }
-
-            if (id == 0)
-            {
-                syncFields.AddRange(new List<string> { "additionalParameters" });
-            }
-
-            var newznab = schemas.FirstOrDefault(i => string.Equals(i.Implementation, "Newznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Newznab", StringComparison.InvariantCultureIgnoreCase))));
-            var torznab = schemas.FirstOrDefault(i => string.Equals(i.Implementation, "Torznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Torznab", StringComparison.InvariantCultureIgnoreCase))));
-
-            if (newznab == null && torznab == null)
-            {
-                _logger.Warn("Indexer schemas are missing 'Newznab' and 'Torznab' implementations from Listenarr at {0}", Settings.BaseUrl);
-                throw new ApplicationException("Listenarr indexer schema must include at least one of 'Newznab' or 'Torznab' implementations.");
-            }
-
-            var schema = protocol == DownloadProtocol.Usenet ? newznab ?? torznab : torznab ?? newznab;
-
-            if (schema == null)
-            {
-                _logger.Warn("No schema available for protocol {0} from Listenarr at {1}", protocol, Settings.BaseUrl);
-                throw new ApplicationException($"Listenarr indexer schema does not contain a suitable implementation for protocol {protocol}.");
-            }
+            var schema = protocol == DownloadProtocol.Usenet ? newznab : torznab;
 
             var listenarrIndexer = new ListenarrIndexer
             {
                 Id = id,
                 Name = $"{indexer.Name} (Prowlarr)",
-                EnableRss = indexer.Enable && (indexer.AppProfile?.Value?.EnableRss ?? false),
-                EnableAutomaticSearch = indexer.Enable && (indexer.AppProfile?.Value?.EnableAutomaticSearch ?? false),
-                EnableInteractiveSearch = indexer.Enable && (indexer.AppProfile?.Value?.EnableInteractiveSearch ?? false),
+                EnableRss = indexer.Enable && indexer.AppProfile.Value.EnableRss,
+                EnableAutomaticSearch = indexer.Enable && indexer.AppProfile.Value.EnableAutomaticSearch,
+                EnableInteractiveSearch = indexer.Enable && indexer.AppProfile.Value.EnableInteractiveSearch,
                 Priority = indexer.Priority,
                 Implementation = indexer.Protocol == DownloadProtocol.Usenet ? "Newznab" : "Torznab",
                 ConfigContract = schema.ConfigContract,
@@ -432,71 +254,10 @@ namespace NzbDrone.Core.Applications.Listenarr
 
             listenarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
-            var requiredFieldNames = new List<string> { "baseUrl", "apiPath", "apiKey", "categories" };
-            var missing = requiredFieldNames.Where(f => listenarrIndexer.Fields.All(x => x.Name != f)).ToList();
-
-            if (missing.Any())
-            {
-                _logger.Debug("Cached schema is missing required fields [{0}]. Attempting to refresh schema from proxy", string.Join(", ", missing));
-
-                try
-                {
-                    var freshSchemas = _listenarrV1Proxy.GetIndexerSchema(Settings);
-
-                    if (freshSchemas != null && freshSchemas.Any())
-                    {
-                        var freshNewznab = freshSchemas.FirstOrDefault(i => string.Equals(i.Implementation, "Newznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Newznab", StringComparison.InvariantCultureIgnoreCase))));
-                        var freshTorznab = freshSchemas.FirstOrDefault(i => string.Equals(i.Implementation, "Torznab", StringComparison.InvariantCultureIgnoreCase) || (i.Implementations != null && i.Implementations.Any(s => string.Equals(s, "Torznab", StringComparison.InvariantCultureIgnoreCase))));
-
-                        var freshSchema = protocol == DownloadProtocol.Usenet ? freshNewznab ?? freshTorznab : freshTorznab ?? freshNewznab;
-
-                        if (freshSchema != null)
-                        {
-                            listenarrIndexer.Fields = freshSchema.Fields.Where(x => syncFields.Contains(x.Name)).ToList();
-                            missing = requiredFieldNames.Where(f => listenarrIndexer.Fields.All(x => x.Name != f)).ToList();
-
-                            if (!missing.Any())
-                            {
-                                _logger.Debug("Fresh schema contained required fields; proceeding with fresh schema");
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.Warn(ex, "Unable to refresh indexer schemas from Listenarr at {0}", Settings.BaseUrl);
-                }
-            }
-
-            if (missing.Any())
-            {
-                _logger.Warn("Indexer schema missing required fields [{0}] from Listenarr at {1}", string.Join(", ", missing), Settings.BaseUrl);
-                throw new ApplicationException($"Listenarr indexer schema missing required fields: {string.Join(", ", missing)}. Ensure '/api/v1/indexer/schema' includes these fields.");
-            }
-
-            var field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl");
-            if (field != null)
-            {
-                field.Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
-            }
-
-            field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath");
-            if (field != null)
-            {
-                field.Value = "/api";
-            }
-
-            field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey");
-            if (field != null)
-            {
-                field.Value = _configFileProvider.ApiKey;
-            }
-
-            field = listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories");
-            if (field != null)
-            {
-                field.Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
-            }
+            listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
+            listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
+            listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
+            listenarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
 
             return listenarrIndexer;
         }

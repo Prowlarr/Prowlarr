@@ -15,12 +15,12 @@ namespace NzbDrone.Core.Applications.Listenarr
         public string Name { get; set; }
         public string ImplementationName { get; set; }
         public string Implementation { get; set; }
-        public List<string> Implementations { get; set; }
         public string ConfigContract { get; set; }
         public string InfoLink { get; set; }
         public int? DownloadClientId { get; set; }
         public HashSet<int> Tags { get; set; }
         public List<ListenarrField> Fields { get; set; }
+
         public bool Equals(ListenarrIndexer other)
         {
             if (ReferenceEquals(null, other))
@@ -28,28 +28,37 @@ namespace NzbDrone.Core.Applications.Listenarr
                 return false;
             }
 
-            // baseUrl comparison (case-insensitive)
-            var baseUrlEqual = string.Equals(
-                (string)Fields.FirstOrDefault(x => x.Name == "baseUrl")?.Value,
-                (string)other.Fields.FirstOrDefault(x => x.Name == "baseUrl")?.Value,
-                StringComparison.InvariantCultureIgnoreCase);
+            var baseUrl = (string)Fields.FirstOrDefault(x => x.Name == "baseUrl").Value == (string)other.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value;
+            var cats = JToken.DeepEquals((JArray)Fields.FirstOrDefault(x => x.Name == "categories").Value, (JArray)other.Fields.FirstOrDefault(x => x.Name == "categories").Value);
 
-            // categories deep equality
-            var catsEqual = JToken.DeepEquals(
-                (JArray)Fields.FirstOrDefault(x => x.Name == "categories")?.Value,
-                (JArray)other.Fields.FirstOrDefault(x => x.Name == "categories")?.Value);
-
-            // apiKey: treat masked remote key as equal
             var apiKey = (string)Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value;
             var otherApiKey = (string)other.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value;
-            var apiKeyEqual = apiKey == otherApiKey || otherApiKey == "********";
+            var apiKeyCompare = apiKey == otherApiKey || otherApiKey == "********";
 
-            // apiPath compare (could be null)
-            var apiPath = Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value;
-            var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value;
-            var apiPathEqual = Equals(apiPath, otherApiPath);
+            var apiPath = Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
+            var otherApiPath = other.Fields.FirstOrDefault(x => x.Name == "apiPath")?.Value == null ? null : other.Fields.FirstOrDefault(x => x.Name == "apiPath").Value;
+            var apiPathCompare = apiPath.Equals(otherApiPath);
 
-            return apiKeyEqual && apiPathEqual && baseUrlEqual && catsEqual;
+            var minimumSeeders = Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
+            var otherMinimumSeeders = other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "minimumSeeders").Value);
+            var minimumSeedersCompare = minimumSeeders == otherMinimumSeeders;
+
+            var seedTime = Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime")?.Value == null ? null : (int?)Convert.ToInt32(Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value);
+            var otherSeedTime = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime")?.Value == null ? null : (int?)Convert.ToInt32(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedTime").Value);
+            var seedTimeCompare = seedTime == otherSeedTime;
+
+            var seedRatio = Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
+            var otherSeedRatio = other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio")?.Value == null ? null : (double?)Convert.ToDouble(other.Fields.FirstOrDefault(x => x.Name == "seedCriteria.seedRatio").Value);
+            var seedRatioCompare = seedRatio == otherSeedRatio;
+
+            return other.EnableRss == EnableRss &&
+                other.EnableAutomaticSearch == EnableAutomaticSearch &&
+                other.EnableInteractiveSearch == EnableInteractiveSearch &&
+                other.Name == Name &&
+                other.Implementation == Implementation &&
+                other.Priority == Priority &&
+                other.Id == Id &&
+                apiKeyCompare && apiPathCompare && baseUrl && cats && minimumSeedersCompare && seedRatioCompare && seedTimeCompare;
         }
     }
 }

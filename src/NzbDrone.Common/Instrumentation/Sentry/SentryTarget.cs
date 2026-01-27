@@ -178,7 +178,7 @@ namespace NzbDrone.Common.Instrumentation.Sentry
         {
             SentrySdk.ConfigureScope(scope =>
             {
-                scope.SetTag("is_docker", $"{osInfo.IsDocker}");
+                scope.SetTag("is_containerized", $"{osInfo.IsContainerized}");
 
                 if (osInfo.Name != null && !OsInfo.IsWindows)
                 {

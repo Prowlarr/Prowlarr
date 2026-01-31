@@ -126,7 +126,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
             else if (tmdbId > 0)
             {
-                body.Add("tmdb_id", tmdbId);
+                body.Add("tmdb_id", $"movie/{tmdbId}");
             }
 
             if (searchTerm.IsNotNullOrWhiteSpace())

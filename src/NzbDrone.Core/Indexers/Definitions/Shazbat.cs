@@ -94,7 +94,9 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
 
     protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
     {
-        return (httpResponse.HasHttpRedirect && httpResponse.RedirectUrl.ContainsIgnoreCase("login")) || httpResponse.Content.ContainsIgnoreCase("sign in now");
+        return (httpResponse.HasHttpRedirect && httpResponse.RedirectUrl.ContainsIgnoreCase("login")) ||
+               httpResponse.Content.ContainsIgnoreCase("sign in now") ||
+               (httpResponse.Content.ContainsIgnoreCase("fullRedirect") && httpResponse.Content.ContainsIgnoreCase("login"));
     }
 
     private IndexerCapabilities SetCapabilities()

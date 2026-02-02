@@ -755,5 +755,13 @@
     "IndexerFileListSettingsFreeleechOnlyHelpText": "只搜索免费发布",
     "IndexerFileListSettingsUsernameHelpText": "网站用户名",
     "IndexerBeyondHDSettingsRefundOnlyHelpText": "Search refund only",
-    "DownloadClientUTorrentProviderMessage": "由于uTorrent以加密软件、恶意软件和广告而闻名，我们建议切换到更好的客户端，例如qBittorrent、Deluge或ruTorrent。"
+    "DownloadClientUTorrentProviderMessage": "由于uTorrent以加密软件、恶意软件和广告而闻名，我们建议切换到更好的客户端，例如qBittorrent、Deluge或ruTorrent。",
+    "IndexerId": "索引器",
+    "IndexerSettingsPasskey": "通行密钥",
+    "IndexerBeyondHDSettingsRefundOnly": "只读",
+    "IndexerBeyondHDSettingsRewindOnly": "只读",
+    "IndexerBeyondHDSettingsRssKeyHelpText": "来自网站的API密钥(在我的安全 => API密钥)",
+    "IndexerHDBitsSettingsFreeleechOnlyHelpText": "只搜索免费发布",
+    "IndexerHDBitsSettingsOrigins": "原始",
+    "IndexerPassThePopcornSettingsApiUserHelpText": "这些设置位于 PassThePopcorn 安全设置中（编辑个人资料 > 安全，Edit Profile > Security）。"
 }

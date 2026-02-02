@@ -104,7 +104,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.TV, "TV/Packs");
             caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.TVSD, "TV/SD/x264");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.TVHD, "TV/x264");
-            caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.TVUHD, "TV/x265");
+            caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.TVx265, "TV/x265");
+            caps.Categories.AddCategoryMapping(104, NewznabStandardCategory.TVUHD, "TV/4K");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/XviD");
 
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "PC/Games");

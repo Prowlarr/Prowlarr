@@ -670,5 +670,20 @@
     "IndexerTorrentSyndikatSettingsApiKeyHelpText": "Site API-sleutel",
     "SearchTypes": "Zoek types",
     "IndexerAlphaRatioSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases",
-    "IndexerAvistazSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases"
+    "IndexerAvistazSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases",
+    "BookSearchTypes": "Zoek types",
+    "SyncProfile": "Synchronisatieprofiel toevoegen",
+    "TVSearchTypes": "Zoek types",
+    "ManageDownloadClients": "Downloadprogramma's",
+    "MovieSearchTypes": "Zoek types",
+    "IndexerTagsHelpTextWarning": "Gebruik tags met voorzichtigheid, ze kunnen onbedoelde effecten hebben. Een app met een tag zal alleen synchroniseren met indexers die dezelfde tag hebben.",
+    "MusicSearchTypes": "Zoek types",
+    "MovieSearch": "Bulk Films Zoeken",
+    "TvSearch": "Zoeken",
+    "IndexerStatus": "Indexeerder Instellingen",
+    "SyncProfiles": "Synchronisatieprofiel toevoegen",
+    "SearchType": "Zoek types",
+    "Proxies": "Profielen",
+    "IndexerHDBitsSettingsFreeleechOnlyHelpText": "Doorzoek alleen freeleech releases",
+    "SearchAllIndexers": "Zoek indexeerder"
 }

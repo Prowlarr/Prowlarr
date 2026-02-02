@@ -5,5 +5,13 @@
     "Username": "用户名",
     "AcceptConfirmationModal": "中文",
     "Backup": "备份",
-    "BackupNow": "立即备份"
+    "BackupNow": "立即备份",
+    "Backups": "备份",
+    "UnableToAddANewAppProfilePleaseTryAgain": "添加",
+    "UnableToAddANewApplicationPleaseTryAgain": "添加",
+    "UnableToAddANewDownloadClientPleaseTryAgain": "添加",
+    "UnableToAddANewIndexerPleaseTryAgain": "添加",
+    "UnableToAddANewIndexerProxyPleaseTryAgain": "添加",
+    "UnableToAddANewNotificationPleaseTryAgain": "添加",
+    "Actions": "操作"
 }

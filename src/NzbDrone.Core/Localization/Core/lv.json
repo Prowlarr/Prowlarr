@@ -16,5 +16,21 @@
     "AddIndexerImplementation": "Pievienot Nosacījumu - {implementationName}",
     "AddIndexerProxyImplementation": "Pievienot Nosacījumu - {implementationName}",
     "AddApplicationImplementation": "Pievienot Savienojumu - {implementationName}",
-    "EditIndexerProxyImplementation": "Pievienot Nosacījumu - {implementationName}"
+    "EditIndexerProxyImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "Connections": "Pievienot Savienojumu",
+    "DownloadClient": "Pievienot Lejupielādes Klientu",
+    "DownloadClients": "Pievienot Lejupielādes Klientu",
+    "EditSyncProfile": "Pievienot Aizkaves Profilu",
+    "AddDownloadClientImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "EditDownloadClientImplementation": "Pievienot Nosacījumu - {implementationName}",
+    "AddSyncProfile": "Pievienot Aizkaves Profilu",
+    "ConnectionLost": "Pievienot Savienojumu",
+    "DeleteDownloadClient": "Pievienot Lejupielādes Klientu",
+    "DownloadClientSettings": "Pievienot Lejupielādes Klientu",
+    "SyncProfile": "Pievienot Aizkaves Profilu",
+    "SyncProfiles": "Pievienot Aizkaves Profilu",
+    "DeleteClientCategory": "Pievienot Lejupielādes Klientu",
+    "DeleteSelectedDownloadClients": "Pievienot Lejupielādes Klientu",
+    "EditSelectedDownloadClients": "Pievienot Lejupielādes Klientu",
+    "ManageDownloadClients": "Pievienot Lejupielādes Klientu"
 }

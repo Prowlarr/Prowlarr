@@ -87,6 +87,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.MoviesSD, "Movies/480p");
             caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.MoviesBluRay, "Movies/Bluray");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.MoviesBluRay, "Movies/Bluray-Full");
+            caps.Categories.AddCategoryMapping(103, NewznabStandardCategory.MoviesSD, "Movies/Cam");
             caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.MoviesDVD, "Movies/DVD-R");
             caps.Categories.AddCategoryMapping(21, NewznabStandardCategory.MoviesSD, "Movies/MP4");
             caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.MoviesForeign, "Movies/Non-English");
@@ -96,6 +97,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.MoviesSD, "Movies/XviD");
 
             caps.Categories.AddCategoryMapping(24, NewznabStandardCategory.TVSD, "TV/480p");
+            caps.Categories.AddCategoryMapping(104, NewznabStandardCategory.TVUHD, "TV/4K");
             caps.Categories.AddCategoryMapping(32, NewznabStandardCategory.TVHD, "TV/Bluray");
             caps.Categories.AddCategoryMapping(31, NewznabStandardCategory.TVSD, "TV/DVD-R");
             caps.Categories.AddCategoryMapping(33, NewznabStandardCategory.TVSD, "TV/DVD-Rip");
@@ -105,7 +107,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(26, NewznabStandardCategory.TVSD, "TV/SD/x264");
             caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.TVHD, "TV/x264");
             caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.TVx265, "TV/x265");
-            caps.Categories.AddCategoryMapping(104, NewznabStandardCategory.TVUHD, "TV/4K");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/XviD");
 
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "PC/Games");

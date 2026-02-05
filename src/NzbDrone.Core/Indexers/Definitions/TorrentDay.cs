@@ -83,8 +83,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             };
 
-            caps.Categories.AddCategoryMapping(96, NewznabStandardCategory.MoviesUHD, "Movie/4K");
             caps.Categories.AddCategoryMapping(25, NewznabStandardCategory.MoviesSD, "Movies/480p");
+            caps.Categories.AddCategoryMapping(96, NewznabStandardCategory.MoviesUHD, "Movie/4K");
             caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.MoviesBluRay, "Movies/Bluray");
             caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.MoviesBluRay, "Movies/Bluray-Full");
             caps.Categories.AddCategoryMapping(103, NewznabStandardCategory.MoviesSD, "Movies/Cam");
@@ -109,10 +109,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(34, NewznabStandardCategory.TVx265, "TV/x265");
             caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.TVSD, "TV/XviD");
 
+            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.ConsoleNDS, "Nintendo");
             caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "PC/Games");
             caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.ConsolePS3, "PS");
             caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.ConsolePSP, "PSP");
-            caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.ConsoleNDS, "Nintendo");
             caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.ConsoleXBox, "Xbox");
 
             caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.AudioMP3, "Music/Audio");

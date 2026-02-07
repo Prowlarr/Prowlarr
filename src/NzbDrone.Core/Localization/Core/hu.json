@@ -708,5 +708,7 @@
     "IndexerNewznabSettingsApiKeyHelpText": "Webhely API-kulcsa",
     "IndexerNzbIndexSettingsApiKeyHelpText": "Webhely API-kulcsa",
     "IndexerPassThePopcornSettingsApiKeyHelpText": "Webhely API-kulcsa",
-    "IndexerTorrentSyndikatSettingsApiKeyHelpText": "Webhely API-kulcsa"
+    "IndexerTorrentSyndikatSettingsApiKeyHelpText": "Webhely API-kulcsa",
+    "OnGrabHelpText": "A kiadás megragadásakor",
+    "OnHealthRestoredHelpText": "Az állapot stabilizálódásakor"
 }

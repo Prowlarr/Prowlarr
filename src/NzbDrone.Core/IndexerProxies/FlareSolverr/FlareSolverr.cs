@@ -58,7 +58,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
-                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
+                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + flaresolverrResponse.StatusCode);
             }
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
@@ -71,7 +71,20 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             InjectCookies(newRequest, result);
 
-            //Request again with User-Agent and Cookies from Flaresolverr
+            // Use FlareSolverr's response body directly — a second HTTP request
+            // gets 403'd because cf_clearance is bound to the solver's TLS fingerprint
+            if (result.Solution.Response.IsNotNullOrWhiteSpace())
+            {
+                return new HttpResponse(
+                    response.Request,
+                    response.Headers,
+                    response.Cookies,
+                    result.Solution.Response,
+                    response.ElapsedTime,
+                    HttpStatusCode.OK);
+            }
+
+            // Fallback: if FlareSolverr returned no body, try cookies (original behavior)
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;

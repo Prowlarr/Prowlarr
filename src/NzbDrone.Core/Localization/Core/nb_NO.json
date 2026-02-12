@@ -191,5 +191,18 @@
     "SyncProfiles": "Legg til forsinkelsesprofil",
     "DeleteClientCategory": "Slett Nedlastingsklient",
     "DeleteSelectedDownloadClients": "Nedlastingsklient",
-    "EditSelectedDownloadClients": "Nedlastingsklient"
+    "EditSelectedDownloadClients": "Nedlastingsklient",
+    "AppUpdated": "{appName} Oppdatert",
+    "AppUpdatedVersion": "{appName} er oppdatert til `{version}`, for å aktivere de siste endringene må du laste inn {appName} på ny.",
+    "AuthenticationMethodHelpTextWarning": "Vennligst velg en valid autentiserings metode.",
+    "AuthenticationRequired": "Verefisering påkrevd",
+    "AddCategory": "Legg til kategori",
+    "AddIndexerProxy": "Legg til indexer Proxy",
+    "AddRemoveOnly": "Legg til og fjern kun",
+    "AddToDownloadClient": "Legg til ny utgave i nedlastingsagenten",
+    "AddedToDownloadClient": "Ny utgave lagt til klient",
+    "AdvancedSettingsHiddenClickToShow": "Avanserte innstillinger er skjult. Klikk for å vise",
+    "AdvancedSettingsShownClickToHide": "Avanserte innstilinger vises.Klikk for å skjule",
+    "AppProfileInUse": "App profil i bruk",
+    "ApplicationLongTermStatusCheckAllClientMessage": "Alle indexere er ikke tilgjengelig på grunn av feil i mer enn 6 timer"
 }

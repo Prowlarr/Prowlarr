@@ -807,5 +807,5 @@
     "FailedToFetchSettings": "Falha ao obter configurações",
     "CurrentlyInstalled": "Atualmente instalado",
     "PreviouslyInstalled": "Instalado anteriormente",
-    "DownloadClientUTorrentProviderMessage": "O uTorrent tem um histórico de incluir criptomineradores, malware e anúncios, recomendamos que você escolha outro cliente de download."
+    "DownloadClientUTorrentProviderMessage": "O uTorrent tem um histórico de inclusão de criptomineradores, malware e anúncios. Recomendamos fortemente que você escolha um cliente diferente."
 }

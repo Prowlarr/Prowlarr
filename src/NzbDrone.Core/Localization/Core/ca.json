@@ -804,7 +804,7 @@
     "DownloadClientRTorrentSettingsAddStopped": "Afegeix aturat",
     "DownloadClientRTorrentSettingsAddStoppedHelpText": "En activar s'afegiran torrents i imants a rTorrent en un estat aturat. Això pot trencar els fitxers magnet.",
     "DownloadClientFreeboxSettingsAppTokenHelpText": "S'ha recuperat el testimoni de l'aplicació en crear l'accés a l'API de Freebox (ex: 'app_token')",
-    "DownloadClientUTorrentProviderMessage": "uTorrent té un historial d'inclusió de criptominers, programari maliciós i anuncis, us animem a triar un client diferent.",
+    "DownloadClientUTorrentProviderMessage": "uTorrent té historial d'incloure criptominers, malware i anuncis, suggerim fortament que escolleixis un client diferent.",
     "DownloadClientQbittorrentSettingsInitialStateHelpText": "Estat inicial dels torrents afegits a qBittorrent. Tingueu en compte que els torrents forçats no compleixen amb les restriccions de llavors",
     "LogSizeLimit": "Límit de la mida del registre",
     "SelectDownloadClientModalTitle": "{modalTitle} - Seleccioneu el client de baixada"

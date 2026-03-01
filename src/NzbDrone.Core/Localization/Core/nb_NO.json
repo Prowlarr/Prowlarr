@@ -5,7 +5,7 @@
     "AddingTag": "Legger til tag",
     "All": "Alle",
     "Analytics": "Analyse",
-    "AppDataDirectory": "AppData -katalog",
+    "AppDataDirectory": "AppData Katalog",
     "ApplyTags": "Bruk Tags",
     "Authentication": "Godkjenning",
     "Automatic": "Automatisk",
@@ -204,5 +204,11 @@
     "AdvancedSettingsHiddenClickToShow": "Avanserte innstillinger er skjult. Klikk for å vise",
     "AdvancedSettingsShownClickToHide": "Avanserte innstilinger vises.Klikk for å skjule",
     "AppProfileInUse": "App profil i bruk",
-    "ApplicationLongTermStatusCheckAllClientMessage": "Alle indexere er ikke tilgjengelig på grunn av feil i mer enn 6 timer"
+    "ApplicationLongTermStatusCheckAllClientMessage": "Alle indexere er ikke tilgjengelig på grunn av feil i mer enn 6 timer",
+    "Any": "Hvilken som helst",
+    "AuthenticationRequiredHelpText": "Endre hvilke forespørsler som krever autentisering. Ikke endre dette med mindre du forstår risikoen.",
+    "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Gjenta nytt passord",
+    "AuthenticationRequiredPasswordHelpTextWarning": "Oppgi nytt passord",
+    "AuthenticationRequiredUsernameHelpTextWarning": "Oppgi nytt bruernavn",
+    "AuthenticationRequiredWarning": "For å forhindre ekstern tilgang uten pålogging, krever {appName} nå at autentisering er aktivert. Du kan velge å deaktivere autentisering for lokale adresser."
 }

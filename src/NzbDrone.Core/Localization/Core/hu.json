@@ -643,7 +643,7 @@
     "DownloadClientRTorrentSettingsUrlPathHelpText": "Az XMLRPC végpont elérési útja, lásd: {url}. ruTorrent használata esetén ez általában az RPC2 vagy a [ruTorrent elérési útvonala]{url2}.",
     "DownloadClientSettingsDestinationHelpText": "A letöltési útvonal kézi beállítása. Ha üresen marad, az alapértelmezett lesz használva",
     "DownloadClientSettingsUrlBaseHelpText": "Prefixet ad a(z) {clientName} hivatkozáshoz, például: {url}",
-    "DownloadClientUTorrentProviderMessage": "uTorrent korábban többször is tartalmazott kriptobányászokat, kártevőket és hirdetéseket, ezért erősen javasoljuk, hogy válasszon másik klienst.",
+    "DownloadClientUTorrentProviderMessage": "A uTorrent múltjában előfordult, hogy kriptobányászót, kártevőket és reklámokat tartalmazott, ezért erősen javasoljuk, hogy válasszon egy másik klienst.",
     "TheLogLevelDefault": "A naplózási szint alapértéke a 'Debug', ez megváltoztatható az Általános beállítások/beállítások/általános menüpontban",
     "IndexerHDBitsSettingsCodecsHelpText": "Ha nincs megadva, minden lehetőség felhasználásra kerül.",
     "IndexerHDBitsSettingsMediumsHelpText": "Ha nincs megadva, minden lehetőség felhasználásra kerül.",

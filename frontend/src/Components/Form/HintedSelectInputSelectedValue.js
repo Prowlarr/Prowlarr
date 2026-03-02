@@ -24,7 +24,7 @@ function HintedSelectInputSelectedValue(props) {
     >
       <div className={styles.valueText}>
         {
-          isMultiSelect ?
+          isMultiSelect && Array.isArray(value) ?
             value.map((key, index) => {
               const v = valuesMap[key];
               return (

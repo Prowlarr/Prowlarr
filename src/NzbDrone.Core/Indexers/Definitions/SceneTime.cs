@@ -233,12 +233,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return releaseInfos; // no results
             }
 
-            var headerColumns = table.QuerySelectorAll("tbody > tr > td.cat_Head").Select(x => x.TextContent).ToList();
-            var categoryIndex = headerColumns.FindIndex(x => x.Equals("Type"));
-            var nameIndex = headerColumns.FindIndex(x => x.Equals("Name"));
-            var sizeIndex = headerColumns.FindIndex(x => x.Equals("Size"));
-            var seedersIndex = headerColumns.FindIndex(x => x.Equals("Seeders"));
-            var leechersIndex = headerColumns.FindIndex(x => x.Equals("Leechers"));
+            var headerColumns = table.QuerySelectorAll("tbody > tr > td.cat_Head")
+                                     .Select(x => x.GetAttribute("title").IsNotNullOrWhiteSpace() ? x.GetAttribute("title") : x.TextContent)
+                                     .ToList();
+            var categoryIndex = headerColumns.FindIndex(x => x.Equals("Type", StringComparison.OrdinalIgnoreCase));
+            var nameIndex = headerColumns.FindIndex(x => x.Equals("Name", StringComparison.OrdinalIgnoreCase));
+            var sizeIndex = headerColumns.FindIndex(x => x.Equals("Size", StringComparison.OrdinalIgnoreCase));
+            var seedersIndex = headerColumns.FindIndex(x => x.Equals("Seeder(s)", StringComparison.OrdinalIgnoreCase));
+            var leechersIndex = headerColumns.FindIndex(x => x.Equals("Leecher(s)", StringComparison.OrdinalIgnoreCase));
 
             var rows = dom.QuerySelectorAll("tr.browse");
 

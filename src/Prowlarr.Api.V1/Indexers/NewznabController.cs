@@ -58,6 +58,11 @@ namespace NzbDrone.Api.V1.Indexers
         [HttpGet("{id:int}/api")]
         public async Task<IActionResult> GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
         {
+            if (!SupportsExtendedSearchParameters(Request.Path))
+            {
+                request.searchMode = null;
+            }
+
             var requestType = request.t;
             request.source = Request.GetSource();
             request.server = Request.GetServerUrl();
@@ -204,6 +209,12 @@ namespace NzbDrone.Api.V1.Indexers
                 default:
                     return CreateResponse(CreateErrorXML(202, $"No such function ({requestType})"), statusCode: StatusCodes.Status400BadRequest);
             }
+        }
+
+        internal static bool SupportsExtendedSearchParameters(PathString path)
+        {
+            return path.Value?.StartsWith("/api/v1/indexer/", StringComparison.OrdinalIgnoreCase) == true &&
+                   path.Value.EndsWith("/newznab", StringComparison.OrdinalIgnoreCase);
         }
 
         [HttpGet("/api/v1/indexer/{id:int}/download")]

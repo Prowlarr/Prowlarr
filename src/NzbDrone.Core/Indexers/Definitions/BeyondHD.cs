@@ -389,6 +389,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(7, Label = "IndexerBeyondHDSettingsRewindOnly", Type = FieldType.Checkbox, HelpText = "IndexerBeyondHDSettingsRewindOnlyHelpText")]
         public bool RewindOnly { get; set; }
 
+        [SearchConstraint]
         [FieldDefinition(8, Label = "IndexerBeyondHDSettingsSearchTypes", Type = FieldType.Select, SelectOptions = typeof(BeyondHDSearchType), HelpText = "IndexerBeyondHDSettingsSearchTypesHelpText", Advanced = true)]
         public IEnumerable<int> SearchTypes { get; set; }
 

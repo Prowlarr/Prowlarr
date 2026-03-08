@@ -9,7 +9,7 @@ namespace Prowlarr.Api.V1.DownloadClient
         public bool Enable { get; set; }
         public DownloadProtocol Protocol { get; set; }
         public int Priority { get; set; }
-        public List<DownloadClientCategory> Categories { get; set; }
+        public List<DownloadClientCategory> Categories { get; set; } = [];
         public bool SupportsCategories { get; set; }
     }
 

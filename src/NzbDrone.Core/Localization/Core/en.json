@@ -429,7 +429,7 @@
   "IndexerSettingsQueryLimit": "Query Limit",
   "IndexerSettingsQueryLimitHelpText": "The number of max queries as specified by the respective unit that {appName} will allow to the site",
   "IndexerSettingsQueryTimeout": "Query Timeout",
-  "IndexerSettingsQueryTimeoutHelpText": "Query timeout in milliseconds for this indexer. Default is 100000 ms (100s). Increase for slow indexers, decrease for faster failure detection",
+  "IndexerSettingsQueryTimeoutHelpText": "Query timeout in seconds for this indexer. Default is 100s. Increase for slow indexers, decrease for faster failure detection",
   "IndexerSettingsRssKey": "RSS Key",
   "IndexerSettingsSeedRatio": "Seed Ratio",
   "IndexerSettingsSeedRatioHelpText": "The ratio a torrent should reach before stopping, empty uses the download client's default. Ratio should be at least 1.0 and follow the indexers rules",

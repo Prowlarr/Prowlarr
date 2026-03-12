@@ -526,8 +526,8 @@ namespace NzbDrone.Core.Indexers
             catch (TaskCanceledException ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                var timeoutMs = Settings.BaseSettings?.QueryTimeout ?? 100000;
-                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout ({0} ms). [{1}]", timeoutMs, url);
+                var timeoutSec = Settings.BaseSettings?.QueryTimeout ?? 100;
+                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout ({0}s). [{1}]", timeoutSec, url);
             }
             catch (Exception ex)
             {
@@ -664,7 +664,7 @@ namespace NzbDrone.Core.Indexers
 
             if (request.HttpRequest.RequestTimeout == TimeSpan.Zero && Settings.BaseSettings != null)
             {
-                request.HttpRequest.RequestTimeout = TimeSpan.FromMilliseconds(Settings.BaseSettings.QueryTimeout);
+                request.HttpRequest.RequestTimeout = TimeSpan.FromSeconds(Settings.BaseSettings.QueryTimeout);
             }
 
             var response = await RetryStrategy
@@ -844,8 +844,8 @@ namespace NzbDrone.Core.Indexers
 
                 if (webException.Message.Contains("timed out"))
                 {
-                    var timeoutMs = Settings.BaseSettings?.QueryTimeout ?? 100000;
-                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, request timed out after " + timeoutMs + " ms. Consider increasing the Query Timeout in the indexer advanced settings. " + webException.Message);
+                    var timeoutSec = Settings.BaseSettings?.QueryTimeout ?? 100;
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, request timed out after " + timeoutSec + "s. Consider increasing the Query Timeout in the indexer advanced settings. " + webException.Message);
                 }
 
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||

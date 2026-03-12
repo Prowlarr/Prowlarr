@@ -526,7 +526,8 @@ namespace NzbDrone.Core.Indexers
             catch (TaskCanceledException ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout. [{0}]", url);
+                var timeoutMs = Settings.BaseSettings?.QueryTimeout ?? 100000;
+                _logger.Warn(ex, "Unable to connect to indexer, possibly due to a timeout ({0} ms). [{1}]", timeoutMs, url);
             }
             catch (Exception ex)
             {
@@ -660,6 +661,11 @@ namespace NzbDrone.Core.Indexers
 
             request.HttpRequest.SuppressHttpError = true;
             request.HttpRequest.Encoding ??= Encoding;
+
+            if (request.HttpRequest.RequestTimeout == TimeSpan.Zero && Settings.BaseSettings != null)
+            {
+                request.HttpRequest.RequestTimeout = TimeSpan.FromMilliseconds(Settings.BaseSettings.QueryTimeout);
+            }
 
             var response = await RetryStrategy
                 .ExecuteAsync(static async (state, _) => await state._httpClient.ExecuteProxiedAsync(state.HttpRequest, state.Definition), (_httpClient, request.HttpRequest, Definition))
@@ -836,8 +842,14 @@ namespace NzbDrone.Core.Indexers
                     return new ValidationFailure(string.Empty, "Unable to connect to indexer connection failure. Check your connection to the indexer's server and DNS." + webException.Message);
                 }
 
+                if (webException.Message.Contains("timed out"))
+                {
+                    var timeoutMs = Settings.BaseSettings?.QueryTimeout ?? 100000;
+                    return new ValidationFailure(string.Empty, "Unable to connect to indexer, request timed out after " + timeoutMs + " ms. Consider increasing the Query Timeout in the indexer advanced settings. " + webException.Message);
+                }
+
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
-                    webException.Message.Contains("504") || webException.Message.Contains("timed out"))
+                    webException.Message.Contains("504"))
                 {
                     return new ValidationFailure(string.Empty, "Unable to connect to indexer, indexer's server is unavailable. Try again later. " + webException.Message);
                 }

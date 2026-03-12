@@ -662,9 +662,9 @@ namespace NzbDrone.Core.Indexers
             request.HttpRequest.SuppressHttpError = true;
             request.HttpRequest.Encoding ??= Encoding;
 
-            if (request.HttpRequest.RequestTimeout == TimeSpan.Zero && Settings.BaseSettings != null)
+            if (request.HttpRequest.RequestTimeout == TimeSpan.Zero && Settings.BaseSettings is { QueryLimit: not null })
             {
-                request.HttpRequest.RequestTimeout = TimeSpan.FromSeconds(Settings.BaseSettings.QueryTimeout);
+                request.HttpRequest.RequestTimeout = TimeSpan.FromSeconds(Settings.BaseSettings.QueryTimeout.Value);
             }
 
             var response = await RetryStrategy

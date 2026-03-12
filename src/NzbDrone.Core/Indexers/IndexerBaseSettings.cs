@@ -19,6 +19,7 @@ namespace NzbDrone.Core.Indexers
 
             RuleFor(c => c.QueryTimeout)
                 .InclusiveBetween(1, 300)
+                .When(c => c.QueryLimit.HasValue)
                 .WithMessage("Must be between 1 and 300 seconds (5 minutes)");
         }
     }
@@ -35,7 +36,7 @@ namespace NzbDrone.Core.Indexers
         public int LimitsUnit { get; set; } = (int)IndexerLimitsUnit.Day;
 
         [FieldDefinition(4, Type = FieldType.Number, Label = "IndexerSettingsQueryTimeout", Unit = "seconds", HelpText = "IndexerSettingsQueryTimeoutHelpText", Advanced = true)]
-        public int QueryTimeout { get; set; } = 100;
+        public int? QueryTimeout { get; set; }
     }
 
     public enum IndexerLimitsUnit

@@ -19,13 +19,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
     {
         private static readonly AvistazSettingsValidator Validator = new();
 
-        public AvistazSettings()
-        {
-            Token = "";
-            FreeleechOnly = false;
-        }
-
-        public string Token { get; set; }
+        public string Token { get; set; } = string.Empty;
 
         [FieldDefinition(2, Label = "Username", HelpText = "IndexerAvistazSettingsUsernameHelpText", HelpTextWarning = "IndexerAvistazSettingsUsernameHelpTextWarning", Privacy = PrivacyLevel.UserName)]
         public string Username { get; set; }

@@ -233,25 +233,22 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return releaseInfos; // no results
             }
 
-            var headerColumns = table.QuerySelectorAll("tbody > tr > td.cat_Head")
-                                     .Select(x => x.GetAttribute("title").IsNotNullOrWhiteSpace() ? x.GetAttribute("title") : x.TextContent)
-                                     .ToList();
+            var headerColumns = table.QuerySelectorAll("thead > tr > th.cat_Head")
+                .Select(x => x.GetAttribute("title").IsNotNullOrWhiteSpace() ? x.GetAttribute("title") : x.TextContent)
+                .ToList();
             var categoryIndex = headerColumns.FindIndex(x => x.Equals("Type", StringComparison.OrdinalIgnoreCase));
             var nameIndex = headerColumns.FindIndex(x => x.Equals("Name", StringComparison.OrdinalIgnoreCase));
             var sizeIndex = headerColumns.FindIndex(x => x.Equals("Size", StringComparison.OrdinalIgnoreCase));
             var seedersIndex = headerColumns.FindIndex(x => x.Equals("Seeder(s)", StringComparison.OrdinalIgnoreCase));
             var leechersIndex = headerColumns.FindIndex(x => x.Equals("Leecher(s)", StringComparison.OrdinalIgnoreCase));
 
-            var rows = dom.QuerySelectorAll("tr.browse");
+            var rows = table.QuerySelectorAll("tbody > tr");
 
             foreach (var row in rows)
             {
                 var qDescCol = row.Children[nameIndex];
                 var qLink = qDescCol.QuerySelector("a");
-
-                // Clean up title
-                qLink.QuerySelectorAll("font[color=\"green\"]").ToList().ForEach(e => e.Remove());
-                var title = qLink.TextContent.Trim();
+                var title = qLink.QuerySelector("span.torrent-text").TextContent.Trim();
 
                 var infoUrl = _settings.BaseUrl + qLink.GetAttribute("href")?.TrimStart('/');
                 var torrentId = ParseUtil.GetArgumentFromQueryString(infoUrl, "id");
@@ -276,7 +273,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Size = ParseUtil.GetBytes(row.Children[sizeIndex].TextContent),
                     Seeders = seeders,
                     Peers = ParseUtil.CoerceInt(row.Children[leechersIndex].TextContent.Trim()) + seeders,
-                    DownloadVolumeFactor = row.QuerySelector("font > b:contains(Freeleech)") != null ? 0 : 1,
+                    DownloadVolumeFactor = row.QuerySelector("span.tag.free") is not null ? 0 : 1,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,
                     MinimumSeedTime = 259200 // 72 hours

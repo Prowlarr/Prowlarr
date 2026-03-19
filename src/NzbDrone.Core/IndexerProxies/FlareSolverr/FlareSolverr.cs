@@ -63,6 +63,10 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
 
+            _logger.Debug("FlareSolverr response status: {0}, message: {1}", result.Status, result.Message);
+            _logger.Debug("FlareSolverr solution has response body: {0} (length: {1})", result.Solution.Response.IsNotNullOrWhiteSpace(), result.Solution.Response?.Length ?? 0);
+            _logger.Debug("FlareSolverr returned {0} cookies, UA: {1}", result.Solution.Cookies?.Length ?? 0, result.Solution.UserAgent);
+
             var newRequest = response.Request;
 
             //Cache the user-agent so we can inject it in next request to avoid re-solve
@@ -75,6 +79,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             // gets 403'd because cf_clearance is bound to the solver's TLS fingerprint
             if (result.Solution.Response.IsNotNullOrWhiteSpace())
             {
+                _logger.Debug("Using FlareSolverr response body directly (skipping cookie retry)");
                 return new HttpResponse(
                     response.Request,
                     response.Headers,
@@ -85,7 +90,9 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             }
 
             // Fallback: if FlareSolverr returned no body, try cookies (original behavior)
+            _logger.Debug("Attempting cookie-based retry for {0}", newRequest.Url);
             var finalResponse = _httpClient.Execute(newRequest);
+            _logger.Debug("Cookie retry response: {0} (CF protected: {1})", finalResponse.StatusCode, CloudFlareDetectionService.IsCloudflareProtected(finalResponse));
 
             return finalResponse;
         }

@@ -82,11 +82,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             var searchUrl = SearchUrl + "?" + searchParameters.GetQueryString();
 
-            // TODO: Change to HttpAccept.Json after they fix the issue with missing headers
-            var request = new IndexerRequest(searchUrl, HttpAccept.Html);
-            request.HttpRequest.Headers.Add("Authorization", $"Bearer {Settings.Token}");
+            var request = new IndexerRequest(searchUrl, HttpAccept.Json);
+            request.HttpRequest.Headers.Set("Authorization", $"Bearer {Settings.Token}");
 
-            request.HttpRequest.SuppressHttpErrorStatusCodes = new[] { HttpStatusCode.NotFound };
+            request.HttpRequest.SuppressHttpErrorStatusCodes = [HttpStatusCode.NotFound];
 
             yield return request;
         }

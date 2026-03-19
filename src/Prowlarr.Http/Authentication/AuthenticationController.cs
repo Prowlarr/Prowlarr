@@ -72,7 +72,7 @@ namespace Prowlarr.Http.Authentication
                 return Unauthorized();
             }
 
-            if (returnUrl.IsNullOrWhiteSpace())
+            if (returnUrl.IsNullOrWhiteSpace() || !Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(_configFileProvider.UrlBase + "/");
             }

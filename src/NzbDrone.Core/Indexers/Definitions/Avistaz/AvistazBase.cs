@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -21,7 +20,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(6);
         public override IndexerCapabilities Capabilities => SetCapabilities();
         protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
-        private IIndexerRepository _indexerRepository;
+        private readonly IIndexerRepository _indexerRepository;
 
         public AvistazBase(IIndexerRepository indexerRepository,
                        IIndexerHttpClient httpClient,
@@ -57,7 +56,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             try
             {
-                Settings.Token = await GetToken();
+                Settings.Token = await GetToken().ConfigureAwait(false);
 
                 if (Definition.Id > 0)
                 {
@@ -66,7 +65,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
                 _logger.Debug("Avistaz authentication succeeded.");
             }
-            catch (HttpException ex) when (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
+            catch (HttpException ex) when (ex.Response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.UnprocessableEntity)
             {
                 _logger.Warn(ex, "Failed to authenticate with Avistaz");
 
@@ -90,11 +89,11 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         {
             try
             {
-                await GetToken();
+                await GetToken().ConfigureAwait(false);
             }
             catch (HttpException ex)
             {
-                if (ex.Response.StatusCode == HttpStatusCode.Unauthorized)
+                if (ex.Response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.UnprocessableEntity)
                 {
                     _logger.Warn(ex, "Unauthorized request to indexer");
 
@@ -110,10 +109,10 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             {
                 _logger.Warn(ex, "Unable to connect to indexer");
 
-                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details");
+                return new ValidationFailure(string.Empty, "Unable to connect to indexer, check the log above the ValidationFailure for more details. " + ex.Message);
             }
 
-            return await base.TestConnection();
+            return await base.TestConnection().ConfigureAwait(false);
         }
 
         private async Task<string> GetToken()
@@ -121,18 +120,17 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             var requestBuilder = new HttpRequestBuilder(LoginUrl)
             {
                 LogResponseContent = true,
-                Method = HttpMethod.Post
             };
 
-            // TODO: Change to HttpAccept.Json after they fix the issue with missing headers
             var authLoginRequest = requestBuilder
+                .Post()
                 .AddFormParameter("username", Settings.Username)
                 .AddFormParameter("password", Settings.Password)
                 .AddFormParameter("pid", Settings.Pid.Trim())
-                .Accept(HttpAccept.Html)
+                .Accept(HttpAccept.Json)
                 .Build();
 
-            var response = await ExecuteAuth(authLoginRequest);
+            var response = await ExecuteAuth(authLoginRequest).ConfigureAwait(false);
 
             if (!STJson.TryDeserialize<AvistazAuthResponse>(response.Content, out var authResponse))
             {

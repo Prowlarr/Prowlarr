@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
@@ -112,25 +111,26 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var queryParams = new NebulanceQuery
+            var queryParams = new NameValueCollection
             {
-                Age = ">0"
+                { "action", "search" },
+                { "age", ">0" },
             };
 
             if (searchCriteria.TvMazeId is > 0)
             {
-                queryParams.TvMaze = searchCriteria.TvMazeId.Value;
+                queryParams.Set("tvmaze", searchCriteria.TvMazeId.ToString());
             }
             else if (searchCriteria.ImdbId.IsNotNullOrWhiteSpace())
             {
-                queryParams.Imdb = searchCriteria.FullImdbId;
+                queryParams.Set("imdb", searchCriteria.FullImdbId);
             }
 
             var searchQuery = searchCriteria.SanitizedSearchTerm.Trim();
 
             if (searchQuery.IsNotNullOrWhiteSpace())
             {
-                queryParams.Release = searchQuery;
+                queryParams.Set("release", searchQuery);
             }
 
             if (searchCriteria.Season.HasValue &&
@@ -139,43 +139,43 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 if (searchQuery.IsNotNullOrWhiteSpace())
                 {
-                    queryParams.Name = searchQuery;
+                    queryParams.Set("name", searchQuery);
                 }
 
-                queryParams.Release = showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture);
+                queryParams.Set("release", showDate.ToString("yyyy.MM.dd", CultureInfo.InvariantCulture));
             }
             else
             {
                 if (searchCriteria.Season.HasValue)
                 {
-                    queryParams.Season = searchCriteria.Season.Value;
+                    queryParams.Set("season", searchCriteria.Season.Value.ToString());
                 }
 
                 if (searchCriteria.Episode.IsNotNullOrWhiteSpace() && int.TryParse(searchCriteria.Episode, out var episodeNumber))
                 {
-                    queryParams.Episode = episodeNumber;
+                    queryParams.Set("episode", episodeNumber.ToString());
                 }
             }
 
-            if ((queryParams.Season.HasValue || queryParams.Episode.HasValue) &&
-                queryParams.Name.IsNullOrWhiteSpace() &&
-                queryParams.Release.IsNullOrWhiteSpace() &&
-                !queryParams.TvMaze.HasValue &&
-                queryParams.Imdb.IsNullOrWhiteSpace())
+            if ((queryParams.Get("season").IsNotNullOrWhiteSpace() || queryParams.Get("episode").IsNotNullOrWhiteSpace()) &&
+                queryParams.Get("name").IsNullOrWhiteSpace() &&
+                queryParams.Get("release").IsNullOrWhiteSpace() &&
+                queryParams.Get("tvmaze").IsNullOrWhiteSpace() &&
+                queryParams.Get("imdb").IsNullOrWhiteSpace())
             {
-                _logger.Debug("NBL API does not support season calls without name, series, id, imdb, tvmaze, or time keys.");
+                _logger.Warn("NBL API does not support season calls without name, series, id, imdb, tvmaze, or time keys.");
 
                 return new IndexerPageableRequestChain();
             }
 
-            if (queryParams.Name is { Length: > 0 and < 3 } || queryParams.Release is { Length: > 0 and < 3 })
+            if (queryParams.Get("name") is { Length: > 0 and < 3 } || queryParams.Get("release") is { Length: > 0 and < 3 })
             {
-                _logger.Debug("NBL API does not support release calls that are 2 characters or fewer.");
+                _logger.Warn("NBL API does not support release calls that are 2 characters or fewer.");
 
                 return new IndexerPageableRequestChain();
             }
 
-            pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
+            pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria));
 
             return pageableRequests;
         }
@@ -189,40 +189,45 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            var queryParams = new NebulanceQuery
+            var queryParams = new NameValueCollection
             {
-                Age = ">0"
+                { "action", "search" },
+                { "age", ">0" },
             };
 
             var searchQuery = searchCriteria.SanitizedSearchTerm.Trim();
 
             if (searchQuery.IsNotNullOrWhiteSpace())
             {
-                queryParams.Release = searchQuery;
+                queryParams.Set("release", searchQuery);
             }
 
-            if (queryParams.Release is { Length: > 0 and < 3 })
+            if (queryParams.Get("release") is { Length: > 0 and < 3 })
             {
                 _logger.Debug("NBL API does not support release calls that are 2 characters or fewer.");
 
                 return new IndexerPageableRequestChain();
             }
 
-            pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria.Limit, searchCriteria.Offset));
+            pageableRequests.Add(GetPagedRequests(queryParams, searchCriteria));
 
             return pageableRequests;
         }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(NebulanceQuery parameters, int? results, int? offset)
+        private IEnumerable<IndexerRequest> GetPagedRequests(NameValueCollection parameters, SearchCriteriaBase searchCriteria)
         {
-            var apiUrl = _settings.BaseUrl + "api.php";
+            parameters.Set("api_key", _settings.ApiKey);
+            parameters.Set("per_page", searchCriteria.Limit.GetValueOrDefault(100).ToString());
 
-            var builder = new JsonRpcRequestBuilder(apiUrl)
-                .Call("getTorrents", _settings.ApiKey, parameters, results ?? 100, offset ?? 0);
+            if (searchCriteria.Limit > 0 && searchCriteria.Offset > 0)
+            {
+                var page = searchCriteria.Offset / searchCriteria.Limit;
+                parameters.Set("page", page.ToString());
+            }
 
-            builder.SuppressHttpError = true;
+            var apiUrl = $"{_settings.BaseUrl}api.php?{parameters.GetQueryString()}";
 
-            yield return new IndexerRequest(builder.Build());
+            yield return new IndexerRequest(apiUrl, HttpAccept.Json);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -244,16 +249,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                STJson.TryDeserialize<JsonRpcResponse<NebulanceErrorResponse>>(indexerResponse.HttpResponse.Content, out var errorResponse);
-
-                throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request: {1}", indexerResponse.HttpResponse.StatusCode, errorResponse?.Result?.Error?.Message ?? "Check the logs for more information.");
+                throw new IndexerException(indexerResponse, "Unexpected response status '{0}' code from indexer request. Check the logs for more information.", indexerResponse.HttpResponse.StatusCode);
             }
 
-            JsonRpcResponse<NebulanceResponse> jsonResponse;
+            NebulanceResponse jsonResponse;
 
             try
             {
-                jsonResponse = STJson.Deserialize<JsonRpcResponse<NebulanceResponse>>(indexerResponse.HttpResponse.Content);
+                jsonResponse = STJson.Deserialize<NebulanceResponse>(indexerResponse.HttpResponse.Content);
             }
             catch (Exception ex)
             {
@@ -262,19 +265,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, "Unexpected response from indexer request: {0}", ex, response?.Result ?? ex.Message);
             }
 
-            if (jsonResponse.Error != null || jsonResponse.Result == null)
+            if (jsonResponse.Error != null)
             {
-                throw new IndexerException(indexerResponse, "Indexer API call returned an error [{0}]", jsonResponse.Error);
+                throw new IndexerException(indexerResponse, "Indexer API call returned an error [{0}]", jsonResponse.Error?.Message);
             }
 
-            if (jsonResponse.Result?.Items == null || jsonResponse.Result.Items.Count == 0)
+            if (jsonResponse.TotalResults == 0 || jsonResponse.Items == null || jsonResponse.Items.Count == 0)
             {
                 return torrentInfos;
             }
 
-            var rows = jsonResponse.Result.Items;
-
-            foreach (var row in rows)
+            foreach (var row in jsonResponse.Items)
             {
                 var details = _settings.BaseUrl + "torrents.php?id=" + row.TorrentId;
 
@@ -284,26 +285,30 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     Guid = details,
                     InfoUrl = details,
-                    DownloadUrl = row.Download,
+                    DownloadUrl = row.DownloadLink,
                     Title = title.Trim(),
                     Categories = new List<IndexerCategory> { TvCategoryFromQualityParser.ParseTvShowQuality(row.ReleaseTitle) },
-                    Size = ParseUtil.CoerceLong(row.Size),
-                    Files = row.FileList.Count(),
+                    Size = row.Size,
+                    Files = row.FileList.Count,
                     PublishDate = DateTime.Parse(row.PublishDateUtc, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal),
-                    Grabs = ParseUtil.CoerceInt(row.Snatch),
-                    Seeders = ParseUtil.CoerceInt(row.Seed),
-                    Peers = ParseUtil.CoerceInt(row.Seed) + ParseUtil.CoerceInt(row.Leech),
+                    Grabs = row.Snatch,
+                    Seeders = row.Seed,
+                    Peers = row.Seed + row.Leech,
                     Scene = row.Tags?.ContainsIgnoreCase("scene"),
                     MinimumRatio = 0, // ratioless
-                    MinimumSeedTime = row.Category.ToLower() == "season" ? 432000 : 86400, // 120 hours for seasons and 24 hours for episodes
+                    MinimumSeedTime = row.Category.ToUpperInvariant() == "SEASON" ? 432000 : 86400, // 120 hours for seasons and 24 hours for episodes
                     DownloadVolumeFactor = 0, // ratioless tracker
                     UploadVolumeFactor = 1,
-                    PosterUrl = row.Banner
                 };
 
-                if (row.TvMazeId.IsNotNullOrWhiteSpace())
+                if (row.ImdbId.IsNotNullOrWhiteSpace())
                 {
-                    release.TvMazeId = ParseUtil.CoerceInt(row.TvMazeId);
+                    release.ImdbId = ParseUtil.GetImdbId(row.ImdbId).GetValueOrDefault();
+                }
+
+                if (row.TvMazeId is > 0)
+                {
+                    release.TvMazeId = row.TvMazeId.Value;
                 }
 
                 torrentInfos.Add(release);
@@ -326,100 +331,55 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string ApiKey { get; set; }
     }
 
-    public class NebulanceQuery
-    {
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Id { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Time { get; set; }
-
-        [JsonProperty(PropertyName="age", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Age { get; set; }
-
-        [JsonProperty(PropertyName="tvmaze", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int? TvMaze { get; set; }
-
-        [JsonProperty(PropertyName="imdb", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Imdb { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Hash { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string[] Tags { get; set; }
-
-        [JsonProperty(PropertyName="name", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty(PropertyName="release", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Release { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Category { get; set; }
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Series { get; set; }
-
-        [JsonProperty(PropertyName="season", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int? Season { get; set; }
-
-        [JsonProperty(PropertyName="episode", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int? Episode { get; set; }
-
-        public NebulanceQuery Clone()
-        {
-            return MemberwiseClone() as NebulanceQuery;
-        }
-    }
-
     public class NebulanceResponse
     {
-        public List<NebulanceTorrent> Items { get; set; }
+        [JsonPropertyName("total_results")]
+        public int TotalResults { get; init; }
+
+        public IReadOnlyCollection<NebulanceTorrent> Items { get; init; }
+
+        public NebulanceErrorMessage Error { get; init; }
     }
 
     public class NebulanceTorrent
     {
         [JsonPropertyName("rls_name")]
-        public string ReleaseTitle { get; set; }
+        public string ReleaseTitle { get; init; }
 
         [JsonPropertyName("cat")]
-        public string Category { get; set; }
+        public string Category { get; init; }
 
-        public string Size { get; set; }
-        public string Seed { get; set; }
-        public string Leech { get; set; }
-        public string Snatch { get; set; }
-        public string Download { get; set; }
+        public long Size { get; init; }
+        public int Seed { get; init; }
+        public int Leech { get; init; }
+        public int Snatch { get; init; }
+
+        [JsonPropertyName("download")]
+        public string DownloadLink { get; init; }
 
         [JsonPropertyName("file_list")]
-        public IEnumerable<string> FileList { get; set; } = Array.Empty<string>();
+        public IReadOnlyCollection<string> FileList { get; init; } = [];
 
         [JsonPropertyName("group_name")]
-        public string GroupName { get; set; }
-
-        [JsonPropertyName("series_banner")]
-        public string Banner { get; set; }
+        public string GroupName { get; init; }
 
         [JsonPropertyName("group_id")]
-        public string TorrentId { get; set; }
+        public int TorrentId { get; init; }
 
-        [JsonPropertyName("series_id")]
-        public string TvMazeId { get; set; }
+        [JsonPropertyName("imdb_id")]
+        public string ImdbId { get; init; }
+
+        [JsonPropertyName("tvmaze_id")]
+        public int? TvMazeId { get; init; }
 
         [JsonPropertyName("rls_utc")]
-        public string PublishDateUtc { get; set; }
+        public string PublishDateUtc { get; init; }
 
-        public IEnumerable<string> Tags { get; set; } = Array.Empty<string>();
-    }
-
-    public class NebulanceErrorResponse
-    {
-        public NebulanceErrorMessage Error { get; set; }
+        public IReadOnlyCollection<string> Tags { get; init; } = [];
     }
 
     public class NebulanceErrorMessage
     {
-        public string Message { get; set; }
+        public string Message { get; init; }
     }
 }

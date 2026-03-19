@@ -94,7 +94,9 @@ public class Shazbat : TorrentIndexerBase<ShazbatSettings>
 
     protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
     {
-        return (httpResponse.HasHttpRedirect && httpResponse.RedirectUrl.ContainsIgnoreCase("login")) || httpResponse.Content.ContainsIgnoreCase("sign in now");
+        return (httpResponse.HasHttpRedirect && httpResponse.RedirectUrl.ContainsIgnoreCase("login")) ||
+               httpResponse.Content.ContainsIgnoreCase("sign in now") ||
+               (httpResponse.Content.ContainsIgnoreCase("fullRedirect") && httpResponse.Content.ContainsIgnoreCase("login"));
     }
 
     private IndexerCapabilities SetCapabilities()
@@ -168,9 +170,9 @@ public class ShazbatRequestGenerator : IIndexerRequestGenerator
 
         if (term.IsNotNullOrWhiteSpace())
         {
-            var request = new HttpRequestBuilder(_settings.BaseUrl + "search").Post()
-                .AddFormParameter("search", term)
-                .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+            var request = new HttpRequestBuilder(_settings.BaseUrl + "search")
+                .AddQueryParam("search", term)
+                .AddQueryParam("portlet", "true")
                 .SetHeader("X-Requested-With", "XMLHttpRequest")
                 .SetHeader("Referer", _settings.BaseUrl)
                 .Accept(HttpAccept.Html)
@@ -195,7 +197,7 @@ public class ShazbatRequestGenerator : IIndexerRequestGenerator
         term = Regex.Replace(term, @"(.+)\b\d{4}(\.\d{2}\.\d{2})?\b", "$1");
         term = Regex.Replace(term, @"[\.\s\(\)\[\]]+", " ");
 
-        return term.ToLower().Trim();
+        return term.ToLowerInvariant().Trim();
     }
 
     public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -260,15 +262,15 @@ public partial class ShazbatParser : IParseIndexerResponse
                 var showPageUrl = new HttpRequestBuilder(_settings.BaseUrl + "show")
                     .AddQueryParam("id", show.GetAttribute("data-id"))
                     .Build()
-                    .Url.FullUri;
+                    .Url
+                    .FullUri;
 
-                var showRequest =  new HttpRequestBuilder(_settings.BaseUrl + "show").Post()
+                var showRequest =  new HttpRequestBuilder(_settings.BaseUrl + "show")
                     .SetCookies(indexerResponse.HttpResponse.GetCookies() ?? new Dictionary<string, string>())
                     .AddQueryParam("id", show.GetAttribute("data-id"))
                     .AddQueryParam("show_mode", "torrents")
-                    .AddFormParameter("portlet", "true")
-                    .AddFormParameter("tab", "true")
-                    .SetHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .AddQueryParam("portlet", "true")
+                    .AddQueryParam("tab", "true")
                     .SetHeader("X-Requested-With", "XMLHttpRequest")
                     .SetHeader("Referer", showPageUrl)
                     .Accept(HttpAccept.Html)

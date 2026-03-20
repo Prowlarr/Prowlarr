@@ -31,6 +31,9 @@ namespace NzbDrone.Core.IndexerVersions
 
         private const string DEFINITION_BRANCH = "master";
         private const int DEFINITION_VERSION = 11;
+        private const string DANISHBYTES_API_DEFINITION = "danishbytes-api";
+        private const string DANISHBYTES_URL = "https://danishbytes.club/";
+        private const string NORDICBYTES_URL = "https://nordicbytes.org/";
 
         // Used when moving yml to C#
         private readonly List<string> _definitionBlocklist = new()
@@ -108,6 +111,7 @@ namespace NzbDrone.Core.IndexerVersions
                 var customDefinitionFolder = Path.Combine(_appFolderInfo.AppDataFolder, "Definitions", "Custom");
 
                 indexerList = ReadDefinitionsFromDisk(indexerList, customDefinitionFolder);
+                indexerList = indexerList.Select(UpdateDanishBytesMetaDefinition).ToList();
             }
             catch (Exception ex)
             {
@@ -281,7 +285,57 @@ namespace NzbDrone.Core.IndexerVersions
                 });
             }
 
+            if (string.Equals(definition.Id, DANISHBYTES_API_DEFINITION, StringComparison.OrdinalIgnoreCase))
+            {
+                definition.Links = UpdateDanishBytesLinks(definition.Links);
+                UpdateDanishBytesHelpLinks(definition.Settings);
+            }
+
             return definition;
+        }
+
+        private CardigannMetaDefinition UpdateDanishBytesMetaDefinition(CardigannMetaDefinition definition)
+        {
+            if (definition == null)
+            {
+                return null;
+            }
+
+            if (!string.Equals(definition.Id, DANISHBYTES_API_DEFINITION, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(definition.File, DANISHBYTES_API_DEFINITION, StringComparison.OrdinalIgnoreCase))
+            {
+                return definition;
+            }
+
+            definition.Links = UpdateDanishBytesLinks(definition.Links);
+            UpdateDanishBytesHelpLinks(definition.Settings);
+
+            return definition;
+        }
+
+        private List<string> UpdateDanishBytesLinks(List<string> links)
+        {
+            var updatedLinks = (links ?? new List<string>())
+                .Where(link => !string.Equals(link, NORDICBYTES_URL, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            updatedLinks.Insert(0, NORDICBYTES_URL);
+
+            return updatedLinks;
+        }
+
+        private void UpdateDanishBytesHelpLinks(List<SettingsField> settings)
+        {
+            if (settings == null)
+            {
+                return;
+            }
+
+            foreach (var setting in settings.Where(s => !string.IsNullOrWhiteSpace(s.Default) && (s.Name == "info_apikey" || s.Name == "info_rsskey")))
+            {
+                setting.Default = setting.Default.Replace(DANISHBYTES_URL, NORDICBYTES_URL, StringComparison.OrdinalIgnoreCase);
+                setting.Default = setting.Default.Replace("DanishBytes", "NordicBytes", StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         public void Handle(ApplicationStartedEvent message)

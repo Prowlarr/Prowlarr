@@ -22,6 +22,15 @@ namespace NzbDrone.Core.Datastore.Migration.Framework
             return expressionRoot.Table(name).WithColumn("Id").AsInt32().PrimaryKey().Identity();
         }
 
+        public static IDbCommand CreateCommand(this IDbConnection conn, IDbTransaction tran, string query)
+        {
+            var command = conn.CreateCommand();
+            command.Transaction = tran;
+            command.CommandText = query;
+
+            return command;
+        }
+
         public static void AddParameter(this IDbCommand command, object value)
         {
             var parameter = command.CreateParameter();

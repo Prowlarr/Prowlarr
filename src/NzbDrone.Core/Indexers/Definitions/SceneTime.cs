@@ -227,20 +227,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             var parser = new HtmlParser();
             using var dom = parser.ParseDocument(indexerResponse.Content);
 
-            var table = dom.QuerySelector("table.movehere");
+            var table = dom.QuerySelector("table#torrenttable");
             if (table == null)
             {
                 return releaseInfos; // no results
             }
 
-            var headerColumns = table.QuerySelectorAll("thead > tr > th.cat_Head")
-                .Select(x => x.GetAttribute("title").IsNotNullOrWhiteSpace() ? x.GetAttribute("title") : x.TextContent)
+            var headerColumns = table.QuerySelectorAll("thead > tr > th")
+                .Select(x => x.GetAttribute("title") ?? x.TextContent)
                 .ToList();
             var categoryIndex = headerColumns.FindIndex(x => x.Equals("Type", StringComparison.OrdinalIgnoreCase));
             var nameIndex = headerColumns.FindIndex(x => x.Equals("Name", StringComparison.OrdinalIgnoreCase));
             var sizeIndex = headerColumns.FindIndex(x => x.Equals("Size", StringComparison.OrdinalIgnoreCase));
-            var seedersIndex = headerColumns.FindIndex(x => x.Equals("Seeder(s)", StringComparison.OrdinalIgnoreCase));
-            var leechersIndex = headerColumns.FindIndex(x => x.Equals("Leecher(s)", StringComparison.OrdinalIgnoreCase));
+            var seedersIndex = headerColumns.FindIndex(x => x.Equals("Seeders", StringComparison.OrdinalIgnoreCase));
+            var leechersIndex = headerColumns.FindIndex(x => x.Equals("Leechers", StringComparison.OrdinalIgnoreCase));
 
             var rows = table.QuerySelectorAll("tbody > tr");
 
@@ -248,7 +248,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 var qDescCol = row.Children[nameIndex];
                 var qLink = qDescCol.QuerySelector("a");
-                var title = qLink.QuerySelector("span.torrent-text").TextContent.Trim();
+                var title = qLink.QuerySelector("span.bw-torrent-name").TextContent.Trim();
 
                 var infoUrl = _settings.BaseUrl + qLink.GetAttribute("href")?.TrimStart('/');
                 var torrentId = ParseUtil.GetArgumentFromQueryString(infoUrl, "id");

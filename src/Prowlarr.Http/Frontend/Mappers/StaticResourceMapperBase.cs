@@ -31,7 +31,7 @@ namespace Prowlarr.Http.Frontend.Mappers
 
         public abstract bool CanHandle(string resourceUrl);
 
-        public Task<FileStreamResult> GetResponse(string resourceUrl)
+        public Task<IActionResult> GetResponse(string resourceUrl)
         {
             var filePath = Map(resourceUrl);
 
@@ -42,7 +42,7 @@ namespace Prowlarr.Http.Frontend.Mappers
                     contentType = "application/octet-stream";
                 }
 
-                return Task.FromResult(new FileStreamResult(GetContentStream(filePath), new MediaTypeHeaderValue(contentType)
+                return Task.FromResult<IActionResult>(new FileStreamResult(GetContentStream(filePath), new MediaTypeHeaderValue(contentType)
                 {
                     Encoding = contentType == "text/plain" ? Encoding.UTF8 : null
                 }));
@@ -50,7 +50,7 @@ namespace Prowlarr.Http.Frontend.Mappers
 
             _logger.Warn("File {0} not found", filePath);
 
-            return Task.FromResult<FileStreamResult>(null);
+            return Task.FromResult<IActionResult>(null);
         }
 
         protected virtual Stream GetContentStream(string filePath)

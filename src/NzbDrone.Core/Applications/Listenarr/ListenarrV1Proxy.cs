@@ -23,10 +23,10 @@ namespace NzbDrone.Core.Applications.Listenarr
 
     public class ListenarrV1Proxy : IListenarrV1Proxy
     {
-        private static Version MinimumApplicationVersion => new(0, 2, 48, 0);
+        private static Version MinimumApplicationVersion => new(0, 2, 65, 0);
 
         private const string AppApiRoute = "/api/v1";
-        private const string AppIndexerApiRoute = $"{AppApiRoute}/indexer";
+        private const string AppIndexerApiRoute = $"{AppApiRoute}/prowlarr/indexer";
 
         private readonly IHttpClient _httpClient;
         private readonly Logger _logger;

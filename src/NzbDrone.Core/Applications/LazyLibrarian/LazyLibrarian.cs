@@ -15,12 +15,14 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
         private readonly ILazyLibrarianV1Proxy _lazyLibrarianV1Proxy;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerNameTemplateService _indexerNameTemplateService;
 
-        public LazyLibrarian(ILazyLibrarianV1Proxy lazyLibrarianV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
+        public LazyLibrarian(ILazyLibrarianV1Proxy lazyLibrarianV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, IIndexerNameTemplateService indexerNameTemplateService, Logger logger)
             : base(appIndexerMapService, indexerFactory, logger)
         {
             _lazyLibrarianV1Proxy = lazyLibrarianV1Proxy;
             _configFileProvider = configFileProvider;
+            _indexerNameTemplateService = indexerNameTemplateService;
         }
 
         public override ValidationResult Test()
@@ -155,8 +157,8 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
 
             var lazyLibrarianIndexer = new LazyLibrarianIndexer
             {
-                Name = originalName ?? $"{indexer.Name} (Prowlarr)",
-                Altername = $"{indexer.Name} (Prowlarr)",
+                Name = originalName ?? _indexerNameTemplateService.FormatIndexerName(indexer.Name, _configFileProvider.InstanceName),
+                Altername = originalName ?? _indexerNameTemplateService.FormatIndexerName(indexer.Name, _configFileProvider.InstanceName),
                 Host = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/api",
                 Apikey = _configFileProvider.ApiKey,
                 Categories = string.Join(",", indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),

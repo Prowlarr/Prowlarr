@@ -22,6 +22,7 @@ function HostSettings(props) {
     urlBase,
     instanceName,
     applicationUrl,
+    indexerNameTemplate,
     enableSsl,
     sslPort,
     sslCertPath,
@@ -102,6 +103,25 @@ function HostSettings(props) {
           helpText={translate('ApplicationUrlHelpText')}
           onChange={onInputChange}
           {...applicationUrl}
+        />
+      </FormGroup>
+
+      <FormGroup
+        advancedSettings={advancedSettings}
+        isAdvanced={true}
+      >
+        <FormLabel>{translate('IndexerNameTemplate')}</FormLabel>
+
+        <FormInputGroup
+          type={inputTypes.TEXT}
+          name="indexerNameTemplate"
+          helpText={translate('IndexerNameTemplateHelpText')}
+          helpTextWarning={
+            indexerNameTemplate && indexerNameTemplate.value &&
+            !indexerNameTemplate.value.includes('{name}') ? translate('IndexerNameTemplateHelpTextWarning') : undefined
+          }
+          onChange={onInputChange}
+          {...indexerNameTemplate}
         />
       </FormGroup>
 

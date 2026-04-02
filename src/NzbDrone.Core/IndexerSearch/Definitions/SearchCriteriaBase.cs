@@ -23,6 +23,7 @@ namespace NzbDrone.Core.IndexerSearch.Definitions
         public long? MaxSize { get; set; }
         public string Source { get; set; }
         public string Host { get; set; }
+        public IndexerSearchMode SearchMode { get; set; }
 
         public override string ToString() => $"{SearchQuery}, Offset: {Offset ?? 0}, Limit: {Limit ?? 0}, Categories: [{string.Join(", ", Categories)}]";
 

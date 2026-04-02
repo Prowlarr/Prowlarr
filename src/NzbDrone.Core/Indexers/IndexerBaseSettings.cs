@@ -16,6 +16,11 @@ namespace NzbDrone.Core.Indexers
                 .GreaterThan(0)
                 .When(c => c.GrabLimit.HasValue)
                 .WithMessage("Should be greater than zero");
+
+            RuleFor(c => c.QueryTimeout)
+                .InclusiveBetween(1, 300)
+                .When(c => c.QueryLimit.HasValue)
+                .WithMessage("Must be between 1 and 300 seconds (5 minutes)");
         }
     }
 
@@ -29,6 +34,9 @@ namespace NzbDrone.Core.Indexers
 
         [FieldDefinition(3, Type = FieldType.Select, Label = "IndexerSettingsLimitsUnit", SelectOptions = typeof(IndexerLimitsUnit), HelpText = "IndexerSettingsLimitsUnitHelpText", Advanced = true)]
         public int LimitsUnit { get; set; } = (int)IndexerLimitsUnit.Day;
+
+        [FieldDefinition(4, Type = FieldType.Number, Label = "IndexerSettingsQueryTimeout", Unit = "seconds", HelpText = "IndexerSettingsQueryTimeoutHelpText", Advanced = true)]
+        public int? QueryTimeout { get; set; }
     }
 
     public enum IndexerLimitsUnit

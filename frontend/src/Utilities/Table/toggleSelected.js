@@ -13,7 +13,7 @@ function toggleSelected(selectedState, items, id, selected, shiftKey, idProp = '
   }
 
   if (shiftKey && lastToggled) {
-    const { lower, upper } = getToggledRange(items, id, lastToggled);
+    const { lower, upper } = getToggledRange(items, id, lastToggled, idProp);
 
     for (let i = lower; i < upper; i++) {
       nextSelectedState[items[i][idProp]] = selected;

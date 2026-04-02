@@ -23,6 +23,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Site does not allow automation")]
     public class ZonaQ : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
         public override string Name => "ZonaQ";

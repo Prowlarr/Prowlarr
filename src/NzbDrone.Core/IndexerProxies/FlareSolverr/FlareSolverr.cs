@@ -58,7 +58,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
-                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
+                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + flaresolverrResponse.StatusCode);
             }
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
@@ -71,7 +71,32 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             InjectCookies(newRequest, result);
 
-            //Request again with User-Agent and Cookies from Flaresolverr
+            // Use FlareSolverr's response body directly when available.
+            // A second HTTP request with the extracted cookies would get rejected
+            // because cf_clearance is validated against the TLS fingerprint of the
+            // client that solved the challenge (FlareSolverr's headless browser),
+            // which differs from .NET HttpClient's fingerprint.
+            if (result.Solution.Response.IsNotNullOrWhiteSpace())
+            {
+                var headers = new HttpHeader();
+
+                // Preserve the Content-Type from FlareSolverr's solution so downstream
+                // parsers (e.g. JSON indexers) interpret the body correctly.
+                if (result.Solution.Headers?.ContentType.IsNotNullOrWhiteSpace() == true)
+                {
+                    headers.ContentType = result.Solution.Headers.ContentType;
+                }
+
+                return new HttpResponse(
+                    response.Request,
+                    headers,
+                    response.Cookies,
+                    result.Solution.Response,
+                    response.ElapsedTime,
+                    HttpStatusCode.OK);
+            }
+
+            // Fallback: if FlareSolverr returned no body, retry with cookies (original behavior)
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;

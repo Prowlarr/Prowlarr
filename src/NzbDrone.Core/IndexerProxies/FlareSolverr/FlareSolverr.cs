@@ -38,9 +38,19 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             request.SuppressHttpError = true;
 
             //Inject UA if not present
-            if (_cache.Find(request.Url.Host).IsNotNullOrWhiteSpace() && request.Headers.UserAgent.IsNullOrWhiteSpace())
+            if (request.Headers.UserAgent.IsNullOrWhiteSpace())
             {
-                request.Headers.UserAgent = _cache.Find(request.Url.Host);
+                var userAgent = _cache.Find(GetSolverUserAgentCacheKey());
+
+                if (userAgent.IsNullOrWhiteSpace())
+                {
+                    userAgent = _cache.Find(request.Url.Host);
+                }
+
+                if (userAgent.IsNotNullOrWhiteSpace())
+                {
+                    request.Headers.UserAgent = userAgent;
+                }
             }
 
             return request;
@@ -58,20 +68,29 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
-                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
+                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + flaresolverrResponse.StatusCode);
             }
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
+
+            if (result?.Solution == null ||
+                result.Solution.UserAgent.IsNullOrWhiteSpace() ||
+                !string.Equals(result.Status, "ok", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new FlareSolverrException(result?.Message.IsNotNullOrWhiteSpace() == true
+                    ? result.Message
+                    : "FlareSolverr returned an invalid response");
+            }
 
             var newRequest = response.Request;
 
             //Cache the user-agent so we can inject it in next request to avoid re-solve
             _cache.Set(response.Request.Url.Host, result.Solution.UserAgent);
+            _cache.Set(GetSolverUserAgentCacheKey(), result.Solution.UserAgent);
             newRequest.Headers.UserAgent = result.Solution.UserAgent;
 
             InjectCookies(newRequest, result);
 
-            //Request again with User-Agent and Cookies from Flaresolverr
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;
@@ -193,8 +212,21 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     _logger.Error("Proxy validation failed: {0}", response.StatusCode);
                     failures.Add(new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("ProxyValidationBadRequest", new Dictionary<string, object> { { "statusCode", response.StatusCode } })));
                 }
+                else
+                {
+                    var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
 
-                var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
+                    if (result?.Solution == null ||
+                        result.Solution.UserAgent.IsNullOrWhiteSpace() ||
+                        !string.Equals(result.Status, "ok", StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw new FlareSolverrException(result?.Message.IsNotNullOrWhiteSpace() == true
+                            ? result.Message
+                            : "FlareSolverr returned an invalid response");
+                    }
+
+                    _cache.Set(GetSolverUserAgentCacheKey(), result.Solution.UserAgent);
+                }
             }
             catch (Exception ex)
             {
@@ -203,6 +235,11 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             }
 
             return new ValidationResult(failures);
+        }
+
+        private string GetSolverUserAgentCacheKey()
+        {
+            return $"FlareSolverr:{Settings.Host.TrimEnd('/')}";
         }
 
         private Uri GetProxyUri(HttpProxySettings proxySettings)

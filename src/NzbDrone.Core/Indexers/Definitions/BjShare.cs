@@ -2,13 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
-using FluentValidation;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
@@ -29,7 +25,6 @@ public class BjShare : TorrentIndexerBase<BjShareSettings>
     public override string[] IndexerUrls => new[] { "https://bj-share.info/" };
     public override string Description => "Private PT-BR torrent tracker";
     public override string Language => "pt-BR";
-    public override Encoding Encoding => Encoding.UTF8;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -45,63 +40,30 @@ public class BjShare : TorrentIndexerBase<BjShareSettings>
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new BjShareRequestGenerator(Settings, Capabilities);
+        return new BjShareRequestGenerator(Settings);
     }
 
     public override IParseIndexerResponse GetParser()
     {
-        return new BjShareParser(Settings, Capabilities.Categories);
-    }
-
-    protected override async Task DoLogin()
-    {
-        if (string.IsNullOrWhiteSpace(Settings.Cookie))
-        {
-            throw new IndexerAuthException("BJ-Share cookie is empty");
-        }
-
-        var cookies = ParseCookieHeader(Settings.Cookie);
-
-        if (cookies.Count == 0)
-        {
-            throw new IndexerAuthException("BJ-Share cookie is invalid");
-        }
-
-        UpdateCookies(cookies, DateTime.Now.AddDays(30));
-        await Task.CompletedTask;
+        return new BjShareParser(Capabilities.Categories);
     }
 
     protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
     {
-        return httpResponse.RedirectUrl.Contains("login.php") ||
-            !httpResponse.Content.Contains("/logout.php?auth=");
-    }
-
-    private static IDictionary<string, string> ParseCookieHeader(string rawCookie)
-    {
-        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var part in rawCookie.Split(';', StringSplitOptions.RemoveEmptyEntries))
+        if (!httpResponse.Content.Contains("logout.php?auth="))
         {
-            var idx = part.IndexOf('=');
-            if (idx <= 0)
-            {
-                continue;
-            }
-
-            var name = part[..idx].Trim();
-            var value = part[(idx + 1)..].Trim();
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                dict[name] = value;
-            }
+            throw new IndexerAuthException("BjShare authentication with cookies failed.");
         }
 
-        return dict;
+        return false;
     }
 
-    private IndexerCapabilities SetCapabilities()
+    protected override IDictionary<string, string> GetCookies()
+    {
+        return CookieUtil.CookieHeaderToDictionary(Settings.Cookie);
+    }
+
+    private static IndexerCapabilities SetCapabilities()
     {
         var caps = new IndexerCapabilities
         {
@@ -137,15 +99,13 @@ public class BjShare : TorrentIndexerBase<BjShareSettings>
 public class BjShareRequestGenerator : IIndexerRequestGenerator
 {
     private readonly BjShareSettings _settings;
-    private readonly IndexerCapabilities _capabilities;
 
     public Func<IDictionary<string, string>> GetCookies { get; set; }
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-    public BjShareRequestGenerator(BjShareSettings settings, IndexerCapabilities capabilities)
+    public BjShareRequestGenerator(BjShareSettings settings)
     {
         _settings = settings;
-        _capabilities = capabilities;
     }
 
     public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
@@ -235,13 +195,12 @@ public class BjShareRequestGenerator : IIndexerRequestGenerator
 
 public class BjShareParser : IParseIndexerResponse
 {
-    private readonly BjShareSettings _settings;
     private readonly IndexerCapabilitiesCategories _categories;
+
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
 
-    public BjShareParser(BjShareSettings settings, IndexerCapabilitiesCategories categories)
+    public BjShareParser(IndexerCapabilitiesCategories categories)
     {
-        _settings = settings;
         _categories = categories;
     }
 
@@ -339,6 +298,7 @@ public class BjShareParser : IParseIndexerResponse
             DownloadUrl = ToAbsolute(baseUrl, downloadHref),
             InfoUrl = ToAbsolute(baseUrl, detailsHref),
             Title = BuildReleaseTitle(group.Title, group.Year, infoText),
+            Categories = _categories.MapTrackerCatToNewznab(group.CategoryId.ToString()),
             Size = ParseSize(row.QuerySelector("td:nth-last-child(4)")?.TextContent),
             Seeders = ParseInt(row.QuerySelector("td:nth-last-child(2)")?.TextContent),
             Peers = ParseInt(row.QuerySelector("td:nth-last-child(1)")?.TextContent),
@@ -346,23 +306,49 @@ public class BjShareParser : IParseIndexerResponse
             PublishDate = ParseBjDate(row.QuerySelector("td.nobr .time")?.GetAttribute("title")),
             DownloadVolumeFactor = row.QuerySelector("strong[title*=\"Free\"]") != null ? 0 : 1,
             UploadVolumeFactor = 1,
-            MinimumRatio = 1.0,
+            MinimumRatio = 1,
             MinimumSeedTime = 604800
         };
-
-        var cats = _categories.MapTrackerCatToNewznab(group.CategoryId.ToString());
-        if (cats.Any())
-        {
-            release.Categories = cats;
-        }
 
         return release;
     }
 
     private ReleaseInfo ParseStandaloneTorrent(IElement row, string baseUrl)
     {
-        // Implementar se o BJ-Share realmente retornar esse formato para outras buscas.
-        return null;
+        var downloadHref = row.QuerySelector("span.download_torrent a")?.GetAttribute("href");
+        if (string.IsNullOrWhiteSpace(downloadHref))
+        {
+            return null;
+        }
+
+        var detailsHref = row.QuerySelector("a[href*=\"torrentid=\"]")?.GetAttribute("href");
+        var categoryHref = row.QuerySelector("td.cats_col a")?.GetAttribute("href") ?? string.Empty;
+
+        var rawTitle = row.QuerySelector("div.group_info a[href^=\"series.php\"]")?.TextContent?.Trim() ?? string.Empty;
+        var groupInfoText = Regex.Replace(row.QuerySelector("div.group_info")?.TextContent?.Trim() ?? string.Empty, @"\s+", " ");
+        var infoText = row.QuerySelector("div.torrent_info")?.TextContent?.Trim() ?? string.Empty;
+
+        var title = ExtractEnglishOrFallbackTitle(rawTitle);
+        var year = ExtractYear(groupInfoText);
+        var categoryId = ExtractCategoryId(categoryHref);
+
+        return new TorrentInfo
+        {
+            Guid = ToAbsolute(baseUrl, downloadHref),
+            DownloadUrl = ToAbsolute(baseUrl, downloadHref),
+            InfoUrl = ToAbsolute(baseUrl, detailsHref),
+            Title = BuildReleaseTitle(title, year, infoText),
+            Categories = _categories.MapTrackerCatToNewznab(categoryId.ToString()),
+            Size = ParseSize(row.QuerySelector("td:nth-last-child(4)")?.TextContent),
+            Seeders = ParseInt(row.QuerySelector("td:nth-last-child(2)")?.TextContent),
+            Peers = ParseInt(row.QuerySelector("td:nth-last-child(1)")?.TextContent),
+            Grabs = ParseInt(row.QuerySelector("td:nth-last-child(3)")?.TextContent),
+            PublishDate = ParseBjDate(row.QuerySelector("td.nobr .time")?.GetAttribute("title")),
+            DownloadVolumeFactor = row.QuerySelector("strong[title*=\"Free\"]") != null ? 0 : 1,
+            UploadVolumeFactor = 1,
+            MinimumRatio = 1,
+            MinimumSeedTime = 604800
+        };
     }
 
     private static string ExtractEnglishOrFallbackTitle(string raw)
@@ -424,13 +410,6 @@ public class BjShareParser : IParseIndexerResponse
             return PublishDateFallback();
         }
 
-        var formats = new[]
-        {
-            "MMM dd yyyy, HH:mm",
-            "MMM dd yyyy, HH:mm",
-            "MMM dd yyyy, HH:mm"
-        };
-
         if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var parsed))
         {
             return parsed;
@@ -474,29 +453,14 @@ public class BjShareParser : IParseIndexerResponse
     }
 }
 
-public class BjShareSettingsValidator : NoAuthSettingsValidator<BjShareSettings>
-{
-    public BjShareSettingsValidator()
-    {
-        RuleFor(x => x.Cookie).NotEmpty();
-        RuleFor(x => x.BaseUrl).NotEmpty();
-    }
-}
+public class BjShareSettingsValidator : CookieBaseSettingsValidator<BjShareSettings>;
 
-public class BjShareSettings : NoAuthTorrentBaseSettings
+public class BjShareSettings : CookieTorrentBaseSettings
 {
     private static readonly BjShareSettingsValidator Validator = new();
 
-    [FieldDefinition(1, Label = "Cookie", Type = FieldType.Textbox, HelpText = "Cookie completo da sessão autenticada")]
-    public string Cookie { get; set; }
-
-    [FieldDefinition(2, Label = "Freeleech only", Type = FieldType.Checkbox)]
+    [FieldDefinition(3, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox)]
     public bool FreeleechOnly { get; set; }
-
-    public BjShareSettings()
-    {
-        BaseUrl = "https://bj-share.info/";
-    }
 
     public override NzbDroneValidationResult Validate()
     {

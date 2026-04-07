@@ -179,10 +179,34 @@ public class BjShareRequestGenerator : IIndexerRequestGenerator
         var parameters = new NameValueCollection();
 
         var query = searchCriteria.SearchTerm?.Trim() ?? string.Empty;
+        int? seasonFromQuery = null;
 
-        if (searchCriteria is TvSearchCriteria)
+        var seasonMatch = Regex.Match(query, @"\{season:\s*(\d+)\}", RegexOptions.IgnoreCase);
+        if (seasonMatch.Success)
+        {
+            seasonFromQuery = int.Parse(seasonMatch.Groups[1].Value, CultureInfo.InvariantCulture);
+            query = Regex.Replace(query, @"\{season:\s*\d+\}", "", RegexOptions.IgnoreCase).Trim();
+        }
+
+        var episodeMatch = Regex.Match(query, @"\{episode:\s*(\d+)\}", RegexOptions.IgnoreCase);
+        if (episodeMatch.Success)
+        {
+            query = Regex.Replace(query, @"\{episode:\s*\d+\}", "", RegexOptions.IgnoreCase).Trim();
+        }
+
+        if (searchCriteria is TvSearchCriteria tv)
         {
             query = Regex.Replace(query, @"(S\d+E\d+|S\d+)", "", RegexOptions.IgnoreCase).Trim();
+
+            var season = tv.Season ?? seasonFromQuery;
+            if (season.HasValue)
+            {
+                query = $"{query} S{season.Value:00}";
+            }
+        }
+        else if (seasonFromQuery.HasValue)
+        {
+            query = $"{query} S{seasonFromQuery.Value:00}";
         }
 
         parameters.Set("searchstr", query);

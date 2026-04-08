@@ -19,6 +19,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
+    [Obsolete("Migrated to YAML for Torznab API")]
     public class SceneTime : TorrentIndexerBase<SceneTimeSettings>
     {
         public override string Name => "SceneTime";

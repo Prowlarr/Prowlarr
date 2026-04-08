@@ -14,7 +14,7 @@ namespace Prowlarr.Api.V1.Search
         public string Type { get; set; }
         public List<int> IndexerIds { get; set; }
         public List<int> Categories { get; set; }
-        public int Limit { get; set; }
-        public int Offset { get; set; }
+        public int? Limit { get; set; }
+        public int? Offset { get; set; }
     }
 }

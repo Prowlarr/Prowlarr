@@ -120,12 +120,12 @@ namespace NzbDrone.Core.Indexers.Headphones
                 baseUrl += "&apikey=" + Settings.ApiKey;
             }
 
-            if (searchCriteria.Limit.HasValue)
+            if (searchCriteria.Limit.HasValue && searchCriteria.Limit.Value > 0)
             {
                 parameters.Add("limit", searchCriteria.Limit.ToString());
             }
 
-            if (searchCriteria.Offset.HasValue)
+            if (searchCriteria.Offset.HasValue && searchCriteria.Offset.Value > 0)
             {
                 parameters.Add("offset", searchCriteria.Offset.ToString());
             }

@@ -263,12 +263,12 @@ namespace NzbDrone.Core.Indexers.Newznab
                 searchUrl += "&apikey=" + Settings.ApiKey;
             }
 
-            if (searchCriteria.Limit.HasValue)
+            if (searchCriteria.Limit.HasValue && searchCriteria.Limit.Value > 0)
             {
                 parameters.Set("limit", searchCriteria.Limit.ToString());
             }
 
-            if (searchCriteria.Offset.HasValue)
+            if (searchCriteria.Offset.HasValue && searchCriteria.Offset.Value > 0)
             {
                 parameters.Set("offset", searchCriteria.Offset.ToString());
             }

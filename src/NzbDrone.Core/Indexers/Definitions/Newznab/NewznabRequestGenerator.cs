@@ -263,7 +263,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 searchUrl += "&apikey=" + Settings.ApiKey;
             }
 
-            if (searchCriteria.Limit.HasValue && searchCriteria.Limit.Value > 0)
+            if (searchCriteria.Limit is > 0)
             {
                 parameters.Set("limit", searchCriteria.Limit.ToString());
             }

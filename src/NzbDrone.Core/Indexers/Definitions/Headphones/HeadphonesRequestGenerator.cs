@@ -125,7 +125,7 @@ namespace NzbDrone.Core.Indexers.Headphones
                 parameters.Add("limit", searchCriteria.Limit.ToString());
             }
 
-            if (searchCriteria.Offset is > 0)
+            if (searchCriteria.Offset.HasValue)
             {
                 parameters.Add("offset", searchCriteria.Offset.ToString());
             }

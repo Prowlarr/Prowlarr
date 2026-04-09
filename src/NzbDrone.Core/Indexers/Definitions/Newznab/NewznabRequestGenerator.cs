@@ -268,7 +268,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 parameters.Set("limit", searchCriteria.Limit.ToString());
             }
 
-            if (searchCriteria.Offset is > 0)
+            if (searchCriteria.Offset.HasValue)
             {
                 parameters.Set("offset", searchCriteria.Offset.ToString());
             }

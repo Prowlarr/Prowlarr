@@ -77,20 +77,24 @@ public class BjShare : TorrentIndexerBase<BjShareSettings>
         caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.PC, "Aplicativos");
         caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.PCGames, "Jogos");
         caps.Categories.AddCategoryMapping(5, NewznabStandardCategory.BooksComics, "Mangás");
+        caps.Categories.AddCategoryMapping(6, NewznabStandardCategory.TV, "Vídeos de TV");
         caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.Other, "Outros");
         caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.TVSport, "Esportes");
         caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.BooksMags, "Revistas");
         caps.Categories.AddCategoryMapping(10, NewznabStandardCategory.Books, "E-Books");
         caps.Categories.AddCategoryMapping(11, NewznabStandardCategory.AudioAudiobook, "Audiobook");
-        caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.BooksComics, "HQ");
+        caps.Categories.AddCategoryMapping(12, NewznabStandardCategory.BooksComics, "Histórias em Quadrinhos");
         caps.Categories.AddCategoryMapping(13, NewznabStandardCategory.TV, "Stand Up Comedy");
         caps.Categories.AddCategoryMapping(14, NewznabStandardCategory.TVAnime, "Anime");
+        caps.Categories.AddCategoryMapping(15, NewznabStandardCategory.XXXImageSet, "Fotos Adultas");
+        caps.Categories.AddCategoryMapping(16, NewznabStandardCategory.TVOther, "Desenho Animado");
+        caps.Categories.AddCategoryMapping(17, NewznabStandardCategory.TVDocumentary, "Documentários");
         caps.Categories.AddCategoryMapping(18, NewznabStandardCategory.Other, "Cursos");
         caps.Categories.AddCategoryMapping(19, NewznabStandardCategory.XXX, "Filmes Adultos");
         caps.Categories.AddCategoryMapping(20, NewznabStandardCategory.XXXOther, "Jogos Adultos");
         caps.Categories.AddCategoryMapping(21, NewznabStandardCategory.XXXOther, "Mangás Adultos");
         caps.Categories.AddCategoryMapping(22, NewznabStandardCategory.XXXOther, "Animes Adultos");
-        caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.XXXOther, "HQ Adultas");
+        caps.Categories.AddCategoryMapping(23, NewznabStandardCategory.XXXOther, "HQ Adultos");
 
         return caps;
     }
@@ -267,7 +271,15 @@ public class BjShareParser : IParseIndexerResponse
         var groupDetailsHref = row.QuerySelector("div.group_info a[href^=\"torrents.php?id=\"]")?.GetAttribute("href");
         var seriesHref = row.QuerySelector("div.group_info a[href^=\"series.php?id=\"]")?.GetAttribute("href");
 
-        var title = ExtractEnglishOrFallbackTitle(rawTitle);
+        var groupDetailsText = row.QuerySelector("div.group_info a[href^=\"torrents.php?id=\"][title=\"View torrent group\"]")?.TextContent?.Trim();
+        var titleSource = row.QuerySelector("div.group_info a[href^=\"series.php?id=\"]")?.TextContent?.Trim();
+        if (string.IsNullOrWhiteSpace(titleSource))
+        {
+            titleSource = RemoveGroupDetailsText(rawTitle, groupDetailsText);
+        }
+
+        var seasonInformation = ExtractSeasonEpisode(groupDetailsText);
+        var title = ExtractEnglishOrFallbackTitle(string.IsNullOrWhiteSpace(titleSource) ? rawTitle : titleSource);
         var year = ExtractYear(rawTitle);
         var categoryId = ExtractCategoryId(categoryHref);
 
@@ -275,6 +287,7 @@ public class BjShareParser : IParseIndexerResponse
         {
             Title = title,
             Year = year,
+            SeasonEpisode = seasonInformation,
             CategoryId = categoryId,
             GroupDetailsUrl = ToAbsolute(baseUrl, groupDetailsHref),
             SeriesUrl = ToAbsolute(baseUrl, seriesHref)
@@ -291,17 +304,18 @@ public class BjShareParser : IParseIndexerResponse
 
         var detailsHref = row.QuerySelector("a[href*=\"torrentid=\"]")?.GetAttribute("href");
         var infoText = row.QuerySelector("td[colspan=\"3\"] a[href*=\"torrentid=\"]")?.TextContent?.Trim() ?? string.Empty;
+        var peerStats = ParsePeerStats(row);
 
         var release = new TorrentInfo
         {
             Guid = ToAbsolute(baseUrl, downloadHref),
             DownloadUrl = ToAbsolute(baseUrl, downloadHref),
             InfoUrl = ToAbsolute(baseUrl, detailsHref),
-            Title = BuildReleaseTitle(group.Title, group.Year, infoText),
+            Title = BuildReleaseTitle(group.Title, group.Year, group.SeasonEpisode, infoText),
             Categories = _categories.MapTrackerCatToNewznab(group.CategoryId.ToString()),
             Size = ParseSize(row.QuerySelector("td:nth-last-child(4)")?.TextContent),
-            Seeders = ParseInt(row.QuerySelector("td:nth-last-child(2)")?.TextContent),
-            Peers = ParseInt(row.QuerySelector("td:nth-last-child(1)")?.TextContent),
+            Seeders = peerStats.Seeders,
+            Peers = peerStats.Peers,
             Grabs = ParseInt(row.QuerySelector("td:nth-last-child(3)")?.TextContent),
             PublishDate = ParseBjDate(row.QuerySelector("td.nobr .time")?.GetAttribute("title")),
             DownloadVolumeFactor = row.QuerySelector("strong[title*=\"Free\"]") != null ? 0 : 1,
@@ -330,18 +344,21 @@ public class BjShareParser : IParseIndexerResponse
 
         var title = ExtractEnglishOrFallbackTitle(rawTitle);
         var year = ExtractYear(groupInfoText);
+        var seasonLink = row.QuerySelector("div.group_info a.tooltip[href^=\"torrents.php\"]");
+        var seasonEpisode = seasonLink?.TextContent?.Trim() ?? string.Empty;
         var categoryId = ExtractCategoryId(categoryHref);
+        var peerStats = ParsePeerStats(row);
 
         return new TorrentInfo
         {
             Guid = ToAbsolute(baseUrl, downloadHref),
             DownloadUrl = ToAbsolute(baseUrl, downloadHref),
             InfoUrl = ToAbsolute(baseUrl, detailsHref),
-            Title = BuildReleaseTitle(title, year, infoText),
+            Title = BuildReleaseTitle(title, year, seasonEpisode, infoText),
             Categories = _categories.MapTrackerCatToNewznab(categoryId.ToString()),
             Size = ParseSize(row.QuerySelector("td:nth-last-child(4)")?.TextContent),
-            Seeders = ParseInt(row.QuerySelector("td:nth-last-child(2)")?.TextContent),
-            Peers = ParseInt(row.QuerySelector("td:nth-last-child(1)")?.TextContent),
+            Seeders = peerStats.Seeders,
+            Peers = peerStats.Peers,
             Grabs = ParseInt(row.QuerySelector("td:nth-last-child(3)")?.TextContent),
             PublishDate = ParseBjDate(row.QuerySelector("td.nobr .time")?.GetAttribute("title")),
             DownloadVolumeFactor = row.QuerySelector("strong[title*=\"Free\"]") != null ? 0 : 1,
@@ -389,16 +406,71 @@ public class BjShareParser : IParseIndexerResponse
         return int.TryParse(value, out var id) ? id : 0;
     }
 
-    private static string BuildReleaseTitle(string title, int? year, string infoText)
+    private static string RemoveGroupDetailsText(string rawTitle, string groupDetailsText)
+    {
+        var title = rawTitle ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(groupDetailsText))
+        {
+            title = Regex.Replace(title, $@"\s*-\s*{Regex.Escape(groupDetailsText)}(?=\s*\[|$)", string.Empty);
+        }
+
+        title = Regex.Replace(title, @"\s*-\s*(?=\[(?:19|20)\d{2}\])", " ");
+
+        return title.Trim();
+    }
+
+    private static string ExtractSeasonEpisode(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var match = Regex.Match(value, @"\b[ST](\d{1,2})(?:\s*E(\d{1,3}))?\b", RegexOptions.IgnoreCase);
+        if (!match.Success)
+        {
+            return string.Empty;
+        }
+
+        var season = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+        if (!match.Groups[2].Success)
+        {
+            return $"S{season:00}";
+        }
+
+        var episode = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+        return $"S{season:00}E{episode:00}";
+    }
+
+    private static string BuildReleaseTitle(string title, int? year, string seasonEpisode, string infoText)
     {
         var cleanInfo = Regex.Replace(infoText ?? string.Empty, @"[\[\]]", "");
         cleanInfo = cleanInfo.Replace("Full HD", "1080p");
         cleanInfo = cleanInfo.Replace("4K", "2160p");
         cleanInfo = cleanInfo.Replace("SD", "480p");
+        cleanInfo = Regex.Replace(cleanInfo, @"(^|/\s*)HD(?=\s*/|$)", "$1720p", RegexOptions.IgnoreCase);
         cleanInfo = cleanInfo.Replace(" / Free", "");
         cleanInfo = Regex.Replace(cleanInfo, @"\s+", " ").Trim();
 
-        return $"{title} {(year.HasValue ? year.Value.ToString(CultureInfo.InvariantCulture) : string.Empty)} {cleanInfo}".Trim();
+        if (!string.IsNullOrWhiteSpace(seasonEpisode) && Regex.IsMatch(cleanInfo, $@"\b{Regex.Escape(seasonEpisode)}\b", RegexOptions.IgnoreCase))
+        {
+            seasonEpisode = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(seasonEpisode) && Regex.IsMatch(title ?? string.Empty, $@"\b{Regex.Escape(seasonEpisode)}\b", RegexOptions.IgnoreCase))
+        {
+            seasonEpisode = string.Empty;
+        }
+
+        return $"{title} {(year.HasValue ? year.Value.ToString(CultureInfo.InvariantCulture) : string.Empty)} {seasonEpisode} {cleanInfo}".Trim();
+    }
+
+    private static (int Seeders, int Peers) ParsePeerStats(IElement row)
+    {
+        var seeders = ParseInt(row.QuerySelector("td:nth-last-child(2)")?.TextContent);
+        var leechers = ParseInt(row.QuerySelector("td:nth-last-child(1)")?.TextContent);
+
+        return (seeders, seeders + leechers);
     }
 
     private static DateTime PublishDateFallback() => DateTime.UtcNow;
@@ -447,6 +519,7 @@ public class BjShareParser : IParseIndexerResponse
     {
         public string Title { get; set; }
         public int? Year { get; set; }
+        public string SeasonEpisode { get; set; }
         public int CategoryId { get; set; }
         public string GroupDetailsUrl { get; set; }
         public string SeriesUrl { get; set; }

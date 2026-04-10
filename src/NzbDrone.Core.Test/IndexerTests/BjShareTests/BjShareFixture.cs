@@ -59,7 +59,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BjShareTests
             release.DownloadUrl.Should().Be("https://bj-share.info/torrents.php?action=download&id=222222&source=browse");
             release.InfoUrl.Should().Be("https://bj-share.info/torrents.php?id=111111&torrentid=222222");
             release.PublishDate.Should().Be(DateTime.Parse("May 02 2021, 20:22", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
-            release.Size.Should().Be(98837934899);
+            release.Size.Should().Be(98837938176);
             release.Grabs.Should().Be(121);
             release.Seeders.Should().Be(6);
             release.Peers.Should().Be(8);
@@ -138,13 +138,13 @@ namespace NzbDrone.Core.Test.IndexerTests.BjShareTests
             releases[0].DownloadUrl.Should().Be("https://bj-share.info/torrents.php?action=download&id=888001&source=browse");
             releases[0].InfoUrl.Should().Be("https://bj-share.info/torrents.php?id=765432&torrentid=888001");
             releases[0].PublishDate.Should().Be(DateTime.Parse("Mar 26 2027, 22:02", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
-            releases[0].Size.Should().Be(4917737553);
+            releases[0].Size.Should().Be(4917737472);
             releases[0].Seeders.Should().Be(74);
             releases[0].Peers.Should().Be(79);
 
             releases[1].Title.Should().Be("Journey Beyond 2027 S03E07 MKV / H.265 / WEB-DL / 2160p / Dolby Atmos / 10-bit / Dolby Vision / HDR10+ / Dual Audio / StreamBox");
             releases[1].DownloadUrl.Should().Be("https://bj-share.info/torrents.php?action=download&id=888002&source=browse");
-            releases[1].Size.Should().Be(11220602060);
+            releases[1].Size.Should().Be(11220601856);
             releases[1].Seeders.Should().Be(17);
             releases[1].Peers.Should().Be(17);
         }
@@ -209,7 +209,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BjShareTests
             release.DownloadUrl.Should().Be("https://bj-share.info/torrents.php?action=download&id=240001&source=browse");
             release.InfoUrl.Should().Be("https://bj-share.info/torrents.php?id=654321&torrentid=240001");
             release.PublishDate.Should().Be(DateTime.Parse("Dec 07 2019, 15:46", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
-            release.Size.Should().Be(13851269529);
+            release.Size.Should().Be(13851269120);
             release.Grabs.Should().Be(40);
             release.Seeders.Should().Be(0);
             release.Peers.Should().Be(1);

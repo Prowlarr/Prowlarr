@@ -519,7 +519,7 @@ public class BjShareParser : IParseIndexerResponse
             return null;
         }
 
-        return new HttpUri(baseUrl).CombinePath(href).FullUri;
+        return (new HttpUri(baseUrl) + new HttpUri(href)).FullUri;
     }
 
     private sealed class GroupContext

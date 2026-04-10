@@ -448,7 +448,7 @@ public class BjShareParser : IParseIndexerResponse
         cleanInfo = cleanInfo.Replace("Full HD", "1080p");
         cleanInfo = cleanInfo.Replace("4K", "2160p");
         cleanInfo = cleanInfo.Replace("SD", "480p");
-        cleanInfo = Regex.Replace(cleanInfo, @"(^|/\s*)HD(?=\s*/|$)", "$1720p", RegexOptions.IgnoreCase);
+        cleanInfo = Regex.Replace(cleanInfo, @"(^|/\s*)HD(?=\s*/|$)", "${1}720p", RegexOptions.IgnoreCase);
         cleanInfo = cleanInfo.Replace(" / Free", "");
         cleanInfo = Regex.Replace(cleanInfo, @"\s+", " ").Trim();
 
@@ -462,7 +462,13 @@ public class BjShareParser : IParseIndexerResponse
             seasonEpisode = string.Empty;
         }
 
-        return $"{title} {(year.HasValue ? year.Value.ToString(CultureInfo.InvariantCulture) : string.Empty)} {seasonEpisode} {cleanInfo}".Trim();
+        return string.Join(" ", new[]
+        {
+            title,
+            year?.ToString(CultureInfo.InvariantCulture),
+            seasonEpisode,
+            cleanInfo
+        }.Where(x => !string.IsNullOrWhiteSpace(x)));
     }
 
     private static (int Seeders, int Peers) ParsePeerStats(IElement row)

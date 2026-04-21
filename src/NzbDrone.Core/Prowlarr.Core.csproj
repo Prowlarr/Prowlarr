@@ -6,7 +6,7 @@
     <PackageReference Include="AngleSharp.Xml" Version="1.0.0" />
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Diacritical.Net" Version="1.0.4" />
-    <PackageReference Include="MailKit" Version="4.14.0" />
+    <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.16" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />

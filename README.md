@@ -1,83 +1,83 @@
-# Prowlarr
+# Caching Prowlarr
 
-[![Build Status](https://dev.azure.com/Prowlarr/Prowlarr/_apis/build/status/Prowlarr.Prowlarr?branchName=develop)](https://dev.azure.com/Prowlarr/Prowlarr/_build/latest?definitionId=1&branchName=develop)
-[![Translation status](https://translate.servarr.com/widget/servarr/prowlarr/svg-badge.svg)](https://translate.servarr.com/engage/servarr/?utm_source=widget)
-[![Docker Pulls](https://img.shields.io/docker/pulls/hotio/prowlarr.svg)](https://wiki.servarr.com/prowlarr/installation/docker)
-![Github Downloads](https://img.shields.io/github/downloads/Prowlarr/Prowlarr/total.svg)
-[![Backers on Open Collective](https://opencollective.com/Prowlarr/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/Prowlarr/sponsors/badge.svg)](#sponsors)
-[![Mega Sponsors on Open Collective](https://opencollective.com/Prowlarr/megasponsors/badge.svg)](#mega-sponsors)
+## Installation
 
-Prowlarr is an indexer manager/proxy built on the popular \*arr .net/reactjs base stack to integrate with your various PVR apps. Prowlarr supports management of both Torrent Trackers and Usenet Indexers. It integrates seamlessly with Lidarr, Mylar3, Radarr, Readarr, and Sonarr offering complete management of your indexers with no per app Indexer setup required (we do it all).
+This fork is designed to be a drop-in replacement for existing Prowlarr docker installations. Simply replace your prowlarr docker image with `ghcr.io/realzombee/prowlarr:develop`
 
-## Major Features Include
+Sample docker compose:
+```docker
+prowlarr:
+    image: ghcr.io/realzombee/prowlarr:develop
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - CACHE_TTL_MINS=10
+      - CACHE_MAX_SIZE_MB=100
+    volumes:
+      - /path/to/prowlarr/data:/config
+      # Additional volume mounts as needed
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+```
 
-- Usenet support for 24 indexers natively, including Headphones VIP
-- Usenet support for any Newznab compatible indexer via "Generic Newznab"
-- Torrent support for over 500 trackers with more added all the time
-- Torrent support for any Torznab compatible tracker via "Generic Torznab"
-- Support for custom YML definitions via Cardigann that includes JSON and XML parsing
-- Indexer Sync to Lidarr/Mylar3/Radarr/Readarr/Sonarr, so no manual configuration of the other applications are required
-- Indexer history and statistics
-- Manual searching of Trackers & Indexers at a category level
-- Parameter based manual searching
-- Support for pushing multiple releases at once directly to your download clients from Prowlarr
-- Indexer health and status notifications
-- Per Indexer proxy support (SOCKS4, SOCKS5, HTTP, Flaresolverr)
+## Why this fork?
 
-## Support
+This fork aims to improve certain aspects of Prowlarr to make it work better with remote "infinite" library setups (Debrid/Usenet streaming, etc). This fork will be kept up-to-date with the Prowlarr develop branch and the changes in this fork are fully compatible with the original Prowlarr configs so you can freely swap back and forth between them.
 
-[![Wiki](https://img.shields.io/badge/servarr-wiki-181717.svg?maxAge=60)](https://wiki.servarr.com/prowlarr)
-[![Discord](https://img.shields.io/badge/discord-chat-7289DA.svg?maxAge=60)](https://prowlarr.com/discord)
+## Features
 
-Note: GitHub Issues are for Bugs and Feature Requests Only
+### Cache indexer query responses
 
-[![GitHub - Bugs and Feature Requests Only](https://img.shields.io/badge/github-issues-red.svg?maxAge=60)](https://github.com/Prowlarr/Prowlarr/issues)
+| Env Var           | Default | Description                                                                                                                                         |
+|-------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| CACHE_TTL_MINS    | 10      | How long a particular query response should be cached for. Should be <15 mins to ensure RSS queries get fresh data but you can go higher if needed. |
+| CACHE_MAX_SIZE_MB | 100     | Maximum size of cache in memory before old records are cleaned up. Higher values will use more memory.                                              |
 
-## Indexers & Trackers
 
-[![Supported Indexers](https://img.shields.io/badge/Supported%20Indexers-View%20all%20currently%20supported%20indexers%20%26%20trackers-important)](https://wiki.servarr.com/en/prowlarr/supported-indexers)
+Clients like decypharr/nzbdav/altmount cause a lot of repeated queries to the indexer that waste time and API queries. In particular, the workflow for most usenet streaming setups is:
+- Arrs search for an item
+- Arr grabs the item
+- decypharr/nzbdav/altmount check whether the nzb is streamable
+- If not streamable, mark the download as failed which triggers another search
+- Repeat
 
-[![Indexer Requests](https://img.shields.io/badge/Indexer%20Requests-Create%20and%20view%20existing%20requests%20for%20trackers%20and%20indexers-informational)](https://requests.prowlarr.com)
+On analyzing my prowlarr db for duplicate queries, I found that nearly 30% of queries were duplicated within 10 mins and having a cache would have saved thousands of queries to my indexers and also drastically speed up the search/import process.
 
-## Contributors & Developers
+Generally, if you're using any of the usenet streaming clients, this fork will give you much better search performance. Run this SQL query against your prowlarr db if you want to check how beneficial caching would be for your setup:
 
-[API Documentation](https://prowlarr.com/docs/api/)
+```sql
+WITH enriched AS (
+    SELECT
+        IndexerId,
+        json_extract(Data, '$.season') AS season,
+        json_extract(Data, '$.query') AS query,
+        json_extract(Data, '$.categories') AS categories,
+        json_extract(Data, '$.queryType') AS queryType,
+        json_extract(Data, '$.tvdbId') AS tvdbId,
+        json_extract(Data, '$.tmdbId') AS tmdbId,
+        json_extract(Data, '$.imdbId') AS imdbId,
+        CAST(strftime('%s', date) / 600 AS INTEGER) AS window_id
+    FROM History
+    WHERE date >= datetime('now', '-90 days') AND (EventType = 2 OR EventType = 3)
+    ),
+    grouped AS (
+SELECT
+    COUNT(*) AS total_calls,
+    COUNT(*) - 1 AS duplicate_calls
+FROM enriched
+GROUP BY
+    IndexerId, season, query, categories, queryType, tvdbId, tmdbId, imdbId, window_id
+    )
+SELECT
+    SUM(total_calls) AS total_requests,
+    SUM(duplicate_calls) AS total_duplicate_calls,
+    100.0 * SUM(duplicate_calls) / SUM(total_calls) AS duplicate_percent
+FROM grouped;
+```
 
-This project exists thanks to all the people who contribute.
+## Contributing
 
-- [Contribute (GitHub)](CONTRIBUTING.md)
-- [Contribution (Wiki Article)](https://wiki.servarr.com/prowlarr/contributing)
-- [YML Indexer Definition (Wiki Article)](https://wiki.servarr.com/prowlarr/cardigann-yml-definition)
-
-[![Contributors List](https://opencollective.com/Prowlarr/contributors.svg?width=890&button=false)](https://github.com/Prowlarr/Prowlarr/graphs/contributors)
-
-## Backers
-
-Thank you to all our backers! 🙏 [Become a backer](https://opencollective.com/Prowlarr#backer)
-![Backers List](https://opencollective.com/Prowlarr/backers.svg?width=890)
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [Become a sponsor](https://opencollective.com/Prowlarr#sponsor)
-![Sponsors List](https://opencollective.com/Prowlarr/sponsors.svg?width=890)
-
-## Mega Sponsors
-
-![Mega Sponsors List](https://opencollective.com/Prowlarr/tiers/mega-sponsor.svg?width=890)
-
-## JetBrains
-
-Thank you to [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png" alt="JetBrains" width="96">](http://www.jetbrains.com/) for providing us with free licenses to their great tools.
-
-* [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/ReSharper_icon.png" alt="ReSharper" width="32"> ReSharper](http://www.jetbrains.com/resharper/)
-* [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/WebStorm_icon.png" alt="WebStorm" width="32"> WebStorm](http://www.jetbrains.com/webstorm/)
-* [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/Rider_icon.png" alt="Rider" width="32"> Rider](http://www.jetbrains.com/rider/)
-* [<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/dotTrace_icon.png" alt="dotTrace" width="32"> dotTrace](http://www.jetbrains.com/dottrace/)
-
-### License
-
-- [GNU GPL v3](http://www.gnu.org/licenses/gpl.html)
-- Copyright 2010-2025
-
-Icon Credit - [Box vector created by freepik - www.freepik.com](https://www.freepik.com/vectors/box)
+Feel free to open issues or pull requests for any changes you'd like to see.

@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Net.Http.Headers;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -56,6 +57,7 @@ namespace NzbDrone.Api.V1.Indexers
 
         [HttpGet("/api/v1/indexer/{id:int}/newznab")]
         [HttpGet("{id:int}/api")]
+        [OutputCache]
         public async Task<IActionResult> GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
         {
             var requestType = request.t;

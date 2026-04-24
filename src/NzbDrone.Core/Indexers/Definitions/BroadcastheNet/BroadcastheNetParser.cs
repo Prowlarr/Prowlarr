@@ -95,7 +95,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                     Grabs = torrent.Snatched,
                     Seeders = torrent.Seeders,
                     Peers = torrent.Leechers + torrent.Seeders,
-                    PublishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).ToUniversalTime().AddSeconds(torrent.Time),
+                    PublishDate = DateTime.UnixEpoch.AddSeconds(torrent.Time),
                     Origin = torrent.Origin,
                     Source = torrent.Source,
                     Container = torrent.Container,

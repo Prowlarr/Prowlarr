@@ -226,8 +226,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in jsonContent.Value<JArray>("rows"))
             {
-                var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
                 var id = row.Value<string>("id");
                 var details = _settings.BaseUrl + "details.php?id=" + id;
                 var seeders = row.Value<int>("seeders");
@@ -243,7 +241,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = _settings.BaseUrl + "download.php?id=" + id + "&apikey=" + _settings.ApiKey,
                     Title = row.Value<string>("name"),
                     Categories = _categories.MapTrackerCatToNewznab(row.Value<int>("category").ToString()),
-                    PublishDate = dateTime.AddSeconds(row.Value<long>("added")).ToLocalTime(),
+                    PublishDate = DateTime.UnixEpoch.AddSeconds(row.Value<long>("added")).ToLocalTime(),
                     Size = row.Value<long>("size"),
                     Files = row.Value<int>("numfiles"),
                     Seeders = seeders,

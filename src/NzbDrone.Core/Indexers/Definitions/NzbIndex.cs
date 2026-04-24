@@ -1138,8 +1138,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in jsonContent.Value<JArray>("results"))
             {
-                var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
                 var id = row.Value<string>("id");
                 var details = _settings.BaseUrl + "collection/" + id;
 
@@ -1157,7 +1155,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = _settings.BaseUrl + "download/" + id,
                     Title = parsedTitle.Groups["title"].Value,
                     Categories = row.Value<JArray>("group_ids").SelectMany(g => _categories.MapTrackerCatToNewznab(g.Value<string>())).Distinct().ToList(),
-                    PublishDate = dateTime.AddMilliseconds(row.Value<long>("posted")).ToLocalTime(),
+                    PublishDate = DateTime.UnixEpoch.AddMilliseconds(row.Value<long>("posted")).ToLocalTime(),
                     Size = row.Value<long>("size"),
                     Files = row.Value<int>("file_count")
                 };

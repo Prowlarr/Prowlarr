@@ -444,7 +444,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                 var enctype = form.GetAttribute("enctype");
                 if (enctype == "multipart/form-data")
                 {
-                    var boundary = "---------------------------" + DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds.ToString().Replace(".", "");
+                    var boundary = "---------------------------" + (DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds.ToString().Replace(".", "");
                     var bodyParts = new List<string>();
 
                     foreach (var pair in pairs)

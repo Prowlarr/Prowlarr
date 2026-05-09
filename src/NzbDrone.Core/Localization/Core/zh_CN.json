@@ -754,7 +754,7 @@
     "IndexerPassThePopcornSettingsFreeleechOnlyHelpText": "只搜索免费发布",
     "IndexerFileListSettingsFreeleechOnlyHelpText": "只搜索免费发布",
     "IndexerFileListSettingsUsernameHelpText": "网站用户名",
-    "IndexerBeyondHDSettingsRefundOnlyHelpText": "Search refund only",
+    "IndexerBeyondHDSettingsRefundOnlyHelpText": "仅搜索退款记录",
     "DownloadClientUTorrentProviderMessage": "uTorrent 曾经含有挖矿行为、恶意软件和广告，我们强烈建议你选择其他客户端。",
     "IndexerId": "索引器",
     "IndexerSettingsPasskey": "通行密钥",

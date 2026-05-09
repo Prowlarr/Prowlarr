@@ -13,5 +13,6 @@
     "UnableToAddANewIndexerPleaseTryAgain": "添加",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "添加",
     "UnableToAddANewNotificationPleaseTryAgain": "添加",
-    "Actions": "操作"
+    "Actions": "操作",
+    "ActiveApps": "启用APP"
 }

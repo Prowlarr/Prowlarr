@@ -63,63 +63,22 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (Settings.UseFreeleechWedge is (int)MyAnonamouseFreeleechWedgeAction.Preferred or (int)MyAnonamouseFreeleechWedgeAction.Required &&
                 bool.TryParse(link.GetQueryParam("canUseToken"), out var canUseToken) && canUseToken)
             {
-                _logger.Debug("Attempting to use freeleech wedge for {0}", downloadLink.AbsoluteUri);
+                var flDownloadLink = new Uri(downloadLink.AbsoluteUri + "&fl");
 
-                if (int.TryParse(link.GetQueryParam("tid"), out var torrentId) && torrentId > 0)
+                _logger.Debug("Attempting to use freeleech wedge for {0}", flDownloadLink.AbsoluteUri);
+
+                try
                 {
-                    var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-                    var freeleechUrl = Settings.BaseUrl + $"json/bonusBuy.php/{timestamp}";
-
-                    var freeleechRequestBuilder = new HttpRequestBuilder(freeleechUrl)
-                        .Accept(HttpAccept.Json)
-                        .AddQueryParam("spendtype", "personalFL")
-                        .AddQueryParam("torrentid", torrentId)
-                        .AddQueryParam("timestamp", timestamp.ToString());
-
-                    freeleechRequestBuilder.LogResponseContent = true;
-
-                    var cookies = GetCookies();
-
-                    if (cookies != null && cookies.Any())
-                    {
-                        freeleechRequestBuilder.SetCookies(cookies);
-                    }
-
-                    var freeleechRequest = freeleechRequestBuilder.Build();
-
-                    var freeleechResponse = await _httpClient.ExecuteProxiedAsync(freeleechRequest, Definition).ConfigureAwait(false);
-
-                    var resource = Json.Deserialize<MyAnonamouseBuyPersonalFreeleechResponse>(freeleechResponse.Content);
-
-                    if (resource.Success)
-                    {
-                        _logger.Debug("Successfully used freeleech wedge for torrentid {0}.", torrentId);
-                    }
-                    else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This Torrent is VIP"))
-                    {
-                        _logger.Debug("{0} is already VIP, continuing downloading: {1}", torrentId, resource.Error);
-                    }
-                    else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This is already a personal freeleech"))
-                    {
-                        _logger.Debug("{0} is already a personal freeleech, continuing downloading: {1}", torrentId, resource.Error);
-                    }
-                    else
-                    {
-                        _logger.Warn("Failed to purchase freeleech wedge for {0}: {1}", torrentId, resource.Error);
-
-                        if (Settings.UseFreeleechWedge == (int)MyAnonamouseFreeleechWedgeAction.Preferred)
-                        {
-                            _logger.Debug("'Use Freeleech Wedge' option set to preferred, continuing downloading: '{0}'", downloadLink.AbsoluteUri);
-                        }
-                        else
-                        {
-                            throw new ReleaseUnavailableException($"Failed to buy freeleech wedge and 'Use Freeleech Wedge' is set to required, aborting download: '{downloadLink.AbsoluteUri}'");
-                        }
-                    }
+                    return await base.Download(flDownloadLink).ConfigureAwait(false);
                 }
-                else
+                catch (ReleaseDownloadException ex)
                 {
-                    _logger.Warn("Could not get torrent id from link {0}, skipping use of freeleech wedge.", downloadLink.AbsoluteUri);
+                    if (Settings.UseFreeleechWedge == (int)MyAnonamouseFreeleechWedgeAction.Required)
+                    {
+                        throw new ReleaseUnavailableException($"Failed to use freeleech wedge and 'Use Freeleech Wedge' is set to required, aborting download: '{downloadLink.AbsoluteUri}'", ex);
+                    }
+
+                    _logger.Debug(ex, "Freeleech wedge attempt failed, retrying without freeleech wedge: '{0}'", downloadLink.AbsoluteUri);
                 }
             }
 
@@ -909,12 +868,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public string Error { get; set; }
         public IReadOnlyCollection<MyAnonamouseTorrent> Data { get; set; }
         public string Message { get; set; }
-    }
-
-    public class MyAnonamouseBuyPersonalFreeleechResponse
-    {
-        public bool Success { get; set; }
-        public string Error { get; set; }
     }
 
     public class MyAnonamouseUserDataResponse

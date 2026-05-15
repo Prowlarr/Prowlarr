@@ -275,7 +275,7 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.MinAge.HasValue)
             {
-                parameters.Set("minage", searchCriteria.MaxAge.ToString());
+                parameters.Set("minage", searchCriteria.MinAge.ToString());
             }
 
             if (searchCriteria.MaxAge.HasValue)
@@ -285,12 +285,12 @@ namespace NzbDrone.Core.Indexers.Newznab
 
             if (searchCriteria.MinSize.HasValue)
             {
-                parameters.Set("minsize", searchCriteria.MaxAge.ToString());
+                parameters.Set("minsize", searchCriteria.MinSize.ToString());
             }
 
             if (searchCriteria.MaxSize.HasValue)
             {
-                parameters.Set("maxsize", searchCriteria.MaxAge.ToString());
+                parameters.Set("maxsize", searchCriteria.MaxSize.ToString());
             }
 
             if (parameters.Count > 0)

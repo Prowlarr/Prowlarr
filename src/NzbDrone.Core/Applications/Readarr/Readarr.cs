@@ -99,7 +99,7 @@ namespace NzbDrone.Core.Applications.Readarr
             {
                 var baseUrl = (string)indexer.Fields.FirstOrDefault(x => x.Name == "baseUrl")?.Value ?? string.Empty;
 
-                if (!baseUrl.StripCredentials().StartsWith(Settings.ProwlarrUrl.TrimEnd('/')) &&
+                if (!baseUrl.StartsWith(Settings.ProwlarrUrl.TrimEnd('/')) &&
                     (string)indexer.Fields.FirstOrDefault(x => x.Name == "apiKey")?.Value != _configFileProvider.ApiKey)
                 {
                     continue;
@@ -254,8 +254,7 @@ namespace NzbDrone.Core.Applications.Readarr
 
             readarrIndexer.Fields.AddRange(schema.Fields.Where(x => syncFields.Contains(x.Name)));
 
-            var prowlarrUrl = Settings.ProwlarrUrl.TrimEnd('/').WithBasicAuth(Settings.ProwlarrAuthUsername, Settings.ProwlarrAuthPassword);
-            readarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{prowlarrUrl}/{indexer.Id}/";
+            readarrIndexer.Fields.FirstOrDefault(x => x.Name == "baseUrl").Value = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/";
             readarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             readarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             readarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));

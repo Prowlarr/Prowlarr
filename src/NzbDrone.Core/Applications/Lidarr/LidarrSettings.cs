@@ -42,6 +42,18 @@ namespace NzbDrone.Core.Applications.Lidarr
         [FieldDefinition(4, Type = FieldType.Checkbox, Label = "ApplicationSettingsSyncRejectBlocklistedTorrentHashes", HelpText = "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
         public bool SyncRejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
 
+        [FieldDefinition(5, Label = "ApplicationAuthUsername", HelpText = "ApplicationAuthUsernameHelpText", Privacy = PrivacyLevel.UserName, Advanced = true)]
+        public string AuthUsername { get; set; }
+
+        [FieldDefinition(6, Label = "ApplicationAuthPassword", HelpText = "ApplicationAuthPasswordHelpText", Type = FieldType.Password, Privacy = PrivacyLevel.Password, Advanced = true)]
+        public string AuthPassword { get; set; }
+
+        [FieldDefinition(7, Label = "ApplicationProwlarrAuthUsername", HelpText = "ApplicationProwlarrAuthUsernameHelpText", Privacy = PrivacyLevel.UserName, Advanced = true)]
+        public string ProwlarrAuthUsername { get; set; }
+
+        [FieldDefinition(8, Label = "ApplicationProwlarrAuthPassword", HelpText = "ApplicationProwlarrAuthPasswordHelpText", Type = FieldType.Password, Privacy = PrivacyLevel.Password, Advanced = true)]
+        public string ProwlarrAuthPassword { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

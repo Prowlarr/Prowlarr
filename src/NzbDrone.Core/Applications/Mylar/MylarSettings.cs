@@ -40,6 +40,18 @@ namespace NzbDrone.Core.Applications.Mylar
         [FieldDefinition(3, Label = "Sync Categories", Type = FieldType.Select, SelectOptions = typeof(NewznabCategoryFieldConverter), Advanced = true, HelpText = "Only Indexers that support these categories will be synced")]
         public IEnumerable<int> SyncCategories { get; set; }
 
+        [FieldDefinition(4, Label = "ApplicationAuthUsername", HelpText = "ApplicationAuthUsernameHelpText", Privacy = PrivacyLevel.UserName, Advanced = true)]
+        public string AuthUsername { get; set; }
+
+        [FieldDefinition(5, Label = "ApplicationAuthPassword", HelpText = "ApplicationAuthPasswordHelpText", Type = FieldType.Password, Privacy = PrivacyLevel.Password, Advanced = true)]
+        public string AuthPassword { get; set; }
+
+        [FieldDefinition(6, Label = "ApplicationProwlarrAuthUsername", HelpText = "ApplicationProwlarrAuthUsernameHelpText", Privacy = PrivacyLevel.UserName, Advanced = true)]
+        public string ProwlarrAuthUsername { get; set; }
+
+        [FieldDefinition(7, Label = "ApplicationProwlarrAuthPassword", HelpText = "ApplicationProwlarrAuthPasswordHelpText", Type = FieldType.Password, Privacy = PrivacyLevel.Password, Advanced = true)]
+        public string ProwlarrAuthPassword { get; set; }
+
         public NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));

@@ -152,12 +152,13 @@ namespace NzbDrone.Core.Applications.LazyLibrarian
         private LazyLibrarianIndexer BuildLazyLibrarianIndexer(IndexerDefinition indexer, IndexerCapabilities indexerCapabilities, DownloadProtocol protocol, string originalName = null)
         {
             var schema = protocol == DownloadProtocol.Usenet ? LazyLibrarianProviderType.Newznab : LazyLibrarianProviderType.Torznab;
+            var prowlarrUrl = Settings.ProwlarrUrl.TrimEnd('/').WithBasicAuth(Settings.ProwlarrAuthUsername, Settings.ProwlarrAuthPassword);
 
             var lazyLibrarianIndexer = new LazyLibrarianIndexer
             {
                 Name = originalName ?? $"{indexer.Name} (Prowlarr)",
                 Altername = $"{indexer.Name} (Prowlarr)",
-                Host = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/api",
+                Host = $"{prowlarrUrl}/{indexer.Id}/api",
                 Apikey = _configFileProvider.ApiKey,
                 Categories = string.Join(",", indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),
                 Enabled = indexer.Enable,

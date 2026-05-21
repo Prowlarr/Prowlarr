@@ -5,6 +5,7 @@ using System.Net.Http;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 
@@ -178,16 +179,16 @@ namespace NzbDrone.Core.Applications.Whisparr
 
         private HttpRequest BuildRequest(WhisparrSettings settings, string resource, HttpMethod method)
         {
-            var baseUrl = settings.BaseUrl.TrimEnd('/').StripCredentials(out var credentials);
+            var baseUrl = settings.BaseUrl.TrimEnd('/');
 
             var requestBuilder = new HttpRequestBuilder(baseUrl)
                 .Resource(resource)
                 .Accept(HttpAccept.Json)
                 .SetHeader("X-Api-Key", settings.ApiKey);
 
-            if (credentials != null)
+            if (settings.AuthUsername.IsNotNullOrWhiteSpace() || settings.AuthPassword.IsNotNullOrWhiteSpace())
             {
-                requestBuilder.NetworkCredential = credentials;
+                requestBuilder.NetworkCredential = new BasicNetworkCredential(settings.AuthUsername, settings.AuthPassword);
             }
 
             var request = requestBuilder.Build();

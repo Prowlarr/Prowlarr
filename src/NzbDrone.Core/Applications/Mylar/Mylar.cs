@@ -152,12 +152,13 @@ namespace NzbDrone.Core.Applications.Mylar
         private MylarIndexer BuildMylarIndexer(IndexerDefinition indexer, IndexerCapabilities indexerCapabilities, DownloadProtocol protocol, string originalName = null)
         {
             var schema = protocol == DownloadProtocol.Usenet ? MylarProviderType.Newznab : MylarProviderType.Torznab;
+            var prowlarrUrl = Settings.ProwlarrUrl.TrimEnd('/').WithBasicAuth(Settings.ProwlarrAuthUsername, Settings.ProwlarrAuthPassword);
 
             var mylarIndexer = new MylarIndexer
             {
                 Name = originalName ?? $"{indexer.Name} (Prowlarr)",
                 Altername = $"{indexer.Name} (Prowlarr)",
-                Host = $"{Settings.ProwlarrUrl.TrimEnd('/')}/{indexer.Id}/api",
+                Host = $"{prowlarrUrl}/{indexer.Id}/api",
                 Apikey = _configFileProvider.ApiKey,
                 Categories = string.Join(",", indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray())),
                 Enabled = indexer.Enable,

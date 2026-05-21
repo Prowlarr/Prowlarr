@@ -193,13 +193,19 @@ namespace NzbDrone.Core.Applications.Lidarr
 
         private HttpRequest BuildRequest(LidarrSettings settings, string resource, HttpMethod method)
         {
-            var baseUrl = settings.BaseUrl.TrimEnd('/');
+            var baseUrl = settings.BaseUrl.TrimEnd('/').StripCredentials(out var credentials);
 
-            var request = new HttpRequestBuilder(baseUrl)
+            var requestBuilder = new HttpRequestBuilder(baseUrl)
                 .Resource(resource)
                 .Accept(HttpAccept.Json)
-                .SetHeader("X-Api-Key", settings.ApiKey)
-                .Build();
+                .SetHeader("X-Api-Key", settings.ApiKey);
+
+            if (credentials != null)
+            {
+                requestBuilder.NetworkCredential = credentials;
+            }
+
+            var request = requestBuilder.Build();
 
             request.Headers.ContentType = "application/json";
 

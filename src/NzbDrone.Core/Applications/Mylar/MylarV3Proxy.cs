@@ -158,13 +158,18 @@ namespace NzbDrone.Core.Applications.Mylar
 
         private HttpRequest BuildRequest(MylarSettings settings, string resource, string command, HttpMethod method, Dictionary<string, string> parameters = null)
         {
-            var baseUrl = settings.BaseUrl.TrimEnd('/');
+            var baseUrl = settings.BaseUrl.TrimEnd('/').StripCredentials(out var credentials);
 
             var requestBuilder = new HttpRequestBuilder(baseUrl)
                 .Resource(resource)
                 .Accept(HttpAccept.Json)
                 .AddQueryParam("cmd", command)
                 .AddQueryParam("apikey", settings.ApiKey);
+
+            if (credentials != null)
+            {
+                requestBuilder.NetworkCredential = credentials;
+            }
 
             if (parameters != null)
             {

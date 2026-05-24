@@ -135,5 +135,8 @@
     "DeleteClientCategory": "Tambahkan Download Client",
     "DeleteDownloadClient": "Tambahkan Download Client",
     "EditSyncProfile": "Tambah Delay Profile",
-    "EditIndexerProxyImplementation": "tambah persyaratan {implementationName}"
+    "EditIndexerProxyImplementation": "tambah persyaratan {implementationName}",
+    "AddCustomFilter": "tambah filter khusus",
+    "AddConnection": "tambah koneksi",
+    "AddConnectionImplementation": "tambah koneksi - {implementationName}"
 }

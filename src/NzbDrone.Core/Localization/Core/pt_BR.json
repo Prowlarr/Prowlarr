@@ -807,5 +807,9 @@
     "FailedToFetchSettings": "Falha ao obter configurações",
     "CurrentlyInstalled": "Atualmente instalado",
     "PreviouslyInstalled": "Instalado anteriormente",
-    "DownloadClientUTorrentProviderMessage": "O uTorrent tem um histórico de inclusão de criptomineradores, malware e anúncios. Recomendamos fortemente que você escolha um cliente diferente."
+    "DownloadClientUTorrentProviderMessage": "O uTorrent tem um histórico de inclusão de criptomineradores, malware e anúncios. Recomendamos fortemente que você escolha um cliente diferente.",
+    "ApplicationAuthPassword": "Senha de autenticação",
+    "ApplicationAuthPasswordHelpText": "Senha de autenticação básica HTTP usada pelo {appName} ao acessar este aplicativo. Defina se o aplicativo estiver atrás de um proxy reverso protegido por autenticação básica.",
+    "ApplicationAuthUsername": "Usuário de autenticação",
+    "ApplicationAuthUsernameHelpText": "Nome de usuário de autenticação básica HTTP usado pelo {appName} ao acessar este aplicativo. Defina se o aplicativo estiver atrás de um proxy reverso protegido por autenticação básica."
 }

@@ -14,5 +14,11 @@
     "UnableToAddANewIndexerProxyPleaseTryAgain": "添加",
     "UnableToAddANewNotificationPleaseTryAgain": "添加",
     "Actions": "操作",
-    "ActiveApps": "启用APP"
+    "ActiveApps": "启用APP",
+    "Updates": "更新",
+    "Uptime": "运行时间",
+    "UseProxy": "使用代理",
+    "Warn": "警告",
+    "YesCancel": "确认 ,取消",
+    "Yesterday": "昨天"
 }

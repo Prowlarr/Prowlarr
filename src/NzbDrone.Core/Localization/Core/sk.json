@@ -130,12 +130,12 @@
     "UnableToAddANewDownloadClientPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
     "UnableToAddANewNotificationPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
     "UnableToAddANewIndexerPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
-    "BackupsLoadError": "Nie je možné načítať albumy",
+    "BackupsLoadError": "Nie je možné načítať zálohy",
     "Docker": "Docker",
     "UnableToAddANewApplicationPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
-    "EditIndexerImplementation": "Pridať Indexer - {implementationName}",
+    "EditIndexerImplementation": "Upraviť indexer - {implementationName}",
     "AddApplicationImplementation": "Pridať pripojenie - {implementationName}",
-    "EditConnectionImplementation": "Pridať pripojenie - {implementationName}",
+    "EditConnectionImplementation": "Upraviť pripojenie - {implementationName}",
     "EditDownloadClientImplementation": "Pridať klienta pre sťahovanie - {implementationName}",
     "UnableToAddANewIndexerProxyPleaseTryAgain": "Nie je možné pridať novú podmienku, skúste to znova.",
     "Directory": "Priečinok",
@@ -806,5 +806,10 @@
     "TotalHostGrabs": "Celkový počet získaných hostiteľov",
     "TotalIndexerSuccessfulGrabs": "Celkový počet úspešných načítaní indexátorom",
     "TotalUserAgentGrabs": "Celkový počet získaní používateľských agentov",
-    "UpdateUiNotWritableHealthCheckMessage": "Aktualizáciu nie je možné nainštalovať, pretože používateľ '{userName}' nemôže zapisovať do priečinka '{uiFolder}'."
+    "UpdateUiNotWritableHealthCheckMessage": "Aktualizáciu nie je možné nainštalovať, pretože používateľ '{userName}' nemôže zapisovať do priečinka '{uiFolder}'.",
+    "AddCustomFilter": "Pridať vlastný filter",
+    "ApplicationAuthPassword": "Auth heslo",
+    "ApplicationAuthPasswordHelpText": "Heslo pre základné overenie HTTP, ktoré používa {appName} pri prístupe k tejto aplikácii. Nastavte, ak sa aplikácia nachádza za reverzným proxy serverom chráneným základným overením.",
+    "ApplicationAuthUsername": "Auth používateľské meno",
+    "ApplicationAuthUsernameHelpText": "Používateľské meno HTTP Basic Authentication, ktoré používa {appName} pri prístupe k tejto aplikácii. Nastavte, ak sa aplikácia nachádza za reverzným proxy serverom chráneným základným overením."
 }

@@ -803,5 +803,7 @@
     "PreferMagnetUrl": "磁力链接优先",
     "PreferMagnetUrlHelpText": "若开启，该索引器将优先使用磁力链接，种子链接作为备用",
     "ProwlarrDownloadClientsAlert": "如果你想直接在 {appName} 中搜索，你需要添加下载管理器，否则你不需要在此添加。你的程序中的搜索行为将使用它自己的下载管理器配置。",
-    "ProwlarrDownloadClientsInAppOnlyAlert": "下载管理器仅对 {appName} 中搜索有效，而不会同步到其他程序中。目前没有添加此功能的计划。"
+    "ProwlarrDownloadClientsInAppOnlyAlert": "下载管理器仅对 {appName} 中搜索有效，而不会同步到其他程序中。目前没有添加此功能的计划。",
+    "IndexerNewznabSettingsAdditionalParametersHelpText": "額外的 Newznab 參數（例如 `&t=search&cat=2000,2010&extended=1`）",
+    "IndexerSettingsApiUser": "API 使用者"
 }

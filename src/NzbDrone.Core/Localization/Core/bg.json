@@ -806,5 +806,6 @@
     "Website": "Уебсайт",
     "WouldYouLikeToRestoreBackup": "Искате ли да възстановите архива '{name}'?",
     "XmlRpcPath": "XML RPC път",
-    "days": "дни"
+    "days": "дни",
+    "Category": "Категория"
 }

@@ -807,5 +807,9 @@
     "FailedToFetchSettings": "Error al recuperar la configuración",
     "CurrentlyInstalled": "Actualmente instalado",
     "PreviouslyInstalled": "Previamente instalado",
-    "DownloadClientUTorrentProviderMessage": "uTorrent tiene un amplio historial de incluir criptomineros, malware y publicidad, por lo que recomendamos encarecidamente que elijas un cliente diferente."
+    "DownloadClientUTorrentProviderMessage": "uTorrent tiene un amplio historial de incluir criptomineros, malware y publicidad, por lo que recomendamos encarecidamente que elijas un cliente diferente.",
+    "ApplicationAuthPassword": "Contraseña de autenticación",
+    "ApplicationAuthPasswordHelpText": "Contraseña de autenticación básica en HTTP usada por {appName} cuando se accede a esta aplicación. Establecer si la aplicación se sitúa tras un proxy inverso protegido por autenticación básica.",
+    "ApplicationAuthUsername": "Usuario de autenticación",
+    "ApplicationAuthUsernameHelpText": "Usuario de autenticación básico en HTTP usado por {appName} cuando se accede a esta aplicación. Establecer si la aplicación se sitúa tras un proxy inverso protegido por autenticación básica."
 }

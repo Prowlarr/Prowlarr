@@ -242,5 +242,6 @@
     "SyncProfiles": "Dodaj Profil Odgode",
     "DeleteSelectedDownloadClients": "Klijent za preuzimanje",
     "EditSelectedDownloadClients": "Klijent za preuzimanje",
-    "Download": "Ponovno preuzimanje neuspješno"
+    "Download": "Ponovno preuzimanje neuspješno",
+    "AddCustomFilter": "Dodaj proizvoljan filter"
 }

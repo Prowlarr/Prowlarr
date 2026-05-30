@@ -59,10 +59,13 @@ public class SecretCinema : GazelleBase<GazelleSettings>
     }
 }
 
-public class SecretCinemaParser : IParseIndexerResponse
+public partial class SecretCinemaParser : IParseIndexerResponse
 {
     private readonly GazelleSettings _settings;
     private readonly IndexerCapabilities _capabilities;
+
+    [GeneratedRegex(@"(\b|[-._ ])((?:19|20)\d{2})(\b|[-._ ])", RegexOptions.Compiled)]
+    private static partial Regex YearRegex();
 
     public SecretCinemaParser(GazelleSettings settings, IndexerCapabilities capabilities)
     {
@@ -145,18 +148,23 @@ public class SecretCinemaParser : IParseIndexerResponse
 
                     if (IsAnyMovieCategory(release.Categories))
                     {
-                        // Remove director from title
-                        // SC API returns no more useful information than this
-                        release.Title = $"{title} ({result.GroupYear}) {torrent.Media}".Trim();
-
-                        if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+                        if (torrent.RemasterTitle.IsNotNullOrWhiteSpace() && YearRegex().IsMatch(torrent.RemasterTitle))
                         {
-                            release.Title += $" [{WebUtility.HtmlDecode(torrent.RemasterTitle).Trim()}]";
+                            release.Title = WebUtility.HtmlDecode(torrent.RemasterTitle).Trim();
                         }
+                        else
+                        {
+                            release.Title = $"{title} ({result.GroupYear}) {torrent.Media}".Trim();
 
-                        // Replace media formats with standards
-                        release.Title = Regex.Replace(release.Title, @"\bBDMV\b", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
-                        release.Title = Regex.Replace(release.Title, @"\bSD\b", "DVDRip", RegexOptions.IgnoreCase);
+                            if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
+                            {
+                                release.Title += $" [{WebUtility.HtmlDecode(torrent.RemasterTitle).Trim()}]";
+                            }
+
+                            // Replace media formats with standards
+                            release.Title = Regex.Replace(release.Title, @"\bBDMV\b", "COMPLETE BLURAY", RegexOptions.IgnoreCase);
+                            release.Title = Regex.Replace(release.Title, @"\bSD\b", "DVDRip", RegexOptions.IgnoreCase);
+                        }
                     }
                     else
                     {

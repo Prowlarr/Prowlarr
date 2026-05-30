@@ -158,7 +158,7 @@ public partial class SecretCinemaParser : IParseIndexerResponse
 
                             if (torrent.RemasterTitle.IsNotNullOrWhiteSpace())
                             {
-                                release.Title += $" [{WebUtility.HtmlDecode(torrent.RemasterTitle).Trim()}]";
+                                release.Title += $" / {WebUtility.HtmlDecode(torrent.RemasterTitle).Trim()}";
                             }
 
                             // Replace media formats with standards

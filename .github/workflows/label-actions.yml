@@ -8,16 +8,14 @@ on:
   discussion:
     types: [labeled, unlabeled]
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-  discussions: write
-
 jobs:
   action:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     steps:
-      - uses: dessant/label-actions@v4
+      - uses: dessant/label-actions@v5
         with:
           process-only: 'issues, prs'

@@ -16,7 +16,6 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -56,76 +55,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new MyAnonamouseParser(Definition, Settings, Capabilities.Categories, _httpClient, _cacheManager, _logger);
         }
 
-        public override async Task<IndexerDownloadResponse> Download(Uri link)
-        {
-            var downloadLink = link.RemoveQueryParam("canUseToken");
-
-            if (Settings.UseFreeleechWedge is (int)MyAnonamouseFreeleechWedgeAction.Preferred or (int)MyAnonamouseFreeleechWedgeAction.Required &&
-                bool.TryParse(link.GetQueryParam("canUseToken"), out var canUseToken) && canUseToken)
-            {
-                _logger.Debug("Attempting to use freeleech wedge for {0}", downloadLink.AbsoluteUri);
-
-                if (int.TryParse(link.GetQueryParam("tid"), out var torrentId) && torrentId > 0)
-                {
-                    var timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-                    var freeleechUrl = Settings.BaseUrl + $"json/bonusBuy.php/{timestamp}";
-
-                    var freeleechRequestBuilder = new HttpRequestBuilder(freeleechUrl)
-                        .Accept(HttpAccept.Json)
-                        .AddQueryParam("spendtype", "personalFL")
-                        .AddQueryParam("torrentid", torrentId)
-                        .AddQueryParam("timestamp", timestamp.ToString());
-
-                    freeleechRequestBuilder.LogResponseContent = true;
-
-                    var cookies = GetCookies();
-
-                    if (cookies != null && cookies.Any())
-                    {
-                        freeleechRequestBuilder.SetCookies(cookies);
-                    }
-
-                    var freeleechRequest = freeleechRequestBuilder.Build();
-
-                    var freeleechResponse = await _httpClient.ExecuteProxiedAsync(freeleechRequest, Definition).ConfigureAwait(false);
-
-                    var resource = Json.Deserialize<MyAnonamouseBuyPersonalFreeleechResponse>(freeleechResponse.Content);
-
-                    if (resource.Success)
-                    {
-                        _logger.Debug("Successfully used freeleech wedge for torrentid {0}.", torrentId);
-                    }
-                    else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This Torrent is VIP"))
-                    {
-                        _logger.Debug("{0} is already VIP, continuing downloading: {1}", torrentId, resource.Error);
-                    }
-                    else if (resource.Error.IsNotNullOrWhiteSpace() && resource.Error.ContainsIgnoreCase("This is already a personal freeleech"))
-                    {
-                        _logger.Debug("{0} is already a personal freeleech, continuing downloading: {1}", torrentId, resource.Error);
-                    }
-                    else
-                    {
-                        _logger.Warn("Failed to purchase freeleech wedge for {0}: {1}", torrentId, resource.Error);
-
-                        if (Settings.UseFreeleechWedge == (int)MyAnonamouseFreeleechWedgeAction.Preferred)
-                        {
-                            _logger.Debug("'Use Freeleech Wedge' option set to preferred, continuing downloading: '{0}'", downloadLink.AbsoluteUri);
-                        }
-                        else
-                        {
-                            throw new ReleaseUnavailableException($"Failed to buy freeleech wedge and 'Use Freeleech Wedge' is set to required, aborting download: '{downloadLink.AbsoluteUri}'");
-                        }
-                    }
-                }
-                else
-                {
-                    _logger.Warn("Could not get torrent id from link {0}, skipping use of freeleech wedge.", downloadLink.AbsoluteUri);
-                }
-            }
-
-            return await base.Download(downloadLink).ConfigureAwait(false);
-        }
-
         protected override IDictionary<string, string> GetCookies()
         {
             var cookies = base.GetCookies();
@@ -147,7 +76,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             await base.Test(failures).ConfigureAwait(false);
         }
 
-        private IndexerCapabilities SetCapabilities()
+        private static IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
@@ -563,9 +492,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .CombinePath("/tor/download.php")
                 .AddQueryParam("tid", torrentId);
 
-            if (_settings.UseFreeleechWedge is (int)MyAnonamouseFreeleechWedgeAction.Preferred or (int)MyAnonamouseFreeleechWedgeAction.Required && canUseToken)
+            if (_settings.UseFreeleechWedge && canUseToken)
             {
-                url = url.AddQueryParam("canUseToken", "true");
+                url = url.AddQueryParam("fl", "1");
             }
 
             return url.FullUri;
@@ -623,7 +552,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             SearchInSeries = false;
             SearchInFilenames = false;
             SearchLanguages = Array.Empty<int>();
-            UseFreeleechWedge = (int)MyAnonamouseFreeleechWedgeAction.Never;
         }
 
         [FieldDefinition(2, Type = FieldType.Textbox, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
@@ -644,8 +572,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(7, Type = FieldType.Select, Label = "Search Languages", SelectOptions = typeof(MyAnonamouseSearchLanguages), HelpText = "Specify the desired languages. If unspecified, all options are used.")]
         public IEnumerable<int> SearchLanguages { get; set; }
 
-        [FieldDefinition(8, Type = FieldType.Select, Label = "Use Freeleech Wedges", SelectOptions = typeof(MyAnonamouseFreeleechWedgeAction), HelpText = "Use freeleech wedges to make grabbed torrents personal freeleech")]
-        public int UseFreeleechWedge { get; set; }
+        [FieldDefinition(8, Type = FieldType.Checkbox, Label = "Use Freeleech Wedges", HelpText = "Use freeleech wedges to make grabbed torrents personal freeleech")]
+        public bool UseFreeleechWedge { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
@@ -653,7 +581,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public enum MyAnonamouseSearchType
+    internal enum MyAnonamouseSearchType
     {
         [FieldOption(Label="All torrents", Hint = "Search everything")]
         All = 0,
@@ -674,7 +602,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         NotVip = 5,
     }
 
-    public enum MyAnonamouseSearchLanguages
+    internal enum MyAnonamouseSearchLanguages
     {
         [FieldOption(Label="English")]
         English = 1,
@@ -866,60 +794,42 @@ namespace NzbDrone.Core.Indexers.Definitions
         Other = 47,
     }
 
-    public enum MyAnonamouseFreeleechWedgeAction
+    internal class MyAnonamouseTorrent
     {
-        [FieldOption(Label = "Never", Hint = "Do not buy as freeleech")]
-        Never = 0,
-
-        [FieldOption(Label = "Preferred", Hint = "Buy and use wedge if possible")]
-        Preferred = 1,
-
-        [FieldOption(Label = "Required", Hint = "Abort download if unable to buy wedge")]
-        Required = 2,
-    }
-
-    public class MyAnonamouseTorrent
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
+        public int Id { get; init; }
+        public string Title { get; init; }
         [JsonProperty(PropertyName = "author_info")]
-        public string AuthorInfo { get; set; }
-        public string Description { get; set; }
+        public string AuthorInfo { get; init; }
+        public string Description { get; init; }
         [JsonProperty(PropertyName = "lang_code")]
-        public string LanguageCode { get; set; }
-        public string Filetype { get; set; }
-        public bool Vip { get; set; }
-        public bool Free { get; set; }
+        public string LanguageCode { get; init; }
+        public string Filetype { get; init; }
+        public bool Vip { get; init; }
+        public bool Free { get; init; }
         [JsonProperty(PropertyName = "personal_freeleech")]
-        public bool PersonalFreeLeech { get; set; }
+        public bool PersonalFreeLeech { get; init; }
         [JsonProperty(PropertyName = "fl_vip")]
-        public bool FreeVip { get; set; }
-        public string Category { get; set; }
-        public string Added { get; set; }
+        public bool FreeVip { get; init; }
+        public string Category { get; init; }
+        public string Added { get; init; }
         [JsonProperty(PropertyName = "times_completed")]
-        public int Grabs { get; set; }
-        public int Seeders { get; set; }
-        public int Leechers { get; set; }
-        public int NumFiles { get; set; }
-        public string Size { get; set; }
+        public int Grabs { get; init; }
+        public int Seeders { get; init; }
+        public int Leechers { get; init; }
+        public int NumFiles { get; init; }
+        public string Size { get; init; }
     }
 
-    public class MyAnonamouseResponse
+    internal class MyAnonamouseResponse
     {
-        public string Error { get; set; }
-        public IReadOnlyCollection<MyAnonamouseTorrent> Data { get; set; }
-        public string Message { get; set; }
+        public string Error { get; init; }
+        public IReadOnlyCollection<MyAnonamouseTorrent> Data { get; init; }
+        public string Message { get; init; }
     }
 
-    public class MyAnonamouseBuyPersonalFreeleechResponse
-    {
-        public bool Success { get; set; }
-        public string Error { get; set; }
-    }
-
-    public class MyAnonamouseUserDataResponse
+    internal class MyAnonamouseUserDataResponse
     {
         [JsonProperty(PropertyName = "classname")]
-        public string UserClass { get; set; }
+        public string UserClass { get; init; }
     }
 }

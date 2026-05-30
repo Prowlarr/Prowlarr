@@ -55,6 +55,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             return new MyAnonamouseParser(Definition, Settings, Capabilities.Categories, _httpClient, _cacheManager, _logger);
         }
 
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var request = new HttpRequestBuilder(link.AbsoluteUri).Build();
+
+            return Task.FromResult(request);
+        }
+
         protected override IDictionary<string, string> GetCookies()
         {
             var cookies = base.GetCookies();
@@ -233,7 +240,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "tor[perpage]", searchCriteria.Limit?.ToString() ?? "100" },
                 { "tor[startNumber]", searchCriteria.Offset?.ToString() ?? "0" },
                 { "thumbnails", "1" }, // gives links for thumbnail sized versions of their posters
-                { "description", "1" } // include the description
+                { "description", "1" }, // include the description
+                { "dlLink", "1" }, // include download link hash
             };
 
             if (_settings.SearchInDescription)
@@ -462,7 +470,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var isFreeLeech = item.Free || item.PersonalFreeLeech || (hasUserVip && item.FreeVip);
 
-                release.DownloadUrl = GetDownloadUrl(id, !isFreeLeech);
+                release.DownloadUrl = GetDownloadUrl(id, item.DownloadHash, !isFreeLeech);
                 release.InfoUrl = $"{_settings.BaseUrl}t/{id}";
                 release.Guid = release.InfoUrl;
                 release.Categories = _categories.MapTrackerCatToNewznab(item.Category);
@@ -486,18 +494,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             return releaseInfos.ToArray();
         }
 
-        private string GetDownloadUrl(int torrentId, bool canUseToken)
+        private string GetDownloadUrl(int torrentId, string downloadHash, bool canUseToken)
         {
-            var url = new HttpUri(_settings.BaseUrl)
-                .CombinePath("/tor/download.php")
+            var requestBuilder = new HttpRequestBuilder(_settings.BaseUrl)
+                .Resource("/tor/download.php/{downloadHash}")
+                .SetSegment("downloadHash", downloadHash)
                 .AddQueryParam("tid", torrentId);
 
             if (_settings.UseFreeleechWedge && canUseToken)
             {
-                url = url.AddQueryParam("fl", "1");
+                requestBuilder = requestBuilder.AddQueryParam("fl", "1");
             }
 
-            return url.FullUri;
+            return requestBuilder.Build().Url.FullUri;
         }
 
         private bool HasUserVip(Dictionary<string, string> cookies)
@@ -818,6 +827,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public int Leechers { get; init; }
         public int NumFiles { get; init; }
         public string Size { get; init; }
+        [JsonProperty(PropertyName = "dl")]
+        public string DownloadHash { get; init; }
     }
 
     internal class MyAnonamouseResponse

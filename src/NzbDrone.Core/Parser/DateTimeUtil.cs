@@ -27,17 +27,13 @@ namespace NzbDrone.Core.Parser
 
         public static DateTime UnixTimestampToDateTime(double unixTime)
         {
-            var unixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             var unixTimeStampInTicks = (long)(unixTime * TimeSpan.TicksPerSecond);
-            return new DateTime(unixStart.Ticks + unixTimeStampInTicks);
+            return new DateTime(DateTime.UnixEpoch.Ticks + unixTimeStampInTicks, DateTimeKind.Utc);
         }
 
         public static double DateTimeToUnixTimestamp(DateTime dt)
         {
-            var date = dt.ToUniversalTime();
-            var ticks = date.Ticks - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).Ticks;
-            var ts = ticks / TimeSpan.TicksPerSecond;
-            return ts;
+            return (double)new DateTimeOffset(dt.ToUniversalTime()).ToUnixTimeSeconds();
         }
 
         // ex: "2 hours 1 day"

@@ -160,7 +160,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var seeders = torrent.Seeders ?? 0;
                 var leechers = torrent.Leechers ?? 0;
                 var grabs = torrent.Completed ?? 0;
-                var publishDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(torrent.Created);
+                var publishDate = DateTime.UnixEpoch.AddSeconds(torrent.Created);
 
                 var release = new TorrentInfo
                 {

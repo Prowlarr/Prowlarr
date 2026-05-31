@@ -350,9 +350,9 @@ namespace NzbDrone.Common.Disk
         {
             Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
-            if (dateTime.Before(DateTimeExtensions.Epoch))
+            if (dateTime.Before(DateTime.UnixEpoch))
             {
-                dateTime = DateTimeExtensions.Epoch;
+                dateTime = DateTime.UnixEpoch;
             }
 
             Directory.SetLastWriteTimeUtc(path, dateTime);
@@ -362,9 +362,9 @@ namespace NzbDrone.Common.Disk
         {
             Ensure.That(path, () => path).IsValidPath(PathValidationType.CurrentOs);
 
-            if (dateTime.Before(DateTimeExtensions.Epoch))
+            if (dateTime.Before(DateTime.UnixEpoch))
             {
-                dateTime = DateTimeExtensions.Epoch;
+                dateTime = DateTime.UnixEpoch;
             }
 
             File.SetLastWriteTime(path, dateTime);

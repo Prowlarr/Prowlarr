@@ -99,7 +99,7 @@ namespace NzbDrone.Common.OAuth
 
         private static long ToUnixTime(DateTime dateTime)
         {
-            var timeSpan = dateTime - new DateTime(1970, 1, 1);
+            var timeSpan = dateTime - DateTime.UnixEpoch;
             var timestamp = (long)timeSpan.TotalSeconds;
 
             return timestamp;

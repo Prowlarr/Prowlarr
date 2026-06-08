@@ -296,9 +296,9 @@ namespace NzbDrone.Host
 
             app.UseRouting();
             app.UseCors();
-            app.UseOutputCache();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseOutputCache();
             app.UseResponseCompression();
             app.Properties["host.AppName"] = BuildInfo.AppName;
 

@@ -148,9 +148,9 @@ public partial class SecretCinemaParser : IParseIndexerResponse
 
                     if (IsAnyMovieCategory(release.Categories))
                     {
-                        if (torrent.RemasterTitle.IsNotNullOrWhiteSpace() && YearRegex().IsMatch(torrent.RemasterTitle))
+                        if (torrent.ReleaseName.IsNotNullOrWhiteSpace() && YearRegex().IsMatch(torrent.ReleaseName))
                         {
-                            release.Title = WebUtility.HtmlDecode(torrent.RemasterTitle).Trim();
+                            release.Title = WebUtility.HtmlDecode(torrent.ReleaseName).Trim();
                         }
                         else
                         {

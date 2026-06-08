@@ -18,6 +18,7 @@ public class GazelleTorrent
     public bool Remastered { get; set; }
     public string RemasterYear { get; set; }
     public string RemasterTitle { get; set; }
+    public string ReleaseName { get; set; }
     public string Media { get; set; }
     public string Encoding { get; set; }
     public string Format { get; set; }

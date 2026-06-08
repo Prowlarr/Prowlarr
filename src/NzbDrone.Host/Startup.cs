@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using DryIoc;
 using Microsoft.AspNetCore.Authorization;
@@ -103,6 +104,8 @@ namespace NzbDrone.Host
             {
                 options.DefaultExpirationTimeSpan = TimeSpan.FromMinutes(cacheTtl);
                 options.SizeLimit = cacheSize * 1024 * 1024;
+                options.AddPolicy("NewznabQuery", builder =>
+                    builder.With(context => !IsRssRequest(context.HttpContext.Request)));
             });
 
             services
@@ -347,6 +350,26 @@ namespace NzbDrone.Host
             {
                 instancePolicy.PreventStartIfAlreadyRunning();
             }
+        }
+
+        private static bool IsRssRequest(HttpRequest request)
+        {
+            var query = request.Query;
+            var requestType = query["t"].ToString();
+
+            if (requestType is not ("search" or "tvsearch" or "movie" or "music" or "book"))
+            {
+                return false;
+            }
+
+            string[] searchParams =
+            {
+                "q", "imdbid", "tmdbid", "tvdbid", "rid", "tvmazeid", "traktid", "doubanid",
+                "season", "ep", "album", "artist", "label", "track", "year", "genre",
+                "author", "title", "publisher"
+            };
+
+            return searchParams.All(param => string.IsNullOrWhiteSpace(query[param].ToString()));
         }
     }
 }

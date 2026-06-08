@@ -57,7 +57,7 @@ namespace NzbDrone.Api.V1.Indexers
 
         [HttpGet("/api/v1/indexer/{id:int}/newznab")]
         [HttpGet("{id:int}/api")]
-        [OutputCache]
+        [OutputCache(PolicyName = "NewznabQuery")]
         public async Task<IActionResult> GetNewznabResponse(int id, [FromQuery] NewznabRequest request)
         {
             var requestType = request.t;

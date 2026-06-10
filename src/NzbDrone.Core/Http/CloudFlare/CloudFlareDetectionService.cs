@@ -20,12 +20,7 @@ namespace NzbDrone.Core.Http.CloudFlare
 
         public static bool IsCloudflareProtected(HttpResponse response)
         {
-            if (!response.Headers.Any(i => i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower())))
-            {
-                return false;
-            }
-
-            // detect CloudFlare and DDoS-GUARD
+            // detect CloudFlare and DDoS-GUARD via content analysis (most reliable, check first)
             if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
                 response.StatusCode.Equals(HttpStatusCode.Forbidden))
             {
@@ -34,10 +29,31 @@ namespace NzbDrone.Core.Http.CloudFlare
                     responseHtml.Contains("<title>Access denied</title>") ||
                     responseHtml.Contains("<title>Attention Required! | Cloudflare</title>") ||
                     responseHtml.Trim().Equals("error code: 1020") ||
-                    responseHtml.Contains("<title>DDOS-GUARD</title>", StringComparison.OrdinalIgnoreCase))
+                    responseHtml.Contains("<title>DDOS-GUARD</title>", StringComparison.OrdinalIgnoreCase) ||
+                    responseHtml.Contains("cdn-cgi"))
                 {
                     return true;
                 }
+            }
+
+            // detect CloudFlare redirect challenges (HTTP 302 with cdn-cgi URLs or content)
+            if (response.StatusCode.Equals(HttpStatusCode.Redirect) ||
+                response.StatusCode.Equals(HttpStatusCode.Found) ||
+                response.StatusCode.Equals(HttpStatusCode.Moved) ||
+                response.StatusCode.Equals(HttpStatusCode.RedirectMethod))
+            {
+                var location = response.Headers["Location"] ?? string.Empty;
+                var content = response.Content ?? string.Empty;
+                if (location.Contains("cdn-cgi") || content.Contains("cdn-cgi"))
+                {
+                    return true;
+                }
+            }
+
+            // detect CloudFlare and DDoS-GUARD via Server header
+            if (response.Headers.Any(i => i.Key != null && i.Key.ToLower() == "server" && CloudflareServerNames.Contains(i.Value.ToLower())))
+            {
+                return true;
             }
 
             // detect Custom CloudFlare for EbookParadijs, Film-Paleis, MuziekFabriek and Puur-Hollands

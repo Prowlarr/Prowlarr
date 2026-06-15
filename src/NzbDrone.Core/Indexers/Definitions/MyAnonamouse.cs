@@ -427,7 +427,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 if (item.AuthorInfo != null)
                 {
                     var authorInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.AuthorInfo);
-                    var author = authorInfo?.Take(5).Select(v => v.Value).Join(", ");
+                    var author = authorInfo?.Take(5).Select(v => WebUtility.HtmlDecode(v.Value)).Join(", ");
 
                     if (author.IsNotNullOrWhiteSpace())
                     {

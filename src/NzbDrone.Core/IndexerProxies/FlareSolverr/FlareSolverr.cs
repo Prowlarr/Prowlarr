@@ -74,6 +74,27 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             //Request again with User-Agent and Cookies from Flaresolverr
             var finalResponse = _httpClient.Execute(newRequest);
 
+            // Some sites block Prowlarr's header-stripped replay at the origin (e.g. an nginx
+            // 403) even after Cloudflare has been passed with the cf_clearance cookie. When that
+            // happens, fall back to the page HTML that FlareSolverr already retrieved with a real
+            // browser so Cardigann can still parse the response instead of failing.
+            if ((int)finalResponse.StatusCode >= 400 &&
+                result.Status.IsNotNullOrWhiteSpace() &&
+                result.Status.Equals("ok", StringComparison.OrdinalIgnoreCase) &&
+                result.Solution?.Response.IsNotNullOrWhiteSpace() == true)
+            {
+                _logger.Debug("Replayed request to {0} returned {1}; falling back to FlareSolverr solved HTML", newRequest.Url, finalResponse.StatusCode);
+
+                var headers = new HttpHeader
+                {
+                    ContentType = result.Solution.Headers?.ContentType.IsNotNullOrWhiteSpace() == true
+                        ? result.Solution.Headers.ContentType
+                        : "text/html"
+                };
+
+                return new HttpResponse(newRequest, headers, finalResponse.Cookies, result.Solution.Response, statusCode: HttpStatusCode.OK);
+            }
+
             return finalResponse;
         }
 

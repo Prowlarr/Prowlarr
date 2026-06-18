@@ -261,6 +261,11 @@ namespace NzbDrone.Core.Parser
 
             if (commonStandardFormats.Any(layout.ContainsIgnoreCase) && DateTime.TryParseExact(date, layout, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
             {
+                if (parsedDate.Kind == DateTimeKind.Unspecified)
+                {
+                    return DateTime.SpecifyKind(parsedDate, DateTimeKind.Utc);
+                }
+
                 return parsedDate;
             }
 
@@ -318,7 +323,14 @@ namespace NzbDrone.Core.Parser
 
             try
             {
-                return DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
+                var parsedDate = DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
+
+                if (parsedDate.Kind == DateTimeKind.Unspecified)
+                {
+                    return DateTime.SpecifyKind(parsedDate, DateTimeKind.Utc);
+                }
+
+                return parsedDate;
             }
             catch (FormatException ex)
             {

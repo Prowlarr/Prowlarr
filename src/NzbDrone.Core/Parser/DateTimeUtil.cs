@@ -323,14 +323,14 @@ namespace NzbDrone.Core.Parser
 
             try
             {
-                var result = DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
+                var dt = DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
 
-                if (result.Kind == DateTimeKind.Unspecified)
+                if (dt.Kind == DateTimeKind.Unspecified)
                 {
-                    return DateTime.SpecifyKind(result, DateTimeKind.Utc);
+                    return DateTime.SpecifyKind(dt, DateTimeKind.Utc);
                 }
 
-                return result;
+                return dt;
             }
             catch (FormatException ex)
             {

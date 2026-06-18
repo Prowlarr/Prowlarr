@@ -39,5 +39,36 @@ namespace NzbDrone.Core.Test.ParserTests
                 .ToString(standardFormat, CultureInfo.InvariantCulture)
                 .Should().Be(expectedDate);
         }
+
+        [TestCase("2026-06-03 01:01:21", "yyyy-MM-dd HH:mm:ss")]
+        [TestCase("2022-08-08 02:07:39", "yyyy-MM-dd HH:mm:ss")]
+        [TestCase("2022-01-15 12:30:45", "yyyy-MM-dd HH:mm:ss")]
+        public void parse_datetime_golang_timezone_less_should_assume_utc(string dateInput, string format)
+        {
+            var result = DateTimeUtil.ParseDateTimeGoLang(dateInput, format);
+
+            result.Kind.Should().Be(DateTimeKind.Utc);
+            result.Year.Should().Be(int.Parse(dateInput.AsSpan(0, 4)));
+            result.Month.Should().Be(int.Parse(dateInput.AsSpan(5, 2)));
+            result.Day.Should().Be(int.Parse(dateInput.AsSpan(8, 2)));
+        }
+
+        [TestCase("2026-06-03 01:01:21", "2006-01-02 15:04:05")]
+        [TestCase("2022-08-08 02:07:39", "2006-01-02 15:04:05")]
+        public void parse_datetime_golang_golang_format_timezone_less_should_assume_utc(string dateInput, string format)
+        {
+            var result = DateTimeUtil.ParseDateTimeGoLang(dateInput, format);
+
+            result.Kind.Should().Be(DateTimeKind.Utc);
+        }
+
+        [TestCase("2022-08-08 02:07:39 -02:00", "yyyy-MM-dd HH:mm:ss zzz")]
+        [TestCase("2022-08-08 02:07:39 -02:00", "2006-01-02 15:04:05 -07:00")]
+        public void parse_datetime_golang_timezone_aware_should_not_assume_utc(string dateInput, string format)
+        {
+            var result = DateTimeUtil.ParseDateTimeGoLang(dateInput, format);
+
+            result.Kind.Should().NotBe(DateTimeKind.Unspecified);
+        }
     }
 }

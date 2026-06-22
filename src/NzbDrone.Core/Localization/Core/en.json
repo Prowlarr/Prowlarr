@@ -393,7 +393,7 @@
   "IndexerNewznabSettingsApiKeyHelpText": "Site API Key",
   "IndexerNewznabSettingsVipExpirationHelpText": "Enter date (yyyy-mm-dd) for VIP Expiration or blank, {appName} will notify 1 week from expiration of VIP",
   "IndexerNoDefinitionCheckHealthCheckMessage": "Indexers have no definition and will not work: {indexerNames}. Please remove and (or) re-add to {appName}.",
-  "IndexerNzbIndexSettingsApiKeyHelpText": "Site API Key",
+  "IndexerNzbIndexSettingsApiKeyHelpText": "Site API Key (optional — searching works without one, but with a lower rate limit)",
   "IndexerObsoleteCheckMessage": "Indexers are obsolete or have been updated: {0}. Please remove and (or) re-add to {appName}",
   "IndexerOrpheusSettingsApiKeyHelpText": "API Key from the Site (Found in Settings => Access Settings)",
   "IndexerPassThePopcornSettingsApiKeyHelpText": "Site API Key",

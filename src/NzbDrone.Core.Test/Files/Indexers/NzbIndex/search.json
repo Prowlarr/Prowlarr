@@ -1,0 +1,34 @@
+{
+  "data": {
+    "content": [
+      {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "name": "Some.Movie.2023.1080p.BluRay.x264-GROUP",
+        "poster": "uploader@example.com",
+        "posted": 1700000000,
+        "size": 8589934592,
+        "fileCount": 42,
+        "complete": true,
+        "groups": ["alt.binaries.hdtv"]
+      },
+      {
+        "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "name": "Some.TV.Show.S01E01.720p.WEB-DL-GROUP",
+        "poster": "other@example.com",
+        "posted": 1699900000,
+        "size": 1073741824,
+        "fileCount": 10,
+        "complete": true,
+        "groups": ["alt.binaries.teevee", "alt.binaries.dvd"]
+      }
+    ],
+    "page": {
+      "size": 25,
+      "number": 0,
+      "totalElements": 2,
+      "totalPages": 1
+    }
+  },
+  "error": false,
+  "errorMessage": null
+}

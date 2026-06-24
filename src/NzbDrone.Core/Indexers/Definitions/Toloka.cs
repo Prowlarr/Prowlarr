@@ -399,7 +399,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Guid = infoUrl,
                     InfoUrl = infoUrl,
                     DownloadUrl = _settings.BaseUrl + downloadUrl,
-                    Title = _titleParser.Parse(title, categories, _settings.StripCyrillicLetters),
+                    Title = _titleParser.Parse(title, categories, _settings.StripCyrillicLetters, _settings.AddUkrainianToTitle),
                     Description = title,
                     Categories = categories,
                     Seeders = seeders,
@@ -462,7 +462,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private readonly Regex _stripCyrillicRegex = new(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true)
+        public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true, bool addUkrainianToTitle = false)
         {
             // https://www.fileformat.info/info/unicode/category/Pd/list.htm
             title = Regex.Replace(title, @"\p{Pd}", "-", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -510,6 +510,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             // replace multiple spaces with a single space
             title = Regex.Replace(title, @"\s+", " ");
+
+            if (addUkrainianToTitle)
+            {
+                title += " UKR";
+            }
 
             return title.Trim();
         }
@@ -563,5 +568,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(5, Label = "Strip Cyrillic Letters", Type = FieldType.Checkbox)]
         public bool StripCyrillicLetters { get; set; }
+
+        [FieldDefinition(6, Label = "Add UKR to Title", HelpText = "Appends UKR to the end of all release titles to improve language detection by Sonarr and Radarr. Will cause English-only results to be misidentified.", Type = FieldType.Checkbox)]
+        public bool AddUkrainianToTitle { get; set; }
     }
 }

@@ -511,7 +511,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             // replace multiple spaces with a single space
             title = Regex.Replace(title, @"\s+", " ");
 
-            if (addUkrainianToTitle && !Regex.IsMatch(title, @"\bUKR\b", RegexOptions.IgnoreCase))
+            if (addUkrainianToTitle && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.IsMatch(title, @"\bUKR\b", RegexOptions.IgnoreCase))
             {
                 title += " UKR";
             }
@@ -522,6 +522,11 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static bool IsAnyTvCategory(ICollection<IndexerCategory> category)
         {
             return category.Contains(NewznabStandardCategory.TV) || NewznabStandardCategory.TV.SubCategories.Any(subCategory => category.Contains(subCategory));
+        }
+
+        private static bool IsAnyMovieCategory(ICollection<IndexerCategory> category)
+        {
+            return category.Contains(NewznabStandardCategory.Movies) || NewznabStandardCategory.Movies.SubCategories.Any(subCategory => category.Contains(subCategory));
         }
 
         private static string MoveFirstTagsToEndOfReleaseTitle(string input)

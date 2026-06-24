@@ -511,7 +511,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             // replace multiple spaces with a single space
             title = Regex.Replace(title, @"\s+", " ");
 
-            if (addUkrainianToTitle)
+            if (addUkrainianToTitle && !Regex.IsMatch(title, @"\bUKR\b", RegexOptions.IgnoreCase))
             {
                 title += " UKR";
             }

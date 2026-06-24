@@ -41,5 +41,14 @@ namespace NzbDrone.Core.Test.IndexerTests.TolokaTests
             result.Should().EndWith("UKR");
             result.Should().Contain("Castlevania");
         }
+
+        [Test]
+        public void should_not_append_ukr_when_already_present()
+        {
+            var result = _parser.Parse("Castlevania S03E01 1080p WEB-DL UKR", new List<IndexerCategory>(), addUkrainianToTitle: true);
+
+            result.Should().EndWith("UKR");
+            result.Should().NotContain("UKR UKR");
+        }
     }
 }

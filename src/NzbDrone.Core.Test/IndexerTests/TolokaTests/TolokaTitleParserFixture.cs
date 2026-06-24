@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions;
-using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Test.IndexerTests.TolokaTests
 {

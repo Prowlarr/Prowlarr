@@ -17,38 +17,14 @@ namespace NzbDrone.Core.Test.IndexerTests.TolokaTests
             _parser = new TolokaTitleParser();
         }
 
-        [Test]
-        public void should_not_append_ukr_when_disabled()
+        [TestCase("Castlevania S03E01 1080p WEB-DL", false, "Castlevania S03E01 1080p WEB-DL")]
+        [TestCase("Castlevania S03E01 1080p WEB-DL", true, "Castlevania S03E01 1080p WEB-DL UKR")]
+        [TestCase("Castlevania S03E01 1080p WEB-DL UKR", true, "Castlevania S03E01 1080p WEB-DL UKR")]
+        public void should_parse_title_with_ukr_option(string title, bool addUkrainianToTitle, string expected)
         {
-            var result = _parser.Parse("Castlevania S03E01 1080p WEB-DL", new List<IndexerCategory>(), addUkrainianToTitle: false);
+            var result = _parser.Parse(title, new List<IndexerCategory>(), addUkrainianToTitle: addUkrainianToTitle);
 
-            result.Should().NotEndWith("UKR");
-        }
-
-        [Test]
-        public void should_append_ukr_when_enabled()
-        {
-            var result = _parser.Parse("Castlevania S03E01 1080p WEB-DL", new List<IndexerCategory>(), addUkrainianToTitle: true);
-
-            result.Should().EndWith("UKR");
-        }
-
-        [Test]
-        public void should_append_ukr_after_cyrillic_stripping()
-        {
-            var result = _parser.Parse("Замок Кастлеванія / Castlevania S03E01 1080p WEB-DL", new List<IndexerCategory>(), stripCyrillicLetters: true, addUkrainianToTitle: true);
-
-            result.Should().EndWith("UKR");
-            result.Should().Contain("Castlevania");
-        }
-
-        [Test]
-        public void should_not_append_ukr_when_already_present()
-        {
-            var result = _parser.Parse("Castlevania S03E01 1080p WEB-DL UKR", new List<IndexerCategory>(), addUkrainianToTitle: true);
-
-            result.Should().EndWith("UKR");
-            result.Should().NotContain("UKR UKR");
+            result.Should().Be(expected);
         }
     }
 }

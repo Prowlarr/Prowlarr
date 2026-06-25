@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
+using System.Text.RegularExpressions;
 using FluentValidation;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -188,7 +190,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var id = row.Value<string>("id");
                 var parsedTitle = ParseTitleRegex.Match(row.Value<string>("name"));
 
-                if (!parsedTitle.Success || parsedTitle.Groups["title"].Value.IsNullOrWhiteSpace()) || string.IsNullOrWhiteSpace(id))
+                if (id.IsNullOrWhiteSpace() || !parsedTitle.Success || parsedTitle.Groups["title"].Value.IsNullOrWhiteSpace())
                 {
                     continue;
                 }

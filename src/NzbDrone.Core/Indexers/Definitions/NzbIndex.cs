@@ -175,9 +175,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var releaseInfos = new List<ReleaseInfo>();
-            var content = jsonContent["data"]?["content"] as JArray;
 
-            if (content == null)
+            if (jsonContent["data"]?["content"] is not JArray content)
             {
                 return releaseInfos;
             }

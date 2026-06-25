@@ -44,7 +44,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NzbIndexTests
             releases.Should().HaveCount(2);
 
             var first = releases.First();
-            first.Title.Should().Be("Some.Movie.2023.1080p.BluRay.x264-GROUP");
+            first.Title.Should().Be("Ubuntu Gubuntu 11.10 Unity Edition (64bit)");
             first.DownloadUrl.Should().Be("https://nzbindex.com/api/download/a1b2c3d4-e5f6-7890-abcd-ef1234567890.nzb");
             first.InfoUrl.Should().Be("https://nzbindex.com/collection/a1b2c3d4-e5f6-7890-abcd-ef1234567890");
             first.PublishDate.Should().Be(DateTime.Parse("2023-11-14T22:13:20Z").ToUniversalTime());

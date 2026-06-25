@@ -219,10 +219,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class NzbIndexSettingsValidator : AbstractValidator<NzbIndexSettings>
-    {
-        public class NzbIndexSettingsValidator : AbstractValidator<NzbIndexSettings>;
-    }
+    public class NzbIndexSettingsValidator : AbstractValidator<NzbIndexSettings>;
 
     public class NzbIndexSettings : IIndexerSettings
     {

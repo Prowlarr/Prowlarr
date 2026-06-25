@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using FluentValidation;
 using Newtonsoft.Json.Linq;
 using NLog;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;

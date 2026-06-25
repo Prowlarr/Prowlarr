@@ -113,24 +113,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IEnumerable<IndexerRequest> GetPagedRequests(string term, int limit, int offset)
         {
-            var queryCollection = new List<KeyValuePair<string, string>>();
-
-            if (!string.IsNullOrWhiteSpace(_settings.ApiKey))
+            var queryCollection = new List<KeyValuePair<string, string>>
             {
-                queryCollection.Add(new KeyValuePair<string, string>("key", _settings.ApiKey));
+                { "max", limit.ToString(CultureInfo.InvariantCulture) }
+            };
+
+            if (_settings.ApiKey.IsNotNullOrWhiteSpace())
+            {
+                queryCollection.Add("key", _settings.ApiKey.Trim());
             }
 
-            queryCollection.Add(new KeyValuePair<string, string>("max", limit.ToString()));
-
-            if (!string.IsNullOrWhiteSpace(term))
+            if (term.IsNotNullOrWhiteSpace())
             {
-                queryCollection.Add(new KeyValuePair<string, string>("q", term));
+                queryCollection.Add("q", term);
             }
 
             var page = offset / limit;
             if (page > 0)
             {
-                queryCollection.Add(new KeyValuePair<string, string>("p", page.ToString()));
+                queryCollection.Add("p", page.ToString(CultureInfo.InvariantCulture));
             }
 
             var searchUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/search?{queryCollection.GetQueryString()}";
@@ -145,6 +146,8 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class NzbIndexParser : IParseIndexerResponse
     {
         private readonly NzbIndexSettings _settings;
+
+        private static readonly Regex ParseTitleRegex = new(@"\""(?<title>[^:\/]*?)(?:\.(rar|nfo|mkv|par2|001|nzb|url|zip|r[0-9]{2}))?\""", RegexOptions.Compiled);
 
         public NzbIndexParser(NzbIndexSettings settings)
         {
@@ -184,9 +187,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             foreach (var row in content)
             {
                 var id = row.Value<string>("id");
-                var title = row.Value<string>("name");
+                var parsedTitle = ParseTitleRegex.Match(row.Value<string>("name"));
 
-                if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(id))
+                if (!parsedTitle.Success || parsedTitle.Groups["title"].Value.IsNullOrWhiteSpace()) || string.IsNullOrWhiteSpace(id))
                 {
                     continue;
                 }
@@ -198,7 +201,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Guid = details,
                     InfoUrl = details,
                     DownloadUrl = $"{baseUrl}/api/download/{id}.nzb",
-                    Title = title,
+                    Title = parsedTitle.Groups["title"].Value,
                     Categories = new List<IndexerCategory> { NewznabStandardCategory.Other },
                     PublishDate = DateTimeOffset.FromUnixTimeSeconds(row.Value<long>("posted")).UtcDateTime,
                     Size = row.Value<long>("size"),
@@ -217,9 +220,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class NzbIndexSettingsValidator : AbstractValidator<NzbIndexSettings>
     {
-        public NzbIndexSettingsValidator()
-        {
-        }
+        public class NzbIndexSettingsValidator : AbstractValidator<NzbIndexSettings>;
     }
 
     public class NzbIndexSettings : IIndexerSettings

@@ -206,7 +206,6 @@ namespace NzbDrone.Core.Indexers.Definitions
                     PublishDate = DateTimeOffset.FromUnixTimeSeconds(row.Value<long>("posted")).UtcDateTime,
                     Size = row.Value<long>("size"),
                     Files = row.Value<int>("fileCount"),
-                    PosterUrl = row.Value<string>("poster"),
                 };
 
                 releaseInfos.Add(release);

@@ -199,6 +199,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("free", "on");
             }
 
+            // Only sort actual searches by seeders, never the RSS/recent feed, which must stay
+            // in the site's default (date) order so new releases are still seen.
+            if (Settings.SortBySeeders && !searchCriteria.IsRssSearch)
+            {
+                qc.Add("o", "seeders");
+            }
+
             if (imdbId.IsNotNullOrWhiteSpace())
             {
                 // ipt uses sphinx, which supports boolean operators and grouping
@@ -431,6 +438,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(4, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerIPTorrentsSettingsFreeleechOnlyHelpText")]
         public bool FreeLeechOnly { get; set; }
+
+        [FieldDefinition(5, Label = "IndexerSettingsSortBySeeders", Type = FieldType.Checkbox, HelpText = "IndexerIPTorrentsSettingsSortBySeedersHelpText")]
+        public bool SortBySeeders { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

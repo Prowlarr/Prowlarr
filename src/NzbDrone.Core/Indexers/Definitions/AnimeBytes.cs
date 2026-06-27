@@ -705,8 +705,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             RuleFor(c => c.Username).NotEmpty();
 
             RuleFor(c => c.Passkey).NotEmpty()
-                .Must(x => x.Length is 32 or 48)
-                .WithMessage("Passkey length must be 32 or 48");
+                .Must(x => x.Length is 32 or 48 or 56)
+                .WithMessage("Passkey length must be 32, 48 or 56");
         }
     }
 

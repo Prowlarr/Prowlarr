@@ -438,7 +438,7 @@
   "IndexerSettingsSeedRatioHelpText": "The ratio a torrent should reach before stopping, empty uses the download client's default. Ratio should be at least 1.0 and follow the indexers rules",
   "IndexerSettingsSeedTime": "Seed Time",
   "IndexerSettingsSeedTimeHelpText": "The time a torrent should be seeded before stopping, empty uses the download client's default",
-  "IndexerSettingsSortBySeeders": "Sort by Seeders",
+  "IndexerSettingsSearchSortBySeeders": "Search sorting by Seeders",
   "IndexerSettingsSummary": "Configure various global Indexer settings including Proxies.",
   "IndexerSettingsVipExpiration": "VIP Expiration",
   "IndexerSite": "Indexer Site",

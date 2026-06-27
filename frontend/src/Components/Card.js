@@ -10,11 +10,13 @@ class Card extends Component {
 
   render() {
     const {
+      ariaLabel,
       className,
       overlayClassName,
       overlayContent,
       children,
-      onPress
+      onPress,
+      title
     } = this.props;
 
     if (overlayContent) {
@@ -22,7 +24,9 @@ class Card extends Component {
         <div className={className}>
           <Link
             className={styles.underlay}
+            aria-label={ariaLabel}
             onPress={onPress}
+            title={title}
           />
 
           <div className={overlayClassName}>
@@ -35,7 +39,9 @@ class Card extends Component {
     return (
       <Link
         className={className}
+        aria-label={ariaLabel}
         onPress={onPress}
+        title={title}
       >
         {children}
       </Link>
@@ -44,11 +50,13 @@ class Card extends Component {
 }
 
 Card.propTypes = {
+  ariaLabel: PropTypes.string,
   className: PropTypes.string.isRequired,
   overlayClassName: PropTypes.string.isRequired,
   overlayContent: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
-  onPress: PropTypes.func.isRequired
+  onPress: PropTypes.func.isRequired,
+  title: PropTypes.string
 };
 
 Card.defaultProps = {

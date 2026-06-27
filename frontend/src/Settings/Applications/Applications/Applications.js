@@ -81,6 +81,8 @@ class Applications extends Component {
 
             <Card
               className={styles.addApplication}
+              ariaLabel={translate('AddApplication')}
+              title={translate('AddApplication')}
               onPress={this.onAddApplicationPress}
             >
               <div className={styles.center}>

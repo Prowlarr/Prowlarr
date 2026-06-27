@@ -69,6 +69,8 @@ class Application extends Component {
     return (
       <Card
         className={styles.application}
+        ariaLabel={translate('EditApplicationName', { name })}
+        title={name}
         overlayContent={true}
         onPress={this.onEditApplicationPress}
       >

@@ -199,9 +199,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("free", "on");
             }
 
-            // Only sort actual searches by seeders, never the RSS/recent feed, which must stay
-            // in the site's default (date) order so new releases are still seen.
-            if (Settings.SortBySeeders && !searchCriteria.IsRssSearch)
+            if (Settings.Sort == (int)IPTorrentsSort.Seeders && !searchCriteria.IsRssSearch)
             {
                 qc.Add("o", "seeders");
             }
@@ -439,12 +437,21 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerIPTorrentsSettingsFreeleechOnlyHelpText")]
         public bool FreeLeechOnly { get; set; }
 
-        [FieldDefinition(5, Label = "IndexerSettingsSortBySeeders", Type = FieldType.Checkbox, HelpText = "IndexerIPTorrentsSettingsSortBySeedersHelpText")]
-        public bool SortBySeeders { get; set; }
+        [FieldDefinition(5, Label = "IndexerSettingsSearchSortBy", Type = FieldType.Select, SelectOptions = typeof(IPTorrentsSort), HelpText = "IndexerIPTorrentsSettingsSortHelpText")]
+        public int Sort { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    public enum IPTorrentsSort
+    {
+        [FieldOption(Label = "Default", Hint = "Site default order (most recent first)")]
+        Default = 0,
+
+        [FieldOption(Label = "Seeders", Hint = "Most seeders first")]
+        Seeders = 1,
     }
 }

@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Test.IndexerTests.IPTorrentsTests
         [Test]
         public void should_sort_by_seeders_when_enabled()
         {
-            Subject.Settings.SortBySeeders = true;
+            Subject.Settings.Sort = (int)IPTorrentsSort.Seeders;
 
             var results = Subject.GetSearchRequests(_movieSearchCriteria);
 
@@ -65,7 +65,7 @@ namespace NzbDrone.Core.Test.IndexerTests.IPTorrentsTests
         [Test]
         public void should_not_sort_rss_feed_even_when_enabled()
         {
-            Subject.Settings.SortBySeeders = true;
+            Subject.Settings.Sort = (int)IPTorrentsSort.Seeders;
 
             var results = Subject.GetSearchRequests(new BasicSearchCriteria { Categories = new[] { 2000 } });
 

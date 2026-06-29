@@ -199,7 +199,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("free", "on");
             }
 
-            if (Settings.Sort == (int)IPTorrentsSort.Seeders && !searchCriteria.IsRssSearch)
+            if (!searchCriteria.IsRssSearch && Settings.SearchSortBy == (int)IPTorrentsSort.Seeders)
             {
                 qc.Add("o", "seeders");
             }
@@ -437,8 +437,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(4, Label = "IndexerSettingsFreeleechOnly", Type = FieldType.Checkbox, HelpText = "IndexerIPTorrentsSettingsFreeleechOnlyHelpText")]
         public bool FreeLeechOnly { get; set; }
 
-        [FieldDefinition(5, Label = "IndexerSettingsSearchSortBy", Type = FieldType.Select, SelectOptions = typeof(IPTorrentsSort), HelpText = "IndexerIPTorrentsSettingsSortHelpText")]
-        public int Sort { get; set; }
+        [FieldDefinition(5, Label = "IndexerIPTorrentsSettingsSearchSortBy", Type = FieldType.Select, SelectOptions = typeof(IPTorrentsSort), HelpText = "IndexerIPTorrentsSettingsSearchSortByHelpText")]
+        public int SearchSortBy { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

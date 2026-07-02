@@ -150,7 +150,7 @@ public class PreToMe : TorrentIndexerBase<PreToMeSettings>
         caps.Categories.AddCategoryMapping("cat[]=31&tags=RARFiX", NewznabStandardCategory.Other, "Miscellaneous/RARFiX");
 
         caps.Categories.AddCategoryMapping("cat[]=19", NewznabStandardCategory.Movies, "Movies");
-        caps.Categories.AddCategoryMapping("cat[]=19&tags=x264", NewznabStandardCategory.Movies, "Movies/x264");
+        caps.Categories.AddCategoryMapping("cat[]=19&tags=x264", NewznabStandardCategory.MoviesHD, "Movies/x264");
         caps.Categories.AddCategoryMapping("cat[]=19&tags=720p", NewznabStandardCategory.MoviesHD, "Movies/720p");
         caps.Categories.AddCategoryMapping("cat[]=19&tags=XviD", NewznabStandardCategory.MoviesSD, "Movies/XviD");
         caps.Categories.AddCategoryMapping("cat[]=19&tags=BluRay", NewznabStandardCategory.MoviesHD, "Movies/BluRay");
@@ -160,12 +160,20 @@ public class PreToMe : TorrentIndexerBase<PreToMeSettings>
         caps.Categories.AddCategoryMapping("cat[]=19&tags=DVDR", NewznabStandardCategory.MoviesSD, "Movies/DVDR");
         caps.Categories.AddCategoryMapping("cat[]=19&tags=WMV", NewznabStandardCategory.Movies, "Movies/WMV");
         caps.Categories.AddCategoryMapping("cat[]=19&tags=CAM", NewznabStandardCategory.Movies, "Movies/CAM");
+        caps.Categories.AddCategoryMapping("cat[]=19&tags=2160p", NewznabStandardCategory.MoviesUHD, "Movies/2160p");
+        caps.Categories.AddCategoryMapping("cat[]=19&tags=DolbyVision", NewznabStandardCategory.Movies, "Movies/DolbyVision");
+        caps.Categories.AddCategoryMapping("cat[]=19&tags=x265", NewznabStandardCategory.MoviesHD, "Movies/x265");
 
         caps.Categories.AddCategoryMapping("cat[]=6", NewznabStandardCategory.Audio, "Music");
         caps.Categories.AddCategoryMapping("cat[]=6&tags=MP3", NewznabStandardCategory.AudioMP3, "Music/MP3");
         caps.Categories.AddCategoryMapping("cat[]=6&tags=V2", NewznabStandardCategory.AudioMP3, "Music/V2");
         caps.Categories.AddCategoryMapping("cat[]=6&tags=FLAC", NewznabStandardCategory.AudioLossless, "Music/FLAC");
         caps.Categories.AddCategoryMapping("cat[]=6&tags=320kbps", NewznabStandardCategory.AudioMP3, "Music/320kbps");
+
+        caps.Categories.AddCategoryMapping("cat[]=52", NewznabStandardCategory.TVSport, "Sport");
+        caps.Categories.AddCategoryMapping("cat[]=52&tags=1080p", NewznabStandardCategory.TVSport, "Sport/1080p");
+        caps.Categories.AddCategoryMapping("cat[]=52&tags=720p", NewznabStandardCategory.TVSport, "Sport/720p");
+        caps.Categories.AddCategoryMapping("cat[]=52&tags=2160p", NewznabStandardCategory.TVSport, "Sport/2160p");
 
         caps.Categories.AddCategoryMapping("cat[]=7", NewznabStandardCategory.TV, "TV");
         caps.Categories.AddCategoryMapping("cat[]=7&tags=x264", NewznabStandardCategory.TVHD, "TV/x264");
@@ -178,10 +186,21 @@ public class PreToMe : TorrentIndexerBase<PreToMeSettings>
         caps.Categories.AddCategoryMapping("cat[]=7&tags=Documentary", NewznabStandardCategory.TVDocumentary, "TV/Documentary");
         caps.Categories.AddCategoryMapping("cat[]=7&tags=PDTV", NewznabStandardCategory.TVSD, "TV/PDTV");
         caps.Categories.AddCategoryMapping("cat[]=7&tags=HD-DVD", NewznabStandardCategory.TVSD, "TV/HD-DVD");
+        caps.Categories.AddCategoryMapping("cat[]=7&tags=1080p", NewznabStandardCategory.TVHD, "TV/1080p");
+        caps.Categories.AddCategoryMapping("cat[]=7&tags=2160p", NewznabStandardCategory.TVUHD, "TV/2160p");
+        caps.Categories.AddCategoryMapping("cat[]=7&tags=DolbyVision", NewznabStandardCategory.TVUHD, "TV/DolbyVision");
+        caps.Categories.AddCategoryMapping("cat[]=7&tags=x265", NewznabStandardCategory.TVHD, "TV/x265");
 
         caps.Categories.AddCategoryMapping("cat[]=51", NewznabStandardCategory.XXX, "XXX");
         caps.Categories.AddCategoryMapping("cat[]=51&tags=XviD", NewznabStandardCategory.XXXXviD, "XXX/XviD");
         caps.Categories.AddCategoryMapping("cat[]=51&tags=DVDRiP", NewznabStandardCategory.XXXDVD, "XXX/DVDRiP");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=1080p", NewznabStandardCategory.XXXx264, "XXX/1080p");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=2160p", NewznabStandardCategory.XXXUHD, "XXX/2160p");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=720p", NewznabStandardCategory.XXXx264, "XXX/720p");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=VR180", NewznabStandardCategory.XXXOther, "XXX/VR180");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=x264", NewznabStandardCategory.XXXx264, "XXX/x264");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=x265", NewznabStandardCategory.XXXx264, "XXX/x265");
+        caps.Categories.AddCategoryMapping("cat[]=51&tags=XXX-VR180", NewznabStandardCategory.XXXOther, "XXX/VR180");
 
         return caps;
     }

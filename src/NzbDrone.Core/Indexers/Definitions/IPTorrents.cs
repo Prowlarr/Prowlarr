@@ -199,9 +199,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                 qc.Add("free", "on");
             }
 
-            if (!searchCriteria.IsRssSearch && Settings.SearchSortBy == (int)IPTorrentsSort.Seeders)
+            if (!searchCriteria.IsRssSearch)
             {
-                qc.Add("o", "seeders");
+                var sortOrder = Settings.SearchSortBy switch
+                {
+                    (int)IPTorrentsSort.Seeders => "seeders",
+                    (int)IPTorrentsSort.Leechers => "leechers",
+                    (int)IPTorrentsSort.Snatches => "completed",
+                    (int)IPTorrentsSort.Size => "size",
+                    (int)IPTorrentsSort.Name => "name",
+                    _ => "default"
+                };
+                qc.Add("o", sortOrder);
             }
 
             if (imdbId.IsNotNullOrWhiteSpace())
@@ -453,5 +462,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldOption(Label = "Seeders", Hint = "Most seeders first")]
         Seeders = 1,
+
+        [FieldOption(Label = "Leechers", Hint ="Most leechers first")]
+        Leechers = 2,
+
+        [FieldOption(Label = "Snatches", Hint = "Most snatches first")]
+        Snatches = 3,
+
+        [FieldOption(Label = "Size", Hint = "Largest first")]
+        Size = 4,
+
+        [FieldOption(Label = "Name", Hint = "Ordered alphabetically")]
+        Name = 5
     }
 }

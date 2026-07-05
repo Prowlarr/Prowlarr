@@ -417,5 +417,8 @@
     "DownloadClientCategory": "Eyða niðurhals viðskiptavinur",
     "IndexerProxies": "Forgangur indexers",
     "DeleteSelectedIndexers": "Eyða Indexer",
-    "FilterPlaceHolder": "Eyða Indexer"
+    "FilterPlaceHolder": "Eyða Indexer",
+    "PrioritySettings": "Forgangsréttur: {0}",
+    "TheLogLevelDefault": "Notkunarstigið er sjálfgefið „Upplýsingar“ og er hægt að breyta því",
+    "WouldYouLikeToRestoreBackup": "Viltu endurheimta öryggisafritið {0}?"
 }

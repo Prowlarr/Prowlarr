@@ -417,5 +417,8 @@
     "Notifications": "การรับรอง",
     "SyncProfiles": "แก้ไขโปรไฟล์ความล่าช้า",
     "MovieSearchTypes": "ค้นหาภาพยนตร์จำนวนมาก",
-    "FilterPlaceHolder": "ลบ Indexer"
+    "FilterPlaceHolder": "ลบ Indexer",
+    "PrioritySettings": "ลำดับความสำคัญ: {0}",
+    "TheLogLevelDefault": "ระดับการบันทึกมีค่าเริ่มต้นเป็น \"ข้อมูล\" และสามารถเปลี่ยนแปลงได้",
+    "WouldYouLikeToRestoreBackup": "คุณต้องการกู้คืนข้อมูลสำรอง {0} หรือไม่"
 }

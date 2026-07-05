@@ -492,5 +492,8 @@
     "DeleteSelectedDownloadClientsMessageText": "Är du säker på att du vill radera de markerade filmfilerna?",
     "DeleteSelectedIndexer": "Sök Indexers",
     "DeleteSelectedIndexers": "Sök Indexers",
-    "EditCategory": "Kategori"
+    "EditCategory": "Kategori",
+    "PrioritySettings": "Prioritet: {0}",
+    "TheLogLevelDefault": "Loggnivån är som standard 'Info' och kan ändras i",
+    "WouldYouLikeToRestoreBackup": "Skulle du vilja återställa säkerhetskopian {0} ?"
 }

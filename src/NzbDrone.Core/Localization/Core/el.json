@@ -563,5 +563,8 @@
     "IndexerSettingsAppsMinimumSeeders": "Ελάχιστοι σπαρτήρες",
     "DeleteSelectedIndexer": "Αναζήτηση ευρετηρίων",
     "DeleteSelectedIndexers": "Αναζήτηση ευρετηρίων",
-    "EditCategory": "Κατηγορία"
+    "EditCategory": "Κατηγορία",
+    "PrioritySettings": "Προτεραιότητα: {0}",
+    "TheLogLevelDefault": "Το επίπεδο καταγραφής είναι από προεπιλογή σε «Πληροφορίες» και μπορεί να αλλάξει",
+    "WouldYouLikeToRestoreBackup": "Θέλετε να επαναφέρετε το αντίγραφο ασφαλείας {0};"
 }

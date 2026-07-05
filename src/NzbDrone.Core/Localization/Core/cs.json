@@ -699,5 +699,15 @@
     "LogFilesLocation": "Soubory s logy jsou uloževy v {location}",
     "InstallMajorVersionUpdateMessageLink": "Pro více informací prosím navštivte [{domain}]({url}).",
     "WouldYouLikeToRestoreBackup": "Chcete obnovit zálohu {0}?",
-    "UpdateAvailableHealthCheckMessage": "Nová verze je k dispozici: {version}"
+    "UpdateAvailableHealthCheckMessage": "Nová verze je k dispozici: {version}",
+    "ApplicationAuthPassword": "Heslo ověření",
+    "ApplicationAuthPasswordHelpText": "Heslo základního ověření HTTP použité v {appName} použité pro přístup k této aplikaci. Nastavte pokud se aplikace nachází za reverzní proxy se základním ověřováním.",
+    "ApplicationAuthUsername": "Uživatelské jméno ověření",
+    "ApplicationAuthUsernameHelpText": "Uživatelské jméno základního ověření HTTP použité v {appName} použité pro přístup k této aplikaci. Nastavte pokud se aplikace nachází za reverzní proxy se základním ověřováním.",
+    "IndexerBeyondHDSettingsRewindOnly": "Pouze přetočit",
+    "IndexerBeyondHDSettingsRewindOnlyHelpText": "Vyhledat pouze přetočit",
+    "IndexerSettingsFreeleechOnly": "Pouze volné stahování",
+    "ManualGrab": "Získat ručně",
+    "MappedCategories": "Mapované kategorie",
+    "MassEditor": "Hromadné úpravy"
 }

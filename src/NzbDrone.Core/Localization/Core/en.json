@@ -381,6 +381,8 @@
   "IndexerIPTorrentsSettingsCookieUserAgent": "Cookie User-Agent",
   "IndexerIPTorrentsSettingsCookieUserAgentHelpText": "User-Agent associated with cookie used from Browser",
   "IndexerIPTorrentsSettingsFreeleechOnlyHelpText": "Search freeleech releases only",
+  "IndexerIPTorrentsSettingsSearchSortBy": "Search Sort By",
+  "IndexerIPTorrentsSettingsSearchSortByHelpText": "Select the order in which to sort search results",
   "IndexerId": "Indexer ID",
   "IndexerInfo": "Indexer Info",
   "IndexerLongTermStatusAllUnavailableHealthCheckMessage": "All indexers are unavailable due to failures for more than 6 hours",

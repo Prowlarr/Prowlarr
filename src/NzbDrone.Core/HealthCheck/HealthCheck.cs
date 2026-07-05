@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Datastore;
+using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.HealthCheck
 {
@@ -14,6 +17,13 @@ namespace NzbDrone.Core.HealthCheck
         public HealthCheckReason Reason { get; set; }
         public string Message { get; set; }
         public HttpUri WikiUrl { get; set; }
+
+        /// <summary>
+        /// Tags of the indexers this health check concerns, captured when the check ran, or null
+        /// when the check is not tied to specific indexers (e.g. a system check). Notifications
+        /// with tags only receive an indexer health check when these tags intersect theirs.
+        /// </summary>
+        public IReadOnlySet<int> IndexerTags { get; private set; }
 
         public HealthCheck()
         {
@@ -32,6 +42,18 @@ namespace NzbDrone.Core.HealthCheck
             Reason = reason;
             Message = message;
             WikiUrl = MakeWikiUrl(wikiFragment ?? MakeWikiFragment(message));
+        }
+
+        /// <summary>
+        /// Records the indexers this health check concerns, so notifications can be scoped by their tags.
+        /// </summary>
+        /// <param name="indexers">Definitions of the affected indexers.</param>
+        /// <returns>This health check, for chaining.</returns>
+        public HealthCheck WithIndexers(IEnumerable<ProviderDefinition> indexers)
+        {
+            IndexerTags = indexers.SelectMany(i => i.Tags).ToHashSet();
+
+            return this;
         }
 
         private static string MakeWikiFragment(string message)

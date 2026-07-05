@@ -201,16 +201,24 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (!searchCriteria.IsRssSearch)
             {
-                var sortOrder = Settings.SearchSortBy switch
+                switch (Settings.SearchSortBy)
                 {
-                    (int)IPTorrentsSort.Seeders => "seeders",
-                    (int)IPTorrentsSort.Leechers => "leechers",
-                    (int)IPTorrentsSort.Snatches => "completed",
-                    (int)IPTorrentsSort.Size => "size",
-                    (int)IPTorrentsSort.Name => "name",
-                    _ => "default"
-                };
-                qc.Add("o", sortOrder);
+                    case (int)IPTorrentsSort.Seeders:
+                        qc.Add("o", "seeders");
+                        break;
+                    case (int)IPTorrentsSort.Leechers:
+                        qc.Add("o", "leechers");
+                        break;
+                    case (int)IPTorrentsSort.Snatches:
+                        qc.Add("o", "completed");
+                        break;
+                    case (int)IPTorrentsSort.Size:
+                        qc.Add("o", "size");
+                        break;
+                    case (int)IPTorrentsSort.Name:
+                        qc.Add("o", "name");
+                        break;
+                }
             }
 
             if (imdbId.IsNotNullOrWhiteSpace())

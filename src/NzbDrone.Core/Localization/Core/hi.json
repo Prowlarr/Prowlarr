@@ -415,5 +415,10 @@
     "MovieSearchTypes": "मास मूवी सर्च",
     "DeleteSelectedIndexer": "अनुक्रमणिका हटाएं",
     "Connect": "प्रमाणीकरण",
-    "FilterPlaceHolder": "अनुक्रमणिका हटाएं"
+    "FilterPlaceHolder": "अनुक्रमणिका हटाएं",
+    "RestartProwlarr": "फिर से शुरू करें",
+    "PrioritySettings": "प्राथमिकता: {0}",
+    "ExternalUpdater": "बाहरी अपडेट तंत्र का उपयोग करने के लिए रैडिर को कॉन्फ़िगर किया गया है",
+    "TheLogLevelDefault": "लॉग लेवल 'इंफो' में डिफॉल्ट करता है और इसमें बदला जा सकता है",
+    "WouldYouLikeToRestoreBackup": "क्या आप बैकअप {0} को पुनर्स्थापित करना चाहेंगे?"
 }

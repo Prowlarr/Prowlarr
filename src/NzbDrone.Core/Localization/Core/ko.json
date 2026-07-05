@@ -551,5 +551,7 @@
     "PackSeedTimeHelpText": "토런트가 중지되기 전에 시드되어야 하는 시간, 비어 있으면 다운로드 클라이언트의 기본값을 사용합니다.",
     "SeedRatioHelpText": "토런트가 중지되기 전에 시드되어야 하는 시간, 비어 있으면 다운로드 클라이언트의 기본값을 사용합니다.",
     "IndexerSettingsPackSeedTimeIndexerHelpText": "토런트가 중지되기 전에 시드되어야 하는 시간, 비어 있으면 다운로드 클라이언트의 기본값을 사용합니다.",
-    "FilterPlaceHolder": "인덱서 플래그 선택"
+    "FilterPlaceHolder": "인덱서 플래그 선택",
+    "RecentChanges": "최근 변경 사항",
+    "InstallLatest": "최신 설치"
 }

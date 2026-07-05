@@ -680,7 +680,7 @@
     "IndexerSettingsRssKey": "Clave RSS",
     "IndexerSettingsSeedRatio": "Ratio de sembrado",
     "IndexerSettingsSeedTimeHelpText": "El tiempo que un torrent debería ser sembrado antes de parar, vacío usa el predeterminado del cliente de descarga",
-    "IndexerMTeamTpSettingsApiKeyHelpText": "Clave API del sitio (encontrada en Panel de control de usuario => Seguridad => Laboratorio)",
+    "IndexerMTeamTpSettingsApiKeyHelpText": "Clave API del sitio (encontrada en Panel de control de usuario => Laboratorio)",
     "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Buscar solo lanzamientos freeleech",
     "Menu": "Menú",
     "Mixed": "Mezclado",

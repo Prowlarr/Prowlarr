@@ -227,7 +227,7 @@
     "Date": "日付",
     "Dates": "日付",
     "SSLCertPassword": "SSL証明書のパスワード",
-    "About": "約",
+    "About": "このソフトウェアについて",
     "AcceptConfirmationModal": "確認モーダルを受け入れる",
     "Actions": "行動",
     "Added": "追加",
@@ -418,5 +418,9 @@
     "DeleteSelectedApplications": "選択したムービーファイルを削除する",
     "DownloadClientCategory": "ダウンロードクライアントを削除する",
     "FilterPlaceHolder": "インデクサーを削除する",
-    "IndexerNoDefinitionCheckHealthCheckMessage": "インデクサーの定義が設定されておらず、機能していません: {indexerNames}。 {appName} から削除、もしくは再追加してください。"
+    "IndexerNoDefinitionCheckHealthCheckMessage": "インデクサーの定義が設定されておらず、機能していません: {indexerNames}。 {appName} から削除、もしくは再追加してください。",
+    "PrioritySettings": "優先度：{0}",
+    "TheLogLevelDefault": "ログレベルのデフォルトは「情報」であり、で変更できます。",
+    "WouldYouLikeToRestoreBackup": "バックアップ{0}を復元しますか？",
+    "UseSsl": "SSLを使用する"
 }

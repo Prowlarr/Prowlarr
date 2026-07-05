@@ -536,5 +536,8 @@
     "DeleteSelectedIndexer": "Eliminar indexador",
     "DeleteSelectedIndexers": "Eliminar indexador",
     "EditSelectedIndexers": "Eliminar indexador",
-    "NotificationStatusSingleClientHealthCheckMessage": "Listas indisponíveis devido a erros: {0}"
+    "NotificationStatusSingleClientHealthCheckMessage": "Listas indisponíveis devido a erros: {0}",
+    "PrioritySettings": "Prioridade: {0}",
+    "TheLogLevelDefault": "O nível de registo é padronizado como \"Informações\" e pode ser alterado em",
+    "WouldYouLikeToRestoreBackup": "Deseja restaurar a cópia de segurança {0}?"
 }

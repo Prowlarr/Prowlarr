@@ -807,5 +807,9 @@
     "DownloadClientUTorrentProviderMessage": "uTorrent té historial d'incloure criptominers, malware i anuncis, suggerim fortament que escolleixis un client diferent.",
     "DownloadClientQbittorrentSettingsInitialStateHelpText": "Estat inicial dels torrents afegits a qBittorrent. Tingueu en compte que els torrents forçats no compleixen amb les restriccions de llavors",
     "LogSizeLimit": "Límit de la mida del registre",
-    "SelectDownloadClientModalTitle": "{modalTitle} - Seleccioneu el client de baixada"
+    "SelectDownloadClientModalTitle": "{modalTitle} - Seleccioneu el client de baixada",
+    "ApplicationAuthPassword": "Contrasenya d'autenticació",
+    "ApplicationAuthPasswordHelpText": "Contrasenya d'autenticació bàsica HTTP utilitzada per {appName} en accedir a aquesta aplicació. Establiu-la si l'aplicació es troba darrere d'un proxy invers protegit amb autenticació bàsica.",
+    "ApplicationAuthUsername": "Nom d'usuari d'autenticació",
+    "ApplicationAuthUsernameHelpText": "Nom d'usuari d'autenticació bàsica HTTP utilitzada per {appName} en accedir a aquesta aplicació. Definiu-ho si l'aplicació es troba darrere d'un proxy invers protegit amb autenticació bàsica."
 }

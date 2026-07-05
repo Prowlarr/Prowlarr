@@ -417,5 +417,8 @@
     "DeleteSelectedDownloadClientsMessageText": "هل أنت متأكد أنك تريد حذف ملفات الأفلام المحددة؟",
     "AddSyncProfile": "تحرير ملف تعريف التأخير",
     "SyncProfiles": "تحرير ملف تعريف التأخير",
-    "FilterPlaceHolder": "حذف المفهرس"
+    "FilterPlaceHolder": "حذف المفهرس",
+    "PrioritySettings": "الأولوية: {0}",
+    "TheLogLevelDefault": "يتم تعيين مستوى السجل افتراضيًا على \"المعلومات\" ويمكن تغييره",
+    "WouldYouLikeToRestoreBackup": "هل ترغب في استعادة النسخة الاحتياطية {0}؟"
 }

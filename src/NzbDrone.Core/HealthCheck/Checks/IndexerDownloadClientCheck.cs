@@ -44,7 +44,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
                     {
                         { "indexerNames", string.Join(", ", invalidIndexers.Select(v => v.Name).ToArray()) }
                     }),
-                    "#invalid-indexer-download-client-setting");
+                    "#invalid-indexer-download-client-setting")
+                {
+                    RelatedProviders = invalidIndexers.Select(v => v.Id).ToList()
+                };
             }
 
             return new HealthCheck(GetType());

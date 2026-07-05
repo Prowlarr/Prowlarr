@@ -43,7 +43,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
             return new HealthCheck(GetType(),
                 healthType,
                 healthMessage,
-                "#indexers-are-obsolete");
+                "#indexers-are-obsolete")
+            {
+                RelatedProviders = oldIndexers.Select(v => v.Definition.Id).ToList()
+            };
         }
 
         public override bool CheckOnSchedule => false;

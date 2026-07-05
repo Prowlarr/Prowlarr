@@ -21,12 +21,14 @@ namespace NzbDrone.Core.Notifications
     {
         private readonly INotificationFactory _notificationFactory;
         private readonly INotificationStatusService _notificationStatusService;
+        private readonly IIndexerFactory _indexerFactory;
         private readonly Logger _logger;
 
-        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, Logger logger)
+        public NotificationService(INotificationFactory notificationFactory, INotificationStatusService notificationStatusService, IIndexerFactory indexerFactory, Logger logger)
         {
             _notificationFactory = notificationFactory;
             _notificationStatusService = notificationStatusService;
+            _indexerFactory = indexerFactory;
             _logger = logger;
         }
 
@@ -85,7 +87,8 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings) &&
+                        ShouldHandleHealthCheck(notification.Definition, message.HealthCheck))
                     {
                         notification.OnHealthIssue(message.HealthCheck);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
@@ -110,7 +113,8 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings) &&
+                        ShouldHandleHealthCheck(notification.Definition, message.PreviousCheck))
                     {
                         notification.OnHealthRestored(message.PreviousCheck);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
@@ -218,6 +222,42 @@ namespace NzbDrone.Core.Notifications
             }
 
             _logger.Debug("{0} does not have any intersecting tags with {1}. Notification will not be sent.", definition.Name, indexer.Name);
+
+            return false;
+        }
+
+        private bool ShouldHandleHealthCheck(ProviderDefinition definition, HealthCheck.HealthCheck healthCheck)
+        {
+            if (definition.Tags.Empty())
+            {
+                _logger.Debug("No tags set for this notification.");
+
+                return true;
+            }
+
+            // Health checks that aren't tied to specific indexers (e.g. system checks) are not
+            // tag-scoped, so tagged notifications still receive them rather than silently missing
+            // application-wide health issues.
+            if (healthCheck.RelatedProviders?.Any() != true)
+            {
+                _logger.Debug("Health check is not associated with any indexer, notification will be sent.");
+
+                return true;
+            }
+
+            var relatedTags = _indexerFactory.All()
+                .Where(i => healthCheck.RelatedProviders.Contains(i.Id))
+                .SelectMany(i => i.Tags)
+                .ToHashSet();
+
+            if (definition.Tags.Intersect(relatedTags).Any())
+            {
+                _logger.Debug("Notification and health check indexer(s) have one or more intersecting tags.");
+
+                return true;
+            }
+
+            _logger.Debug("{0} does not have any intersecting tags with the health check indexer(s). Notification will not be sent.", definition.Name);
 
             return false;
         }

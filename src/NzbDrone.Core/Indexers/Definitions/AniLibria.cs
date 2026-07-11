@@ -5,10 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -20,15 +22,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class AniLibria : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
-        internal const string ApiUrl = "https://aniliberty.top/api/v1/";
+        internal const string PublicUrl = "https://anilibria.top/";
 
         public override string Name => "AniLibria";
-        public override string[] IndexerUrls => new[] { "https://anilibria.top/" };
+        public override string[] IndexerUrls => new[] { "https://aniliberty.top/" };
         public override string Language => "ru-RU";
         public override string Description => "AniLibria is a public Russian anime torrent indexer";
         public override Encoding Encoding => Encoding.UTF8;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
+
+        private string ApiUrl => $"{IndexerUrls[0]}api/v1/";
 
         public AniLibria(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -37,12 +41,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new AniLibriaRequestGenerator();
+            return new AniLibriaRequestGenerator(ApiUrl);
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new AniLibriaParser();
+            return new AniLibriaParser(ApiUrl);
         }
 
         // AniLibria search returns release IDs, while the batch endpoint returns torrents nested in releases.
@@ -95,6 +99,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AniLibriaRequestGenerator : IIndexerRequestGenerator
     {
+        private readonly string _apiUrl;
+
+        public AniLibriaRequestGenerator(string apiUrl)
+        {
+            _apiUrl = apiUrl;
+        }
+
         public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
         {
             return GetSearchRequests(searchCriteria, searchCriteria.SanitizedSearchTerm);
@@ -120,7 +131,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             return GetSearchRequests(searchCriteria, searchCriteria.SanitizedSearchTerm);
         }
 
-        private static IndexerPageableRequestChain GetSearchRequests(SearchCriteriaBase searchCriteria, string searchTerm)
+        private IndexerPageableRequestChain GetSearchRequests(SearchCriteriaBase searchCriteria, string searchTerm)
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
@@ -136,14 +147,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             return pageableRequests;
         }
 
-        private static IEnumerable<IndexerRequest> GetSearchRequest(string searchTerm)
+        private IEnumerable<IndexerRequest> GetSearchRequest(string searchTerm)
         {
-            yield return new IndexerRequest($"{AniLibria.ApiUrl}app/search/releases?query={Uri.EscapeDataString(searchTerm.Trim())}", HttpAccept.Json);
+            yield return new IndexerRequest($"{_apiUrl}app/search/releases?query={Uri.EscapeDataString(searchTerm.Trim())}", HttpAccept.Json);
         }
 
-        private static IEnumerable<IndexerRequest> GetRecentRequest()
+        private IEnumerable<IndexerRequest> GetRecentRequest()
         {
-            yield return new IndexerRequest($"{AniLibria.ApiUrl}anime/torrents?limit=50", HttpAccept.Json);
+            yield return new IndexerRequest($"{_apiUrl}anime/torrents?limit=50", HttpAccept.Json);
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }
@@ -152,6 +163,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     public class AniLibriaParser : IParseIndexerResponse
     {
+        private readonly string _apiUrl;
+
+        public AniLibriaParser(string apiUrl)
+        {
+            _apiUrl = apiUrl;
+        }
+
         public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
         {
             if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.NotFound)
@@ -163,24 +181,26 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             try
             {
-                using var document = JsonDocument.Parse(indexerResponse.Content);
-                var entries = GetDataArray(document.RootElement, indexerResponse);
+                var jsonResponse = STJson.Deserialize<AniLibriaApiResponse>(indexerResponse.Content);
+                if (jsonResponse?.Data == null)
+                {
+                    throw new IndexerException(indexerResponse, "Unexpected AniLibria API response; expected an object with a data JSON array");
+                }
+
                 var releaseInfos = new List<ReleaseInfo>();
 
-                foreach (var entry in entries.EnumerateArray())
+                foreach (var entry in jsonResponse.Data)
                 {
-                    if (entry.ValueKind != JsonValueKind.Object)
+                    if (entry.Torrents != null)
                     {
-                        throw new IndexerException(indexerResponse, "Unexpected AniLibria API response; expected each release entry to be a JSON object");
+                        foreach (var torrent in entry.Torrents)
+                        {
+                            AddTorrent(releaseInfos, torrent, entry);
+                        }
                     }
-
-                    if (entry.TryGetProperty("torrents", out var torrents) && torrents.ValueKind == JsonValueKind.Array)
+                    else if (entry.Release != null)
                     {
-                        AddReleaseTorrents(releaseInfos, entry, torrents);
-                    }
-                    else if (entry.TryGetProperty("release", out var release) && release.ValueKind == JsonValueKind.Object)
-                    {
-                        AddTorrent(releaseInfos, entry, release);
+                        AddTorrent(releaseInfos, entry, entry.Release);
                     }
                 }
 
@@ -203,27 +223,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             try
             {
-                using var document = JsonDocument.Parse(indexerResponse.Content);
-                if (document.RootElement.ValueKind != JsonValueKind.Array)
+                var releases = STJson.Deserialize<IReadOnlyCollection<AniLibriaRelease>>(indexerResponse.Content);
+                if (releases == null)
                 {
                     throw new IndexerException(indexerResponse, "Unexpected AniLibria search response; expected a JSON array");
                 }
 
-                var ids = new List<long>();
-                foreach (var release in document.RootElement.EnumerateArray())
-                {
-                    if (release.ValueKind != JsonValueKind.Object)
-                    {
-                        throw new IndexerException(indexerResponse, "Unexpected AniLibria search response; expected each release entry to be a JSON object");
-                    }
-
-                    if (TryGetInt64(release, "id", out var id) && id > 0)
-                    {
-                        ids.Add(id);
-                    }
-                }
-
-                return ids.Distinct().ToList();
+                return releases.Where(release => release.Id > 0).Select(release => release.Id).Distinct().ToList();
             }
             catch (JsonException ex)
             {
@@ -231,24 +237,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
         }
 
-        private static void AddReleaseTorrents(ICollection<ReleaseInfo> releaseInfos, JsonElement release, JsonElement torrents)
+        private void AddTorrent(ICollection<ReleaseInfo> releaseInfos, AniLibriaApiEntry torrent, AniLibriaApiEntry release)
         {
-            foreach (var torrent in torrents.EnumerateArray())
-            {
-                AddTorrent(releaseInfos, torrent, release);
-            }
-        }
-
-        private static void AddTorrent(ICollection<ReleaseInfo> releaseInfos, JsonElement torrent, JsonElement release)
-        {
-            if (torrent.ValueKind != JsonValueKind.Object || release.ValueKind != JsonValueKind.Object ||
-                !TryGetInt64(torrent, "id", out var torrentId) || torrentId <= 0 ||
-                !TryGetString(torrent, "hash", out var hash) || !IsValidInfoHash(hash))
+            if (torrent?.Id <= 0 || !IsValidInfoHash(torrent.Hash))
             {
                 return;
             }
 
-            var title = GetString(torrent, "label");
+            var title = torrent.Label;
             if (title.IsNullOrWhiteSpace())
             {
                 title = GetFallbackTitle(release);
@@ -259,42 +255,39 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return;
             }
 
-            var createdAt = GetString(torrent, "created_at");
-            if (!DateTimeOffset.TryParse(createdAt, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var publishDate))
+            if (!DateTimeOffset.TryParse(torrent.CreatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var publishDate))
             {
                 return;
             }
 
-            var releaseId = TryGetInt64(release, "id", out var id) && id > 0 ? id : (long?)null;
-            var alias = GetString(release, "alias");
+            var releaseId = release.Id > 0 ? release.Id : (long?)null;
+            var alias = release.Alias;
             if (alias.IsNullOrWhiteSpace() && !releaseId.HasValue)
             {
                 return;
             }
 
             var infoUrl = alias.IsNotNullOrWhiteSpace()
-                ? $"https://anilibria.top/anime/releases/release/{alias}"
-                : releaseId.HasValue ? $"{AniLibria.ApiUrl}anime/releases/{releaseId.Value}" : null;
+                ? $"{AniLibria.PublicUrl}anime/releases/release/{alias}"
+                : releaseId.HasValue ? $"{_apiUrl}anime/releases/{releaseId.Value}" : null;
 
-            var seeders = GetInt32(torrent, "seeders");
-            var leechers = GetInt32(torrent, "leechers");
             var releaseInfo = new TorrentInfo
             {
-                Guid = $"{AniLibria.ApiUrl}anime/torrents/{torrentId}",
+                Guid = $"{_apiUrl}anime/torrents/{torrent.Id}",
                 Title = title,
                 InfoUrl = infoUrl,
-                DownloadUrl = $"{AniLibria.ApiUrl}anime/torrents/{torrentId}/file",
-                MagnetUrl = GetString(torrent, "magnet"),
-                InfoHash = hash.Trim().ToUpperInvariant(),
-                Size = GetInt64(torrent, "size"),
-                Seeders = seeders,
-                Peers = seeders + leechers,
-                Grabs = GetInt32(torrent, "completed_times"),
+                DownloadUrl = $"{_apiUrl}anime/torrents/{torrent.Id}/file",
+                MagnetUrl = torrent.Magnet,
+                InfoHash = torrent.Hash.Trim().ToUpperInvariant(),
+                Size = torrent.Size,
+                Seeders = torrent.Seeders,
+                Peers = torrent.Seeders + torrent.Leechers,
+                Grabs = torrent.CompletedTimes,
                 PublishDate = publishDate.UtcDateTime,
-                Categories = new List<IndexerCategory> { GetCategory(GetNestedString(release, "type", "value")) },
-                Resolution = NormalizeResolution(GetNestedString(torrent, "quality", "value")),
-                Source = GetNestedString(torrent, "type", "value"),
-                Codec = GetNestedString(torrent, "codec", "value"),
+                Categories = new List<IndexerCategory> { GetCategory(release.Type?.Value) },
+                Resolution = NormalizeResolution(torrent.Quality?.Value),
+                Source = torrent.Type?.Value,
+                Codec = torrent.Codec?.Value,
                 DownloadVolumeFactor = 0,
                 UploadVolumeFactor = 1
             };
@@ -302,15 +295,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             releaseInfos.Add(releaseInfo);
         }
 
-        private static JsonElement GetDataArray(JsonElement root, IndexerResponse indexerResponse)
-        {
-            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("data", out var data) && data.ValueKind == JsonValueKind.Array)
-            {
-                return data;
-            }
-
-            throw new IndexerException(indexerResponse, "Unexpected AniLibria API response; expected an object with a data JSON array");
-        }
 
         private static void ValidateJsonResponse(IndexerResponse indexerResponse)
         {
@@ -326,9 +310,9 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
         }
 
-        private static string GetFallbackTitle(JsonElement release)
+        private static string GetFallbackTitle(AniLibriaApiEntry release)
         {
-            return GetNestedString(release, "name", "main") ?? GetNestedString(release, "name", "english");
+            return release.Name?.Main ?? release.Name?.English;
         }
 
         private static bool IsValidInfoHash(string hash)
@@ -358,56 +342,52 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
         }
 
-        private static string GetNestedString(JsonElement element, string parentName, string propertyName)
-        {
-            return element.ValueKind == JsonValueKind.Object && element.TryGetProperty(parentName, out var parent) && parent.ValueKind == JsonValueKind.Object
-                ? GetString(parent, propertyName)
-                : null;
-        }
-
-        private static string GetString(JsonElement element, string propertyName)
-        {
-            return TryGetString(element, propertyName, out var value) ? value : null;
-        }
-
-        private static bool TryGetString(JsonElement element, string propertyName, out string value)
-        {
-            value = null;
-            if (element.ValueKind != JsonValueKind.Object || !element.TryGetProperty(propertyName, out var property) || property.ValueKind != JsonValueKind.String)
-            {
-                return false;
-            }
-
-            value = property.GetString();
-            return true;
-        }
-
-        private static int GetInt32(JsonElement element, string propertyName)
-        {
-            return TryGetInt64(element, propertyName, out var value) && value <= int.MaxValue && value >= int.MinValue ? (int)value : 0;
-        }
-
-        private static long GetInt64(JsonElement element, string propertyName)
-        {
-            return TryGetInt64(element, propertyName, out var value) ? value : 0;
-        }
-
-        private static bool TryGetInt64(JsonElement element, string propertyName, out long value)
-        {
-            value = 0;
-            if (element.ValueKind != JsonValueKind.Object || !element.TryGetProperty(propertyName, out var property))
-            {
-                return false;
-            }
-
-            if (property.ValueKind == JsonValueKind.Number)
-            {
-                return property.TryGetInt64(out value);
-            }
-
-            return property.ValueKind == JsonValueKind.String && long.TryParse(property.GetString(), out value);
-        }
-
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    internal sealed class AniLibriaApiResponse
+    {
+        public IReadOnlyCollection<AniLibriaApiEntry> Data { get; init; }
+    }
+
+    internal sealed class AniLibriaRelease
+    {
+        public long Id { get; init; }
+    }
+
+    internal sealed class AniLibriaApiEntry
+    {
+        public long Id { get; init; }
+        public string Alias { get; init; }
+        public AniLibriaValue Type { get; init; }
+        public AniLibriaName Name { get; init; }
+        public IReadOnlyCollection<AniLibriaApiEntry> Torrents { get; init; }
+        public AniLibriaApiEntry Release { get; init; }
+        public string Hash { get; init; }
+        public string Label { get; init; }
+        public string Magnet { get; init; }
+        public long Size { get; init; }
+        public int Seeders { get; init; }
+        public int Leechers { get; init; }
+
+        [JsonPropertyName("completed_times")]
+        public int CompletedTimes { get; init; }
+
+        [JsonPropertyName("created_at")]
+        public string CreatedAt { get; init; }
+
+        public AniLibriaValue Quality { get; init; }
+        public AniLibriaValue Codec { get; init; }
+    }
+
+    internal sealed class AniLibriaValue
+    {
+        public string Value { get; init; }
+    }
+
+    internal sealed class AniLibriaName
+    {
+        public string Main { get; init; }
+        public string English { get; init; }
     }
 }

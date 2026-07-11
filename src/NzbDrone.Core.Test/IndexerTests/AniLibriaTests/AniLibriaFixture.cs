@@ -36,6 +36,8 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
         [Test]
         public async Task should_make_a_search_request_then_one_batch_release_request_and_map_all_torrents()
         {
+            Subject.IndexerUrls.Should().Equal("https://aniliberty.top/");
+
             SetupResponses(
                 ReadAllText(@"Files/Indexers/AniLibria/search-releases.json"),
                 ReadAllText(@"Files/Indexers/AniLibria/releases-list.json"),

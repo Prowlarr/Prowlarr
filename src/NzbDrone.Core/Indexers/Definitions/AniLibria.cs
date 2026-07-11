@@ -223,7 +223,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             try
             {
-                var releases = STJson.Deserialize<IReadOnlyCollection<AniLibriaRelease>>(indexerResponse.Content);
+                var releases = STJson.Deserialize<List<AniLibriaRelease>>(indexerResponse.Content);
                 if (releases == null)
                 {
                     throw new IndexerException(indexerResponse, "Unexpected AniLibria search response; expected a JSON array");

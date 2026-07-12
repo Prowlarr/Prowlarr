@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -26,7 +25,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override string[] IndexerUrls => new[] { "https://aniliberty.top/" };
         public override string Description => "AniLibria is a public Russian anime torrent indexer";
         public override string Language => "ru-RU";
-        public override Encoding Encoding => Encoding.UTF8;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
@@ -46,7 +44,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             return new AniLibriaParser(ApiUrl);
         }
-
         // AniLibria search returns release IDs, while the batch endpoint returns torrents nested in releases.
         protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
         {

@@ -22,17 +22,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class AniLibria : TorrentIndexerBase<NoAuthTorrentBaseSettings>
     {
-        internal const string PublicUrl = "https://anilibria.top/";
-
         public override string Name => "AniLibria";
         public override string[] IndexerUrls => new[] { "https://aniliberty.top/" };
-        public override string Language => "ru-RU";
         public override string Description => "AniLibria is a public Russian anime torrent indexer";
+        public override string Language => "ru-RU";
         public override Encoding Encoding => Encoding.UTF8;
         public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        private string ApiUrl => $"{IndexerUrls[0]}api/v1/";
+        private string ApiUrl => $"{Settings.BaseUrl}api/v1/";
 
         public AniLibria(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -244,32 +242,28 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return;
             }
 
-            var title = torrent.Label;
-            if (title.IsNullOrWhiteSpace())
-            {
-                title = GetFallbackTitle(release);
-            }
-
+            var title = torrent.Label ?? GetFallbackTitle(release);
             if (title.IsNullOrWhiteSpace())
             {
                 return;
             }
 
-            if (!DateTimeOffset.TryParse(torrent.CreatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var publishDate))
+            var publishDate = DateTime.UtcNow;
+            if (DateTimeOffset.TryParse(torrent.CreatedAt, CultureInfo.InvariantCulture, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var parsedPublishDate))
             {
-                return;
+                publishDate = parsedPublishDate.UtcDateTime;
             }
 
-            var releaseId = release.Id > 0 ? release.Id : (long?)null;
             var alias = release.Alias;
-            if (alias.IsNullOrWhiteSpace() && !releaseId.HasValue)
+            string infoUrl = null;
+            if (alias.IsNotNullOrWhiteSpace())
             {
-                return;
+                infoUrl = $"{_apiUrl}anime/releases/release/{alias}";
             }
-
-            var infoUrl = alias.IsNotNullOrWhiteSpace()
-                ? $"{AniLibria.PublicUrl}anime/releases/release/{alias}"
-                : releaseId.HasValue ? $"{_apiUrl}anime/releases/{releaseId.Value}" : null;
+            else if (release.Id > 0)
+            {
+                infoUrl = $"{_apiUrl}anime/releases/{release.Id}";
+            }
 
             var releaseInfo = new TorrentInfo
             {
@@ -283,7 +277,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 Seeders = torrent.Seeders,
                 Peers = torrent.Seeders + torrent.Leechers,
                 Grabs = torrent.CompletedTimes,
-                PublishDate = publishDate.UtcDateTime,
+                PublishDate = publishDate,
                 Categories = new List<IndexerCategory> { GetCategory(release.Type?.Value) },
                 Resolution = NormalizeResolution(torrent.Quality?.Value),
                 Source = torrent.Type?.Value,
@@ -294,7 +288,6 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             releaseInfos.Add(releaseInfo);
         }
-
 
         private static void ValidateJsonResponse(IndexerResponse indexerResponse)
         {

@@ -29,7 +29,10 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
             Subject.Definition = new IndexerDefinition
             {
                 Name = "AniLibria",
-                Settings = new NoAuthTorrentBaseSettings()
+                Settings = new NoAuthTorrentBaseSettings
+                {
+                    BaseUrl = "https://aniliberty.top/"
+                }
             };
         }
 
@@ -53,7 +56,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
             var avc = releases.Single(r => r.Title.Contains("Test TV", StringComparison.Ordinal) && r.Title.Contains("[AVC]", StringComparison.Ordinal));
             avc.Title.Should().Be("[AniLibria] Test TV S01E01-03 [WEB-DL][1080p][AVC]");
             avc.Guid.Should().Be("https://aniliberty.top/api/v1/anime/torrents/1001");
-            avc.InfoUrl.Should().Be("https://anilibria.top/anime/releases/release/test-tv-pack");
+            avc.InfoUrl.Should().Be("https://aniliberty.top/api/v1/anime/releases/release/test-tv-pack");
             avc.DownloadUrl.Should().Be("https://aniliberty.top/api/v1/anime/torrents/1001/file");
             avc.MagnetUrl.Should().Be("magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             avc.InfoHash.Should().Be("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -129,14 +132,75 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
         }
 
         [Test]
-        public void should_skip_a_non_object_torrent_without_discarding_valid_torrents()
+        public async Task should_use_the_configured_base_url_for_requests_and_torrent_urls()
+        {
+            Subject.Definition.Settings = new NoAuthTorrentBaseSettings
+            {
+                BaseUrl = "https://custom.anilibria.example/"
+            };
+            SetupResponses(
+                ReadAllText(@"Files/Indexers/AniLibria/search-releases.json"),
+                ReadAllText(@"Files/Indexers/AniLibria/releases-list.json"),
+                ReadAllText(@"Files/Indexers/AniLibria/recent-torrents.json"));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "Test Anime!" })).Releases.Cast<TorrentInfo>().ToList();
+
+            _requests.Should().Equal(
+                "https://custom.anilibria.example/api/v1/app/search/releases?query=Test%20Anime",
+                "https://custom.anilibria.example/api/v1/anime/releases/list?ids=100,200,300,400,500,600,700,800,900,1000");
+            var torrent = releases.Single(r => r.Title.Contains("Test TV", StringComparison.Ordinal) && r.Title.Contains("[AVC]", StringComparison.Ordinal));
+            torrent.Guid.Should().Be("https://custom.anilibria.example/api/v1/anime/torrents/1001");
+            torrent.DownloadUrl.Should().Be("https://custom.anilibria.example/api/v1/anime/torrents/1001/file");
+            torrent.InfoUrl.Should().Be("https://custom.anilibria.example/api/v1/anime/releases/release/test-tv-pack");
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("not-a-date")]
+        public void should_keep_torrents_with_missing_or_invalid_created_at(string createdAt)
+        {
+            var createdAtJson = createdAt == null ? "null" : $"\"{createdAt}\"";
+            var response = CreateIndexerResponse("{\"data\":[{\"id\":100,\"alias\":\"test\",\"type\":{\"value\":\"TV\"},\"torrents\":[{\"id\":2,\"hash\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"label\":\"valid\",\"size\":1,\"seeders\":0,\"leechers\":0,\"completed_times\":0,\"created_at\":" + createdAtJson + "}]}]}");
+            var before = DateTime.UtcNow;
+
+            var release = Subject.GetParser().ParseResponse(response).Single();
+
+            var after = DateTime.UtcNow;
+            release.PublishDate.Kind.Should().Be(DateTimeKind.Utc);
+            release.PublishDate.Should().BeOnOrAfter(before);
+            release.PublishDate.Should().BeOnOrBefore(after);
+        }
+
+        [Test]
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void should_keep_torrents_without_an_alias_or_positive_release_id(long releaseId)
+        {
+            var response = CreateIndexerResponse($"{{\"data\":[{{\"id\":{releaseId},\"type\":{{\"value\":\"TV\"}},\"torrents\":[{{\"id\":2,\"hash\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"label\":\"valid\",\"size\":1,\"seeders\":0,\"leechers\":0,\"completed_times\":0,\"created_at\":\"2026-01-02T03:04:05+00:00\"}}]}}]}}");
+
+            var release = Subject.GetParser().ParseResponse(response).Single();
+
+            release.InfoUrl.Should().BeNull();
+        }
+
+        [Test]
+        public void should_use_the_release_title_when_a_torrent_label_is_null()
+        {
+            var response = CreateIndexerResponse("{\"data\":[{\"id\":100,\"alias\":\"test\",\"name\":{\"main\":\"Release title\"},\"type\":{\"value\":\"TV\"},\"torrents\":[{\"id\":2,\"hash\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"label\":null,\"size\":1,\"seeders\":0,\"leechers\":0,\"completed_times\":0,\"created_at\":\"2026-01-02T03:04:05+00:00\"}]}]}");
+
+            var release = Subject.GetParser().ParseResponse(response).Single();
+
+            release.Title.Should().Be("Release title");
+        }
+
+        [Test]
+        public void should_throw_indexer_exception_for_a_non_object_torrent()
         {
             var response = CreateIndexerResponse("{\"data\":[{\"id\":100,\"alias\":\"test\",\"type\":{\"value\":\"TV\"},\"torrents\":[123,{\"id\":2,\"hash\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"label\":\"valid\",\"size\":1,\"seeders\":0,\"leechers\":0,\"completed_times\":0,\"created_at\":\"2026-01-02T03:04:05+00:00\"}]}]}");
 
-            var releases = Subject.GetParser().ParseResponse(response);
+            Action act = () => Subject.GetParser().ParseResponse(response);
 
-            releases.Should().ContainSingle();
-            releases.Single().Title.Should().Be("valid");
+            act.Should().Throw<IndexerException>().WithMessage("*Unable to parse AniLibria API response*");
         }
 
         [Test]
@@ -156,7 +220,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
 
             Action act = () => AniLibriaParser.ParseSearchReleaseIds(response);
 
-            act.Should().Throw<IndexerException>().WithMessage("*expected a JSON array*");
+            act.Should().Throw<IndexerException>().WithMessage("*Unable to parse AniLibria search response*");
         }
 
         [Test]
@@ -170,9 +234,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
         }
 
         [Test]
-        [TestCase("[]")]
         [TestCase("{}")]
-        [TestCase("{\"data\":{}}")]
         public void should_throw_indexer_exception_for_a_malformed_batch_response_envelope(string content)
         {
             var response = CreateIndexerResponse(content);
@@ -184,6 +246,17 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
 
         [Test]
         [TestCase("[]")]
+        [TestCase("{\"data\":{}}")]
+        public void should_throw_indexer_exception_for_an_invalid_batch_response_shape(string content)
+        {
+            var response = CreateIndexerResponse(content);
+
+            Action act = () => Subject.GetParser().ParseResponse(response);
+
+            act.Should().Throw<IndexerException>().WithMessage("*Unable to parse AniLibria API response*");
+        }
+
+        [Test]
         [TestCase("{}")]
         [TestCase("{\"data\":null}")]
         public void should_throw_indexer_exception_for_a_malformed_recent_response_envelope(string content)
@@ -196,13 +269,25 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
         }
 
         [Test]
+        [TestCase("[]")]
+        [TestCase("{\"data\":{}}")]
+        public void should_throw_indexer_exception_for_an_invalid_recent_response_shape(string content)
+        {
+            var response = CreateRecentIndexerResponse(content);
+
+            Action act = () => Subject.GetParser().ParseResponse(response);
+
+            act.Should().Throw<IndexerException>().WithMessage("*Unable to parse AniLibria API response*");
+        }
+
+        [Test]
         public void should_throw_indexer_exception_for_a_non_object_search_entry()
         {
             var response = CreateSearchIndexerResponse("[123]");
 
             Action act = () => AniLibriaParser.ParseSearchReleaseIds(response);
 
-            act.Should().Throw<IndexerException>().WithMessage("*expected each release entry to be a JSON object*");
+            act.Should().Throw<IndexerException>().WithMessage("*Unable to parse AniLibria search response*");
         }
 
         [Test]
@@ -212,7 +297,7 @@ namespace NzbDrone.Core.Test.IndexerTests.AniLibriaTests
 
             Action act = () => Subject.GetParser().ParseResponse(response);
 
-            act.Should().Throw<IndexerException>().WithMessage("*expected each release entry to be a JSON object*");
+            act.Should().Throw<IndexerException>().WithMessage("*Unable to parse AniLibria API response*");
         }
 
         [Test]

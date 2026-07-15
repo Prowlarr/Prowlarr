@@ -84,6 +84,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var caps = new IndexerCapabilities
             {
+                LimitsDefault = 50,
+                LimitsMax = 50,
                 TvSearchParams = new List<TvSearchParam>
                 {
                     TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId

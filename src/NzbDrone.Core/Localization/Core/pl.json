@@ -486,7 +486,7 @@
     "DownloadClientQbittorrentSettingsFirstAndLastFirstHelpText": "Pobieraj najpierw pierwsze i ostatnie fragmenty (qBittorrent 4.1.0+)",
     "DownloadClientQbittorrentSettingsUseSslHelpText": "Użyj bezpiecznego połączenia. Zobacz Opcje -> Web UI -> 'Use HTTPS instead of HTTP' w qBittorrent.",
     "DownloadClientRTorrentSettingsAddStopped": "Dodaj zatrzymane",
-    "IndexerNzbIndexSettingsApiKeyHelpText": "Klucz API strony",
+    "IndexerNzbIndexSettingsApiKeyHelpText": "Klucz API serwisu (opcjonalny — wyszukiwanie działa bez niego, ale z niższym limitem częstotliwości)",
     "Redirected": "Przekierowany",
     "SeedTime": "Czas seedowania",
     "FailedToFetchSettings": "Nie udało się pobrać ustawień",

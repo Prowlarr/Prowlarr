@@ -667,7 +667,7 @@
     "IndexerIPTorrentsSettingsFreeleechOnlyHelpText": "Buscar solo lanzamientos freeleech",
     "IndexerNewznabSettingsAdditionalParametersHelpText": "Parámetros adicionales de Newznab",
     "IndexerNewznabSettingsApiKeyHelpText": "Clave API del sitio",
-    "IndexerNzbIndexSettingsApiKeyHelpText": "Clave API del sitio",
+    "IndexerNzbIndexSettingsApiKeyHelpText": "Clave API del sitio (opcional — la búsqueda funciona sin una, pero con un límite más bajo de ratio)",
     "IndexerPassThePopcornSettingsApiUserHelpText": "Estas opciones se encuentran en tus opciones de seguridad de PassThePopcorn (Editar perfil > Seguridad).",
     "IndexerPassThePopcornSettingsApiKeyHelpText": "Clave API del sitio",
     "IndexerRedactedSettingsApiKeyHelpText": "Clave API del sitio (encontrada en Opciones => Opciones de acceso)",
@@ -811,5 +811,7 @@
     "ApplicationAuthPassword": "Contraseña de autenticación",
     "ApplicationAuthPasswordHelpText": "Contraseña de autenticación básica en HTTP usada por {appName} cuando se accede a esta aplicación. Establecer si la aplicación se sitúa tras un proxy inverso protegido por autenticación básica.",
     "ApplicationAuthUsername": "Usuario de autenticación",
-    "ApplicationAuthUsernameHelpText": "Usuario de autenticación básico en HTTP usado por {appName} cuando se accede a esta aplicación. Establecer si la aplicación se sitúa tras un proxy inverso protegido por autenticación básica."
+    "ApplicationAuthUsernameHelpText": "Usuario de autenticación básico en HTTP usado por {appName} cuando se accede a esta aplicación. Establecer si la aplicación se sitúa tras un proxy inverso protegido por autenticación básica.",
+    "IndexerIPTorrentsSettingsSearchSortByHelpText": "Selecciona el orden en que se ordenan los resultados de búsqueda",
+    "IndexerIPTorrentsSettingsSearchSortBy": "Orden de búsqueda"
 }

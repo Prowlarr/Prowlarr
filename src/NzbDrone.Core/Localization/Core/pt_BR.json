@@ -640,7 +640,7 @@
     "IndexerIPTorrentsSettingsFreeleechOnlyHelpText": "Pesquisar apenas lançamentos freeleech",
     "IndexerNebulanceSettingsApiKeyHelpText": "Chave de API nas chaves de API das configurações do usuário. A chave deve ter permissões de Lista e Download",
     "IndexerNewznabSettingsApiKeyHelpText": "Chave de API do site",
-    "IndexerNzbIndexSettingsApiKeyHelpText": "Chave de API do site",
+    "IndexerNzbIndexSettingsApiKeyHelpText": "Chave de API do site (opcional — a busca funciona sem uma, mas com um limite de requisições menor)",
     "IndexerOrpheusSettingsApiKeyHelpText": "Chave API do site (encontrada em Configurações = Configurações de acesso)",
     "IndexerPassThePopcornSettingsApiKeyHelpText": "Chave de API do site",
     "IndexerPassThePopcornSettingsApiUserHelpText": "Essas configurações estão nas configurações de segurança do PassThePopcorn (Edit Profile [Editar perfil] > Security [Segurança]).",
@@ -811,5 +811,7 @@
     "ApplicationAuthPassword": "Senha de autenticação",
     "ApplicationAuthPasswordHelpText": "Senha de autenticação básica HTTP usada pelo {appName} ao acessar este aplicativo. Defina se o aplicativo estiver atrás de um proxy reverso protegido por autenticação básica.",
     "ApplicationAuthUsername": "Usuário de autenticação",
-    "ApplicationAuthUsernameHelpText": "Nome de usuário de autenticação básica HTTP usado pelo {appName} ao acessar este aplicativo. Defina se o aplicativo estiver atrás de um proxy reverso protegido por autenticação básica."
+    "ApplicationAuthUsernameHelpText": "Nome de usuário de autenticação básica HTTP usado pelo {appName} ao acessar este aplicativo. Defina se o aplicativo estiver atrás de um proxy reverso protegido por autenticação básica.",
+    "IndexerIPTorrentsSettingsSearchSortBy": "Ordenar Busca Por",
+    "IndexerIPTorrentsSettingsSearchSortByHelpText": "Selecione a ordem na qual classificar os resultados da busca"
 }

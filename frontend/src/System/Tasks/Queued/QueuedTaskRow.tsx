@@ -40,7 +40,7 @@ function getStatusIconProps(status: string, message: string | undefined) {
       return {
         name: icons.CHECK,
         kind: kinds.SUCCESS,
-        title: message === 'Completed' ? title : `${title}: ${message}`,
+        title: message == null ? title : `${title}: ${message}`,
       };
 
     case 'failed':

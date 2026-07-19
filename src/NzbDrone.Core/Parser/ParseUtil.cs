@@ -135,11 +135,11 @@ namespace NzbDrone.Core.Parser
         public static long GetBytes(string str)
         {
             var unit = new string(str.Where(char.IsLetter).ToArray());
-            var val = CoerceFloat(str);
+            var val = CoerceDouble(str);
             return GetBytes(unit, val);
         }
 
-        private static long GetBytes(string unit, float value)
+        private static long GetBytes(string unit, double value)
         {
             unit = unit.Replace("i", "").ToLowerInvariant();
             if (unit.Contains("kb"))
@@ -165,12 +165,12 @@ namespace NzbDrone.Core.Parser
             return (long)value;
         }
 
-        private static long BytesFromTB(float tb) => BytesFromGB(tb * 1024f);
+        private static long BytesFromTB(double tb) => BytesFromGB(tb * 1024d);
 
-        private static long BytesFromGB(float gb) => BytesFromMB(gb * 1024f);
+        private static long BytesFromGB(double gb) => BytesFromMB(gb * 1024d);
 
-        private static long BytesFromMB(float mb) => BytesFromKB(mb * 1024f);
+        private static long BytesFromMB(double mb) => BytesFromKB(mb * 1024d);
 
-        private static long BytesFromKB(float kb) => (long)(kb * 1024f);
+        private static long BytesFromKB(double kb) => (long)(kb * 1024d);
     }
 }

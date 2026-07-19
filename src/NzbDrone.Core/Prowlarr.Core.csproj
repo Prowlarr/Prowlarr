@@ -6,13 +6,13 @@
     <PackageReference Include="AngleSharp.Xml" Version="1.0.0" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Diacritical.Net" Version="1.0.4" />
-    <PackageReference Include="MailKit" Version="4.16.0" />
+    <PackageReference Include="MailKit" Version="4.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.27" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.27" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.5" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.6" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
     <PackageReference Include="Npgsql" Version="9.0.5" />
-    <PackageReference Include="Polly" Version="8.6.6" />
+    <PackageReference Include="Polly" Version="8.7.0" />
     <PackageReference Include="FluentMigrator.Runner.Core" Version="6.2.0" />
     <PackageReference Include="FluentMigrator.Runner.Postgres" Version="6.2.0" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="6.2.0" />
@@ -25,7 +25,7 @@
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
     <PackageReference Include="MonoTorrent" Version="2.0.7" />
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
-    <PackageReference Include="AngleSharp" Version="1.4.0" />
+    <PackageReference Include="AngleSharp" Version="1.5.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Common\Prowlarr.Common.csproj" />

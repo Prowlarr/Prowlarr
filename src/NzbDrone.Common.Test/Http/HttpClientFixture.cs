@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NLog;
@@ -364,7 +365,7 @@ namespace NzbDrone.Common.Test.Http
         }
 
         [Test]
-        public void should_send_basic_auth_header_as_utf8()
+        public async Task should_send_basic_auth_header_as_utf8()
         {
             var username = "tèst";
             var password = "pâsswörd_ș";
@@ -374,12 +375,12 @@ namespace NzbDrone.Common.Test.Http
                 Credentials = new BasicNetworkCredential(username, password)
             };
 
-            var response = Subject.Get<HttpBinResource>(request);
+            var response = await Subject.GetAsync<HttpBinResource>(request);
 
             response.Resource.Headers.Should().ContainKey("Authorization");
 
             var authHeader = response.Resource.Headers["Authorization"].ToString();
-            var encodedPart = authHeader.Split(' ')[1];
+            var encodedPart = authHeader!.Split(' ', 2).Last();
             var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(encodedPart));
 
             decoded.Should().Be($"{username}:{password}");

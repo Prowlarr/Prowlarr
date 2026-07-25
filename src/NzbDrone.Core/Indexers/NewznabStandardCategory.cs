@@ -24,6 +24,17 @@ namespace NzbDrone.Core.Indexers
         public static readonly IndexerCategory ConsoleWiiU = new(1130, "Console/WiiU");
         public static readonly IndexerCategory ConsoleXBoxOne = new(1140, "Console/XBox One");
         public static readonly IndexerCategory ConsolePS4 = new(1180, "Console/PS4");
+        public static readonly IndexerCategory ConsoleGameBoy = new(1190, "Console/Game Boy");
+        public static readonly IndexerCategory ConsoleGameBoyAdvance = new(1200, "Console/Game Boy Advance");
+        public static readonly IndexerCategory ConsoleGameBoyColor = new(1210, "Console/Game Boy Color");
+        public static readonly IndexerCategory ConsoleNES = new(1220, "Console/NES");
+        public static readonly IndexerCategory ConsoleNintendo64 = new(1230, "Console/Nintendo 64");
+        public static readonly IndexerCategory ConsoleGameCube = new(1240, "Console/Nintendo GameCube");
+        public static readonly IndexerCategory ConsolePokemonMini = new(1250, "Console/Pokemon Mini");
+        public static readonly IndexerCategory ConsoleSNES = new(1260, "Console/SNES");
+        public static readonly IndexerCategory ConsoleSwitch = new(1270, "Console/Switch");
+        public static readonly IndexerCategory ConsoleVirtualBoy = new(1280, "Console/Virtual Boy");
+        public static readonly IndexerCategory ConsoleNewNintendo3DS = new(1290, "Console/New Nintendo 3DS");
 
         public static readonly IndexerCategory Movies = new(2000, "Movies");
         public static readonly IndexerCategory MoviesForeign = new(2010, "Movies/Foreign");
@@ -120,6 +131,17 @@ namespace NzbDrone.Core.Indexers
             ConsoleWiiU,
             ConsoleXBoxOne,
             ConsolePS4,
+            ConsoleGameBoy,
+            ConsoleGameBoyAdvance,
+            ConsoleGameBoyColor,
+            ConsoleNES,
+            ConsoleNintendo64,
+            ConsoleGameCube,
+            ConsolePokemonMini,
+            ConsoleSNES,
+            ConsoleSwitch,
+            ConsoleVirtualBoy,
+            ConsoleNewNintendo3DS,
             Movies,
             MoviesForeign,
             MoviesOther,
@@ -202,7 +224,18 @@ namespace NzbDrone.Core.Indexers
                     ConsolePSVita,
                     ConsoleWiiU,
                     ConsoleXBoxOne,
-                    ConsolePS4
+                    ConsolePS4,
+                    ConsoleGameBoy,
+                    ConsoleGameBoyAdvance,
+                    ConsoleGameBoyColor,
+                    ConsoleNES,
+                    ConsoleNintendo64,
+                    ConsoleGameCube,
+                    ConsolePokemonMini,
+                    ConsoleSNES,
+                    ConsoleSwitch,
+                    ConsoleVirtualBoy,
+                    ConsoleNewNintendo3DS
                 });
             Movies.SubCategories.AddRange(
                 new List<IndexerCategory>

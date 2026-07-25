@@ -71,19 +71,19 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("Xbox 360", NewznabStandardCategory.ConsoleXBox360, "Xbox 360");
 
             // Nintendo
-            caps.Categories.AddCategoryMapping("Game Boy", NewznabStandardCategory.ConsoleOther, "Game Boy");
-            caps.Categories.AddCategoryMapping("Game Boy Advance", NewznabStandardCategory.ConsoleOther, "Game Boy Advance");
-            caps.Categories.AddCategoryMapping("Game Boy Color", NewznabStandardCategory.ConsoleOther, "Game Boy Color");
-            caps.Categories.AddCategoryMapping("NES", NewznabStandardCategory.ConsoleOther, "NES");
-            caps.Categories.AddCategoryMapping("Nintendo 64", NewznabStandardCategory.ConsoleOther, "Nintendo 64");
-            caps.Categories.AddCategoryMapping("Nintendo 3DS", NewznabStandardCategory.ConsoleOther, "Nintendo 3DS");
-            caps.Categories.AddCategoryMapping("New Nintendo 3DS", NewznabStandardCategory.ConsoleOther, "New Nintendo 3DS");
+            caps.Categories.AddCategoryMapping("Game Boy", NewznabStandardCategory.ConsoleGameBoy, "Game Boy");
+            caps.Categories.AddCategoryMapping("Game Boy Advance", NewznabStandardCategory.ConsoleGameBoyAdvance, "Game Boy Advance");
+            caps.Categories.AddCategoryMapping("Game Boy Color", NewznabStandardCategory.ConsoleGameBoyColor, "Game Boy Color");
+            caps.Categories.AddCategoryMapping("NES", NewznabStandardCategory.ConsoleNES, "NES");
+            caps.Categories.AddCategoryMapping("Nintendo 64", NewznabStandardCategory.ConsoleNintendo64, "Nintendo 64");
+            caps.Categories.AddCategoryMapping("Nintendo 3DS", NewznabStandardCategory.Console3DS, "Nintendo 3DS");
+            caps.Categories.AddCategoryMapping("New Nintendo 3DS", NewznabStandardCategory.ConsoleNewNintendo3DS, "New Nintendo 3DS");
             caps.Categories.AddCategoryMapping("Nintendo DS", NewznabStandardCategory.ConsoleNDS, "Nintendo DS");
-            caps.Categories.AddCategoryMapping("Nintendo GameCube", NewznabStandardCategory.ConsoleOther, "Nintendo GameCube");
-            caps.Categories.AddCategoryMapping("Pokemon Mini", NewznabStandardCategory.ConsoleOther, "Pokemon Mini");
-            caps.Categories.AddCategoryMapping("SNES", NewznabStandardCategory.ConsoleOther, "SNES");
-            caps.Categories.AddCategoryMapping("Switch", NewznabStandardCategory.ConsoleOther, "Switch");
-            caps.Categories.AddCategoryMapping("Virtual Boy", NewznabStandardCategory.ConsoleOther, "Virtual Boy");
+            caps.Categories.AddCategoryMapping("Nintendo GameCube", NewznabStandardCategory.ConsoleGameCube, "Nintendo GameCube");
+            caps.Categories.AddCategoryMapping("Pokemon Mini", NewznabStandardCategory.ConsolePokemonMini, "Pokemon Mini");
+            caps.Categories.AddCategoryMapping("SNES", NewznabStandardCategory.ConsoleSNES, "SNES");
+            caps.Categories.AddCategoryMapping("Switch", NewznabStandardCategory.ConsoleSwitch, "Switch");
+            caps.Categories.AddCategoryMapping("Virtual Boy", NewznabStandardCategory.ConsoleVirtualBoy, "Virtual Boy");
             caps.Categories.AddCategoryMapping("Wii", NewznabStandardCategory.ConsoleWii, "Wii");
             caps.Categories.AddCategoryMapping("Wii U", NewznabStandardCategory.ConsoleWiiU, "Wii U");
 

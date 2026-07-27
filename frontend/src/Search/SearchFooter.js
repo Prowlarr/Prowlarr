@@ -250,6 +250,7 @@ class SearchFooter extends Component {
 
           <NewznabCategorySelectInputConnector
             name='searchCategories'
+            indexerIds={searchIndexerIds}
             value={searchCategories}
             isDisabled={isFetching}
             onChange={this.onInputChange}

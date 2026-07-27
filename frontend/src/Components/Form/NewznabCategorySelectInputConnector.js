@@ -8,7 +8,9 @@ function createMapStateToProps() {
   return createSelector(
     (state, { value }) => value,
     (state) => state.settings.indexerCategories,
-    (value, categories) => {
+    (state) => state.indexers.items,
+    (state, { indexerIds }) => indexerIds,
+    (value, categories, indexers, indexerIds) => {
       const values = [];
 
       categories.items.forEach((element) => {
@@ -29,6 +31,31 @@ function createMapStateToProps() {
           });
         }
       });
+
+      if (indexerIds && indexerIds.length === 1) {
+        const indexer = indexers.find((i) => i.id === indexerIds[0]);
+        const indexerCategories = (indexer?.capabilities?.categories ?? [])
+          .filter((category) => category.id >= 100000);
+
+        if (indexerCategories.length) {
+          const customCategoryGroup = {
+            key: `indexerCategories-${indexer.id}`,
+            value: indexer.name,
+            isDisabled: true
+          };
+
+          values.push(customCategoryGroup);
+
+          indexerCategories.forEach((category) => {
+            values.push({
+              key: category.id,
+              value: category.name,
+              hint: `(${category.id})`,
+              parentKey: customCategoryGroup.key
+            });
+          });
+        }
+      }
 
       return {
         value: value || [],
@@ -60,7 +87,7 @@ class IndexersSelectInputConnector extends Component {
 
 IndexersSelectInputConnector.propTypes = {
   name: PropTypes.string.isRequired,
-  indexerIds: PropTypes.number,
+  indexerIds: PropTypes.arrayOf(PropTypes.number),
   value: PropTypes.arrayOf(PropTypes.number).isRequired,
   values: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func.isRequired

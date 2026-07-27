@@ -80,6 +80,19 @@ class SearchFooterConnector extends Component {
   // Listeners
 
   onInputChange = ({ name, value }) => {
+    if (name === 'searchIndexerIds') {
+      const searchCategories = this.props.defaultCategories.filter(
+        (category) => category < 100000
+      );
+
+      this.props.setSearchDefault({
+        [name]: value,
+        searchCategories
+      });
+
+      return;
+    }
+
     this.props.setSearchDefault({ [name]: value });
   };
 
@@ -98,6 +111,7 @@ class SearchFooterConnector extends Component {
 
 SearchFooterConnector.propTypes = {
   defaultSearchQueryParams: PropTypes.object.isRequired,
+  defaultCategories: PropTypes.arrayOf(PropTypes.number).isRequired,
   setSearchDefault: PropTypes.func.isRequired
 };
 

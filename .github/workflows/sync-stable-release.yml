@@ -1,0 +1,86 @@
+name: Sync Official Prowlarr Release
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main repository
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Fetch latest release tag from official Prowlarr
+        id: get_release
+        shell: bash
+        run: |
+          # Fetch the latest production release (ignores drafts & pre-releases)
+          RELEASE_JSON=$(curl -sSL "https://api.github.com/repos/Prowlarr/Prowlarr/releases/latest")
+          TAG_NAME=$(echo "$RELEASE_JSON" | jq -r '.tag_name')
+
+          if [ -z "$TAG_NAME" ] || [ "$TAG_NAME" = "null" ]; then
+            echo "Error: Could not retrieve latest tag from Prowlarr/Prowlarr"
+            exit 1
+          fi
+
+          echo "LATEST_TAG=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "Found latest official Prowlarr release: $TAG_NAME"
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check if release tag is already merged
+        id: check_tag
+        shell: bash
+        run: |
+          TAG="${{ steps.get_release.outputs.LATEST_TAG }}"
+          git fetch origin tag "$TAG" --no-tags || true
+
+          if git merge-base --is-ancestor "$TAG" master 2>/dev/null; then
+            echo "Tag $TAG is already included in master."
+            echo "NEW_RELEASE=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag $TAG is NOT in master. New release needed!"
+            echo "NEW_RELEASE=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Sync PR if new release exists
+        if: steps.check_tag.outputs.NEW_RELEASE == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.get_release.outputs.LATEST_TAG }}
+        run: |
+          SYNC_BRANCH="sync-release-${TAG}"
+
+          # Check if PR or branch already exists
+          if git ls-remote --heads origin "$SYNC_BRANCH" | grep -q "$SYNC_BRANCH"; then
+            echo "Branch $SYNC_BRANCH already exists on remote. Skipping PR creation."
+            exit 0
+          fi
+
+          git checkout -b "$SYNC_BRANCH"
+          git fetch https://github.com/Prowlarr/Prowlarr.git tag "$TAG" --no-tags
+          
+          # Merge tag retaining custom commits
+          git merge "$TAG" -m "Merge official Prowlarr release tag $TAG into $SYNC_BRANCH"
+
+          git push origin "$SYNC_BRANCH"
+
+          gh pr create \
+            --base master \
+            --head "$SYNC_BRANCH" \
+            --title "Release Sync: Prowlarr ${TAG}" \
+            --body "Automated release sync for upstream Prowlarr release \`${TAG}\`."

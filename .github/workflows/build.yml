@@ -1,0 +1,358 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "src/Prowlarr.Api.*/openapi.json"
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "src/NzbDrone.Core/Localization/Core/**"
+      - "src/Prowlarr.Api.*/openapi.json"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FRAMEWORK: net8.0
+  RAW_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  PROWLARR_MAJOR_VERSION: 1
+  VERSION: 1.32.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.variables.outputs.branch }}
+      version: ${{ steps.variables.outputs.version }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Setup Node.js (Volta)
+        uses: volta-cli/action@v4
+
+      - name: Setup Variables
+        id: variables
+        shell: bash
+        run: |
+          PROWLARR_VERSION="${{ env.VERSION }}.${{ github.run_number }}"
+          echo "PROWLARR_VERSION=$PROWLARR_VERSION" >> "$GITHUB_ENV"
+          echo "BRANCH=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_ENV"
+          echo "branch=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_OUTPUT"
+          echo "version=$PROWLARR_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Yarn Install
+        run: yarn install
+
+      - name: Lint UI
+        run: yarn lint
+
+      - name: Build UI & Backend (linux-x64)
+        run: ./build.sh --backend --frontend --packages -f net8.0 -r linux-x64
+        env:
+          PROWLARR_VERSION: ${{ env.PROWLARR_VERSION }}
+          BRANCH: ${{ env.BRANCH }}
+
+      - name: Upload UI Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_ui
+          path: _output/UI/**/*
+
+      - name: Upload Linux Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_linux
+          path: _artifacts/linux-*/**/*
+
+      - name: Publish linux-x64 Test Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-linux-x64
+          path: _tests/net8.0/linux-x64/publish/**/*
+
+  unit_test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Download Test Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-linux-x64
+          path: _tests
+
+      - name: Make Test Binaries Executable
+        shell: bash
+        run: |
+          find _tests -name "Prowlarr.Test.Dummy" -exec chmod +x {} \;
+          chmod +x _tests/test.sh
+
+      - name: Run Unit Tests
+        shell: bash
+        env:
+          TEST_DIR: ${{ github.workspace }}/_tests
+        run: _tests/test.sh Linux Unit Test
+
+      - name: Upload Unit Test Results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-unit-linux
+          path: TestResult.xml
+
+  unit_test_postgres:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres: [14, 15]
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_PASSWORD: prowlarr
+          POSTGRES_USER: prowlarr
+          POSTGRES_DB: prowlarr
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U prowlarr" --health-interval=10s
+          --health-timeout=5s --health-retries=5
+    env:
+      Prowlarr__Postgres__Host: localhost
+      Prowlarr__Postgres__Port: 5432
+      Prowlarr__Postgres__User: prowlarr
+      Prowlarr__Postgres__Password: prowlarr
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Download Test Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-linux-x64
+          path: _tests
+
+      - name: Make Test Binaries Executable
+        shell: bash
+        run: |
+          find _tests -name "Prowlarr.Test.Dummy" -exec chmod +x {} \;
+          chmod +x _tests/test.sh
+
+      - name: Run Unit Tests (Postgres)
+        shell: bash
+        env:
+          TEST_DIR: ${{ github.workspace }}/_tests
+        run: _tests/test.sh Linux Unit Test
+
+      - name: Upload Unit Test Results (Postgres)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-unit-linux-postgres-${{ matrix.postgres }}
+          path: TestResult.xml
+
+  integration_test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Download Test Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-linux-x64
+          path: _tests
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build_linux
+          path: _output
+
+      - name: Prepare Binary Directory
+        shell: bash
+        run: |
+          mkdir -p ./bin
+          mkdir -p _tests/bin
+          find _output -name "Prowlarr.dll" -exec dirname {} \; | head -n 1 | xargs -I {} cp -r {}/. ./bin/
+          cp -r ./bin/. _tests/bin/
+
+      - name: Make Test Binaries Executable
+        shell: bash
+        run: |
+          find _tests -name "Prowlarr.Test.Dummy" -exec chmod +x {} \;
+          chmod +x _tests/test.sh
+          chmod +x ./bin/Prowlarr 2>/dev/null || true
+          chmod +x _tests/bin/Prowlarr 2>/dev/null || true
+
+      - name: Run Integration Tests
+        shell: bash
+        env:
+          TEST_DIR: ${{ github.workspace }}/_tests
+        run: _tests/test.sh Linux Integration Test
+
+      - name: Upload Integration Test Results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-integration-linux
+          path: TestResult.xml
+
+  integration_test_postgres:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres: [14, 15]
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_PASSWORD: prowlarr
+          POSTGRES_USER: prowlarr
+          POSTGRES_DB: prowlarr
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U prowlarr" --health-interval=10s
+          --health-timeout=5s --health-retries=5
+    env:
+      Prowlarr__Postgres__Host: localhost
+      Prowlarr__Postgres__Port: 5432
+      Prowlarr__Postgres__User: prowlarr
+      Prowlarr__Postgres__Password: prowlarr
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Download Test Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-linux-x64
+          path: _tests
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build_linux
+          path: _output
+
+      - name: Prepare Binary Directory
+        shell: bash
+        run: |
+          mkdir -p ./bin
+          mkdir -p _tests/bin
+          find _output -name "Prowlarr.dll" -exec dirname {} \; | head -n 1 | xargs -I {} cp -r {}/. ./bin/
+          cp -r ./bin/. _tests/bin/
+
+      - name: Make Test Binaries Executable
+        shell: bash
+        run: |
+          find _tests -name "Prowlarr.Test.Dummy" -exec chmod +x {} \;
+          chmod +x _tests/test.sh
+          chmod +x ./bin/Prowlarr 2>/dev/null || true
+          chmod +x _tests/bin/Prowlarr 2>/dev/null || true
+
+      - name: Run Integration Tests (Postgres)
+        shell: bash
+        env:
+          TEST_DIR: ${{ github.workspace }}/_tests
+        run: _tests/test.sh Linux Integration Test
+
+      - name: Upload Integration Test Results (Postgres)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-integration-linux-postgres-${{ matrix.postgres }}
+          path: TestResult.xml
+
+  automation_test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Download Test Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tests-linux-x64
+          path: _tests
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build_linux
+          path: _output
+
+      - name: Prepare Binary Directory
+        shell: bash
+        run: |
+          mkdir -p ./bin
+          mkdir -p _tests/bin
+          find _output -name "Prowlarr.dll" -exec dirname {} \; | head -n 1 | xargs -I {} cp -r {}/. ./bin/
+          cp -r ./bin/. _tests/bin/
+
+      - name: Make Test Binaries Executable
+        shell: bash
+        run: |
+          find _tests -name "Prowlarr.Test.Dummy" -exec chmod +x {} \;
+          chmod +x _tests/test.sh
+          chmod +x ./bin/Prowlarr 2>/dev/null || true
+          chmod +x _tests/bin/Prowlarr 2>/dev/null || true
+
+      - name: Run Automation Tests
+        shell: bash
+        env:
+          TEST_DIR: ${{ github.workspace }}/_tests
+        run: _tests/test.sh Linux Automation Test
+
+      - name: Upload Automation Test Results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-automation-linux
+          path: TestResult.xml

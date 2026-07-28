@@ -71,11 +71,8 @@ jobs:
             exit 0
           fi
 
-          git checkout -b "$SYNC_BRANCH"
           git fetch https://github.com/Prowlarr/Prowlarr.git tag "$TAG" --no-tags
-          
-          # Merge tag retaining custom commits
-          git merge "$TAG" -m "Merge official Prowlarr release tag $TAG into $SYNC_BRANCH"
+          git checkout -b "$SYNC_BRANCH" "$TAG"
 
           git push origin "$SYNC_BRANCH"
 

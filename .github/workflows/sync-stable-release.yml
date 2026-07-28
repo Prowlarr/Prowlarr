@@ -46,6 +46,7 @@ jobs:
         shell: bash
         run: |
           TAG="${{ steps.get_release.outputs.LATEST_TAG }}"
+          git fetch https://github.com/Prowlarr/Prowlarr.git tag "$TAG" --no-tags
           git fetch origin tag "$TAG" --no-tags || true
 
           if git merge-base --is-ancestor "$TAG" master 2>/dev/null; then
@@ -74,6 +75,7 @@ jobs:
           git fetch https://github.com/Prowlarr/Prowlarr.git tag "$TAG" --no-tags
           git checkout -b "$SYNC_BRANCH" "$TAG"
 
+          git push origin "$TAG" || true
           git push origin "$SYNC_BRANCH"
 
           gh pr create \

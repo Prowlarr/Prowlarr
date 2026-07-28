@@ -8,6 +8,7 @@ on:
 jobs:
   lock:
     runs-on: ubuntu-latest
+    if: github.repository == 'Prowlarr/Prowlarr'
     permissions:
       issues: write
       pull-requests: write

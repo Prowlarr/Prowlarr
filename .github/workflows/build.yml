@@ -21,7 +21,6 @@ concurrency:
 env:
   FRAMEWORK: net8.0
   RAW_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-  PROWLARR_MAJOR_VERSION: 1
 
 jobs:
   build:
@@ -32,6 +31,8 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -45,8 +46,8 @@ jobs:
         id: variables
         shell: bash
         run: |
-          MAJOR_VER=$(grep -E '^\s*majorVersion:' azure-pipelines.yml | head -n 1 | awk -F"'" '{print $2}')
-          PROWLARR_VERSION="${MAJOR_VER:-2.5.2}.${{ github.run_number }}"
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0.0")
+          PROWLARR_VERSION="${TAG#v}"
           echo "PROWLARR_VERSION=$PROWLARR_VERSION" >> "$GITHUB_ENV"
           echo "BRANCH=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_ENV"
           echo "branch=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_OUTPUT"

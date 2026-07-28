@@ -19,13 +19,15 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Extract Version
         id: get_version
         shell: bash
         run: |
-          MAJOR_VER=$(grep -E '^\s*majorVersion:' azure-pipelines.yml | head -n 1 | awk -F"'" '{print $2}')
-          VERSION="${MAJOR_VER:-2.5.2}"
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0.0")
+          VERSION="${TAG#v}"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node.js (Volta)

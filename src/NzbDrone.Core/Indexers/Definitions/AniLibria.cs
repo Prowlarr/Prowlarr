@@ -44,7 +44,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             return new AniLibriaParser(ApiUrl);
         }
-        // AniLibria search returns release IDs, while the batch endpoint returns torrents nested in releases.
         protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
         {
             if (!request.Url.FullUri.Contains("/app/search/releases?", StringComparison.Ordinal))

@@ -46,7 +46,8 @@ jobs:
         id: variables
         shell: bash
         run: |
-          PROWLARR_VERSION="${{ env.VERSION }}.${{ github.run_number }}"
+          MAJOR_VER=$(grep -E '^\s*majorVersion:' azure-pipelines.yml | head -n 1 | awk -F"'" '{print $2}')
+          PROWLARR_VERSION="${MAJOR_VER:-2.5.2}.${{ github.run_number }}"
           echo "PROWLARR_VERSION=$PROWLARR_VERSION" >> "$GITHUB_ENV"
           echo "BRANCH=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_ENV"
           echo "branch=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_OUTPUT"

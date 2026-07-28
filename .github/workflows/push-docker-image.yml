@@ -24,7 +24,8 @@ jobs:
         id: get_version
         shell: bash
         run: |
-          VERSION=$(grep -E '^\s*VERSION:' .github/workflows/build.yml | awk '{print $2}')
+          MAJOR_VER=$(grep -E '^\s*majorVersion:' azure-pipelines.yml | head -n 1 | awk -F"'" '{print $2}')
+          VERSION="${MAJOR_VER:-2.5.2}.${{ github.run_number }}"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node.js (Volta)

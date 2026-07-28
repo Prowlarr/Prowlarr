@@ -2,12 +2,12 @@
 
 ## Installation
 
-This fork is designed to be a drop-in replacement for existing Prowlarr docker installations. Simply replace your prowlarr docker image with `ghcr.io/realzombee/prowlarr:develop`
+This fork is designed to be a drop-in replacement for existing Prowlarr docker installations. Simply replace your prowlarr docker image with `ghcr.io/actuallyevan/prowlarr:latest`
 
 Sample docker compose:
 ```docker
 prowlarr:
-    image: ghcr.io/realzombee/prowlarr:develop
+    image: ghcr.io/actuallyevan/prowlarr:latest
     container_name: prowlarr
     environment:
       - PUID=1000

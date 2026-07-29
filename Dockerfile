@@ -20,10 +20,9 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
 
 RUN rm -rf /app/prowlarr/bin/*
 
-COPY --from=binaries /${TARGETARCH}/. /app/prowlarr/bin/
+COPY --chmod=755 --from=binaries /${TARGETARCH}/. /app/prowlarr/bin/
 
-RUN chmod -R +x /app/prowlarr/bin && \
-  echo -e "UpdateMethod=docker\nBranch=${PROWLARR_BRANCH}\nPackageVersion=${VERSION:-LocalBuild}\nPackageAuthor=${PACKAGE_AUTHOR}" > /app/prowlarr/package_info && \
+RUN echo -e "UpdateMethod=docker\nBranch=${PROWLARR_BRANCH}\nPackageVersion=${VERSION:-LocalBuild}\nPackageAuthor=${PACKAGE_AUTHOR}" > /app/prowlarr/package_info && \
   printf "Linuxserver.io version: ${VERSION}\nBuild-date: ${BUILD_DATE}" > /build_version && \
   echo "**** cleanup ****" && \
   rm -rf \

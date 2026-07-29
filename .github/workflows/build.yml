@@ -64,6 +64,7 @@ jobs:
         env:
           PROWLARRVERSION: ${{ env.PROWLARR_VERSION }}
           BRANCH: ${{ env.BRANCH }}
+          BUILD_SOURCEBRANCHNAME: ${{ env.BRANCH }}
 
       - name: Upload UI Artifact
         uses: actions/upload-artifact@v4

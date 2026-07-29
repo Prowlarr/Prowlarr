@@ -87,4 +87,3 @@ jobs:
             VERSION=${{ steps.get_version.outputs.VERSION }}
             PROWLARR_BRANCH=${{ inputs.branch }}
             PACKAGE_AUTHOR=github.com/${{ github.repository }}
-            PROWLARR_REPO=${{ github.repository }}

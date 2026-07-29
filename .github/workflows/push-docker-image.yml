@@ -46,7 +46,7 @@ jobs:
           # Build musl-arm64 backend binaries
           ./build.sh --backend --frontend --packages -f net8.0 -r linux-musl-arm64
         env:
-          PROWLARR_VERSION: ${{ steps.get_version.outputs.VERSION }}
+          PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
           BRANCH: ${{ inputs.branch }}
 
       - name: Set Build Date

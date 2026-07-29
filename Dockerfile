@@ -18,6 +18,8 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
   org.opencontainers.image.source="${PACKAGE_AUTHOR}" \
   org.opencontainers.image.version="${VERSION}"
 
+RUN rm -rf /app/prowlarr/bin/*
+
 COPY --from=binaries /${TARGETARCH}/. /app/prowlarr/bin/
 
 RUN echo -e "UpdateMethod=docker\nBranch=${PROWLARR_BRANCH}\nPackageVersion=${VERSION:-LocalBuild}\nPackageAuthor=${PACKAGE_AUTHOR}" > /app/prowlarr/package_info && \

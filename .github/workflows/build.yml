@@ -62,7 +62,7 @@ jobs:
       - name: Build UI & Backend (linux-x64)
         run: ./build.sh --backend --frontend --packages -f net8.0 -r linux-x64
         env:
-          PROWLARR_VERSION: ${{ env.PROWLARR_VERSION }}
+          PROWLARRVERSION: ${{ env.PROWLARR_VERSION }}
           BRANCH: ${{ env.BRANCH }}
 
       - name: Upload UI Artifact

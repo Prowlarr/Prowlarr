@@ -38,6 +38,8 @@ jobs:
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
 
       - name: Compile Backend & Frontend Packages
         run: |

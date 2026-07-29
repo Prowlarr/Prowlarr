@@ -50,6 +50,7 @@ jobs:
         env:
           PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
           BRANCH: ${{ inputs.branch }}
+          BUILD_SOURCEBRANCHNAME: ${{ inputs.branch }}
 
       - name: Set Build Date
         shell: bash

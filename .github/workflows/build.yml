@@ -83,7 +83,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tests-linux-x64
-          path: _tests/net8.0/linux-x64/publish/**/*
+          path: _tests/${{ env.FRAMEWORK }}/linux-x64/publish/**/*
 
   unit_test:
     needs: build

@@ -23,7 +23,6 @@ permissions:
   checks: write
 
 env:
-  FRAMEWORK: net8.0
   RAW_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:

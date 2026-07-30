@@ -3,8 +3,8 @@ ARG BASE_IMAGE=ghcr.io/linuxserver/prowlarr:latest
 
 FROM scratch AS binaries
 ARG TARGETARCH
-COPY _artifacts/linux-musl-x64/net8.0/Prowlarr /amd64
-COPY _artifacts/linux-musl-arm64/net8.0/Prowlarr /arm64
+COPY _artifacts/linux-musl-x64/*/Prowlarr /amd64
+COPY _artifacts/linux-musl-arm64/*/Prowlarr /arm64
 
 FROM ${BASE_IMAGE}
 

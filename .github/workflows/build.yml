@@ -48,10 +48,13 @@ jobs:
         run: |
           TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0.0")
           PROWLARR_VERSION="${TAG#v}"
+          FRAMEWORK=$(git grep -h -m 1 "<TargetFrameworks>" src/NzbDrone.Core/ | sed -e 's/.*<TargetFrameworks>\(.*\)<\/TargetFrameworks>.*/\1/')
           echo "PROWLARR_VERSION=$PROWLARR_VERSION" >> "$GITHUB_ENV"
           echo "BRANCH=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_ENV"
+          echo "FRAMEWORK=$FRAMEWORK" >> "$GITHUB_ENV"
           echo "branch=${RAW_BRANCH_NAME//\//-}" >> "$GITHUB_OUTPUT"
           echo "version=$PROWLARR_VERSION" >> "$GITHUB_OUTPUT"
+          echo "framework=$FRAMEWORK" >> "$GITHUB_OUTPUT"
 
       - name: Yarn Install
         run: yarn install
@@ -60,7 +63,7 @@ jobs:
         run: yarn lint
 
       - name: Build UI & Backend (linux-x64)
-        run: ./build.sh --backend --frontend --packages -f net8.0 -r linux-x64
+        run: ./build.sh --backend --frontend --packages -f "${{ env.FRAMEWORK }}" -r linux-x64
         env:
           PROWLARRVERSION: ${{ env.PROWLARR_VERSION }}
           BRANCH: ${{ env.BRANCH }}

@@ -30,6 +30,12 @@ jobs:
           VERSION="${TAG#v}"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Extract Target Framework
+        shell: bash
+        run: |
+          FRAMEWORK=$(git grep -h -m 1 "<TargetFrameworks>" src/NzbDrone.Core/ | sed -e 's/.*<TargetFrameworks>\(.*\)<\/TargetFrameworks>.*/\1/')
+          echo "FRAMEWORK=$FRAMEWORK" >> "$GITHUB_ENV"
+
       - name: Set up Node.js (Volta)
         uses: volta-cli/action@v4
 
@@ -43,10 +49,8 @@ jobs:
 
       - name: Compile Backend & Frontend Packages
         run: |
-          # Build UI and musl-x64 backend binaries
-          ./build.sh --backend --frontend --packages -f net8.0 -r linux-musl-x64
-          # Build musl-arm64 backend binaries
-          ./build.sh --backend --frontend --packages -f net8.0 -r linux-musl-arm64
+          ./build.sh --backend --frontend --packages -f "${{ env.FRAMEWORK }}" -r linux-musl-x64
+          ./build.sh --backend --frontend --packages -f "${{ env.FRAMEWORK }}" -r linux-musl-arm64
         env:
           PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
           BRANCH: ${{ inputs.branch }}

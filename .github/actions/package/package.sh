@@ -5,10 +5,9 @@ artifactsFolder=_artifacts
 uiFolder="$outputFolder/UI"
 framework="${FRAMEWORK:=net8.0}"
 
-rm -rf $artifactsFolder
 mkdir -p $artifactsFolder
 
-for runtime in _output/*
+for runtime in $artifactsFolder/*
 do
   name="${runtime##*/}"
   folderName="$runtime/$framework"

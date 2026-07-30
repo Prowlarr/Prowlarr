@@ -18,6 +18,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  checks: write
+
 env:
   FRAMEWORK: net8.0
   RAW_BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -124,6 +128,14 @@ jobs:
           name: results-unit-linux
           path: TestResult.xml
 
+      - name: Publish Unit Test Summary
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Unit Test Summary
+          path: TestResult.xml
+          reporter: dotnet-nunit
+
   unit_test_postgres:
     needs: build
     runs-on: ubuntu-latest
@@ -182,6 +194,14 @@ jobs:
           name: results-unit-linux-postgres-${{ matrix.postgres }}
           path: TestResult.xml
 
+      - name: Publish Unit Test (Postgres) Summary
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Unit Test (Postgres ${{ matrix.postgres }}) Summary
+          path: TestResult.xml
+          reporter: dotnet-nunit
+
   integration_test:
     needs: build
     runs-on: ubuntu-latest
@@ -234,6 +254,14 @@ jobs:
         with:
           name: results-integration-linux
           path: TestResult.xml
+
+      - name: Publish Integration Test Summary
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Integration Test Summary
+          path: TestResult.xml
+          reporter: dotnet-nunit
 
   integration_test_postgres:
     needs: build
@@ -309,6 +337,14 @@ jobs:
           name: results-integration-linux-postgres-${{ matrix.postgres }}
           path: TestResult.xml
 
+      - name: Publish Integration Test (Postgres) Summary
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Integration Test (Postgres ${{ matrix.postgres }}) Summary
+          path: TestResult.xml
+          reporter: dotnet-nunit
+
   automation_test:
     needs: build
     runs-on: ubuntu-latest
@@ -361,3 +397,11 @@ jobs:
         with:
           name: results-automation-linux
           path: TestResult.xml
+
+      - name: Publish Automation Test Summary
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v3
+        with:
+          name: Automation Test Summary
+          path: TestResult.xml
+          reporter: dotnet-nunit

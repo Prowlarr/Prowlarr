@@ -15,7 +15,7 @@ do
   prowlarrFolder="$folderName/Prowlarr"
   archiveName="Prowlarr.$BRANCH.$PROWLARRVERSION.$name"
 
-  if [[ "$name" == 'UI' ]]; then
+  if [ ! -d "$prowlarrFolder" ]; then
     continue
   fi
     

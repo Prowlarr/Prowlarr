@@ -48,6 +48,7 @@ jobs:
           global-json-file: global.json
 
       - name: Build All Packages + Windows Installer
+        shell: bash
         run: ./build.sh --backend --frontend --packages --installer -f "${{ env.FRAMEWORK }}"
         env:
           PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}

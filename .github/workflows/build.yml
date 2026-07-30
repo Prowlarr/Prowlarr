@@ -60,14 +60,8 @@ jobs:
           echo "version=$PROWLARR_VERSION" >> "$GITHUB_OUTPUT"
           echo "framework=$FRAMEWORK" >> "$GITHUB_OUTPUT"
 
-      - name: Yarn Install
-        run: yarn install
-
-      - name: Lint UI
-        run: yarn lint
-
       - name: Build UI & Backend (linux-x64)
-        run: ./build.sh --backend --frontend --packages -f "${{ env.FRAMEWORK }}" -r linux-x64
+        run: ./build.sh --backend --frontend --lint --packages -f "${{ env.FRAMEWORK }}" -r linux-x64
         env:
           PROWLARRVERSION: ${{ env.PROWLARR_VERSION }}
           BRANCH: ${{ env.BRANCH }}

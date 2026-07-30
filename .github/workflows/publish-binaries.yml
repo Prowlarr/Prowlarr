@@ -49,11 +49,15 @@ jobs:
 
       - name: Build All Packages + Windows Installer
         shell: bash
-        run: ./build.sh --backend --frontend --packages --installer -f "${{ env.FRAMEWORK }}"
+        run: ./build.sh --backend --frontend --packages --installer --enable-extra-platforms -f "${{ env.FRAMEWORK }}"
         env:
           PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
           BRANCH: ${{ inputs.branch }}
           BUILD_SOURCEBRANCHNAME: ${{ inputs.branch }}
+
+      - name: Install zip tool
+        shell: cmd
+        run: choco install zip -y
 
       - name: Package Archives (.tar.gz / .zip / .exe)
         shell: bash

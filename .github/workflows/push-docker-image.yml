@@ -39,9 +39,6 @@ jobs:
       - name: Set up Node.js (Volta)
         uses: volta-cli/action@v4
 
-      - name: Yarn Install
-        run: yarn install
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:

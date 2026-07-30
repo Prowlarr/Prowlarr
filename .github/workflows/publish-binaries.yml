@@ -1,0 +1,77 @@
+name: Publish Release Binaries
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name the release is built from'
+        required: true
+        default: master
+
+env:
+  INNOVERSION: 6.7.2
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract Version
+        id: get_version
+        shell: bash
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0.0")
+          VERSION="${TAG#v}"
+          echo "TAG_NAME=$TAG" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "MAJORVERSION=${VERSION%.*}" >> "$GITHUB_ENV"
+          echo "MINORVERSION=${VERSION##*.}" >> "$GITHUB_ENV"
+
+      - name: Extract Target Framework
+        shell: bash
+        run: |
+          FRAMEWORK=$(git grep -h -m 1 "<TargetFrameworks>" src/NzbDrone.Core/ | sed -e 's/.*<TargetFrameworks>\(.*\)<\/TargetFrameworks>.*/\1/')
+          echo "FRAMEWORK=$FRAMEWORK" >> "$GITHUB_ENV"
+
+      - name: Set up Node.js (Volta)
+        uses: volta-cli/action@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Build All Packages + Windows Installer
+        run: ./build.sh --backend --frontend --packages --installer -f "${{ env.FRAMEWORK }}"
+        env:
+          PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
+          BRANCH: ${{ inputs.branch }}
+          BUILD_SOURCEBRANCHNAME: ${{ inputs.branch }}
+
+      - name: Package Archives (.tar.gz / .zip / .exe)
+        shell: bash
+        run: .github/actions/package/package.sh
+        env:
+          FRAMEWORK: ${{ env.FRAMEWORK }}
+          BRANCH: ${{ inputs.branch }}
+          PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.TAG_NAME }}
+          name: Prowlarr v${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            _artifacts/*.tar.gz
+            _artifacts/*.zip
+            _artifacts/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

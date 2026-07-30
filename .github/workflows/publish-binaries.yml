@@ -49,7 +49,7 @@ jobs:
 
       - name: Build All Packages + Windows Installer
         shell: bash
-        run: ./build.sh --backend --frontend --packages --installer --enable-extra-platforms -f "${{ env.FRAMEWORK }}"
+        run: ./build.sh --backend --frontend --packages --installer -f "${{ env.FRAMEWORK }}"
         env:
           PROWLARRVERSION: ${{ steps.get_version.outputs.VERSION }}
           BRANCH: ${{ inputs.branch }}

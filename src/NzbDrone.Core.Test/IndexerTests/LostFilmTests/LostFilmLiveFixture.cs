@@ -90,6 +90,12 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         [Test]
         public async Task should_fetch_episode_releases_live()
         {
+            if (!await EnsureAuthenticatedAsync())
+            {
+                Assert.Fail("All captcha login attempts failed");
+                return;
+            }
+
             var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } });
 
             AssertEpisodeReleases(result);

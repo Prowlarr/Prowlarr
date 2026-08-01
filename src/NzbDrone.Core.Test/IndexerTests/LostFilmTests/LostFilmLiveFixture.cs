@@ -31,6 +31,7 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
     {
         private const string BaseUrl = "https://www.lostfilm.tv";
         private IIndexerHttpClient _realHttpClient;
+        private IDictionary<string, string> _storedCookies;
 
         [SetUp]
         public void Setup()
@@ -59,19 +60,19 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
 
             Mocker.SetConstant<IIndexerHttpClient>(_realHttpClient);
 
-            IDictionary<string, string> storedCookies = null;
+            _storedCookies = null;
             var envCookies = Environment.GetEnvironmentVariable("LOSTFILM_COOKIES");
             if (envCookies.IsNotNullOrWhiteSpace())
             {
-                storedCookies = envCookies.Split(';', StringSplitOptions.TrimEntries)
+                _storedCookies = envCookies.Split(';', StringSplitOptions.TrimEntries)
                     .Select(c => c.Split('=', 2))
                     .ToDictionary(p => p[0].Trim(), p => p[1].Trim());
             }
 
             var statusService = new Mock<IIndexerStatusService>();
             statusService.Setup(s => s.UpdateCookies(It.IsAny<int>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<DateTime?>()))
-                .Callback((int id, IDictionary<string, string> cookies, DateTime? expiration) => storedCookies = cookies);
-            statusService.Setup(s => s.GetIndexerCookies(It.IsAny<int>())).Returns(() => storedCookies);
+                .Callback((int id, IDictionary<string, string> cookies, DateTime? expiration) => _storedCookies = cookies);
+            statusService.Setup(s => s.GetIndexerCookies(It.IsAny<int>())).Returns(() => _storedCookies);
             statusService.Setup(s => s.GetIndexerCookiesExpirationDate(It.IsAny<int>())).Returns(DateTime.Now.AddDays(30));
             Mocker.SetConstant<IIndexerStatusService>(statusService.Object);
 
@@ -167,6 +168,34 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             result.Queries.Should().HaveCount(1);
             result.Releases.Should().NotBeEmpty();
             result.Releases.Should().Contain(r => r.Title.Contains("Breaking Bad - S"));
+        }
+
+        [Test]
+        public async Task should_reuse_session_cookies_without_relogin_live()
+        {
+            var criteria = new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } };
+
+            if (!await EnsureAuthenticatedAsync())
+            {
+                Assert.Fail("All captcha login attempts failed");
+                return;
+            }
+
+            // The durable lf_session must be persisted to the DB rather than clobbered
+            // by the stale request snapshot after the login.
+            _storedCookies.Should().NotBeNull();
+            _storedCookies.Should().ContainKey("lf_session");
+            var firstLfSession = _storedCookies["lf_session"];
+
+            var result = await Subject.Fetch(criteria);
+            AssertEpisodeReleases(result);
+
+            // A second search must reuse the same persisted session without re-logging in.
+            // An unwanted DoLogin would fail without a captcha answer and throw an IndexerAuthException.
+            _storedCookies.Should().Contain("lf_session", firstLfSession);
+
+            var secondResult = await Subject.Fetch(criteria);
+            AssertEpisodeReleases(secondResult);
         }
 
         private async Task<bool> EnsureAuthenticatedAsync()

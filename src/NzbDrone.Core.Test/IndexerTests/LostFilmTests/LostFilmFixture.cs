@@ -45,6 +45,14 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
                     Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", contentType } }, new CookieCollection(), content)));
         }
 
+        private void MockResponse(HttpMethod method, string path, string content, CookieCollection cookies, string contentType = "text/html")
+        {
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == method && v.Url.Path == path), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", contentType } }, cookies, content)));
+        }
+
         private void MockResponse(HttpMethod method, string path, byte[] content, string contentType)
         {
             Mocker.GetMock<IIndexerHttpClient>()
@@ -130,6 +138,64 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
 
             result.Releases.Should().HaveCount(3);
             result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/Avatar_Aang_The_Last_Airbender");
+            result.Releases.Should().OnlyContain(r => r.Categories.Contains(NewznabStandardCategory.Movies));
+        }
+
+        [Test]
+        public async Task should_persist_cookies_from_relogin()
+        {
+            IDictionary<string, string> storedCookies = null;
+            DateTime? storedExpiration = null;
+
+            var statusService = Mocker.GetMock<IIndexerStatusService>();
+            statusService.Setup(s => s.UpdateCookies(It.IsAny<int>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<DateTime?>()))
+                .Callback((int id, IDictionary<string, string> cookies, DateTime? expiration) =>
+                {
+                    storedCookies = cookies;
+                    storedExpiration = expiration;
+                });
+            statusService.Setup(s => s.GetIndexerCookies(It.IsAny<int>())).Returns(() => storedCookies);
+            statusService.Setup(s => s.GetIndexerCookiesExpirationDate(It.IsAny<int>())).Returns(() => storedExpiration ?? DateTime.Now.AddDays(30));
+
+            // First /new response is anonymous which triggers a re-login; the login response
+            // sets a fresh durable lf_session cookie with a far-future Expires.
+            const string anonPage = "<html><body><a href=\"/login\" class=\"link\">Вход</a></body></html>";
+            const string authedPage = "<html><body><div class=\"row\"><a href=\"/series/Test_Show/season_1/episode_1\">Test</a></div></body></html>";
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+            var newRequestCount = 0;
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/new"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), ++newRequestCount == 1 ? anonPage : authedPage)));
+
+            var loginCookies = new CookieCollection
+            {
+                new Cookie("lf_session", "NEWSESSION", "/") { Expires = new DateTime(2027, 6, 1) },
+                new Cookie("PHPSESSID", "NEWPHP", "/")
+            };
+            MockResponse(HttpMethod.Post, "/ajaxik.php", "{\"success\":true,\"result\":\"ok\"}", loginCookies, "application/json");
+            MockResponse(HttpMethod.Get, "/series/Test_Show/season_1/episode_1", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new BasicSearchCriteria());
+
+            result.Releases.Should().NotBeEmpty();
+
+            // The fresh lf_session from the login must survive in the DB after the request,
+            // with the server-derived expiry, instead of being clobbered by the stale request snapshot.
+            storedCookies.Should().Contain("lf_session", "NEWSESSION");
+            storedCookies.Should().Contain("PHPSESSID", "NEWPHP");
+            storedExpiration.Should().Be(new DateTime(2027, 6, 1));
+        }
+
+        [Test]
+        public void should_advertise_tv_and_movie_categories()
+        {
+            Subject.Capabilities.Categories.GetTrackerCategories().Should().Contain(new[] { "1", "2" });
+
+            Subject.Capabilities.Categories.MapTrackerCatToNewznab("1").Should().Contain(NewznabStandardCategory.TV);
+            Subject.Capabilities.Categories.MapTrackerCatToNewznab("2").Should().Contain(NewznabStandardCategory.Movies);
         }
 
         [Test]

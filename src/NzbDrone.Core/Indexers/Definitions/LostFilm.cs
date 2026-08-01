@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -62,6 +63,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
         private string BaseUrl => Settings.BaseUrl.TrimEnd('/');
+
+        private DateTime? _cookiesExpiration;
 
         public LostFilm(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
@@ -178,7 +181,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             Settings.Captcha = null;
 
             var cookies = response.GetCookies();
-            UpdateCookies(cookies, DateTime.Now.AddDays(30));
+
+            // lf_session is a durable cookie (expires years out); keep it in the DB for as long
+            // as the server says it is valid instead of forcing a re-login every 30 days.
+            DateTime? expiration = null;
+            foreach (Cookie cookie in response.Cookies)
+            {
+                if (cookie.Expires > DateTime.Now && (expiration == null || cookie.Expires > expiration.Value))
+                {
+                    expiration = cookie.Expires;
+                }
+            }
+
+            UpdateCookies(cookies, expiration ?? DateTime.Now.AddDays(30));
+            _cookiesExpiration = expiration ?? DateTime.Now.AddDays(30);
 
             _logger.Debug("LostFilm.tv authentication succeeded");
         }
@@ -273,7 +289,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             request.StoreRequestCookie = true;
             request.StoreResponseCookie = true;
 
-            Cookies ??= GetCookies();
+            Cookies ??= LoadCookies();
 
             if (Cookies != null)
             {
@@ -284,6 +300,22 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return request;
+        }
+
+        private IDictionary<string, string> LoadCookies()
+        {
+            // Mirrors HttpIndexerBase.GetCookies but also keeps the stored expiration so it
+            // is not reset to a shorter TTL when cookies are re-persisted after each request.
+            Cookies = _indexerStatusService.GetIndexerCookies(Definition.Id);
+            _cookiesExpiration = _indexerStatusService.GetIndexerCookiesExpirationDate(Definition.Id);
+
+            if (_cookiesExpiration < DateTime.Now)
+            {
+                Cookies = null;
+                _cookiesExpiration = null;
+            }
+
+            return Cookies;
         }
 
         private async Task<HttpResponse> ExecuteAsync(HttpRequest request)
@@ -311,7 +343,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 response = await ExecuteAsync(request);
             }
 
-            UpdateCookies(request.Cookies, DateTime.Now.AddDays(30));
+            // Persist the current in-memory cookies (which a DoLogin above may have just
+            // refreshed with a new session) instead of the stale request snapshot, so the
+            // durable lf_session cookie survives across restarts.
+            if (Cookies != null)
+            {
+                UpdateCookies(Cookies, _cookiesExpiration ?? DateTime.Now.AddDays(30));
+            }
 
             if (CloudFlareDetectionService.IsCloudflareProtected(response))
             {
@@ -551,10 +589,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             var urlDetails = new TrackerUrlDetails(playButton);
             var episodeReleases = await FetchTrackerReleases(urlDetails);
 
+            var isMovie = url.Contains("/movies/", StringComparison.OrdinalIgnoreCase);
+
             foreach (var release in episodeReleases)
             {
                 release.InfoUrl = url;
                 release.PublishDate = date;
+
+                if (isMovie)
+                {
+                    release.Categories = new List<IndexerCategory> { NewznabStandardCategory.Movies };
+                }
             }
 
             releases.AddRange(episodeReleases);
@@ -871,6 +916,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
+            caps.Categories.AddCategoryMapping(2, NewznabStandardCategory.Movies);
 
             return caps;
         }

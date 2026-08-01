@@ -101,6 +101,23 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             AssertEpisodeReleases(result);
         }
 
+        [Test]
+        public async Task should_fetch_recent_releases_live()
+        {
+            // Mirrors the indexer configuration "Test" flow (HttpIndexerBase.TestConnection):
+            // an empty BasicSearchCriteria must hit the RSS feed (/new) and return releases.
+            if (!await EnsureAuthenticatedAsync())
+            {
+                Assert.Fail("All captcha login attempts failed");
+                return;
+            }
+
+            var result = await Subject.Fetch(new BasicSearchCriteria());
+
+            result.Queries.Should().HaveCount(1);
+            result.Releases.Should().NotBeEmpty();
+        }
+
         private void AssertEpisodeReleases(IndexerPageableQueryResult result)
         {
             result.Queries.Should().HaveCount(1);

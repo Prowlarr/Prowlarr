@@ -1,0 +1,954 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web;
+using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
+using Newtonsoft.Json.Linq;
+using NLog;
+using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
+using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Http.CloudFlare;
+using NzbDrone.Core.Indexers.Definitions.Cardigann;
+using NzbDrone.Core.Indexers.Exceptions;
+using NzbDrone.Core.Indexers.Settings;
+using NzbDrone.Core.IndexerSearch.Definitions;
+using NzbDrone.Core.Messaging.Events;
+using NzbDrone.Core.Parser;
+using NzbDrone.Core.ThingiProvider;
+using NzbDrone.Core.Parser.Model;
+
+namespace NzbDrone.Core.Indexers.Definitions
+{
+    public class LostFilm : TorrentIndexerBase<LostFilmSettings>
+    {
+        private static readonly Regex ParsePlayEpisodeRegex = new(@"PlayEpisode\('(?<id>\d+)(?<season>\d{3})(?<episode>\d{3})'\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex ParseReleaseDetailsRegex = new("Видео:\\ (?<quality>.+).\\ Размер:\\ (?<size>.+).\\ Перевод", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
+
+        public override string Name => "LostFilm.tv";
+        public override string[] IndexerUrls => new[]
+        {
+            "https://www.lostfilm.tv/",
+            "https://www.lostfilmtv5.site/",
+            "https://www.lostfilmtv2.site/",
+            "https://www.lostfilmtv3.site/",
+            "https://www.lostfilm.today/",
+            "https://www.lostfilm.download/",
+            "https://www.lostfilm.run/",
+            "https://lostfilm.site/",
+            "https://www.lostfilm.life/",
+            "https://www.lostfilm.uno/",
+            "https://www.lostfilm.tw/"
+        };
+        public override string[] LegacyUrls => new[]
+        {
+            "https://lostfilm.tw/",
+            "https://www.lostfilm.win/",
+            "https://www.lostfilmtv.site/"
+        };
+        public override string Language => "ru-RU";
+        public override string Description => "LostFilm is a RUSSIAN Semi-Private site. Unique portal for foreign series";
+        public override Encoding Encoding => Encoding.UTF8;
+        public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
+        public override IndexerCapabilities Capabilities => SetCapabilities();
+
+        private string BaseUrl => Settings.BaseUrl.TrimEnd('/');
+
+        public LostFilm(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+            : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
+        {
+        }
+
+        public override IIndexerRequestGenerator GetRequestGenerator()
+        {
+            return new LostFilmRequestGenerator(Settings);
+        }
+
+        public override IParseIndexerResponse GetParser()
+        {
+            return new LostFilmParser();
+        }
+
+        public override IEnumerable<ProviderDefinition> DefaultDefinitions
+        {
+            get
+            {
+                foreach (var definition in base.DefaultDefinitions)
+                {
+                    ((IndexerDefinition)definition).ExtraFields = new List<SettingsField>
+                    {
+                        new()
+                        {
+                            Name = "cardigannCaptcha",
+                            Type = "cardigannCaptcha",
+                            Label = "CAPTCHA"
+                        }
+                    };
+
+                    yield return definition;
+                }
+            }
+        }
+
+        public override object RequestAction(string action, IDictionary<string, string> query)
+        {
+            if (action == "checkCaptcha")
+            {
+                return new
+                {
+                    captchaRequest = GetLoginPageAsync().GetAwaiter().GetResult()
+                };
+            }
+
+            return base.RequestAction(action, query);
+        }
+
+        protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
+        {
+            return httpResponse.Content?.Contains("href=\"/login\"") == true;
+        }
+
+        protected override async Task DoLogin()
+        {
+            _logger.Debug("Logging in to LostFilm.tv");
+
+            // Performing Logout is required to invalidate previous session otherwise the `{"error":1,"result":"ok"}` will be returned.
+            await Logout();
+
+            var requestBuilder = new HttpRequestBuilder(BaseUrl + "/ajaxik.php")
+                .Post()
+                .Accept(HttpAccept.Html)
+                .AddFormParameter("act", "users")
+                .AddFormParameter("type", "login")
+                .AddFormParameter("mail", Settings.Username)
+                .AddFormParameter("pass", Settings.Password)
+                .AddFormParameter("rem", "1");
+
+            if (Settings.Captcha.IsNotNullOrWhiteSpace())
+            {
+                requestBuilder.AddFormParameter("need_captcha", "1");
+                requestBuilder.AddFormParameter("captcha", Settings.Captcha);
+            }
+
+            var response = await ExecuteAuth(BuildRequest(requestBuilder));
+
+            var content = response.Content ?? string.Empty;
+
+            if (content.Contains("need_captcha"))
+            {
+                throw new IndexerAuthException("LostFilm.tv requires a captcha. Open the indexer settings to fetch a new one.");
+            }
+
+            if (content.Contains("error\":1") || content.Contains("error\":2") || content.Contains("error\":4"))
+            {
+                throw new IndexerAuthException("Captcha is incorrect");
+            }
+
+            if (content.Contains("error\":3"))
+            {
+                throw new IndexerAuthException("E-mail or password is incorrect");
+            }
+
+            if (!content.Contains("success\":true"))
+            {
+                throw new IndexerAuthException("LostFilm.tv authentication failed: " + content);
+            }
+
+            var cookies = response.GetCookies();
+            UpdateCookies(cookies, DateTime.Now.AddDays(30));
+
+            _logger.Debug("LostFilm.tv authentication succeeded");
+        }
+
+        public override async Task<IndexerDownloadResponse> Download(Uri link)
+        {
+            var response = await GetResponse(new HttpRequestBuilder(link.AbsoluteUri).Accept(HttpAccept.Html));
+
+            if (CheckIfLoginNeeded(response))
+            {
+                throw new IndexerAuthException("LostFilm.tv login required to download torrent");
+            }
+
+            return new IndexerDownloadResponse(response.ResponseData);
+        }
+
+        protected override async Task<IndexerQueryResult> FetchPage(IndexerRequest request, IParseIndexerResponse parser)
+        {
+            var urlQuery = HttpUtility.ParseQueryString(request.HttpRequest.Url.Query);
+            var isRss = request.HttpRequest.Url.Path.Equals("/new", StringComparison.OrdinalIgnoreCase);
+
+            IList<ReleaseInfo> releases;
+
+            if (isRss)
+            {
+                releases = await FetchNewReleases();
+            }
+            else
+            {
+                releases = await PerformSearch(urlQuery["val"], urlQuery["season"].ParseInt32(), urlQuery["episode"]);
+            }
+
+            return new IndexerQueryResult
+            {
+                Releases = releases
+            };
+        }
+
+        private HttpRequest BuildRequest(HttpRequestBuilder builder)
+        {
+            var request = builder.Build();
+            request.SuppressHttpError = true;
+            request.Encoding = Encoding;
+            request.RateLimit = RateLimit;
+
+            // LostFilm's session/captcha are bound to a server-side PHPSESSID.
+            // Persist cookies in the shared cookie container so the session created
+            // while fetching the captcha is reused for the login and search requests.
+            request.StoreRequestCookie = true;
+            request.StoreResponseCookie = true;
+
+            Cookies ??= GetCookies();
+
+            if (Cookies != null)
+            {
+                foreach (var cookie in Cookies)
+                {
+                    request.Cookies[cookie.Key] = cookie.Value;
+                }
+            }
+
+            return request;
+        }
+
+        private async Task<HttpResponse> ExecuteAsync(HttpRequest request)
+        {
+            return await RetryStrategy.ExecuteAsync(
+                static async (state, _) => await state._httpClient.ExecuteProxiedAsync(state.HttpRequest, state.Definition),
+                (_httpClient, HttpRequest: request, Definition));
+        }
+
+        private async Task<HttpResponse> GetResponse(HttpRequestBuilder builder, bool checkLogin = true)
+        {
+            return await GetResponse(BuildRequest(builder), checkLogin);
+        }
+
+        private async Task<HttpResponse> GetResponse(HttpRequest request, bool checkLogin = true)
+        {
+            var response = await ExecuteAsync(request);
+
+            if (checkLogin && CheckIfLoginNeeded(response))
+            {
+                _logger.Trace("LostFilm.tv: attempting to re-auth based on indexer search response");
+
+                await DoLogin();
+
+                response = await ExecuteAsync(request);
+            }
+
+            UpdateCookies(request.Cookies, DateTime.Now.AddDays(30));
+
+            if (CloudFlareDetectionService.IsCloudflareProtected(response))
+            {
+                throw new CloudFlareProtectionException(response);
+            }
+
+            return response;
+        }
+
+        private async Task<Captcha> GetLoginPageAsync()
+        {
+            var response = await GetResponse(new HttpRequestBuilder(BaseUrl + "/login").Accept(HttpAccept.Html), checkLogin: false);
+
+            var parser = new HtmlParser();
+            using var document = parser.ParseDocument(response.Content);
+            var qCaptchaImg = document.QuerySelector("img#captcha_pictcha");
+
+            if (qCaptchaImg == null)
+            {
+                return new Captcha { ImageData = Array.Empty<byte>() };
+            }
+
+            var captchaUrl = BaseUrl + qCaptchaImg.GetAttribute("src");
+            var captchaResponse = await GetResponse(new HttpRequestBuilder(captchaUrl), checkLogin: false);
+
+            return new Captcha
+            {
+                ContentType = captchaResponse.Headers.ContentType,
+                ImageData = captchaResponse.ResponseData
+            };
+        }
+
+        private async Task Logout()
+        {
+            _logger.Debug("LostFilm.tv: performing logout");
+
+            var requestBuilder = new HttpRequestBuilder(BaseUrl + "/ajaxik.php")
+                .Post()
+                .Accept(HttpAccept.Html)
+                .AddFormParameter("act", "users")
+                .AddFormParameter("type", "logout");
+
+            var response = await ExecuteAuth(BuildRequest(requestBuilder));
+            _logger.Debug("LostFilm.tv logout result: " + (response.Content ?? string.Empty));
+        }
+
+        private async Task<IList<ReleaseInfo>> PerformSearch(string searchTerm, int? season, string episode)
+        {
+            if (searchTerm.IsNullOrWhiteSpace())
+            {
+                return await FetchNewReleases();
+            }
+
+            _logger.Debug("PerformSearch: {0} [Season: {1}, Episode: {2}]", searchTerm, season, episode);
+            var releases = new List<ReleaseInfo>();
+
+            // Search query words. Consists of Series keywords that will be used for series search request,
+            // and Episode keywords that will be used for episode filtering.
+            var keywords = searchTerm.Split(' ').ToList();
+            // Keywords count related to Series Search.
+            var searchKeywords = keywords.Count;
+            // Keywords count related to Series Filter.
+            var serieFilterKeywords = 0;
+
+            do
+            {
+                var searchString = string.Join(" ", keywords.Take(searchKeywords));
+                _logger.Debug("LostFilm.tv: searching: " + searchString);
+
+                var requestBuilder = new HttpRequestBuilder(BaseUrl + "/ajaxik.php")
+                    .Post()
+                    .Accept(HttpAccept.Html)
+                    .AddFormParameter("act", "common")
+                    .AddFormParameter("type", "search")
+                    .AddFormParameter("val", searchString);
+
+                var response = await GetResponse(requestBuilder);
+
+                if (response.Content == null)
+                {
+                    _logger.Debug("LostFilm.tv: empty series response for query: " + searchString);
+                    continue;
+                }
+
+                try
+                {
+                    var json = JToken.Parse(response.Content);
+                    if (json == null || json.Type == JTokenType.Array)
+                    {
+                        _logger.Debug("LostFilm.tv: invalid response for query: " + searchString);
+                        continue; // Search loop
+                    }
+
+                    // Protect from {"data":false,"result":"ok"}
+                    var jsonData = json["data"];
+                    if (jsonData?.Type != JTokenType.Object)
+                    {
+                        continue; // Search loop
+                    }
+
+                    var jsonSeries = jsonData["series"];
+                    if (jsonSeries == null || !jsonSeries.HasValues)
+                    {
+                        continue; // Search loop
+                    }
+
+                    var series = jsonSeries.ToList();
+                    _logger.Debug("LostFilm.tv: found {0} series: [{1}]", series.Count, string.Join(", ", series.Select(s => s["title_orig"].Value<string>())));
+
+                    // Filter found series
+                    if (series.Count > 1)
+                    {
+                        serieFilterKeywords = keywords.Count - searchKeywords;
+
+                        do
+                        {
+                            var serieFilter = string.Join(" ", keywords.GetRange(searchKeywords, serieFilterKeywords));
+                            _logger.Debug("LostFilm.tv: filtering: " + serieFilter);
+                            var filteredSeries = series.Where(s => s["title_orig"].Value<string>().Contains(serieFilter)).ToList();
+
+                            if (filteredSeries.Count > 0)
+                            {
+                                _logger.Debug("LostFilm.tv: series filtered: [{0}]", string.Join(", ", filteredSeries.Select(s => s["title_orig"].Value<string>())));
+                                series = filteredSeries;
+                                break; // Serie Filter loop
+                            }
+                        }
+                        while (--serieFilterKeywords > 0);
+                    }
+
+                    foreach (var serie in series)
+                    {
+                        var link = serie["link"].ToString();
+                        var seasonPath = season is > 0 ? $"/season_{season}" : "/seasons";
+                        var url = BaseUrl + link + seasonPath;
+
+                        if (!string.IsNullOrEmpty(episode)) // Fetch single episode releases
+                        {
+                            url += "/episode_" + episode;
+                            releases.AddRange(await FetchEpisodeReleases(url));
+                        }
+                        else // Fetch the whole series OR episode with filter applied
+                        {
+                            var episodeKeywords = keywords.Skip(searchKeywords + serieFilterKeywords);
+                            var episodeFilterKeywords = episodeKeywords.Count();
+
+                            // Search for episodes dropping 1 filter word each time when no results has found.
+                            // Last search will be performed with empty filter
+                            do
+                            {
+                                var filter = string.Join(" ", episodeKeywords.Take(episodeFilterKeywords));
+                                _logger.Debug("LostFilm.tv: searching episodes with filter [" + filter + "]");
+                                var taskReleases = await FetchSeriesReleases(url, season, episode, filter);
+
+                                if (taskReleases.Count > 0)
+                                {
+                                    _logger.Debug("LostFilm.tv: found {0} episodes", taskReleases.Count);
+                                    releases.AddRange(taskReleases);
+                                    break; // Episodes Filter loop
+                                }
+                            }
+                            while (--episodeFilterKeywords >= 0);
+                        }
+                    }
+
+                    break; // Search loop
+                }
+                catch (Exception ex) when (ex is not IndexerAuthException)
+                {
+                    _logger.Warn(ex, "LostFilm.tv: error parsing search response for query: " + searchString);
+                }
+            }
+            while (--searchKeywords > 0);
+
+            return releases;
+        }
+
+        private async Task<IList<ReleaseInfo>> FetchNewReleases()
+        {
+            var url = BaseUrl + "/new";
+            _logger.Debug("FetchNewReleases: " + url);
+
+            var response = await GetResponse(new HttpRequestBuilder(url).Accept(HttpAccept.Html));
+            var releases = new List<ReleaseInfo>();
+
+            var parser = new HtmlParser();
+            using var document = parser.ParseDocument(response.Content);
+            var rows = document.QuerySelectorAll("div.row");
+
+            foreach (var row in rows)
+            {
+                var link = row.QuerySelector("a")?.GetAttribute("href");
+
+                if (link.IsNullOrWhiteSpace())
+                {
+                    continue;
+                }
+
+                var episodeUrl = BaseUrl + link;
+                releases.AddRange(await FetchEpisodeReleases(episodeUrl));
+            }
+
+            return releases;
+        }
+
+        private async Task<List<ReleaseInfo>> FetchEpisodeReleases(string url)
+        {
+            _logger.Debug("FetchEpisodeReleases: " + url);
+            var response = await GetResponse(new HttpRequestBuilder(url).Accept(HttpAccept.Html));
+            var releases = new List<ReleaseInfo>();
+
+            var parser = new HtmlParser();
+            using var document = parser.ParseDocument(response.Content);
+
+            var playButton = document.QuerySelector("div.external-btn");
+            if (playButton == null || playButton.ClassList.Contains("inactive"))
+            {
+                return releases;
+            }
+
+            var dateString = document.QuerySelector("div.details-pane > div.left-box").TextContent;
+            var key = dateString.Contains("TBA") ? "ru: " : "eng: ";
+            dateString = TrimString(dateString, key, " г.");
+
+            DateTime date;
+            if (dateString.Length == 4)
+            {
+                // dateString might be just a year
+                date = DateTime.TryParseExact(dateString, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
+            }
+            else
+            {
+                // dd mmmm yyyy
+                date = DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
+            }
+
+            var urlDetails = new TrackerUrlDetails(playButton);
+            var episodeReleases = await FetchTrackerReleases(urlDetails);
+
+            foreach (var release in episodeReleases)
+            {
+                release.InfoUrl = url;
+                release.PublishDate = date;
+            }
+
+            releases.AddRange(episodeReleases);
+
+            return releases;
+        }
+
+        private async Task<List<ReleaseInfo>> FetchSeriesReleases(string url, int? season, string episode, string filter)
+        {
+            _logger.Debug("FetchSeriesReleases: {0} S: {1} E: {2} Filter: {3}", url, season, episode, filter);
+
+            var response = await GetResponse(new HttpRequestBuilder(url).Accept(HttpAccept.Html));
+            var releases = new List<ReleaseInfo>();
+
+            var parser = new HtmlParser();
+            using var document = parser.ParseDocument(response.Content);
+            var seasons = document.QuerySelectorAll("div.serie-block");
+            const string rowSelector = "table.movie-parts-list > tbody > tr";
+
+            foreach (var seasonBlock in seasons)
+            {
+                // Could be null if serie-block is for Extras
+                var seasonButton = seasonBlock.QuerySelector("div.movie-details-block > div.external-btn");
+
+                // Process only season we're searching for
+                if (seasonButton != null && season is > 0)
+                {
+                    // If seasonButton in "inactive" it will not contain "onClick" handler. Better to parse element which always exists.
+                    var watchedButton = seasonBlock.QuerySelector("div.movie-details-block > div.haveseen-btn");
+                    var buttonCode = watchedButton.GetAttribute("data-code");
+                    var currentSeason = buttonCode.Substring(buttonCode.IndexOf('-') + 1);
+
+                    if (currentSeason != season.ToString())
+                    {
+                        continue; // Can't match season by regex OR season not matches to a searched one
+                    }
+
+                    // Stop parsing season episodes if season pack was required but it's not available yet.
+                    if (seasonButton.ClassList.Contains("inactive"))
+                    {
+                        _logger.Debug("LostFilm.tv: no season pack is found for S{0}", season);
+                        break;
+                    }
+                }
+
+                // Fetch season pack releases if no episode filtering is required.
+                // If seasonButton implements "inactive" class there are no season pack available and each episode should be fetched separately.
+                if (string.IsNullOrEmpty(episode) && string.IsNullOrEmpty(filter) && seasonButton != null && !seasonButton.ClassList.Contains("inactive"))
+                {
+                    var lastEpisode = seasonBlock.QuerySelector(rowSelector);
+                    var dateColumn = lastEpisode.QuerySelector("td.delta");
+                    var date = DateFromEpisodeColumn(dateColumn);
+
+                    var urlDetails = new TrackerUrlDetails(seasonButton);
+                    var seasonReleases = await FetchTrackerReleases(urlDetails);
+
+                    foreach (var release in seasonReleases)
+                    {
+                        release.InfoUrl = url;
+                        release.PublishDate = date;
+                    }
+
+                    releases.AddRange(seasonReleases);
+
+                    if (season is > 0)
+                    {
+                        break; // Searched season was processed
+                    }
+
+                    // Skip parsing separate episodes if season pack was added
+                    if (seasonReleases.Count > 0)
+                    {
+                        continue;
+                    }
+                }
+
+                // No season filtering was applied OR season pack in not available
+                var rows = seasonBlock.QuerySelectorAll(rowSelector).Where(s => !s.ClassList.Contains("not-available"));
+
+                foreach (var row in rows)
+                {
+                    var couldBreak = false; // Set to `true` if searched episode was found
+
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        var titles = row.QuerySelector("td.gamma > div");
+                        if (titles.TextContent.IndexOf(filter, StringComparison.OrdinalIgnoreCase) == -1)
+                        {
+                            continue;
+                        }
+                    }
+
+                    var playButton = row.QuerySelector("td.zeta > div.external-btn");
+                    if (playButton == null)
+                    {
+                        continue;
+                    }
+
+                    if (!string.IsNullOrEmpty(episode))
+                    {
+                        var match = ParsePlayEpisodeRegex.Match(playButton.GetAttribute("onclick"));
+                        var episodeNumber = match.Groups["episode"];
+
+                        if (episodeNumber == null || episodeNumber.Value.TrimStart('0') != episode.TrimStart('0'))
+                        {
+                            continue;
+                        }
+
+                        couldBreak = true;
+                    }
+
+                    var dateColumn = row.QuerySelector("td.delta"); // Contains both Date and EpisodeURL
+                    var date = DateFromEpisodeColumn(dateColumn);
+
+                    var link = dateColumn.GetAttribute("onclick"); // goTo('/series/Prison_Break/season_5/episode_9/',false)
+                    link = TrimString(link, '\'', '\'');
+                    var episodeUrl = BaseUrl + link;
+                    var urlDetails = new TrackerUrlDetails(playButton);
+
+                    var episodeReleases = await FetchTrackerReleases(urlDetails);
+
+                    foreach (var release in episodeReleases)
+                    {
+                        release.InfoUrl = episodeUrl;
+                        release.PublishDate = date;
+                    }
+
+                    releases.AddRange(episodeReleases);
+
+                    if (couldBreak)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return releases;
+        }
+
+        private async Task<IReadOnlyList<ReleaseInfo>> FetchTrackerReleases(TrackerUrlDetails details)
+        {
+            var url = $"{BaseUrl}/v_search.php?c={details.SeriesId}&s={details.Season}&e={(string.IsNullOrEmpty(details.Episode) ? "999" : details.Episode)}";
+            _logger.Debug("FetchTrackerReleases: " + url);
+
+            // Get redirection page with generated link on it. This link can't be constructed manually as it contains Hash field and hashing algo is unknown.
+            // The page redirects to /login when not authenticated, so follow redirects to let CheckIfLoginNeeded re-auth.
+            var request = BuildRequest(new HttpRequestBuilder(url).Accept(HttpAccept.Html));
+            request.AllowAutoRedirect = true;
+            var response = await GetResponse(request);
+
+            if (response.Content == null)
+            {
+                throw new IndexerAuthException("Empty response from " + url);
+            }
+
+            if (response.Content == "log in first")
+            {
+                throw new IndexerAuthException("Log in first");
+            }
+
+            var parser = new HtmlParser();
+            using var document = parser.ParseDocument(response.Content);
+            var meta = document.QuerySelector("meta");
+            var metaContent = meta.GetAttribute("content");
+
+            // Follow redirection defined by async url.replace and prepend sitelink
+            var redirectionUrl = BaseUrl + metaContent.Substring(metaContent.IndexOf("url=") + 4);
+            return await FollowTrackerRedirection(redirectionUrl, details);
+        }
+
+        private async Task<List<ReleaseInfo>> FollowTrackerRedirection(string url, TrackerUrlDetails details)
+        {
+            _logger.Debug("FollowTrackerRedirection: " + url);
+            var response = await GetResponse(new HttpRequestBuilder(url).Accept(HttpAccept.Html));
+            var releases = new List<ReleaseInfo>();
+
+            var parser = new HtmlParser();
+            using var document = parser.ParseDocument(response.Content);
+            var rows = document.QuerySelectorAll("div.inner-box--item");
+
+            if (rows.Length == 0)
+            {
+                return releases;
+            }
+
+            _logger.Debug("LostFilm.tv: parsing {0} releases", rows.Length);
+
+            var serieTitle = document.QuerySelector("div.inner-box--subtitle").TextContent;
+            serieTitle = serieTitle.Substring(0, serieTitle.LastIndexOf(','));
+
+            var episodeInfo = document.QuerySelector("div.inner-box--text").TextContent;
+            var episodeName = TrimString(episodeInfo, '(', ')');
+
+            foreach (var row in rows)
+            {
+                var detailsInfo = row.QuerySelector("div.inner-box--desc").TextContent;
+                var releaseDetails = ParseReleaseDetailsRegex.Match(detailsInfo);
+
+                if (!releaseDetails.Success)
+                {
+                    _logger.Debug("LostFilm.tv: failed to map release details string: {0}", detailsInfo);
+                    continue;
+                }
+
+                // For supported qualities see TvCategoryParser.cs
+                var quality = releaseDetails.Groups["quality"].Value.Trim();
+                // Adapt shitty quality format for common algorithms
+                quality = Regex.Replace(quality, "-Rip", "Rip", RegexOptions.IgnoreCase);
+                quality = Regex.Replace(quality, "WEB-DLRip", "WEBDL", RegexOptions.IgnoreCase);
+                quality = Regex.Replace(quality, "WEB-DL", "WEBDL", RegexOptions.IgnoreCase);
+                quality = Regex.Replace(quality, "HDTVRip", "HDTV", RegexOptions.IgnoreCase);
+                // Fix forgotten p-Progressive suffix in resolution index
+                quality = Regex.Replace(quality, "1080 ", "1080p ", RegexOptions.IgnoreCase);
+                quality = Regex.Replace(quality, "720 ", "720p ", RegexOptions.IgnoreCase);
+
+                var techComponents = new[]
+                {
+                    "rus",
+                    quality,
+                    "(LostFilm)"
+                };
+                var techInfo = string.Join(" ", techComponents.Where(s => !string.IsNullOrEmpty(s)));
+
+                // Ru title: downloadLink.TextContent.Replace("\n", "")
+                // En title should be manually constructed.
+                var titleComponents = new[]
+                {
+                    serieTitle,
+                    details.GetEpisodeString(),
+                    episodeName,
+                    techInfo
+                };
+                var downloadLink = row.QuerySelector("div.inner-box--link > a");
+                var sizeString = releaseDetails.Groups["size"].Value.ToUpper();
+                sizeString = sizeString.Replace("ТБ", "TB");
+                sizeString = sizeString.Replace("ГБ", "GB");
+                sizeString = sizeString.Replace("МБ", "MB");
+                sizeString = sizeString.Replace("КБ", "KB");
+                var link = new Uri(downloadLink.GetAttribute("href"));
+
+                var release = new TorrentInfo
+                {
+                    Title = string.Join(" - ", titleComponents.Where(s => !string.IsNullOrEmpty(s))),
+                    DownloadUrl = link.AbsoluteUri,
+                    Guid = link.AbsoluteUri,
+                    Size = ParseUtil.GetBytes(sizeString),
+                    // add missing torznab fields not available from results
+                    Seeders = 1,
+                    Peers = 2,
+                    DownloadVolumeFactor = 0,
+                    UploadVolumeFactor = 1,
+                    MinimumRatio = 1,
+                    MinimumSeedTime = 172800 // 48 hours
+                };
+
+                release.Categories = new List<IndexerCategory> { NewznabStandardCategory.TV };
+
+                _logger.Debug("LostFilm.tv: add: " + release.Title);
+                releases.Add(release);
+            }
+
+            return releases;
+        }
+
+        private static string TrimString(string s, char startChar, char endChar)
+        {
+            var start = s.IndexOf(startChar);
+            var end = s.LastIndexOf(endChar);
+            return (start != -1 && end != -1) ? s.Substring(start + 1, end - start - 1) : null;
+        }
+
+        private static string TrimString(string s, string startString, string endString)
+        {
+            var start = s.IndexOf(startString);
+            var end = s.LastIndexOf(endString);
+            return (start != -1 && end != -1) ? s.Substring(start + startString.Length, end - start - startString.Length) : null;
+        }
+
+        private static DateTime DateFromEpisodeColumn(IElement dateColumn)
+        {
+            var dateString = dateColumn.QuerySelector("span.small-text")?.TextContent;
+            // 'Eng: 23.05.2017' -> '23.05.2017' OR '23.05.2017' -> '23.05.2017'
+            dateString = string.IsNullOrEmpty(dateString) ? dateColumn.QuerySelector("span")?.TextContent : dateString.Substring(dateString.IndexOf(":") + 2);
+            // dd.mm.yyyy
+            return DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
+        }
+
+        private IndexerCapabilities SetCapabilities()
+        {
+            var caps = new IndexerCapabilities
+            {
+                TvSearchParams = new List<TvSearchParam>
+                {
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
+                },
+                MovieSearchParams = new List<MovieSearchParam>
+                {
+                    MovieSearchParam.Q
+                }
+            };
+
+            caps.Categories.AddCategoryMapping(1, NewznabStandardCategory.TV);
+
+            return caps;
+        }
+
+        private class TrackerUrlDetails
+        {
+            public string SeriesId { get; private set; }
+            public string Season { get; private set; }
+            public string Episode { get; private set; }
+
+            public TrackerUrlDetails(string seriesId, string season, string episode)
+            {
+                SeriesId = seriesId;
+                Season = season;
+                Episode = episode;
+            }
+
+            public TrackerUrlDetails(IElement button)
+            {
+                var trigger = button.GetAttribute("onclick");
+                var match = ParsePlayEpisodeRegex.Match(trigger);
+
+                SeriesId = match.Groups["id"].Value.TrimStart('0');
+                Season = match.Groups["season"].Value.TrimStart('0');
+                Episode = match.Groups["episode"].Value.TrimStart('0');
+            }
+
+            public string GetEpisodeString()
+            {
+                var result = string.Empty;
+
+                if (!string.IsNullOrEmpty(Season) && Season != "0" && Season != "999")
+                {
+                    result += "S" + Season;
+
+                    if (!string.IsNullOrEmpty(Episode) && Episode != "0" && Episode != "999")
+                    {
+                        result += "E" + Episode;
+                    }
+                }
+
+                return result;
+            }
+        }
+    }
+
+    public class LostFilmRequestGenerator : IIndexerRequestGenerator
+    {
+        private readonly LostFilmSettings _settings;
+
+        public LostFilmRequestGenerator(LostFilmSettings settings)
+        {
+            _settings = settings;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MovieSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            if (searchCriteria.IsRssSearch || searchCriteria.SearchTerm.IsNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRssRequests());
+            }
+            else
+            {
+                pageableRequests.Add(GetSearchRequests(searchCriteria.SanitizedSearchTerm, null, null));
+            }
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(MusicSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            if (searchCriteria.IsRssSearch || searchCriteria.SearchTerm.IsNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRssRequests());
+            }
+            else
+            {
+                pageableRequests.Add(GetSearchRequests(searchCriteria.SanitizedSearchTerm, searchCriteria.Season, searchCriteria.Episode));
+            }
+
+            return pageableRequests;
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BookSearchCriteria searchCriteria)
+        {
+            return new IndexerPageableRequestChain();
+        }
+
+        public IndexerPageableRequestChain GetSearchRequests(BasicSearchCriteria searchCriteria)
+        {
+            var pageableRequests = new IndexerPageableRequestChain();
+
+            pageableRequests.Add(GetRssRequests());
+
+            return pageableRequests;
+        }
+
+        public Func<IDictionary<string, string>> GetCookies { get; set; }
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        private IEnumerable<IndexerRequest> GetRssRequests()
+        {
+            yield return new IndexerRequest(new HttpRequestBuilder(_settings.BaseUrl).Resource("new").Build());
+        }
+
+        private IEnumerable<IndexerRequest> GetSearchRequests(string term, int? season, string episode)
+        {
+            var requestBuilder = new HttpRequestBuilder(_settings.BaseUrl)
+                .Resource("ajaxik.php")
+                .Post()
+                .Accept(HttpAccept.Html)
+                .AddFormParameter("act", "common")
+                .AddFormParameter("type", "search")
+                .AddFormParameter("val", term)
+                .AddQueryParam("val", term);
+
+            if (season is > 0)
+            {
+                requestBuilder.AddQueryParam("season", season.Value);
+            }
+
+            if (episode.IsNotNullOrWhiteSpace())
+            {
+                requestBuilder.AddQueryParam("episode", episode);
+            }
+
+            yield return new IndexerRequest(requestBuilder.Build());
+        }
+    }
+
+    public class LostFilmParser : IParseIndexerResponse
+    {
+        public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+
+        public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
+        {
+            // Multi-step flow is handled in LostFilm.FetchPage, no response parsing is required here.
+            return Array.Empty<ReleaseInfo>();
+        }
+    }
+
+    public class LostFilmSettings : UserPassTorrentBaseSettings, ICaptchaProvider
+    {
+        public string Captcha { get; set; }
+    }
+}

@@ -79,6 +79,32 @@ namespace Prowlarr.Api.V1.Indexers
                 resource.DefinitionName = settings.DefinitionFile;
                 infoLinkName = settings.DefinitionFile;
             }
+            else if (definition.Settings is ICaptchaProvider captchaProvider)
+            {
+                if (definition.ExtraFields == null || !definition.ExtraFields.Any(x => x.Name == "cardigannCaptcha"))
+                {
+                    definition.ExtraFields = new List<SettingsField>
+                    {
+                        new()
+                        {
+                            Name = "cardigannCaptcha",
+                            Type = "cardigannCaptcha",
+                            Label = "CAPTCHA"
+                        }
+                    };
+                }
+
+                var extraFields = definition.ExtraFields.Select((field, i) => MapCardigannField(definition, field, i)).ToList();
+
+                resource.Fields.AddRange(extraFields);
+
+                var captchaField = extraFields.FirstOrDefault(x => x.Name == "cardigannCaptcha");
+
+                if (captchaField != null)
+                {
+                    captchaField.Value = captchaProvider.Captcha;
+                }
+            }
 
             resource.InfoLink = $"https://wiki.servarr.com/prowlarr/supported-indexers#{infoLinkName.ToLower().Replace(' ', '-')}";
             resource.AppProfileId = definition.AppProfileId;
@@ -144,6 +170,15 @@ namespace Prowlarr.Api.V1.Indexers
                             }
                         }
                     }
+                }
+            }
+            else if (definition.Settings is ICaptchaProvider captchaProvider)
+            {
+                var captchaField = resource.Fields.FirstOrDefault(x => x.Name == "cardigannCaptcha");
+
+                if (captchaField != null)
+                {
+                    captchaProvider.Captcha = captchaField.Value?.ToString() ?? string.Empty;
                 }
             }
 

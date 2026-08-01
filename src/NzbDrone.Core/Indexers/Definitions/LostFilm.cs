@@ -581,7 +581,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     if (!string.IsNullOrEmpty(filter))
                     {
                         var titles = row.QuerySelector("td.gamma > div");
-                        if (titles.TextContent.IndexOf(filter, StringComparison.OrdinalIgnoreCase) == -1)
+                        if (!titles.TextContent.Contains(filter, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
@@ -898,7 +898,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetRssRequests());
+            if (searchCriteria.IsRssSearch || searchCriteria.SearchTerm.IsNullOrWhiteSpace())
+            {
+                pageableRequests.Add(GetRssRequests());
+            }
+            else
+            {
+                pageableRequests.Add(GetSearchRequests(searchCriteria.SanitizedSearchTerm, null, null));
+            }
 
             return pageableRequests;
         }

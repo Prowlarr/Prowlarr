@@ -116,5 +116,27 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             captchaRequest.ContentType.Should().Be("image/jpeg");
             captchaRequest.ImageData.Should().Equal(0x89, 0x50, 0x4E, 0x47);
         }
+
+        [Test]
+        public void should_search_with_basic_search_criteria()
+        {
+            var chain = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria { SearchTerm = "breaking bad" });
+
+            var paths = chain.GetAllTiers().SelectMany(x => x).Select(x => x.HttpRequest.Url.Path).ToList();
+
+            paths.Should().Contain("/ajaxik.php");
+            paths.Should().NotContain("/new");
+        }
+
+        [Test]
+        public void should_return_rss_for_empty_basic_search_criteria()
+        {
+            var chain = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria());
+
+            var paths = chain.GetAllTiers().SelectMany(x => x).Select(x => x.HttpRequest.Url.Path).ToList();
+
+            paths.Should().Contain("/new");
+            paths.Should().NotContain("/ajaxik.php");
+        }
     }
 }

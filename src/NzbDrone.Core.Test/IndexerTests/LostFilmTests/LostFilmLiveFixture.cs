@@ -18,6 +18,7 @@ using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
 using NzbDrone.Core.IndexerProxies;
+using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Security;
@@ -118,8 +119,52 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         [Test]
         public async Task should_login_with_captcha_and_fetch_live()
         {
+            if (!await EnsureAuthenticatedAsync())
+            {
+                Assert.Fail("All captcha login attempts failed");
+                return;
+            }
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } });
+
+            AssertEpisodeReleases(result);
+        }
+
+        [Test]
+        public async Task should_search_basic_live()
+        {
+            if (!await EnsureAuthenticatedAsync())
+            {
+                Assert.Fail("All captcha login attempts failed");
+                return;
+            }
+
+            var result = await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "breaking bad" });
+
+            result.Queries.Should().HaveCount(1);
+            result.Releases.Should().NotBeEmpty();
+            result.Releases.Should().Contain(r => r.Title.Contains("Breaking Bad - S"));
+        }
+
+        private async Task<bool> EnsureAuthenticatedAsync()
+        {
             const string captchaImageFile = "/logs/live_captcha.gif";
             const string captchaAnswerFile = "/logs/live_captcha_answer.txt";
+
+            try
+            {
+                // Reuse the existing session (injected cookies or a previous login) if it is still valid.
+                var probe = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } });
+
+                if (probe.Queries.Count > 0)
+                {
+                    return true;
+                }
+            }
+            catch (IndexerAuthException)
+            {
+                // Session expired, fall through to captcha login below.
+            }
 
             for (var attempt = 1; attempt <= 6; attempt++)
             {
@@ -148,16 +193,13 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
 
                 var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } });
 
-                if (result.Queries.Count == 0)
+                if (result.Queries.Count > 0)
                 {
-                    continue;
+                    return true;
                 }
-
-                AssertEpisodeReleases(result);
-                return;
             }
 
-            Assert.Fail("All captcha login attempts failed");
+            return false;
         }
     }
 }

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
+using FluentValidation.Results;
 using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
@@ -22,6 +24,7 @@ using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
@@ -142,11 +145,22 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (content.Contains("need_captcha"))
             {
+                // A captcha is required but the one we hold is stale or missing entirely.
+                // Clear it so it is not reused and ask the user to fetch a fresh one.
+                Settings.Captcha = null;
+
                 throw new IndexerAuthException("LostFilm.tv requires a captcha. Open the indexer settings to fetch a new one.");
             }
 
             if (content.Contains("error\":1") || content.Contains("error\":2") || content.Contains("error\":4"))
             {
+                // LostFilm captchas are single-use and bound to the login session, so a
+                // failed captcha can never succeed again. Clear it to stop the retry loop.
+                if (content.Contains("error\":4"))
+                {
+                    Settings.Captcha = null;
+                }
+
                 throw new IndexerAuthException("Captcha is incorrect");
             }
 
@@ -160,10 +174,56 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException("LostFilm.tv authentication failed: " + content);
             }
 
+            // The captcha was consumed by this successful login; never reuse it.
+            Settings.Captcha = null;
+
             var cookies = response.GetCookies();
             UpdateCookies(cookies, DateTime.Now.AddDays(30));
 
             _logger.Debug("LostFilm.tv authentication succeeded");
+        }
+
+        protected override async Task<ValidationFailure> TestConnection()
+        {
+            try
+            {
+                // The default implementation scrapes every new episode, which is slow.
+                // Verify connectivity and authentication with a single feed page request instead.
+                await GetResponse(new HttpRequestBuilder(BaseUrl + "/new").Accept(HttpAccept.Html));
+
+                return null;
+            }
+            catch (IndexerAuthException ex)
+            {
+                _logger.Warn(ex, "Unable to authenticate with LostFilm.tv");
+
+                return new ValidationFailure(string.Empty, "Unable to authenticate with LostFilm.tv. " + ex.Message);
+            }
+            catch (CloudFlareProtectionException ex)
+            {
+                return new ValidationFailure(string.Empty, ex.Message);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.Warn(ex, "Unable to connect to LostFilm.tv");
+
+                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to LostFilm.tv. This is typically caused by DNS/SSL issues. Check DNS settings, ensure IPv6 is working or disabled, consider using different DNS servers, or try a VPN/proxy if needed. See: 'https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues' " + ex.Message)
+                {
+                    DetailedDescription = ex.InnerException?.Message
+                };
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.Warn(ex, "Unable to connect to LostFilm.tv");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to LostFilm.tv, possibly due to a timeout. Try again or check your network settings. " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn(ex, "Unable to connect to LostFilm.tv");
+
+                return new ValidationFailure(string.Empty, "Unable to connect to LostFilm.tv, check the log above the ValidationFailure for more details. " + ex.Message);
+            }
         }
 
         public override async Task<IndexerDownloadResponse> Download(Uri link)
@@ -514,6 +574,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             var seasons = document.QuerySelectorAll("div.serie-block");
             const string rowSelector = "table.movie-parts-list > tbody > tr";
 
+            if (seasons.Length == 0 && url.Contains("/movies/", StringComparison.OrdinalIgnoreCase))
+            {
+                // Movie pages have no `div.serie-block` season blocks. Fall back to the
+                // episode parser which handles the movie page layout (see FetchEpisodeReleases).
+                _logger.Debug("LostFilm.tv: movie page detected, parsing as a movie: " + url);
+
+                return await FetchEpisodeReleases(TrimSeasonSuffix(url));
+            }
+
             foreach (var seasonBlock in seasons)
             {
                 // Could be null if serie-block is for Extras
@@ -757,6 +826,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return releases;
+        }
+
+        private static string TrimSeasonSuffix(string url)
+        {
+            return Regex.Replace(url, @"/(season_\d+|seasons)/?$", string.Empty, RegexOptions.IgnoreCase);
         }
 
         private static string TrimString(string s, char startChar, char endChar)

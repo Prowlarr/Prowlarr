@@ -118,6 +118,21 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
+        public async Task should_find_releases_for_movie_search()
+        {
+            MockResponse(HttpMethod.Post, "/ajaxik.php", ReadAllText(@"Files/Indexers/LostFilm/search_avatar.json"), "application/json");
+            MockResponse(HttpMethod.Get, "/movies/Avatar_Aang_The_Last_Airbender/seasons", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/movies/Avatar_Aang_The_Last_Airbender", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new MovieSearchCriteria { SearchTerm = "avatar aang", Categories = new[] { 2000 } });
+
+            result.Releases.Should().HaveCount(3);
+            result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/Avatar_Aang_The_Last_Airbender");
+        }
+
+        [Test]
         public void should_search_with_basic_search_criteria()
         {
             var chain = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria { SearchTerm = "breaking bad" });

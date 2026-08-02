@@ -27,7 +27,7 @@ namespace NzbDrone.Core.Http.CloudFlare
 
             // detect CloudFlare and DDoS-GUARD
             if (response.StatusCode.Equals(HttpStatusCode.ServiceUnavailable) ||
-                response.StatusCode.Equals(HttpStatusCode.Forbidden)) ||
+                response.StatusCode.Equals(HttpStatusCode.Forbidden) ||
                 response.StatusCode.Equals(HttpStatusCode.OK))
             {
                 var responseHtml = response.Content;

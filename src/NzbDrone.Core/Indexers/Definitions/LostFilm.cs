@@ -838,11 +838,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // Ru title: downloadLink.TextContent.Replace("\n", "")
                 // En title should be manually constructed.
-                // For movies there is no season/episode to show; append the release year instead.
+                // For movies there is no season/episode to show; mark them and append the release year instead.
                 var titleComponents = details.IsMovie
                     ? new[]
                     {
                         serieTitle,
+                        "Movie",
                         details.ReleaseYear?.ToString(),
                         techInfo
                     }

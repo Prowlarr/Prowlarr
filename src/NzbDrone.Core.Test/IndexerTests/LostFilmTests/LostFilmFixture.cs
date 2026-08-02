@@ -140,7 +140,25 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/Avatar_Aang_The_Last_Airbender");
             result.Releases.Should().OnlyContain(r => r.Categories.Contains(NewznabStandardCategory.Movies));
             result.Releases.Should().OnlyContain(r => !r.Title.Contains("S1E1"));
-            result.Releases.Should().OnlyContain(r => r.Title.StartsWith("Breaking Bad - 2013 -"));
+            result.Releases.Should().OnlyContain(r => r.Title.StartsWith("Breaking Bad - Movie - 2013 -"));
+            result.Releases.Should().OnlyContain(r => r.Title.EndsWith("(LostFilm)"));
+        }
+
+        [Test]
+        public async Task should_add_movie_component_even_when_title_ends_with_movie()
+        {
+            MockResponse(HttpMethod.Post, "/ajaxik.php", ReadAllText(@"Files/Indexers/LostFilm/search_avatar.json"), "application/json");
+            MockResponse(HttpMethod.Get, "/movies/Avatar_Aang_The_Last_Airbender/seasons", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/movies/Avatar_Aang_The_Last_Airbender", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            var trackerHtml = ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html")
+                .Replace("Breaking Bad, сериал", "El Camino: A Breaking Bad Movie, сериал");
+            MockResponse(HttpMethod.Get, "/V/", trackerHtml);
+
+            var result = await Subject.Fetch(new MovieSearchCriteria { SearchTerm = "avatar aang", Categories = new[] { 2000 } });
+
+            result.Releases.Should().HaveCount(3);
+            result.Releases.Should().OnlyContain(r => r.Title.StartsWith("El Camino: A Breaking Bad Movie - Movie - 2013 -"));
             result.Releases.Should().OnlyContain(r => r.Title.EndsWith("(LostFilm)"));
         }
 

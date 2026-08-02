@@ -147,7 +147,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 requestBuilder.AddFormParameter("captcha", Settings.Captcha);
             }
 
-            var response = await ExecuteAuth(BuildRequest(requestBuilder));
+            var request = BuildRequest(requestBuilder);
+            request.Cookies.Remove("PHPSESSID");
+            var response = await ExecuteAuth(request);
 
             var content = response.Content ?? string.Empty;
 
@@ -446,7 +448,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return new Captcha { ImageData = Array.Empty<byte>() };
             }
 
-            var captchaUrl = new Uri(new Uri(BaseUrl + "/"), qCaptchaImg.GetAttribute("src"));
+            var captchaSrc = qCaptchaImg.GetAttribute("src");
+
+            if (string.IsNullOrWhiteSpace(captchaSrc))
+            {
+                return new Captcha { ImageData = Array.Empty<byte>() };
+            }
+
+            var captchaUrl = new Uri(new Uri(BaseUrl + "/"), captchaSrc);
             var captchaResponse = await GetResponse(new HttpRequestBuilder(captchaUrl.AbsoluteUri), checkLogin: false);
 
             return new Captcha
@@ -982,6 +991,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                 sizeString = sizeString.Replace("МБ", "MB");
                 sizeString = sizeString.Replace("КБ", "KB");
                 var href = downloadLink.GetAttribute("href");
+
+                if (string.IsNullOrWhiteSpace(href))
+                {
+                    _logger.Debug("LostFilm.tv: release row has no download link");
+                    continue;
+                }
+
                 var link = new Uri(new Uri(BaseUrl + "/"), href);
 
                 var release = new TorrentInfo
@@ -1036,7 +1052,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var dateString = dateColumn.QuerySelector("span.small-text")?.TextContent;
             // 'Eng: 23.05.2017' -> '23.05.2017' OR '23.05.2017' -> '23.05.2017'
-            dateString = string.IsNullOrEmpty(dateString) ? dateColumn.QuerySelector("span")?.TextContent : dateString.Substring(dateString.IndexOf(":") + 2);
+            if (!string.IsNullOrEmpty(dateString))
+            {
+                var separator = dateString.IndexOf(':');
+                dateString = separator > 0 ? dateString.Substring(separator + 2) : dateString;
+            }
+            else
+            {
+                dateString = dateColumn.QuerySelector("span")?.TextContent;
+            }
             // dd.mm.yyyy
             return DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
         }

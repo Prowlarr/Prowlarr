@@ -586,10 +586,14 @@ namespace NzbDrone.Core.Indexers.Definitions
                 date = DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
             }
 
-            var urlDetails = new TrackerUrlDetails(playButton);
-            var episodeReleases = await FetchTrackerReleases(urlDetails);
-
             var isMovie = url.Contains("/movies/", StringComparison.OrdinalIgnoreCase);
+
+            var urlDetails = new TrackerUrlDetails(playButton)
+            {
+                IsMovie = isMovie,
+                ReleaseYear = isMovie ? date.Year : (int?)null
+            };
+            var episodeReleases = await FetchTrackerReleases(urlDetails);
 
             foreach (var release in episodeReleases)
             {
@@ -834,13 +838,21 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // Ru title: downloadLink.TextContent.Replace("\n", "")
                 // En title should be manually constructed.
-                var titleComponents = new[]
-                {
-                    serieTitle,
-                    details.GetEpisodeString(),
-                    episodeName,
-                    techInfo
-                };
+                // For movies there is no season/episode to show; append the release year instead.
+                var titleComponents = details.IsMovie
+                    ? new[]
+                    {
+                        serieTitle,
+                        details.ReleaseYear?.ToString(),
+                        techInfo
+                    }
+                    : new[]
+                    {
+                        serieTitle,
+                        details.GetEpisodeString(),
+                        episodeName,
+                        techInfo
+                    };
                 var downloadLink = row.QuerySelector("div.inner-box--link > a");
                 var sizeString = releaseDetails.Groups["size"].Value.ToUpper();
                 sizeString = sizeString.Replace("ТБ", "TB");
@@ -926,6 +938,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             public string SeriesId { get; private set; }
             public string Season { get; private set; }
             public string Episode { get; private set; }
+            public bool IsMovie { get; set; }
+            public int? ReleaseYear { get; set; }
 
             public TrackerUrlDetails(string seriesId, string season, string episode)
             {

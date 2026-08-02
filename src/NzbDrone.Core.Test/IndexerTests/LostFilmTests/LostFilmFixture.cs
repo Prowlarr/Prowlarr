@@ -139,6 +139,9 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             result.Releases.Should().HaveCount(3);
             result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/Avatar_Aang_The_Last_Airbender");
             result.Releases.Should().OnlyContain(r => r.Categories.Contains(NewznabStandardCategory.Movies));
+            result.Releases.Should().OnlyContain(r => !r.Title.Contains("S1E1"));
+            result.Releases.Should().OnlyContain(r => r.Title.StartsWith("Breaking Bad - 2013 -"));
+            result.Releases.Should().OnlyContain(r => r.Title.EndsWith("(LostFilm)"));
         }
 
         [Test]

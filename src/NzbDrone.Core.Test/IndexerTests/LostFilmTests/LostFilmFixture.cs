@@ -274,6 +274,93 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
+        public async Task should_skip_tracker_row_without_description_and_keep_valid_siblings()
+        {
+            MockAllResponses();
+            MockResponse(HttpMethod.Get, "/new", "<html><body><div class=\"row\"><a href=\"/series/Breaking_Bad/season_5/episode_16\">Breaking Bad</a></div></body></html>");
+
+            // One tracker row is missing div.inner-box--desc (previously an NRE that killed the
+            // whole RSS sync); the sibling row is valid and must still be parsed.
+            const string trackerPage = "<html><body><div class=\"inner-box general\">" +
+                "<div class=\"inner-box--subtitle\">Breaking Bad, сериал</div>" +
+                "<div class=\"inner-box--text\">5 сезон</div>" +
+                "<div class=\"inner-box--list\">" +
+                "<div class=\"inner-box--item\"><div class=\"inner-box--link main\"><a href=\"https://n.tracktor.site/td.php?s=broken\">Bad row</a></div></div>" +
+                "<div class=\"inner-box--item\"><div class=\"inner-box--link main\"><a href=\"https://n.tracktor.site/td.php?s=good\">Good row</a></div>" +
+                "<div class=\"inner-box--desc\">Видео: 1080p WEB-DLRip. Размер: 40.61 ГБ. Перевод: Многоголосый закадровый (LostFilm.TV)</div></div>" +
+                "</div></div></body></html>";
+            MockResponse(HttpMethod.Get, "/V/", trackerPage);
+
+            var result = await Subject.Fetch(new BasicSearchCriteria());
+
+            result.Releases.Should().HaveCount(1);
+            var release = result.Releases.Single();
+            release.Title.Should().Be("Breaking Bad - S5E16 - rus 1080p WEBDL (LostFilm)");
+            release.DownloadUrl.Should().Be("https://n.tracktor.site/td.php?s=good");
+        }
+
+        [Test]
+        public async Task should_resolve_relative_download_url_against_base_url()
+        {
+            MockAllResponses();
+            MockResponse(HttpMethod.Get, "/new", "<html><body><div class=\"row\"><a href=\"/series/Breaking_Bad/season_5/episode_16\">Breaking Bad</a></div></body></html>");
+
+            // A relative tracker href used to throw UriFormatException; it must resolve against BaseUrl.
+            const string trackerPage = "<html><body><div class=\"inner-box general\">" +
+                "<div class=\"inner-box--subtitle\">Breaking Bad, сериал</div>" +
+                "<div class=\"inner-box--text\">5 сезон</div>" +
+                "<div class=\"inner-box--list\">" +
+                "<div class=\"inner-box--item\"><div class=\"inner-box--link main\"><a href=\"td.php?s=abc123\">Relative row</a></div>" +
+                "<div class=\"inner-box--desc\">Видео: 1080p WEB-DLRip. Размер: 40.61 ГБ. Перевод: Многоголосый закадровый (LostFilm.TV)</div></div>" +
+                "</div></div></body></html>";
+            MockResponse(HttpMethod.Get, "/V/", trackerPage);
+
+            var result = await Subject.Fetch(new BasicSearchCriteria());
+
+            result.Releases.Should().ContainSingle();
+            result.Releases.Single().DownloadUrl.Should().Be($"{BaseUrl}/td.php?s=abc123");
+        }
+
+        [Test]
+        public async Task should_skip_series_row_without_title_element_during_filtered_search()
+        {
+            // The first /ajaxik.php call (searching "breaking bad crystal") returns nothing, which
+            // makes the search loop drop a keyword and retry with "breaking bad". The leftover
+            // "crystal" keyword becomes the episode-title filter and exercises the td.gamma guard.
+            const string singleSeriesJson = "{\"data\":{\"series\":[{\"id\":\"119\",\"title\":\"Во все тяжкие\",\"title_orig\":\"Breaking Bad\",\"link\":\"/series/Breaking_Bad\"}]},\"result\":\"ok\"}";
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Post && v.Url.Path == "/ajaxik.php"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                {
+                    var body = r.GetContent() ?? string.Empty;
+                    var content = body.Contains("crystal") ? "{\"data\":false,\"result\":\"ok\"}" : singleSeriesJson;
+                    return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), content));
+                });
+
+            // Season 5 block with two rows: the first has no td.gamma > div (previously an NRE),
+            // the second matches the "crystal" filter and must be parsed normally.
+            const string seasonPage = "<html><body><div class=\"serie-block\">" +
+                "<div class=\"movie-details-block\"><div class=\"external-btn\" onclick=\"PlayEpisode('119005016')\"></div>" +
+                "<div class=\"haveseen-btn\" data-code=\"season-5\"></div></div>" +
+                "<table class=\"movie-parts-list\"><tbody>" +
+                "<tr><td class=\"zeta\"><div class=\"external-btn\" onclick=\"PlayEpisode('119005016')\"></div></td>" +
+                "<td class=\"delta\" onclick=\"goTo('/series/Breaking_Bad/season_5/episode_16/',false)\"><span class=\"small-text\">Eng: 23.05.2017</span></td></tr>" +
+                "<tr><td class=\"gamma\"><div>Crystal Blue</div></td>" +
+                "<td class=\"zeta\"><div class=\"external-btn\" onclick=\"PlayEpisode('119005016')\"></div></td>" +
+                "<td class=\"delta\" onclick=\"goTo('/series/Breaking_Bad/season_5/episode_16/',false)\"><span class=\"small-text\">Eng: 23.05.2017</span></td></tr>" +
+                "</tbody></table></div></body></html>";
+            MockResponse(HttpMethod.Get, "/series/Breaking_Bad/season_5", seasonPage);
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad crystal", Season = 5, Categories = new[] { 5000 } });
+
+            result.Releases.Should().NotBeEmpty();
+            result.Releases.Should().OnlyContain(r => r.Title.Contains("Breaking Bad - S5E16"));
+        }
+
+        [Test]
         public void should_advertise_tv_and_movie_categories()
         {
             Subject.Capabilities.Categories.GetTrackerCategories().Should().Contain(new[] { "1", "2" });

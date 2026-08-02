@@ -66,6 +66,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private DateTime? _cookiesExpiration;
 
+        private readonly object _cookieSync = new object();
+
         private IDictionary<string, string> _persistedCookies;
         private DateTime? _persistedExpiration;
 
@@ -325,14 +327,17 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private void PersistCookies(IDictionary<string, string> cookies, DateTime? expiration)
         {
-            if (CookiesEqual(_persistedCookies, _persistedExpiration, cookies, expiration))
+            lock (_cookieSync)
             {
-                return;
-            }
+                if (CookiesEqual(_persistedCookies, _persistedExpiration, cookies, expiration))
+                {
+                    return;
+                }
 
-            UpdateCookies(cookies, expiration);
-            _persistedCookies = new Dictionary<string, string>(cookies);
-            _persistedExpiration = expiration;
+                UpdateCookies(cookies, expiration);
+                _persistedCookies = new Dictionary<string, string>(cookies);
+                _persistedExpiration = expiration;
+            }
         }
 
         private static bool CookiesEqual(IDictionary<string, string> previous, DateTime? previousExpiration, IDictionary<string, string> current, DateTime? expiration)
@@ -586,7 +591,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     break; // Search loop
                 }
-                catch (Exception ex) when (ex is not IndexerAuthException)
+                catch (Exception ex) when (ex is not IndexerAuthException and not HttpException and not TooManyRequestsException and not CloudFlareProtectionException)
                 {
                     _logger.Warn(ex, "LostFilm.tv: error parsing search response for query: " + searchString);
                 }
@@ -726,7 +731,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                     var buttonCode = watchedButton?.GetAttribute("data-code");
                     var dashIndex = buttonCode == null ? -1 : buttonCode.IndexOf('-');
 
-                    if (dashIndex != -1 && buttonCode.Substring(dashIndex + 1) != season.ToString())
+                    if (dashIndex == -1)
+                    {
+                        _logger.Debug("LostFilm.tv: cannot determine season from haveseen-btn data-code");
+                        continue;
+                    }
+
+                    if (buttonCode.Substring(dashIndex + 1) != season.ToString())
                     {
                         continue; // Can't match season by regex OR season not matches to a searched one
                     }
@@ -780,7 +791,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     if (!string.IsNullOrEmpty(filter))
                     {
                         var titles = row.QuerySelector("td.gamma > div");
-                        if (!titles.TextContent.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                        if (titles == null || !titles.TextContent.Contains(filter, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
@@ -794,7 +805,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     if (!string.IsNullOrEmpty(episode))
                     {
-                        var match = ParsePlayEpisodeRegex.Match(playButton.GetAttribute("onclick"));
+                        var match = ParsePlayEpisodeRegex.Match(playButton.GetAttribute("onclick") ?? string.Empty);
                         var episodeNumber = match.Groups["episode"];
 
                         if (episodeNumber == null || episodeNumber.Value.TrimStart('0') != episode.TrimStart('0'))
@@ -904,7 +915,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var row in rows)
             {
-                var detailsInfo = row.QuerySelector("div.inner-box--desc").TextContent;
+                var descElement = row.QuerySelector("div.inner-box--desc");
+                var detailsInfo = descElement?.TextContent;
+
+                if (string.IsNullOrEmpty(detailsInfo))
+                {
+                    _logger.Debug("LostFilm.tv: release row has no description");
+                    continue;
+                }
+
                 var releaseDetails = ParseReleaseDetailsRegex.Match(detailsInfo);
 
                 if (!releaseDetails.Success)
@@ -962,7 +981,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 sizeString = sizeString.Replace("ГБ", "GB");
                 sizeString = sizeString.Replace("МБ", "MB");
                 sizeString = sizeString.Replace("КБ", "KB");
-                var link = new Uri(downloadLink.GetAttribute("href"));
+                var href = downloadLink.GetAttribute("href");
+                var link = new Uri(new Uri(BaseUrl + "/"), href);
 
                 var release = new TorrentInfo
                 {
@@ -1058,7 +1078,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             public TrackerUrlDetails(IElement button)
             {
-                var trigger = button.GetAttribute("onclick");
+                var trigger = button.GetAttribute("onclick") ?? string.Empty;
                 var match = ParsePlayEpisodeRegex.Match(trigger);
 
                 SeriesId = match.Groups["id"].Value.TrimStart('0');

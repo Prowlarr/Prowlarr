@@ -437,7 +437,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private async Task<Captcha> GetLoginPageAsync()
         {
-            var response = await GetResponse(new HttpRequestBuilder(BaseUrl + "/login").Accept(HttpAccept.Html), checkLogin: false);
+            var request = BuildRequest(new HttpRequestBuilder(BaseUrl + "/login").Accept(HttpAccept.Html));
+
+            // LostFilm only renders the captcha form for guests; when a valid lf_session is
+            // present the login page is served with the authenticated layout and no captcha.
+            // Drop the session cookie for this fetch (the null value replaces the cookie in
+            // the shared container without touching the persisted session). PHPSESSID is kept
+            // because the captcha image is bound to it for the subsequent login submission.
+            request.Cookies["lf_session"] = null;
+
+            var response = await GetResponse(request, checkLogin: false);
 
             var parser = new HtmlParser();
             using var document = parser.ParseDocument(response.Content);

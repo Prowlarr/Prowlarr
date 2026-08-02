@@ -198,6 +198,21 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             AssertEpisodeReleases(secondResult);
         }
 
+        [Test]
+        public void should_return_captcha_even_with_valid_session_live()
+        {
+            // Regression: checkCaptcha must fetch /login anonymously. When a valid lf_session
+            // is present (seeded from LOSTFILM_COOKIES) the /login page would otherwise render
+            // the authenticated layout with no captcha form, producing an empty image
+            // (data:null;base64, 0 B) in the settings UI.
+            var action = Subject.RequestAction("checkCaptcha", new Dictionary<string, string>());
+            var captchaRequest = action.GetType().GetProperty("captchaRequest").GetValue(action) as Captcha;
+
+            captchaRequest.Should().NotBeNull();
+            captchaRequest.ImageData.Should().NotBeNullOrEmpty();
+            captchaRequest.ContentType.Should().NotBeNullOrWhiteSpace();
+        }
+
         private async Task<bool> EnsureAuthenticatedAsync()
         {
             // Overridable so a host-side poller can share the same files across a volume

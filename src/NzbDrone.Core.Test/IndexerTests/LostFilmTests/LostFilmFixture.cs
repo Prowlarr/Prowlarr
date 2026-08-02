@@ -126,6 +126,42 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
+        public void should_fetch_captcha_page_as_guest_even_with_valid_session()
+        {
+            // Regression: LostFilm only renders the captcha form to guests. When a valid
+            // lf_session is present, checkCaptcha must still fetch /login without the session
+            // cookie, otherwise the authenticated layout (no captcha) is returned and the
+            // settings UI shows an empty image.
+            IDictionary<string, string> storedCookies = new Dictionary<string, string>
+            {
+                { "lf_session", "VALID_SESSION" },
+                { "PHPSESSID", "VALID_PHP" }
+            };
+
+            var statusService = Mocker.GetMock<IIndexerStatusService>();
+            statusService.Setup(s => s.UpdateCookies(It.IsAny<int>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<DateTime?>()))
+                .Callback((int id, IDictionary<string, string> cookies, DateTime? expiration) => storedCookies = cookies);
+            statusService.Setup(s => s.GetIndexerCookies(It.IsAny<int>())).Returns(() => storedCookies);
+            statusService.Setup(s => s.GetIndexerCookiesExpirationDate(It.IsAny<int>())).Returns(() => DateTime.Now.AddDays(30));
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+            client.Setup(o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/login"
+                        && (!v.Cookies.ContainsKey("lf_session") || v.Cookies["lf_session"] == null)),
+                    Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), ReadAllText(@"Files/Indexers/LostFilm/login.html"))));
+            MockResponse(HttpMethod.Get, "/simple_captcha.php", new byte[] { 0x89, 0x50, 0x4E, 0x47 }, "image/jpeg");
+
+            var result = Subject.RequestAction("checkCaptcha", new Dictionary<string, string>());
+            var captchaRequest = result.GetType().GetProperty("captchaRequest").GetValue(result) as Captcha;
+
+            captchaRequest.Should().NotBeNull();
+            captchaRequest.ContentType.Should().Be("image/jpeg");
+            captchaRequest.ImageData.Should().Equal(0x89, 0x50, 0x4E, 0x47);
+        }
+
+        [Test]
         public async Task should_find_releases_for_movie_search()
         {
             MockResponse(HttpMethod.Post, "/ajaxik.php", ReadAllText(@"Files/Indexers/LostFilm/search_avatar.json"), "application/json");

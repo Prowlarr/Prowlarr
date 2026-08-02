@@ -33,6 +33,7 @@ namespace NzbDrone.Core.Http.CloudFlare
                 if (responseHtml.Contains("<title>Just a moment...</title>") ||
                     responseHtml.Contains("<title>Access denied</title>") ||
                     responseHtml.Contains("<title>Attention Required! | Cloudflare</title>") ||
+                    responseHtml.Contains("<title>What Is My IP Address? - ifconfig.me</title>") ||
                     responseHtml.Trim().Equals("error code: 1020") ||
                     responseHtml.Contains("<title>DDOS-GUARD</title>", StringComparison.OrdinalIgnoreCase))
                 {

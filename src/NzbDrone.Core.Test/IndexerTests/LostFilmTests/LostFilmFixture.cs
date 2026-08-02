@@ -211,6 +211,69 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
+        public async Task should_replay_request_with_fresh_cookies_after_stale_session_relogin()
+        {
+            // Seed expired-but-unexpired (stale) session cookies: the first request is sent with
+            // a dead PHPSESSID, which the server answers with the login page. After the re-login
+            // the replayed request must carry the fresh session, not the stale request snapshot.
+            IDictionary<string, string> storedCookies = new Dictionary<string, string>
+            {
+                { "lf_session", "STALE_SESSION" },
+                { "PHPSESSID", "STALE_PHP" }
+            };
+            DateTime? storedExpiration = DateTime.Now.AddDays(30);
+
+            var statusService = Mocker.GetMock<IIndexerStatusService>();
+            statusService.Setup(s => s.UpdateCookies(It.IsAny<int>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<DateTime?>()))
+                .Callback((int id, IDictionary<string, string> cookies, DateTime? expiration) =>
+                {
+                    storedCookies = cookies;
+                    storedExpiration = expiration;
+                });
+            statusService.Setup(s => s.GetIndexerCookies(It.IsAny<int>())).Returns(() => storedCookies);
+            statusService.Setup(s => s.GetIndexerCookiesExpirationDate(It.IsAny<int>())).Returns(() => storedExpiration ?? DateTime.Now.AddDays(30));
+
+            const string anonPage = "<html><body><a href=\"/login\" class=\"link\">Вход</a></body></html>";
+            const string authedPage = "<html><body><div class=\"row\"><a href=\"/series/Test_Show/season_1/episode_1\">Test</a></div></body></html>";
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+            var newRequestCount = 0;
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/new"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                {
+                    newRequestCount++;
+                    if (newRequestCount == 1)
+                    {
+                        r.Cookies.Should().Contain("lf_session", "STALE_SESSION");
+                    }
+                    else
+                    {
+                        // Without re-applying the fresh session the replayed request would still
+                        // carry STALE_SESSION and the server would bounce us back to the login page.
+                        r.Cookies.Should().Contain("lf_session", "NEWSESSION");
+                        r.Cookies.Should().Contain("PHPSESSID", "NEWPHP");
+                    }
+
+                    return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), newRequestCount == 1 ? anonPage : authedPage));
+                });
+
+            var loginCookies = new CookieCollection
+            {
+                new Cookie("lf_session", "NEWSESSION", "/") { Expires = new DateTime(2027, 6, 1) },
+                new Cookie("PHPSESSID", "NEWPHP", "/")
+            };
+            MockResponse(HttpMethod.Post, "/ajaxik.php", "{\"success\":true,\"result\":\"ok\"}", loginCookies, "application/json");
+            MockResponse(HttpMethod.Get, "/series/Test_Show/season_1/episode_1", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new BasicSearchCriteria());
+
+            result.Releases.Should().NotBeEmpty();
+            newRequestCount.Should().Be(2);
+        }
+
+        [Test]
         public void should_advertise_tv_and_movie_categories()
         {
             Subject.Capabilities.Categories.GetTrackerCategories().Should().Contain(new[] { "1", "2" });

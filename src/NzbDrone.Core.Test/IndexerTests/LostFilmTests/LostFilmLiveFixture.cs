@@ -200,8 +200,16 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
 
         private async Task<bool> EnsureAuthenticatedAsync()
         {
-            const string captchaImageFile = "/logs/live_captcha.gif";
-            const string captchaAnswerFile = "/logs/live_captcha_answer.txt";
+            // Overridable so a host-side poller can share the same files across a volume
+            // mount (e.g. LOSTFILM_CAPTCHA_DIR=/logs mapping to the host's /tmp/opencode).
+            var captchaDir = Environment.GetEnvironmentVariable("LOSTFILM_CAPTCHA_DIR");
+            if (captchaDir.IsNullOrWhiteSpace())
+            {
+                captchaDir = System.IO.Path.GetTempPath();
+            }
+
+            var captchaImageFile = System.IO.Path.Combine(captchaDir, "live_captcha.gif");
+            var captchaAnswerFile = System.IO.Path.Combine(captchaDir, "live_captcha_answer.txt");
 
             try
             {
@@ -224,7 +232,21 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
 
                 var action = Subject.RequestAction("checkCaptcha", new Dictionary<string, string>());
                 var captchaRequest = action.GetType().GetProperty("captchaRequest").GetValue(action) as Captcha;
-                System.IO.File.WriteAllBytes(captchaImageFile, captchaRequest.ImageData);
+
+                if (captchaRequest == null || captchaRequest.ImageData.Length == 0)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    System.IO.File.WriteAllBytes(captchaImageFile, captchaRequest.ImageData);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("LostFilmLive: failed to write captcha to {0}: {1}", captchaImageFile, ex.Message);
+                    continue;
+                }
 
                 string answer = null;
                 for (var i = 0; i < 40 && answer == null; i++)

@@ -81,9 +81,11 @@ namespace Prowlarr.Api.V1.Indexers
             }
             else if (definition.Settings is ICaptchaProvider captchaProvider)
             {
-                if (definition.ExtraFields == null || !definition.ExtraFields.Any(x => x.Name == "cardigannCaptcha"))
+                var extraFields = definition.ExtraFields;
+
+                if (extraFields == null || !extraFields.Any(x => x.Name == "cardigannCaptcha"))
                 {
-                    definition.ExtraFields = new List<SettingsField>
+                    extraFields = new List<SettingsField>(extraFields ?? new List<SettingsField>())
                     {
                         new()
                         {
@@ -94,11 +96,11 @@ namespace Prowlarr.Api.V1.Indexers
                     };
                 }
 
-                var extraFields = definition.ExtraFields.Select((field, i) => MapCardigannField(definition, field, i)).ToList();
+                var captchaFields = extraFields.Select((field, i) => MapCardigannField(definition, field, i)).ToList();
 
-                resource.Fields.AddRange(extraFields);
+                resource.Fields.AddRange(captchaFields);
 
-                var captchaField = extraFields.FirstOrDefault(x => x.Name == "cardigannCaptcha");
+                var captchaField = captchaFields.FirstOrDefault(x => x.Name == "cardigannCaptcha");
 
                 if (captchaField != null)
                 {

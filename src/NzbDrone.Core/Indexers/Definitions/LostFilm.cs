@@ -66,6 +66,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private DateTime? _cookiesExpiration;
 
+        private IDictionary<string, string> _persistedCookies;
+        private DateTime? _persistedExpiration;
+
         public LostFilm(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
@@ -193,8 +196,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            UpdateCookies(cookies, expiration ?? DateTime.Now.AddDays(30));
             _cookiesExpiration = expiration ?? DateTime.Now.AddDays(30);
+            PersistCookies(cookies, _cookiesExpiration);
 
             _logger.Debug("LostFilm.tv authentication succeeded");
         }
@@ -250,6 +253,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 throw new IndexerAuthException("LostFilm.tv login required to download torrent");
             }
+
+            ValidateDownloadData(response.ResponseData);
 
             return new IndexerDownloadResponse(response.ResponseData);
         }
@@ -318,6 +323,36 @@ namespace NzbDrone.Core.Indexers.Definitions
             return Cookies;
         }
 
+        private void PersistCookies(IDictionary<string, string> cookies, DateTime? expiration)
+        {
+            if (CookiesEqual(_persistedCookies, _persistedExpiration, cookies, expiration))
+            {
+                return;
+            }
+
+            UpdateCookies(cookies, expiration);
+            _persistedCookies = new Dictionary<string, string>(cookies);
+            _persistedExpiration = expiration;
+        }
+
+        private static bool CookiesEqual(IDictionary<string, string> previous, DateTime? previousExpiration, IDictionary<string, string> current, DateTime? expiration)
+        {
+            if (previous == null || previousExpiration != expiration || previous.Count != current.Count)
+            {
+                return false;
+            }
+
+            foreach (var pair in current)
+            {
+                if (!previous.TryGetValue(pair.Key, out var value) || value != pair.Value)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private async Task<HttpResponse> ExecuteAsync(HttpRequest request)
         {
             return await RetryStrategy.ExecuteAsync(
@@ -340,20 +375,54 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 await DoLogin();
 
+                // DoLogin refreshed the in-memory session cookies; the request snapshot still
+                // carries the stale pre-login cookies, so re-apply the fresh session to the
+                // replayed request (mirrors HttpIndexerBase.ModifyRequest).
+                request.Cookies.Clear();
+
+                if (Cookies != null)
+                {
+                    foreach (var cookie in Cookies)
+                    {
+                        request.Cookies[cookie.Key] = cookie.Value;
+                    }
+                }
+
                 response = await ExecuteAsync(request);
             }
 
             // Persist the current in-memory cookies (which a DoLogin above may have just
             // refreshed with a new session) instead of the stale request snapshot, so the
-            // durable lf_session cookie survives across restarts.
+            // durable lf_session cookie survives across restarts. Only write to the DB when
+            // the cookie set or its expiry actually changed.
             if (Cookies != null)
             {
-                UpdateCookies(Cookies, _cookiesExpiration ?? DateTime.Now.AddDays(30));
+                PersistCookies(Cookies, _cookiesExpiration ?? DateTime.Now.AddDays(30));
             }
 
             if (CloudFlareDetectionService.IsCloudflareProtected(response))
             {
                 throw new CloudFlareProtectionException(response);
+            }
+
+            // Surface HTTP errors instead of silently returning empty results, so rate limiting
+            // and server errors trigger the usual Prowlarr backoff/handling.
+            if (response.HasHttpError && (request.SuppressHttpErrorStatusCodes == null || !request.SuppressHttpErrorStatusCodes.Contains(response.StatusCode)))
+            {
+                if (request.LogHttpError)
+                {
+                    _logger.Warn("HTTP Error - {0}", response);
+                }
+
+                if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                {
+                    throw new TooManyRequestsException(request, response);
+                }
+
+                if (response.HasHttpServerError)
+                {
+                    throw new HttpException(request, response);
+                }
             }
 
             return response;
@@ -372,8 +441,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return new Captcha { ImageData = Array.Empty<byte>() };
             }
 
-            var captchaUrl = BaseUrl + qCaptchaImg.GetAttribute("src");
-            var captchaResponse = await GetResponse(new HttpRequestBuilder(captchaUrl), checkLogin: false);
+            var captchaUrl = new Uri(new Uri(BaseUrl + "/"), qCaptchaImg.GetAttribute("src"));
+            var captchaResponse = await GetResponse(new HttpRequestBuilder(captchaUrl.AbsoluteUri), checkLogin: false);
 
             return new Captcha
             {
@@ -468,7 +537,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         {
                             var serieFilter = string.Join(" ", keywords.GetRange(searchKeywords, serieFilterKeywords));
                             _logger.Debug("LostFilm.tv: filtering: " + serieFilter);
-                            var filteredSeries = series.Where(s => s["title_orig"].Value<string>().Contains(serieFilter)).ToList();
+                            var filteredSeries = series.Where(s => (s["title_orig"]?.Value<string>() ?? string.Empty).Contains(serieFilter, StringComparison.OrdinalIgnoreCase)).ToList();
 
                             if (filteredSeries.Count > 0)
                             {
@@ -570,20 +639,32 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return releases;
             }
 
-            var dateString = document.QuerySelector("div.details-pane > div.left-box").TextContent;
+            var leftBox = document.QuerySelector("div.details-pane > div.left-box");
+            if (leftBox == null)
+            {
+                return releases;
+            }
+
+            var dateString = leftBox.TextContent;
             var key = dateString.Contains("TBA") ? "ru: " : "eng: ";
             dateString = TrimString(dateString, key, " г.");
 
-            DateTime date;
-            if (dateString.Length == 4)
+            // Only take the year from a date that actually parsed; a malformed date must
+            // never silently produce a wrong ReleaseYear or PublishDate.
+            DateTime? date = null;
+            if (dateString != null)
             {
-                // dateString might be just a year
-                date = DateTime.TryParseExact(dateString, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
-            }
-            else
-            {
-                // dd mmmm yyyy
-                date = DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
+                if (dateString.Length == 4)
+                {
+                    if (DateTime.TryParseExact(dateString, "yyyy", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var parsedDate))
+                    {
+                        date = parsedDate;
+                    }
+                }
+                else if (DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate))
+                {
+                    date = parsedDate;
+                }
             }
 
             var isMovie = url.Contains("/movies/", StringComparison.OrdinalIgnoreCase);
@@ -591,14 +672,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             var urlDetails = new TrackerUrlDetails(playButton)
             {
                 IsMovie = isMovie,
-                ReleaseYear = isMovie ? date.Year : (int?)null
+                ReleaseYear = isMovie && date.HasValue ? date.Value.Year : (int?)null
             };
             var episodeReleases = await FetchTrackerReleases(urlDetails);
 
             foreach (var release in episodeReleases)
             {
                 release.InfoUrl = url;
-                release.PublishDate = date;
+                release.PublishDate = date ?? DateTime.Now;
 
                 if (isMovie)
                 {
@@ -642,10 +723,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 {
                     // If seasonButton in "inactive" it will not contain "onClick" handler. Better to parse element which always exists.
                     var watchedButton = seasonBlock.QuerySelector("div.movie-details-block > div.haveseen-btn");
-                    var buttonCode = watchedButton.GetAttribute("data-code");
-                    var currentSeason = buttonCode.Substring(buttonCode.IndexOf('-') + 1);
+                    var buttonCode = watchedButton?.GetAttribute("data-code");
+                    var dashIndex = buttonCode == null ? -1 : buttonCode.IndexOf('-');
 
-                    if (currentSeason != season.ToString())
+                    if (dashIndex != -1 && buttonCode.Substring(dashIndex + 1) != season.ToString())
                     {
                         continue; // Can't match season by regex OR season not matches to a searched one
                     }
@@ -663,7 +744,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 if (string.IsNullOrEmpty(episode) && string.IsNullOrEmpty(filter) && seasonButton != null && !seasonButton.ClassList.Contains("inactive"))
                 {
                     var lastEpisode = seasonBlock.QuerySelector(rowSelector);
-                    var dateColumn = lastEpisode.QuerySelector("td.delta");
+                    var dateColumn = lastEpisode?.QuerySelector("td.delta");
                     var date = DateFromEpisodeColumn(dateColumn);
 
                     var urlDetails = new TrackerUrlDetails(seasonButton);
@@ -775,11 +856,18 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var parser = new HtmlParser();
             using var document = parser.ParseDocument(response.Content);
-            var meta = document.QuerySelector("meta");
-            var metaContent = meta.GetAttribute("content");
+            var refreshMeta = document.QuerySelector("meta[http-equiv=\"refresh\"]");
+            var metaContent = refreshMeta?.GetAttribute("content");
+            var urlIndex = metaContent?.IndexOf("url=") ?? -1;
+
+            if (refreshMeta == null || metaContent == null || urlIndex == -1)
+            {
+                _logger.Debug("LostFilm.tv: no refresh redirect meta found in response");
+                return Array.Empty<ReleaseInfo>();
+            }
 
             // Follow redirection defined by async url.replace and prepend sitelink
-            var redirectionUrl = BaseUrl + metaContent.Substring(metaContent.IndexOf("url=") + 4);
+            var redirectionUrl = BaseUrl + metaContent.Substring(urlIndex + 4);
             return await FollowTrackerRedirection(redirectionUrl, details);
         }
 
@@ -800,11 +888,19 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             _logger.Debug("LostFilm.tv: parsing {0} releases", rows.Length);
 
-            var serieTitle = document.QuerySelector("div.inner-box--subtitle").TextContent;
-            serieTitle = serieTitle.Substring(0, serieTitle.LastIndexOf(','));
+            var subtitleElement = document.QuerySelector("div.inner-box--subtitle");
+            if (subtitleElement == null)
+            {
+                _logger.Debug("LostFilm.tv: no series subtitle found on tracker page");
+                return releases;
+            }
 
-            var episodeInfo = document.QuerySelector("div.inner-box--text").TextContent;
-            var episodeName = TrimString(episodeInfo, '(', ')');
+            var serieTitle = subtitleElement.TextContent;
+            var lastComma = serieTitle.LastIndexOf(',');
+            serieTitle = lastComma > 0 ? serieTitle.Substring(0, lastComma) : serieTitle;
+
+            var episodeInfo = document.QuerySelector("div.inner-box--text")?.TextContent;
+            var episodeName = episodeInfo == null ? null : TrimString(episodeInfo, '(', ')');
 
             foreach (var row in rows)
             {
@@ -855,6 +951,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                         techInfo
                     };
                 var downloadLink = row.QuerySelector("div.inner-box--link > a");
+                if (downloadLink == null)
+                {
+                    _logger.Debug("LostFilm.tv: release row has no download link");
+                    continue;
+                }
+
                 var sizeString = releaseDetails.Groups["size"].Value.ToUpper();
                 sizeString = sizeString.Replace("ТБ", "TB");
                 sizeString = sizeString.Replace("ГБ", "GB");
@@ -907,6 +1009,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private static DateTime DateFromEpisodeColumn(IElement dateColumn)
         {
+            if (dateColumn == null)
+            {
+                return DateTime.Now;
+            }
+
             var dateString = dateColumn.QuerySelector("span.small-text")?.TextContent;
             // 'Eng: 23.05.2017' -> '23.05.2017' OR '23.05.2017' -> '23.05.2017'
             dateString = string.IsNullOrEmpty(dateString) ? dateColumn.QuerySelector("span")?.TextContent : dateString.Substring(dateString.IndexOf(":") + 2);

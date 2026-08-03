@@ -23,8 +23,8 @@ using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Parser.Model;
+using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -64,9 +64,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private string BaseUrl => Settings.BaseUrl.TrimEnd('/');
 
-        private DateTime? _cookiesExpiration;
-
         private readonly object _cookieSync = new object();
+
+        private DateTime? _cookiesExpiration;
 
         private IDictionary<string, string> _persistedCookies;
         private DateTime? _persistedExpiration;
@@ -501,8 +501,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             // Search query words. Consists of Series keywords that will be used for series search request,
             // and Episode keywords that will be used for episode filtering.
             var keywords = searchTerm.Split(' ').ToList();
+
             // Keywords count related to Series Search.
             var searchKeywords = keywords.Count;
+
             // Keywords count related to Series Filter.
             var serieFilterKeywords = 0;
 
@@ -578,12 +580,15 @@ namespace NzbDrone.Core.Indexers.Definitions
                         var seasonPath = season is > 0 ? $"/season_{season}" : "/seasons";
                         var url = BaseUrl + link + seasonPath;
 
-                        if (!string.IsNullOrEmpty(episode)) // Fetch single episode releases
+                        // Fetch single episode releases
+                        if (!string.IsNullOrEmpty(episode))
                         {
                             url += "/episode_" + episode;
                             releases.AddRange(await FetchEpisodeReleases(url));
                         }
-                        else // Fetch the whole series OR episode with filter applied
+
+                        // Fetch the whole series OR episode with filter applied
+                        else
                         {
                             var episodeKeywords = keywords.Skip(searchKeywords + serieFilterKeywords);
                             var episodeFilterKeywords = episodeKeywords.Count();
@@ -952,11 +957,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 // For supported qualities see TvCategoryParser.cs
                 var quality = releaseDetails.Groups["quality"].Value.Trim();
+
                 // Adapt shitty quality format for common algorithms
                 quality = Regex.Replace(quality, "-Rip", "Rip", RegexOptions.IgnoreCase);
                 quality = Regex.Replace(quality, "WEB-DLRip", "WEBDL", RegexOptions.IgnoreCase);
                 quality = Regex.Replace(quality, "WEB-DL", "WEBDL", RegexOptions.IgnoreCase);
                 quality = Regex.Replace(quality, "HDTVRip", "HDTV", RegexOptions.IgnoreCase);
+
                 // Fix forgotten p-Progressive suffix in resolution index
                 quality = Regex.Replace(quality, "1080 ", "1080p ", RegexOptions.IgnoreCase);
                 quality = Regex.Replace(quality, "720 ", "720p ", RegexOptions.IgnoreCase);
@@ -1015,6 +1022,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     DownloadUrl = link.AbsoluteUri,
                     Guid = link.AbsoluteUri,
                     Size = ParseUtil.GetBytes(sizeString),
+
                     // add missing torznab fields not available from results
                     Seeders = 1,
                     Peers = 2,
@@ -1060,6 +1068,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var dateString = dateColumn.QuerySelector("span.small-text")?.TextContent;
+
             // 'Eng: 23.05.2017' -> '23.05.2017' OR '23.05.2017' -> '23.05.2017'
             if (!string.IsNullOrEmpty(dateString))
             {
@@ -1070,6 +1079,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 dateString = dateColumn.QuerySelector("span")?.TextContent;
             }
+
             // dd.mm.yyyy
             return DateTime.TryParse(dateString, RuCulture, DateTimeStyles.AssumeLocal, out var parsedDate) ? parsedDate : DateTime.Now;
         }

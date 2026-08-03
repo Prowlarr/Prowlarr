@@ -110,6 +110,12 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
+        public void should_use_half_second_rate_limit()
+        {
+            Subject.RateLimit.Should().Be(TimeSpan.FromSeconds(0.5));
+        }
+
+        [Test]
         public void should_return_captcha_from_checkCaptcha_action()
         {
             MockResponse(HttpMethod.Post, "/ajaxik.php", "{\"success\":true,\"result\":\"ok\"}", "application/json");

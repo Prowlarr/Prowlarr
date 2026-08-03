@@ -62,6 +62,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IndexerPrivacy Privacy => IndexerPrivacy.SemiPrivate;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(0.5);
+
         private string BaseUrl => Settings.BaseUrl.TrimEnd('/');
 
         private readonly object _cookieSync = new object();

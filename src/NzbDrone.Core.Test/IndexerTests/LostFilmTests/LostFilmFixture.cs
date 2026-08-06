@@ -462,13 +462,18 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             result.Releases.Should().OnlyContain(r => r.InfoUrl == "https://www.lostfilmtv5.site/series/Shogun/seasons");
             result.Releases.Should().OnlyContain(r => r.Title.StartsWith("Сёгун - S1"));
 
-            client.Verify(o => o.ExecuteProxiedAsync(
-                It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilm.tv" && v.Url.Path == "/series/Shogun/seasons"),
-                Subject.Definition), Times.Once());
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilm.tv" && v.Url.Path == "/series/Shogun/seasons"),
+                    Subject.Definition),
+                Times.Once());
+
             // The mirror is hit twice: once for the fallback, once for the re-login replay.
-            client.Verify(o => o.ExecuteProxiedAsync(
-                It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilmtv5.site" && v.Url.Path == "/series/Shogun/seasons"),
-                Subject.Definition), Times.Exactly(2));
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilmtv5.site" && v.Url.Path == "/series/Shogun/seasons"),
+                    Subject.Definition),
+                Times.Exactly(2));
         }
 
         [Test]

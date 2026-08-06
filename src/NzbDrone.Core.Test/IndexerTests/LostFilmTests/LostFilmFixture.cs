@@ -403,6 +403,75 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
+        public async Task should_fallback_to_mirror_when_primary_is_geo_blocked()
+        {
+            // Regression: www.lostfilm.tv serves the search API but Cloudflare geo-blocks its
+            // content pages with HTTP 451, which used to yield an empty result set. The content
+            // request must be transparently retried on the next working mirror and all follow-up
+            // requests (tracker, redirection, re-login) must stay on that mirror.
+            const string geoBlockedPage = "<html><body>Unavailable For Legal Reasons</body></html>";
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+
+            // Fallback to an empty page so unmatched requests do not fail the test (first wins
+            // nothing here: Moq uses the last matching setup, so register it first).
+            client.Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), "<html><body></body></html>")));
+
+            // The search API lives on the primary host and still works there; the same endpoint
+            // handles the login submission (the anonymous mirror page triggers a re-login).
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Post && v.Url.Path == "/ajaxik.php"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                {
+                    var body = r.GetContent() ?? string.Empty;
+
+                    if (body.Contains("type=login"))
+                    {
+                        var loginCookies = new CookieCollection
+                        {
+                            new Cookie("lf_session", "MIRROR_SESSION", "/") { Expires = new DateTime(2027, 6, 1) },
+                            new Cookie("PHPSESSID", "MIRROR_PHP", "/")
+                        };
+                        return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, loginCookies, "{\"success\":true,\"result\":\"ok\"}"));
+                    }
+
+                    return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), ReadAllText(@"Files/Indexers/LostFilm/search_shogun.json")));
+                });
+
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_shogun.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_shogun.html"));
+
+            // Host-specific setups must be registered after the path-based ones (Moq: last wins).
+            client.Setup(o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilm.tv" && v.Url.Path == "/series/Shogun/seasons"),
+                    Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), geoBlockedPage, statusCode: HttpStatusCode.UnavailableForLegalReasons)));
+            client.Setup(o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilmtv5.site" && v.Url.Path == "/series/Shogun/seasons"),
+                    Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), ReadAllText(@"Files/Indexers/LostFilm/shogun_seasons.html"))));
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "shogun", Categories = new[] { 5000 } });
+
+            // The geo-blocked primary must not swallow the search: the mirror serves the seasons
+            // page and the season-pack release is parsed from it, keeping InfoUrl on the mirror.
+            result.Releases.Should().HaveCount(3);
+            result.Releases.Should().OnlyContain(r => r.InfoUrl == "https://www.lostfilmtv5.site/series/Shogun/seasons");
+            result.Releases.Should().OnlyContain(r => r.Title.StartsWith("Сёгун - S1"));
+
+            client.Verify(o => o.ExecuteProxiedAsync(
+                It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilm.tv" && v.Url.Path == "/series/Shogun/seasons"),
+                Subject.Definition), Times.Once());
+            // The mirror is hit twice: once for the fallback, once for the re-login replay.
+            client.Verify(o => o.ExecuteProxiedAsync(
+                It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Host == "www.lostfilmtv5.site" && v.Url.Path == "/series/Shogun/seasons"),
+                Subject.Definition), Times.Exactly(2));
+        }
+
+        [Test]
         public void should_advertise_tv_and_movie_categories()
         {
             Subject.Capabilities.Categories.GetTrackerCategories().Should().Contain(new[] { "1", "2" });

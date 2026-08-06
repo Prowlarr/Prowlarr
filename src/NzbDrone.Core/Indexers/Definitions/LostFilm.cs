@@ -64,7 +64,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public override TimeSpan RateLimit => TimeSpan.FromSeconds(0.5);
 
-        private string BaseUrl => Settings.BaseUrl.TrimEnd('/');
+        // When the configured site is Cloudflare-geo-blocked (HTTP 451) the indexer transparently
+        // retries content requests on the next working mirror and remembers it for the rest of the
+        // session, so all follow-up URLs (tracker, login) stay on the same host.
+        private string _workingMirror;
+
+        private string BaseUrl => (_workingMirror ?? Settings.BaseUrl).TrimEnd('/');
 
         private readonly object _cookieSync = new object();
 
@@ -376,7 +381,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private async Task<HttpResponse> GetResponse(HttpRequest request, bool checkLogin = true)
         {
-            var response = await ExecuteAsync(request);
+            var (response, requestUsed) = await ExecuteWithMirrorFallback(request);
 
             if (checkLogin && CheckIfLoginNeeded(response))
             {
@@ -387,17 +392,17 @@ namespace NzbDrone.Core.Indexers.Definitions
                 // DoLogin refreshed the in-memory session cookies; the request snapshot still
                 // carries the stale pre-login cookies, so re-apply the fresh session to the
                 // replayed request (mirrors HttpIndexerBase.ModifyRequest).
-                request.Cookies.Clear();
+                requestUsed.Cookies.Clear();
 
                 if (Cookies != null)
                 {
                     foreach (var cookie in Cookies)
                     {
-                        request.Cookies[cookie.Key] = cookie.Value;
+                        requestUsed.Cookies[cookie.Key] = cookie.Value;
                     }
                 }
 
-                response = await ExecuteAsync(request);
+                response = await ExecuteAsync(requestUsed);
             }
 
             // Persist the current in-memory cookies (which a DoLogin above may have just
@@ -416,25 +421,188 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             // Surface HTTP errors instead of silently returning empty results, so rate limiting
             // and server errors trigger the usual Prowlarr backoff/handling.
-            if (response.HasHttpError && (request.SuppressHttpErrorStatusCodes == null || !request.SuppressHttpErrorStatusCodes.Contains(response.StatusCode)))
+            if (response.HasHttpError && (requestUsed.SuppressHttpErrorStatusCodes == null || !requestUsed.SuppressHttpErrorStatusCodes.Contains(response.StatusCode)))
             {
-                if (request.LogHttpError)
+                if (requestUsed.LogHttpError)
                 {
                     _logger.Warn("HTTP Error - {0}", response);
                 }
 
                 if (response.StatusCode == HttpStatusCode.TooManyRequests)
                 {
-                    throw new TooManyRequestsException(request, response);
+                    throw new TooManyRequestsException(requestUsed, response);
                 }
 
                 if (response.HasHttpServerError)
                 {
-                    throw new HttpException(request, response);
+                    throw new HttpException(requestUsed, response);
                 }
             }
 
             return response;
+        }
+
+        private async Task<(HttpResponse Response, HttpRequest Request)> ExecuteWithMirrorFallback(HttpRequest request)
+        {
+            HttpResponse response;
+            Exception primaryError = null;
+
+            try
+            {
+                response = await ExecuteAsync(request);
+            }
+            catch (Exception ex) when (IsMirrorFailoverException(ex))
+            {
+                response = null;
+                primaryError = ex;
+            }
+
+            if (response != null && !IsGeoBlocked(response))
+            {
+                return (response, request);
+            }
+
+            // The primary was geo-blocked (HTTP 451) or unreachable; retry on the mirrors.
+            var mirrored = await TryMirrorRequests(request);
+            if (mirrored != null)
+            {
+                return mirrored.Value;
+            }
+
+            if (primaryError != null)
+            {
+                throw primaryError;
+            }
+
+            // No mirror worked either; return the original geo-blocked response. The callers
+            // parse it to nothing, so a search degrades to an empty result instead of failing.
+            return (response, request);
+        }
+
+        private async Task<(HttpResponse Response, HttpRequest Request)?> TryMirrorRequests(HttpRequest request)
+        {
+            foreach (var mirror in GetMirrorCandidates(request.Url.Host))
+            {
+                try
+                {
+                    var mirrorRequest = CloneForMirror(request, mirror);
+                    var mirrorResponse = await ExecuteAsync(mirrorRequest);
+
+                    if (!IsGeoBlocked(mirrorResponse))
+                    {
+                        if (!mirror.Equals(_workingMirror, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _logger.Info("LostFilm.tv: geo-blocked, switching to mirror {0}", mirror);
+                            _workingMirror = mirror;
+                        }
+
+                        return (mirrorResponse, mirrorRequest);
+                    }
+                }
+                catch (Exception ex) when (IsMirrorFailoverException(ex))
+                {
+                    _logger.Debug("LostFilm.tv: mirror {0} failed: {1}", mirror, ex.Message);
+                }
+            }
+
+            return null;
+        }
+
+        private IEnumerable<string> GetMirrorCandidates(string currentHost)
+        {
+            var candidates = new List<string>();
+
+            if (_workingMirror.IsNotNullOrWhiteSpace() && !new HttpUri(_workingMirror).Host.Equals(currentHost, StringComparison.OrdinalIgnoreCase))
+            {
+                candidates.Add(_workingMirror);
+            }
+
+            foreach (var url in IndexerUrls)
+            {
+                var mirror = url.TrimEnd('/');
+
+                if (candidates.Contains(mirror) || new HttpUri(mirror).Host.Equals(currentHost, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                candidates.Add(mirror);
+            }
+
+            return candidates;
+        }
+
+        private static HttpRequest CloneForMirror(HttpRequest request, string mirrorBaseUrl)
+        {
+            var mirrorUrl = new HttpUri(mirrorBaseUrl).CombinePath(request.Url.Path).SetQuery(request.Url.Query);
+
+            var clone = new HttpRequest(mirrorUrl.FullUri)
+            {
+                Method = request.Method,
+                ContentData = request.ContentData,
+                ContentSummary = request.ContentSummary,
+                SuppressHttpError = request.SuppressHttpError,
+                SuppressHttpErrorStatusCodes = request.SuppressHttpErrorStatusCodes,
+                UseSimplifiedUserAgent = request.UseSimplifiedUserAgent,
+                AllowAutoRedirect = request.AllowAutoRedirect,
+                ConnectionKeepAlive = request.ConnectionKeepAlive,
+                LogResponseContent = request.LogResponseContent,
+                LogHttpError = request.LogHttpError,
+                StoreRequestCookie = request.StoreRequestCookie,
+                StoreResponseCookie = request.StoreResponseCookie,
+                RequestTimeout = request.RequestTimeout,
+                RateLimit = request.RateLimit,
+                Encoding = request.Encoding,
+                Credentials = request.Credentials,
+                ProxySettings = request.ProxySettings
+            };
+
+            foreach (var header in request.Headers)
+            {
+                clone.Headers.Set(header.Key, header.Value);
+            }
+
+            foreach (var cookie in request.Cookies)
+            {
+                clone.Cookies[cookie.Key] = cookie.Value;
+            }
+
+            return clone;
+        }
+
+        private static bool IsGeoBlocked(HttpResponse response)
+        {
+            if (response.StatusCode == HttpStatusCode.UnavailableForLegalReasons)
+            {
+                return true;
+            }
+
+            if (response.Content == null)
+            {
+                return false;
+            }
+
+            return response.Content.Contains("Unavailable For Legal Reasons", StringComparison.OrdinalIgnoreCase)
+                || response.Content.Contains("error code: 1026", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsMirrorFailoverException(Exception ex)
+        {
+            return ex is not CloudFlareProtectionException
+                and not TooManyRequestsException
+                and not IndexerAuthException;
+        }
+
+        // URLs for series/episode pages are built with BaseUrl before the mirror fallback has
+        // happened; keep them clickable by rewriting them onto the working mirror once found.
+        private string InfoUrlFor(string url)
+        {
+            if (_workingMirror == null)
+            {
+                return url;
+            }
+
+            return BaseUrl + new Uri(url).PathAndQuery;
         }
 
         private async Task<Captcha> GetLoginPageAsync()
@@ -708,7 +876,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             foreach (var release in episodeReleases)
             {
-                release.InfoUrl = url;
+                release.InfoUrl = InfoUrlFor(url);
                 release.PublishDate = date ?? DateTime.Now;
 
                 if (isMovie)
@@ -788,7 +956,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     foreach (var release in seasonReleases)
                     {
-                        release.InfoUrl = url;
+                        release.InfoUrl = InfoUrlFor(url);
                         release.PublishDate = date;
                     }
 

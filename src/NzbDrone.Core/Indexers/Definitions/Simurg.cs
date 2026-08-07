@@ -1,5 +1,9 @@
+using System;
+using System.Threading.Tasks;
 using NLog;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.Messaging.Events;
 
@@ -31,10 +35,17 @@ public class Simurg : GazelleBase<GazelleSettings>
         return caps;
     }
 
-    protected override GazelleRequestProperties GetRequestProperties()
+    protected override Task<HttpRequest> GetDownloadRequest(Uri link)
     {
-        var properties = base.GetRequestProperties();
-        properties.AuthorizationFormat = "token {0}";
-        return properties;
+        var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+        {
+            AllowAutoRedirect = FollowRedirect
+        };
+
+        var request = requestBuilder
+            .SetHeader("Authorization", $"token {Settings.Apikey}")
+            .Build();
+
+        return Task.FromResult(request);
     }
 }

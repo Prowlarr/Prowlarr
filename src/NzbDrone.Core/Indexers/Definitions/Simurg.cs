@@ -20,19 +20,6 @@ public class Simurg : GazelleBase<GazelleSettings>
         : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
     {
     }
-        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
-        {
-            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
-            {
-                AllowAutoRedirect = FollowRedirect
-            };
-
-            var request = requestBuilder
-                .SetHeader("Authorization", $"token {Settings.Apikey}")
-                .Build();
-
-            return Task.FromResult(request);
-        }
 
     protected override IndexerCapabilities SetCapabilities()
     {
@@ -42,5 +29,12 @@ public class Simurg : GazelleBase<GazelleSettings>
         caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
 
         return caps;
+    }
+
+    protected override GazelleRequestProperties GetRequestProperties()
+    {
+        var properties = base.GetRequestProperties();
+        properties.AuthorizationFormat = "token {0}";
+        return properties;
     }
 }

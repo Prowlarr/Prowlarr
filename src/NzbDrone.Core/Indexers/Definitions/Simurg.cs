@@ -5,7 +5,7 @@ using NzbDrone.Core.Messaging.Events;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
-public class Simurg : GazelleBase<GazelleSettings>
+public class Simurg : GazelleBase<SimurgSettings>
 {
     public override string Name => "Simurg";
     public override string[] IndexerUrls => new[] { "https://simurg.world/" };
@@ -31,3 +31,5 @@ public class Simurg : GazelleBase<GazelleSettings>
         return caps;
     }
 }
+
+public class SimurgSettings : GazelleUserPassOrCookieSettings;

@@ -20,6 +20,19 @@ public class Simurg : GazelleBase<GazelleSettings>
         : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
     {
     }
+        protected override Task<HttpRequest> GetDownloadRequest(Uri link)
+        {
+            var requestBuilder = new HttpRequestBuilder(link.AbsoluteUri)
+            {
+                AllowAutoRedirect = FollowRedirect
+            };
+
+            var request = requestBuilder
+                .SetHeader("Authorization", $"token {Settings.Apikey}")
+                .Build();
+
+            return Task.FromResult(request);
+        }
 
     protected override IndexerCapabilities SetCapabilities()
     {

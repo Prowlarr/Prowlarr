@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using NLog;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
-using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions.Gazelle;
 using NzbDrone.Core.Messaging.Events;
 
@@ -43,7 +42,7 @@ public class Simurg : GazelleBase<GazelleSettings>
         };
 
         var request = requestBuilder
-            .SetHeader("Authorization", $"token {Settings.Apikey}")
+            .SetHeader("Authorization", $"token {Settings.ApiKey}")
             .Build();
 
         return Task.FromResult(request);

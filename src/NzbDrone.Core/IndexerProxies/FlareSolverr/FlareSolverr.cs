@@ -58,7 +58,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
-                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
+                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + flaresolverrResponse.StatusCode);
             }
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);

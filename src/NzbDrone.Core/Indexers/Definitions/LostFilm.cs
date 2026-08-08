@@ -24,7 +24,6 @@ using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Parser;
 using NzbDrone.Core.Parser.Model;
-using NzbDrone.Core.ThingiProvider;
 using NzbDrone.Core.Validation;
 
 namespace NzbDrone.Core.Indexers.Definitions
@@ -91,27 +90,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         public override IParseIndexerResponse GetParser()
         {
             return new LostFilmParser();
-        }
-
-        public override IEnumerable<ProviderDefinition> DefaultDefinitions
-        {
-            get
-            {
-                foreach (var definition in base.DefaultDefinitions)
-                {
-                    ((IndexerDefinition)definition).ExtraFields = new List<SettingsField>
-                    {
-                        new()
-                        {
-                            Name = "cardigannCaptcha",
-                            Type = "cardigannCaptcha",
-                            Label = "CAPTCHA"
-                        }
-                    };
-
-                    yield return definition;
-                }
-            }
         }
 
         public override object RequestAction(string action, IDictionary<string, string> query)

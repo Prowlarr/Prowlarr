@@ -506,5 +506,91 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             paths.Should().Contain("/new");
             paths.Should().NotContain("/ajaxik.php");
         }
+
+        [Test]
+        public async Task should_return_no_releases_when_search_degenerates_to_stopword()
+        {
+            // Regression: "The Cuphead Show! Шоу Чашека! 2022" has no matching series, so the search
+            // loop drops keywords until only the stopword "the" remains. Without a relevance filter
+            // that matches dozens of unrelated series and fetches their episodes (the original flood).
+            const string decoySeriesJson = "{\"data\":{\"series\":[" +
+                "{\"id\":\"1\",\"title\":\"4400\",\"title_orig\":\"The 4400\",\"link\":\"/series/The_4400\"}," +
+                "{\"id\":\"2\",\"title\":\"Сотня\",\"title_orig\":\"The 100\",\"link\":\"/series/The_100\"}," +
+                "{\"id\":\"3\",\"title\":\"Офис\",\"title_orig\":\"The Office\",\"link\":\"/series/The_Office\"}]," +
+                "\"result\":\"ok\"}";
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+
+            // Fallback to an empty page so unmatched requests do not fail the test (first wins
+            // nothing here: Moq uses the last matching setup, so register it first).
+            client.Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), "<html><body></body></html>")));
+
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Post && v.Url.Path == "/ajaxik.php"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                {
+                    var body = r.GetContent() ?? string.Empty;
+                    var content = body.Contains("cuphead", StringComparison.OrdinalIgnoreCase) ? "{\"data\":[],\"result\":\"ok\"}" : decoySeriesJson;
+                    return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), content));
+                });
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "The Cuphead Show! Шоу Чашека! 2022", Categories = new[] { 5000 } });
+
+            result.Releases.Should().BeEmpty();
+
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && (v.Url.Path.StartsWith("/series/") || v.Url.Path.StartsWith("/movies/"))),
+                    Subject.Definition),
+                Times.Never());
+        }
+
+        [Test]
+        public async Task should_fetch_only_highest_scoring_series_on_tie()
+        {
+            // Regression: the api returns Breaking Bad and El Camino for "breaking bad"; both match
+            // the informative tokens equally. Only the highest-scoring series must be fetched, the
+            // other must not trigger any episode downloads (the tie resolves to API order via the
+            // stable sort).
+            MockAllResponses();
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } });
+
+            result.Releases.Should().HaveCount(3);
+            result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/series/Breaking_Bad/season_5/episode_16");
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/series/Breaking_Bad/season_5/episode_16"),
+                    Subject.Definition),
+                Times.Once());
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/movies/El_Camino_A_Breaking_Bad_Movie/season_5/episode_16"),
+                    Subject.Definition),
+                Times.Never());
+        }
+
+        [Test]
+        public async Task should_keep_single_series_that_matches_only_via_link()
+        {
+            // Regression: a single series result may carry readable titles that do not contain the
+            // search tokens (e.g. transliteration) and a missing title_orig. It must still be accepted
+            // when its link slug matches, instead of being pruned by the relevance filter.
+            const string singleSeriesJson = "{\"data\":{\"series\":[{\"id\":\"710\",\"title\":\"Эль Камино\",\"link\":\"/movies/El_Camino_A_Breaking_Bad_Movie\"}]},\"result\":\"ok\"}";
+
+            MockResponse(HttpMethod.Post, "/ajaxik.php", singleSeriesJson, "application/json");
+            MockResponse(HttpMethod.Get, "/movies/El_Camino_A_Breaking_Bad_Movie/seasons", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/movies/El_Camino_A_Breaking_Bad_Movie", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "camino", Categories = new[] { 5000 } });
+
+            result.Releases.Should().NotBeEmpty();
+            result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/El_Camino_A_Breaking_Bad_Movie");
+        }
     }
 }

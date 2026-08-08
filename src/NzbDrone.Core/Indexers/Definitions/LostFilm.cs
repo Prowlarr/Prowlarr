@@ -33,6 +33,15 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static readonly Regex ParsePlayEpisodeRegex = new(@"PlayEpisode\('(?<id>\d+)(?<season>\d{3})(?<episode>\d{3})'\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ParseReleaseDetailsRegex = new("Видео:\\ (?<quality>.+).\\ Размер:\\ (?<size>.+).\\ Перевод", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
+        private static readonly HashSet<string> SearchStopWords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "the", "a", "an", "of", "to", "and", "for", "in", "on", "with", "at", "by", "from", "is", "it", "or", "as", "be",
+            "show", "series", "season", "episode", "movie", "film", "tv",
+            "в", "во", "на", "по", "с", "со", "и", "а", "о", "об", "у", "к", "ко", "за", "для", "не", "но", "же", "ли", "бы",
+            "что", "как", "это", "этот", "эта", "эти", "или",
+            "сериал", "сериалы", "фильм", "фильмы", "сезон", "сезоны", "серия", "серии", "серий", "эпизод", "эпизоды",
+            "шоу", "год", "года", "лет"
+        };
 
         public override string Name => "LostFilm.tv";
         public override string[] IndexerUrls => new[]
@@ -636,6 +645,53 @@ namespace NzbDrone.Core.Indexers.Definitions
             _logger.Debug("LostFilm.tv logout result: " + (response.Content ?? string.Empty));
         }
 
+        private static string Fold(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return string.Empty;
+            }
+
+            var normalized = value.Normalize(NormalizationForm.FormD);
+            var builder = new StringBuilder(normalized.Length);
+
+            foreach (var c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark && char.IsLetterOrDigit(c))
+                {
+                    builder.Append(c);
+                }
+            }
+
+            return builder.ToString().ToLowerInvariant();
+        }
+
+        private static IReadOnlyList<string> GetInformativeTokens(string searchTerm)
+        {
+            return searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(Fold)
+                .Where(t => t.Length >= 2 && !SearchStopWords.Contains(t) && !(t.Length == 4 && t.All(char.IsDigit)))
+                .Distinct()
+                .ToList();
+        }
+
+        private static int GetRelevanceScore(JToken series, IReadOnlyList<string> informativeTokens)
+        {
+            var fields = new[]
+            {
+                series["title"]?.Value<string>(),
+                series["title_orig"]?.Value<string>(),
+                series["link"]?.Value<string>()
+            };
+
+            var haystacks = fields
+                .Where(f => !string.IsNullOrEmpty(f))
+                .Select(Fold)
+                .ToList();
+
+            return informativeTokens.Sum(token => haystacks.Any(h => h.Contains(token, StringComparison.Ordinal)) ? 1 : 0);
+        }
+
         private async Task<IList<ReleaseInfo>> PerformSearch(string searchTerm, int? season, string episode)
         {
             if (searchTerm.IsNullOrWhiteSpace())
@@ -650,11 +706,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             // and Episode keywords that will be used for episode filtering.
             var keywords = searchTerm.Split(' ').ToList();
 
+            // Distinct, normalized search tokens that are specific enough to match a series title.
+            var informativeTokens = GetInformativeTokens(searchTerm);
+
             // Keywords count related to Series Search.
             var searchKeywords = keywords.Count;
-
-            // Keywords count related to Series Filter.
-            var serieFilterKeywords = 0;
 
             do
             {
@@ -699,27 +755,27 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     var series = jsonSeries.ToList();
-                    _logger.Debug("LostFilm.tv: found {0} series: [{1}]", series.Count, string.Join(", ", series.Select(s => s["title_orig"].Value<string>())));
+                    _logger.Debug("LostFilm.tv: found {0} series: [{1}]", series.Count, string.Join(", ", series.Select(s => s["title_orig"]?.Value<string>() ?? string.Empty)));
 
-                    // Filter found series
-                    if (series.Count > 1)
+                    // Keep only the series whose folded title/link best matches the informative search tokens.
+                    // Without this a query that degrades to a stopword (e.g. "The Cuphead Show! Шоу Чашека! 2022"
+                    // for an unavailable series) would match dozens of unrelated series.
+                    if (informativeTokens.Count > 0)
                     {
-                        serieFilterKeywords = keywords.Count - searchKeywords;
+                        var best = series
+                            .Select(s => new { Serie = s, Score = GetRelevanceScore(s, informativeTokens) })
+                            .OrderByDescending(x => x.Score)
+                            .FirstOrDefault();
 
-                        do
+                        if (best?.Score > 0)
                         {
-                            var serieFilter = string.Join(" ", keywords.GetRange(searchKeywords, serieFilterKeywords));
-                            _logger.Debug("LostFilm.tv: filtering: " + serieFilter);
-                            var filteredSeries = series.Where(s => (s["title_orig"]?.Value<string>() ?? string.Empty).Contains(serieFilter, StringComparison.OrdinalIgnoreCase)).ToList();
-
-                            if (filteredSeries.Count > 0)
-                            {
-                                _logger.Debug("LostFilm.tv: series filtered: [{0}]", string.Join(", ", filteredSeries.Select(s => s["title_orig"].Value<string>())));
-                                series = filteredSeries;
-                                break; // Serie Filter loop
-                            }
+                            series = new List<JToken> { best.Serie };
                         }
-                        while (--serieFilterKeywords > 0);
+                        else
+                        {
+                            _logger.Debug("LostFilm.tv: no series matches informative tokens [{0}], skipping", string.Join(", ", informativeTokens));
+                            continue; // Search loop
+                        }
                     }
 
                     foreach (var serie in series)
@@ -738,7 +794,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         // Fetch the whole series OR episode with filter applied
                         else
                         {
-                            var episodeKeywords = keywords.Skip(searchKeywords + serieFilterKeywords);
+                            var episodeKeywords = keywords.Skip(searchKeywords);
                             var episodeFilterKeywords = episodeKeywords.Count();
 
                             // Search for episodes dropping 1 filter word each time when no results has found.

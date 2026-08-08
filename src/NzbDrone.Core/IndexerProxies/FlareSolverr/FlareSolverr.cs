@@ -58,7 +58,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
-                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
+                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + flaresolverrResponse.StatusCode);
             }
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
@@ -71,7 +71,28 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             InjectCookies(newRequest, result);
 
-            //Request again with User-Agent and Cookies from Flaresolverr
+            // Use the solved response body from FlareSolverr directly when available.
+            // Replaying the returned cookies from a different HTTP client is unreliable
+            // because Cloudflare may reject clearance tokens issued to the solver's browser.
+            if (result.Solution.Response.IsNotNullOrWhiteSpace())
+            {
+                var headers = new HttpHeader();
+
+                if (result.Solution.Headers?.ContentType != null)
+                {
+                    headers.ContentType = result.Solution.Headers.ContentType;
+                }
+
+                return new HttpResponse(
+                    response.Request,
+                    headers,
+                    response.Cookies,
+                    result.Solution.Response,
+                    response.ElapsedTime,
+                    HttpStatusCode.OK);
+            }
+
+            // Fallback: no response body from FlareSolverr, retry with cookies
             var finalResponse = _httpClient.Execute(newRequest);
 
             return finalResponse;

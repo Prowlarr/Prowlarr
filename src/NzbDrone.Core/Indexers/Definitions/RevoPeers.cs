@@ -19,30 +19,30 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class RevolutionTT : TorrentIndexerBase<UserPassTorrentBaseSettings>
+    public class RevoPeers : TorrentIndexerBase<UserPassTorrentBaseSettings>
     {
-        public override string Name => "RevolutionTT";
+        public override string Name => "RevoPeers";
 
-        public override string[] IndexerUrls => new[] { "https://revott.me/" };
-        public override string[] LegacyUrls => new[] { "https://revolutiontt.me/" };
-        public override string Description => "The Revolution has begun";
+        public override string[] IndexerUrls => new[] { "https://revopeers.me/" };
+        public override string[] LegacyUrls => new[] { "https://revott.me/", "https://revolutiontt.me/", "https://www.gimmepeers.com/" };
+        public override string Description => "RevoPeers is a Private PAY2DL Torrent Tracker for MOVIES / TV / GENERAL";
         private string LoginUrl => Settings.BaseUrl + "takelogin.php";
         public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
         public override IndexerCapabilities Capabilities => SetCapabilities();
 
-        public RevolutionTT(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+        public RevoPeers(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
             : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
         {
         }
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            return new RevolutionTTRequestGenerator { Settings = Settings, Capabilities = Capabilities };
+            return new RevoPeersRequestGenerator { Settings = Settings, Capabilities = Capabilities };
         }
 
         public override IParseIndexerResponse GetParser()
         {
-            return new RevolutionTTParser(Settings, Capabilities.Categories);
+            return new RevoPeersParser(Settings, Capabilities.Categories);
         }
 
         protected override async Task DoLogin()
@@ -71,11 +71,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 UpdateCookies(response.GetCookies(), DateTime.Now.AddDays(30));
 
-                _logger.Debug("RevolutionTT authentication succeeded");
+                _logger.Debug("RevoPeers authentication succeeded");
             }
             else
             {
-                throw new IndexerAuthException("RevolutionTT authentication failed");
+                throw new IndexerAuthException("RevoPeers authentication failed");
             }
         }
 
@@ -107,32 +107,34 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
 
             caps.Categories.AddCategoryMapping("23", NewznabStandardCategory.TVAnime);
-            caps.Categories.AddCategoryMapping("22", NewznabStandardCategory.PC0day);
+            caps.Categories.AddCategoryMapping("2", NewznabStandardCategory.PCMac);
             caps.Categories.AddCategoryMapping("1", NewznabStandardCategory.PCISO);
-            caps.Categories.AddCategoryMapping("36", NewznabStandardCategory.Books);
+            caps.Categories.AddCategoryMapping("22", NewznabStandardCategory.AudioAudiobook);
             caps.Categories.AddCategoryMapping("36", NewznabStandardCategory.BooksEBook);
-            caps.Categories.AddCategoryMapping("4", NewznabStandardCategory.PCGames);
-            caps.Categories.AddCategoryMapping("21", NewznabStandardCategory.PCGames);
-            caps.Categories.AddCategoryMapping("16", NewznabStandardCategory.ConsolePS3);
             caps.Categories.AddCategoryMapping("40", NewznabStandardCategory.ConsoleWii);
+            caps.Categories.AddCategoryMapping("16", NewznabStandardCategory.ConsolePS3);
+            caps.Categories.AddCategoryMapping("4", NewznabStandardCategory.PCGames);
             caps.Categories.AddCategoryMapping("39", NewznabStandardCategory.ConsoleXBox360);
             caps.Categories.AddCategoryMapping("35", NewznabStandardCategory.ConsoleNDS);
-            caps.Categories.AddCategoryMapping("34", NewznabStandardCategory.ConsolePSP);
-            caps.Categories.AddCategoryMapping("2", NewznabStandardCategory.PCMac);
+            caps.Categories.AddCategoryMapping("34", NewznabStandardCategory.PCMobileOther);
+            caps.Categories.AddCategoryMapping("51", NewznabStandardCategory.MoviesUHD);
             caps.Categories.AddCategoryMapping("10", NewznabStandardCategory.MoviesBluRay);
             caps.Categories.AddCategoryMapping("20", NewznabStandardCategory.MoviesDVD);
             caps.Categories.AddCategoryMapping("12", NewznabStandardCategory.MoviesHD);
             caps.Categories.AddCategoryMapping("44", NewznabStandardCategory.MoviesOther);
-            caps.Categories.AddCategoryMapping("11", NewznabStandardCategory.MoviesSD);
+            caps.Categories.AddCategoryMapping("11", NewznabStandardCategory.MoviesHD);
             caps.Categories.AddCategoryMapping("19", NewznabStandardCategory.MoviesSD);
             caps.Categories.AddCategoryMapping("6", NewznabStandardCategory.Audio);
             caps.Categories.AddCategoryMapping("8", NewznabStandardCategory.AudioLossless);
             caps.Categories.AddCategoryMapping("46", NewznabStandardCategory.AudioOther);
             caps.Categories.AddCategoryMapping("29", NewznabStandardCategory.AudioVideo);
+            caps.Categories.AddCategoryMapping("21", NewznabStandardCategory.TVSport);
+            caps.Categories.AddCategoryMapping("70", NewznabStandardCategory.TVUHD);
             caps.Categories.AddCategoryMapping("43", NewznabStandardCategory.TVOther);
             caps.Categories.AddCategoryMapping("42", NewznabStandardCategory.TVHD);
             caps.Categories.AddCategoryMapping("45", NewznabStandardCategory.TVOther);
             caps.Categories.AddCategoryMapping("41", NewznabStandardCategory.TVSD);
+            caps.Categories.AddCategoryMapping("52", NewznabStandardCategory.TVHD);
             caps.Categories.AddCategoryMapping("7", NewznabStandardCategory.TVSD);
             caps.Categories.AddCategoryMapping("9", NewznabStandardCategory.XXX);
             caps.Categories.AddCategoryMapping("49", NewznabStandardCategory.XXX);
@@ -143,7 +145,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class RevolutionTTRequestGenerator : IIndexerRequestGenerator
+    public class RevoPeersRequestGenerator : IIndexerRequestGenerator
     {
         public UserPassTorrentBaseSettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
@@ -234,12 +236,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
     }
 
-    public class RevolutionTTParser : IParseIndexerResponse
+    public class RevoPeersParser : IParseIndexerResponse
     {
         private readonly UserPassTorrentBaseSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
 
-        public RevolutionTTParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
+        public RevoPeersParser(UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories)
         {
             _settings = settings;
             _categories = categories;

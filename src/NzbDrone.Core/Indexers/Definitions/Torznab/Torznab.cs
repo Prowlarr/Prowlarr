@@ -92,7 +92,6 @@ namespace NzbDrone.Core.Indexers.Torznab
             get
             {
                 yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", settings: GetSettings("https://feed.animetosho.org"), categories: new[] { 2020, 5070 });
-                yield return GetDefinition("MoreThanTV", "Private torrent tracker for TV / MOVIES", settings: GetSettings("https://www.morethantv.me", apiPath: @"/api/torznab"), categories: new[] { 2000, 5000 });
                 yield return GetDefinition("Torrent Network", "Torrent Network (TN) is a GERMAN Private site for TV / MOVIES / GENERAL", language: "de-DE", settings: GetSettings("https://tntracker.org", apiPath: @"/api/torznab/api"));
                 yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", settings: GetSettings(""));
             }

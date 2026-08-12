@@ -58,7 +58,6 @@ namespace NzbDrone.Core.IndexerVersions
         private readonly IHttpClient _httpClient;
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly IDiskProvider _diskProvider;
-        private readonly IIndexerDefinitionVersionService _versionService;
         private readonly ICached<CardigannDefinition> _cache;
         private readonly Logger _logger;
 
@@ -70,16 +69,15 @@ namespace NzbDrone.Core.IndexerVersions
         public IndexerDefinitionUpdateService(IHttpClient httpClient,
                                           IAppFolderInfo appFolderInfo,
                                           IDiskProvider diskProvider,
-                                          IIndexerDefinitionVersionService versionService,
                                           ICacheManager cacheManager,
                                           Logger logger)
         {
             _appFolderInfo = appFolderInfo;
             _diskProvider = diskProvider;
-            _versionService = versionService;
-            _cache = cacheManager.GetCache<CardigannDefinition>(typeof(CardigannDefinition), "definitions");
             _httpClient = httpClient;
             _logger = logger;
+
+            _cache = cacheManager.GetCache<CardigannDefinition>(typeof(CardigannDefinition), "definitions");
         }
 
         public List<CardigannMetaDefinition> All()
@@ -209,7 +207,7 @@ namespace NzbDrone.Core.IndexerVersions
                 }
             }
 
-            var dbDefs = _versionService.All();
+            var dbDefs = All();
 
             //Check to ensure it's in versioned defs before we go to web
             if (dbDefs.Count > 0 && dbDefs.All(x => x.File != fileKey))

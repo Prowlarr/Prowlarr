@@ -58,7 +58,7 @@ export const defaultState = {
     {
       name: 'indexers',
       label: () => translate('Indexers'),
-      type: filterBuilderTypes.CONTAINS,
+      type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.INDEXER
     },
     {
@@ -70,7 +70,7 @@ export const defaultState = {
     {
       name: 'tags',
       label: () => translate('Tags'),
-      type: filterBuilderTypes.CONTAINS,
+      type: filterBuilderTypes.ARRAY,
       valueType: filterBuilderValueTypes.TAG
     }
   ],

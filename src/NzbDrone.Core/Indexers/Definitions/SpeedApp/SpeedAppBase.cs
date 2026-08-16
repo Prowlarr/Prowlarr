@@ -185,7 +185,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 { "itemsPerPage", Math.Min(_pageSize, searchCriteria.Limit.GetValueOrDefault(_pageSize)).ToString() },
                 { "sort", "torrent.createdAt" },
-                { "direction", "desc" }
+                { "direction", "desc" },
+
+                // Without this, the API silently excludes dead (0 seed/leech) torrents
+                // server-side, so a search whose only match is dead returns zero results
+                // instead of the dead result itself (see Prowlarr#2778). Downstream apps
+                // already rank/filter by seeder count, so surfacing a dead result is a
+                // strict improvement over a search that looks like it found nothing.
+                { "includingDead", "1" }
             };
 
             if (searchCriteria.Limit is > 0 && searchCriteria.Offset is > 0)

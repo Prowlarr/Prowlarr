@@ -317,10 +317,10 @@ namespace NzbDrone.Core.Indexers
 
                 throw new ReleaseDownloadException("Download failed", ex);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
+                _logger.Error(ex, "Release download failed ({0})", link.AbsoluteUri);
                 throw;
             }
 

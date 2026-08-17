@@ -67,10 +67,10 @@ namespace NzbDrone.Core.Indexers.Headphones
                 downloadBytes = response.ResponseData;
                 elapsedTime = response.ElapsedTime;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _indexerStatusService.RecordFailure(Definition.Id);
-                _logger.Error("Download failed");
+                _logger.Error(ex, "Release download failed ({0})", link.AbsoluteUri);
                 throw;
             }
 

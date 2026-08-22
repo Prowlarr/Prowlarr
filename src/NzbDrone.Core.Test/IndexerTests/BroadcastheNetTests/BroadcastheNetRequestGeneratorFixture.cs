@@ -91,15 +91,16 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             secondQuery.Name.Should().Be("S01E%");
         }
 
-        [Test]
-        public void should_search_by_tvdbid_season_episode_if_supported()
+        [TestCase(1, "3", "S01E%03%")]
+        [TestCase(1, "103", "S01E103%")]
+        public void should_search_by_tvdbid_season_episode_if_supported(int season, string episode, string expectedQuery)
         {
             var tvSearchCriteria = new TvSearchCriteria
             {
                 Categories = new[] { NewznabStandardCategory.TV.Id, NewznabStandardCategory.TVHD.Id },
                 TvdbId = 371980,
-                Season = 1,
-                Episode = "3"
+                Season = season,
+                Episode = episode
             };
 
             var results = Subject.GetSearchRequests(tvSearchCriteria);
@@ -114,7 +115,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             query.Tvrage.Should().BeNull();
             query.Search.Should().BeNull();
             query.Category.Should().Be("Episode");
-            query.Name.Should().Be("S01E03%");
+            query.Name.Should().Be(expectedQuery);
         }
 
         [Test]
@@ -226,15 +227,16 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             secondQuery.Name.Should().Be("S02E%");
         }
 
-        [Test]
-        public void should_search_by_term_season_episode_if_supported()
+        [TestCase(2, "3", "S02E%03%")]
+        [TestCase(2, "103", "S02E103%")]
+        public void should_search_by_term_season_episode_if_supported(int season, string episode, string expectedQuery)
         {
             var tvSearchCriteria = new TvSearchCriteria
             {
                 Categories = new[] { NewznabStandardCategory.TV.Id, NewznabStandardCategory.TVHD.Id },
                 SearchTerm = "Malcolm in the Middle",
-                Season = 2,
-                Episode = "3"
+                Season = season,
+                Episode = episode
             };
 
             var results = Subject.GetSearchRequests(tvSearchCriteria);
@@ -249,7 +251,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
             query.Tvrage.Should().BeNull();
             query.Search.Should().Be("Malcolm%in%the%Middle");
             query.Category.Should().Be("Episode");
-            query.Name.Should().Be("S02E03%");
+            query.Name.Should().Be(expectedQuery);
         }
 
         [Test]

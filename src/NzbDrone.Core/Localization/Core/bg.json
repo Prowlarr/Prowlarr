@@ -807,5 +807,9 @@
     "WouldYouLikeToRestoreBackup": "Искате ли да възстановите архива '{name}'?",
     "XmlRpcPath": "XML RPC път",
     "days": "дни",
-    "Category": "Категория"
+    "Category": "Категория",
+    "ApplicationAuthPassword": "Auth парола",
+    "ApplicationAuthPasswordHelpText": "HTTP Basic аутентикационна парола използвана от {appName} когато достъпва това приложение. Задайте ако приложението стои зад Basic аутентикационно ривърс прокси.",
+    "ApplicationAuthUsername": "Auth потребителско име",
+    "ApplicationAuthUsernameHelpText": "HTTP Basic аутентикационно потребителско име използвано от {appName} докато достъпвате това приложение. Задайте ако приложението стои зад Basic аутентикационно ривърс прокси"
 }

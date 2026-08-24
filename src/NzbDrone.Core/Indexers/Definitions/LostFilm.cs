@@ -807,26 +807,35 @@ namespace NzbDrone.Core.Indexers.Definitions
             var series = jsonSeries.ToList();
             _logger.Debug("LostFilm.tv: found {0} series: [{1}]", series.Count, string.Join(", ", series.Select(s => s["title_orig"]?.Value<string>() ?? string.Empty)));
 
-            // Keep only the series whose folded title/link best matches the informative search tokens.
+            // Keep only the series whose folded title/link matches the informative search tokens.
             // Without this a query that degrades to a stopword (e.g. "The Cuphead Show! Шоу Чашека! 2022"
-            // for an unavailable series) would match dozens of unrelated series.
+            // for an unavailable series) would match dozens of unrelated series. Every positive-score
+            // match is kept so multi-match queries return all of them (e.g. the Peaky Blinders series
+            // and its The Immortal Man movie).
             if (informativeTokens.Count == 0)
             {
                 return series;
             }
 
-            var best = series
+            var scored = series
                 .Select(s => new { Serie = s, Score = GetRelevanceScore(s, informativeTokens) })
+                .Where(x => x.Score > 0)
                 .OrderByDescending(x => x.Score)
-                .FirstOrDefault();
+                .ToList();
 
-            if (best?.Score > 0)
+            if (scored.Count == 0)
             {
-                return new List<JToken> { best.Serie };
+                _logger.Debug("LostFilm.tv: no series matches informative tokens [{0}], skipping", string.Join(", ", informativeTokens));
+                return new List<JToken>();
             }
 
-            _logger.Debug("LostFilm.tv: no series matches informative tokens [{0}], skipping", string.Join(", ", informativeTokens));
-            return new List<JToken>();
+            if (scored.Count < series.Count)
+            {
+                _logger.Debug("LostFilm.tv: dropped {0} non-matching series out of {1}", series.Count - scored.Count, series.Count);
+            }
+
+            // Stable sort: equal scores keep the order returned by the site.
+            return scored.Select(x => x.Serie).ToList();
         }
 
         private async Task<List<ReleaseInfo>> FetchEpisodesWithFilterFallbackAsync(string url, int? season, string episode, IEnumerable<string> episodeKeywordsSource)

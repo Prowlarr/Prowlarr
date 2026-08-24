@@ -28,6 +28,7 @@ public class Simurg : GazelleBase<SimurgSettings>
         caps.Categories.AddCategoryMapping(3, NewznabStandardCategory.BooksEBook, "E-Books");
         caps.Categories.AddCategoryMapping(4, NewznabStandardCategory.AudioAudiobook, "Audiobooks");
         caps.Categories.AddCategoryMapping(7, NewznabStandardCategory.BooksComics, "Comics");
+        caps.Categories.AddCategoryMapping(8, NewznabStandardCategory.BooksMags, "Magazines");
 
         return caps;
     }

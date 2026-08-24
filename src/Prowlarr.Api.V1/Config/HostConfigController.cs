@@ -4,6 +4,7 @@ using System.Reflection;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Network;
 using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Update;
@@ -49,6 +50,7 @@ namespace Prowlarr.Api.V1.Config
                            .When(c => c.AllowedHosts.IsNotNullOrWhiteSpace());
 
             SharedValidator.RuleFor(c => c.UrlBase).ValidUrlBase();
+            SharedValidator.RuleFor(c => c.TrustedNetworks).ValidIpNetworks();
             SharedValidator.RuleFor(c => c.InstanceName).ContainsProwlarr().When(c => c.InstanceName.IsNotNullOrWhiteSpace());
 
             SharedValidator.RuleFor(c => c.Username).NotEmpty().When(c => c.AuthenticationMethod == AuthenticationType.Forms);
@@ -127,6 +129,8 @@ namespace Prowlarr.Api.V1.Config
         [Produces("application/json")]
         public ActionResult<HostConfigResource> SaveHostConfig([FromBody] HostConfigResource resource)
         {
+            resource.TrustedNetworks = IPNetworkParser.NormalizeList(resource.TrustedNetworks);
+
             var dictionary = resource.GetType()
                                      .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                      .ToDictionary(prop => prop.Name, prop => prop.GetValue(resource, null));

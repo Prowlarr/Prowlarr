@@ -37,6 +37,17 @@ namespace Prowlarr.Api.V1.Config
 
             SharedValidator.RuleFor(c => c.Port).ValidPort();
 
+            SharedValidator.RuleFor(c => c.AllowedHosts).NotNull();
+
+            SharedValidator.RuleFor(c => c.AllowedHosts)
+                           .Must(h => AllowedHostsParser.Parse(h).Any())
+                           .When(c => c.AuthenticationRequired != AuthenticationRequiredType.Enabled)
+                           .WithMessage("Allowed Hosts is required when 'Authentication Required' is not 'Enabled'");
+
+            SharedValidator.RuleFor(c => c.AllowedHosts)
+                           .ValidHosts()
+                           .When(c => c.AllowedHosts.IsNotNullOrWhiteSpace());
+
             SharedValidator.RuleFor(c => c.UrlBase).ValidUrlBase();
             SharedValidator.RuleFor(c => c.InstanceName).ContainsProwlarr().When(c => c.InstanceName.IsNotNullOrWhiteSpace());
 

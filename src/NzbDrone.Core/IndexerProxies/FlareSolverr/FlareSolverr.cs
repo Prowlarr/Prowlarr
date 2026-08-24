@@ -20,8 +20,8 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 {
     public class FlareSolverr : HttpIndexerProxyBase<FlareSolverrSettings>
     {
-        private readonly ICached<string> _cache;
         private readonly IHttpProxySettingsProvider _proxySettingsProvider;
+        private readonly ICached<string> _cache;
 
         public FlareSolverr(IHttpProxySettingsProvider proxySettingsProvider, IProwlarrCloudRequestBuilder cloudRequestBuilder, IHttpClient httpClient, Logger logger, ILocalizationService localizationService, ICacheManager cacheManager)
             : base(cloudRequestBuilder, httpClient, logger, localizationService)
@@ -58,10 +58,15 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
 
             if (flaresolverrResponse.StatusCode != HttpStatusCode.OK && flaresolverrResponse.StatusCode != HttpStatusCode.InternalServerError)
             {
-                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + response.StatusCode);
+                throw new FlareSolverrException("HTTP StatusCode not 200 or 500. Status is :" + flaresolverrResponse.StatusCode);
             }
 
             var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(flaresolverrResponse.Content);
+
+            if (result?.Solution?.Cookies is not { Count: not 0 })
+            {
+                throw new FlareSolverrException("Empty cookies returned by FlareSolverr.");
+            }
 
             var newRequest = response.Request;
 
@@ -194,7 +199,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
                     failures.Add(new NzbDroneValidationFailure("Host", _localizationService.GetLocalizedString("ProxyValidationBadRequest", new Dictionary<string, object> { { "statusCode", response.StatusCode } })));
                 }
 
-                var result = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
+                _ = JsonConvert.DeserializeObject<FlareSolverrResponse>(response.Content);
             }
             catch (Exception ex)
             {
@@ -205,7 +210,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             return new ValidationResult(failures);
         }
 
-        private Uri GetProxyUri(HttpProxySettings proxySettings)
+        private static Uri GetProxyUri(HttpProxySettings proxySettings)
         {
             return proxySettings.Type switch
             {
@@ -220,7 +225,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
         {
             public string Cmd { get; set; }
             public string Url { get; set; }
-            public Cookie[] Cookies { get; set; }
+            public IReadOnlyCollection<Cookie> Cookies { get; set; }
             public FlareSolverrProxy Proxy { get; set; }
         }
 
@@ -270,7 +275,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public string Status { get; set; }
             public Headers Headers { get; set; }
             public string Response { get; set; }
-            public Cookie[] Cookies { get; set; }
+            public IReadOnlyCollection<Cookie> Cookies { get; set; }
             public string UserAgent { get; set; }
         }
 
@@ -288,7 +293,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             public string SameSite { get; set; }
 
             public string ToHeaderValue() => $"{Name}={Value}";
-            public System.Net.Cookie ToCookieObj() => new System.Net.Cookie(Name, Value);
+            public System.Net.Cookie ToCookieObj() => new(Name, Value);
         }
 
         private class Headers

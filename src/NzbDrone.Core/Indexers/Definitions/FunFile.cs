@@ -19,6 +19,7 @@ using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
+[Obsolete("Moved to YML for Cardigann")]
 public class FunFile : TorrentIndexerBase<UserPassTorrentBaseSettings>
 {
     public override string Name => "FunFile";

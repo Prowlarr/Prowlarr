@@ -139,6 +139,7 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
         caps.Categories.AddCategoryMapping(423, NewznabStandardCategory.PCGames, "PCGame(PC遊戲)");
         caps.Categories.AddCategoryMapping(448, NewznabStandardCategory.ConsoleOther, "TvGame(TV遊戲)");
         caps.Categories.AddCategoryMapping(405, NewznabStandardCategory.TVAnime, "Anime(動畫)");
+        caps.Categories.AddCategoryMapping(453, NewznabStandardCategory.TVAnime, "Anime(動畫)/BluRay");
         caps.Categories.AddCategoryMapping(407, NewznabStandardCategory.TVSport, "Sports(運動)");
         caps.Categories.AddCategoryMapping(427, NewznabStandardCategory.BooksEBook, "Study/Edu ebook(教育書面)");
         caps.Categories.AddCategoryMapping(422, NewznabStandardCategory.PC0day, "Software(軟體)");

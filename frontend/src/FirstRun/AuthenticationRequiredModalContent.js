@@ -4,7 +4,7 @@ import Alert from 'Components/Alert';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
 import FormLabel from 'Components/Form/FormLabel';
-import SpinnerButton from 'Components/Link/SpinnerButton';
+import SpinnerErrorButton from 'Components/Link/SpinnerErrorButton';
 import LoadingIndicator from 'Components/Loading/LoadingIndicator';
 import ModalBody from 'Components/Modal/ModalBody';
 import ModalContent from 'Components/Modal/ModalContent';
@@ -24,6 +24,7 @@ function AuthenticationRequiredModalContent(props) {
     isPopulated,
     error,
     isSaving,
+    saveError,
     settings,
     onInputChange,
     onSavePress,
@@ -35,7 +36,8 @@ function AuthenticationRequiredModalContent(props) {
     authenticationRequired,
     username,
     password,
-    passwordConfirmation
+    passwordConfirmation,
+    allowedHosts
   } = settings;
 
   const authenticationEnabled = authenticationMethod && authenticationMethod.value !== 'none';
@@ -43,12 +45,12 @@ function AuthenticationRequiredModalContent(props) {
   const didMount = useRef(false);
 
   useEffect(() => {
-    if (!isSaving && didMount.current) {
+    if (!isSaving && !saveError && didMount.current) {
       dispatchFetchStatus();
     }
 
     didMount.current = true;
-  }, [isSaving, dispatchFetchStatus]);
+  }, [isSaving, saveError, dispatchFetchStatus]);
 
   return (
     <ModalContent
@@ -133,6 +135,19 @@ function AuthenticationRequiredModalContent(props) {
                   {...passwordConfirmation}
                 />
               </FormGroup>
+
+              <FormGroup>
+                <FormLabel>{translate('AllowedHosts')}</FormLabel>
+                <FormInputGroup
+                  type={inputTypes.TEXT}
+                  name="allowedHosts"
+                  helpText={translate('AllowedHostsHelpText')}
+                  helpTextWarning={translate('RestartRequiredHelpTextWarning')}
+                  helpLink="https://wiki.servarr.com/prowlarr/settings#host"
+                  onChange={onInputChange}
+                  {...allowedHosts}
+                />
+              </FormGroup>
             </div> :
             null
         }
@@ -143,14 +158,15 @@ function AuthenticationRequiredModalContent(props) {
       </ModalBody>
 
       <ModalFooter>
-        <SpinnerButton
+        <SpinnerErrorButton
           kind={kinds.PRIMARY}
           isSpinning={isSaving}
           isDisabled={!authenticationEnabled}
+          error={saveError}
           onPress={onSavePress}
         >
           {translate('Save')}
-        </SpinnerButton>
+        </SpinnerErrorButton>
       </ModalFooter>
     </ModalContent>
   );

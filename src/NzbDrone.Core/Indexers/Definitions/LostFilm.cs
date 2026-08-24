@@ -15,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
@@ -32,6 +33,19 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         private static readonly Regex ParsePlayEpisodeRegex = new(@"PlayEpisode\('(?<id>\d+)(?<season>\d{3})(?<episode>\d{3})'\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ParseReleaseDetailsRegex = new("Видео:\\ (?<quality>.+).\\ Размер:\\ (?<size>.+).\\ Перевод", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly List<(Regex Pattern, string Replacement)> QualityReplacements = new()
+        {
+            // Adapt LostFilm's quality format for common algorithms (TvCategoryParser.cs).
+            // Order matters: WEB-DLRip must be replaced before WEB-DL.
+            (new Regex("-Rip", RegexOptions.Compiled | RegexOptions.IgnoreCase), "Rip"),
+            (new Regex("WEB-DLRip", RegexOptions.Compiled | RegexOptions.IgnoreCase), "WEBDL"),
+            (new Regex("WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase), "WEBDL"),
+            (new Regex("HDTVRip", RegexOptions.Compiled | RegexOptions.IgnoreCase), "HDTV"),
+
+            // Fix forgotten p-Progressive suffix in resolution index
+            (new Regex("1080 ", RegexOptions.Compiled | RegexOptions.IgnoreCase), "1080p "),
+            (new Regex("720 ", RegexOptions.Compiled | RegexOptions.IgnoreCase), "720p ")
+        };
         private static readonly CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
         private static readonly HashSet<string> SearchStopWords = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -220,20 +234,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 return new ValidationFailure(string.Empty, ex.Message);
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
             {
+                // HttpRequestException covers DNS/SSL failures; TaskCanceledException usually means a timeout.
                 _logger.Warn(ex, "Unable to connect to LostFilm.tv");
 
-                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to LostFilm.tv. This is typically caused by DNS/SSL issues. Check DNS settings, ensure IPv6 is working or disabled, consider using different DNS servers, or try a VPN/proxy if needed. See: 'https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues' " + ex.Message)
+                return new NzbDroneValidationFailure(string.Empty, "Unable to connect to LostFilm.tv. This is typically caused by network problems, DNS/SSL issues or timeouts. Check DNS settings, ensure IPv6 is working or disabled, consider using different DNS servers, or try a VPN/proxy if needed. See: 'https://wiki.servarr.com/prowlarr/troubleshooting#dns-ssl-connection-issues' " + ex.Message)
                 {
                     DetailedDescription = ex.InnerException?.Message
                 };
-            }
-            catch (TaskCanceledException ex)
-            {
-                _logger.Warn(ex, "Unable to connect to LostFilm.tv");
-
-                return new ValidationFailure(string.Empty, "Unable to connect to LostFilm.tv, possibly due to a timeout. Try again or check your network settings. " + ex.Message);
             }
             catch (Exception ex)
             {
@@ -726,56 +735,13 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 var response = await GetResponse(requestBuilder);
 
-                if (response.Content == null)
-                {
-                    _logger.Debug("LostFilm.tv: empty series response for query: " + searchString);
-                    continue;
-                }
-
                 try
                 {
-                    var json = JToken.Parse(response.Content);
-                    if (json == null || json.Type == JTokenType.Array)
+                    var series = ParseMatchingSeries(response, searchString, informativeTokens);
+
+                    if (series.Count == 0)
                     {
-                        _logger.Debug("LostFilm.tv: invalid response for query: " + searchString);
-                        continue; // Search loop
-                    }
-
-                    // Protect from {"data":false,"result":"ok"}
-                    var jsonData = json["data"];
-                    if (jsonData?.Type != JTokenType.Object)
-                    {
-                        continue; // Search loop
-                    }
-
-                    var jsonSeries = jsonData["series"];
-                    if (jsonSeries == null || !jsonSeries.HasValues)
-                    {
-                        continue; // Search loop
-                    }
-
-                    var series = jsonSeries.ToList();
-                    _logger.Debug("LostFilm.tv: found {0} series: [{1}]", series.Count, string.Join(", ", series.Select(s => s["title_orig"]?.Value<string>() ?? string.Empty)));
-
-                    // Keep only the series whose folded title/link best matches the informative search tokens.
-                    // Without this a query that degrades to a stopword (e.g. "The Cuphead Show! Шоу Чашека! 2022"
-                    // for an unavailable series) would match dozens of unrelated series.
-                    if (informativeTokens.Count > 0)
-                    {
-                        var best = series
-                            .Select(s => new { Serie = s, Score = GetRelevanceScore(s, informativeTokens) })
-                            .OrderByDescending(x => x.Score)
-                            .FirstOrDefault();
-
-                        if (best?.Score > 0)
-                        {
-                            series = new List<JToken> { best.Serie };
-                        }
-                        else
-                        {
-                            _logger.Debug("LostFilm.tv: no series matches informative tokens [{0}], skipping", string.Join(", ", informativeTokens));
-                            continue; // Search loop
-                        }
+                        continue; // Search loop: degrade the query and retry
                     }
 
                     foreach (var serie in series)
@@ -794,25 +760,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                         // Fetch the whole series OR episode with filter applied
                         else
                         {
-                            var episodeKeywords = keywords.Skip(searchKeywords);
-                            var episodeFilterKeywords = episodeKeywords.Count();
-
-                            // Search for episodes dropping 1 filter word each time when no results has found.
-                            // Last search will be performed with empty filter
-                            do
-                            {
-                                var filter = string.Join(" ", episodeKeywords.Take(episodeFilterKeywords));
-                                _logger.Debug("LostFilm.tv: searching episodes with filter [" + filter + "]");
-                                var taskReleases = await FetchSeriesReleases(url, season, episode, filter);
-
-                                if (taskReleases.Count > 0)
-                                {
-                                    _logger.Debug("LostFilm.tv: found {0} episodes", taskReleases.Count);
-                                    releases.AddRange(taskReleases);
-                                    break; // Episodes Filter loop
-                                }
-                            }
-                            while (--episodeFilterKeywords >= 0);
+                            releases.AddRange(await FetchEpisodesWithFilterFallbackAsync(url, season, episode, keywords.Skip(searchKeywords)));
                         }
                     }
 
@@ -824,6 +772,85 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
             while (--searchKeywords > 0);
+
+            return releases;
+        }
+
+        private List<JToken> ParseMatchingSeries(HttpResponse response, string searchString, IReadOnlyList<string> informativeTokens)
+        {
+            if (response.Content == null)
+            {
+                _logger.Debug("LostFilm.tv: empty series response for query: " + searchString);
+                return new List<JToken>();
+            }
+
+            var json = JToken.Parse(response.Content);
+            if (json == null || json.Type == JTokenType.Array)
+            {
+                _logger.Debug("LostFilm.tv: invalid response for query: " + searchString);
+                return new List<JToken>();
+            }
+
+            // Protect from {"data":false,"result":"ok"}
+            var jsonData = json["data"];
+            if (jsonData?.Type != JTokenType.Object)
+            {
+                return new List<JToken>();
+            }
+
+            var jsonSeries = jsonData["series"];
+            if (jsonSeries == null || !jsonSeries.HasValues)
+            {
+                return new List<JToken>();
+            }
+
+            var series = jsonSeries.ToList();
+            _logger.Debug("LostFilm.tv: found {0} series: [{1}]", series.Count, string.Join(", ", series.Select(s => s["title_orig"]?.Value<string>() ?? string.Empty)));
+
+            // Keep only the series whose folded title/link best matches the informative search tokens.
+            // Without this a query that degrades to a stopword (e.g. "The Cuphead Show! Шоу Чашека! 2022"
+            // for an unavailable series) would match dozens of unrelated series.
+            if (informativeTokens.Count == 0)
+            {
+                return series;
+            }
+
+            var best = series
+                .Select(s => new { Serie = s, Score = GetRelevanceScore(s, informativeTokens) })
+                .OrderByDescending(x => x.Score)
+                .FirstOrDefault();
+
+            if (best?.Score > 0)
+            {
+                return new List<JToken> { best.Serie };
+            }
+
+            _logger.Debug("LostFilm.tv: no series matches informative tokens [{0}], skipping", string.Join(", ", informativeTokens));
+            return new List<JToken>();
+        }
+
+        private async Task<List<ReleaseInfo>> FetchEpisodesWithFilterFallbackAsync(string url, int? season, string episode, IEnumerable<string> episodeKeywordsSource)
+        {
+            var releases = new List<ReleaseInfo>();
+            var episodeKeywords = episodeKeywordsSource.ToList();
+
+            // Search for episodes dropping 1 filter word each time when no results has found.
+            // Last search will be performed with empty filter
+            var episodeFilterKeywords = episodeKeywords.Count;
+            do
+            {
+                var filter = string.Join(" ", episodeKeywords.Take(episodeFilterKeywords));
+                _logger.Debug("LostFilm.tv: searching episodes with filter [" + filter + "]");
+                var taskReleases = await FetchSeriesReleases(url, season, episode, filter);
+
+                if (taskReleases.Count > 0)
+                {
+                    _logger.Debug("LostFilm.tv: found {0} episodes", taskReleases.Count);
+                    releases.AddRange(taskReleases);
+                    break; // Episodes Filter loop
+                }
+            }
+            while (--episodeFilterKeywords >= 0);
 
             return releases;
         }
@@ -1160,17 +1187,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
 
                 // For supported qualities see TvCategoryParser.cs
-                var quality = releaseDetails.Groups["quality"].Value.Trim();
-
-                // Adapt shitty quality format for common algorithms
-                quality = Regex.Replace(quality, "-Rip", "Rip", RegexOptions.IgnoreCase);
-                quality = Regex.Replace(quality, "WEB-DLRip", "WEBDL", RegexOptions.IgnoreCase);
-                quality = Regex.Replace(quality, "WEB-DL", "WEBDL", RegexOptions.IgnoreCase);
-                quality = Regex.Replace(quality, "HDTVRip", "HDTV", RegexOptions.IgnoreCase);
-
-                // Fix forgotten p-Progressive suffix in resolution index
-                quality = Regex.Replace(quality, "1080 ", "1080p ", RegexOptions.IgnoreCase);
-                quality = Regex.Replace(quality, "720 ", "720p ", RegexOptions.IgnoreCase);
+                var quality = NormalizeQuality(releaseDetails.Groups["quality"].Value.Trim());
 
                 var techComponents = new[]
                 {
@@ -1243,6 +1260,16 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             return releases;
+        }
+
+        private static string NormalizeQuality(string quality)
+        {
+            foreach (var (pattern, replacement) in QualityReplacements)
+            {
+                quality = pattern.Replace(quality, replacement);
+            }
+
+            return quality;
         }
 
         private static string TrimSeasonSuffix(string url)
@@ -1463,8 +1490,9 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
     }
 
-    public class LostFilmSettings : UserPassTorrentBaseSettings, ICaptchaProvider
+    public class LostFilmSettings : UserPassTorrentBaseSettings
     {
+        [FieldDefinition(4, Label = "CAPTCHA", Type = FieldType.CardigannCaptcha, HelpText = "Enter the code from the captcha image")]
         public string Captcha { get; set; }
     }
 }

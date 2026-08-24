@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
@@ -113,6 +115,20 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         public void should_use_half_second_rate_limit()
         {
             Subject.RateLimit.Should().Be(TimeSpan.FromSeconds(0.5));
+        }
+
+        [Test]
+        public void should_expose_captcha_as_cardigann_captcha_schema_field()
+        {
+            // The captcha input is rendered by the generic schema pipeline: the field type
+            // string must serialize to "cardigannCaptcha" (FieldType -> FirstCharToLower).
+            var attribute = typeof(LostFilmSettings)
+                .GetProperty(nameof(LostFilmSettings.Captcha))
+                ?.GetCustomAttribute<FieldDefinitionAttribute>(false);
+
+            attribute.Should().NotBeNull();
+            attribute.Type.Should().Be(FieldType.CardigannCaptcha);
+            attribute.Order.Should().Be(4);
         }
 
         [Test]

@@ -811,5 +811,7 @@
     "ApplicationAuthPassword": "Salasana",
     "ApplicationAuthPasswordHelpText": "HTTP Basic Auth -salasana, jota {appName} käyttää kirjautuessaan sovellukseen. Aseta, jos sovellus on Basic Auth -suojausta käyttävän käänteisvälityspalvelimen takana.",
     "ApplicationAuthUsernameHelpText": "HTTP Basic Auth -tunnus, jota {appName} käyttää kirjautuessaan sovellukseen. Aseta, jos sovellus on Basic Auth -suojausta käyttävän käänteisvälityspalvelimen takana.",
-    "ApplicationAuthUsername": "Käyttäjätunnus"
+    "ApplicationAuthUsername": "Käyttäjätunnus",
+    "IndexerIPTorrentsSettingsSearchSortBy": "Tulosten järjestystapa",
+    "IndexerIPTorrentsSettingsSearchSortByHelpText": "Valitse miten hakutulokset järjestetään."
 }

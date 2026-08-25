@@ -476,14 +476,14 @@
     "Proxies": "Profiler",
     "Donate": "Datum",
     "TvSearch": "Sök",
-    "AddCategory": "Kategori",
-    "AddConnection": "Anslutning",
+    "AddCategory": "Lägg till kategori",
+    "AddConnection": "Lägg till anslutning",
     "EditSelectedDownloadClients": "Radera nedladdningsklient",
     "MovieSearch": "Mass-sök filmer",
     "IndexerHDBitsSettingsOrigins": "Orginal",
     "IndexerInfo": "Indexerare",
     "MovieSearchTypes": "Mass-sök filmer",
-    "AddSyncProfile": "Redigera fördröjningsprofil",
+    "AddSyncProfile": "Lägg till synkroniseringsprofil",
     "SyncProfile": "Redigera fördröjningsprofil",
     "SyncProfiles": "Redigera fördröjningsprofil",
     "DownloadClientCategory": "Radera nedladdningsklient",
@@ -495,5 +495,6 @@
     "EditCategory": "Kategori",
     "PrioritySettings": "Prioritet: {0}",
     "TheLogLevelDefault": "Loggnivån är som standard 'Info' och kan ändras i",
-    "WouldYouLikeToRestoreBackup": "Skulle du vilja återställa säkerhetskopian {0} ?"
+    "WouldYouLikeToRestoreBackup": "Skulle du vilja återställa säkerhetskopian {0} ?",
+    "ActiveApps": "Aktiva appar"
 }

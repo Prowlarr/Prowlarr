@@ -37,7 +37,7 @@ namespace NzbDrone.Core.Test.IndexerTests.NzbIndexTests
 
             Mocker.GetMock<IIndexerHttpClient>()
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get), Subject.Definition))
-                .Returns<HttpRequest, IndexerDefinition>((r, d) => Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), responseJson)));
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), responseJson));
 
             var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "test" })).Releases;
 

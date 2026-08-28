@@ -46,7 +46,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
                     _localizationService.GetLocalizedString("IndexerLongTermStatusAllUnavailableHealthCheckMessage"),
-                    "#indexers-are-unavailable-due-to-failures");
+                    "#indexers-are-unavailable-due-to-failures")
+                {
+                    RelatedProviders = backOffProviders.Select(v => v.Provider.Definition.Id).ToList()
+                };
             }
 
             return new HealthCheck(GetType(),
@@ -55,7 +58,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     { "indexerNames", string.Join(", ", backOffProviders.Select(v => v.Provider.Definition.Name)) }
                 }),
-                "#indexers-are-unavailable-due-to-failures");
+                "#indexers-are-unavailable-due-to-failures")
+            {
+                RelatedProviders = backOffProviders.Select(v => v.Provider.Definition.Id).ToList()
+            };
         }
     }
 }

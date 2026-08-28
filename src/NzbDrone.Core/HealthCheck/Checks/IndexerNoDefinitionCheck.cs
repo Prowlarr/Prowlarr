@@ -40,7 +40,10 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     { "indexerNames", string.Join(", ", noDefinitionIndexers.Select(v => v.Definition.Name).ToArray()) }
                 }),
-                "#indexers-have-no-definition");
+                "#indexers-have-no-definition")
+            {
+                RelatedProviders = noDefinitionIndexers.Select(v => v.Definition.Id).ToList()
+            };
         }
 
         public override bool CheckOnSchedule => false;

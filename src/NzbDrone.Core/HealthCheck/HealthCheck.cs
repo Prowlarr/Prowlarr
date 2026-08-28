@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Datastore;
@@ -13,6 +14,13 @@ namespace NzbDrone.Core.HealthCheck
         public HealthCheckResult Type { get; set; }
         public string Message { get; set; }
         public HttpUri WikiUrl { get; set; }
+
+        /// <summary>
+        /// Ids of the indexers this health check relates to, when applicable. Used to scope
+        /// notifications by tag; an empty collection means the check is not tied to specific
+        /// indexers (e.g. a system check) and applies to every notification.
+        /// </summary>
+        public IEnumerable<int> RelatedProviders { get; set; } = Array.Empty<int>();
 
         public HealthCheck()
         {

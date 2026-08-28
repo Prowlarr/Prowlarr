@@ -19,7 +19,7 @@ namespace NzbDrone.Common.Test.Http
                 { "__cfduid", "d6237f041586694295" },
                 { "__cf_bm", "TlOng/xyqckk-TMen38z+0RFYA7YA=" }
             };
-            CollectionAssert.AreEqual(expectedCookieDictionary, CookieUtil.CookieHeaderToDictionary(cookieHeader));
+            Assert.That(expectedCookieDictionary, Is.EquivalentTo(CookieUtil.CookieHeaderToDictionary(cookieHeader)));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NzbDrone.Common.Test.Http
                 { "__cfduid", "d6237f041586694295" },
                 { "__cf_bm", "test" } // we always assume the latest value is the most recent
             };
-            CollectionAssert.AreEqual(expectedCookieDictionary, CookieUtil.CookieHeaderToDictionary(cookieHeader));
+            Assert.That(expectedCookieDictionary, Is.EquivalentTo(CookieUtil.CookieHeaderToDictionary(cookieHeader)));
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace NzbDrone.Common.Test.Http
             // malformed cookies
             var cookieHeader = "__cfduidd6237f041586694295; __cf_;bm TlOng; good_cookie=value";
             var expectedCookieDictionary = new Dictionary<string, string> { { "good_cookie", "value" }, };
-            CollectionAssert.AreEqual(expectedCookieDictionary, CookieUtil.CookieHeaderToDictionary(cookieHeader));
+            Assert.That(expectedCookieDictionary, Is.EquivalentTo(CookieUtil.CookieHeaderToDictionary(cookieHeader)));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace NzbDrone.Common.Test.Http
         {
             // null cookie header
             var expectedCookieDictionary = new Dictionary<string, string>();
-            CollectionAssert.AreEqual(expectedCookieDictionary, CookieUtil.CookieHeaderToDictionary(null));
+            Assert.That(expectedCookieDictionary, Is.EquivalentTo(CookieUtil.CookieHeaderToDictionary(null)));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace NzbDrone.Common.Test.Http
                 { "__cf_bm", "TlOng/xyqckk-TMen38z+0RFYA7YA=" }
             };
             var expectedCookieHeader = "__cfduid=d6237f041586694295; __cf_bm=TlOng/xyqckk-TMen38z+0RFYA7YA=";
-            CollectionAssert.AreEqual(expectedCookieHeader, CookieUtil.CookieDictionaryToHeader(cookieDictionary));
+            Assert.That(expectedCookieHeader, Is.EquivalentTo(CookieUtil.CookieDictionaryToHeader(cookieDictionary)));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace NzbDrone.Common.Test.Http
                 { "__cf_=bm", "34234234" }
             };
             var ex = Assert.Throws<FormatException>(() => CookieUtil.CookieDictionaryToHeader(cookieDictionary));
-            Assert.AreEqual("The cookie '__cf_=bm=34234234' is malformed.", ex.Message);
+            Assert.That("The cookie '__cf_=bm=34234234' is malformed.", Is.EqualTo(ex.Message));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace NzbDrone.Common.Test.Http
                 { "__cf_bm", "34234 234" }
             };
             var ex = Assert.Throws<FormatException>(() => CookieUtil.CookieDictionaryToHeader(cookieDictionary));
-            Assert.AreEqual("The cookie '__cf_bm=34234 234' is malformed.", ex.Message);
+            Assert.That("The cookie '__cf_bm=34234 234' is malformed.", Is.EqualTo(ex.Message));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace NzbDrone.Common.Test.Http
         {
             // null cookie dictionary
             var expectedCookieHeader = "";
-            CollectionAssert.AreEqual(expectedCookieHeader, CookieUtil.CookieDictionaryToHeader(null));
+            Assert.That(expectedCookieHeader, Is.EquivalentTo(CookieUtil.CookieDictionaryToHeader(null)));
         }
     }
 }

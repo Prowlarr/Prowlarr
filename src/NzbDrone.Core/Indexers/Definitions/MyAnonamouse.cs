@@ -230,8 +230,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 { "tor[srchIn][narrator]", "true" },
                 { "tor[searchIn]", "torrents" },
                 { "tor[sortType]", "default" },
-                { "tor[startNumber]", searchCriteria.Offset?.ToString() ?? "0" },
-                { "perpage", searchCriteria.Limit?.ToString() ?? "100" },
+                { "tor[startNumber]", searchCriteria.Offset?.ToString(CultureInfo.InvariantCulture) ?? "0" },
+                { "perpage", searchCriteria.Limit?.ToString(CultureInfo.InvariantCulture) ?? "100" },
                 { "thumbnails", "1" }, // gives links for thumbnail sized versions of their posters
                 { "description", "1" } // include the description
             };

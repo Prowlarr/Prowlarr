@@ -21,13 +21,15 @@ namespace NzbDrone.Core.Applications.Whisparr
         private readonly IWhisparrV3Proxy _whisparrV3Proxy;
         private readonly ICached<List<WhisparrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerNameTemplateService _indexerNameTemplateService;
 
-        public Whisparr(ICacheManager cacheManager, IWhisparrV3Proxy whisparrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
+        public Whisparr(ICacheManager cacheManager, IWhisparrV3Proxy whisparrV3Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, IIndexerNameTemplateService indexerNameTemplateService, Logger logger)
             : base(appIndexerMapService, indexerFactory, logger)
         {
             _schemaCache = cacheManager.GetCache<List<WhisparrIndexer>>(GetType());
             _whisparrV3Proxy = whisparrV3Proxy;
             _configFileProvider = configFileProvider;
+            _indexerNameTemplateService = indexerNameTemplateService;
         }
 
         public override ValidationResult Test()
@@ -232,7 +234,7 @@ namespace NzbDrone.Core.Applications.Whisparr
             var whisparrIndexer = new WhisparrIndexer
             {
                 Id = id,
-                Name = $"{indexer.Name} (Prowlarr)",
+                Name = _indexerNameTemplateService.FormatIndexerName(indexer.Name, _configFileProvider.InstanceName),
                 EnableRss = indexer.Enable && indexer.AppProfile.Value.EnableRss,
                 EnableAutomaticSearch = indexer.Enable && indexer.AppProfile.Value.EnableAutomaticSearch,
                 EnableInteractiveSearch = indexer.Enable && indexer.AppProfile.Value.EnableInteractiveSearch,

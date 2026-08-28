@@ -21,13 +21,15 @@ namespace NzbDrone.Core.Applications.Readarr
         private readonly ICached<List<ReadarrIndexer>> _schemaCache;
         private readonly IReadarrV1Proxy _readarrV1Proxy;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerNameTemplateService _indexerNameTemplateService;
 
-        public Readarr(ICacheManager cacheManager, IReadarrV1Proxy readarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
+        public Readarr(ICacheManager cacheManager, IReadarrV1Proxy readarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, IIndexerNameTemplateService indexerNameTemplateService, Logger logger)
             : base(appIndexerMapService, indexerFactory, logger)
         {
             _schemaCache = cacheManager.GetCache<List<ReadarrIndexer>>(GetType());
             _readarrV1Proxy = readarrV1Proxy;
             _configFileProvider = configFileProvider;
+            _indexerNameTemplateService = indexerNameTemplateService;
         }
 
         public override ValidationResult Test()
@@ -241,7 +243,7 @@ namespace NzbDrone.Core.Applications.Readarr
             var readarrIndexer = new ReadarrIndexer
             {
                 Id = id,
-                Name = $"{indexer.Name} (Prowlarr)",
+                Name = _indexerNameTemplateService.FormatIndexerName(indexer.Name, _configFileProvider.InstanceName),
                 EnableRss = indexer.Enable && indexer.AppProfile.Value.EnableRss,
                 EnableAutomaticSearch = indexer.Enable && indexer.AppProfile.Value.EnableAutomaticSearch,
                 EnableInteractiveSearch = indexer.Enable && indexer.AppProfile.Value.EnableInteractiveSearch,

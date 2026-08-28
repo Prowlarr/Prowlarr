@@ -88,6 +88,12 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("LogIndexerResponse", value); }
         }
 
+        public string IndexerNameTemplate
+        {
+            get { return GetValue("indexernametemplate", Applications.IndexerNameTemplateDefaults.DefaultTemplate); }
+            set { SetValue("indexernametemplate", value); }
+        }
+
         public int FirstDayOfWeek
         {
             get { return GetValueInt("FirstDayOfWeek", (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek); }

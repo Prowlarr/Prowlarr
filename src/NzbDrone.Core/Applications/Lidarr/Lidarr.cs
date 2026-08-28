@@ -21,13 +21,15 @@ namespace NzbDrone.Core.Applications.Lidarr
         private readonly ILidarrV1Proxy _lidarrV1Proxy;
         private readonly ICached<List<LidarrIndexer>> _schemaCache;
         private readonly IConfigFileProvider _configFileProvider;
+        private readonly IIndexerNameTemplateService _indexerNameTemplateService;
 
-        public Lidarr(ICacheManager cacheManager, ILidarrV1Proxy lidarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, Logger logger)
+        public Lidarr(ICacheManager cacheManager, ILidarrV1Proxy lidarrV1Proxy, IConfigFileProvider configFileProvider, IAppIndexerMapService appIndexerMapService, IIndexerFactory indexerFactory, IIndexerNameTemplateService indexerNameTemplateService, Logger logger)
             : base(appIndexerMapService, indexerFactory, logger)
         {
             _schemaCache = cacheManager.GetCache<List<LidarrIndexer>>(GetType());
             _lidarrV1Proxy = lidarrV1Proxy;
             _configFileProvider = configFileProvider;
+            _indexerNameTemplateService = indexerNameTemplateService;
         }
 
         public override ValidationResult Test()
@@ -247,7 +249,7 @@ namespace NzbDrone.Core.Applications.Lidarr
             var lidarrIndexer = new LidarrIndexer
             {
                 Id = id,
-                Name = $"{indexer.Name} (Prowlarr)",
+                Name = _indexerNameTemplateService.FormatIndexerName(indexer.Name, _configFileProvider.InstanceName),
                 EnableRss = indexer.Enable && indexer.AppProfile.Value.EnableRss,
                 EnableAutomaticSearch = indexer.Enable && indexer.AppProfile.Value.EnableAutomaticSearch,
                 EnableInteractiveSearch = indexer.Enable && indexer.AppProfile.Value.EnableInteractiveSearch,

@@ -526,5 +526,7 @@
     "MovieSearchTypes": "Caută filme în masa",
     "PrioritySettings": "Prioritate: {0}",
     "TheLogLevelDefault": "Nivelul jurnalului este implicit la „Informații” și poate fi modificat în",
-    "WouldYouLikeToRestoreBackup": "Doriți să restaurați copia de rezervă {0}?"
+    "WouldYouLikeToRestoreBackup": "Doriți să restaurați copia de rezervă {0}?",
+    "ApplicationAuthPassword": "Parolă autentificare",
+    "ApplicationAuthUsername": "Nume utilizator autentificare"
 }

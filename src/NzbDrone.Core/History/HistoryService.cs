@@ -32,10 +32,10 @@ namespace NzbDrone.Core.History
     }
 
     public class HistoryService : IHistoryService,
-                                  IHandle<ProviderDeletedEvent<IIndexer>>,
-                                  IHandle<IndexerQueryEvent>,
-                                  IHandle<IndexerDownloadEvent>,
-                                  IHandle<IndexerAuthEvent>,
+                                  IHandleAsync<ProviderDeletedEvent<IIndexer>>,
+                                  IHandleAsync<IndexerQueryEvent>,
+                                  IHandleAsync<IndexerDownloadEvent>,
+                                  IHandleAsync<IndexerAuthEvent>,
                                   IExecute<CleanUpHistoryCommand>,
                                   IExecute<ClearHistoryCommand>
     {
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.History
             _logger.Debug("History has been cleaned up.");
         }
 
-        public void Handle(IndexerQueryEvent message)
+        public void HandleAsync(IndexerQueryEvent message)
         {
             var response = message.QueryResult.Response;
 
@@ -190,7 +190,7 @@ namespace NzbDrone.Core.History
             _historyRepository.Insert(history);
         }
 
-        public void Handle(IndexerDownloadEvent message)
+        public void HandleAsync(IndexerDownloadEvent message)
         {
             var history = new History
             {
@@ -230,7 +230,7 @@ namespace NzbDrone.Core.History
             _historyRepository.Insert(history);
         }
 
-        public void Handle(IndexerAuthEvent message)
+        public void HandleAsync(IndexerAuthEvent message)
         {
             var history = new History
             {
@@ -245,7 +245,7 @@ namespace NzbDrone.Core.History
             _historyRepository.Insert(history);
         }
 
-        public void Handle(ProviderDeletedEvent<IIndexer> message)
+        public void HandleAsync(ProviderDeletedEvent<IIndexer> message)
         {
             _historyRepository.DeleteForIndexers(new List<int> { message.ProviderId });
         }

@@ -46,12 +46,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
+                    HealthCheckReason.ApplicationLongTermStatusAllUnavailable,
                     _localizationService.GetLocalizedString("ApplicationLongTermStatusCheckAllClientMessage"),
                     "#applications-are-unavailable-due-to-failures");
             }
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
+                HealthCheckReason.ApplicationLongTermStatusUnavailable,
                 string.Format(_localizationService.GetLocalizedString("ApplicationLongTermStatusCheckSingleClientMessage"),
                     string.Join(", ", backOffProviders.Select(v => v.Provider.Definition.Name))),
                 "#applications-are-unavailable-due-to-failures");

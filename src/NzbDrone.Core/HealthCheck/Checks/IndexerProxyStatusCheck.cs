@@ -38,12 +38,14 @@ namespace NzbDrone.Core.HealthCheck.Checks
             {
                 return new HealthCheck(GetType(),
                     HealthCheckResult.Error,
+                    HealthCheckReason.IndexerProxyStatusAllUnavailable,
                     _localizationService.GetLocalizedString("IndexerProxyStatusAllUnavailableHealthCheckMessage"),
                     "#indexer-proxies-are-unavailable-due-to-failures");
             }
 
             return new HealthCheck(GetType(),
                 HealthCheckResult.Warning,
+                HealthCheckReason.IndexerProxyStatusUnavailable,
                 _localizationService.GetLocalizedString("IndexerProxyStatusUnavailableHealthCheckMessage", new Dictionary<string, object>
                 {
                     { "indexerProxyNames", string.Join(", ", badProxies.Select(v => v.Definition.Name)) }

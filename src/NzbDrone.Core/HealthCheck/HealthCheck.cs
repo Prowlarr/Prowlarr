@@ -11,6 +11,7 @@ namespace NzbDrone.Core.HealthCheck
 
         public Type Source { get; set; }
         public HealthCheckResult Type { get; set; }
+        public HealthCheckReason Reason { get; set; }
         public string Message { get; set; }
         public HttpUri WikiUrl { get; set; }
 
@@ -24,10 +25,11 @@ namespace NzbDrone.Core.HealthCheck
             Type = HealthCheckResult.Ok;
         }
 
-        public HealthCheck(Type source, HealthCheckResult type, string message, string wikiFragment = null)
+        public HealthCheck(Type source, HealthCheckResult type, HealthCheckReason reason, string message, string wikiFragment = null)
         {
             Source = source;
             Type = type;
+            Reason = reason;
             Message = message;
             WikiUrl = MakeWikiUrl(wikiFragment ?? MakeWikiFragment(message));
         }
@@ -49,5 +51,42 @@ namespace NzbDrone.Core.HealthCheck
         Notice = 1,
         Warning = 2,
         Error = 3
+    }
+
+    public enum HealthCheckReason
+    {
+        AllowedHostsNotConfigured,
+        AppDataLocation,
+        ApplicationLongTermStatusAllUnavailable,
+        ApplicationLongTermStatusUnavailable,
+        ApplicationStatusAllClients,
+        ApplicationStatusSingleClient,
+        DownloadClientStatusAllClients,
+        DownloadClientStatusSingleClient,
+        IndexerCheckNoAvailableIndexers,
+        IndexerDownloadClient,
+        IndexerLongTermStatusAllUnavailable,
+        IndexerLongTermStatusUnavailable,
+        IndexerNoDefinition,
+        IndexerProxyStatusAllUnavailable,
+        IndexerProxyStatusUnavailable,
+        IndexerStatusAllUnavailable,
+        IndexerStatusUnavailable,
+        IndexerVIPExpired,
+        IndexerVIPExpiring,
+        MinimumApiKeyLength,
+        NotificationStatusAll,
+        NotificationStatusSingle,
+        OutdatedDefinitions,
+        ProxyBadRequest,
+        ProxyFailed,
+        ProxyResolveIp,
+        ReleaseBranch,
+        ServerNotification,
+        SystemTime,
+        UpdateAvailable,
+        UpdateStartupNotWritable,
+        UpdateStartupTranslocation,
+        UpdateUiNotWritable
     }
 }

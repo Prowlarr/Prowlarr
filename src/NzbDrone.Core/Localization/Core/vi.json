@@ -446,5 +446,6 @@
     "ApplicationURL": "URL của ứng dụng",
     "PrioritySettings": "Ưu tiên: {0}",
     "TheLogLevelDefault": "Mức nhật ký mặc định là 'Thông tin' và có thể được thay đổi trong",
-    "WouldYouLikeToRestoreBackup": "Bạn có muốn khôi phục bản sao lưu {0} không?"
+    "WouldYouLikeToRestoreBackup": "Bạn có muốn khôi phục bản sao lưu {0} không?",
+    "Any": "bất kỳ"
 }

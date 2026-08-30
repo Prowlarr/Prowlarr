@@ -36,6 +36,7 @@ namespace NzbDrone.Core.Configuration
         bool LaunchBrowser { get; }
         AuthenticationType AuthenticationMethod { get; }
         AuthenticationRequiredType AuthenticationRequired { get; }
+        string AllowedHosts { get; }
         bool AnalyticsEnabled { get; }
         string LogLevel { get; }
         string ConsoleLogLevel { get; }
@@ -49,6 +50,7 @@ namespace NzbDrone.Core.Configuration
         string SslCertPath { get; }
         string SslCertPassword { get; }
         string UrlBase { get; }
+        string TrustedNetworks { get; }
         string UiFolder { get; }
         string InstanceName { get; }
         bool UpdateAutomatically { get; }
@@ -235,6 +237,10 @@ namespace NzbDrone.Core.Configuration
                 ? enumValue
                 : GetValueEnum("AuthenticationRequired", AuthenticationRequiredType.Enabled);
 
+        public bool TrustCgnatIpAddresses => _authOptions.TrustCgnatIpAddresses ?? GetValueBoolean("TrustCgnatIpAddresses", false, persist: false);
+
+        public string AllowedHosts => _serverOptions.AllowedHosts ?? GetValue("AllowedHosts", string.Empty);
+
         public bool AnalyticsEnabled => _logOptions.AnalyticsEnabled ?? GetValueBoolean("AnalyticsEnabled", true, persist: false);
 
         public string Branch => _updateOptions.Branch ?? GetValue("Branch", "master").ToLowerInvariant();
@@ -279,6 +285,8 @@ namespace NzbDrone.Core.Configuration
                 return "/" + urlBase;
             }
         }
+
+        public string TrustedNetworks => _serverOptions.TrustedNetworks ?? GetValue("TrustedNetworks", string.Empty);
 
         public string UiFolder => BuildInfo.IsDebug ? Path.Combine("..", "UI") : "UI";
 
@@ -500,7 +508,5 @@ namespace NzbDrone.Core.Configuration
             SetValue("ApiKey", GenerateApiKey());
             _eventAggregator.PublishEvent(new ApiKeyChangedEvent());
         }
-
-        public bool TrustCgnatIpAddresses => _authOptions.TrustCgnatIpAddresses ?? GetValueBoolean("TrustCgnatIpAddresses", false, persist: false);
     }
 }

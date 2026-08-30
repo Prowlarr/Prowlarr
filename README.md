@@ -1,8 +1,8 @@
-# Caching Prowlarr
+# Prowlarr
 
 ## Installation
 
-This fork is designed to be a drop-in replacement for existing Prowlarr docker installations. Simply replace your prowlarr docker image with `ghcr.io/actuallyevan/prowlarr:latest`
+This fork is designed to be a drop-in replacement for existing Prowlarr docker installations. Simply replace your Prowlarr docker image with `ghcr.io/actuallyevan/prowlarr:latest`
 
 Sample docker compose:
 ```docker
@@ -13,6 +13,7 @@ prowlarr:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
+      # Configure caching behavior
       - CACHE_TTL_MINS=10
       - CACHE_MAX_SIZE_MB=100
     volumes:
@@ -25,11 +26,9 @@ prowlarr:
 
 ## Why this fork?
 
-This fork aims to improve certain aspects of Prowlarr to make it work better with remote "infinite" library setups (Debrid/Usenet streaming, etc). This fork will be kept up-to-date with the Prowlarr develop branch and the changes in this fork are fully compatible with the original Prowlarr configs so you can freely swap back and forth between them.
+This fork aims to improve certain aspects of Prowlarr to make it work better with remote "infinite" library setups (Debrid/Usenet streaming, etc). This fork will be kept up-to-date with Prowlarr stable releases and you should be able to swap back and forth between them if needed.
 
-## Features
-
-### Cache indexer query responses
+## Cache indexer query responses
 
 | Env Var           | Default | Description                                                                                                                                         |
 |-------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -37,16 +36,16 @@ This fork aims to improve certain aspects of Prowlarr to make it work better wit
 | CACHE_MAX_SIZE_MB | 100     | Maximum size of cache in memory before old records are cleaned up. Higher values will use more memory.                                              |
 
 
-Clients like decypharr/nzbdav/altmount cause a lot of repeated queries to the indexer that waste time and API queries. In particular, the workflow for most usenet streaming setups is:
+Debrid/Usenet mounting tools cause a lot of repeated queries to the indexer that waste time and API queries. In particular, the workflow for most Usenet streaming setups is:
 - Arrs search for an item
 - Arr grabs the item
-- decypharr/nzbdav/altmount check whether the nzb is streamable
+- Tools check whether the nzb is streamable
 - If not streamable, mark the download as failed which triggers another search
 - Repeat
 
-On analyzing my prowlarr db for duplicate queries, I found that nearly 30% of queries were duplicated within 10 mins and having a cache would have saved thousands of queries to my indexers and also drastically speed up the search/import process.
+On analyzing my Prowlarr database for duplicate queries, I found that nearly 30% of queries were duplicated within 10 minutes and having a cache would have saved thousands of queries to my indexers and also drastically speed up the search/import process.
 
-Generally, if you're using any of the usenet streaming clients, this fork will give you much better search performance. Run this SQL query against your prowlarr db if you want to check how beneficial caching would be for your setup:
+Generally, if you're using any of the streaming clients, this fork will give you much better search performance. Run this SQL query against your Prowlarr database if you want to check how beneficial caching would be for your setup:
 
 ```sql
 WITH enriched AS (

@@ -284,7 +284,7 @@ namespace NzbDrone.Core.Indexers
 
                         response = await _httpClient.ExecuteProxiedAsync(request, Definition);
                     }
-                    while (response.StatusCode is HttpStatusCode.MovedPermanently or HttpStatusCode.Found or HttpStatusCode.SeeOther);
+                    while (response.StatusCode is HttpStatusCode.MovedPermanently or HttpStatusCode.Found or HttpStatusCode.SeeOther or HttpStatusCode.TemporaryRedirect or HttpStatusCode.PermanentRedirect);
                 }
 
                 fileData = response.ResponseData;

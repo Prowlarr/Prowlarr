@@ -77,6 +77,20 @@ SELECT
 FROM grouped;
 ```
 
+### Cache nzb/torrent files
+
+| Env Var                    | Default | Description                                                                                                                                                                                        |
+|----------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ENABLE_DOWNLOAD_CACHE      | false   | Whether prowlarr should download and cache nzb/torrent files                                                                                                                                       |
+| DOWNLOAD_CACHE_MAX_SIZE_MB | 1000    | Maximum size of download cache on disk. The cleanup job runs with the housekeeping tasks every 24 hours so this is not a strict limit. From my observations, 1GB of disk cache can store ~6k nzbs. |
+
+There are potentials for download loops in arrs where they can keep re-downloading the same release over and over due to mismatches in the parsed release CF scores and CF scores after imports. This problem gets exacerbated when you use tools like Newtarr/Houndarr/Huntarr/etc to automate searching.
+
+Typically, usenet indexers frown upon repeatedly downloading the same release and that can lead to bans. This feature caches all nzbs and torrents locally so future grabs don't hit indexers. This also helps when rebuilding libraries/searching after a change in quality profiles.
+
+Note:
+- When this feature is enabled, nzb/torrent downloads will happen through prowlarr instead of Sonarr/Radarr. The user-agent is set to Sonarr when this feature is turned on to prevent issues with indexers.
+
 ## Contributing
 
 Feel free to open issues or pull requests for any changes you'd like to see.

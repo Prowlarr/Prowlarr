@@ -7,6 +7,13 @@ on:
         description: 'Branch name the release is built from'
         required: true
         default: master
+  workflow_call:
+    inputs:
+      branch:
+        description: 'Branch name the release is built from'
+        required: true
+        type: string
+        default: master
 
 jobs:
   build:

@@ -1,0 +1,24 @@
+name: Full Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name the release is built from'
+        required: true
+        default: master
+
+jobs:
+  publish-binaries:
+    name: Publish Binaries
+    uses: ./.github/workflows/publish-binaries.yml
+    with:
+      branch: ${{ inputs.branch }}
+    secrets: inherit
+
+  push-docker-image:
+    name: Push Docker Image
+    uses: ./.github/workflows/push-docker-image.yml
+    with:
+      branch: ${{ inputs.branch }}
+    secrets: inherit

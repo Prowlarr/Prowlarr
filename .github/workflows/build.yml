@@ -398,3 +398,17 @@ jobs:
           name: Automation Test Summary
           path: TestResult.xml
           reporter: dotnet-nunit
+
+  docker:
+    name: Push PR Docker Image
+    if: github.event_name == 'pull_request'
+    needs: [build, unit_test, unit_test_postgres, integration_test, automation_test]
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/push-docker-image.yml
+    with:
+      branch: ${{ github.head_ref }}
+      is_pr: true
+      pr_number: ${{ github.event.pull_request.number }}
+    secrets: inherit

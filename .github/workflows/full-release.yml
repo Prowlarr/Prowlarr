@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   packages: write
+  statuses: write
 
 jobs:
   publish-binaries:

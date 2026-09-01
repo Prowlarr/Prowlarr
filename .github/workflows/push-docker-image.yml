@@ -14,38 +14,66 @@ on:
         required: true
         type: string
         default: master
-      is_pr:
-        description: 'Whether this is a PR build'
-        type: boolean
-        default: false
-      pr_number:
-        description: 'Pull Request number'
-        type: string
-        default: ''
+  workflow_run:
+    workflows: ["Build"]
+    types: [completed]
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    if: |
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success')
     permissions:
       contents: read
       packages: write
+      statuses: write
     env:
       IMAGE_NAME: ghcr.io/${{ github.repository }}
     steps:
-      - name: Check out
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Extract Metadata
+      - name: Extract Metadata & Determine Mode
         id: meta_env
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0.0")
           VERSION="${TAG#v}"
           FRAMEWORK=$(git grep -h -m 1 "<TargetFrameworks>" src/NzbDrone.Core/ | sed -e 's/.*<TargetFrameworks>\(.*\)<\/TargetFrameworks>.*/\1/')
+          
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            IS_PR="true"
+            PR_NUM="${{ github.event.workflow_run.pull_requests[0].number }}"
+            PR_SHA="${{ github.event.workflow_run.head_sha }}"
+            BRANCH="${{ github.event.workflow_run.head_branch }}"
+
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              /repos/${{ github.repository }}/statuses/$PR_SHA \
+              -f state='pending' \
+              -f description='Building & pushing PR Docker image...' \
+              -f context='Push PR Docker Image' \
+              -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          else
+            IS_PR="false"
+            PR_NUM=""
+            PR_SHA=""
+            BRANCH="${{ inputs.branch }}"
+          fi
+
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
           echo "FRAMEWORK=$FRAMEWORK" >> "$GITHUB_ENV"
+          echo "IS_PR=$IS_PR" >> "$GITHUB_ENV"
+          echo "PR_NUM=$PR_NUM" >> "$GITHUB_OUTPUT"
+          echo "PR_SHA=$PR_SHA" >> "$GITHUB_ENV"
+          echo "BRANCH=$BRANCH" >> "$GITHUB_ENV"
+
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || inputs.branch }}
+          fetch-depth: 0
 
       - name: Set up Node.js (Volta)
         uses: volta-cli/action@v4
@@ -59,15 +87,15 @@ jobs:
         run: |
           ./build.sh --backend --frontend --packages -f "${{ env.FRAMEWORK }}" -r linux-musl-x64
 
-          if [ "${{ inputs.is_pr }}" != "true" ]; then
+          if [ "${{ env.IS_PR }}" != "true" ]; then
             ./build.sh --backend --frontend --packages -f "${{ env.FRAMEWORK }}" -r linux-musl-arm64
           else
             mkdir -p _artifacts/linux-musl-arm64/${{ env.FRAMEWORK }}/Prowlarr
           fi
         env:
           PROWLARRVERSION: ${{ steps.meta_env.outputs.VERSION }}
-          BRANCH: ${{ inputs.branch }}
-          BUILD_SOURCEBRANCHNAME: ${{ inputs.branch }}
+          BRANCH: ${{ env.BRANCH }}
+          BUILD_SOURCEBRANCHNAME: ${{ env.BRANCH }}
 
       - name: Set Build Date
         shell: bash
@@ -89,22 +117,50 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=pr-${{ inputs.pr_number }},enable=${{ inputs.is_pr == true }}
-            type=raw,value=${{ steps.meta_env.outputs.VERSION }},enable=${{ inputs.is_pr != true }}
-            type=raw,value=latest,enable=${{ inputs.is_pr != true && inputs.branch == 'master' }}
-            type=raw,value=${{ inputs.branch }},enable=${{ inputs.is_pr != true }}
+            type=raw,value=pr-${{ steps.meta_env.outputs.PR_NUM }},enable=${{ env.IS_PR == 'true' }}
+            type=raw,value=${{ steps.meta_env.outputs.VERSION }},enable=${{ env.IS_PR != 'true' }}
+            type=raw,value=latest,enable=${{ env.IS_PR != 'true' && env.BRANCH == 'master' }}
+            type=raw,value=${{ env.BRANCH }},enable=${{ env.IS_PR != 'true' }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile
-          platforms: ${{ inputs.is_pr && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
+          platforms: ${{ env.IS_PR == 'true' && 'linux/amd64' || 'linux/amd64,linux/arm64' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_DATE=${{ env.BUILD_DATE }}
             VERSION=${{ steps.meta_env.outputs.VERSION }}
-            PROWLARR_BRANCH=${{ inputs.branch }}
+            PROWLARR_BRANCH=${{ env.BRANCH }}
             PACKAGE_AUTHOR=github.com/${{ github.repository }}
+
+      - name: Update PR Status (Success)
+        if: success() && env.IS_PR == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/statuses/${{ env.PR_SHA }} \
+            -f state='success' \
+            -f description="Pushed ghcr.io/${{ github.repository }}:pr-${{ steps.meta_env.outputs.PR_NUM }}" \
+            -f context='Push PR Docker Image' \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/pkgs/container/${{ github.event.repository.name }}"
+
+      - name: Update PR Status (Failure)
+        if: failure() && env.IS_PR == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/statuses/${{ env.PR_SHA }} \
+            -f state='failure' \
+            -f description="Docker build/push failed" \
+            -f context='Push PR Docker Image' \
+            -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

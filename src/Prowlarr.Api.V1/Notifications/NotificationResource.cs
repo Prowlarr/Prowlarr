@@ -8,11 +8,13 @@ namespace Prowlarr.Api.V1.Notifications
         public bool OnGrab { get; set; }
         public bool OnHealthIssue { get; set; }
         public bool OnHealthRestored { get; set; }
+        public bool OnVipExpiration { get; set; }
         public bool OnApplicationUpdate { get; set; }
         public bool SupportsOnGrab { get; set; }
         public bool IncludeManualGrabs { get; set; }
         public bool SupportsOnHealthIssue { get; set; }
         public bool SupportsOnHealthRestored { get; set; }
+        public bool SupportsOnVipExpiration { get; set; }
         public bool IncludeHealthWarnings { get; set; }
         public bool SupportsOnApplicationUpdate { get; set; }
         public string TestCommand { get; set; }
@@ -34,8 +36,10 @@ namespace Prowlarr.Api.V1.Notifications
             resource.IncludeManualGrabs = definition.IncludeManualGrabs;
             resource.OnHealthIssue = definition.OnHealthIssue;
             resource.OnHealthRestored = definition.OnHealthRestored;
+            resource.OnVipExpiration = definition.OnVipExpiration;
             resource.SupportsOnHealthIssue = definition.SupportsOnHealthIssue;
             resource.SupportsOnHealthRestored = definition.SupportsOnHealthRestored;
+            resource.SupportsOnVipExpiration = definition.SupportsOnVipExpiration;
             resource.IncludeHealthWarnings = definition.IncludeHealthWarnings;
             resource.OnApplicationUpdate = definition.OnApplicationUpdate;
             resource.SupportsOnApplicationUpdate = definition.SupportsOnApplicationUpdate;
@@ -57,8 +61,10 @@ namespace Prowlarr.Api.V1.Notifications
             definition.IncludeManualGrabs = resource.IncludeManualGrabs;
             definition.OnHealthIssue = resource.OnHealthIssue;
             definition.OnHealthRestored = resource.OnHealthRestored;
+            definition.OnVipExpiration = resource.OnVipExpiration;
             definition.SupportsOnHealthIssue = resource.SupportsOnHealthIssue;
             definition.SupportsOnHealthRestored = resource.SupportsOnHealthRestored;
+            definition.SupportsOnVipExpiration = resource.SupportsOnVipExpiration;
             definition.IncludeHealthWarnings = resource.IncludeHealthWarnings;
             definition.OnApplicationUpdate = resource.OnApplicationUpdate;
             definition.SupportsOnApplicationUpdate = resource.SupportsOnApplicationUpdate;

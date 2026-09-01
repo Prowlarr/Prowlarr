@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.HealthCheck;
+using NzbDrone.Core.HealthCheck.Checks;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Events;
 using NzbDrone.Core.Messaging.Events;
@@ -38,6 +40,18 @@ namespace NzbDrone.Core.Notifications
                 HealthCheckResult.Warning when includeWarnings => true,
                 _ => false
             };
+        }
+
+        private bool ShouldHandleVipExpiration(HealthCheck.HealthCheck healthCheck)
+        {
+            return IsVipExpirationHealthCheck(healthCheck) &&
+                   ShouldHandleHealthFailure(healthCheck, true);
+        }
+
+        private bool IsVipExpirationHealthCheck(HealthCheck.HealthCheck healthCheck)
+        {
+            return healthCheck.Source == typeof(IndexerVIPCheck) ||
+                   healthCheck.Source == typeof(IndexerVIPExpiredCheck);
         }
 
         private bool ShouldHandleOnGrab(GrabMessage message, bool includeManual)
@@ -81,15 +95,33 @@ namespace NzbDrone.Core.Notifications
                 return;
             }
 
-            foreach (var notification in _notificationFactory.OnHealthIssueEnabled())
+            var notified = new HashSet<int>();
+            var notifications = _notificationFactory.OnHealthIssueEnabled()
+                                                    .Concat(_notificationFactory.OnVipExpirationEnabled());
+
+            foreach (var notification in notifications)
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    var definition = (NotificationDefinition)notification.Definition;
+
+                    var shouldHandleHealthIssue = definition.OnHealthIssue &&
+                                                  ShouldHandleHealthFailure(message.HealthCheck, definition.IncludeHealthWarnings);
+                    var shouldHandleVipExpiration = definition.OnVipExpiration &&
+                                                    ShouldHandleVipExpiration(message.HealthCheck);
+
+                    if (!shouldHandleHealthIssue && !shouldHandleVipExpiration)
                     {
-                        notification.OnHealthIssue(message.HealthCheck);
-                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                        continue;
                     }
+
+                    if (!notified.Add(definition.Id))
+                    {
+                        continue;
+                    }
+
+                    notification.OnHealthIssue(message.HealthCheck);
+                    _notificationStatusService.RecordSuccess(notification.Definition.Id);
                 }
                 catch (Exception ex)
                 {

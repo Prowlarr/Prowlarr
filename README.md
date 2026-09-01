@@ -5,7 +5,7 @@
 This fork is designed to be a drop-in replacement for existing Prowlarr docker installations. Simply replace your Prowlarr docker image with `ghcr.io/actuallyevan/prowlarr:latest`
 
 Sample docker compose:
-```docker
+```yaml
 prowlarr:
     image: ghcr.io/actuallyevan/prowlarr:latest
     container_name: prowlarr
@@ -16,6 +16,8 @@ prowlarr:
       # Configure caching behavior
       - CACHE_TTL_MINS=10
       - CACHE_MAX_SIZE_MB=100
+      - ENABLE_DOWNLOAD_CACHE=true
+      - DOWNLOAD_CACHE_MAX_SIZE_MB=1000
     volumes:
       - /path/to/prowlarr/data:/config
       # Additional volume mounts as needed
@@ -32,7 +34,7 @@ This fork aims to improve certain aspects of Prowlarr to make it work better wit
 
 | Env Var           | Default | Description                                                                                                                                         |
 |-------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| CACHE_TTL_MINS    | 10      | How long a particular query response should be cached for. Should be <15 mins to ensure RSS queries get fresh data but you can go higher if needed. |
+| CACHE_TTL_MINS    | 10      | How long a particular query response should be cached for. Should be <15 minutes to ensure RSS queries get fresh data but you can go higher if needed. |
 | CACHE_MAX_SIZE_MB | 100     | Maximum size of cache in memory before old records are cleaned up. Higher values will use more memory.                                              |
 
 
@@ -43,7 +45,7 @@ Debrid/Usenet mounting tools cause a lot of repeated queries to the indexer that
 - If not streamable, mark the download as failed which triggers another search
 - Repeat
 
-On analyzing my Prowlarr database for duplicate queries, I found that nearly 30% of queries were duplicated within 10 minutes and having a cache would have saved thousands of queries to my indexers and also drastically speed up the search/import process.
+An analysis of Prowlarr query history showed that nearly 30% of requests were duplicated within 10 minutes. Caching these responses saves thousands of indexer calls and drastically speeds up search and import times.
 
 Generally, if you're using any of the streaming clients, this fork will give you much better search performance. Run this SQL query against your Prowlarr database if you want to check how beneficial caching would be for your setup:
 
@@ -77,19 +79,19 @@ SELECT
 FROM grouped;
 ```
 
-### Cache nzb/torrent files
+## Cache nzb/torrent files
 
 | Env Var                    | Default | Description                                                                                                                                                                                        |
 |----------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ENABLE_DOWNLOAD_CACHE      | false   | Whether prowlarr should download and cache nzb/torrent files                                                                                                                                       |
-| DOWNLOAD_CACHE_MAX_SIZE_MB | 1000    | Maximum size of download cache on disk. The cleanup job runs with the housekeeping tasks every 24 hours so this is not a strict limit. From my observations, 1GB of disk cache can store ~6k nzbs. |
+| ENABLE_DOWNLOAD_CACHE      | false   | Whether Prowlarr should download and cache nzb/torrent files                                                                                                                                       |
+| DOWNLOAD_CACHE_MAX_SIZE_MB | 1000    | Maximum size of download cache on disk. The cleanup job runs with the housekeeping tasks every 24 hours so this is not a strict limit. In testing, 1GB of disk cache stored ~6k nzbs. |
 
-There are potentials for download loops in arrs where they can keep re-downloading the same release over and over due to mismatches in the parsed release CF scores and CF scores after imports. This problem gets exacerbated when you use tools like Newtarr/Houndarr/Huntarr/etc to automate searching.
+There is potential for download loops in arrs where the same release is re-downloaded repeatedly due to mismatches in the parsed release custom format score and custom format score after import. This problem gets exacerbated when you use tools like Newtarr/Houndarr/Huntarr/etc to automate searching.
 
-Typically, usenet indexers frown upon repeatedly downloading the same release and that can lead to bans. This feature caches all nzbs and torrents locally so future grabs don't hit indexers. This also helps when rebuilding libraries/searching after a change in quality profiles.
+Typically, Usenet indexers frown upon repeatedly downloading the same nzb, which can result in bans. This feature caches all nzbs and torrents locally so future grabs don't hit indexers. This also helps when rebuilding libraries/searching after a change in custom formats and/or quality profiles.
 
-Note:
-- When this feature is enabled, nzb/torrent downloads will happen through prowlarr instead of Sonarr/Radarr. The user-agent is set to Sonarr when this feature is turned on to prevent issues with indexers.
+> [!NOTE]
+> When this feature is enabled, nzb/torrent downloads will happen through Prowlarr instead of Sonarr/Radarr. The user-agent is set to Sonarr when this feature is turned on to prevent restrictions or other issues with Usenet indexers.
 
 ## Contributing
 

@@ -24,7 +24,7 @@ on:
         default: ''
 
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
     permissions:
       contents: read

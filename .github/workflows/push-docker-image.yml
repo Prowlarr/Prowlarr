@@ -72,7 +72,7 @@ jobs:
                 /repos/${{ github.repository }}/statuses/$PR_SHA \
                 -f state='pending' \
                 -f description='Building & pushing PR Docker image...' \
-                -f context='Push PR Docker Image' \
+                -f context='(Docker) Push PR Image' \
                 -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true
             fi
           else
@@ -162,7 +162,7 @@ jobs:
             /repos/${{ github.repository }}/statuses/${{ env.PR_SHA }} \
             -f state='success' \
             -f description="Pushed ghcr.io/${{ github.repository }}:pr-${{ steps.meta_env.outputs.PR_NUM }}" \
-            -f context='Push PR Docker Image' \
+            -f context='(Docker) Push PR Image' \
             -f target_url="${{ github.server_url }}/${{ github.repository }}/pkgs/container/${{ github.event.repository.name }}" || true
 
       - name: Update PR Status (Failure)
@@ -176,5 +176,5 @@ jobs:
             /repos/${{ github.repository }}/statuses/${{ env.PR_SHA }} \
             -f state='failure' \
             -f description="Docker build/push failed" \
-            -f context='Push PR Docker Image' \
+            -f context='(Docker) Push PR Image' \
             -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" || true

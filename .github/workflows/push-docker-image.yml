@@ -36,6 +36,7 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || inputs.branch }}
           fetch-depth: 0
+          allow-unsafe-pr-checkout: true
 
       - name: Extract Metadata & Determine Mode
         id: meta_env

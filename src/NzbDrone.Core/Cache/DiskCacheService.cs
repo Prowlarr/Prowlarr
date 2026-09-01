@@ -12,6 +12,8 @@ namespace NzbDrone.Core.Cache
 {
     public interface IDiskCacheService
     {
+        bool IsEnabled { get; }
+
         Task<byte[]> Get(string key);
 
         Task Store(string key, byte[] value, string fileName);
@@ -24,11 +26,13 @@ namespace NzbDrone.Core.Cache
         private readonly IAppFolderInfo _appFolderInfo;
         private readonly Logger _logger;
 
+        public bool IsEnabled =>
+            bool.TryParse(Environment.GetEnvironmentVariable("ENABLE_DOWNLOAD_CACHE"), out var enabled) && enabled;
+
         public DiskCacheService(IAppFolderInfo appFolderInfo, Logger logger)
         {
             _appFolderInfo = appFolderInfo;
             _logger = logger;
-            Directory.CreateDirectory(GetDiskCacheDir());
         }
 
         public async Task<byte[]> Get(string key)
@@ -98,6 +102,13 @@ namespace NzbDrone.Core.Cache
 
         public void Cleanup()
         {
+            var cacheDir = GetDiskCacheDir();
+
+            if (!Directory.Exists(cacheDir))
+            {
+                return;
+            }
+
             var cacheMaxSize = int.TryParse(
                 Environment.GetEnvironmentVariable("DOWNLOAD_CACHE_MAX_SIZE_MB"),
                 out var mega)
@@ -107,7 +118,7 @@ namespace NzbDrone.Core.Cache
             var maxBytes = cacheMaxSize * 1024 * 1024;
 
             var files = Directory
-                .EnumerateFiles(GetDiskCacheDir(), "*", SearchOption.AllDirectories)
+                .EnumerateFiles(cacheDir, "*", SearchOption.AllDirectories)
                 .Select(path =>
                 {
                     var info = new FileInfo(path);

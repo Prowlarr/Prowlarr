@@ -6,6 +6,11 @@ namespace NzbDrone.Core.Housekeeping.Housekeepers
     {
         public void Clean()
         {
+            if (!diskCacheService.IsEnabled)
+            {
+                return;
+            }
+
             diskCacheService.Cleanup();
         }
     }

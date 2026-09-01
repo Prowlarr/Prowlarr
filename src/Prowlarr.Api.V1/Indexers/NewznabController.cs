@@ -268,9 +268,7 @@ namespace NzbDrone.Api.V1.Indexers
                 throw new BadRequestException("Failed to normalize provided link");
             }
 
-            var enableDownloadCache = bool.TryParse(
-                Environment.GetEnvironmentVariable("ENABLE_DOWNLOAD_CACHE"),
-                out var enabled) && enabled;
+            var enableDownloadCache = _diskCacheService.IsEnabled;
 
             // If Indexer is set to download via Redirect then just redirect to the link unless it's a Usenet indexer at which point it forces Redirect.
             if (!enableDownloadCache)

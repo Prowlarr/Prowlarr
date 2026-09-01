@@ -27,6 +27,7 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.branch }}
           fetch-depth: 0
 
       - name: Extract Version

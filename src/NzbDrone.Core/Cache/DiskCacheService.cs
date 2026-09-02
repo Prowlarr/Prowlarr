@@ -109,7 +109,7 @@ namespace NzbDrone.Core.Cache
                 return;
             }
 
-            var cacheMaxSize = int.TryParse(
+            var cacheMaxSize = long.TryParse(
                 Environment.GetEnvironmentVariable("DOWNLOAD_CACHE_MAX_SIZE_MB"),
                 out var mega)
                 ? mega
@@ -135,6 +135,8 @@ namespace NzbDrone.Core.Cache
 
             var totalSize = files.Sum(x => x.Size);
             var deletedCount = 0;
+
+            _logger.Debug("Total size of disk cache: {0} MB, Limit: {1} MB", totalSize / 1024 / 1024, maxBytes / 1024 / 1024);
 
             foreach (var file in files)
             {

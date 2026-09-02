@@ -7,23 +7,14 @@ on:
 permissions:
   packages: write
 
+concurrency:
+  group: cleanup-ghcr-${{ github.event.repository.name }}
+
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
       - name: Delete PR image
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.event.repository.name }}
-          TAG: pr-${{ github.event.pull_request.number }}
-        run: |
-          VERSION_ID=$(gh api "/user/packages/container/${REPO,,}/versions" \
-            --paginate \
-            --jq ".[] | select(.metadata.container.tags[]? == \"$TAG\") | .id" 2>/dev/null | head -n 1)
-
-          if [ -n "$VERSION_ID" ]; then
-            gh api --method DELETE "/user/packages/container/${REPO,,}/versions/$VERSION_ID"
-            echo "Successfully deleted $TAG from GHCR."
-          else
-            echo "No package version found with tag $TAG. Nothing to delete."
-          fi
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          delete-tags: pr-${{ github.event.pull_request.number }}

@@ -17,4 +17,5 @@ jobs:
       - name: Delete PR image
         uses: dataaxiom/ghcr-cleanup-action@v1
         with:
+          package: prowlarr
           delete-tags: pr-${{ github.event.pull_request.number }}

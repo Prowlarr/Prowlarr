@@ -1,3 +1,4 @@
+using System;
 using NzbDrone.Common.EnvironmentInfo;
 
 namespace NzbDrone.Common.Http
@@ -33,8 +34,21 @@ namespace NzbDrone.Common.Http
 
             var osVersion = osInfo.Version?.ToLower();
 
-            _userAgent = $"{BuildInfo.AppName}/{BuildInfo.Version} ({osName} {osVersion})";
-            _userAgentSimplified = $"{BuildInfo.AppName}/{BuildInfo.Version.ToString(2)}";
+            var enableDownloadCache = bool.TryParse(
+                Environment.GetEnvironmentVariable("ENABLE_DOWNLOAD_CACHE"),
+                out var enabled) && enabled;
+
+            if (enableDownloadCache)
+            {
+                // Use Sonarr as the user agent if downloading through prowlarr
+                _userAgent = $"Sonarr/4.0.19.2979 ({osName} {osVersion})";
+                _userAgentSimplified = $"Sonarr/4.0";
+            }
+            else
+            {
+                _userAgent = $"{BuildInfo.AppName}/{BuildInfo.Version} ({osName} {osVersion})";
+                _userAgentSimplified = $"{BuildInfo.AppName}/{BuildInfo.Version.ToString(2)}";
+            }
         }
     }
 }

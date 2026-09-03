@@ -7,6 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NzbDrone.Core\Prowlarr.Core.csproj" />
+    <ProjectReference Include="..\Prowlarr.Api.V1\Prowlarr.Api.V1.csproj" />
     <ProjectReference Include="..\NzbDrone.Test.Common\Prowlarr.Test.Common.csproj" />
     <ProjectReference Include="..\Prowlarr.Http\Prowlarr.Http.csproj" />
   </ItemGroup>

@@ -454,6 +454,7 @@
   "IndexerVipExpiredHealthCheckMessage": "Indexer VIP benefits have expired: {indexerNames}",
   "IndexerVipExpiringHealthCheckMessage": "Indexer VIP benefits expiring soon: {indexerNames}",
   "Indexers": "Indexers",
+  "IndexerProxies": "Indexer Proxies",
   "Info": "Info",
   "InfoUrl": "Info URL",
   "InitialFailure": "Initial Failure",

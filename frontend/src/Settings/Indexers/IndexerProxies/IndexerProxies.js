@@ -83,6 +83,8 @@ class IndexerProxies extends Component {
 
             <Card
               className={styles.addIndexerProxy}
+              ariaLabel={translate('AddIndexerProxy')}
+              title={translate('AddIndexerProxy')}
               onPress={this.onAddIndexerProxyPress}
             >
               <div className={styles.center}>

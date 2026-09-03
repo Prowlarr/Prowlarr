@@ -74,6 +74,8 @@ class AppProfile extends Component {
     return (
       <Card
         className={styles.appProfile}
+        ariaLabel={translate('EditSyncProfileName', { name })}
+        title={name}
         overlayContent={true}
         onPress={this.onEditAppProfilePress}
       >

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Card from 'Components/Card';
 import Button from 'Components/Link/Button';
-import Link from 'Components/Link/Link';
 import Menu from 'Components/Menu/Menu';
 import MenuContent from 'Components/Menu/MenuContent';
 import { sizes } from 'Helpers/Props';
@@ -38,66 +38,64 @@ class AddApplicationItem extends Component {
     const hasPresets = !!presets && !!presets.length;
 
     return (
-      <div
+      <Card
         className={styles.application}
+        overlayClassName={styles.overlay}
+        ariaLabel={translate('AddApplicationImplementation', { implementationName })}
+        title={implementationName}
+        overlayContent={true}
+        onPress={this.onApplicationSelect}
       >
-        <Link
-          className={styles.underlay}
-          onPress={this.onApplicationSelect}
-        />
+        <div className={styles.name}>
+          {implementationName}
+        </div>
 
-        <div className={styles.overlay}>
-          <div className={styles.name}>
-            {implementationName}
-          </div>
+        <div className={styles.actions}>
+          {
+            hasPresets &&
+              <span>
+                <Button
+                  size={sizes.SMALL}
+                  onPress={this.onApplicationSelect}
+                >
+                  Custom
+                </Button>
 
-          <div className={styles.actions}>
-            {
-              hasPresets &&
-                <span>
+                <Menu className={styles.presetsMenu}>
                   <Button
+                    className={styles.presetsMenuButton}
                     size={sizes.SMALL}
-                    onPress={this.onApplicationSelect}
                   >
-                    Custom
+                    Presets
                   </Button>
 
-                  <Menu className={styles.presetsMenu}>
-                    <Button
-                      className={styles.presetsMenuButton}
-                      size={sizes.SMALL}
-                    >
-                      Presets
-                    </Button>
+                  <MenuContent>
+                    {
+                      presets.map((preset) => {
+                        return (
+                          <AddApplicationPresetMenuItem
+                            key={preset.name}
+                            name={preset.name}
+                            implementation={implementation}
+                            implementationName={implementationName}
+                            onPress={onApplicationSelect}
+                          />
+                        );
+                      })
+                    }
+                  </MenuContent>
+                </Menu>
+              </span>
+          }
 
-                    <MenuContent>
-                      {
-                        presets.map((preset) => {
-                          return (
-                            <AddApplicationPresetMenuItem
-                              key={preset.name}
-                              name={preset.name}
-                              implementation={implementation}
-                              implementationName={implementationName}
-                              onPress={onApplicationSelect}
-                            />
-                          );
-                        })
-                      }
-                    </MenuContent>
-                  </Menu>
-                </span>
-            }
-
-            <Button
-              to={infoLink}
-              size={sizes.SMALL}
-            >
-              {translate('MoreInfo')}
-            </Button>
-          </div>
+          <Button
+            to={infoLink}
+            size={sizes.SMALL}
+          >
+            {translate('MoreInfo')}
+          </Button>
         </div>
-      </div>
+      </Card>
     );
   }
 }

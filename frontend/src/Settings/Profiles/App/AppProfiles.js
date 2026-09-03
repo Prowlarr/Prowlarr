@@ -74,6 +74,8 @@ class AppProfiles extends Component {
 
             <Card
               className={styles.addAppProfile}
+              ariaLabel={translate('AddSyncProfile')}
+              title={translate('AddSyncProfile')}
               onPress={this.onEditAppProfilePress}
             >
               <div className={styles.center}>

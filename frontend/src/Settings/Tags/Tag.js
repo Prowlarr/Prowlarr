@@ -74,6 +74,8 @@ class Tag extends Component {
     return (
       <Card
         className={styles.tag}
+        ariaLabel={translate('TagDetails', { label })}
+        title={label}
         overlayContent={true}
         onPress={this.onShowDetailsPress}
       >

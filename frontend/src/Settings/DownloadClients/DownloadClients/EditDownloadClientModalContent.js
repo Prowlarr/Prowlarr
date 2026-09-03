@@ -187,6 +187,8 @@ class EditDownloadClientModalContent extends Component {
 
                         <Card
                           className={styles.addCategory}
+                          ariaLabel={translate('AddCategory')}
+                          title={translate('AddCategory')}
                           onPress={this.onAddCategoryPress}
                         >
                           <div className={styles.center}>

@@ -6,6 +6,7 @@ on:
 
 permissions:
   packages: write
+  actions: write
 
 concurrency:
   group: cleanup-ghcr-${{ github.event.repository.name }}

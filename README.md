@@ -32,10 +32,10 @@ This fork aims to improve certain aspects of Prowlarr to make it work better wit
 
 ## Cache indexer query responses
 
-| Env Var           | Default | Description                                                                                                                                         |
-|-------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| CACHE_TTL_MINS    | 10      | How long a particular query response should be cached for. Should be <15 minutes to ensure RSS queries get fresh data but you can go higher if needed. |
-| CACHE_MAX_SIZE_MB | 100     | Maximum size of cache in memory before old records are cleaned up. Higher values will use more memory.                                              |
+| Env Var           | Default | Description                                                                                            |
+|-------------------|---------|--------------------------------------------------------------------------------------------------------|
+| CACHE_TTL_MINS    | 10      | How long a particular query response should be cached for. RSS queries are not cached.                 |
+| CACHE_MAX_SIZE_MB | 100     | Maximum size of cache in memory before old records are cleaned up. Higher values will use more memory. |
 
 
 Debrid/Usenet mounting tools cause a lot of repeated queries to the indexer that waste time and API queries. In particular, the workflow for most Usenet streaming setups is:

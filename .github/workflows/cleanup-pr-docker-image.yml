@@ -1,0 +1,21 @@
+name: Cleanup PR Docker Image
+
+on:
+  pull_request_target:
+    types: [closed]
+
+permissions:
+  packages: write
+
+concurrency:
+  group: cleanup-ghcr-${{ github.event.repository.name }}
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete PR image
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          package: prowlarr
+          delete-tags: pr-${{ github.event.pull_request.number }}

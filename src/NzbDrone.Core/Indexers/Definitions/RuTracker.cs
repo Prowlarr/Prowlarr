@@ -1769,7 +1769,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             // language fix: all rutracker releases contains russian track
-            if (addRussianToTitle && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.Match(title, "\bRUS\b", RegexOptions.IgnoreCase).Success)
+            if (addRussianToTitle && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.Match(title, @"\bRUS\b", RegexOptions.IgnoreCase).Success)
             {
                 title += " RUS";
             }

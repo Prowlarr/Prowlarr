@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,12 +20,14 @@ using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Instrumentation;
 using NzbDrone.Common.Processes;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Cache;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Instrumentation;
 using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Host.AccessControl;
+using NzbDrone.Host.Caching;
 using NzbDrone.SignalR;
 using Prowlarr.Api.V1.System;
 using Prowlarr.Http;
@@ -107,6 +110,8 @@ namespace NzbDrone.Host
                 options.AddPolicy("NewznabQuery", builder =>
                     builder.With(context => !IsRssRequest(context.HttpContext.Request)));
             });
+
+            services.AddSingleton<IOutputCacheStore, SqliteOutputCacheStore>();
 
             services
             .AddControllers(options =>
@@ -240,6 +245,8 @@ namespace NzbDrone.Host
                               IStartupContext startupContext,
                               Lazy<IMainDatabase> mainDatabaseFactory,
                               Lazy<ILogDatabase> logDatabaseFactory,
+                              ISqliteCacheDatabase sqliteCacheDatabase,
+                              IDownloadCacheMigrator downloadCacheMigrator,
                               DatabaseTarget dbTarget,
                               ISingleInstancePolicy singleInstancePolicy,
                               InitializeLogger initializeLogger,
@@ -270,6 +277,9 @@ namespace NzbDrone.Host
                 _ = logDatabaseFactory.Value;
                 dbTarget.Register();
             }
+
+            sqliteCacheDatabase.Initialize();
+            downloadCacheMigrator.Migrate();
 
             SchemaBuilder.Initialize(container);
 

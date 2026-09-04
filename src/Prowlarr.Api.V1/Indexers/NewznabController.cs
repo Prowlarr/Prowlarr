@@ -37,7 +37,7 @@ namespace NzbDrone.Api.V1.Indexers
         private IIndexerStatusService _indexerStatusService;
         private IDownloadMappingService _downloadMappingService { get; set; }
         private IDownloadService _downloadService { get; set; }
-        private IDiskCacheService _diskCacheService { get; set; }
+        private IDownloadCacheService _downloadCacheService { get; set; }
         private readonly Logger _logger;
 
         public NewznabController(IndexerFactory indexerFactory,
@@ -46,7 +46,7 @@ namespace NzbDrone.Api.V1.Indexers
             IIndexerStatusService indexerStatusService,
             IDownloadMappingService downloadMappingService,
             IDownloadService downloadService,
-            IDiskCacheService diskCacheService,
+            IDownloadCacheService downloadCacheService,
             Logger logger)
         {
             _indexerFactory = indexerFactory;
@@ -55,7 +55,7 @@ namespace NzbDrone.Api.V1.Indexers
             _indexerStatusService = indexerStatusService;
             _downloadMappingService = downloadMappingService;
             _downloadService = downloadService;
-            _diskCacheService = diskCacheService;
+            _downloadCacheService = downloadCacheService;
             _logger = logger;
         }
 
@@ -268,7 +268,7 @@ namespace NzbDrone.Api.V1.Indexers
                 throw new BadRequestException("Failed to normalize provided link");
             }
 
-            var enableDownloadCache = _diskCacheService.IsEnabled;
+            var enableDownloadCache = _downloadCacheService.IsEnabled;
 
             // If Indexer is set to download via Redirect then just redirect to the link unless it's a Usenet indexer at which point it forces Redirect.
             if (!enableDownloadCache)
@@ -289,7 +289,7 @@ namespace NzbDrone.Api.V1.Indexers
 
             if (enableDownloadCache)
             {
-                downloadBytes = await _diskCacheService.Get(unprotectedLink);
+                downloadBytes = await _downloadCacheService.Get(unprotectedLink);
             }
 
             if (downloadBytes == null)
@@ -300,7 +300,7 @@ namespace NzbDrone.Api.V1.Indexers
 
                     if (enableDownloadCache)
                     {
-                        await _diskCacheService.Store(unprotectedLink, downloadBytes, filename);
+                        await _downloadCacheService.Store(unprotectedLink, downloadBytes, filename);
                     }
                 }
                 catch (ReleaseUnavailableException ex)

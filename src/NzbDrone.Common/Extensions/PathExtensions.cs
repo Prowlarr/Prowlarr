@@ -15,6 +15,7 @@ namespace NzbDrone.Common.Extensions
         private const string DB = "prowlarr.db";
         private const string DB_RESTORE = "prowlarr.restore";
         private const string LOG_DB = "logs.db";
+        private const string CACHE_DB = "cache.db";
         private const string NLOG_CONFIG_FILE = "nlog.config";
         private const string UPDATE_CLIENT_EXE_NAME = "Prowlarr.Update";
 
@@ -362,6 +363,11 @@ namespace NzbDrone.Common.Extensions
         public static string GetLogDatabase(this IAppFolderInfo appFolderInfo)
         {
             return Path.Combine(GetAppDataPath(appFolderInfo), LOG_DB);
+        }
+
+        public static string GetCacheDatabase(this IAppFolderInfo appFolderInfo)
+        {
+            return Path.Combine(GetAppDataPath(appFolderInfo), CACHE_DB);
         }
 
         public static string GetNlogConfigPath(this IAppFolderInfo appFolderInfo)

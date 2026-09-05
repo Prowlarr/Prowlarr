@@ -811,5 +811,8 @@
     "ApplicationAuthPassword": "Contrasenya d'autenticació",
     "ApplicationAuthPasswordHelpText": "Contrasenya d'autenticació bàsica HTTP utilitzada per {appName} en accedir a aquesta aplicació. Establiu-la si l'aplicació es troba darrere d'un proxy invers protegit amb autenticació bàsica.",
     "ApplicationAuthUsername": "Nom d'usuari d'autenticació",
-    "ApplicationAuthUsernameHelpText": "Nom d'usuari d'autenticació bàsica HTTP utilitzada per {appName} en accedir a aquesta aplicació. Definiu-ho si l'aplicació es troba darrere d'un proxy invers protegit amb autenticació bàsica."
+    "ApplicationAuthUsernameHelpText": "Nom d'usuari d'autenticació bàsica HTTP utilitzada per {appName} en accedir a aquesta aplicació. Definiu-ho si l'aplicació es troba darrere d'un proxy invers protegit amb autenticació bàsica.",
+    "AllowedHosts": "Hostes permesos",
+    "AllowedHostsHelpText": "Llista de noms d'hostes i adreces IP separades per comes que {appName} n'acceptarà sol·licituds. Utilitza '*.' com a comodí per subdominis. Deixa-ho buit per permetre tots els hostes.",
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Hostes permesos no configurats, {appName} acceptarà sol·licituds de qualsevol nom d'hoste. Configura els hostes permesos a les configuracions Generals per restringir els hostes que poden contactar {appName}."
 }

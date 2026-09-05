@@ -806,5 +806,7 @@
     "ProwlarrDownloadClientsInAppOnlyAlert": "下载管理器仅对 {appName} 中搜索有效，而不会同步到其他程序中。目前没有添加此功能的计划。",
     "IndexerNewznabSettingsAdditionalParametersHelpText": "額外的 Newznab 參數（例如 `&t=search&cat=2000,2010&extended=1`）",
     "IndexerSettingsApiUser": "API 使用者",
-    "ApplicationAuthPassword": "密码"
+    "ApplicationAuthPassword": "密码",
+    "TrustedNetworks": "可信网络",
+    "AllowedHosts": "允许的主机"
 }

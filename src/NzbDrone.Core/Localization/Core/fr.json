@@ -813,5 +813,6 @@
     "ApplicationAuthPasswordHelpText": "Le mot de passe HTTP Basic Auth utilisé par {appName} pour accéder à cette application. Définir si l'application se trouve derrière un proxy inverse protégé par l'authentification de base.",
     "ApplicationAuthUsernameHelpText": "Identifiant HTTP Basic Auth utilisé par {appName} pour accéder à cette application. Définir si l'application se trouve derrière un proxy inverse protégé par l'authentification de base.",
     "IndexerIPTorrentsSettingsSearchSortBy": "Tri des résultats",
-    "IndexerIPTorrentsSettingsSearchSortByHelpText": "Sélectionner l'ordre de tri des résultats de recherche."
+    "IndexerIPTorrentsSettingsSearchSortByHelpText": "Sélectionner l'ordre de tri des résultats de recherche.",
+    "AllowedHosts": "Hôtes autorisés"
 }

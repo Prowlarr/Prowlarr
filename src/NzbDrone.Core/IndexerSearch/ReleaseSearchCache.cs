@@ -2,6 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
@@ -55,45 +57,24 @@ namespace NzbDrone.Core.IndexerSearch
 
         internal static string BuildKey(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            var ids = indexerIds == null || indexerIds.Count == 0
+            var obj = JObject.FromObject(request);
+
+            // Per-request metadata. Does not change indexer results; download URLs are rewritten after search.
+            obj.Remove("source");
+            obj.Remove("host");
+            obj.Remove("server");
+
+            if (obj.Value<string>("cat") is { Length: > 0 } cat)
+            {
+                obj["cat"] = string.Join(",", cat.Split(',').Select(c => c.Trim()).Where(c => c.Length > 0).OrderBy(c => c, StringComparer.Ordinal));
+            }
+
+            obj["_indexerIds"] = indexerIds == null || indexerIds.Count == 0
                 ? "*"
                 : string.Join(",", indexerIds.OrderBy(i => i));
+            obj["_interactiveSearch"] = interactiveSearch;
 
-            var cats = string.IsNullOrWhiteSpace(request.cat)
-                ? string.Empty
-                : string.Join(",", request.cat.Split(',').Select(c => c.Trim()).Where(c => c.Length > 0).OrderBy(c => c));
-
-            // source/host/server are request metadata and are rewritten after search; they must not affect the key.
-            return string.Join('\u001f',
-                request.t,
-                request.q,
-                cats,
-                request.imdbid,
-                request.tmdbid,
-                request.traktid,
-                request.tvdbid,
-                request.tvmazeid,
-                request.doubanid,
-                request.rid,
-                request.season,
-                request.ep,
-                request.year,
-                request.genre,
-                request.album,
-                request.artist,
-                request.label,
-                request.track,
-                request.author,
-                request.title,
-                request.publisher,
-                request.limit,
-                request.offset,
-                request.minage,
-                request.maxage,
-                request.minsize,
-                request.maxsize,
-                ids,
-                interactiveSearch);
+            return obj.ToString(Formatting.None);
         }
 
         private void Trim()

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
+using NzbDrone.Common.Cache;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser.Model;
 
@@ -14,7 +15,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         [SetUp]
         public void SetUp()
         {
-            _subject = new ReleaseSearchCache();
+            _subject = new ReleaseSearchCache(new CacheManager());
             _request = new NewznabRequest
             {
                 t = "tvsearch",
@@ -60,6 +61,14 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             var other = new NewznabRequest { t = "tvsearch", q = "Other Show", tvdbid = 123, season = 1, ep = "2" };
 
             _subject.TryGet(other, new List<int> { 1 }, false, out _).Should().BeFalse();
+        }
+
+        [Test]
+        public void should_miss_when_indexers_differ()
+        {
+            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults { Releases = new List<ReleaseInfo>() });
+
+            _subject.TryGet(_request, new List<int> { 2 }, false, out _).Should().BeFalse();
         }
 
         [Test]

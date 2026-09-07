@@ -15,6 +15,7 @@ import BackupSettings from './BackupSettings';
 import HostSettings from './HostSettings';
 import LoggingSettings from './LoggingSettings';
 import ProxySettings from './ProxySettings';
+import SearchCacheSettings from './SearchCacheSettings';
 import SecuritySettings from './SecuritySettings';
 import UpdateSettings from './UpdateSettings';
 
@@ -153,6 +154,11 @@ class GeneralSettings extends Component {
                 />
 
                 <ProxySettings
+                  settings={settings}
+                  onInputChange={onInputChange}
+                />
+
+                <SearchCacheSettings
                   settings={settings}
                   onInputChange={onInputChange}
                 />

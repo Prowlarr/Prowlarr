@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -36,67 +38,71 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         }
 
         [Test]
-        public void should_return_cached_results_for_same_search()
+        public async Task should_return_cached_results_for_same_search()
         {
-            var results = new NewznabResults
-            {
-                Releases = new List<ReleaseInfo> { new() { Title = "Some Show S01E02", DownloadUrl = "http://indexer/dl" } }
-            };
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("Some Show S01E02"));
 
-            _subject.Set(_request, new List<int> { 1 }, false, results);
+            var cached = await _subject.GetOrSearch(_request, new List<int> { 1 }, false, ShouldNotSearch);
 
-            _subject.TryGet(_request, new List<int> { 1 }, false, out var cached).Should().BeTrue();
             cached.Releases.Should().HaveCount(1);
             cached.Releases[0].Title.Should().Be("Some Show S01E02");
         }
 
         [Test]
-        public void should_not_cache_when_disabled()
+        public async Task should_not_cache_when_disabled()
         {
             _configService.SetupGet(c => c.SearchCacheEnabled).Returns(false);
 
-            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
+            var searches = 0;
+
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () =>
             {
-                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
+                searches++;
+                return SearchResults("A");
             });
 
-            _subject.TryGet(_request, new List<int> { 1 }, false, out _).Should().BeFalse();
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () =>
+            {
+                searches++;
+                return SearchResults("A");
+            });
+
+            searches.Should().Be(2);
         }
 
         [Test]
-        public void should_not_return_existing_results_after_disabled()
+        public async Task should_not_return_existing_results_after_disabled()
         {
-            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
-            {
-                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
-            });
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
 
             _configService.SetupGet(c => c.SearchCacheEnabled).Returns(false);
 
-            _subject.TryGet(_request, new List<int> { 1 }, false, out _).Should().BeFalse();
+            var searched = false;
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () =>
+            {
+                searched = true;
+                return SearchResults("A");
+            });
+
+            searched.Should().BeTrue();
         }
 
         [Test]
-        public void should_store_results_with_configured_ttl()
+        public async Task should_store_results_with_configured_ttl()
         {
             _configService.SetupGet(c => c.SearchCacheTtl).Returns(15);
 
             var cache = CaptureCache();
             var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
 
-            subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
-            {
-                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
-            });
+            await subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
 
             cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(15)), Times.Once);
         }
 
         [Test]
-        public void should_refresh_ttl_on_cache_hit()
+        public async Task should_not_extend_ttl_on_cache_hit()
         {
-            _configService.SetupGet(c => c.SearchCacheTtl).Returns(15);
-
             var cache = CaptureCache();
             cache.Cached.Setup(c => c.Find(It.IsAny<string>())).Returns(new NewznabResults
             {
@@ -105,23 +111,20 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
 
-            subject.TryGet(_request, new List<int> { 1 }, false, out _).Should().BeTrue();
+            await subject.GetOrSearch(_request, new List<int> { 1 }, false, ShouldNotSearch);
 
-            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(15)), Times.Once);
+            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), It.IsAny<TimeSpan>()), Times.Never);
         }
 
         [Test]
-        public void should_store_results_with_default_ttl_when_configured_ttl_is_invalid()
+        public async Task should_store_results_with_default_ttl_when_configured_ttl_is_invalid()
         {
             _configService.SetupGet(c => c.SearchCacheTtl).Returns(0);
 
             var cache = CaptureCache();
             var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
 
-            subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
-            {
-                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
-            });
+            await subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
 
             cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(5)), Times.Once);
         }
@@ -138,38 +141,89 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         }
 
         [Test]
-        public void should_miss_when_query_differs()
+        public async Task should_miss_when_query_differs()
         {
-            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults { Releases = new List<ReleaseInfo>() });
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
 
             var other = new NewznabRequest { t = "tvsearch", q = "Other Show", tvdbid = 123, season = 1, ep = "2" };
 
-            _subject.TryGet(other, new List<int> { 1 }, false, out _).Should().BeFalse();
-        }
-
-        [Test]
-        public void should_miss_when_indexers_differ()
-        {
-            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults { Releases = new List<ReleaseInfo>() });
-
-            _subject.TryGet(_request, new List<int> { 2 }, false, out _).Should().BeFalse();
-        }
-
-        [Test]
-        public void should_clone_releases_so_callers_cannot_mutate_the_cache()
-        {
-            var results = new NewznabResults
+            var searched = false;
+            await _subject.GetOrSearch(other, new List<int> { 1 }, false, () =>
             {
-                Releases = new List<ReleaseInfo> { new() { Title = "A", DownloadUrl = "http://indexer/dl" } }
-            };
+                searched = true;
+                return SearchResults("B");
+            });
 
-            _subject.Set(_request, new List<int> { 1 }, false, results);
+            searched.Should().BeTrue();
+        }
 
-            _subject.TryGet(_request, new List<int> { 1 }, false, out var cached);
+        [Test]
+        public async Task should_miss_when_indexers_differ()
+        {
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
+
+            var searched = false;
+            await _subject.GetOrSearch(_request, new List<int> { 2 }, false, () =>
+            {
+                searched = true;
+                return SearchResults("A");
+            });
+
+            searched.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task should_clone_releases_so_callers_cannot_mutate_the_cache()
+        {
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
+
+            var cached = await _subject.GetOrSearch(_request, new List<int> { 1 }, false, ShouldNotSearch);
             cached.Releases[0].DownloadUrl = "http://mutated";
 
-            _subject.TryGet(_request, new List<int> { 1 }, false, out var again);
+            var again = await _subject.GetOrSearch(_request, new List<int> { 1 }, false, ShouldNotSearch);
             again.Releases[0].DownloadUrl.Should().Be("http://indexer/dl");
+        }
+
+        [Test]
+        public async Task should_run_one_search_for_concurrent_identical_requests()
+        {
+            var searchStarted = new TaskCompletionSource<bool>();
+            var finishSearch = new TaskCompletionSource<bool>();
+            var searches = 0;
+
+            async Task<NewznabResults> Search()
+            {
+                Interlocked.Increment(ref searches);
+                searchStarted.TrySetResult(true);
+                await finishSearch.Task;
+
+                return new NewznabResults { Releases = new List<ReleaseInfo> { new() { Title = "A" } } };
+            }
+
+            var first = _subject.GetOrSearch(_request, new List<int> { 1 }, false, Search);
+            await searchStarted.Task;
+
+            var second = _subject.GetOrSearch(_request, new List<int> { 1 }, false, Search);
+            finishSearch.SetResult(true);
+
+            var results = await Task.WhenAll(first, second);
+
+            searches.Should().Be(1);
+            results[0].Releases[0].Title.Should().Be("A");
+            results[0].Releases[0].Should().NotBeSameAs(results[1].Releases[0]);
+        }
+
+        private static Task<NewznabResults> SearchResults(string title)
+        {
+            return Task.FromResult(new NewznabResults
+            {
+                Releases = new List<ReleaseInfo> { new() { Title = title, DownloadUrl = "http://indexer/dl" } }
+            });
+        }
+
+        private static Task<NewznabResults> ShouldNotSearch()
+        {
+            throw new InvalidOperationException("indexer search should not run");
         }
 
         private static (ICacheManager Manager, Mock<ICached<NewznabResults>> Cached) CaptureCache()

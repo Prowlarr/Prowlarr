@@ -42,13 +42,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         public async Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            if (_releaseSearchCache.TryGet(request, indexerIds, interactiveSearch, out var cached))
-            {
-                _logger.Debug("Returning cached search results for {0}", request.q);
-                return cached;
-            }
-
-            var results = await (request.t switch
+            return await _releaseSearchCache.GetOrSearch(request, indexerIds, interactiveSearch, () => request.t switch
             {
                 "movie" => MovieSearch(request, indexerIds, interactiveSearch),
                 "music" => MusicSearch(request, indexerIds, interactiveSearch),
@@ -56,10 +50,6 @@ namespace NzbDrone.Core.IndexerSearch
                 "book" => BookSearch(request, indexerIds, interactiveSearch),
                 _ => BasicSearch(request, indexerIds, interactiveSearch)
             });
-
-            _releaseSearchCache.Set(request, indexerIds, interactiveSearch, results);
-
-            return results;
         }
 
         private async Task<NewznabResults> MovieSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)

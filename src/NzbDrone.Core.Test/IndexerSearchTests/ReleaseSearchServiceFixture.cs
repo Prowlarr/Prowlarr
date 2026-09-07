@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -24,6 +26,10 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             Mocker.GetMock<IIndexerFactory>()
                 .Setup(s => s.Enabled(It.IsAny<bool>()))
                 .Returns(new List<IIndexer> { _mockIndexer.Object });
+
+            Mocker.GetMock<IReleaseSearchCache>()
+                .Setup(s => s.GetOrSearch(It.IsAny<NewznabRequest>(), It.IsAny<List<int>>(), It.IsAny<bool>(), It.IsAny<Func<Task<NewznabResults>>>()))
+                .Returns<NewznabRequest, List<int>, bool, Func<Task<NewznabResults>>>((_, _, _, search) => search());
         }
 
         private List<SearchCriteriaBase> WatchForSearchCriteria()

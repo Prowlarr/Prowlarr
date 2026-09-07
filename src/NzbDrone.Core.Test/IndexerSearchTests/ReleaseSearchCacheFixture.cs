@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Cache;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser.Model;
 
@@ -9,13 +11,18 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 {
     public class ReleaseSearchCacheFixture
     {
+        private Mock<IConfigService> _configService;
         private ReleaseSearchCache _subject;
         private NewznabRequest _request;
 
         [SetUp]
         public void SetUp()
         {
-            _subject = new ReleaseSearchCache(new CacheManager());
+            _configService = new Mock<IConfigService>();
+            _configService.SetupGet(c => c.SearchCacheEnabled).Returns(true);
+            _configService.SetupGet(c => c.SearchCacheTtl).Returns(5);
+
+            _subject = new ReleaseSearchCache(_configService.Object, new CacheManager());
             _request = new NewznabRequest
             {
                 t = "tvsearch",
@@ -40,6 +47,19 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             _subject.TryGet(_request, new List<int> { 1 }, false, out var cached).Should().BeTrue();
             cached.Releases.Should().HaveCount(1);
             cached.Releases[0].Title.Should().Be("Some Show S01E02");
+        }
+
+        [Test]
+        public void should_not_cache_when_disabled()
+        {
+            _configService.SetupGet(c => c.SearchCacheEnabled).Returns(false);
+
+            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
+            {
+                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
+            });
+
+            _subject.TryGet(_request, new List<int> { 1 }, false, out _).Should().BeFalse();
         }
 
         [Test]

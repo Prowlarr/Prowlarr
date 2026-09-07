@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using NzbDrone.Common;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser.Model;
 
 namespace NzbDrone.Core.IndexerSearch
@@ -18,39 +19,56 @@ namespace NzbDrone.Core.IndexerSearch
 
     public class ReleaseSearchCache : IReleaseSearchCache
     {
-        // Default until settings/UI are wired.
-        internal static readonly TimeSpan DefaultTtl = TimeSpan.FromMinutes(5);
+        private const int DefaultTtlMinutes = 5;
 
         // Per-request metadata that does not change which releases an indexer returns.
         private static readonly string[] MetadataFields = { "source", "host", "server" };
 
+        private readonly IConfigService _configService;
         private readonly ICached<NewznabResults> _cache;
 
-        public ReleaseSearchCache(ICacheManager cacheManager)
+        public ReleaseSearchCache(IConfigService configService, ICacheManager cacheManager)
         {
+            _configService = configService;
             _cache = cacheManager.GetCache<NewznabResults>(GetType(), "searchResults");
         }
 
         public bool TryGet(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, out NewznabResults results)
         {
+            results = null;
+
+            if (!_configService.SearchCacheEnabled)
+            {
+                return false;
+            }
+
             var cached = _cache.Find(BuildKey(request, indexerIds, interactiveSearch));
 
             // Callers rewrite DownloadUrl on the releases they receive, so never hand out the cached instances.
-            results = cached == null ? null : Clone(cached);
+            if (cached == null)
+            {
+                return false;
+            }
 
-            return results != null;
+            results = Clone(cached);
+            return true;
         }
 
         public void Set(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, NewznabResults results)
         {
-            if (results?.Releases == null)
+            if (!_configService.SearchCacheEnabled || results?.Releases == null)
             {
                 return;
             }
 
-            _cache.ClearExpired();
+            var ttlMinutes = _configService.SearchCacheTtl;
+            if (ttlMinutes <= 0)
+            {
+                ttlMinutes = DefaultTtlMinutes;
+            }
 
-            _cache.Set(BuildKey(request, indexerIds, interactiveSearch), Clone(results), DefaultTtl);
+            _cache.ClearExpired();
+            _cache.Set(BuildKey(request, indexerIds, interactiveSearch), Clone(results), TimeSpan.FromMinutes(ttlMinutes));
         }
 
         internal static string BuildKey(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)

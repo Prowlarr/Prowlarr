@@ -93,6 +93,24 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         }
 
         [Test]
+        public void should_refresh_ttl_on_cache_hit()
+        {
+            _configService.SetupGet(c => c.SearchCacheTtl).Returns(15);
+
+            var cache = CaptureCache();
+            cache.Cached.Setup(c => c.Find(It.IsAny<string>())).Returns(new NewznabResults
+            {
+                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
+            });
+
+            var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
+
+            subject.TryGet(_request, new List<int> { 1 }, false, out _).Should().BeTrue();
+
+            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(15)), Times.Once);
+        }
+
+        [Test]
         public void should_store_results_with_default_ttl_when_configured_ttl_is_invalid()
         {
             _configService.SetupGet(c => c.SearchCacheTtl).Returns(0);

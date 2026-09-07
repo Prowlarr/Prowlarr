@@ -662,7 +662,7 @@
   "SearchCacheEnabled": "Enable Search Cache",
   "SearchCacheEnabledHelpText": "Temporarily cache identical search queries so repeated searches can reuse recent results without querying indexers again",
   "SearchCacheTtl": "Cache Duration",
-  "SearchCacheTtlHelpText": "How long identical search results are kept before querying indexers again",
+  "SearchCacheTtlHelpText": "How long identical search results are kept before querying indexers again; matching searches reset this timer",
   "SearchCapabilities": "Search Capabilities",
   "SearchCountIndexers": "Search {count} indexer(s)",
   "SearchIndexers": "Search Indexers",

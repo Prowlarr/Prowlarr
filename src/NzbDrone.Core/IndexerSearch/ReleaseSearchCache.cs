@@ -42,7 +42,8 @@ namespace NzbDrone.Core.IndexerSearch
                 return false;
             }
 
-            var cached = _cache.Find(BuildKey(request, indexerIds, interactiveSearch));
+            var key = BuildKey(request, indexerIds, interactiveSearch);
+            var cached = _cache.Find(key);
 
             // Callers rewrite DownloadUrl on the releases they receive, so never hand out the cached instances.
             if (cached == null)
@@ -50,6 +51,7 @@ namespace NzbDrone.Core.IndexerSearch
                 return false;
             }
 
+            _cache.Set(key, cached, Ttl());
             results = Clone(cached);
             return true;
         }
@@ -61,14 +63,19 @@ namespace NzbDrone.Core.IndexerSearch
                 return;
             }
 
+            _cache.ClearExpired();
+            _cache.Set(BuildKey(request, indexerIds, interactiveSearch), Clone(results), Ttl());
+        }
+
+        private TimeSpan Ttl()
+        {
             var ttlMinutes = _configService.SearchCacheTtl;
             if (ttlMinutes <= 0)
             {
                 ttlMinutes = DefaultTtlMinutes;
             }
 
-            _cache.ClearExpired();
-            _cache.Set(BuildKey(request, indexerIds, interactiveSearch), Clone(results), TimeSpan.FromMinutes(ttlMinutes));
+            return TimeSpan.FromMinutes(ttlMinutes);
         }
 
         internal static string BuildKey(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)

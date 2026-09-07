@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
@@ -63,6 +64,51 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         }
 
         [Test]
+        public void should_not_return_existing_results_after_disabled()
+        {
+            _subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
+            {
+                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
+            });
+
+            _configService.SetupGet(c => c.SearchCacheEnabled).Returns(false);
+
+            _subject.TryGet(_request, new List<int> { 1 }, false, out _).Should().BeFalse();
+        }
+
+        [Test]
+        public void should_store_results_with_configured_ttl()
+        {
+            _configService.SetupGet(c => c.SearchCacheTtl).Returns(15);
+
+            var cache = CaptureCache();
+            var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
+
+            subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
+            {
+                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
+            });
+
+            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(15)), Times.Once);
+        }
+
+        [Test]
+        public void should_store_results_with_default_ttl_when_configured_ttl_is_invalid()
+        {
+            _configService.SetupGet(c => c.SearchCacheTtl).Returns(0);
+
+            var cache = CaptureCache();
+            var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
+
+            subject.Set(_request, new List<int> { 1 }, false, new NewznabResults
+            {
+                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
+            });
+
+            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(5)), Times.Once);
+        }
+
+        [Test]
         public void should_not_treat_source_host_or_server_as_part_of_the_key()
         {
             var first = new NewznabRequest { t = "movie", q = "Film", imdbid = "123", source = "Sonarr", host = "a", server = "http://a" };
@@ -106,6 +152,15 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
 
             _subject.TryGet(_request, new List<int> { 1 }, false, out var again);
             again.Releases[0].DownloadUrl.Should().Be("http://indexer/dl");
+        }
+
+        private static (ICacheManager Manager, Mock<ICached<NewznabResults>> Cached) CaptureCache()
+        {
+            var cached = new Mock<ICached<NewznabResults>>();
+            var manager = new Mock<ICacheManager>();
+            manager.Setup(c => c.GetCache<NewznabResults>(It.IsAny<Type>(), It.IsAny<string>())).Returns(cached.Object);
+
+            return (manager.Object, cached);
         }
     }
 }

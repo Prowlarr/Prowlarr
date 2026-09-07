@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NzbDrone.Common;
@@ -13,8 +16,7 @@ namespace NzbDrone.Core.IndexerSearch
 {
     public interface IReleaseSearchCache
     {
-        bool TryGet(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, out NewznabResults results);
-        void Set(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, NewznabResults results);
+        Task<NewznabResults> GetOrSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, Func<Task<NewznabResults>> search);
     }
 
     public class ReleaseSearchCache : IReleaseSearchCache
@@ -26,6 +28,7 @@ namespace NzbDrone.Core.IndexerSearch
 
         private readonly IConfigService _configService;
         private readonly ICached<NewznabResults> _cache;
+        private readonly ConcurrentDictionary<string, Lazy<Task<NewznabResults>>> _inFlight = new();
 
         public ReleaseSearchCache(IConfigService configService, ICacheManager cacheManager)
         {
@@ -33,38 +36,52 @@ namespace NzbDrone.Core.IndexerSearch
             _cache = cacheManager.GetCache<NewznabResults>(GetType(), "searchResults");
         }
 
-        public bool TryGet(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, out NewznabResults results)
+        public async Task<NewznabResults> GetOrSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, Func<Task<NewznabResults>> search)
         {
-            results = null;
-
             if (!_configService.SearchCacheEnabled)
             {
-                return false;
+                return await search();
             }
 
             var key = BuildKey(request, indexerIds, interactiveSearch);
             var cached = _cache.Find(key);
 
             // Callers rewrite DownloadUrl on the releases they receive, so never hand out the cached instances.
-            if (cached == null)
+            if (cached != null)
             {
-                return false;
+                return Clone(cached);
             }
 
-            _cache.Set(key, cached, Ttl());
-            results = Clone(cached);
-            return true;
-        }
+            var mine = new Lazy<Task<NewznabResults>>(search, LazyThreadSafetyMode.ExecutionAndPublication);
 
-        public void Set(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, NewznabResults results)
-        {
-            if (!_configService.SearchCacheEnabled || results?.Releases == null)
+            // Identical searches that arrive while one is running can share its result.
+            var inFlight = _inFlight.GetOrAdd(key, mine);
+            var isOwner = ReferenceEquals(inFlight, mine);
+
+            try
             {
-                return;
-            }
+                var results = await inFlight.Value;
 
-            _cache.ClearExpired();
-            _cache.Set(BuildKey(request, indexerIds, interactiveSearch), Clone(results), Ttl());
+                if (results?.Releases == null)
+                {
+                    return results;
+                }
+
+                if (isOwner)
+                {
+                    _cache.ClearExpired();
+                    _cache.Set(key, Clone(results), Ttl());
+                }
+
+                return Clone(results);
+            }
+            finally
+            {
+                if (isOwner)
+                {
+                    _inFlight.TryRemove(key, out _);
+                }
+            }
         }
 
         private TimeSpan Ttl()

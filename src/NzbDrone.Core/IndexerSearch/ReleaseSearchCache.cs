@@ -18,9 +18,8 @@ namespace NzbDrone.Core.IndexerSearch
 
     public class ReleaseSearchCache : IReleaseSearchCache
     {
-        // Defaults until settings/UI are wired.
+        // Default until settings/UI are wired.
         internal static readonly TimeSpan DefaultTtl = TimeSpan.FromMinutes(5);
-        internal const int DefaultMaxEntries = 100;
 
         // Per-request metadata that does not change which releases an indexer returns.
         private static readonly string[] MetadataFields = { "source", "host", "server" };
@@ -49,15 +48,7 @@ namespace NzbDrone.Core.IndexerSearch
                 return;
             }
 
-            if (_cache.Count >= DefaultMaxEntries)
-            {
-                _cache.ClearExpired();
-
-                if (_cache.Count >= DefaultMaxEntries)
-                {
-                    return;
-                }
-            }
+            _cache.ClearExpired();
 
             _cache.Set(BuildKey(request, indexerIds, interactiveSearch), Clone(results), DefaultTtl);
         }

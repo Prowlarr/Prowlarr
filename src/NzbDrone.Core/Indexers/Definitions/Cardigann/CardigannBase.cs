@@ -684,6 +684,16 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     case "toupper":
                         data = data.ToUpper();
                         break;
+                    case "b64decode":
+                        var b64decodeInput = Regex.Replace(data, @"\s+", string.Empty);
+                        var b64decodeMod = b64decodeInput.Length % 4;
+                        if (b64decodeMod != 0)
+                        {
+                            b64decodeInput = b64decodeInput.PadRight(b64decodeInput.Length + (4 - b64decodeMod), '=');
+                        }
+
+                        data = Encoding.UTF8.GetString(Convert.FromBase64String(b64decodeInput));
+                        break;
                     case "urldecode":
                         data = data.UrlDecode(_encoding);
                         break;

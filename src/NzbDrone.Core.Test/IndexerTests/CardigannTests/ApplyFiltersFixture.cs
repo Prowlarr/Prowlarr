@@ -59,9 +59,20 @@ namespace NzbDrone.Core.Test.IndexerTests.CardigannTests
         }
 
         [TestCase("this is not valid base64!!!")]
-        [TestCase("aGVsbG8gd29ybGQ==")]
-        public void should_throw_on_invalid_base64(string input)
+        public void should_throw_on_non_base64_characters(string input)
         {
+            var filters = new List<FilterBlock> { new FilterBlock { Name = "b64decode" } };
+
+            Assert.Throws<FormatException>(() => Subject.ApplyFiltersPublic(input, filters));
+        }
+
+        [TestCase("aGVsbG8gd29ybGQ==")]
+        public void should_throw_on_extra_padding_after_a_complete_quantum(string input)
+        {
+            // This input is already a multiple of 4 characters, so the filter's
+            // padding-tolerance logic leaves it untouched; it is still invalid
+            // base64 because "==" here is trailing padding with no incomplete
+            // quantum before it, so Convert.FromBase64String must reject it.
             var filters = new List<FilterBlock> { new FilterBlock { Name = "b64decode" } };
 
             Assert.Throws<FormatException>(() => Subject.ApplyFiltersPublic(input, filters));

@@ -46,8 +46,6 @@ public class BigBbs : TorrentIndexerBase<BigBbsSettings>
     {
         Cookies = null;
 
-        // Fetch the login page first, its cookie must be carried over to the login POST
-        // and its inline script contains the CSRF-style security token required to log in.
         var loginPage = await ExecuteAuth(new HttpRequest(LoginUrl));
         var loginPageCookies = loginPage.GetCookies();
 
@@ -100,8 +98,6 @@ public class BigBbs : TorrentIndexerBase<BigBbsSettings>
         return httpResponse.Content.Contains("error") || httpResponse.Content.Contains("-ERROR-");
     }
 
-    // The login page and the "thank you" AJAX call both require a fresh security token
-    // scraped from a `stKey: "..."` value embedded in one of the page's inline <script> tags.
     private static async Task<string> ExtractSecurityTokenAsync(string content)
     {
         if (content.IsNullOrWhiteSpace())
@@ -169,9 +165,9 @@ public class BigBbs : TorrentIndexerBase<BigBbsSettings>
             var thankUrl = Settings.BaseUrl + "ajax/torrents.php";
 
             var thankRequest = new HttpRequestBuilder(thankUrl)
-            {
-                Method = HttpMethod.Post
-            }
+                {
+                    Method = HttpMethod.Post
+                }
                 .AddFormParameter("action", "thank")
                 .AddFormParameter("tid", torrentId)
                 .AddFormParameter("securitytoken", securityToken)

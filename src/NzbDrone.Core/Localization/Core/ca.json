@@ -708,7 +708,7 @@
     "IndexerHDBitsSettingsOrigins": "Orígens",
     "IndexerIPTorrentsSettingsCookieUserAgentHelpText": "Agent d'usuari associat a la cookie utilitzada des del navegador",
     "IndexerNewznabSettingsApiKeyHelpText": "Clau de l'API del lloc",
-    "IndexerNzbIndexSettingsApiKeyHelpText": "Clau de l'API del lloc",
+    "IndexerNzbIndexSettingsApiKeyHelpText": "Clau API del lloc (opcional: la cerca funciona sense clau, però amb un límit de peticions més baix)",
     "IndexerSettingsAppsMinimumSeedersHelpText": "«Mínims filtradors requerits per les Aplicacions perquè l'indexador s'agafi",
     "IndexerSettingsFreeleechOnly": "Només Freeleech",
     "IndexerSettingsGrabLimit": "Límit de captura",
@@ -721,7 +721,7 @@
     "DeleteAppProfile": "Suprimeix el perfil de l'aplicació",
     "TVSearchTypes": "Tipus de cerca de TV",
     "IndexerMTeamTpSettingsFreeleechOnlyHelpText": "Cerca només els llançaments de freeleech",
-    "IndexerMTeamTpSettingsApiKeyHelpText": "Clau API del Lloc (trobada a Tauler de control de l'usuari => Seguretat => Laboratori)",
+    "IndexerMTeamTpSettingsApiKeyHelpText": "Clau API del lloc (la trobaràs a User Control Panel => Laboratory)",
     "MinimumSeedersHelpText": "Visors mínims requerits per l'aplicació perquè l'indexador s'agafi",
     "NoIndexerHistory": "No s'ha trobat cap historial per a aquest indexador",
     "SearchQueries": "Cerca consultes",
@@ -814,5 +814,9 @@
     "ApplicationAuthUsernameHelpText": "Nom d'usuari d'autenticació bàsica HTTP utilitzada per {appName} en accedir a aquesta aplicació. Definiu-ho si l'aplicació es troba darrere d'un proxy invers protegit amb autenticació bàsica.",
     "AllowedHosts": "Hostes permesos",
     "AllowedHostsHelpText": "Llista de noms d'hostes i adreces IP separades per comes que {appName} n'acceptarà sol·licituds. Utilitza '*.' com a comodí per subdominis. Deixa-ho buit per permetre tots els hostes.",
-    "AllowedHostsNotConfiguredHealthCheckMessage": "Hostes permesos no configurats, {appName} acceptarà sol·licituds de qualsevol nom d'hoste. Configura els hostes permesos a les configuracions Generals per restringir els hostes que poden contactar {appName}."
+    "AllowedHostsNotConfiguredHealthCheckMessage": "Hostes permesos no configurats, {appName} acceptarà sol·licituds de qualsevol nom d'hoste. Configura els hostes permesos a les configuracions Generals per restringir els hostes que poden contactar {appName}.",
+    "IndexerIPTorrentsSettingsSearchSortBy": "Ordena la cerca per",
+    "IndexerIPTorrentsSettingsSearchSortByHelpText": "Selecciona l'ordre en què s'han d'ordenar els resultats de la cerca",
+    "TrustedNetworks": "Xarxes de confiança",
+    "TrustedNetworksHelpText": "Llista separada per comes d'adreces IP o de xarxes en notació CIDR on hi ha els proxies inversos de confiança. Per exemple: 172.17.0.1, 10.0.0.0/8 o fc00::/7. Afegeix-hi només proxies configurats correctament per enviar les capçaleres adequades."
 }

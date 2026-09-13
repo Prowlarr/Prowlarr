@@ -1,0 +1,65 @@
+{
+  "data": [
+    {
+      "id": 9001,
+      "hash": "9999999999999999999999999999999999999999",
+      "label": "[AniLibria] Recent Test TV S01E01 [WEB-DL][1080p][AVC]",
+      "size": 246813579,
+      "seeders": 7,
+      "leechers": 2,
+      "completed_times": 19,
+      "created_at": "2026-07-01T12:34:56+03:00",
+      "quality": { "value": "1080p" },
+      "type": { "value": "WEB-DL" },
+      "codec": { "value": "AVC" },
+      "release": {
+        "id": 901,
+        "alias": "recent-test-tv",
+        "type": { "value": "TV" }
+      }
+    },
+    {
+      "id": 9002,
+      "hash": "8888888888888888888888888888888888888888",
+      "label": "[AniLibria] Recent Test Movie [BDRip][4k][HEVC]",
+      "size": 123456789,
+      "seeders": 4,
+      "leechers": 1,
+      "completed_times": 10,
+      "created_at": "2026-07-02T12:34:56+00:00",
+      "quality": { "value": "4k" },
+      "type": { "value": "BDRip" },
+      "codec": { "value": "HEVC" },
+      "release": {
+        "id": 902,
+        "alias": "recent-test-movie",
+        "type": { "value": "MOVIE" }
+      }
+    },
+    {
+      "id": 9003,
+      "hash": "7777777777777777777777777777777777777777",
+      "label": "[AniLibria] Recent Test OVA [WEB-DL][2k][AVC]",
+      "size": 987654321,
+      "seeders": 2,
+      "leechers": 3,
+      "completed_times": 8,
+      "created_at": "2026-07-03T12:34:56-04:00",
+      "quality": { "value": "2k" },
+      "type": { "value": "WEB-DL" },
+      "codec": { "value": "AVC" },
+      "release": {
+        "id": 903,
+        "alias": "recent-test-ova",
+        "type": { "value": "OVA" }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "current_page": 1,
+      "per_page": 50,
+      "total": 3
+    }
+  }
+}

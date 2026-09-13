@@ -1,0 +1,215 @@
+{
+  "data": [
+  {
+    "id": 100,
+    "alias": "test-tv-pack",
+    "type": { "value": "TV" },
+    "torrents": [
+      {
+        "id": 1001,
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "label": "[AniLibria] Test TV S01E01-03 [WEB-DL][1080p][AVC]",
+        "magnet": "magnet:?xt=urn:btih:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "size": 1234567890,
+        "seeders": 12,
+        "leechers": 3,
+        "completed_times": 45,
+        "created_at": "2026-01-02T03:04:05+00:00",
+        "quality": { "value": "1080p" },
+        "type": { "value": "WEB-DL" },
+        "codec": { "value": "AVC" }
+      },
+      {
+        "id": 1002,
+        "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "label": "[AniLibria] Test TV S01E01-03 [WEB-DL][1080p][HEVC]",
+        "magnet": "magnet:?xt=urn:btih:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "size": 987654321,
+        "seeders": 8,
+        "leechers": 2,
+        "completed_times": 30,
+        "created_at": "2026-01-02T04:05:06+00:00",
+        "quality": { "value": "1080p" },
+        "type": { "value": "WEB-DL" },
+        "codec": { "value": "HEVC" }
+      }
+    ]
+  },
+  {
+    "id": 200,
+    "alias": "test-movie",
+    "type": { "value": "MOVIE" },
+    "torrents": [
+      {
+        "id": 2001,
+        "hash": "cccccccccccccccccccccccccccccccccccccccc",
+        "label": "[AniLibria] Test Movie [BDRip][4k][HEVC]",
+        "magnet": "magnet:?xt=urn:btih:cccccccccccccccccccccccccccccccccccccccc",
+        "size": 3333333333,
+        "seeders": 6,
+        "leechers": 1,
+        "completed_times": 20,
+        "created_at": "2026-02-03T04:05:06+00:00",
+        "quality": { "value": "4k" },
+        "type": { "value": "BDRip" },
+        "codec": { "value": "HEVC" }
+      }
+    ]
+  },
+  {
+    "id": 300,
+    "alias": "test-ova",
+    "type": { "value": "OVA" },
+    "torrents": [
+      {
+        "id": 3001,
+        "hash": "dddddddddddddddddddddddddddddddddddddddd",
+        "label": "[AniLibria] Test OVA S00E01 [WEB-DL][2k][AVC]",
+        "magnet": "magnet:?xt=urn:btih:dddddddddddddddddddddddddddddddddddddddd",
+        "size": 4444444444,
+        "seeders": 4,
+        "leechers": 2,
+        "completed_times": 10,
+        "created_at": "2026-03-04T05:06:07+00:00",
+        "quality": { "value": "2k" },
+        "type": { "value": "WEB-DL" },
+        "codec": { "value": "AVC" }
+      }
+    ]
+  },
+  {
+    "id": 400,
+    "alias": null,
+    "type": null,
+    "torrents": [
+      {
+        "id": 4001,
+        "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "label": "[AniLibria] Test No Type [WEB-DL][8k][AV1]",
+        "magnet": "magnet:?xt=urn:btih:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "size": 5555555555,
+        "seeders": 2,
+        "leechers": 4,
+        "completed_times": 5,
+        "created_at": "2026-04-05T06:07:08+00:00",
+        "quality": { "value": "8k" },
+        "type": { "value": "WEB-DL" },
+        "codec": { "value": "AV1" }
+      }
+    ]
+  },
+  {
+    "id": 500,
+    "alias": "test-unknown",
+    "type": { "value": "UNKNOWN" },
+    "torrents": [
+      {
+        "id": 5001,
+        "hash": "ffffffffffffffffffffffffffffffffffffffff",
+        "label": "[AniLibria] Test Unknown [WEB-DL][720p][AVC]",
+        "magnet": "magnet:?xt=urn:btih:ffffffffffffffffffffffffffffffffffffffff",
+        "size": 6666666666,
+        "seeders": 1,
+        "leechers": 0,
+        "completed_times": 1,
+        "created_at": "2026-05-06T07:08:09+00:00",
+        "quality": { "value": "720p" },
+        "type": { "value": "WEB-DL" },
+        "codec": { "value": "AVC" }
+      }
+    ]
+  },
+  {
+    "id": 600,
+    "alias": "test-dorama",
+    "type": { "value": "DORAMA" },
+    "torrents": [
+      {
+        "id": 6001,
+        "hash": "1111111111111111111111111111111111111111",
+        "label": "[AniLibria] Test Dorama [WEB-DL][1080p][AVC]",
+        "size": 1,
+        "seeders": 0,
+        "leechers": 0,
+        "completed_times": 0,
+        "created_at": "2026-06-07T08:09:10+00:00"
+      }
+    ]
+  },
+  {
+    "id": 700,
+    "alias": "test-ona",
+    "type": { "value": "ONA" },
+    "torrents": [
+      {
+        "id": 7001,
+        "hash": "2222222222222222222222222222222222222222",
+        "label": "[AniLibria] Test ONA [WEB-DL][1080p][AVC]",
+        "size": 1,
+        "seeders": 0,
+        "leechers": 0,
+        "completed_times": 0,
+        "created_at": "2026-07-08T09:10:11+00:00"
+      }
+    ]
+  },
+  {
+    "id": 800,
+    "alias": "test-oad",
+    "type": { "value": "OAD" },
+    "torrents": [
+      {
+        "id": 8001,
+        "hash": "3333333333333333333333333333333333333333",
+        "label": "[AniLibria] Test OAD [WEB-DL][1080p][AVC]",
+        "size": 1,
+        "seeders": 0,
+        "leechers": 0,
+        "completed_times": 0,
+        "created_at": "2026-08-09T10:11:12+00:00"
+      }
+    ]
+  },
+  {
+    "id": 900,
+    "alias": "test-special",
+    "type": { "value": "SPECIAL" },
+    "torrents": [
+      {
+        "id": 9001,
+        "hash": "4444444444444444444444444444444444444444",
+        "label": "[AniLibria] Test Special [WEB-DL][1080p][AVC]",
+        "size": 1,
+        "seeders": 0,
+        "leechers": 0,
+        "completed_times": 0,
+        "created_at": "2026-09-10T11:12:13+00:00"
+      }
+    ]
+  },
+  {
+    "id": 1000,
+    "alias": "test-web",
+    "type": { "value": "WEB" },
+    "torrents": [
+      {
+        "id": 10001,
+        "hash": "5555555555555555555555555555555555555555",
+        "label": "[AniLibria] Test Web [WEB-DL][1080p][AVC]",
+        "size": 1,
+        "seeders": 0,
+        "leechers": 0,
+        "completed_times": 0,
+        "created_at": "2026-10-11T12:13:14+00:00"
+      }
+    ]
+  }
+  ],
+  "meta": {
+    "pagination": {
+      "current_page": 1,
+      "per_page": 10,
+      "total": 10
+    }
+  }
+}

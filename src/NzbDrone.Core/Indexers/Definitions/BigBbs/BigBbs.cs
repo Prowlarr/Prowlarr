@@ -23,8 +23,6 @@ public class BigBbs : TorrentIndexerBase<BigBbsSettings>
     public override string Language => "pl-PL";
     public override IndexerPrivacy Privacy => IndexerPrivacy.Private;
     public override IndexerCapabilities Capabilities => SetCapabilities();
-    public override bool SupportsRss => false;
-
     private string LoginUrl => Settings.BaseUrl + "?p=home&pid=1";
 
     public BigBbs(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)

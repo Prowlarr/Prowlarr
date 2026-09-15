@@ -732,5 +732,16 @@
     "ReleaseBranchCheckOfficialBranchMessage": "Haru {0} ei ole kehtiv {appName}i väljalaskeharu, uuendusi ei saa",
     "ReleaseStatus": "Ilmumise olek",
     "SuggestTranslationChange": "Soovita tõlke muudatust",
-    "TagCannotBeDeletedWhileInUse": "Ei saa kustutada, kuni see on kasutusel"
+    "TagCannotBeDeletedWhileInUse": "Ei saa kustutada, kuni see on kasutusel",
+    "EditSyncProfile": "Muuda sünkroonimisprofiili",
+    "ElapsedTime": "Kulunud aeg",
+    "EnabledRedirected": "Lubatud, ümber suunatud",
+    "FoundCountReleases": "Leiti {itemCount} väljalaset",
+    "FullSync": "Täielik sünkroonimine",
+    "Genre": "Žanr",
+    "Id": "ID",
+    "MovieIndexScrollBottom": "Filmiindeks: Keri alla",
+    "MovieIndexScrollTop": "Filmiindeks: Keri üles",
+    "SSLCertPathHelpText": "PFX-faili asukoht",
+    "UnableToLoadNotifications": "Teavituste laadimine nurjus"
 }

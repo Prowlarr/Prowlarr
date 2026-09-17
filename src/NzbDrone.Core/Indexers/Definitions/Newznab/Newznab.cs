@@ -93,6 +93,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 yield return GetDefinition("abNZB", GetSettings("https://abnzb.com"), categories: new[] { 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("altHUB", GetSettings("https://api.althub.co.za"), categories: new[] { 2000, 3000, 4000, 5000, 7000 });
+                yield return GetDefinition("Anime Tosho (Usenet)", GetSettings("https://feed.animetosho.xyz", apiPath: @"/api/newznab"), categories: new[] { 2020, 5070 });
                 yield return GetDefinition("AnimeTosho (Usenet)", GetSettings("https://feed.animetosho.org"), categories: new[] { 2020, 5070 });
                 yield return GetDefinition("DOGnzb", GetSettings("https://api.dognzb.cr"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("DrunkenSlug", GetSettings("https://drunkenslug.com"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000 });

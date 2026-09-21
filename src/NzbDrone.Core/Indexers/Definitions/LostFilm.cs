@@ -41,6 +41,12 @@ namespace NzbDrone.Core.Indexers.Definitions
         // Never forwarded as a real HTTP cookie - stripped out in BuildRequest.
         private const string CaptchaHostCookieKey = "__lf_captcha_host";
 
+        // A hung/blackholed mirror candidate otherwise costs the full default dispatcher timeout
+        // per mirror tried; cap both the per-probe wait and how many candidates get tried.
+        private const int MaxMirrorCandidates = 3;
+
+        private static readonly TimeSpan MirrorProbeTimeout = TimeSpan.FromSeconds(15);
+
         private static readonly Regex ParsePlayEpisodeRegex = new(@"PlayEpisode\('(?<id>\d+)(?<season>\d{3})(?<episode>\d{3})'\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ParseReleaseDetailsRegex = new("Видео:\\ (?<quality>.+).\\ Размер:\\ (?<size>.+).\\ Перевод", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly List<(Regex Pattern, string Replacement)> QualityReplacements = new()
@@ -140,7 +146,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         protected override bool CheckIfLoginNeeded(HttpResponse httpResponse)
         {
-            return httpResponse.Content?.Contains("href=\"/login\"") == true;
+            // "log in first" is the bare-body answer v_search.php gives for a stale session;
+            // treating it the same as the /login redirect lets the normal re-auth-and-replay
+            // flow in GetResponse self-heal it instead of the caller having to special-case it.
+            return httpResponse.Content?.Contains("href=\"/login\"") == true
+                || httpResponse.Content?.Trim() == "log in first";
         }
 
         protected override async Task DoLogin()
@@ -148,31 +158,17 @@ namespace NzbDrone.Core.Indexers.Definitions
             _logger.Debug("Logging in to LostFilm.tv");
 
             var captchaSubmitted = Settings.Captcha.IsNotNullOrWhiteSpace();
+            var loginBaseUrl = ResolveLoginBaseUrl(captchaSubmitted);
 
-            // If we are about to submit a captcha answer, log in against the exact mirror that
-            // served that captcha image (see CaptchaHostCookieKey) rather than whatever mirror is
-            // currently ambient - they do not necessarily share a PHPSESSID/session store, and
-            // using the wrong one surfaces as a misleading "Captcha is incorrect".
-            string loginBaseUrl = null;
-            if (captchaSubmitted)
+            if (!captchaSubmitted)
             {
-                Cookies ??= LoadCookies();
-
-                if (Cookies != null && Cookies.TryGetValue(CaptchaHostCookieKey, out var captchaHost) && captchaHost.IsNotNullOrWhiteSpace())
-                {
-                    loginBaseUrl = "https://" + captchaHost;
-
-                    if (!captchaHost.Equals(new HttpUri(BaseUrl).Host, StringComparison.OrdinalIgnoreCase))
-                    {
-                        _logger.Info("LostFilm.tv: submitting captcha to its origin mirror {0} instead of {1}", captchaHost, BaseUrl);
-                    }
-                }
+                // Performing Logout is required to invalidate previous session otherwise the `{"error":1,"result":"ok"}` will be returned.
+                // Skipped when submitting a captcha: a captcha is only ever required when we are
+                // NOT logged in, so there is no session to invalidate, and Logout can rotate the
+                // PHPSESSID the captcha image was bound to (see GetLoginPageAsync), breaking the
+                // very answer we are about to submit.
+                await Logout(loginBaseUrl);
             }
-
-            loginBaseUrl ??= BaseUrl;
-
-            // Performing Logout is required to invalidate previous session otherwise the `{"error":1,"result":"ok"}` will be returned.
-            await Logout(loginBaseUrl);
 
             var requestBuilder = new HttpRequestBuilder(loginBaseUrl + "/ajaxik.php")
                 .Post()
@@ -204,14 +200,31 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException("LostFilm.tv requires a captcha. Open the indexer settings to fetch a new one.");
             }
 
-            if (content.Contains("error\":1") || content.Contains("error\":2") || content.Contains("error\":4"))
+            // LostFilm returns {"error":N,"result":"ok"} on failure. Parse the code instead of
+            // substring-matching (which would also match e.g. "error":10), and because the codes
+            // mean different things - only 4 is actually about a wrong/stale captcha; 1/2 mean a
+            // previous session was still active and are unrelated to the captcha's correctness.
+            int? errorCode = null;
+            try
+            {
+                errorCode = JToken.Parse(content)["error"]?.Value<int?>();
+            }
+            catch (Exception)
+            {
+                // Not a JSON response at all (e.g. an upstream error page) - fall through to the
+                // generic failure below instead of throwing an unrelated parse exception.
+            }
+
+            if (errorCode is 1 or 2)
+            {
+                throw new IndexerAuthException("LostFilm.tv login failed (a previous session may still be active). Try again.");
+            }
+
+            if (errorCode == 4)
             {
                 // LostFilm captchas are single-use and bound to the login session, so a
                 // failed captcha can never succeed again. Clear it to stop the retry loop.
-                if (content.Contains("error\":4"))
-                {
-                    Settings.Captcha = null;
-                }
+                Settings.Captcha = null;
 
                 // No captcha was even submitted, so "error":4 here cannot mean "you typed the
                 // wrong answer" - it means one is required, same as the need_captcha case above.
@@ -223,7 +236,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException("Captcha is incorrect");
             }
 
-            if (content.Contains("error\":3"))
+            if (errorCode == 3)
             {
                 throw new IndexerAuthException("E-mail or password is incorrect");
             }
@@ -261,6 +274,66 @@ namespace NzbDrone.Core.Indexers.Definitions
             PersistCookies(cookies, _cookiesExpiration);
 
             _logger.Debug("LostFilm.tv authentication succeeded");
+        }
+
+        // If we are about to submit a captcha answer, log in against the exact mirror that
+        // served that captcha image (see CaptchaHostCookieKey) rather than whatever mirror is
+        // currently ambient - they do not necessarily share a PHPSESSID/session store, and
+        // using the wrong one surfaces as a misleading "Captcha is incorrect".
+        private string ResolveLoginBaseUrl(bool captchaSubmitted)
+        {
+            string loginBaseUrl = null;
+
+            if (captchaSubmitted)
+            {
+                var captchaHost = GetPinnedCaptchaHost();
+
+                if (captchaHost.IsNotNullOrWhiteSpace())
+                {
+                    loginBaseUrl = "https://" + captchaHost;
+
+                    if (!captchaHost.Equals(new HttpUri(BaseUrl).Host, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _logger.Info("LostFilm.tv: submitting captcha to its origin mirror {0} instead of {1}", captchaHost, BaseUrl);
+                    }
+                }
+            }
+
+            return loginBaseUrl ?? BaseUrl;
+        }
+
+        private string GetPinnedCaptchaHost()
+        {
+            Cookies ??= LoadCookies();
+
+            if (Cookies == null || !Cookies.TryGetValue(CaptchaHostCookieKey, out var captchaHost) || captchaHost.IsNullOrWhiteSpace())
+            {
+                return null;
+            }
+
+            // Defense in depth against a tampered/stale DB value - only trust a pinned host that
+            // is still one of our own known mirrors (see IsKnownHost and GetLoginPageAsync, which
+            // is the only writer of this value and already validates it before pinning).
+            return IsKnownHost(captchaHost) ? captchaHost : null;
+        }
+
+        // True if `host` is one of this indexer's own configured/known mirror hosts (current
+        // BaseUrl, or any IndexerUrls/LegacyUrls entry). Used to make sure anything host-derived
+        // from page content (the captcha image URL) or used for cross-domain failover can't send
+        // credentials or session cookies to an unrelated domain.
+        private bool IsKnownHost(string host)
+        {
+            if (host.IsNullOrWhiteSpace())
+            {
+                return false;
+            }
+
+            if (new HttpUri(Settings.BaseUrl).Host.Equals(host, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return IndexerUrls.Concat(LegacyUrls).Any(url => new HttpUri(url).Host.Equals(host, StringComparison.OrdinalIgnoreCase));
         }
 
         protected override async Task<ValidationFailure> TestConnection()
@@ -513,6 +586,18 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return (response, request);
             }
 
+            // Only LostFilm mirrors understand a LostFilm session/captcha; never fail over a
+            // request to an unrelated host (e.g. the n.tracktor.site download domain) onto them.
+            if (!IsKnownHost(request.Url.Host))
+            {
+                if (primaryError != null)
+                {
+                    throw primaryError;
+                }
+
+                return (response, request);
+            }
+
             // The primary was geo-blocked (HTTP 451) or unreachable; retry on the mirrors.
             var mirrored = await TryMirrorRequests(request);
             if (mirrored != null)
@@ -532,11 +617,19 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private async Task<(HttpResponse Response, HttpRequest Request)?> TryMirrorRequests(HttpRequest request)
         {
-            foreach (var mirror in GetMirrorCandidates(request.Url.Host))
+            foreach (var mirror in GetMirrorCandidates(request.Url.Host).Take(MaxMirrorCandidates))
             {
                 try
                 {
                     var mirrorRequest = CloneForMirror(request, mirror);
+                    mirrorRequest.RequestTimeout = MirrorProbeTimeout;
+
+                    // An untested mirror hasn't proven it's actually our own site yet - don't hand
+                    // it the session/auth cookies until it's confirmed not geo-blocked (see
+                    // IsKnownHost/GetLoginPageAsync for the related captcha-host validation).
+                    mirrorRequest.Cookies.Remove("lf_session");
+                    mirrorRequest.Cookies.Remove("PHPSESSID");
+
                     var mirrorResponse = await ExecuteAsync(mirrorRequest);
 
                     if (!IsGeoBlocked(mirrorResponse))
@@ -687,6 +780,15 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var captchaUrl = new Uri(new Uri(BaseUrl + "/"), captchaSrc);
 
+            if (!IsKnownHost(captchaUrl.Host))
+            {
+                // captchaSrc came from page content and resolved to a host we don't recognize as
+                // one of our own mirrors - refuse to fetch it (which would attach our cookies,
+                // including lf_session) or pin it as the login target.
+                _logger.Warn("LostFilm.tv: captcha image points at an unrecognized host {0}, refusing to fetch it", captchaUrl.Host);
+                return new Captcha { ImageData = Array.Empty<byte>() };
+            }
+
             // Pin the mirror that serves this specific captcha's PHPSESSID before fetching the
             // image, so DoLogin can submit the answer to the same host later even if the ambient
             // mirror has since changed (see CaptchaHostCookieKey).
@@ -808,7 +910,14 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     foreach (var serie in series)
                     {
-                        var link = serie["link"].ToString();
+                        var link = serie["link"]?.Value<string>();
+
+                        if (link == null)
+                        {
+                            _logger.Debug("LostFilm.tv: series entry has no link, skipping");
+                            continue;
+                        }
+
                         var seasonPath = season is > 0 ? $"/season_{season}" : "/seasons";
                         var url = BaseUrl + link + seasonPath;
 
@@ -1047,6 +1156,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 // Could be null if serie-block is for Extras
                 var seasonButton = seasonBlock.QuerySelector("div.movie-details-block > div.external-btn");
+
+                if (season is > 0 && seasonButton == null)
+                {
+                    // Can't determine this block's season (e.g. it's an Extras block) - exclude
+                    // it from a season-scoped search instead of falling through and parsing every
+                    // row in it unconditionally.
+                    continue;
+                }
 
                 // Process only season we're searching for
                 if (seasonButton != null && season is > 0)
@@ -1365,14 +1482,20 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var start = s.IndexOf(startChar);
             var end = s.LastIndexOf(endChar);
-            return (start != -1 && end != -1) ? s.Substring(start + 1, end - start - 1) : null;
+
+            // end must be strictly after start, otherwise the Substring length below goes
+            // negative and throws instead of just failing to find a match.
+            return (start != -1 && end > start) ? s.Substring(start + 1, end - start - 1) : null;
         }
 
         private static string TrimString(string s, string startString, string endString)
         {
             var start = s.IndexOf(startString);
             var end = s.LastIndexOf(endString);
-            return (start != -1 && end != -1) ? s.Substring(start + startString.Length, end - start - startString.Length) : null;
+
+            // end must leave room for startString's own length, otherwise the Substring length
+            // below goes negative and throws instead of just failing to find a match.
+            return (start != -1 && end >= start + startString.Length) ? s.Substring(start + startString.Length, end - start - startString.Length) : null;
         }
 
         private static DateTime DateFromEpisodeColumn(IElement dateColumn)

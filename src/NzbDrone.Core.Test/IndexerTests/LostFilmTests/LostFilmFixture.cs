@@ -592,5 +592,100 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
             result.Releases.Should().NotBeEmpty();
             result.Releases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/El_Camino_A_Breaking_Bad_Movie");
         }
+
+        [Test]
+        public async Task should_submit_captcha_to_the_mirror_it_was_fetched_from()
+        {
+            // Regression: a captcha answer is bound to the PHPSESSID of whatever mirror served the
+            // captcha image. If the ambient working mirror changes between fetching the captcha and
+            // submitting the login (e.g. the indexer instance was recreated, or a search on another
+            // thread discovered a different mirror in between), DoLogin used to submit the answer to
+            // the ambient mirror instead of the one the captcha actually came from, which the server
+            // rejects as a misleading "Captcha is incorrect" even for a correct answer.
+            const string captchaHost = "www.lostfilmtv5.site";
+
+            IDictionary<string, string> storedCookies = new Dictionary<string, string>
+            {
+                { "__lf_captcha_host", captchaHost }
+            };
+
+            var statusService = Mocker.GetMock<IIndexerStatusService>();
+            statusService.Setup(s => s.UpdateCookies(It.IsAny<int>(), It.IsAny<IDictionary<string, string>>(), It.IsAny<DateTime?>()))
+                .Callback((int id, IDictionary<string, string> cookies, DateTime? expiration) => storedCookies = cookies);
+            statusService.Setup(s => s.GetIndexerCookies(It.IsAny<int>())).Returns(() => storedCookies);
+            statusService.Setup(s => s.GetIndexerCookiesExpirationDate(It.IsAny<int>())).Returns(() => DateTime.Now.AddDays(30));
+
+            ((LostFilmSettings)Subject.Definition.Settings).Captcha = "12345";
+
+            const string anonPage = "<html><body><a href=\"/login\" class=\"link\">Вход</a></body></html>";
+            const string authedPage = "<html><body><div class=\"row\"><a href=\"/series/Test_Show/season_1/episode_1\">Test</a></div></body></html>";
+
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+
+            // Fallback to an empty page so unmatched requests do not fail the test (first wins
+            // nothing here: Moq uses the last matching setup, so register it first).
+            client.Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), "<html><body></body></html>")));
+
+            var newRequestCount = 0;
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/new"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), ++newRequestCount == 1 ? anonPage : authedPage)));
+
+            var loginCookies = new CookieCollection
+            {
+                new Cookie("lf_session", "NEWSESSION", "/") { Expires = new DateTime(2027, 6, 1) },
+                new Cookie("PHPSESSID", "NEWPHP", "/")
+            };
+
+            // Login/logout must land on the captcha's own mirror, not the configured BaseUrl.
+            client.Setup(o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Post && v.Url.Path == "/ajaxik.php" && v.Url.Host == captchaHost),
+                    Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                    Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, loginCookies, "{\"success\":true,\"result\":\"ok\"}")));
+
+            MockResponse(HttpMethod.Get, "/series/Test_Show/season_1/episode_1", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new BasicSearchCriteria());
+
+            result.Releases.Should().NotBeEmpty();
+
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Post && v.Url.Path == "/ajaxik.php" && v.Url.Host == "www.lostfilm.tv"),
+                    Subject.Definition),
+                Times.Never());
+        }
+
+        [Test]
+        public async Task should_skip_row_without_date_column_and_keep_valid_siblings()
+        {
+            // Regression: a row without td.delta (e.g. malformed/extra markup) used to throw an NRE
+            // in FetchSeriesReleases that killed the whole search, instead of just skipping the row.
+            const string singleSeriesJson = "{\"data\":{\"series\":[{\"id\":\"119\",\"title\":\"Во все тяжкие\",\"title_orig\":\"Breaking Bad\",\"link\":\"/series/Breaking_Bad\"}]},\"result\":\"ok\"}";
+
+            MockResponse(HttpMethod.Post, "/ajaxik.php", singleSeriesJson, "application/json");
+
+            const string seasonPage = "<html><body><div class=\"serie-block\">" +
+                "<div class=\"movie-details-block\"><div class=\"external-btn\" onclick=\"PlayEpisode('119005016')\"></div>" +
+                "<div class=\"haveseen-btn\" data-code=\"season-5\"></div></div>" +
+                "<table class=\"movie-parts-list\"><tbody>" +
+                "<tr><td class=\"zeta\"><div class=\"external-btn\" onclick=\"PlayEpisode('119005015')\"></div></td></tr>" +
+                "<tr><td class=\"zeta\"><div class=\"external-btn\" onclick=\"PlayEpisode('119005016')\"></div></td>" +
+                "<td class=\"delta\" onclick=\"goTo('/series/Breaking_Bad/season_5/episode_16/',false)\"><span class=\"small-text\">Eng: 23.05.2017</span></td></tr>" +
+                "</tbody></table></div></body></html>";
+            MockResponse(HttpMethod.Get, "/series/Breaking_Bad/season_5", seasonPage);
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+            MockResponse(HttpMethod.Get, "/V/", ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html"));
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Categories = new[] { 5000 } });
+
+            result.Releases.Should().NotBeEmpty();
+            result.Releases.Should().OnlyContain(r => r.Title.Contains("Breaking Bad - S5E16"));
+        }
     }
 }

@@ -30,6 +30,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 {
     public class LostFilm : TorrentIndexerBase<LostFilmSettings>
     {
+        // A captcha answer is bound to the PHPSESSID of the specific mirror that served the
+        // captcha image. _workingMirror can change between "fetch a captcha" (RequestAction) and
+        // "submit the login" (DoLogin, possibly on a recreated indexer instance after a settings
+        // save or app restart) if the geo-block situation shifts in between. Pin the exact host the
+        // captcha came from in the durable cookie store (same channel as lf_session, so it survives
+        // instance/process restarts) and prefer it over the ambient mirror when a captcha is
+        // submitted, instead of risking the answer being sent to a session it was never bound to.
+        // Never forwarded as a real HTTP cookie - stripped out in BuildRequest.
+        private const string CaptchaHostCookieKey = "__lf_captcha_host";
+
         private static readonly Regex ParsePlayEpisodeRegex = new(@"PlayEpisode\('(?<id>\d+)(?<season>\d{3})(?<episode>\d{3})'\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex ParseReleaseDetailsRegex = new("Видео:\\ (?<quality>.+).\\ Размер:\\ (?<size>.+).\\ Перевод", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly CultureInfo RuCulture = CultureInfo.GetCultureInfo("ru-RU");
@@ -123,10 +133,34 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             _logger.Debug("Logging in to LostFilm.tv");
 
-            // Performing Logout is required to invalidate previous session otherwise the `{"error":1,"result":"ok"}` will be returned.
-            await Logout();
+            var captchaSubmitted = Settings.Captcha.IsNotNullOrWhiteSpace();
 
-            var requestBuilder = new HttpRequestBuilder(BaseUrl + "/ajaxik.php")
+            // If we are about to submit a captcha answer, log in against the exact mirror that
+            // served that captcha image (see CaptchaHostCookieKey) rather than whatever mirror is
+            // currently ambient - they do not necessarily share a PHPSESSID/session store, and
+            // using the wrong one surfaces as a misleading "Captcha is incorrect".
+            string loginBaseUrl = null;
+            if (captchaSubmitted)
+            {
+                Cookies ??= LoadCookies();
+
+                if (Cookies != null && Cookies.TryGetValue(CaptchaHostCookieKey, out var captchaHost) && captchaHost.IsNotNullOrWhiteSpace())
+                {
+                    loginBaseUrl = "https://" + captchaHost;
+
+                    if (!captchaHost.Equals(new HttpUri(BaseUrl).Host, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _logger.Info("LostFilm.tv: submitting captcha to its origin mirror {0} instead of {1}", captchaHost, BaseUrl);
+                    }
+                }
+            }
+
+            loginBaseUrl ??= BaseUrl;
+
+            // Performing Logout is required to invalidate previous session otherwise the `{"error":1,"result":"ok"}` will be returned.
+            await Logout(loginBaseUrl);
+
+            var requestBuilder = new HttpRequestBuilder(loginBaseUrl + "/ajaxik.php")
                 .Post()
                 .Accept(HttpAccept.Html)
                 .AddFormParameter("act", "users")
@@ -135,7 +169,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 .AddFormParameter("pass", Settings.Password)
                 .AddFormParameter("rem", "1");
 
-            if (Settings.Captcha.IsNotNullOrWhiteSpace())
+            if (captchaSubmitted)
             {
                 requestBuilder.AddFormParameter("need_captcha", "1");
                 requestBuilder.AddFormParameter("captcha", Settings.Captcha);
@@ -165,6 +199,13 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Settings.Captcha = null;
                 }
 
+                // No captcha was even submitted, so "error":4 here cannot mean "you typed the
+                // wrong answer" - it means one is required, same as the need_captcha case above.
+                if (!captchaSubmitted)
+                {
+                    throw new IndexerAuthException("LostFilm.tv requires a captcha. Open the indexer settings to fetch a new one.");
+                }
+
                 throw new IndexerAuthException("Captcha is incorrect");
             }
 
@@ -176,6 +217,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (!content.Contains("success\":true"))
             {
                 throw new IndexerAuthException("LostFilm.tv authentication failed: " + content);
+            }
+
+            // Login succeeded on loginBaseUrl; keep using that exact mirror for the rest of the
+            // session instead of letting the next request re-discover (possibly a different) one.
+            if (!loginBaseUrl.Equals(BaseUrl, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.Info("LostFilm.tv: authenticated session lives on {0}, switching working mirror to match", loginBaseUrl);
+                _workingMirror = loginBaseUrl;
             }
 
             // The captcha was consumed by this successful login; never reuse it.
@@ -298,6 +347,12 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 foreach (var cookie in Cookies)
                 {
+                    // Internal bookkeeping, never a real cookie for the server.
+                    if (cookie.Key == CaptchaHostCookieKey)
+                    {
+                        continue;
+                    }
+
                     request.Cookies[cookie.Key] = cookie.Value;
                 }
             }
@@ -622,6 +677,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             }
 
             var captchaUrl = new Uri(new Uri(BaseUrl + "/"), captchaSrc);
+
+            // Pin the mirror that serves this specific captcha's PHPSESSID before fetching the
+            // image, so DoLogin can submit the answer to the same host later even if the ambient
+            // mirror has since changed (see CaptchaHostCookieKey).
+            Cookies ??= LoadCookies() ?? new Dictionary<string, string>();
+            Cookies[CaptchaHostCookieKey] = captchaUrl.Host;
+
             var captchaResponse = await GetResponse(new HttpRequestBuilder(captchaUrl.AbsoluteUri), checkLogin: false);
 
             return new Captcha
@@ -631,11 +693,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             };
         }
 
-        private async Task Logout()
+        private async Task Logout(string baseUrl)
         {
             _logger.Debug("LostFilm.tv: performing logout");
 
-            var requestBuilder = new HttpRequestBuilder(BaseUrl + "/ajaxik.php")
+            var requestBuilder = new HttpRequestBuilder(baseUrl + "/ajaxik.php")
                 .Post()
                 .Accept(HttpAccept.Html)
                 .AddFormParameter("act", "users")
@@ -1044,10 +1106,23 @@ namespace NzbDrone.Core.Indexers.Definitions
                     }
 
                     var dateColumn = row.QuerySelector("td.delta"); // Contains both Date and EpisodeURL
+                    if (dateColumn == null)
+                    {
+                        _logger.Debug("LostFilm.tv: release row has no td.delta");
+                        continue;
+                    }
+
                     var date = DateFromEpisodeColumn(dateColumn);
 
-                    var link = dateColumn.GetAttribute("onclick"); // goTo('/series/Prison_Break/season_5/episode_9/',false)
-                    link = TrimString(link, '\'', '\'');
+                    var onclick = dateColumn.GetAttribute("onclick"); // goTo('/series/Prison_Break/season_5/episode_9/',false)
+                    var link = onclick == null ? null : TrimString(onclick, '\'', '\'');
+
+                    if (link == null)
+                    {
+                        _logger.Debug("LostFilm.tv: release row has no goTo(...) link in td.delta");
+                        continue;
+                    }
+
                     var episodeUrl = BaseUrl + link;
                     var urlDetails = new TrackerUrlDetails(playButton);
 

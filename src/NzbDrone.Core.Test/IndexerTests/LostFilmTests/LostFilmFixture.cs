@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions;
 using NzbDrone.Core.Indexers.Definitions.Cardigann;
@@ -113,6 +115,20 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         public void should_use_half_second_rate_limit()
         {
             Subject.RateLimit.Should().Be(TimeSpan.FromSeconds(0.5));
+        }
+
+        [Test]
+        public void should_expose_captcha_as_cardigann_captcha_schema_field()
+        {
+            // The captcha input is rendered by the generic schema pipeline: the field type
+            // string must serialize to "cardigannCaptcha" (FieldType -> FirstCharToLower).
+            var attribute = typeof(LostFilmSettings)
+                .GetProperty(nameof(LostFilmSettings.Captcha))
+                ?.GetCustomAttribute<FieldDefinitionAttribute>(false);
+
+            attribute.Should().NotBeNull();
+            attribute.Type.Should().Be(FieldType.CardigannCaptcha);
+            attribute.Order.Should().Be(4);
         }
 
         [Test]
@@ -547,12 +563,11 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
         }
 
         [Test]
-        public async Task should_fetch_only_highest_scoring_series_on_tie()
+        public async Task should_fetch_every_matching_series_on_tie()
         {
             // Regression: the api returns Breaking Bad and El Camino for "breaking bad"; both match
-            // the informative tokens equally. Only the highest-scoring series must be fetched, the
-            // other must not trigger any episode downloads (the tie resolves to API order via the
-            // stable sort).
+            // the informative tokens equally, so both must be searched (the mocked movie page is
+            // empty here, so only Breaking Bad contributes releases).
             MockAllResponses();
 
             var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "breaking bad", Season = 5, Episode = "16", Categories = new[] { 5000 } });
@@ -570,7 +585,75 @@ namespace NzbDrone.Core.Test.IndexerTests.LostFilmTests
                 o => o.ExecuteProxiedAsync(
                     It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/movies/El_Camino_A_Breaking_Bad_Movie/season_5/episode_16"),
                     Subject.Definition),
-                Times.Never());
+                Times.Once());
+        }
+
+        [Test]
+        public async Task should_fetch_series_and_movie_for_multi_match_query()
+        {
+            // Regression: LostFilm returns both the Peaky Blinders series and its The Immortal Man
+            // movie for "peaky blinders". Every positive-score match must be searched, not just the
+            // single best-scoring one.
+            var client = Mocker.GetMock<IIndexerHttpClient>();
+
+            // The seasons page carries the site-wide login link, so the re-login flow fires; login
+            // POSTs must be answered separately from series searches.
+            client.Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Post && v.Url.Path == "/ajaxik.php"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                {
+                    var body = r.GetContent() ?? string.Empty;
+                    var content = body.Contains("type=login")
+                        ? "{\"success\":true,\"result\":\"ok\"}"
+                        : ReadAllText(@"Files/Indexers/LostFilm/search_peakyblinders.json");
+                    return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), content));
+                });
+
+            MockResponse(HttpMethod.Get, "/series/Peaky_Blinders/seasons", ReadAllText(@"Files/Indexers/LostFilm/shogun_seasons.html"));
+            MockResponse(HttpMethod.Get, "/movies/Peaky_Blinders_The_Immortal_Man/seasons", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/movies/Peaky_Blinders_The_Immortal_Man", ReadAllText(@"Files/Indexers/LostFilm/episode_auth.html"));
+            MockResponse(HttpMethod.Get, "/v_search.php", ReadAllText(@"Files/Indexers/LostFilm/vsearch_bb.html"));
+
+            // Both legs resolve through the same /V/ path; rewrite the download links on the
+            // second fetch so the release Guids differ and CleanupReleases does not dedupe
+            // one leg away.
+            var trackerFetchCount = 0;
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/V/"), Subject.Definition))
+                .Returns<HttpRequest, IndexerDefinition>((r, d) =>
+                {
+                    var content = ReadAllText(@"Files/Indexers/LostFilm/tracker_bb.html");
+
+                    if (++trackerFetchCount > 1)
+                    {
+                        content = content.Replace("td.php?s=", "td.php?m=2&s=");
+                    }
+
+                    return Task.FromResult(new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html" } }, new CookieCollection(), content));
+                });
+
+            var result = await Subject.Fetch(new TvSearchCriteria { SearchTerm = "peaky blinders", Categories = new[] { 5000 } });
+
+            result.Releases.Should().HaveCount(6);
+
+            var tvReleases = result.Releases.Where(r => r.Categories.Contains(NewznabStandardCategory.TV)).ToList();
+            var movieReleases = result.Releases.Where(r => r.Categories.Contains(NewznabStandardCategory.Movies)).ToList();
+
+            tvReleases.Should().HaveCount(3);
+            tvReleases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/series/Peaky_Blinders/seasons");
+
+            movieReleases.Should().HaveCount(3);
+            movieReleases.Should().OnlyContain(r => r.InfoUrl == $"{BaseUrl}/movies/Peaky_Blinders_The_Immortal_Man");
+
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/series/Peaky_Blinders/seasons"),
+                    Subject.Definition),
+                Times.Exactly(2)); // initial + re-login replay: the page carries the site login link
+            client.Verify(
+                o => o.ExecuteProxiedAsync(
+                    It.Is<HttpRequest>(v => v.Method == HttpMethod.Get && v.Url.Path == "/movies/Peaky_Blinders_The_Immortal_Man/seasons"),
+                    Subject.Definition),
+                Times.Once());
         }
 
         [Test]

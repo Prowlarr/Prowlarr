@@ -116,7 +116,27 @@ namespace NzbDrone.Core.Indexers.Definitions
                 query.Add("year", year.Value.ToString());
             }
 
-            return new IndexerRequest($"{_settings.BaseUrl.TrimEnd('/')}/__prowlarr_brazilian_public_search?{query.GetQueryString()}", HttpAccept.Html);
+            return new IndexerRequest($"{BuildDisplaySearchUrl(term, route)}?{query.GetQueryString()}", HttpAccept.Html);
+        }
+
+        private string BuildDisplaySearchUrl(string term, BrazilianPublicTorrentRoute route)
+        {
+            var baseUrl = _settings.BaseUrl.TrimEnd('/');
+
+            if (_site.UsesHdrRoutes)
+            {
+                if (route == BrazilianPublicTorrentRoute.SearchPage)
+                {
+                    return baseUrl + "/";
+                }
+
+                var segment = route == BrazilianPublicTorrentRoute.Series ? "series" : "filmes";
+                var slug = BrazilianPublicTorrentParser.ToHdrSlug(term);
+
+                return $"{baseUrl}/{segment}/{slug}/";
+            }
+
+            return baseUrl + "/index.php";
         }
 
         public Func<IDictionary<string, string>> GetCookies { get; set; }

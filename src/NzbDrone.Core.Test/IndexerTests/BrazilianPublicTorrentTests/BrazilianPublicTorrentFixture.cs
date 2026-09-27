@@ -21,6 +21,22 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
     public class BrazilianPublicTorrentFixture : CoreTest
     {
         [Test]
+        public void request_generator_uses_site_routes_instead_of_internal_placeholder_slug()
+        {
+            var subject = Mocker.Resolve<HDRTorrent>();
+            subject.Definition = Definition("HDRTorrent", "https://hdrtorrents.net/");
+
+            var request = subject.GetRequestGenerator()
+                .GetSearchRequests(new MovieSearchCriteria { SearchTerm = "Avatar Fogo e Cinzas", InteractiveSearch = true })
+                .GetAllTiers()
+                .Single()
+                .Single();
+
+            request.Url.FullUri.Should().StartWith("https://hdrtorrents.net/filmes/avatar_fogo_e_cinzas/");
+            request.Url.FullUri.Should().NotContain("__prowlarr");
+        }
+
+        [Test]
         public async Task apachetorrent_uses_homepage_token_cookie_and_referer_for_search()
         {
             var subject = Mocker.Resolve<ApacheTorrent>();

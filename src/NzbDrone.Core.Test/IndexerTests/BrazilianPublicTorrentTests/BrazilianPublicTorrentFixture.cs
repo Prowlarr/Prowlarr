@@ -90,7 +90,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<RedeTorrent>();
             subject.Definition = Definition("RedeTorrent", "https://redestorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://redestorrents.com/", "rede-token", "Matrix",
+            SetupTokenSite(
+                subject.Definition,
+                "https://redestorrents.com/",
+                "rede-token",
+                "Matrix",
                 "<a href=\"https://redestorrents.com/matrix/\"><article class=\"custom-card\"><h2 itemprop=\"headline\">Matrix</h2></article></a>",
                 "https://redestorrents.com/matrix/",
                 Details("Matrix", "Filme", "3.93 GB", "1999", Magnet("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "Matrix.1999.720p.Dual"), "720p / 3.93 GB"));
@@ -211,7 +215,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar 4K"),
                 "https://apachetorrents.com/avatar/",
                 Details("Avatar 4K", "Filme", "20 GB", "2022", Magnet("1111111111111111111111111111111111111111", "Avatar.2022.720p.Dual"), "720p / 3.93 GB"));
@@ -228,7 +236,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar"),
                 "https://apachetorrents.com/avatar/",
                 """
@@ -253,7 +265,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar"),
                 "https://apachetorrents.com/avatar/",
                 DetailsWithoutSize("Avatar", "Filme", "magnet:?xt=urn:btih:9999999999999999999999999999999999999999&dn=Avatar.2022.1080p.Dual&xl=123456789", "Download"));
@@ -269,7 +285,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<RedeTorrent>();
             subject.Definition = Definition("RedeTorrent", "https://redestorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://redestorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://redestorrents.com/",
+                "abc123",
+                "Avatar",
                 "<article><a href=\"https://redestorrents.com/avatar/\">Avatar</a></article>",
                 "https://redestorrents.com/avatar/",
                 """
@@ -292,7 +312,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<RedeTorrent>();
             subject.Definition = Definition("RedeTorrent", "https://redestorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://redestorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://redestorrents.com/",
+                "abc123",
+                "Avatar",
                 "<article><a href=\"https://redestorrents.com/avatar/\">Avatar</a></article>",
                 "https://redestorrents.com/avatar/",
                 """
@@ -320,7 +344,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar"),
                 "https://apachetorrents.com/avatar/",
                 DetailsWithoutSize("Avatar", "Filme", Magnet("2222222222222222222222222222222222222222", "Avatar.2022.1080p.Dual"), "1080p"));
@@ -336,7 +364,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar"),
                 "https://apachetorrents.com/avatar/",
                 Details("Avatar", "Filme", "1 GB", "2022", Magnet("3333333333333333333333333333333333333333", "Avatar.2022.1080p.Dual"), "1080p / 1 GB"));
@@ -353,7 +385,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar-s02/", "Avatar - 2ª Temporada"),
                 "https://apachetorrents.com/avatar-s02/",
                 Details("Avatar - 2ª Temporada", "Serie", "5 GB", "2022", Magnet("4444444444444444444444444444444444444444", "Avatar.2a.Temporada.1080p"), "1080p / 5 GB"));
@@ -369,7 +405,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar"),
                 "https://apachetorrents.com/avatar/",
                 Details("Avatar", "Filme", "1 GB", "2022", Magnet("5555555555555555555555555555555555555555", "Avatar.Directors.Cut.1080p.Dual"), "botao magnet sem titulo util / 1 GB"));
@@ -412,7 +452,11 @@ namespace NzbDrone.Core.Test.IndexerTests.BrazilianPublicTorrentTests
             var subject = Mocker.Resolve<ApacheTorrent>();
             subject.Definition = Definition("ApacheTorrent", "https://apachetorrents.com/");
 
-            SetupTokenSite(subject.Definition, "https://apachetorrents.com/", "abc123", "Avatar",
+            SetupTokenSite(
+                subject.Definition,
+                "https://apachetorrents.com/",
+                "abc123",
+                "Avatar",
                 SearchCard("https://apachetorrents.com/avatar/", "Avatar 4K 20 GB"),
                 "https://apachetorrents.com/avatar/",
                 Details("Avatar 4K", "Filme", "20 GB", "2022", Magnet("7777777777777777777777777777777777777777", "Avatar.2022.720p.Dual"), "720p / 3.93 GB / publicação 20 GB"));

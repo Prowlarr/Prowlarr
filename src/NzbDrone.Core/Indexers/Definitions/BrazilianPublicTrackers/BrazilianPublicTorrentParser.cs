@@ -452,11 +452,15 @@ namespace NzbDrone.Core.Indexers.Definitions
                 return title;
             }
 
-            return Regex.Replace(title, @"(?<!\d)(?<season>\d{1,2})\s*(?:[ªº°a]\s*)?temporada\b", match =>
-            {
-                var season = int.Parse(match.Groups["season"].Value, CultureInfo.InvariantCulture);
-                return $"S{season:00}";
-            }, RegexOptions.IgnoreCase);
+            return Regex.Replace(
+                title,
+                @"(?<!\d)(?<season>\d{1,2})\s*(?:[ªº°a]\s*)?temporada\b",
+                match =>
+                {
+                    var season = int.Parse(match.Groups["season"].Value, CultureInfo.InvariantCulture);
+                    return $"S{season:00}";
+                },
+                RegexOptions.IgnoreCase);
         }
 
         private static bool MatchesSeason(string text, int season)

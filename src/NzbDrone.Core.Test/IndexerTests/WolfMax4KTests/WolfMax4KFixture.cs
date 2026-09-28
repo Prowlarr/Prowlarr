@@ -82,8 +82,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
             var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "the boys" })).Releases;
 
             releases.Should().HaveCount(9);
-            releases.Select(r => r.Title).Should().BeEquivalentTo(new[]
-            {
+            releases.Select(r => r.Title).Should().Equal(
                 "The Boys of Ghost Town (2008) DVDRip VOSE",
                 "The Boys S01E05-E08 HDTV SPANISH",
                 "The Boys S01E02-E04 HDTV SPANISH",
@@ -92,8 +91,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "Matrix (1999) 2160p SPANISH",
                 "Matrix (1999) BluRay 1080p SPANISH",
                 "Matrix (1999) BDRemux 1080p SPANISH",
-                "Los chicos del coro: la historia HDTV 720p SPANISH"
-            }, o => o.WithStrictOrdering());
+                "Los chicos del coro: la historia HDTV 720p SPANISH");
 
             var movie = (TorrentInfo)releases.Single(r => r.Title == "Matrix (1999) 2160p SPANISH");
             movie.Guid.Should().Be("https://wolfmax4k.com/peliculas/368874");

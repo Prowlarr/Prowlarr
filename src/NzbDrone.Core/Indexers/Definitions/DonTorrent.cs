@@ -9,8 +9,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using MonoTorrent;
+using MonoTorrent.BEncoding;
 using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Cache;
@@ -76,8 +79,14 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         }
 
         var torrentUrl = await GetTorrentUrl(contentId, tabla).ConfigureAwait(false);
+        var response = await base.Download(new Uri(torrentUrl)).ConfigureAwait(false);
 
-        return await base.Download(new Uri(torrentUrl)).ConfigureAwait(false);
+        // Some releases are password protected archives; keep the password with the torrent.
+        var password = query["clave"];
+
+        return password.IsNullOrWhiteSpace()
+            ? response
+            : new IndexerDownloadResponse(DonTorrentTorrentComment.AddPassword(response.Data, password), response.ElapsedTime);
     }
 
     private async Task<string> GetTorrentUrl(int contentId, string tabla)
@@ -286,6 +295,7 @@ public class DonTorrentParser : IParseIndexerResponse
 
     private static readonly Regex ItemPathRegex = new(@"^/?(?<kind>pelicula|serie|documental)/(?<id>\d+)(?:/(?<first>\d+))?/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex FormatInParenthesesRegex = new(@"^\s*\((?<format>[^)]+)\)\s*$", RegexOptions.Compiled);
+    private static readonly Regex PasswordRegex = new(@"(?:data-clave|value)\s*=\s*['""](?<password>[^'""]+)['""]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex LatestEpisodeRegex = new(@"^(?<title>.+?)\s*:\s*(?<episode>\d{1,2}x\d{1,3}.*)$", RegexOptions.Compiled);
 
     private readonly ProviderDefinition _definition;
@@ -448,7 +458,9 @@ public class DonTorrentParser : IParseIndexerResponse
             var format = details?.Format ?? item.Format;
             var parsed = DonTorrentTitleBuilder.Build("peliculas", details?.Title ?? item.Title, details?.Year ?? 0, null, format);
 
-            yield return CreateRelease(item, "peliculas", contentId, parsed, details?.Year ?? 0, item.PublishDate ?? DateTime.UtcNow, 1);
+            var password = details?.Rows.FirstOrDefault()?.Password ?? details?.Password;
+
+            yield return CreateRelease(item, "peliculas", contentId, parsed, details?.Year ?? 0, item.PublishDate ?? DateTime.UtcNow, 1, password);
 
             yield break;
         }
@@ -469,18 +481,28 @@ public class DonTorrentParser : IParseIndexerResponse
 
             var parsed = DonTorrentTitleBuilder.Build(row.Tabla ?? tabla, details.Title ?? item.Title, 0, row.Label, details.Format ?? item.Format);
 
-            yield return CreateRelease(item, row.Tabla ?? tabla, row.ContentId, parsed, 0, item.PublishDate ?? row.PublishDate ?? DateTime.UtcNow, parsed.EpisodeCount);
+            yield return CreateRelease(item, row.Tabla ?? tabla, row.ContentId, parsed, 0, item.PublishDate ?? row.PublishDate ?? DateTime.UtcNow, parsed.EpisodeCount, row.Password);
         }
     }
 
-    private TorrentInfo CreateRelease(DonTorrentItem item, string tabla, string contentId, DonTorrentParsedTitle parsed, int year, DateTime publishDate, int episodeCount)
+    private TorrentInfo CreateRelease(DonTorrentItem item, string tabla, string contentId, DonTorrentParsedTitle parsed, int year, DateTime publishDate, int episodeCount, string password)
     {
+        var downloadUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api_validate_pow.php?tabla={Uri.EscapeDataString(tabla)}&content_id={Uri.EscapeDataString(contentId)}";
+
+        if (password.IsNotNullOrWhiteSpace())
+        {
+            downloadUrl += $"&clave={Uri.EscapeDataString(password)}";
+        }
+
         return new TorrentInfo
         {
             Guid = $"{_settings.BaseUrl.TrimEnd('/')}/{tabla}/{contentId}",
-            Title = parsed.Title,
+
+            // Password protected archives are flagged in the title so they are noticed before grabbing.
+            Title = password.IsNotNullOrWhiteSpace() ? $"{parsed.Title} [Clave {password}]" : parsed.Title,
+            Description = password.IsNotNullOrWhiteSpace() ? $"Contraseña / password: {password}" : null,
             InfoUrl = item.InfoUrl,
-            DownloadUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api_validate_pow.php?tabla={Uri.EscapeDataString(tabla)}&content_id={Uri.EscapeDataString(contentId)}",
+            DownloadUrl = downloadUrl,
             Categories = GetCategories(tabla, parsed),
 
             // The site does not publish sizes; use a typical size for the quality so the release is usable.
@@ -581,6 +603,10 @@ public class DonTorrentParser : IParseIndexerResponse
             {
                 details.Format = value;
             }
+            else if (label.StartsWith("Clave", StringComparison.OrdinalIgnoreCase))
+            {
+                details.Password = ParsePassword(info);
+            }
         }
 
         foreach (var button in dom.QuerySelectorAll("a.protected-download[data-content-id], button.protected-download[data-content-id]"))
@@ -596,6 +622,7 @@ public class DonTorrentParser : IParseIndexerResponse
                 var cells = tr.QuerySelectorAll("td").ToList();
 
                 row.Label = cells.FirstOrDefault()?.TextContent.Trim();
+                row.Password = ParsePassword(tr);
                 row.PublishDate = cells
                     .Select(c => DateTime.TryParseExact(c.TextContent.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out var date) ? date : (DateTime?)null)
                     .FirstOrDefault(d => d.HasValue);
@@ -610,6 +637,29 @@ public class DonTorrentParser : IParseIndexerResponse
         }
 
         return details;
+    }
+
+    // Passwords are shown in a click popover: <a data-toggle="popover" title="... data-clave='X' ..." data-content="<input value='X'>">.
+    private static string ParsePassword(IElement container)
+    {
+        var popover = container.QuerySelector("a[data-toggle='popover'][data-trigger='click']");
+
+        if (popover == null)
+        {
+            return null;
+        }
+
+        foreach (var attribute in new[] { popover.GetAttribute("data-content"), popover.GetAttribute("title") })
+        {
+            var match = PasswordRegex.Match(attribute ?? string.Empty);
+
+            if (match.Success && match.Groups["password"].Value.IsNotNullOrWhiteSpace())
+            {
+                return match.Groups["password"].Value.Trim();
+            }
+        }
+
+        return null;
     }
 
     private ICollection<IndexerCategory> GetCategories(string tabla, DonTorrentParsedTitle parsed)
@@ -662,6 +712,7 @@ public class DonTorrentDetails
     public string Title { get; set; }
     public int Year { get; set; }
     public string Format { get; set; }
+    public string Password { get; set; }
     public List<DonTorrentDetailsRow> Rows { get; } = new();
 }
 
@@ -670,6 +721,7 @@ public class DonTorrentDetailsRow
     public string ContentId { get; set; }
     public string Tabla { get; set; }
     public string Label { get; set; }
+    public string Password { get; set; }
     public DateTime? PublishDate { get; set; }
 }
 
@@ -950,4 +1002,35 @@ public class DonTorrentApiResponse
 
     public HttpStatusCode StatusCode { get; }
     public DonTorrentApiResult Result { get; }
+}
+
+public static class DonTorrentTorrentComment
+{
+    // Adds the archive password as the torrent comment (shown by most clients). The comment lives
+    // outside the info dictionary, so the info hash does not change; if it would, the original is kept.
+    public static byte[] AddPassword(byte[] torrentData, string password)
+    {
+        try
+        {
+            var originalHash = Torrent.Load(torrentData).InfoHashes.V1OrV2.ToHex();
+            var torrent = BEncodedValue.Decode<BEncodedDictionary>(torrentData);
+            var comment = $"Contraseña / password: {password}";
+
+            if (torrent.TryGetValue("comment", out var existing) && existing.ToString().IsNotNullOrWhiteSpace())
+            {
+                comment = $"{comment} | {existing}";
+            }
+
+            torrent["comment"] = new BEncodedString(comment);
+            torrent["comment.utf-8"] = new BEncodedString(comment);
+
+            var modified = torrent.Encode();
+
+            return Torrent.Load(modified).InfoHashes.V1OrV2.ToHex() == originalHash ? modified : torrentData;
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return torrentData;
+        }
+    }
 }

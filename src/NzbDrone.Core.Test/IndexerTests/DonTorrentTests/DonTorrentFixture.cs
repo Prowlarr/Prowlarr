@@ -83,9 +83,9 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
             var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "the boys" })).Releases;
 
             releases.Select(r => r.Title).Should().Equal(
-                "The Boys of Ghost Town (2008) DVDRip VOSE",
+                "The Boys of Ghost Town (2008) DVDRip VOSE [Clave WWW.PCTNEW ORG cocineros]",
                 "The Boys S01E01 HDTV SPANISH",
-                "The Boys S01E02-E04 HDTV SPANISH",
+                "The Boys S01E02-E04 HDTV SPANISH [Clave WWW.PCTNEW ORG malotes]",
                 "The Boys S01E05-E08 HDTV SPANISH",
                 "Matrix (1999) 2160p SPANISH",
                 "Desmontando el cosmos S02E01 HDTV 720p SPANISH",
@@ -117,7 +117,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
 
             var releases = (await Subject.Fetch(new MovieSearchCriteria { SearchTerm = "the boys" })).Releases;
 
-            releases.Select(r => r.Title).Should().Equal("The Boys of Ghost Town (2008) DVDRip VOSE", "Matrix (1999) 2160p SPANISH");
+            releases.Select(r => r.Title).Should().Equal("The Boys of Ghost Town (2008) DVDRip VOSE [Clave WWW.PCTNEW ORG cocineros]", "Matrix (1999) 2160p SPANISH");
 
             Mocker.GetMock<IIndexerHttpClient>()
                 .Verify(o => o.ExecuteProxied(It.Is<HttpRequest>(r => r.Url.Path.StartsWith("/serie/")), It.IsAny<IndexerDefinition>()), Times.Never());
@@ -189,6 +189,36 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                 });
 
             Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://dontorrent.moi/api_validate_pow.php?tabla=peliculas&content_id=970")));
+        }
+
+        [Test]
+        public async Task should_carry_archive_passwords()
+        {
+            GivenSite();
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "the boys" })).Releases;
+
+            var episodes = releases.Single(r => r.Title.StartsWith("The Boys S01E02-E04"));
+            episodes.Description.Should().Be("Contraseña / password: WWW.PCTNEW ORG malotes");
+            episodes.DownloadUrl.Should().Be("https://dontorrent.moi/api_validate_pow.php?tabla=series&content_id=62316&clave=WWW.PCTNEW%20ORG%20malotes");
+
+            var free = releases.Single(r => r.Title == "The Boys S01E01 HDTV SPANISH");
+            free.Description.Should().BeNull();
+            free.DownloadUrl.Should().NotContain("clave");
+        }
+
+        [Test]
+        public void should_add_password_as_torrent_comment_without_changing_the_info_hash()
+        {
+            var torrent = Encoding.ASCII.GetBytes($"d8:announce26:udp://tracker.example:13374:infod6:lengthi1024e4:name8:test.mkv12:piece lengthi16384e6:pieces20:{new string('a', 20)}ee");
+
+            var modified = DonTorrentTorrentComment.AddPassword(torrent, "WWW.PCTNEW ORG malotes");
+
+            var original = MonoTorrent.Torrent.Load(torrent);
+            var result = MonoTorrent.Torrent.Load(modified);
+
+            result.Comment.Should().Be("Contraseña / password: WWW.PCTNEW ORG malotes");
+            result.InfoHashes.V1OrV2.ToHex().Should().Be(original.InfoHashes.V1OrV2.ToHex());
         }
 
         [TestCase("peliculas", "Matrix.", 1999, null, "HDRip", "Matrix (1999) HDRip SPANISH")]

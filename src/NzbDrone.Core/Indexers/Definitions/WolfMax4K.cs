@@ -56,7 +56,7 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 
     public override async Task<IndexerDownloadResponse> Download(Uri link)
     {
-        // Search results point to a local placeholder (api/descargas?tabla=...&content_id=...).
+        // Search results point to a local placeholder (api/descargas?tabla=...&code=...).
         // The real .torrent URL is only handed out after the site's proof-of-work exchange.
         if (!link.AbsolutePath.EndsWith("/api/descargas", StringComparison.OrdinalIgnoreCase))
         {
@@ -66,23 +66,26 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         var query = HttpUtility.ParseQueryString(link.Query);
         var tabla = query["tabla"];
 
-        if (tabla.IsNullOrWhiteSpace() || !int.TryParse(query["content_id"], NumberStyles.None, CultureInfo.InvariantCulture, out var contentId))
+        var code = query["code"];
+
+        if (tabla.IsNullOrWhiteSpace() || code.IsNullOrWhiteSpace())
         {
-            throw new ReleaseDownloadException("Invalid WolfMax4K download link: {0}", link.AbsoluteUri);
+            // Links from before the site switched to content codes can't be resolved any more.
+            throw new ReleaseUnavailableException("Outdated or invalid WolfMax4K download link, search again: {0}", link.AbsoluteUri);
         }
 
-        var torrentUrl = await GetTorrentUrl(contentId, tabla).ConfigureAwait(false);
+        var torrentUrl = await GetTorrentUrl(code, tabla).ConfigureAwait(false);
 
         return await base.Download(new Uri(torrentUrl)).ConfigureAwait(false);
     }
 
-    private async Task<string> GetTorrentUrl(int contentId, string tabla)
+    private async Task<string> GetTorrentUrl(string code, string tabla)
     {
-        var generate = await PostDownloadApi(new { action = "generate", content_id = contentId, tabla }).ConfigureAwait(false);
+        var generate = await PostDownloadApi(new { action = "generate", code, tabla }).ConfigureAwait(false);
 
         if (generate.StatusCode == HttpStatusCode.NotFound)
         {
-            throw new ReleaseUnavailableException("WolfMax4K content {0}/{1} no longer exists", tabla, contentId);
+            throw new ReleaseUnavailableException("WolfMax4K content {0}/{1} no longer exists", tabla, code);
         }
 
         ThrowIfLimited(generate);
@@ -110,7 +113,16 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
             throw new ReleaseDownloadException("WolfMax4K rejected the download request: {0}", validate.Result.Error ?? validate.StatusCode.ToString());
         }
 
-        return new Uri(new Uri(Settings.BaseUrl), validate.Result.DownloadUrl).AbsoluteUri;
+        var torrentUrl = new Uri(new Uri(Settings.BaseUrl), validate.Result.DownloadUrl);
+
+        // Some releases are only handed out through an external verification page (a link shortener)
+        // that has to be completed by a person; it is not followed automatically.
+        if (validate.Result.External == true || !torrentUrl.Host.Equals(new Uri(Settings.BaseUrl).Host, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ReleaseDownloadException("WolfMax4K only offers this release through an external verification page ({0}) that has to be completed in a browser, it can't be grabbed automatically", torrentUrl.Host);
+        }
+
+        return torrentUrl.AbsoluteUri;
     }
 
     private void ThrowIfLimited(WolfMax4KApiResponse response)
@@ -327,7 +339,7 @@ public class WolfMax4KParser : IParseIndexerResponse
     private TorrentInfo ParseRow(WolfMax4KCard card, IElement row)
     {
         var button = row.QuerySelector("button.protected-download");
-        var contentId = button?.GetAttribute("data-content-id");
+        var contentId = button?.GetAttribute("data-content-code");
         var tabla = button?.GetAttribute("data-tabla");
 
         if (contentId.IsNullOrWhiteSpace() || tabla.IsNullOrWhiteSpace())
@@ -354,7 +366,7 @@ public class WolfMax4KParser : IParseIndexerResponse
             Guid = $"{_settings.BaseUrl.TrimEnd('/')}/{tabla}/{contentId}",
             Title = parsed.Title,
             InfoUrl = GetAbsoluteUrl(format?.GetAttribute("href")) ?? card.InfoUrl,
-            DownloadUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/descargas?tabla={Uri.EscapeDataString(tabla)}&content_id={Uri.EscapeDataString(contentId)}",
+            DownloadUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/descargas?tabla={Uri.EscapeDataString(tabla)}&code={Uri.EscapeDataString(contentId)}",
             Categories = GetCategories(tabla, parsed),
             Size = sizeText.IsNotNullOrWhiteSpace() ? ParseUtil.GetBytes(sizeText) : null,
             PublishDate = card.PublishDate,
@@ -745,6 +757,8 @@ public class WolfMax4KApiResult
 
     [JsonProperty("wait_minutes")]
     public int? WaitMinutes { get; set; }
+
+    public bool? External { get; set; }
 }
 
 public class WolfMax4KApiResponse

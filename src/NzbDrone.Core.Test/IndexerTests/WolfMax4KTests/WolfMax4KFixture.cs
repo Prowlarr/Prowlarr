@@ -94,9 +94,9 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "Los chicos del coro: la historia HDTV 720p SPANISH");
 
             var movie = (TorrentInfo)releases.Single(r => r.Title == "Matrix (1999) 2160p SPANISH");
-            movie.Guid.Should().Be("https://wolfmax4k.com/peliculas/368874");
+            movie.Guid.Should().Be("https://wolfmax4k.com/peliculas/b8r7m6");
             movie.InfoUrl.Should().Be("https://wolfmax4k.com/pelicula/b8r7m6");
-            movie.DownloadUrl.Should().Be("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=368874");
+            movie.DownloadUrl.Should().Be("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6");
             movie.Size.Should().Be(60333553090);
             movie.PublishDate.Should().Be(new DateTime(2021, 6, 21, 0, 0, 0, DateTimeKind.Utc));
             movie.Year.Should().Be(1999);
@@ -166,7 +166,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Get && r.Url.Path.StartsWith("/torrents/")), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "application/x-bittorrent" } }, new CookieCollection(), torrent));
 
-            var response = await Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=368874"));
+            var response = await Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6"));
 
             response.Data.Should().Equal(torrent);
 
@@ -181,7 +181,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "{\"success\":true,\"challenge\":\"wolfmax4k-test-challenge\"}",
                 "{\"success\":false,\"status\":\"captcha_required\",\"captcha_image\":\"data:image/png;base64,AAAA\",\"message\":\"Verifica que eres humano\"}");
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=368874")));
+            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6")));
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "{\"success\":false,\"status\":\"limit_exceeded\",\"wait_minutes\":45}",
                 HttpStatusCode.TooManyRequests);
 
-            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=368874")));
+            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6")));
 
             ex.Message.Should().Contain("45");
         }
@@ -204,7 +204,28 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Post), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{\"success\":false,\"error\":\"Contenido no encontrado\"}", statusCode: HttpStatusCode.NotFound));
 
-            Assert.ThrowsAsync<ReleaseUnavailableException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=1")));
+            Assert.ThrowsAsync<ReleaseUnavailableException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=zzzzzz")));
+        }
+
+        [Test]
+        public void should_not_follow_external_verification_links()
+        {
+            GivenDownloadApi(
+                "{\"success\":true,\"challenge\":\"wolfmax4k-test-challenge\"}",
+                "{\"success\":true,\"external\":true,\"download_url\":\"https://enlacito.com/s.php?i=abc\"}");
+
+            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6")));
+
+            ex.Message.Should().Contain("enlacito.com");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Verify(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "enlacito.com"), It.IsAny<IndexerDefinition>()), Times.Never());
+        }
+
+        [Test]
+        public void should_reject_outdated_numeric_download_links()
+        {
+            Assert.ThrowsAsync<ReleaseUnavailableException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=368874")));
         }
 
         [TestCase("wolfmax4k-test-challenge", 66)]

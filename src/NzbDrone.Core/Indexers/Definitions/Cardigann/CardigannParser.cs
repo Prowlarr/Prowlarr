@@ -657,25 +657,26 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     break;
                 case "genre":
                     release.Genres ??= new List<string>();
-                    char[] delimitersG = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
                     release.Genres = release.Genres
-                        .Union(value.Split(delimitersG, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
-                        .Select(x => x.Replace("_", " "))
+                        .Union(value.Split([',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " ", StringComparison.Ordinal))
                         .ToList();
                     value = string.Join(", ", release.Genres);
                     break;
                 case "languages":
                     release.Languages ??= new List<string>();
-                    char[] delimitersL = { ',' };
-                    var releaseLanguages = release.Languages.Union(value.Split(delimitersL, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries));
-                    release.Languages = releaseLanguages.Select(x => x.Replace("_", " ")).ToList();
+                    release.Languages = release.Languages
+                        .Union(value.Split([','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " ", StringComparison.Ordinal))
+                        .ToList();
                     value = string.Join(",", release.Languages);
                     break;
                 case "subs":
                     release.Subs ??= new List<string>();
-                    char[] delimitersS = { ',' };
-                    var releaseSubs = release.Subs.Union(value.Split(delimitersS, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries));
-                    release.Subs = releaseSubs.Select(x => x.Replace("_", " ")).ToList();
+                    release.Subs = release.Subs
+                        .Union(value.Split([','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " ", StringComparison.Ordinal))
+                        .ToList();
                     value = string.Join(",", release.Subs);
                     break;
                 case "year":

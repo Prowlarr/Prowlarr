@@ -657,12 +657,27 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     break;
                 case "genre":
                     release.Genres ??= new List<string>();
-                    char[] delimiters = { ',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':' };
                     release.Genres = release.Genres
-                        .Union(value.Split(delimiters, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
-                        .Select(x => x.Replace("_", " "))
+                        .Union(value.Split([',', ' ', '/', ')', '(', '.', ';', '[', ']', '"', '|', ':'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " ", StringComparison.Ordinal))
                         .ToList();
                     value = string.Join(", ", release.Genres);
+                    break;
+                case "languages":
+                    release.Languages ??= new List<string>();
+                    release.Languages = release.Languages
+                        .Union(value.Split([','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " ", StringComparison.Ordinal))
+                        .ToList();
+                    value = string.Join(",", release.Languages);
+                    break;
+                case "subs":
+                    release.Subs ??= new List<string>();
+                    release.Subs = release.Subs
+                        .Union(value.Split([','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                        .Select(x => x.Replace("_", " ", StringComparison.Ordinal))
+                        .ToList();
+                    value = string.Join(",", release.Subs);
                     break;
                 case "year":
                     release.Year = ParseUtil.CoerceInt(value);

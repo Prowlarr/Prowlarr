@@ -159,6 +159,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             variables[".Query.Extended"] = null;
             variables[".Query.APIKey"] = null;
             variables[".Query.Genre"] = null;
+            variables[".Query.IsRssSearch"] = searchCriteria.IsRssSearch;
 
             //Movie
             variables[".Query.Movie"] = null;

@@ -1,19 +1,10 @@
 # RuTracker fixtures
 
-`titles.json` contains 27 sanitized source titles selected from 96 native RuTracker
+`RuTrackerTitleParserFixture.cs` contains 27 inline test cases with sanitized source titles selected from 96 native RuTracker
 source/output pairs collected on 2026-10-02 UTC with Prowlarr v2.5.2.5491.
 The source was the native adapter's Torznab `description`, not a reconstructed
-season title. Topic IDs are public fixture identifiers; category IDs are retained.
+season title. Category IDs are retained.
 There are no cookies, credentials, account details, torrent files or download URLs.
-
-- `source`: original tracker title, unchanged.
-- `expected`: intended parser output with Cyrillic stripping/tag movement disabled
-  and `addRussianToTitle` enabled. Non-anime expectations are the captured baseline;
-  anime expectations preserve counts/TV ordinals and explicit source audio tokens,
-  without inventing a Russian, Japanese, Chinese or Korean audio language.
-- `kind`: descriptive corpus label, not a trusted series type or catalog decision.
-  In particular `plain_tv_full` is only a count-complete title form; it includes
-  sequels and incomplete alternative-language tracks.
 
 The samples cover Chainsmoker Cat, plain TV packs, sequels/cours, partial/ongoing
 releases, split audio coverage, TV+Special, OVA, ONA, specials, anime movies,

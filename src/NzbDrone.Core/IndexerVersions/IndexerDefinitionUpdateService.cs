@@ -30,7 +30,7 @@ namespace NzbDrone.Core.IndexerVersions
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
 
         private const string DEFINITION_BRANCH = "master";
-        private const int DEFINITION_VERSION = 11;
+        private const int DEFINITION_VERSION = 12;
 
         // Used when moving yml to C#
         private readonly List<string> _definitionBlocklist = new()

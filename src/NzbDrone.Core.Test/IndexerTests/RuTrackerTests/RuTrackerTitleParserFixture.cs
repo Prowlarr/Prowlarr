@@ -1,3 +1,5 @@
+using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
@@ -14,40 +16,28 @@ namespace NzbDrone.Core.Test.IndexerTests.RuTrackerTests
     [TestFixture]
     public class RuTrackerTitleParserFixture : CoreTest<RuTrackerTitleParser>
     {
-        [TestCase("rt-6877836")]
-        [TestCase("rt-6843486")]
-        [TestCase("rt-6866428")]
-        [TestCase("rt-6917241")]
-        [TestCase("rt-6916926")]
-        [TestCase("rt-6916169")]
-        [TestCase("rt-6880675")]
-        [TestCase("rt-6841575")]
-        [TestCase("rt-6883487")]
-        [TestCase("rt-6915106")]
-        [TestCase("rt-6903806")]
-        [TestCase("rt-6220551")]
-        [TestCase("rt-6901316")]
-        [TestCase("rt-6917270")]
-        [TestCase("rt-6897663")]
-        [TestCase("rt-6871473")]
-        [TestCase("rt-6906208")]
-        [TestCase("rt-6888787")]
-        [TestCase("rt-6898037")]
-        [TestCase("rt-6684227")]
-        [TestCase("rt-6871287")]
-        [TestCase("rt-6909681")]
-        [TestCase("rt-6907992")]
-        [TestCase("rt-6878488")]
-        [TestCase("rt-6883307")]
-        [TestCase("rt-6905433")]
-        [TestCase("rt-6878048")]
-        public void should_parse_sanitized_real_titles(string id)
+        public static IEnumerable TitleCases
         {
-            var fixture = JArray.Parse(ReadAllText("Files/Indexers/RuTracker/titles.json")).Single(row => (string)row["id"] == id);
-            var categories = fixture["categories"].Values<int>().Select(category => new IndexerCategory { Id = category }).ToArray();
+            get
+            {
+                var path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Files", "Indexers", "RuTracker", "titles.json");
 
-            Subject.Parse((string)fixture["source"], categories, stripCyrillicLetters: false, addRussianToTitle: true)
-                .Should().Be((string)fixture["expected"]);
+                return JArray.Parse(File.ReadAllText(path))
+                    .Select(row => new TestCaseData(
+                            (string)row["source"],
+                            row["categories"].Values<int>().ToArray(),
+                            (string)row["expected"])
+                        .SetName($"should_parse_{(string)row["id"]}"));
+            }
+        }
+
+        [TestCaseSource(nameof(TitleCases))]
+        public void should_parse_sanitized_real_titles(string source, int[] categoryIds, string expected)
+        {
+            var categories = categoryIds.Select(category => new IndexerCategory { Id = category }).ToArray();
+
+            Subject.Parse(source, categories, stripCyrillicLetters: false, addRussianToTitle: true)
+                .Should().Be(expected);
         }
 
         [TestCase("[12 из 12]", "[12 of 12]")]
@@ -67,25 +57,11 @@ namespace NzbDrone.Core.Test.IndexerTests.RuTrackerTests
             result.Should().Be($"Example [TV] {expected} [RUS(int)] [2026, WEB-DL] [1080p]");
         }
 
-        [TestCase("[JAP]", true)]
-        [TestCase("[JPN]", true)]
-        [TestCase("[jpn]", true)]
-        [TestCase("[JAP+Sub]", true)]
-        [TestCase("[JPN(int)+Sub]", true)]
-        [TestCase("[RUS(int), JPN+Sub]", true)]
-        [TestCase("[RUS(ext), ENG, JAP+Sub]", true)]
-        [TestCase("[JAP+Sub, RUS(int)]", true)]
-        [TestCase("[JAP(ext)]", false)]
-        [TestCase("[JPN(ext)+Sub]", false)]
-        [TestCase("[Sub(JAP)]", false)]
-        [TestCase("[Sub, JAP]", false)]
-        [TestCase("[RUS(int), Sub(JPN)]", false)]
-        [TestCase("[RUS(int)+Sub(JAP)]", false)]
-        [TestCase("[JAPAN]", false)]
-        [TestCase("[RUS(int)]", false)]
-        [TestCase("[CHI+Sub]", false)]
-        [TestCase("[ZXX]", false)]
-        public void should_translate_only_explicit_internal_japanese_audio(string audio, bool japanese)
+        [TestCase("[JAP+Sub]", "[JAP]")]
+        [TestCase("[CHI+Sub]", "[CHI]")]
+        [TestCase("[KOR+Sub]", "[KOR]")]
+        [TestCase("[RUS(int), JPN+Sub]", "[RUS(int), JPN]")]
+        public void should_preserve_explicit_anime_audio_without_inventing_a_language(string audio, string expected)
         {
             var result = Subject.Parse(
                 $"Example [TV] [12 из 12] {audio} [2026, WEB-DL] [1080p]",
@@ -93,35 +69,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RuTrackerTests
                 stripCyrillicLetters: false,
                 addRussianToTitle: true);
 
-            result.Contains("Japanese").Should().Be(japanese);
-            result.Should().NotEndWith(" RUS");
-        }
-
-        [TestCase("JAP Samurai [TV] [12 из 12] [ENG]")]
-        [TestCase("[JPN] Example [TV] [12 из 12] [ENG]")]
-        [TestCase("Example [AMV] [JAP]")]
-        [TestCase("Example [TV] [Sub] [JAP]")]
-        public void should_not_translate_title_words_groups_or_unrecognized_layouts(string title)
-        {
-            Subject.Parse(title, new[] { NewznabStandardCategory.TVAnime }, stripCyrillicLetters: false)
-                .Should().NotContain("Japanese");
-        }
-
-        [TestCase("[TV]")]
-        [TestCase("[ТВ]")]
-        [TestCase("[TV+Special]")]
-        [TestCase("[OVA]")]
-        [TestCase("[ONA]")]
-        [TestCase("[Special]")]
-        [TestCase("[Movie]")]
-        [TestCase("[Movie+Special]")]
-        public void should_translate_audio_without_assigning_a_catalog_type_or_season(string type)
-        {
-            Subject.Parse(
-                $"Example {type} [JPN(int)] [2026, WEB-DL] [1080p]",
-                new[] { NewznabStandardCategory.TVAnime },
-                stripCyrillicLetters: false)
-                .Should().Be($"Example {type} [Japanese(int)] [2026, WEB-DL] [1080p]");
+            result.Should().Contain(expected).And.NotContain("Japanese").And.NotEndWith(" RUS");
         }
 
         [TestCase("ТВ-2")]
@@ -132,7 +80,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RuTrackerTests
                 $"Example ({ordinal}) [TV] [12 из 12] [JAP] [1080p]",
                 new[] { NewznabStandardCategory.TVAnime },
                 stripCyrillicLetters: false)
-                .Should().Be("Example (TV-2) [TV] [12 of 12] [Japanese] [1080p]");
+                .Should().Be("Example (TV-2) [TV] [12 of 12] [JAP] [1080p]");
         }
 
         [TestCase(false, false, false)]
@@ -150,7 +98,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RuTrackerTests
                 moveFirst,
                 moveAll);
 
-            result.Should().Contain("TV-2").And.Contain("[12 of 12]").And.Contain("[RUS(int), Japanese]");
+            result.Should().Contain("TV-2").And.Contain("[12 of 12]").And.Contain("[RUS(int), JAP]");
             result.Should().NotContain("S2").And.NotContain("E12").And.NotEndWith(" RUS");
         }
 

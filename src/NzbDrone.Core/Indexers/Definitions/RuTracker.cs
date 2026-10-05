@@ -1725,10 +1725,6 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly Regex _tvTitleRusEpisodeRegex = new(@"(?:Серии|Эпизод|Выпуски)+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _tvTitleRusSeasonAnimeRegex = new(@"ТВ[-]*(?:(\d+))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _tvTitleRusEpisodeAnimeOfRegex = new(@"\[(\d+(\+\d+)?)\s+из\s+(\d+(\+\d+)?)\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _animeJapaneseAudioRegex = new(
-            @"(?<prefix>\[(?:TV|ТВ|OVA|ONA|Special|Movie)(?:\+Special)?\]\s*(?:\[[0-9X?+\-\sиз]+\]\s*)?\[\s*" +
-            @"(?:(?!Sub\b)[A-Z]{3}(?:\((?:int|ext)\))?(?:\+Sub)?\s*,\s*)*)(?:JAP|JPN)(?=(?:\(int\))?(?:\+Sub)?\s*(?:,|\]))",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string Parse(string title,
                             ICollection<IndexerCategory> categories,
@@ -1744,12 +1740,6 @@ namespace NzbDrone.Core.Indexers.Definitions
             title = Regex.Replace(title, @"\b(2160p), 4K\b", "$1", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             var isAnime = categories.Contains(NewznabStandardCategory.TVAnime);
-            if (isAnime)
-            {
-                // Only translate an explicit audio token after the media type and optional count.
-                // Do not infer Japanese from the category, subtitles, release groups or external audio.
-                title = _animeJapaneseAudioRegex.Replace(title, "${prefix}Japanese");
-            }
 
             if (IsAnyTvCategory(categories))
             {

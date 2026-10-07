@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void should_order_descending_with_limit_and_offset(DatabaseType databaseType)
         {
             var builder = new SqlBuilder(databaseType)
-                .OrderByDescending<History.History>(h => h.Date)
+                .OrderBy<History.History>(h => h.Date, SortDirection.Descending)
                 .Take(10)
                 .Skip(20);
 
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Test.Datastore
         public void should_combine_multiple_order_columns()
         {
             var builder = new SqlBuilder(DatabaseType.SQLite)
-                .OrderByDescending<History.History>(h => h.Date)
+                .OrderBy<History.History>(h => h.Date, SortDirection.Descending)
                 .OrderBy<History.History>(h => h.Id);
 
             GetSql(builder).Should().EndWith("ORDER BY \"History\".\"Date\" DESC , \"History\".\"Id\" ASC");

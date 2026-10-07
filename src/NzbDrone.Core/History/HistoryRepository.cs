@@ -33,7 +33,7 @@ namespace NzbDrone.Core.History
         {
             var builder = Builder()
                 .Where<History>(x => x.DownloadId == downloadId)
-                .OrderByDescending<History>(h => h.Date)
+                .OrderBy<History>(h => h.Date, SortDirection.Descending)
                 .Take(1);
 
             return Query(builder).FirstOrDefault();
@@ -61,7 +61,7 @@ namespace NzbDrone.Core.History
                 builder.Where<History>(h => h.EventType == eventType);
             }
 
-            builder.OrderByDescending<History>(h => h.Date);
+            builder.OrderBy<History>(h => h.Date, SortDirection.Descending);
 
             if (limit.HasValue)
             {
@@ -87,7 +87,7 @@ namespace NzbDrone.Core.History
         {
             var builder = Builder()
                 .Where<History>(x => x.IndexerId == indexerId)
-                .OrderByDescending<History>(h => h.Date)
+                .OrderBy<History>(h => h.Date, SortDirection.Descending)
                 .Take(1);
 
             return Query(builder).FirstOrDefault();
@@ -144,7 +144,7 @@ namespace NzbDrone.Core.History
 
             if (limit > 0)
             {
-                builder.OrderByDescending<History>(h => h.Date).Take(limit);
+                builder.OrderBy<History>(h => h.Date, SortDirection.Descending).Take(limit);
             }
 
             return Query(builder).MinBy(h => h.Date);

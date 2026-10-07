@@ -79,14 +79,9 @@ namespace NzbDrone.Core.Datastore
             return builder.GroupBy($"{table}.{propName}");
         }
 
-        public static SqlBuilder OrderBy<TModel>(this SqlBuilder builder, Expression<Func<TModel, object>> property)
+        public static SqlBuilder OrderBy<TModel>(this SqlBuilder builder, Expression<Func<TModel, object>> property, SortDirection direction = SortDirection.Ascending)
         {
-            return builder.OrderBy($"{GetColumnName(property)} ASC");
-        }
-
-        public static SqlBuilder OrderByDescending<TModel>(this SqlBuilder builder, Expression<Func<TModel, object>> property)
-        {
-            return builder.OrderBy($"{GetColumnName(property)} DESC");
+            return builder.OrderBy($"{GetColumnName(property)} {(direction == SortDirection.Descending ? "DESC" : "ASC")}");
         }
 
         public static SqlBuilder Take(this SqlBuilder builder, int count)

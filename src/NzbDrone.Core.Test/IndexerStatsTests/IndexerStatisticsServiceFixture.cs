@@ -43,8 +43,8 @@ namespace NzbDrone.Core.Test.IndexerStatsTests
             };
 
             Mocker.GetMock<IHistoryService>()
-                .Setup(o => o.Between(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .Returns<DateTime, DateTime>((s, f) => history);
+                .Setup(o => o.Between(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>()))
+                .Returns(history);
 
             var statistics = Subject.IndexerStatistics(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow, new List<int> { 5 });
 

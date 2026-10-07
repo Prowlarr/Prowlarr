@@ -604,5 +604,6 @@
     "SeedTime": "זמן שיתוף",
     "days": "ימים",
     "OnHealthRestoredHelpText": "בשחזור תקינות",
-    "IndexerHDBitsSettingsOriginsHelpText": "אם לא צוין, כל האפשרויות יהיו בשימוש."
+    "IndexerHDBitsSettingsOriginsHelpText": "אם לא צוין, כל האפשרויות יהיו בשימוש.",
+    "AllowedHosts": "מארחים מורשים"
 }

@@ -33,7 +33,8 @@ namespace NzbDrone.Core.History
         {
             var builder = Builder()
                 .Where<History>(x => x.DownloadId == downloadId)
-                .OrderBy("\"History\".\"Date\" DESC LIMIT 1");
+                .OrderByDescending<History>(h => h.Date)
+                .Take(1);
 
             return Query(builder).FirstOrDefault();
         }
@@ -60,7 +61,12 @@ namespace NzbDrone.Core.History
                 builder.Where<History>(h => h.EventType == eventType);
             }
 
-            builder.OrderBy(limit.HasValue ? $"\"History\".\"Date\" DESC LIMIT {limit.Value}" : "\"History\".\"Date\" DESC");
+            builder.OrderByDescending<History>(h => h.Date);
+
+            if (limit.HasValue)
+            {
+                builder.Take(limit.Value);
+            }
 
             return Query(builder);
         }
@@ -81,7 +87,8 @@ namespace NzbDrone.Core.History
         {
             var builder = Builder()
                 .Where<History>(x => x.IndexerId == indexerId)
-                .OrderBy("\"History\".\"Date\" DESC LIMIT 1");
+                .OrderByDescending<History>(h => h.Date)
+                .Take(1);
 
             return Query(builder).FirstOrDefault();
         }
@@ -91,7 +98,7 @@ namespace NzbDrone.Core.History
             var builder = Builder()
                 .Where<History>(x => x.Date >= start && x.Date <= end)
                 .Where<History>(x => indexerIds.Contains(x.IndexerId))
-                .OrderBy("\"History\".\"Date\" ASC");
+                .OrderBy<History>(h => h.Date);
 
             return Query(builder);
         }
@@ -137,7 +144,7 @@ namespace NzbDrone.Core.History
 
             if (limit > 0)
             {
-                builder.OrderBy($"\"History\".\"Date\" DESC LIMIT {limit}");
+                builder.OrderByDescending<History>(h => h.Date).Take(limit);
             }
 
             return Query(builder).MinBy(h => h.Date);

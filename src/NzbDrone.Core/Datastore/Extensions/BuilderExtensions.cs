@@ -79,6 +79,26 @@ namespace NzbDrone.Core.Datastore
             return builder.GroupBy($"{table}.{propName}");
         }
 
+        public static SqlBuilder OrderBy<TModel>(this SqlBuilder builder, Expression<Func<TModel, object>> property)
+        {
+            return builder.OrderBy($"{GetColumnName(property)} ASC");
+        }
+
+        public static SqlBuilder OrderByDescending<TModel>(this SqlBuilder builder, Expression<Func<TModel, object>> property)
+        {
+            return builder.OrderBy($"{GetColumnName(property)} DESC");
+        }
+
+        public static SqlBuilder Take(this SqlBuilder builder, int count)
+        {
+            return builder.Limit(count);
+        }
+
+        public static SqlBuilder Skip(this SqlBuilder builder, int count)
+        {
+            return builder.Offset(count);
+        }
+
         public static SqlBuilder.Template AddSelectTemplate(this SqlBuilder builder, Type type)
         {
             return builder.AddTemplate(TableMapping.Mapper.SelectTemplate(type)).LogQuery();
@@ -136,6 +156,13 @@ namespace NzbDrone.Core.Datastore
             sb.AppendLine();
 
             return sb.ToString();
+        }
+
+        private static string GetColumnName<TModel>(Expression<Func<TModel, object>> property)
+        {
+            var table = TableMapping.Mapper.TableNameMapping(typeof(TModel));
+            var propName = property.GetMemberName().Name;
+            return $"\"{table}\".\"{propName}\"";
         }
 
         private static WhereBuilder GetWhereBuilder(DatabaseType databaseType, Expression filter, bool requireConcrete, int seq)

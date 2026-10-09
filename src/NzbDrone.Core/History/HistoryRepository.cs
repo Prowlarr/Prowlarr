@@ -12,10 +12,10 @@ namespace NzbDrone.Core.History
         History MostRecentForDownloadId(string downloadId);
         List<History> FindByDownloadId(string downloadId);
         List<History> FindDownloadHistory(int indexerId);
-        List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType);
+        List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType, int? limit);
         void DeleteForIndexers(List<int> indexerIds);
         History MostRecentForIndexer(int indexerId);
-        List<History> Between(DateTime start, DateTime end);
+        List<History> Between(DateTime start, DateTime end, List<int> indexerIds);
         List<History> Since(DateTime date, HistoryEventType? eventType);
         void Cleanup(int days);
         int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
@@ -31,7 +31,12 @@ namespace NzbDrone.Core.History
 
         public History MostRecentForDownloadId(string downloadId)
         {
-            return FindByDownloadId(downloadId).MaxBy(h => h.Date);
+            var builder = Builder()
+                .Where<History>(x => x.DownloadId == downloadId)
+                .OrderBy<History>(h => h.Date, SortDirection.Descending)
+                .Take(1);
+
+            return Query(builder).FirstOrDefault();
         }
 
         public List<History> FindByDownloadId(string downloadId)
@@ -47,16 +52,23 @@ namespace NzbDrone.Core.History
                          allowed.Contains(h.EventType));
         }
 
-        public List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType)
+        public List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType, int? limit)
         {
-            var query = Query(x => x.IndexerId == indexerId);
+            var builder = Builder().Where<History>(x => x.IndexerId == indexerId);
 
             if (eventType.HasValue)
             {
-                query = query.Where(h => h.EventType == eventType).ToList();
+                builder.Where<History>(h => h.EventType == eventType);
             }
 
-            return query.OrderByDescending(h => h.Date).ToList();
+            builder.OrderBy<History>(h => h.Date, SortDirection.Descending);
+
+            if (limit.HasValue)
+            {
+                builder.Take(limit.Value);
+            }
+
+            return Query(builder);
         }
 
         public void DeleteForIndexers(List<int> indexerIds)
@@ -73,14 +85,22 @@ namespace NzbDrone.Core.History
 
         public History MostRecentForIndexer(int indexerId)
         {
-            return Query(x => x.IndexerId == indexerId).MaxBy(h => h.Date);
+            var builder = Builder()
+                .Where<History>(x => x.IndexerId == indexerId)
+                .OrderBy<History>(h => h.Date, SortDirection.Descending)
+                .Take(1);
+
+            return Query(builder).FirstOrDefault();
         }
 
-        public List<History> Between(DateTime start, DateTime end)
+        public List<History> Between(DateTime start, DateTime end, List<int> indexerIds)
         {
-            var builder = Builder().Where<History>(x => x.Date >= start && x.Date <= end);
+            var builder = Builder()
+                .Where<History>(x => x.Date >= start && x.Date <= end)
+                .Where<History>(x => indexerIds.Contains(x.IndexerId))
+                .OrderBy<History>(h => h.Date);
 
-            return Query(builder).OrderBy(h => h.Date).ToList();
+            return Query(builder);
         }
 
         public List<History> Since(DateTime date, HistoryEventType? eventType)
@@ -122,14 +142,12 @@ namespace NzbDrone.Core.History
                 .Where<History>(x => x.Date >= date)
                 .Where<History>(x => intEvents.Contains((int)x.EventType));
 
-            var query = Query(builder);
-
             if (limit > 0)
             {
-                query = query.OrderByDescending(h => h.Date).Take(limit).ToList();
+                builder.OrderBy<History>(h => h.Date, SortDirection.Descending).Take(limit);
             }
 
-            return query.MinBy(h => h.Date);
+            return Query(builder).MinBy(h => h.Date);
         }
     }
 }

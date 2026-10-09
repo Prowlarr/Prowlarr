@@ -49,7 +49,7 @@ const links = [
     to: '/settings',
     children: [
       {
-        title: () => translate('Indexers'),
+        title: () => translate('IndexerProxies'),
         to: '/settings/indexers'
       },
       {

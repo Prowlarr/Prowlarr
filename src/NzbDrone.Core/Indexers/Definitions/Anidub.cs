@@ -286,7 +286,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var domTitle = content.QuerySelector("#news-title");
             var baseTitle = domTitle.TextContent.Trim();
-            var quality = GetQuality(tabNode.ParentElement);
+            var quality = GetQuality(tabNode);
 
             if (!string.IsNullOrWhiteSpace(quality))
             {
@@ -298,8 +298,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private static string GetQuality(AngleSharp.Dom.IElement releaseNode)
         {
-            // For some releases there's no block with quality
-            if (string.IsNullOrWhiteSpace(releaseNode.Id))
+            // For some releases there's no block with quality, and single-quality
+            // releases place the torrent info node directly under the tab container
+            if (string.IsNullOrWhiteSpace(releaseNode.Id) || releaseNode.Id.StartsWith("torrent_"))
             {
                 return null;
             }
@@ -414,12 +415,25 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private static string GetTorrentId(AngleSharp.Dom.IElement tabNode)
         {
-            var nodeId = tabNode.Id;
+            // Quality tabs ("tv1080", "bd720", ...) wrap the torrent info node,
+            // single-quality releases place it directly under the tab container
+            var infoNode = GetTorrentInfoNode(tabNode);
+            var nodeId = infoNode.Id ?? string.Empty;
 
             // Format is "torrent_{id}_info"
             return nodeId
                 .Replace("torrent_", string.Empty)
                 .Replace("_info", string.Empty);
+        }
+
+        private static AngleSharp.Dom.IElement GetTorrentInfoNode(AngleSharp.Dom.IElement tabNode)
+        {
+            if (tabNode.Id?.StartsWith("torrent_") == true)
+            {
+                return tabNode;
+            }
+
+            return tabNode.QuerySelector("div[id^='torrent_'][id$='_info']") ?? tabNode;
         }
 
         private ICollection<IndexerCategory> ParseCategories(string uriPath)

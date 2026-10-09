@@ -47,7 +47,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
 
         public override IIndexerRequestGenerator GetRequestGenerator()
         {
-            var generator = _generatorCache.Get(Settings.DefinitionFile, () =>
+            var generator = _generatorCache.Get($"{Settings.DefinitionFile}.{Definition.Id}", () =>
                 new CardigannRequestGenerator(_configService,
                     _definitionService.GetCachedDefinition(Settings.DefinitionFile),
                     _logger,

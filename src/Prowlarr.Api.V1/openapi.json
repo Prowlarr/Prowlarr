@@ -5683,6 +5683,9 @@
           "onHealthRestored": {
             "type": "boolean"
           },
+          "onVipExpiration": {
+            "type": "boolean"
+          },
           "onApplicationUpdate": {
             "type": "boolean"
           },
@@ -5696,6 +5699,9 @@
             "type": "boolean"
           },
           "supportsOnHealthRestored": {
+            "type": "boolean"
+          },
+          "supportsOnVipExpiration": {
             "type": "boolean"
           },
           "includeHealthWarnings": {

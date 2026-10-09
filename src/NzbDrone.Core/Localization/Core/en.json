@@ -557,6 +557,8 @@
   "OnHealthRestored": "On Health Restored",
   "OnHealthRestoredHelpText": "On Health Restored",
   "OnLatestVersion": "The latest version of {appName} is already installed",
+  "OnVipExpiration": "On VIP Expiration",
+  "OnVipExpirationHelpText": "On VIP Expiration",
   "Open": "Open",
   "OpenBrowserOnStart": "Open browser on start",
   "OpenThisModal": "Open This Modal",

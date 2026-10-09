@@ -18,11 +18,13 @@ function NotificationEventItems(props) {
     onGrab,
     onHealthIssue,
     onHealthRestored,
+    onVipExpiration,
     onApplicationUpdate,
     supportsOnGrab,
     includeManualGrabs,
     supportsOnHealthIssue,
     supportsOnHealthRestored,
+    supportsOnVipExpiration,
     includeHealthWarnings,
     supportsOnApplicationUpdate
   } = item;
@@ -79,6 +81,17 @@ function NotificationEventItems(props) {
               helpText={translate('OnHealthRestoredHelpText')}
               isDisabled={!supportsOnHealthRestored.value}
               {...onHealthRestored}
+              onChange={onInputChange}
+            />
+          </div>
+
+          <div>
+            <FormInputGroup
+              type={inputTypes.CHECK}
+              name="onVipExpiration"
+              helpText={translate('OnVipExpirationHelpText')}
+              isDisabled={!supportsOnVipExpiration.value}
+              {...onVipExpiration}
               onChange={onInputChange}
             />
           </div>

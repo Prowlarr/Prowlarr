@@ -59,10 +59,12 @@ class Notification extends Component {
       onGrab,
       onHealthIssue,
       onHealthRestored,
+      onVipExpiration,
       onApplicationUpdate,
       supportsOnGrab,
       supportsOnHealthIssue,
       supportsOnHealthRestored,
+      supportsOnVipExpiration,
       supportsOnApplicationUpdate,
       tags,
       tagList
@@ -103,6 +105,14 @@ class Notification extends Component {
         }
 
         {
+          supportsOnVipExpiration && onVipExpiration ?
+            <Label kind={kinds.SUCCESS}>
+              {translate('OnVipExpiration')}
+            </Label> :
+            null
+        }
+
+        {
           supportsOnApplicationUpdate && onApplicationUpdate ?
             <Label kind={kinds.SUCCESS}>
               {translate('OnApplicationUpdate')}
@@ -111,7 +121,7 @@ class Notification extends Component {
         }
 
         {
-          !onGrab && !onHealthIssue && !onHealthRestored && !onApplicationUpdate ?
+          !onGrab && !onHealthIssue && !onHealthRestored && !onVipExpiration && !onApplicationUpdate ?
             <Label
               kind={kinds.DISABLED}
               outline={true}
@@ -153,10 +163,12 @@ Notification.propTypes = {
   onGrab: PropTypes.bool.isRequired,
   onHealthIssue: PropTypes.bool.isRequired,
   onHealthRestored: PropTypes.bool.isRequired,
+  onVipExpiration: PropTypes.bool.isRequired,
   onApplicationUpdate: PropTypes.bool.isRequired,
   supportsOnGrab: PropTypes.bool.isRequired,
   supportsOnHealthIssue: PropTypes.bool.isRequired,
   supportsOnHealthRestored: PropTypes.bool.isRequired,
+  supportsOnVipExpiration: PropTypes.bool.isRequired,
   supportsOnApplicationUpdate: PropTypes.bool.isRequired,
   tags: PropTypes.arrayOf(PropTypes.number).isRequired,
   tagList: PropTypes.arrayOf(PropTypes.object).isRequired,

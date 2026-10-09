@@ -82,15 +82,21 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private IndexerCapabilities SetCapabilities()
         {
+            // The site only matches an IMDb ID if the uploader has tagged the release with it,
+            // so the ID search caps are removed when the user opts out of IMDb ID searches.
+            // Settings are accessed via the definition because the capabilities of template
+            // instances are queried before a definition is assigned.
+            var disableImdbSearch = Definition?.Settings is IPTorrentsSettings settings && settings.DisableImdbSearch;
+
             var caps = new IndexerCapabilities
             {
                 TvSearchParams = new List<TvSearchParam>
                 {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep
                 },
                 MovieSearchParams = new List<MovieSearchParam>
                 {
-                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                    MovieSearchParam.Q
                 },
                 MusicSearchParams = new List<MusicSearchParam>
                 {
@@ -101,6 +107,12 @@ namespace NzbDrone.Core.Indexers.Definitions
                     BookSearchParam.Q
                 }
             };
+
+            if (!disableImdbSearch)
+            {
+                caps.TvSearchParams.Add(TvSearchParam.ImdbId);
+                caps.MovieSearchParams.Add(MovieSearchParam.ImdbId);
+            }
 
             caps.Categories.AddCategoryMapping(72, NewznabStandardCategory.Movies, "Movies");
             caps.Categories.AddCategoryMapping(87, NewznabStandardCategory.Movies3D, "Movie/3D");
@@ -221,7 +233,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 }
             }
 
-            if (imdbId.IsNotNullOrWhiteSpace())
+            if (imdbId.IsNotNullOrWhiteSpace() && !Settings.DisableImdbSearch)
             {
                 // ipt uses sphinx, which supports boolean operators and grouping
                 qc.Add("q", "+(" + imdbId + ")");
@@ -456,6 +468,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         [FieldDefinition(5, Label = "IndexerIPTorrentsSettingsSearchSortBy", Type = FieldType.Select, SelectOptions = typeof(IPTorrentsSort), HelpText = "IndexerIPTorrentsSettingsSearchSortByHelpText")]
         public int SearchSortBy { get; set; }
+
+        [FieldDefinition(6, Label = "IndexerSettingsDisableImdbSearch", Type = FieldType.Checkbox, HelpText = "IndexerIPTorrentsSettingsDisableImdbSearchHelpText")]
+        public bool DisableImdbSearch { get; set; }
 
         public override NzbDroneValidationResult Validate()
         {

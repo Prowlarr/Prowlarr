@@ -237,12 +237,14 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping(1390, NewznabStandardCategory.TVAnime, "|- Наруто");
             caps.Categories.AddCategoryMapping(404, NewznabStandardCategory.TVAnime, "|- Покемоны");
             caps.Categories.AddCategoryMapping(893, NewznabStandardCategory.TVAnime, "|- Японские мультфильмы");
+            caps.Categories.AddCategoryMapping(1277, NewznabStandardCategory.TVAnime, "|- Дунхуа и Эни");
             caps.Categories.AddCategoryMapping(809, NewznabStandardCategory.Audio, "|- Звуковые дорожки (Аниме)");
             caps.Categories.AddCategoryMapping(2484, NewznabStandardCategory.TVAnime, "|- Артбуки и журналы (Аниме)");
             caps.Categories.AddCategoryMapping(1386, NewznabStandardCategory.TVAnime, "|- Обои, сканы, аватары, арт");
             caps.Categories.AddCategoryMapping(1387, NewznabStandardCategory.TVAnime, "|- AMV и другие ролики");
             caps.Categories.AddCategoryMapping(9, NewznabStandardCategory.TV, "Русские сериалы");
             caps.Categories.AddCategoryMapping(81, NewznabStandardCategory.TVHD, "|- Русские сериалы (HD Video)");
+            caps.Categories.AddCategoryMapping(812, NewznabStandardCategory.TVUHD, "|- Русские сериалы (UHD Video)");
             caps.Categories.AddCategoryMapping(920, NewznabStandardCategory.TVSD, "|- Русские сериалы (DVD Video)");
             caps.Categories.AddCategoryMapping(80, NewznabStandardCategory.TV, "|- Сельский детектив");
             caps.Categories.AddCategoryMapping(1535, NewznabStandardCategory.TV, "|- По законам военного времени");

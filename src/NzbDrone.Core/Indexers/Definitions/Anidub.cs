@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using AngleSharp.Html.Parser;
 using NLog;
 using NzbDrone.Common.Http;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
@@ -22,7 +23,7 @@ using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Definitions
 {
-    public class Anidub : TorrentIndexerBase<UserPassTorrentBaseSettings>
+    public class Anidub : TorrentIndexerBase<AnidubSettings>
     {
         public override string Name => "Anidub";
         public override string[] IndexerUrls => new[] { "https://tr.anidub.com/" };
@@ -246,11 +247,12 @@ namespace NzbDrone.Core.Indexers.Definitions
     public class AnidubParser : IParseIndexerResponse
     {
         private readonly ProviderDefinition _definition;
-        private readonly UserPassTorrentBaseSettings _settings;
+        private readonly AnidubSettings _settings;
         private readonly IndexerCapabilitiesCategories _categories;
         private readonly TimeSpan _rateLimit;
         private readonly IIndexerHttpClient _httpClient;
         private readonly Logger _logger;
+        private readonly AnidubTitleParser _titleParser = new();
 
         private static Dictionary<string, string> CategoriesMap => new()
         {
@@ -272,7 +274,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             { "/anons_ongoing", "12" }
         };
 
-        public AnidubParser(ProviderDefinition definition, UserPassTorrentBaseSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
+        public AnidubParser(ProviderDefinition definition, AnidubSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
         {
             _definition = definition;
             _settings = settings;
@@ -282,10 +284,10 @@ namespace NzbDrone.Core.Indexers.Definitions
             _logger = logger;
         }
 
-        private static string GetTitle(AngleSharp.Html.Dom.IHtmlDocument content, AngleSharp.Dom.IElement tabNode)
+        private string GetTitle(AngleSharp.Html.Dom.IHtmlDocument content, AngleSharp.Dom.IElement tabNode, ICollection<IndexerCategory> categories)
         {
             var domTitle = content.QuerySelector("#news-title");
-            var baseTitle = domTitle.TextContent.Trim();
+            var baseTitle = _titleParser.Parse(domTitle.TextContent.Trim(), categories, _settings.StripCyrillicLetters, _settings.AddRussianToTitle);
             var quality = GetQuality(tabNode.ParentElement);
 
             if (!string.IsNullOrWhiteSpace(quality))
@@ -438,11 +440,13 @@ namespace NzbDrone.Core.Indexers.Definitions
             var parser = new HtmlParser();
             using var dom = parser.ParseDocument(indexerResponse.Content);
 
+            var categories = ParseCategories(indexerResponse.Request.Url.Path);
+
             foreach (var t in dom.QuerySelectorAll("#tabs .torrent_c > div"))
             {
                 var release = new TorrentInfo
                 {
-                    Title = GetTitle(dom, t),
+                    Title = GetTitle(dom, t, categories),
                     InfoUrl = indexerResponse.Request.Url.FullUri,
                     DownloadVolumeFactor = 0,
                     UploadVolumeFactor = 1,
@@ -451,7 +455,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Seeders = GetReleaseSeeders(t),
                     Peers = GetReleaseSeeders(t) + GetReleaseLeechers(t),
                     Grabs = GetReleaseGrabs(t),
-                    Categories = ParseCategories(indexerResponse.Request.Url.Path),
+                    Categories = categories,
                     PublishDate = GetDateFromShowPage(dom),
                     DownloadUrl = GetReleaseLink(t),
                     Size = GetReleaseSize(t),
@@ -502,5 +506,205 @@ namespace NzbDrone.Core.Indexers.Definitions
         }
 
         public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }
+    }
+
+    public class AnidubTitleParser
+    {
+        // Season markers: "ТВ-2", "TV-2", "TV 3" and roman numerals ("TV-IV")
+        private static readonly Regex SeasonMarkerRegex = new(@"\b(?:ТВ|TV)[-\s]?(\d{1,3}|[IVXLC]+)\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        // Specials appended after the main batch: "+ Specials [6 из 6]", "+ SP"
+        private static readonly Regex SpecialsSuffixRegex = new(@"\s*\+\s*(?:Specials?|SP)\s*(?:\[[^\]]*\])?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        // Batch episode counter: "[28 из 28]", "[10 из 24]", "[151-366 из 366]", "[293 из ххх]", "[51 из 51 + SP]"
+        private static readonly Regex BatchBracketRegex = new(@"\s*\[(\d+)(?:-(\d+))?\s+из\s+(\d+|[xх]+|\?+)(?:\s*\+\s*\d*\s*SP)?\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex MovieBracketRegex = new(@"\s*\[Movie\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex SeasonTokenRegex = new(@"\bS\d+", RegexOptions.Compiled);
+
+        private static readonly Regex TitlePartSplitRegex = new(@"\s*/\s*", RegexOptions.Compiled);
+
+        private static readonly Regex StripCyrillicRegex = new(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = false, bool addRussianToTitle = false)
+        {
+            categories ??= Array.Empty<IndexerCategory>();
+
+            // https://www.fileformat.info/info/unicode/category/Pd/list.htm
+            title = Regex.Replace(title, @"\p{Pd}", "-", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            if (IsAnyTvCategory(categories))
+            {
+                title = SpecialsSuffixRegex.Replace(title, string.Empty);
+
+                // Both the season marker and the batch counter are removed here
+                // and re-appended below in a canonical Sonarr-parseable form.
+                var seasonNumber = 1;
+                var seasonMatch = SeasonMarkerRegex.Match(title);
+                var hasExplicitMarkers = seasonMatch.Success;
+
+                if (seasonMatch.Success)
+                {
+                    seasonNumber = ParseSeasonNumber(seasonMatch.Groups[1].Value);
+                    title = SeasonMarkerRegex.Replace(title, string.Empty);
+                }
+
+                var episodes = string.Empty;
+                var isCrossSeasonRange = false;
+
+                var batchMatch = BatchBracketRegex.Match(title);
+                if (batchMatch.Success)
+                {
+                    hasExplicitMarkers = true;
+
+                    var from = batchMatch.Groups[1].Value;
+                    var to = batchMatch.Groups[2].Value;
+                    var total = batchMatch.Groups[3].Value;
+                    var totalSuffix = total.All(char.IsDigit) ? $" of {total}" : string.Empty;
+
+                    if (!string.IsNullOrEmpty(to))
+                    {
+                        // Explicit ranges ("151-366 из 366") may span seasons in absolute numbering, keep them season-less
+                        episodes = $"E{from}-{to}{totalSuffix}";
+                        isCrossSeasonRange = true;
+                    }
+                    else if (from == total)
+                    {
+                        // Complete batch is a full season pack
+                        episodes = string.Empty;
+                    }
+                    else if (int.TryParse(from, out var fromNumber) && fromNumber == 1)
+                    {
+                        episodes = $"E01{totalSuffix}";
+                    }
+                    else
+                    {
+                        // Anidub batches are cumulative and always start from the first episode
+                        episodes = $"E01-{from}{totalSuffix}";
+                    }
+
+                    title = BatchBracketRegex.Replace(title, string.Empty);
+                }
+
+                if (stripCyrillicLetters)
+                {
+                    title = SelectForeignTitleParts(title);
+                }
+
+                if (hasExplicitMarkers)
+                {
+                    var suffix = isCrossSeasonRange || SeasonTokenRegex.IsMatch(title) ? episodes : $"S{seasonNumber}{episodes}";
+
+                    if (!string.IsNullOrWhiteSpace(suffix))
+                    {
+                        title = $"{title.TrimEnd()} {suffix}";
+                    }
+                }
+            }
+            else
+            {
+                title = MovieBracketRegex.Replace(title, string.Empty);
+
+                if (stripCyrillicLetters)
+                {
+                    title = SelectForeignTitleParts(title);
+                }
+            }
+
+            if (addRussianToTitle && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.IsMatch(title, @"\bRUS\b", RegexOptions.IgnoreCase))
+            {
+                title += " RUS";
+            }
+
+            title = Regex.Replace(title, @"[\[\(]\s*[\)\]]", string.Empty, RegexOptions.Compiled);
+            title = title.Trim(' ', ',', '-', '_', '|', '/', '\\', ':', ';');
+
+            // replace multiple spaces with a single space
+            title = Regex.Replace(title, @"\s+", " ");
+
+            return title.Trim();
+        }
+
+        private static string SelectForeignTitleParts(string title)
+        {
+            // Anidub titles are "<russian title> / <romaji title> [batch]", keep the romaji part(s)
+            var parts = TitlePartSplitRegex.Split(title);
+
+            if (parts.Length > 1)
+            {
+                var foreignParts = parts.Where(part => !IsMostlyCyrillic(part)).ToList();
+
+                if (foreignParts.Count > 0 && foreignParts.Count < parts.Length)
+                {
+                    return string.Join(" / ", foreignParts);
+                }
+            }
+
+            return StripCyrillicRegex.Replace(title, string.Empty).Trim(' ', '-');
+        }
+
+        private static bool IsMostlyCyrillic(string part)
+        {
+            var cyrillicLetters = part.Count(c => c is >= 'А' and <= 'я');
+            var latinLetters = part.Count(c => c is (>= 'A' and <= 'Z') or (>= 'a' and <= 'z'));
+
+            return cyrillicLetters > latinLetters;
+        }
+
+        private static int ParseSeasonNumber(string value)
+        {
+            if (int.TryParse(value, out var number))
+            {
+                return number;
+            }
+
+            // Roman numerals (e.g. "Overlord TV-IV")
+            var result = 0;
+            var previous = 0;
+
+            foreach (var letter in value.ToUpperInvariant().Reverse())
+            {
+                var current = letter switch
+                {
+                    'I' => 1,
+                    'V' => 5,
+                    'X' => 10,
+                    'L' => 50,
+                    'C' => 100,
+                    _ => 0
+                };
+
+                result += current < previous ? -current : current;
+                previous = current;
+            }
+
+            return result;
+        }
+
+        private static bool IsAnyTvCategory(ICollection<IndexerCategory> categories)
+        {
+            return categories.Contains(NewznabStandardCategory.TV) || NewznabStandardCategory.TV.SubCategories.Any(subCategory => categories.Contains(subCategory));
+        }
+
+        private static bool IsAnyMovieCategory(ICollection<IndexerCategory> categories)
+        {
+            return categories.Contains(NewznabStandardCategory.Movies) || NewznabStandardCategory.Movies.SubCategories.Any(subCategory => categories.Contains(subCategory));
+        }
+    }
+
+    public class AnidubSettings : UserPassTorrentBaseSettings
+    {
+        public AnidubSettings()
+        {
+            StripCyrillicLetters = false;
+            AddRussianToTitle = false;
+        }
+
+        [FieldDefinition(4, Label = "Strip Cyrillic Letters", HelpText = "Strip the Cyrillic title part from release names to improve parsing by Sonarr and Radarr", Type = FieldType.Checkbox)]
+        public bool StripCyrillicLetters { get; set; }
+
+        [FieldDefinition(5, Label = "Add RUS to titles", HelpText = "Add RUS to end of all titles to improve language detection by Sonarr and Radarr. Will cause English-only results to be misidentified.", Type = FieldType.Checkbox)]
+        public bool AddRussianToTitle { get; set; }
     }
 }

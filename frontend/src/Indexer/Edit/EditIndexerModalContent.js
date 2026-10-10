@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import Form from 'Components/Form/Form';
 import FormGroup from 'Components/Form/FormGroup';
 import FormInputGroup from 'Components/Form/FormInputGroup';
@@ -26,6 +26,7 @@ function EditIndexerModalContent(props) {
     isTesting,
     saveError,
     item,
+    defaultUserAgent,
     hasUsenetDownloadClients,
     hasTorrentDownloadClients,
     onInputChange,
@@ -52,8 +53,24 @@ function EditIndexerModalContent(props) {
     fields,
     priority,
     protocol,
-    downloadClientId
+    downloadClientId,
+    userAgent
   } = item;
+
+  // Seed the field with the default on focus so it can be edited rather than retyped, but drop it again on
+  // blur if it was left untouched. Persisting an unmodified copy would pin the indexer to today's version
+  // string, and it would keep sending that after every future upgrade.
+  const onUserAgentFocus = useCallback(() => {
+    if (!userAgent.value) {
+      onInputChange({ name: 'userAgent', value: defaultUserAgent });
+    }
+  }, [userAgent.value, defaultUserAgent, onInputChange]);
+
+  const onUserAgentBlur = useCallback(() => {
+    if (userAgent.value === defaultUserAgent) {
+      onInputChange({ name: 'userAgent', value: '' });
+    }
+  }, [userAgent.value, defaultUserAgent, onInputChange]);
 
   const indexerDisplayName = implementationName === definitionName ? implementationName : `${implementationName} (${definitionName})`;
   const showDownloadClientInput = downloadClientId.value > 0 || protocol.value === 'usenet' && hasUsenetDownloadClients || protocol.value === 'torrent' && hasTorrentDownloadClients;
@@ -181,6 +198,24 @@ function EditIndexerModalContent(props) {
                 </FormGroup> : null
               }
 
+              <FormGroup
+                advancedSettings={advancedSettings}
+                isAdvanced={true}
+              >
+                <FormLabel>{translate('IndexerUserAgent')}</FormLabel>
+
+                <FormInputGroup
+                  type={inputTypes.TEXT}
+                  name="userAgent"
+                  helpText={translate('IndexerUserAgentHelpText')}
+                  placeholder={defaultUserAgent}
+                  {...userAgent}
+                  onChange={onInputChange}
+                  onFocus={onUserAgentFocus}
+                  onBlur={onUserAgentBlur}
+                />
+              </FormGroup>
+
               <FormGroup>
                 <FormLabel>{translate('Tags')}</FormLabel>
 
@@ -248,6 +283,7 @@ EditIndexerModalContent.propTypes = {
   isTesting: PropTypes.bool.isRequired,
   saveError: PropTypes.object,
   item: PropTypes.object.isRequired,
+  defaultUserAgent: PropTypes.string,
   hasUsenetDownloadClients: PropTypes.bool.isRequired,
   hasTorrentDownloadClients: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,

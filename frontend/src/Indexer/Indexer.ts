@@ -53,6 +53,7 @@ interface Indexer extends ModelBase {
   protocol: DownloadProtocol;
   privacy: IndexerPrivacy;
   priority: number;
+  userAgent: string;
   fields: IndexerField[];
   tags: number[];
   sortName: string;

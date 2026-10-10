@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
   </PropertyGroup>
@@ -9,5 +9,6 @@
     <ProjectReference Include="..\NzbDrone.Core\Prowlarr.Core.csproj" />
     <ProjectReference Include="..\NzbDrone.Test.Common\Prowlarr.Test.Common.csproj" />
     <ProjectReference Include="..\Prowlarr.Http\Prowlarr.Http.csproj" />
+    <ProjectReference Include="..\Prowlarr.Api.V1\Prowlarr.Api.V1.csproj" />
   </ItemGroup>
 </Project>

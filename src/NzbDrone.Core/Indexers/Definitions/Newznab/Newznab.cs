@@ -233,7 +233,10 @@ namespace NzbDrone.Core.Indexers.Newznab
         {
             try
             {
-                return _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.GetValueOrDefault(100);
+                return Math.Clamp(
+                    _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsDefault.GetValueOrDefault(100),
+                    Math.Min(100, _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsMax.GetValueOrDefault(100)),
+                    _capabilitiesProvider.GetCapabilities(Settings, Definition).LimitsMax.GetValueOrDefault(100));
             }
             catch
             {

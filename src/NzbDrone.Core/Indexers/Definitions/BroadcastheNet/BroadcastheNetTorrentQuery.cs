@@ -28,6 +28,8 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tvdb { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Imdb { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tvrage { get; set; }
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Age { get; set; }

@@ -35,7 +35,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
             return new BroadcastheNetParser(Capabilities.Categories);
         }
 
-        private IndexerCapabilities SetCapabilities()
+        private static IndexerCapabilities SetCapabilities()
         {
             var caps = new IndexerCapabilities
             {
@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 LimitsMax = 1000,
                 TvSearchParams = new List<TvSearchParam>
                 {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId, TvSearchParam.RId
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TvdbId, TvSearchParam.ImdbId, TvSearchParam.RId
                 }
             };
 

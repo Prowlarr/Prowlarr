@@ -3,9 +3,15 @@
 }
 
 .row {
-  transition: background-color 500ms;
+  & > * {
+    transition: background-color 500ms;
+  }
 
-  &:hover {
+  &.alternateRow > * {
+    background-color: var(--tableRowAlternateBackgroundColor);
+  }
+
+  &:hover > * {
     background-color: var(--tableRowHoverBackgroundColor);
   }
 }

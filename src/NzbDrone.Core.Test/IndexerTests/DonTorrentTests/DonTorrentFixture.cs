@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
             Subject.Definition = new IndexerDefinition
             {
                 Name = "DonTorrent",
-                Settings = new NoAuthTorrentBaseSettings
+                Settings = new DonTorrentSettings
                 {
                     BaseUrl = BaseUrl
                 }
@@ -219,6 +219,21 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
 
             result.Comment.Should().Be("Contraseña / password: WWW.PCTNEW ORG malotes");
             result.InfoHashes.V1OrV2.ToHex().Should().Be(original.InfoHashes.V1OrV2.ToHex());
+        }
+
+        [Test]
+        public void should_read_current_domain_from_telegram_channel()
+        {
+            DonTorrent.ParseTelegramChannel(ReadAllText("Files/Indexers/DonTorrent/telegram.html")).Should().Be("https://dontorrent.newtld/");
+        }
+
+        [Test]
+        public void should_use_alternative_domain_when_set()
+        {
+            ((DonTorrentSettings)Subject.Definition.Settings).AlternativeDomain = "dontorrent.manual";
+
+            Subject.GetBaseUrl().Should().Be("https://dontorrent.manual/");
+            Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria()).GetAllTiers().First().First().Url.Host.Should().Be("dontorrent.manual");
         }
 
         [Test]

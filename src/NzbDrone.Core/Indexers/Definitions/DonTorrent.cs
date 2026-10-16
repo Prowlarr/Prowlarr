@@ -22,6 +22,7 @@ using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Http.CloudFlare;
@@ -35,11 +36,15 @@ using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
-public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
+public class DonTorrent : TorrentIndexerBase<DonTorrentSettings>
 {
     private static readonly TimeSpan DomainOverrideLifetime = TimeSpan.FromDays(7);
     private static readonly TimeSpan DomainLookupInterval = TimeSpan.FromMinutes(10);
     private static readonly Regex SiteHostRegex = new(@"(?:^|\.)dontorrent\.[a-z]{2,}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    // Public preview of the official Telegram channel, where every domain change is announced.
+    public const string TelegramChannelUrl = "https://t.me/s/DonTorrent";
+
+    private static readonly Regex AnnouncedDomainRegex = new(@"https?://(?:[a-z0-9-]+\.)*dontorrent\.[a-z]{2,}(?=[/\s)]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex CurrentDomainRegex = new(@"^https?://(?:[a-z0-9-]+\.)*dontorrent\.[a-z]{2,}/?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private readonly ICacheManager _cacheManager;
@@ -77,16 +82,36 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 
     public string GetBaseUrl()
     {
-        return _domainCache.Find(DomainKey) ?? Settings.BaseUrl;
+        return _domainCache.Find(DomainKey) ?? NormalizeBaseUrl(Settings.AlternativeDomain) ?? Settings.BaseUrl;
     }
 
-    private string DomainKey => $"override:{Definition?.Id}:{Settings.BaseUrl}";
+    private string DomainKey => $"override:{Definition?.Id}:{Settings.BaseUrl}:{Settings.AlternativeDomain}";
 
-    private NoAuthTorrentBaseSettings CurrentSettings()
+    private static string NormalizeBaseUrl(string url)
     {
-        return new NoAuthTorrentBaseSettings
+        if (url.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+
+        url = url.Trim();
+
+        if (!url.Contains("://", StringComparison.Ordinal))
+        {
+            url = $"https://{url}";
+        }
+
+        return Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.Scheme is "http" or "https"
+            ? $"{uri.Scheme}://{uri.Host}/"
+            : null;
+    }
+
+    private DonTorrentSettings CurrentSettings()
+    {
+        return new DonTorrentSettings
         {
             BaseUrl = GetBaseUrl(),
+            AlternativeDomain = Settings.AlternativeDomain,
             BaseSettings = Settings.BaseSettings,
             TorrentBaseSettings = Settings.TorrentBaseSettings
         };
@@ -170,7 +195,11 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 
         if (baseUrl == null)
         {
-            var candidates = new[] { GetBaseUrl(), Settings.BaseUrl }.Concat(IndexerUrls).Concat(LegacyUrls).Distinct(StringComparer.OrdinalIgnoreCase);
+            var candidates = new[] { GetBaseUrl(), NormalizeBaseUrl(Settings.AlternativeDomain), Settings.BaseUrl }
+                .Concat(IndexerUrls)
+                .Concat(LegacyUrls)
+                .Where(c => c != null)
+                .Distinct(StringComparer.OrdinalIgnoreCase);
 
             foreach (var candidate in candidates)
             {
@@ -181,6 +210,9 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
                     break;
                 }
             }
+
+            // Last resort, independent of the site's own domains: the official Telegram channel.
+            baseUrl ??= await ReadTelegramChannel().ConfigureAwait(false);
 
             // Remember the answer (even an empty one) for a while so failures don't hammer the site.
             _domainCache.Set(lookupKey, baseUrl ?? string.Empty, DomainLookupInterval);
@@ -218,6 +250,58 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
             _logger.Debug(ex, "Could not read the DonTorrent domain list from {0}", baseUrl);
             return null;
         }
+    }
+
+    private async Task<string> ReadTelegramChannel()
+    {
+        var request = new HttpRequestBuilder(TelegramChannelUrl)
+            .Accept(HttpAccept.Html)
+            .Build();
+
+        request.SuppressHttpError = true;
+
+        try
+        {
+            var response = await _httpClient.ExecuteProxiedAsync(request, Definition).ConfigureAwait(false);
+
+            return response.StatusCode == HttpStatusCode.OK ? ParseTelegramChannel(response.Content) : null;
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            _logger.Debug(ex, "Could not read {0}", TelegramChannelUrl);
+            return null;
+        }
+    }
+
+    // Takes the newest announcement with a DonTorrent domain that is not flagged as blocked,
+    // e.g. "Dominio Oficial ✅ (12/10/2026) https://dontorrent.meme (Disponible)".
+    public static string ParseTelegramChannel(string html)
+    {
+        var parser = new HtmlParser();
+        using var dom = parser.ParseDocument(html);
+
+        foreach (var message in dom.QuerySelectorAll(".tgme_widget_message_text").Reverse())
+        {
+            var text = message.TextContent;
+
+            if (text.Contains("Censurado", StringComparison.OrdinalIgnoreCase) || text.Contains('\u274C'))
+            {
+                continue;
+            }
+
+            var url = message.QuerySelectorAll("a[href]")
+                .Select(a => a.GetAttribute("href"))
+                .Concat(AnnouncedDomainRegex.Matches(text).Select(m => m.Value))
+                .Select(NormalizeBaseUrl)
+                .FirstOrDefault(u => u != null && SiteHostRegex.IsMatch(new Uri(u).Host));
+
+            if (url != null)
+            {
+                return url;
+            }
+        }
+
+        return null;
     }
 
     public static string ParseDomainDirectory(string html)
@@ -1270,4 +1354,10 @@ public static class DonTorrentTorrentComment
             return torrentData;
         }
     }
+}
+
+public class DonTorrentSettings : NoAuthTorrentBaseSettings
+{
+    [FieldDefinition(2, Label = "Alternative domain", Type = FieldType.Textbox, Placeholder = "https://dontorrent.example/", HelpText = "Optional. DonTorrent changes domain often and the indexer follows it on its own (redirects, /dominios and the Telegram channel). If it still can't find the site, paste the current domain here.")]
+    public string AlternativeDomain { get; set; }
 }

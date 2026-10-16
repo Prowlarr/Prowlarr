@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,11 +15,14 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Newtonsoft.Json;
 using NLog;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
+using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -28,30 +33,237 @@ using NzbDrone.Core.ThingiProvider;
 
 namespace NzbDrone.Core.Indexers.Definitions;
 
-public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
+public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
 {
+    private static readonly TimeSpan DomainOverrideLifetime = TimeSpan.FromDays(7);
+    private static readonly TimeSpan DomainLookupInterval = TimeSpan.FromMinutes(10);
+
+    // wolfmax4k.com was rebranded as wolftorrent.com; accept both names on any TLD.
+    private static readonly Regex SiteHostRegex = new(@"(?:^|\.)(?:wolfmax4k|wolftorrent)\.[a-z]{2,}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private readonly ICached<string> _domainCache;
+
     public override string Name => "WolfMax4K";
-    public override string[] IndexerUrls => new[] { "https://wolfmax4k.com/" };
-    public override string Description => "WolfMax4K is a SPANISH public site for movies, TV series and documentaries";
+
+    // The site moves to a new domain when the current one is blocked; old domains redirect to the new one while they last.
+    public override string[] IndexerUrls => new[] { "https://wolftorrent.com/" };
+    public override string[] LegacyUrls => new[] { "https://wolfmax4k.com/" };
+    public override string Description => "WolfTorrent (formerly WolfMax4K) is a SPANISH public site for movies, TV series and documentaries";
     public override string Language => "es-ES";
     public override Encoding Encoding => Encoding.UTF8;
     public override IndexerPrivacy Privacy => IndexerPrivacy.Public;
     public override IndexerCapabilities Capabilities => SetCapabilities();
     public override TimeSpan RateLimit => TimeSpan.FromSeconds(3);
 
-    public WolfMax4K(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger)
+    public WolfMax4K(IIndexerHttpClient httpClient, IEventAggregator eventAggregator, IIndexerStatusService indexerStatusService, IConfigService configService, Logger logger, ICacheManager cacheManager)
         : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
     {
+        _domainCache = cacheManager.GetCache<string>(GetType(), "domain");
     }
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new WolfMax4KRequestGenerator(Settings);
+        return new WolfMax4KRequestGenerator(CurrentSettings());
     }
 
     public override IParseIndexerResponse GetParser()
     {
-        return new WolfMax4KParser(Definition, Settings, Capabilities.Categories, RateLimit, _httpClient, _logger);
+        return new WolfMax4KParser(Definition, CurrentSettings(), Capabilities.Categories, RateLimit, _httpClient, _logger);
+    }
+
+    public string GetBaseUrl()
+    {
+        return _domainCache.Find(DomainKey) ?? NormalizeBaseUrl(Settings.AlternativeDomain) ?? Settings.BaseUrl;
+    }
+
+    private string DomainKey => $"override:{Definition?.Id}:{Settings.BaseUrl}:{Settings.AlternativeDomain}";
+
+    private static string NormalizeBaseUrl(string url)
+    {
+        if (url.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+
+        url = url.Trim();
+
+        if (!url.Contains("://", StringComparison.Ordinal))
+        {
+            url = $"https://{url}";
+        }
+
+        return Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.Scheme is "http" or "https"
+            ? $"{uri.Scheme}://{uri.Host}/"
+            : null;
+    }
+
+    private WolfMax4KSettings CurrentSettings()
+    {
+        return new WolfMax4KSettings
+        {
+            BaseUrl = GetBaseUrl(),
+            AlternativeDomain = Settings.AlternativeDomain,
+            BaseSettings = Settings.BaseSettings,
+            TorrentBaseSettings = Settings.TorrentBaseSettings
+        };
+    }
+
+    protected override async Task<IndexerResponse> FetchIndexerResponse(IndexerRequest request)
+    {
+        IndexerResponse response = null;
+        Exception failure = null;
+
+        try
+        {
+            response = await base.FetchIndexerResponse(request).ConfigureAwait(false);
+
+            var movedTo = GetRedirectBaseUrl(response.HttpResponse);
+
+            if (movedTo != null)
+            {
+                SwitchBaseUrl(movedTo, request.Url.Host);
+                request.HttpRequest.Url = new HttpUri(ReplaceBaseUrl(request.Url.FullUri, movedTo));
+
+                return await base.FetchIndexerResponse(request).ConfigureAwait(false);
+            }
+
+            if (LooksLikeSite(response.HttpResponse))
+            {
+                return response;
+            }
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            failure = ex;
+        }
+
+        var currentBaseUrl = await LookUpCurrentBaseUrl(request.Url.Host).ConfigureAwait(false);
+
+        if (currentBaseUrl == null)
+        {
+            if (failure != null)
+            {
+                ExceptionDispatchInfo.Capture(failure).Throw();
+            }
+
+            return response;
+        }
+
+        request.HttpRequest.Url = new HttpUri(ReplaceBaseUrl(request.Url.FullUri, currentBaseUrl));
+
+        return await base.FetchIndexerResponse(request).ConfigureAwait(false);
+    }
+
+    // Returns scheme://host/ when the response redirects to another domain of the site.
+    private static string GetRedirectBaseUrl(HttpResponse response)
+    {
+        if ((int)response.StatusCode is < 300 or > 399 || response.RedirectUrl.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+
+        if (!Uri.TryCreate(new Uri(response.Request.Url.FullUri), response.RedirectUrl, out var target) ||
+            !SiteHostRegex.IsMatch(target.Host) ||
+            target.Host.Equals(response.Request.Url.Host, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return $"{target.Scheme}://{target.Host}/";
+    }
+
+    private void SwitchBaseUrl(string baseUrl, string oldHost)
+    {
+        _logger.Info("WolfMax4K moved from {0} to {1}", oldHost, baseUrl);
+        _domainCache.Set(DomainKey, baseUrl, DomainOverrideLifetime);
+    }
+
+    // The site doesn't publish a domain list, so ask every known domain where it lives now:
+    // old domains redirect to the current one, and a domain that serves the site is used as is.
+    private async Task<string> LookUpCurrentBaseUrl(string failingHost)
+    {
+        var lookupKey = $"lookup:{Definition?.Id}";
+        var baseUrl = _domainCache.Find(lookupKey);
+
+        if (baseUrl == null)
+        {
+            var candidates = new[] { NormalizeBaseUrl(Settings.AlternativeDomain), GetBaseUrl(), Settings.BaseUrl }
+                .Concat(IndexerUrls)
+                .Concat(LegacyUrls)
+                .Where(c => c != null && !new Uri(c).Host.Equals(failingHost, StringComparison.OrdinalIgnoreCase))
+                .Distinct(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var candidate in candidates)
+            {
+                baseUrl = await ProbeDomain(candidate).ConfigureAwait(false);
+
+                if (baseUrl != null)
+                {
+                    break;
+                }
+            }
+
+            // Remember the answer (even an empty one) for a while so failures don't hammer the site.
+            _domainCache.Set(lookupKey, baseUrl ?? string.Empty, DomainLookupInterval);
+        }
+
+        if (baseUrl.IsNullOrWhiteSpace() || new Uri(baseUrl).Host.Equals(failingHost, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        SwitchBaseUrl(baseUrl, failingHost);
+
+        return baseUrl;
+    }
+
+    private async Task<string> ProbeDomain(string baseUrl)
+    {
+        var request = new HttpRequestBuilder(baseUrl)
+            .Accept(HttpAccept.Html)
+            .Build();
+
+        request.SuppressHttpError = true;
+        request.AllowAutoRedirect = false;
+
+        try
+        {
+            var response = await _httpClient.ExecuteProxiedAsync(request, Definition).ConfigureAwait(false);
+
+            return GetRedirectBaseUrl(response) ?? (LooksLikeSite(response) && response.StatusCode == HttpStatusCode.OK ? baseUrl : null);
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            _logger.Debug(ex, "WolfMax4K domain {0} is not answering", baseUrl);
+            return null;
+        }
+    }
+
+    private static bool LooksLikeSite(HttpResponse response)
+    {
+        // A dead domain may answer with an error or parking page instead of failing.
+        return response.StatusCode is not (HttpStatusCode.NotFound or HttpStatusCode.Gone) &&
+               !response.HasHttpServerError &&
+               (response.Content.Contains("wolf-card", StringComparison.OrdinalIgnoreCase) ||
+                response.Content.Contains("WolfTorrent", StringComparison.OrdinalIgnoreCase) ||
+                response.Content.Contains("WolfMax4K", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsSiteUnreachable(Exception ex)
+    {
+        return ex switch
+        {
+            null => false,
+            CloudFlareProtectionException => false,
+            HttpException httpException => httpException.Response.HasHttpServerError || httpException.Response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone,
+            WebException or HttpRequestException or TaskCanceledException or IOException => true,
+            _ => IsSiteUnreachable(ex.InnerException)
+        };
+    }
+
+    private static string ReplaceBaseUrl(string url, string baseUrl)
+    {
+        return new Uri(new Uri(baseUrl), new Uri(url).PathAndQuery).AbsoluteUri;
     }
 
     public override async Task<IndexerDownloadResponse> Download(Uri link)
@@ -89,6 +301,7 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         }
 
         ThrowIfLimited(generate);
+        ThrowIfHumanCheck(generate.Result);
 
         if (!generate.Result.Success || generate.Result.Challenge.IsNullOrWhiteSpace())
         {
@@ -101,28 +314,38 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         var validate = await PostDownloadApi(new { action = "validate", challenge = generate.Result.Challenge, nonce }).ConfigureAwait(false);
 
         ThrowIfLimited(validate);
-
-        if (validate.Result.Status == "captcha_required")
-        {
-            // Solving the captcha is deliberately left to a human in a browser.
-            throw new ReleaseDownloadException("WolfMax4K is asking for a captcha. Open {0} in a browser, download any release once to solve it, then retry.", Settings.BaseUrl);
-        }
+        ThrowIfHumanCheck(validate.Result);
 
         if (!validate.Result.Success || validate.Result.DownloadUrl.IsNullOrWhiteSpace())
         {
-            throw new ReleaseDownloadException("WolfMax4K rejected the download request: {0}", validate.Result.Error ?? validate.StatusCode.ToString());
+            throw new ReleaseDownloadException("WolfMax4K rejected the download request: {0}", validate.Result.Error ?? validate.Result.Status ?? validate.StatusCode.ToString());
         }
 
-        var torrentUrl = new Uri(new Uri(Settings.BaseUrl), validate.Result.DownloadUrl);
+        var baseUrl = GetBaseUrl();
+        var torrentUrl = new Uri(new Uri(baseUrl), validate.Result.DownloadUrl);
 
         // Some releases are only handed out through an external verification page (a link shortener)
         // that has to be completed by a person; it is not followed automatically.
-        if (validate.Result.External == true || !torrentUrl.Host.Equals(new Uri(Settings.BaseUrl).Host, StringComparison.OrdinalIgnoreCase))
+        if (validate.Result.External == true || !torrentUrl.Host.Equals(new Uri(baseUrl).Host, StringComparison.OrdinalIgnoreCase))
         {
             throw new ReleaseDownloadException("WolfMax4K only offers this release through an external verification page ({0}) that has to be completed in a browser, it can't be grabbed automatically", torrentUrl.Host);
         }
 
         return torrentUrl.AbsoluteUri;
+    }
+
+    private void ThrowIfHumanCheck(WolfMax4KApiResult result)
+    {
+        // Captchas and Cloudflare Turnstile checks are deliberately left to a human in a browser.
+        if (result.Status == "captcha_required")
+        {
+            throw new ReleaseDownloadException("WolfMax4K is asking for a captcha. Open {0} in a browser, download any release once to solve it, then retry.", GetBaseUrl());
+        }
+
+        if (result.Status == "turnstile_required" || result.Verification != null)
+        {
+            throw new ReleaseDownloadException("WolfMax4K asks for a human verification (Cloudflare Turnstile) on every download, it can't be grabbed automatically. Download the release from {0} in a browser.", GetBaseUrl());
+        }
     }
 
     private void ThrowIfLimited(WolfMax4KApiResponse response)
@@ -139,21 +362,31 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 
     private async Task<WolfMax4KApiResponse> PostDownloadApi(object body)
     {
-        var request = new HttpRequestBuilder(Settings.BaseUrl)
-            .Resource("api/descargas")
-            .Accept(HttpAccept.Json)
-            .SetHeader("Referer", Settings.BaseUrl)
-            .WithRateLimit(RateLimit.TotalSeconds)
-            .Build();
+        HttpResponse response;
 
-        request.Method = HttpMethod.Post;
-        request.Headers.ContentType = "application/json";
-        request.SetContent(body.ToJson(Formatting.None));
+        try
+        {
+            response = await ExecuteDownloadApi(GetBaseUrl(), body).ConfigureAwait(false);
 
-        // 403/404/429 carry a JSON body with the reason, read it instead of throwing.
-        request.SuppressHttpError = true;
+            var movedTo = GetRedirectBaseUrl(response);
 
-        var response = await _httpClient.ExecuteProxiedAsync(request, Definition).ConfigureAwait(false);
+            if (movedTo != null)
+            {
+                SwitchBaseUrl(movedTo, response.Request.Url.Host);
+                response = await ExecuteDownloadApi(movedTo, body).ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            var currentBaseUrl = await LookUpCurrentBaseUrl(new Uri(GetBaseUrl()).Host).ConfigureAwait(false);
+
+            if (currentBaseUrl == null)
+            {
+                throw;
+            }
+
+            response = await ExecuteDownloadApi(currentBaseUrl, body).ConfigureAwait(false);
+        }
 
         WolfMax4KApiResult result;
 
@@ -167,6 +400,26 @@ public class WolfMax4K : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         }
 
         return new WolfMax4KApiResponse(response.StatusCode, result);
+    }
+
+    private Task<HttpResponse> ExecuteDownloadApi(string baseUrl, object body)
+    {
+        var request = new HttpRequestBuilder(baseUrl)
+            .Resource("api/descargas")
+            .Accept(HttpAccept.Json)
+            .SetHeader("Referer", baseUrl)
+            .WithRateLimit(RateLimit.TotalSeconds)
+            .Build();
+
+        request.Method = HttpMethod.Post;
+        request.Headers.ContentType = "application/json";
+        request.SetContent(body.ToJson(Formatting.None));
+        request.AllowAutoRedirect = false;
+
+        // 403/404/429 carry a JSON body with the reason, read it instead of throwing.
+        request.SuppressHttpError = true;
+
+        return _httpClient.ExecuteProxiedAsync(request, Definition);
     }
 
     private IndexerCapabilities SetCapabilities()
@@ -197,9 +450,9 @@ public class WolfMax4KRequestGenerator : IIndexerRequestGenerator
 {
     private static readonly Regex TrailingYearRegex = new(@"\s+(?:19|20)\d{2}$", RegexOptions.Compiled);
 
-    private readonly NoAuthTorrentBaseSettings _settings;
+    private readonly WolfMax4KSettings _settings;
 
-    public WolfMax4KRequestGenerator(NoAuthTorrentBaseSettings settings)
+    public WolfMax4KRequestGenerator(WolfMax4KSettings settings)
     {
         _settings = settings;
     }
@@ -264,20 +517,20 @@ public class WolfMax4KParser : IParseIndexerResponse
     private const int MaxExtraEpisodePages = 10;
 
     private readonly ProviderDefinition _definition;
-    private readonly NoAuthTorrentBaseSettings _settings;
     private readonly IndexerCapabilitiesCategories _categories;
     private readonly TimeSpan _rateLimit;
     private readonly IIndexerHttpClient _httpClient;
     private readonly Logger _logger;
+    private string _baseUrl;
 
-    public WolfMax4KParser(ProviderDefinition definition, NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
+    public WolfMax4KParser(ProviderDefinition definition, WolfMax4KSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, Logger logger)
     {
         _definition = definition;
-        _settings = settings;
         _categories = categories;
         _rateLimit = rateLimit;
         _httpClient = httpClient;
         _logger = logger;
+        _baseUrl = settings.BaseUrl;
     }
 
     public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -288,6 +541,9 @@ public class WolfMax4KParser : IParseIndexerResponse
         }
 
         var releases = new List<ReleaseInfo>();
+
+        // Resolve links against the domain that actually answered (it may have just changed).
+        _baseUrl = $"{indexerResponse.HttpRequest.Url.Scheme}://{indexerResponse.HttpRequest.Url.Host}/";
 
         // Older episodes of a season are loaded on demand; only worth it for real searches.
         var expandEpisodes = indexerResponse.HttpRequest.Url.Path.Contains("/buscar", StringComparison.OrdinalIgnoreCase);
@@ -363,10 +619,11 @@ public class WolfMax4KParser : IParseIndexerResponse
 
         return new TorrentInfo
         {
-            Guid = $"{_settings.BaseUrl.TrimEnd('/')}/{tabla}/{contentId}",
+            // Domain independent, so releases stay the same when the site moves.
+            Guid = $"WolfMax4K-{tabla}-{contentId}",
             Title = parsed.Title,
             InfoUrl = GetAbsoluteUrl(format?.GetAttribute("href")) ?? card.InfoUrl,
-            DownloadUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api/descargas?tabla={Uri.EscapeDataString(tabla)}&code={Uri.EscapeDataString(contentId)}",
+            DownloadUrl = $"{_baseUrl.TrimEnd('/')}/api/descargas?tabla={Uri.EscapeDataString(tabla)}&code={Uri.EscapeDataString(contentId)}",
             Categories = GetCategories(tabla, parsed),
             Size = sizeText.IsNotNullOrWhiteSpace() ? ParseUtil.GetBytes(sizeText) : null,
             PublishDate = card.PublishDate,
@@ -400,7 +657,7 @@ public class WolfMax4KParser : IParseIndexerResponse
             var request = new HttpRequestBuilder(nextUrl)
                 .Accept(HttpAccept.Json)
                 .SetHeader("X-Requested-With", "XMLHttpRequest")
-                .SetHeader("Referer", _settings.BaseUrl)
+                .SetHeader("Referer", _baseUrl)
                 .WithRateLimit(_rateLimit.TotalSeconds)
                 .Build();
 
@@ -490,7 +747,7 @@ public class WolfMax4KParser : IParseIndexerResponse
             return null;
         }
 
-        return new Uri(new Uri(_settings.BaseUrl), url).AbsoluteUri;
+        return new Uri(new Uri(_baseUrl), url).AbsoluteUri;
     }
 
     private static string SetQueryParameter(string url, string key, string value)
@@ -759,6 +1016,8 @@ public class WolfMax4KApiResult
     public int? WaitMinutes { get; set; }
 
     public bool? External { get; set; }
+
+    public object Verification { get; set; }
 }
 
 public class WolfMax4KApiResponse
@@ -780,4 +1039,10 @@ public class WolfMax4KEpisodesResult
 
     [JsonProperty("next_after")]
     public long? NextAfter { get; set; }
+}
+
+public class WolfMax4KSettings : NoAuthTorrentBaseSettings
+{
+    [FieldDefinition(2, Label = "Alternative domain", Type = FieldType.Textbox, Placeholder = "https://wolftorrent.example/", HelpText = "Optional. The indexer follows the site's redirects when it changes domain. If it still can't find the site, paste the current domain here.")]
+    public string AlternativeDomain { get; set; }
 }

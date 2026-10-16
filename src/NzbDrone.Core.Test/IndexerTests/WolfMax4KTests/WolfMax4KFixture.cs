@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using NzbDrone.Common.Cache;
 using NzbDrone.Common.Http;
 using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Indexers.Definitions;
-using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
 using NzbDrone.Core.Parser.Model;
 using NzbDrone.Core.Test.Framework;
@@ -21,15 +21,19 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
     [TestFixture]
     public class WolfMax4KFixture : CoreTest<WolfMax4K>
     {
+        private const string BaseUrl = "https://wolftorrent.com/";
+
         [SetUp]
         public void Setup()
         {
+            Mocker.SetConstant<ICacheManager>(Mocker.Resolve<CacheManager>());
+
             Subject.Definition = new IndexerDefinition
             {
                 Name = "WolfMax4K",
-                Settings = new NoAuthTorrentBaseSettings
+                Settings = new WolfMax4KSettings
                 {
-                    BaseUrl = "https://wolfmax4k.com/"
+                    BaseUrl = BaseUrl
                 }
             };
         }
@@ -94,9 +98,9 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "Los chicos del coro: la historia HDTV 720p SPANISH");
 
             var movie = (TorrentInfo)releases.Single(r => r.Title == "Matrix (1999) 2160p SPANISH");
-            movie.Guid.Should().Be("https://wolfmax4k.com/peliculas/b8r7m6");
-            movie.InfoUrl.Should().Be("https://wolfmax4k.com/pelicula/b8r7m6");
-            movie.DownloadUrl.Should().Be("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6");
+            movie.Guid.Should().Be("WolfMax4K-peliculas-b8r7m6");
+            movie.InfoUrl.Should().Be("https://wolftorrent.com/pelicula/b8r7m6");
+            movie.DownloadUrl.Should().Be("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6");
             movie.Size.Should().Be(60333553090);
             movie.PublishDate.Should().Be(new DateTime(2021, 6, 21, 0, 0, 0, DateTimeKind.Utc));
             movie.Year.Should().Be(1999);
@@ -107,7 +111,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
             movie.UploadVolumeFactor.Should().Be(1);
 
             var episode = (TorrentInfo)releases.Single(r => r.Title == "The Boys S02E01E02 HDTV 1080p SPANISH");
-            episode.InfoUrl.Should().Be("https://wolfmax4k.com/serie/episodio/ht9aa1");
+            episode.InfoUrl.Should().Be("https://wolftorrent.com/serie/episodio/ht9aa1");
             episode.Categories.Select(c => c.Id).Should().Contain(new[] { NewznabStandardCategory.TV.Id, NewznabStandardCategory.TVHD.Id });
             episode.Size.Should().Be(3328599654);
 
@@ -134,7 +138,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
         {
             var requests = Subject.GetRequestGenerator().GetSearchRequests(new MovieSearchCriteria { SearchTerm = "Matrix 1999" });
 
-            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolfmax4k.com/buscar?q=Matrix");
+            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/buscar?q=Matrix");
         }
 
         [Test]
@@ -142,7 +146,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
         {
             var requests = Subject.GetRequestGenerator().GetSearchRequests(new TvSearchCriteria { SearchTerm = "The Boys", Season = 1, Episode = "5" });
 
-            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolfmax4k.com/buscar?q=The%20Boys");
+            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/buscar?q=The%20Boys");
         }
 
         [Test]
@@ -150,7 +154,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
         {
             var requests = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria());
 
-            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolfmax4k.com/ultimos");
+            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/ultimos");
         }
 
         [Test]
@@ -166,7 +170,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Get && r.Url.Path.StartsWith("/torrents/")), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "application/x-bittorrent" } }, new CookieCollection(), torrent));
 
-            var response = await Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6"));
+            var response = await Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6"));
 
             response.Data.Should().Equal(torrent);
 
@@ -181,7 +185,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "{\"success\":true,\"challenge\":\"wolfmax4k-test-challenge\"}",
                 "{\"success\":false,\"status\":\"captcha_required\",\"captcha_image\":\"data:image/png;base64,AAAA\",\"message\":\"Verifica que eres humano\"}");
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6")));
+            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6")));
         }
 
         [Test]
@@ -192,7 +196,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "{\"success\":false,\"status\":\"limit_exceeded\",\"wait_minutes\":45}",
                 HttpStatusCode.TooManyRequests);
 
-            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6")));
+            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6")));
 
             ex.Message.Should().Contain("45");
         }
@@ -204,7 +208,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Post), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader(), new CookieCollection(), "{\"success\":false,\"error\":\"Contenido no encontrado\"}", statusCode: HttpStatusCode.NotFound));
 
-            Assert.ThrowsAsync<ReleaseUnavailableException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=zzzzzz")));
+            Assert.ThrowsAsync<ReleaseUnavailableException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=zzzzzz")));
         }
 
         [Test]
@@ -214,7 +218,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "{\"success\":true,\"challenge\":\"wolfmax4k-test-challenge\"}",
                 "{\"success\":true,\"external\":true,\"download_url\":\"https://enlacito.com/s.php?i=abc\"}");
 
-            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&code=b8r7m6")));
+            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6")));
 
             ex.Message.Should().Contain("enlacito.com");
 
@@ -226,6 +230,86 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
         public void should_reject_outdated_numeric_download_links()
         {
             Assert.ThrowsAsync<ReleaseUnavailableException>(() => Subject.Download(new Uri("https://wolfmax4k.com/api/descargas?tabla=peliculas&content_id=368874")));
+        }
+
+        [Test]
+        public void should_not_try_to_pass_turnstile_verification()
+        {
+            GivenDownloadApi(
+                "{\"success\":true,\"verification\":{\"provider\":\"turnstile\",\"sitekey\":\"key\",\"action\":\"download\"},\"challenge\":\"wolfmax4k-test-challenge\"}",
+                "{\"success\":false,\"status\":\"turnstile_required\"}");
+
+            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6")));
+
+            ex.Message.Should().Contain("Turnstile");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Verify(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Post && Encoding.UTF8.GetString(r.ContentData).Contains("\"validate\"")), Subject.Definition), Times.Never());
+        }
+
+        [Test]
+        public void should_migrate_legacy_domain()
+        {
+            Subject.Definition.Settings = new WolfMax4KSettings { BaseUrl = "https://wolfmax4k.com/" };
+
+            var requests = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria());
+
+            requests.GetAllTiers().First().First().Url.Host.Should().Be("wolftorrent.com");
+        }
+
+        [Test]
+        public void should_use_alternative_domain_when_set()
+        {
+            Subject.Definition.Settings = new WolfMax4KSettings { BaseUrl = BaseUrl, AlternativeDomain = "wolftorrent.example" };
+
+            Subject.GetBaseUrl().Should().Be("https://wolftorrent.example/");
+
+            var requests = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria());
+
+            requests.GetAllTiers().First().First().Url.Host.Should().Be("wolftorrent.example");
+        }
+
+        [Test]
+        public async Task should_follow_redirect_to_new_domain()
+        {
+            var html = ReadAllText("Files/Indexers/WolfMax4K/search.html");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolftorrent.com" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Location", "https://wolftorrent.newtld/ultimos" } }, new CookieCollection(), string.Empty, statusCode: HttpStatusCode.MovedPermanently));
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolftorrent.newtld" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html; charset=utf-8" } }, new CookieCollection(), html));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria())).Releases;
+
+            releases.Should().NotBeEmpty();
+            releases.Should().OnlyContain(r => r.DownloadUrl.StartsWith("https://wolftorrent.newtld/"));
+            Subject.GetBaseUrl().Should().Be("https://wolftorrent.newtld/");
+        }
+
+        [Test]
+        public async Task should_ask_old_domains_when_site_is_down()
+        {
+            var html = ReadAllText("Files/Indexers/WolfMax4K/search.html");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolftorrent.com"), Subject.Definition))
+                .ThrowsAsync(new WebException("refused", WebExceptionStatus.ConnectFailure));
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolfmax4k.com" && r.Url.Path == "/"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Location", "https://wolftorrent.newtld/" } }, new CookieCollection(), string.Empty, statusCode: HttpStatusCode.MovedPermanently));
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolftorrent.newtld" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html; charset=utf-8" } }, new CookieCollection(), html));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria())).Releases;
+
+            releases.Should().NotBeEmpty();
+            Subject.GetBaseUrl().Should().Be("https://wolftorrent.newtld/");
         }
 
         [TestCase("wolfmax4k-test-challenge", 66)]

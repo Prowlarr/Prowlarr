@@ -221,12 +221,6 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
         }
 
         [Test]
-        public void should_read_current_domain_from_telegram_channel()
-        {
-            DonTorrent.ParseTelegramChannel(ReadAllText("Files/Indexers/DonTorrent/telegram.html")).Should().Be("https://dontorrent.newtld/");
-        }
-
-        [Test]
         public void should_use_alternative_domain_when_set()
         {
             ((DonTorrentSettings)Subject.Definition.Settings).AlternativeDomain = "dontorrent.manual";

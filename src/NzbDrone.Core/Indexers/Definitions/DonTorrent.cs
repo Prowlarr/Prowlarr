@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.IO;
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,6 +24,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Exceptions;
+using NzbDrone.Core.Http.CloudFlare;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -34,10 +37,20 @@ namespace NzbDrone.Core.Indexers.Definitions;
 
 public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 {
+    private static readonly TimeSpan DomainOverrideLifetime = TimeSpan.FromDays(7);
+    private static readonly TimeSpan DomainLookupInterval = TimeSpan.FromMinutes(10);
+    private static readonly Regex SiteHostRegex = new(@"(?:^|\.)dontorrent\.[a-z]{2,}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex CurrentDomainRegex = new(@"^https?://(?:[a-z0-9-]+\.)*dontorrent\.[a-z]{2,}/?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     private readonly ICacheManager _cacheManager;
+    private readonly ICached<string> _domainCache;
 
     public override string Name => "DonTorrent";
-    public override string[] IndexerUrls => new[] { "https://dontorrent.moi/" };
+
+    // The site moves to a new domain whenever the current one is blocked; old domains redirect to the
+    // current one while they last, and /dominios lists the current domain ("Dominio Actual").
+    public override string[] IndexerUrls => new[] { "https://dontorrent.meme/" };
+    public override string[] LegacyUrls => new[] { "https://dontorrent.moi/" };
     public override string Description => "DonTorrent is a SPANISH public site for movies, TV series and documentaries";
     public override string Language => "es-ES";
     public override Encoding Encoding => Encoding.UTF8;
@@ -49,16 +62,203 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         : base(httpClient, eventAggregator, indexerStatusService, configService, logger)
     {
         _cacheManager = cacheManager;
+        _domainCache = cacheManager.GetCache<string>(GetType(), "domain");
     }
 
     public override IIndexerRequestGenerator GetRequestGenerator()
     {
-        return new DonTorrentRequestGenerator(Settings);
+        return new DonTorrentRequestGenerator(CurrentSettings());
     }
 
     public override IParseIndexerResponse GetParser()
     {
-        return new DonTorrentParser(Definition, Settings, Capabilities.Categories, RateLimit, _httpClient, _cacheManager.GetCache<DonTorrentDetails>(GetType(), "details"), _logger);
+        return new DonTorrentParser(Definition, CurrentSettings(), Capabilities.Categories, RateLimit, _httpClient, _cacheManager.GetCache<DonTorrentDetails>(GetType(), "details"), _logger);
+    }
+
+    public string GetBaseUrl()
+    {
+        return _domainCache.Find(DomainKey) ?? Settings.BaseUrl;
+    }
+
+    private string DomainKey => $"override:{Definition?.Id}:{Settings.BaseUrl}";
+
+    private NoAuthTorrentBaseSettings CurrentSettings()
+    {
+        return new NoAuthTorrentBaseSettings
+        {
+            BaseUrl = GetBaseUrl(),
+            BaseSettings = Settings.BaseSettings,
+            TorrentBaseSettings = Settings.TorrentBaseSettings
+        };
+    }
+
+    protected override async Task<IndexerResponse> FetchIndexerResponse(IndexerRequest request)
+    {
+        IndexerResponse response = null;
+        Exception failure = null;
+
+        try
+        {
+            response = await base.FetchIndexerResponse(request).ConfigureAwait(false);
+
+            var movedTo = GetRedirectBaseUrl(response.HttpResponse);
+
+            if (movedTo != null)
+            {
+                SwitchBaseUrl(movedTo, request.Url.Host);
+                request.HttpRequest.Url = new HttpUri(ReplaceBaseUrl(request.Url.FullUri, movedTo));
+
+                return await base.FetchIndexerResponse(request).ConfigureAwait(false);
+            }
+
+            if (LooksLikeSite(response.HttpResponse))
+            {
+                return response;
+            }
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            failure = ex;
+        }
+
+        var currentBaseUrl = await LookUpCurrentBaseUrl(request.Url.Host).ConfigureAwait(false);
+
+        if (currentBaseUrl == null)
+        {
+            if (failure != null)
+            {
+                ExceptionDispatchInfo.Capture(failure).Throw();
+            }
+
+            return response;
+        }
+
+        request.HttpRequest.Url = new HttpUri(ReplaceBaseUrl(request.Url.FullUri, currentBaseUrl));
+
+        return await base.FetchIndexerResponse(request).ConfigureAwait(false);
+    }
+
+    // Returns scheme://host/ when the response redirects to another DonTorrent domain.
+    private static string GetRedirectBaseUrl(HttpResponse response)
+    {
+        if ((int)response.StatusCode is < 300 or > 399 || response.RedirectUrl.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+
+        if (!Uri.TryCreate(new Uri(response.Request.Url.FullUri), response.RedirectUrl, out var target) ||
+            !SiteHostRegex.IsMatch(target.Host) ||
+            target.Host.Equals(response.Request.Url.Host, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return $"{target.Scheme}://{target.Host}/";
+    }
+
+    private void SwitchBaseUrl(string baseUrl, string oldHost)
+    {
+        _logger.Info("DonTorrent moved from {0} to {1}", oldHost, baseUrl);
+        _domainCache.Set(DomainKey, baseUrl, DomainOverrideLifetime);
+    }
+
+    // Reads "Dominio Actual" from /dominios on any domain that still answers; null if nothing better is found.
+    private async Task<string> LookUpCurrentBaseUrl(string failingHost)
+    {
+        var lookupKey = $"lookup:{Definition?.Id}";
+        var baseUrl = _domainCache.Find(lookupKey);
+
+        if (baseUrl == null)
+        {
+            var candidates = new[] { GetBaseUrl(), Settings.BaseUrl }.Concat(IndexerUrls).Concat(LegacyUrls).Distinct(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var candidate in candidates)
+            {
+                baseUrl = await ReadDomainDirectory(candidate).ConfigureAwait(false);
+
+                if (baseUrl != null)
+                {
+                    break;
+                }
+            }
+
+            // Remember the answer (even an empty one) for a while so failures don't hammer the site.
+            _domainCache.Set(lookupKey, baseUrl ?? string.Empty, DomainLookupInterval);
+        }
+
+        if (baseUrl.IsNullOrWhiteSpace() || new Uri(baseUrl).Host.Equals(failingHost, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        SwitchBaseUrl(baseUrl, failingHost);
+
+        return baseUrl;
+    }
+
+    private async Task<string> ReadDomainDirectory(string baseUrl)
+    {
+        var request = new HttpRequestBuilder(baseUrl)
+            .Resource("dominios")
+            .Accept(HttpAccept.Html)
+            .Build();
+
+        request.SuppressHttpError = true;
+        request.AllowAutoRedirect = false;
+
+        try
+        {
+            var response = await _httpClient.ExecuteProxiedAsync(request, Definition).ConfigureAwait(false);
+
+            return GetRedirectBaseUrl(response) ??
+                   (response.StatusCode == HttpStatusCode.OK ? ParseDomainDirectory(response.Content) : null);
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            _logger.Debug(ex, "Could not read the DonTorrent domain list from {0}", baseUrl);
+            return null;
+        }
+    }
+
+    public static string ParseDomainDirectory(string html)
+    {
+        var parser = new HtmlParser();
+        using var dom = parser.ParseDocument(html);
+
+        var current = dom.QuerySelectorAll("div.alert p, p")
+            .FirstOrDefault(p => p.TextContent.Contains("Dominio Actual", StringComparison.OrdinalIgnoreCase));
+
+        // The URL and the "Dominio Actual" label are separate links; read the URL from its own element.
+        var url = current?.QuerySelectorAll("a")
+            .Select(a => a.TextContent.Trim())
+            .FirstOrDefault(t => CurrentDomainRegex.IsMatch(t));
+
+        return url == null ? null : $"{new Uri(url).Scheme}://{new Uri(url).Host}/";
+    }
+
+    private static bool LooksLikeSite(HttpResponse response)
+    {
+        // A dead domain may answer with an error or parking page instead of failing.
+        return response.StatusCode is not (HttpStatusCode.NotFound or HttpStatusCode.Gone) &&
+               !response.HasHttpServerError &&
+               response.Content.Contains("dontorrent", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSiteUnreachable(Exception ex)
+    {
+        return ex switch
+        {
+            null => false,
+            CloudFlareProtectionException => false,
+            HttpException httpException => httpException.Response.HasHttpServerError || httpException.Response.StatusCode is HttpStatusCode.NotFound or HttpStatusCode.Gone,
+            WebException or HttpRequestException or TaskCanceledException or IOException => true,
+            _ => IsSiteUnreachable(ex.InnerException)
+        };
+    }
+
+    private static string ReplaceBaseUrl(string url, string baseUrl)
+    {
+        return new Uri(new Uri(baseUrl), new Uri(url).PathAndQuery).AbsoluteUri;
     }
 
     public override async Task<IndexerDownloadResponse> Download(Uri link)
@@ -115,7 +315,7 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         if (validate.Result.Status == "captcha_required")
         {
             // Solving the captcha is deliberately left to a human in a browser.
-            throw new ReleaseDownloadException("DonTorrent is asking for a captcha. Open {0} in a browser, download any release once to solve it, then retry.", Settings.BaseUrl);
+            throw new ReleaseDownloadException("DonTorrent is asking for a captcha. Open {0} in a browser, download any release once to solve it, then retry.", GetBaseUrl());
         }
 
         if (!validate.Result.Success || validate.Result.DownloadUrl.IsNullOrWhiteSpace())
@@ -123,7 +323,7 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
             throw new ReleaseDownloadException("DonTorrent rejected the download request: {0}", validate.Result.Error ?? validate.StatusCode.ToString());
         }
 
-        return new Uri(new Uri(Settings.BaseUrl), validate.Result.DownloadUrl).AbsoluteUri;
+        return new Uri(new Uri(GetBaseUrl()), validate.Result.DownloadUrl).AbsoluteUri;
     }
 
     private void ThrowIfLimited(DonTorrentApiResponse response)
@@ -140,21 +340,31 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
 
     private async Task<DonTorrentApiResponse> PostDownloadApi(object body)
     {
-        var request = new HttpRequestBuilder(Settings.BaseUrl)
-            .Resource("api_validate_pow.php")
-            .Accept(HttpAccept.Json)
-            .SetHeader("Referer", Settings.BaseUrl)
-            .WithRateLimit(RateLimit.TotalSeconds)
-            .Build();
+        HttpResponse response;
 
-        request.Method = HttpMethod.Post;
-        request.Headers.ContentType = "application/json";
-        request.SetContent(body.ToJson(Formatting.None));
+        try
+        {
+            response = await ExecuteDownloadApi(GetBaseUrl(), body).ConfigureAwait(false);
 
-        // 403/404/429 carry a JSON body with the reason, read it instead of throwing.
-        request.SuppressHttpError = true;
+            var movedTo = GetRedirectBaseUrl(response);
 
-        var response = await _httpClient.ExecuteProxiedAsync(request, Definition).ConfigureAwait(false);
+            if (movedTo != null)
+            {
+                SwitchBaseUrl(movedTo, response.Request.Url.Host);
+                response = await ExecuteDownloadApi(movedTo, body).ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex) when (IsSiteUnreachable(ex))
+        {
+            var currentBaseUrl = await LookUpCurrentBaseUrl(new Uri(GetBaseUrl()).Host).ConfigureAwait(false);
+
+            if (currentBaseUrl == null)
+            {
+                throw;
+            }
+
+            response = await ExecuteDownloadApi(currentBaseUrl, body).ConfigureAwait(false);
+        }
 
         DonTorrentApiResult result;
 
@@ -168,6 +378,26 @@ public class DonTorrent : TorrentIndexerBase<NoAuthTorrentBaseSettings>
         }
 
         return new DonTorrentApiResponse(response.StatusCode, result);
+    }
+
+    private Task<HttpResponse> ExecuteDownloadApi(string baseUrl, object body)
+    {
+        var request = new HttpRequestBuilder(baseUrl)
+            .Resource("api_validate_pow.php")
+            .Accept(HttpAccept.Json)
+            .SetHeader("Referer", baseUrl)
+            .WithRateLimit(RateLimit.TotalSeconds)
+            .Build();
+
+        request.Method = HttpMethod.Post;
+        request.Headers.ContentType = "application/json";
+        request.SetContent(body.ToJson(Formatting.None));
+        request.AllowAutoRedirect = false;
+
+        // 403/404/429 carry a JSON body with the reason, read it instead of throwing.
+        request.SuppressHttpError = true;
+
+        return _httpClient.ExecuteProxiedAsync(request, Definition);
     }
 
     private IndexerCapabilities SetCapabilities()
@@ -299,8 +529,8 @@ public class DonTorrentParser : IParseIndexerResponse
     private static readonly Regex LatestEpisodeRegex = new(@"^(?<title>.+?)\s*:\s*(?<episode>\d{1,2}x\d{1,3}.*)$", RegexOptions.Compiled);
 
     private readonly ProviderDefinition _definition;
-    private readonly NoAuthTorrentBaseSettings _settings;
     private readonly IndexerCapabilitiesCategories _categories;
+    private string _baseUrl;
     private readonly TimeSpan _rateLimit;
     private readonly IIndexerHttpClient _httpClient;
     private readonly ICached<DonTorrentDetails> _detailsCache;
@@ -311,12 +541,12 @@ public class DonTorrentParser : IParseIndexerResponse
     public DonTorrentParser(ProviderDefinition definition, NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, ICached<DonTorrentDetails> detailsCache, Logger logger)
     {
         _definition = definition;
-        _settings = settings;
         _categories = categories;
         _rateLimit = rateLimit;
         _httpClient = httpClient;
         _detailsCache = detailsCache;
         _logger = logger;
+        _baseUrl = settings.BaseUrl;
     }
 
     public IList<ReleaseInfo> ParseResponse(IndexerResponse indexerResponse)
@@ -325,6 +555,9 @@ public class DonTorrentParser : IParseIndexerResponse
         {
             throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request");
         }
+
+        // Links are resolved against the domain that actually answered (the site moves often).
+        _baseUrl = $"{indexerResponse.HttpRequest.Url.Scheme}://{indexerResponse.HttpRequest.Url.Host}/";
 
         var searchType = (indexerResponse.Request as DonTorrentRequest)?.SearchType ?? DonTorrentSearchType.All;
         var isLatest = indexerResponse.HttpRequest.Url.Path.Contains("/ultimos", StringComparison.OrdinalIgnoreCase);
@@ -487,7 +720,7 @@ public class DonTorrentParser : IParseIndexerResponse
 
     private TorrentInfo CreateRelease(DonTorrentItem item, string tabla, string contentId, DonTorrentParsedTitle parsed, int year, DateTime publishDate, int episodeCount, string password)
     {
-        var downloadUrl = $"{_settings.BaseUrl.TrimEnd('/')}/api_validate_pow.php?tabla={Uri.EscapeDataString(tabla)}&content_id={Uri.EscapeDataString(contentId)}";
+        var downloadUrl = $"{_baseUrl.TrimEnd('/')}/api_validate_pow.php?tabla={Uri.EscapeDataString(tabla)}&content_id={Uri.EscapeDataString(contentId)}";
 
         if (password.IsNotNullOrWhiteSpace())
         {
@@ -496,7 +729,8 @@ public class DonTorrentParser : IParseIndexerResponse
 
         return new TorrentInfo
         {
-            Guid = $"{_settings.BaseUrl.TrimEnd('/')}/{tabla}/{contentId}",
+            // The domain changes often, keep the guid independent of it.
+            Guid = $"DonTorrent-{tabla}-{contentId}",
 
             // Password protected archives are flagged in the title so they are noticed before grabbing.
             Title = password.IsNotNullOrWhiteSpace() ? $"{parsed.Title} [Clave {password}]" : parsed.Title,
@@ -538,7 +772,7 @@ public class DonTorrentParser : IParseIndexerResponse
 
         var request = new HttpRequestBuilder(url)
             .Accept(HttpAccept.Html)
-            .SetHeader("Referer", _settings.BaseUrl)
+            .SetHeader("Referer", _baseUrl)
             .WithRateLimit(_rateLimit.TotalSeconds)
             .Build();
 
@@ -690,7 +924,10 @@ public class DonTorrentParser : IParseIndexerResponse
 
     private string GetAbsoluteUrl(string url)
     {
-        return new Uri(new Uri(_settings.BaseUrl), url).AbsoluteUri;
+        // Pages may still link to a previous domain; always follow the one that answered.
+        var uri = new Uri(new Uri(_baseUrl), url);
+
+        return new Uri(new Uri(_baseUrl), uri.PathAndQuery).AbsoluteUri;
     }
 
     public Action<IDictionary<string, string>, DateTime?> CookiesUpdater { get; set; }

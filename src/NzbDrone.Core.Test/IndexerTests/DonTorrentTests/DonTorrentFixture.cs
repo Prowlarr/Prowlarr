@@ -22,7 +22,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
     [TestFixture]
     public class DonTorrentFixture : CoreTest<DonTorrent>
     {
-        private const string BaseUrl = "https://dontorrent.moi/";
+        private const string BaseUrl = "https://dontorrent.meme/";
 
         [SetUp]
         public void Setup()
@@ -92,21 +92,21 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                 "Desmontando el cosmos S02E02 HDTV 720p SPANISH");
 
             var movie = (TorrentInfo)releases.Single(r => r.Title == "Matrix (1999) 2160p SPANISH");
-            movie.Guid.Should().Be("https://dontorrent.moi/peliculas/23404");
-            movie.InfoUrl.Should().Be("https://dontorrent.moi/pelicula/23404/Matrix-4K");
-            movie.DownloadUrl.Should().Be("https://dontorrent.moi/api_validate_pow.php?tabla=peliculas&content_id=23404");
+            movie.Guid.Should().Be("DonTorrent-peliculas-23404");
+            movie.InfoUrl.Should().Be("https://dontorrent.meme/pelicula/23404/Matrix-4K");
+            movie.DownloadUrl.Should().Be("https://dontorrent.meme/api_validate_pow.php?tabla=peliculas&content_id=23404");
             movie.Year.Should().Be(1999);
             movie.Size.Should().BeGreaterThan(0);
             movie.Categories.Select(c => c.Id).Should().Contain(new[] { NewznabStandardCategory.Movies.Id, NewznabStandardCategory.MoviesUHD.Id });
 
             var episodes = releases.Single(r => r.Title == "The Boys S01E05-E08 HDTV SPANISH");
-            episodes.Guid.Should().Be("https://dontorrent.moi/series/62317");
+            episodes.Guid.Should().Be("DonTorrent-series-62317");
             episodes.PublishDate.Should().Be(new DateTime(2019, 8, 13, 0, 0, 0, DateTimeKind.Utc));
             episodes.Size.Should().Be(releases.Single(r => r.Title == "The Boys S01E01 HDTV SPANISH").Size * 4);
             episodes.Categories.Select(c => c.Id).Should().Contain(new[] { NewznabStandardCategory.TV.Id, NewznabStandardCategory.TVSD.Id });
 
             var documentary = releases.Single(r => r.Title == "Desmontando el cosmos S02E02 HDTV 720p SPANISH");
-            documentary.DownloadUrl.Should().Be("https://dontorrent.moi/api_validate_pow.php?tabla=documentales&content_id=2065");
+            documentary.DownloadUrl.Should().Be("https://dontorrent.meme/api_validate_pow.php?tabla=documentales&content_id=2065");
             documentary.Categories.Select(c => c.Id).Should().Contain(NewznabStandardCategory.TVDocumentary.Id);
         }
 
@@ -140,7 +140,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
             var request = Subject.GetRequestGenerator().GetSearchRequests(new MovieSearchCriteria { SearchTerm = "Matrix 1999" }).GetAllTiers().First().First();
 
             request.HttpRequest.Method.Should().Be(HttpMethod.Post);
-            request.Url.FullUri.Should().Be("https://dontorrent.moi/buscar");
+            request.Url.FullUri.Should().Be("https://dontorrent.meme/buscar");
             Encoding.UTF8.GetString(request.HttpRequest.ContentData).Should().Be("valor=Matrix&Buscar=Buscar");
         }
 
@@ -156,7 +156,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                     var body = Encoding.UTF8.GetString(r.ContentData);
                     var json = body.Contains("\"generate\"")
                         ? "{\"success\":true,\"challenge\":\"wolfmax4k-test-challenge\"}"
-                        : "{\"success\":true,\"download_url\":\"https://dontorrent.moi/torrents/series/The-Boys-1-1-HDTV.torrent\"}";
+                        : "{\"success\":true,\"download_url\":\"https://dontorrent.meme/torrents/series/The-Boys-1-1-HDTV.torrent\"}";
 
                     return new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), json);
                 });
@@ -165,7 +165,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Get && r.Url.Path.StartsWith("/torrents/")), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "application/x-bittorrent" } }, new CookieCollection(), torrent));
 
-            var response = await Subject.Download(new Uri("https://dontorrent.moi/api_validate_pow.php?tabla=series&content_id=62315"));
+            var response = await Subject.Download(new Uri("https://dontorrent.meme/api_validate_pow.php?tabla=series&content_id=62315"));
 
             response.Data.Should().Equal(torrent);
 
@@ -188,7 +188,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                     return new HttpResponse(r, new HttpHeader(), new CookieCollection(), json);
                 });
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://dontorrent.moi/api_validate_pow.php?tabla=peliculas&content_id=970")));
+            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://dontorrent.meme/api_validate_pow.php?tabla=peliculas&content_id=970")));
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
 
             var episodes = releases.Single(r => r.Title.StartsWith("The Boys S01E02-E04"));
             episodes.Description.Should().Be("Contraseña / password: WWW.PCTNEW ORG malotes");
-            episodes.DownloadUrl.Should().Be("https://dontorrent.moi/api_validate_pow.php?tabla=series&content_id=62316&clave=WWW.PCTNEW%20ORG%20malotes");
+            episodes.DownloadUrl.Should().Be("https://dontorrent.meme/api_validate_pow.php?tabla=series&content_id=62316&clave=WWW.PCTNEW%20ORG%20malotes");
 
             var free = releases.Single(r => r.Title == "The Boys S01E01 HDTV SPANISH");
             free.Description.Should().BeNull();
@@ -219,6 +219,33 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
 
             result.Comment.Should().Be("Contraseña / password: WWW.PCTNEW ORG malotes");
             result.InfoHashes.V1OrV2.ToHex().Should().Be(original.InfoHashes.V1OrV2.ToHex());
+        }
+
+        [Test]
+        public void should_read_current_domain_from_domain_list()
+        {
+            DonTorrent.ParseDomainDirectory(ReadAllText("Files/Indexers/DonTorrent/dominios.html")).Should().Be("https://dontorrent.newtld/");
+        }
+
+        [Test]
+        public async Task should_follow_redirect_to_new_domain()
+        {
+            GivenSite();
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "dontorrent.meme" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Location", "https://dontorrent.newtld/ultimos" } }, new CookieCollection(), string.Empty, statusCode: HttpStatusCode.MovedPermanently));
+
+            var latest = ReadAllText("Files/Indexers/DonTorrent/ultimos.html");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "dontorrent.newtld" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => Html(r, latest));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria())).Releases;
+
+            releases.Should().NotBeEmpty();
+            Subject.GetBaseUrl().Should().Be("https://dontorrent.newtld/");
         }
 
         [TestCase("peliculas", "Matrix.", 1999, null, "HDRip", "Matrix (1999) HDRip SPANISH")]

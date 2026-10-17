@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<caps>
+  <server version="1.0" title="Curupira" strapline="Indexador Usenet BR"
+          url="https://curupira.example.test" image="" />
+  <limits max="100" default="50" />
+  <registration available="no" open="no" />
+  <searching>
+    <search available="yes" supportedParams="q,cat,limit,offset" />
+    <tv-search available="yes" supportedParams="q,season,ep,cat,limit,offset,rid,tvdbid,tmdbid,imdbid" />
+    <movie-search available="yes" supportedParams="q,cat,limit,offset,imdbid,tmdbid" />
+    <audio-search available="no" supportedParams="" />
+    <book-search available="no" supportedParams="" />
+  </searching>
+  <categories>
+    <category id="1000" name="Console">
+      <subcat id="1090" name="Other" />
+      <subcat id="1180" name="PS4" />
+      <subcat id="1050" name="XBox 360" />
+      <subcat id="1130" name="WiiU" />
+      <subcat id="1110" name="3DS" />
+    </category>
+    <category id="2000" name="Movies">
+      <subcat id="2010" name="Foreign" />
+      <subcat id="2020" name="Other" />
+      <subcat id="2030" name="SD" />
+      <subcat id="2040" name="HD" />
+      <subcat id="2045" name="UHD" />
+      <subcat id="2050" name="BluRay" />
+      <subcat id="2060" name="3D" />
+    </category>
+    <category id="3000" name="Audio">
+      <subcat id="3010" name="MP3" />
+      <subcat id="3020" name="Video" />
+      <subcat id="3030" name="Audiobook" />
+      <subcat id="3040" name="Lossless" />
+    </category>
+    <category id="4000" name="PC">
+      <subcat id="4050" name="Games" />
+      <subcat id="4030" name="Mac" />
+      <subcat id="4040" name="Mobile-Other" />
+    </category>
+    <category id="5000" name="TV">
+      <subcat id="5010" name="WEB-DL" />
+      <subcat id="5020" name="Foreign" />
+      <subcat id="5030" name="SD" />
+      <subcat id="5040" name="HD" />
+      <subcat id="5045" name="UHD" />
+      <subcat id="5050" name="Other" />
+      <subcat id="5070" name="Anime" />
+      <subcat id="5080" name="Documentary" />
+    </category>
+    <category id="7000" name="Books">
+      <subcat id="7010" name="Mags" />
+      <subcat id="7020" name="Ebook" />
+      <subcat id="7030" name="Comics" />
+    </category>
+    <category id="8000" name="Other">
+      <subcat id="8010" name="Misc" />
+    </category>
+  </categories>
+</caps>

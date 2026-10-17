@@ -94,6 +94,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("abNZB", GetSettings("https://abnzb.com"), categories: new[] { 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("altHUB", GetSettings("https://api.althub.co.za"), categories: new[] { 2000, 3000, 4000, 5000, 7000 });
                 yield return GetDefinition("AnimeTosho (Usenet)", GetSettings("https://feed.animetosho.org"), categories: new[] { 2020, 5070 });
+                yield return GetDefinition("Curupira", GetSettings("https://curupira.cc"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 7000, 8000 }, language: "pt-BR", description: "Curupira is a BRAZILIAN Private Usenet Indexer for MOVIES / TV / ANIME / GENERAL");
                 yield return GetDefinition("DOGnzb", GetSettings("https://api.dognzb.cr"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("DrunkenSlug", GetSettings("https://drunkenslug.com"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000 });
                 yield return GetDefinition("GingaDADDY", GetSettings("https://www.gingadaddy.com"));
@@ -119,7 +120,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, NewznabSettings settings, IEnumerable<int> categories = null)
+        private IndexerDefinition GetDefinition(string name, NewznabSettings settings, IEnumerable<int> categories = null, string language = null, string description = null)
         {
             var caps = new IndexerCapabilities();
 
@@ -140,6 +141,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 Enable = true,
                 Name = name,
+                Language = language,
+                Description = description,
                 Implementation = GetType().Name,
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,

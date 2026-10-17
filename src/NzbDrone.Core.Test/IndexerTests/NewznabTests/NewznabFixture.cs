@@ -69,6 +69,66 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         }
 
         [Test]
+        public void should_include_curupira_preset()
+        {
+            var definition = Subject.DefaultDefinitions.Cast<IndexerDefinition>().Single(d => d.Name == "Curupira");
+            var settings = (NewznabSettings)definition.Settings;
+
+            settings.BaseUrl.Should().Be("https://curupira.cc");
+            settings.ApiPath.Should().Be("/api");
+            definition.Language.Should().Be("pt-BR");
+            definition.Description.Should().Be("Curupira is a BRAZILIAN Private Usenet Indexer for MOVIES / TV / ANIME / GENERAL");
+            definition.Capabilities.Categories.GetTorznabCategoryTree().Select(c => c.Id)
+                .Should().BeEquivalentTo(new[] { 1000, 2000, 3000, 4000, 5000, 7000, 8000 });
+            definition.Protocol.Should().Be(DownloadProtocol.Usenet);
+            definition.Privacy.Should().Be(IndexerPrivacy.Private);
+            definition.SupportsRedirect.Should().BeTrue();
+            definition.Redirect.Should().BeTrue();
+            definition.Implementation.Should().Be("Newznab");
+
+            var unchanged = Subject.DefaultDefinitions.Cast<IndexerDefinition>().Single(d => d.Name == "DOGnzb");
+            unchanged.Language.Should().BeNull();
+            unchanged.Description.Should().BeNull();
+        }
+
+        [Test]
+        public async Task should_parse_curupira_feed()
+        {
+            var feed = ReadAllText("Files/Indexers/Newznab/newznab_curupira.xml");
+            _caps.Categories.AddCategoryMapping(5040, NewznabStandardCategory.TVHD, "TV/HD");
+            _caps.Categories.AddCategoryMapping(2040, NewznabStandardCategory.MoviesHD, "Movies/HD");
+            _caps.Categories.AddCategoryMapping(5070, NewznabStandardCategory.TVAnime, "TV/Anime");
+            _caps.Categories.AddCategoryMapping(8010, NewznabStandardCategory.OtherMisc, "Other/Misc");
+            _caps.Categories.AddCategoryMapping(7020, NewznabStandardCategory.BooksEBook, "Books/Ebook");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader(), new CookieCollection(), feed));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchType = "search", Limit = 100, Offset = 0 })).Releases;
+
+            releases.Should().HaveCount(5);
+
+            var release = releases.First();
+            release.Title.Should().Be("Duna.Parte.Dois.2024.2160p.AMZN.WEB-DL.DDP5.1.HDR.H.265-GRP");
+            release.DownloadProtocol.Should().Be(DownloadProtocol.Usenet);
+            release.DownloadUrl.Should().Be("https://curupira.example.test/api?t=get&id=01960000-0000-7000-8000-000000000101&apikey=test-api-key-0000000000000000");
+            release.InfoUrl.Should().Be("https://curupira.example.test/releases/01960000-0000-7000-8000-000000000101");
+            release.Size.Should().Be(42949672960L);
+            release.Grabs.Should().Be(128);
+            release.Files.Should().Be(30);
+            release.ImdbId.Should().Be(1375666);
+            release.TmdbId.Should().Be(603);
+            release.TvdbId.Should().Be(360893);
+            release.PublishDate.Should().Be(new DateTime(2024, 1, 14, 8, 0, 0, DateTimeKind.Utc));
+            releases.ElementAt(1).PublishDate.Should().Be(new DateTime(2024, 1, 15, 12, 0, 0, DateTimeKind.Utc));
+            release.Languages.Should().Equal("Portuguese (Brazil)", "English");
+            release.Categories.Should().Contain(c => c.Id == 5040);
+            releases.ElementAt(1).Languages.Should().Equal("Portuguese");
+            releases.ElementAt(2).Categories.Should().Contain(c => c.Id == 5070);
+        }
+
+        [Test]
         public void should_use_best_pagesize_reported_by_caps()
         {
             _caps.LimitsMax = 30;

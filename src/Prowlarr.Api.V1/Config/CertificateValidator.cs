@@ -35,7 +35,7 @@ namespace Prowlarr.Api.V1.Config
 
             try
             {
-                new X509Certificate2(resource.SslCertPath, resource.SslCertPassword, X509KeyStorageFlags.DefaultKeySet);
+                X509CertificateLoader.LoadPkcs12FromFile(resource.SslCertPath, resource.SslCertPassword, X509KeyStorageFlags.DefaultKeySet);
 
                 return true;
             }

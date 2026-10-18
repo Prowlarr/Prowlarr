@@ -11,7 +11,7 @@
     background-color: var(--tableRowAlternateBackgroundColor);
   }
 
-  &:hover > div {
+  &:hover {
     background-color: var(--tableRowHoverBackgroundColor);
   }
 }

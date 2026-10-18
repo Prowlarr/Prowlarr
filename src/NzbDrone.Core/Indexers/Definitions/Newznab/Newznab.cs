@@ -15,11 +15,14 @@ namespace NzbDrone.Core.Indexers.Newznab
 {
     public class Newznab : UsenetIndexerBase<NewznabSettings>
     {
+        private const string DefaultDescription = "Newznab is an API search specification for Usenet";
+
         private readonly INewznabCapabilitiesProvider _capabilitiesProvider;
 
         public override string Name => "Newznab";
         public override string[] IndexerUrls => GetBaseUrlFromSettings();
-        public override string Description => "Newznab is an API search specification for Usenet";
+        public override string Description => GetPresetDefinition()?.Description ?? DefaultDescription;
+        public override string Language => GetPresetDefinition()?.Language ?? base.Language;
         public override bool FollowRedirect => true;
         public override bool SupportsRedirect => true;
         public override bool SupportsPagination => true;
@@ -94,7 +97,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 yield return GetDefinition("abNZB", GetSettings("https://abnzb.com"), categories: new[] { 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("altHUB", GetSettings("https://api.althub.co.za"), categories: new[] { 2000, 3000, 4000, 5000, 7000 });
                 yield return GetDefinition("AnimeTosho (Usenet)", GetSettings("https://feed.animetosho.org"), categories: new[] { 2020, 5070 });
-                yield return GetDefinition("Curupira", GetSettings("https://curupira.cc"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 7000, 8000 });
+                yield return GetDefinition("Curupira", GetSettings("https://curupira.cc"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 7000, 8000 }, language: "pt-BR", description: "Curupira is a Brazilian private Usenet indexer");
                 yield return GetDefinition("DOGnzb", GetSettings("https://api.dognzb.cr"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000 });
                 yield return GetDefinition("DrunkenSlug", GetSettings("https://drunkenslug.com"), categories: new[] { 1000, 2000, 3000, 4000, 5000, 6000, 7000 });
                 yield return GetDefinition("GingaDADDY", GetSettings("https://www.gingadaddy.com"));
@@ -120,7 +123,25 @@ namespace NzbDrone.Core.Indexers.Newznab
             _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private IndexerDefinition GetDefinition(string name, NewznabSettings settings, IEnumerable<int> categories = null)
+        private IndexerDefinition GetPresetDefinition()
+        {
+            if (Definition?.Settings is not NewznabSettings settings)
+            {
+                return null;
+            }
+
+            var apiUrl = GetApiUrl(settings);
+
+            return apiUrl == null ? null : DefaultDefinitions.Cast<IndexerDefinition>()
+                .FirstOrDefault(d => apiUrl.Equals(GetApiUrl((NewznabSettings)d.Settings)));
+        }
+
+        private static Uri GetApiUrl(NewznabSettings settings)
+        {
+            return Uri.TryCreate($"{settings.BaseUrl?.TrimEnd('/')}{settings.ApiPath?.TrimEnd('/')}", UriKind.Absolute, out var url) ? url : null;
+        }
+
+        private IndexerDefinition GetDefinition(string name, NewznabSettings settings, IEnumerable<int> categories = null, string language = null, string description = null)
         {
             var caps = new IndexerCapabilities();
 
@@ -141,6 +162,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 Enable = true,
                 Name = name,
+                Language = language ?? base.Language,
+                Description = description ?? DefaultDescription,
                 Implementation = GetType().Name,
                 Settings = settings,
                 Protocol = DownloadProtocol.Usenet,

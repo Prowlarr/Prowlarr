@@ -69,6 +69,60 @@ namespace NzbDrone.Core.Test.IndexerTests.NewznabTests
         }
 
         [Test]
+        public void should_preserve_preset_metadata_when_building_the_catalog()
+        {
+            Subject.Definition.Settings = new NewznabSettings { BaseUrl = "https://curupira.cc" };
+            var factory = Mocker.Resolve<IndexerFactory>();
+            var definitions = Subject.DefaultDefinitions.Cast<IndexerDefinition>().ToList();
+
+            foreach (var definition in definitions)
+            {
+                factory.SetProviderCharacteristics(Subject, definition);
+            }
+
+            var curupira = definitions.Single(d => d.Name == "Curupira");
+            curupira.Language.Should().Be("pt-BR");
+            curupira.Description.Should().Be("Curupira is a Brazilian private Usenet indexer");
+
+            definitions.Where(d => d.Name != "Curupira").Should().OnlyContain(d =>
+                d.Language == "en-US" && d.Description == "Newznab is an API search specification for Usenet");
+        }
+
+        [TestCase("https://curupira.cc", "/api", "pt-BR")]
+        [TestCase("https://CURUPIRA.cc:443/", "/api/", "pt-BR")]
+        [TestCase("https://curupira.cc", "/API", "en-US")]
+        [TestCase("https://curupira.cc", "/other/api", "en-US")]
+        [TestCase("https://curupira.cc:8443", "/api", "en-US")]
+        [TestCase("https://curupira.cc/other", "/api", "en-US")]
+        [TestCase("https://curupira.cc.example.test", "/api", "en-US")]
+        [TestCase("https://example.test/curupira.cc", "/api", "en-US")]
+        [TestCase("https://api.dognzb.cr", "/api", "en-US")]
+        [TestCase("", "/api", "en-US")]
+        [TestCase(null, "/api", "en-US")]
+        public void should_resolve_metadata_from_the_configured_endpoint(string baseUrl, string apiPath, string language)
+        {
+            var definition = (IndexerDefinition)Subject.Definition;
+            definition.Name = "My renamed indexer";
+            definition.Settings = new NewznabSettings { BaseUrl = baseUrl, ApiPath = apiPath };
+
+            Mocker.Resolve<IndexerFactory>().SetProviderCharacteristics(Subject, definition);
+
+            definition.Language.Should().Be(language);
+            definition.Description.Should().Be(language == "pt-BR"
+                ? "Curupira is a Brazilian private Usenet indexer"
+                : "Newznab is an API search specification for Usenet");
+        }
+
+        [Test]
+        public void should_use_generic_metadata_without_a_definition()
+        {
+            Subject.Definition = null;
+
+            Subject.Language.Should().Be("en-US");
+            Subject.Description.Should().Be("Newznab is an API search specification for Usenet");
+        }
+
+        [Test]
         public void should_use_best_pagesize_reported_by_caps()
         {
             _caps.LimitsMax = 30;

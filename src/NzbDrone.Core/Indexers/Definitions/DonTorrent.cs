@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.IO;
 using System.Runtime.ExceptionServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -555,12 +555,12 @@ public class DonTorrentParser : IParseIndexerResponse
 
     private readonly ProviderDefinition _definition;
     private readonly IndexerCapabilitiesCategories _categories;
-    private string _baseUrl;
     private readonly TimeSpan _rateLimit;
     private readonly IIndexerHttpClient _httpClient;
     private readonly ICached<DonTorrentDetails> _detailsCache;
     private readonly Logger _logger;
 
+    private string _baseUrl;
     private int _detailRequests;
 
     public DonTorrentParser(ProviderDefinition definition, NoAuthTorrentBaseSettings settings, IndexerCapabilitiesCategories categories, TimeSpan rateLimit, IIndexerHttpClient httpClient, ICached<DonTorrentDetails> detailsCache, Logger logger)

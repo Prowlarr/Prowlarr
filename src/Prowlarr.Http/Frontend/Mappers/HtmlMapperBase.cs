@@ -12,7 +12,7 @@ namespace Prowlarr.Http.Frontend.Mappers
     {
         private readonly IDiskProvider _diskProvider;
         private readonly Lazy<ICacheBreakerProvider> _cacheBreakProviderFactory;
-        private static readonly Regex ReplaceRegex = new Regex(@"(?:(?<attribute>href|src)=\"")(?<path>.*?(?<extension>css|js|png|ico|ics|svg|json))(?:\"")(?:\s(?<nohash>data-no-hash))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex ReplaceRegex = new Regex(@"(?:(?<attribute>href|src)=)(?:\""(?<path>.*?(?<extension>css|js|png|ico|ics|svg|json))\""|(?<path>[^\s\""'=<>`]+?(?<extension>css|js|png|ico|ics|svg|json))(?=[\s>]))(?:\s(?<nohash>data-no-hash))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private string _urlBase;
         private string _generatedContent;

@@ -184,6 +184,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             var parameters = new NameValueCollection
             {
                 { "itemsPerPage", Math.Min(_pageSize, searchCriteria.Limit.GetValueOrDefault(_pageSize)).ToString() },
+                { "includingDead", "1" },
                 { "sort", "torrent.createdAt" },
                 { "direction", "desc" }
             };

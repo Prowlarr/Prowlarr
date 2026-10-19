@@ -17,7 +17,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
         public override bool SupportsSearch => true;
         public override bool SupportsPagination => false;
         public override int PageSize => 50;
-        public override TimeSpan RateLimit => TimeSpan.FromSeconds(6);
+        public override TimeSpan RateLimit => TimeSpan.FromSeconds(6.1);
         public override IndexerCapabilities Capabilities => SetCapabilities();
         protected virtual string LoginUrl => Settings.BaseUrl + "api/v1/jackett/auth";
         private readonly IIndexerRepository _indexerRepository;

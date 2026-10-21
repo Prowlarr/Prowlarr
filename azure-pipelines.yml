@@ -9,14 +9,14 @@ variables:
   testsFolder: './_tests'
   yarnCacheFolder: $(Pipeline.Workspace)/.yarn
   nugetCacheFolder: $(Pipeline.Workspace)/.nuget/packages
-  majorVersion: '2.6.5'
+  majorVersion: '3.0.0'
   minorVersion: $[counter('minorVersion', 1)]
   prowlarrVersion: '$(majorVersion).$(minorVersion)'
   buildName: '$(Build.SourceBranchName).$(prowlarrVersion)'
   sentryOrg: 'servarr'
   sentryUrl: 'https://sentry.servarr.com'
-  dotnetVersion: '8.0.421'
-  nodeVersion: '20.X'
+  dotnetVersion: '10.0.402'
+  nodeVersion: '24.X'
   innoVersion: '6.7.1'
   windowsImage: 'windows-2025'
   linuxImage: 'ubuntu-24.04'
@@ -116,6 +116,11 @@ stages:
             sed -i.ORI 's/osx-x64/osx-x64;freebsd-x64/' "$BUNDLEDVERSIONS"
           fi
         displayName: Enable Extra Platform Support
+      - bash: dotnet nuget add source --configfile src/NuGet.config --name gh-openur https://nuget.pkg.github.com/openur/index.json --username "$OPENUR_USERNAME" --password "$OPENUR_TOKEN" --store-password-in-clear-text
+        env:
+          OPENUR_USERNAME: $(openurusername)
+          OPENUR_TOKEN: $(openurtoken)
+        displayName: Add Openur Feed
       - bash: ./build.sh --backend --enable-extra-platforms
         displayName: Build Prowlarr Backend
       - bash: |
@@ -129,23 +134,23 @@ stages:
         artifact: '$(osName)Backend'
         displayName: Publish Backend
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: '$(testsFolder)/net8.0/win-x64/publish'
+      - publish: '$(testsFolder)/net10.0/win-x64/publish'
         artifact: win-x64-tests
         displayName: Publish win-x64 Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: '$(testsFolder)/net8.0/linux-x64/publish'
+      - publish: '$(testsFolder)/net10.0/linux-x64/publish'
         artifact: linux-x64-tests
         displayName: Publish linux-x64 Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: '$(testsFolder)/net8.0/linux-musl-x64/publish'
+      - publish: '$(testsFolder)/net10.0/linux-musl-x64/publish'
         artifact: linux-musl-x64-tests
         displayName: Publish linux-musl-x64 Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: '$(testsFolder)/net8.0/freebsd-x64/publish'
+      - publish: '$(testsFolder)/net10.0/freebsd-x64/publish'
         artifact: freebsd-x64-tests
         displayName: Publish freebsd-x64 Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
-      - publish: '$(testsFolder)/net8.0/osx-x64/publish'
+      - publish: '$(testsFolder)/net10.0/osx-x64/publish'
         artifact: osx-x64-tests
         displayName: Publish osx-x64 Test Package
         condition: and(succeeded(), eq(variables['osName'], 'Windows'))
@@ -262,21 +267,21 @@ stages:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).windows-core-x64.zip'
           archiveType: 'zip'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/win-x64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/win-x64/net10.0
       - task: ArchiveFiles@2
         displayName: Create win-x86 zip
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).windows-core-x86.zip'
           archiveType: 'zip'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/win-x86/net8.0
+          rootFolderOrFile: $(artifactsFolder)/win-x86/net10.0
       - task: ArchiveFiles@2
         displayName: Create osx-x64 app
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).osx-app-core-x64.zip'
           archiveType: 'zip'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/osx-x64-app/net8.0
+          rootFolderOrFile: $(artifactsFolder)/osx-x64-app/net10.0
       - task: ArchiveFiles@2
         displayName: Create osx-x64 tar
         inputs:
@@ -284,14 +289,14 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/osx-x64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/osx-x64/net10.0
       - task: ArchiveFiles@2
         displayName: Create osx-arm64 app
         inputs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/Prowlarr.$(buildName).osx-app-core-arm64.zip'
           archiveType: 'zip'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/osx-arm64-app/net8.0
+          rootFolderOrFile: $(artifactsFolder)/osx-arm64-app/net10.0
       - task: ArchiveFiles@2
         displayName: Create osx-arm64 tar
         inputs:
@@ -299,7 +304,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/osx-arm64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/osx-arm64/net10.0
       - task: ArchiveFiles@2
         displayName: Create linux-x64 tar
         inputs:
@@ -307,7 +312,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/linux-x64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/linux-x64/net10.0
       - task: ArchiveFiles@2
         displayName: Create linux-musl-x64 tar
         inputs:
@@ -315,7 +320,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/linux-musl-x64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/linux-musl-x64/net10.0
       - task: ArchiveFiles@2
         displayName: Create linux-arm tar
         inputs:
@@ -323,7 +328,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/linux-arm/net8.0
+          rootFolderOrFile: $(artifactsFolder)/linux-arm/net10.0
       - task: ArchiveFiles@2
         displayName: Create linux-musl-arm tar
         inputs:
@@ -331,7 +336,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/linux-musl-arm/net8.0
+          rootFolderOrFile: $(artifactsFolder)/linux-musl-arm/net10.0
       - task: ArchiveFiles@2
         displayName: Create linux-arm64 tar
         inputs:
@@ -339,7 +344,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/linux-arm64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/linux-arm64/net10.0
       - task: ArchiveFiles@2
         displayName: Create linux-musl-arm64 tar
         inputs:
@@ -347,7 +352,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/linux-musl-arm64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/linux-musl-arm64/net10.0
       - task: ArchiveFiles@2
         displayName: Create freebsd-x64 tar
         inputs:
@@ -355,7 +360,7 @@ stages:
           archiveType: 'tar'
           tarCompression: 'gz'
           includeRootFolder: false
-          rootFolderOrFile: $(artifactsFolder)/freebsd-x64/net8.0
+          rootFolderOrFile: $(artifactsFolder)/freebsd-x64/net10.0
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: 'Packages'
         displayName: Publish Packages
@@ -520,60 +525,6 @@ stages:
           failTaskOnFailedTests: true
           failTaskOnMissingResultsFile: true
 
-    - job: Unit_LinuxCore_Postgres14
-      displayName: Unit Native LinuxCore with Postgres14 Database
-      dependsOn: Prepare
-      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
-      variables:
-        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
-        artifactName: linux-x64-tests
-        Prowlarr__Postgres__Host: 'localhost'
-        Prowlarr__Postgres__Port: '5432'
-        Prowlarr__Postgres__User: 'prowlarr'
-        Prowlarr__Postgres__Password: 'prowlarr'
-
-      pool:
-        vmImage: ${{ variables.linuxImage }}
-
-      timeoutInMinutes: 10
-
-      steps:
-      - task: UseDotNet@2
-        displayName: 'Install .net core'
-        inputs:
-          version: $(dotnetVersion)
-      - checkout: none
-      - task: DownloadPipelineArtifact@2
-        displayName: Download Test Artifact
-        inputs:
-          buildType: 'current'
-          artifactName: $(artifactName)
-          targetPath: $(testsFolder)
-      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
-        displayName: Make Test Dummy Executable
-        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
-      - bash: |
-          docker run -d --name=postgres14 \
-          -e POSTGRES_PASSWORD=prowlarr \
-          -e POSTGRES_USER=prowlarr \
-          -p 5432:5432/tcp \
-          -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
-          postgres:14
-        displayName: Start postgres
-      - bash: |
-          chmod a+x ${TESTSFOLDER}/test.sh
-          ls -lR ${TESTSFOLDER}
-          ${TESTSFOLDER}/test.sh Linux Unit Test
-        displayName: Run Tests
-      - task: PublishTestResults@2
-        displayName: Publish Test Results
-        inputs:
-          testResultsFormat: 'NUnit'
-          testResultsFiles: '**/TestResult.xml'
-          testRunTitle: 'LinuxCore Postgres14 Unit Tests'
-          failTaskOnFailedTests: true
-          failTaskOnMissingResultsFile: true
-
     - job: Unit_LinuxCore_Postgres15
       displayName: Unit Native LinuxCore with Postgres15 Database
       dependsOn: Prepare
@@ -625,6 +576,114 @@ stages:
           testResultsFormat: 'NUnit'
           testResultsFiles: '**/TestResult.xml'
           testRunTitle: 'LinuxCore Postgres15 Unit Tests'
+          failTaskOnFailedTests: true
+          failTaskOnMissingResultsFile: true
+
+    - job: Unit_LinuxCore_Postgres16
+      displayName: Unit Native LinuxCore with Postgres16 Database
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      variables:
+        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+        artifactName: linux-x64-tests
+        Prowlarr__Postgres__Host: 'localhost'
+        Prowlarr__Postgres__Port: '5432'
+        Prowlarr__Postgres__User: 'prowlarr'
+        Prowlarr__Postgres__Password: 'prowlarr'
+
+      pool:
+        vmImage: ${{ variables.linuxImage }}
+
+      timeoutInMinutes: 10
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Install .net core'
+        inputs:
+          version: $(dotnetVersion)
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: $(artifactName)
+          targetPath: $(testsFolder)
+      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
+        displayName: Make Test Dummy Executable
+        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
+      - bash: |
+          docker run -d --name=postgres16 \
+          -e POSTGRES_PASSWORD=prowlarr \
+          -e POSTGRES_USER=prowlarr \
+          -p 5432:5432/tcp \
+          -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
+          postgres:16
+        displayName: Start postgres
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ls -lR ${TESTSFOLDER}
+          ${TESTSFOLDER}/test.sh Linux Unit Test
+        displayName: Run Tests
+      - task: PublishTestResults@2
+        displayName: Publish Test Results
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'LinuxCore Postgres16 Unit Tests'
+          failTaskOnFailedTests: true
+          failTaskOnMissingResultsFile: true
+
+    - job: Unit_LinuxCore_Postgres18
+      displayName: Unit Native LinuxCore with Postgres18 Database
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      variables:
+        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+        artifactName: linux-x64-tests
+        Prowlarr__Postgres__Host: 'localhost'
+        Prowlarr__Postgres__Port: '5432'
+        Prowlarr__Postgres__User: 'prowlarr'
+        Prowlarr__Postgres__Password: 'prowlarr'
+
+      pool:
+        vmImage: ${{ variables.linuxImage }}
+
+      timeoutInMinutes: 10
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Install .net core'
+        inputs:
+          version: $(dotnetVersion)
+      - checkout: none
+      - task: DownloadPipelineArtifact@2
+        displayName: Download Test Artifact
+        inputs:
+          buildType: 'current'
+          artifactName: $(artifactName)
+          targetPath: $(testsFolder)
+      - bash: find ${TESTSFOLDER} -name "Prowlarr.Test.Dummy" -exec chmod a+x {} \;
+        displayName: Make Test Dummy Executable
+        condition: and(succeeded(), ne(variables['osName'], 'Windows'))
+      - bash: |
+          docker run -d --name=postgres18 \
+          -e POSTGRES_PASSWORD=prowlarr \
+          -e POSTGRES_USER=prowlarr \
+          -p 5432:5432/tcp \
+          -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
+          postgres:18
+        displayName: Start postgres
+      - bash: |
+          chmod a+x ${TESTSFOLDER}/test.sh
+          ls -lR ${TESTSFOLDER}
+          ${TESTSFOLDER}/test.sh Linux Unit Test
+        displayName: Run Tests
+      - task: PublishTestResults@2
+        displayName: Publish Test Results
+        inputs:
+          testResultsFormat: 'NUnit'
+          testResultsFiles: '**/TestResult.xml'
+          testRunTitle: 'LinuxCore Postgres18 Unit Tests'
           failTaskOnFailedTests: true
           failTaskOnMissingResultsFile: true
 
@@ -712,72 +771,8 @@ stages:
           failTaskOnMissingResultsFile: true
         displayName: Publish Test Results
 
-    - job: Integration_LinuxCore_Postgres14
-      displayName: Integration Native LinuxCore with Postgres14 Database
-      dependsOn: Prepare
-      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
-      variables:
-        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
-        Prowlarr__Postgres__Host: 'localhost'
-        Prowlarr__Postgres__Port: '5432'
-        Prowlarr__Postgres__User: 'prowlarr'
-        Prowlarr__Postgres__Password: 'prowlarr'
-
-      pool:
-        vmImage: ${{ variables.linuxImage }}
-
-      steps:
-        - task: UseDotNet@2
-          displayName: 'Install .net core'
-          inputs:
-            version: $(dotnetVersion)
-        - checkout: none
-        - task: DownloadPipelineArtifact@2
-          displayName: Download Test Artifact
-          inputs:
-            buildType: 'current'
-            artifactName: 'linux-x64-tests'
-            targetPath: $(testsFolder)
-        - task: DownloadPipelineArtifact@2
-          displayName: Download Build Artifact
-          inputs:
-            buildType: 'current'
-            artifactName: Packages
-            itemPattern: '**/$(pattern)'
-            targetPath: $(Build.ArtifactStagingDirectory)
-        - task: ExtractFiles@1
-          inputs:
-            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
-            destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
-          displayName: Extract Package
-        - bash: |
-            mkdir -p ./bin/
-            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
-          displayName: Move Package Contents
-        - bash: |
-            docker run -d --name=postgres14 \
-            -e POSTGRES_PASSWORD=prowlarr \
-            -e POSTGRES_USER=prowlarr \
-            -p 5432:5432/tcp \
-            -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
-            postgres:14
-          displayName: Start postgres
-        - bash: |
-            chmod a+x ${TESTSFOLDER}/test.sh
-            ${TESTSFOLDER}/test.sh Linux Integration Test
-          displayName: Run Integration Tests
-        - task: PublishTestResults@2
-          inputs:
-            testResultsFormat: 'NUnit'
-            testResultsFiles: '**/TestResult.xml'
-            testRunTitle: 'Integration LinuxCore Postgres14 Database Integration Tests'
-            failTaskOnFailedTests: true
-            failTaskOnMissingResultsFile: true
-          displayName: Publish Test Results
-
-
     - job: Integration_LinuxCore_Postgres15
-      displayName: Integration Native LinuxCore with Postgres Database
+      displayName: Integration Native LinuxCore with Postgres15 Database
       dependsOn: Prepare
       condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
       variables:
@@ -835,6 +830,132 @@ stages:
             testResultsFormat: 'NUnit'
             testResultsFiles: '**/TestResult.xml'
             testRunTitle: 'Integration LinuxCore Postgres15 Database Integration Tests'
+            failTaskOnFailedTests: true
+            failTaskOnMissingResultsFile: true
+          displayName: Publish Test Results
+
+    - job: Integration_LinuxCore_Postgres16
+      displayName: Integration Native LinuxCore with Postgres16 Database
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      variables:
+        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+        Prowlarr__Postgres__Host: 'localhost'
+        Prowlarr__Postgres__Port: '5432'
+        Prowlarr__Postgres__User: 'prowlarr'
+        Prowlarr__Postgres__Password: 'prowlarr'
+
+      pool:
+        vmImage: ${{ variables.linuxImage }}
+
+      steps:
+        - task: UseDotNet@2
+          displayName: 'Install .net core'
+          inputs:
+            version: $(dotnetVersion)
+        - checkout: none
+        - task: DownloadPipelineArtifact@2
+          displayName: Download Test Artifact
+          inputs:
+            buildType: 'current'
+            artifactName: 'linux-x64-tests'
+            targetPath: $(testsFolder)
+        - task: DownloadPipelineArtifact@2
+          displayName: Download Build Artifact
+          inputs:
+            buildType: 'current'
+            artifactName: Packages
+            itemPattern: '**/$(pattern)'
+            targetPath: $(Build.ArtifactStagingDirectory)
+        - task: ExtractFiles@1
+          inputs:
+            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
+            destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+          displayName: Extract Package
+        - bash: |
+            mkdir -p ./bin/
+            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+          displayName: Move Package Contents
+        - bash: |
+            docker run -d --name=postgres16 \
+            -e POSTGRES_PASSWORD=prowlarr \
+            -e POSTGRES_USER=prowlarr \
+            -p 5432:5432/tcp \
+            -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
+            postgres:16
+          displayName: Start postgres
+        - bash: |
+            chmod a+x ${TESTSFOLDER}/test.sh
+            ${TESTSFOLDER}/test.sh Linux Integration Test
+          displayName: Run Integration Tests
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'NUnit'
+            testResultsFiles: '**/TestResult.xml'
+            testRunTitle: 'Integration LinuxCore Postgres16 Database Integration Tests'
+            failTaskOnFailedTests: true
+            failTaskOnMissingResultsFile: true
+          displayName: Publish Test Results
+
+    - job: Integration_LinuxCore_Postgres18
+      displayName: Integration Native LinuxCore with Postgres18 Database
+      dependsOn: Prepare
+      condition: and(succeeded(), eq(dependencies.Prepare.outputs['setVar.backendNotUpdated'], '0'))
+      variables:
+        pattern: 'Prowlarr.*.linux-core-x64.tar.gz'
+        Prowlarr__Postgres__Host: 'localhost'
+        Prowlarr__Postgres__Port: '5432'
+        Prowlarr__Postgres__User: 'prowlarr'
+        Prowlarr__Postgres__Password: 'prowlarr'
+
+      pool:
+        vmImage: ${{ variables.linuxImage }}
+
+      steps:
+        - task: UseDotNet@2
+          displayName: 'Install .net core'
+          inputs:
+            version: $(dotnetVersion)
+        - checkout: none
+        - task: DownloadPipelineArtifact@2
+          displayName: Download Test Artifact
+          inputs:
+            buildType: 'current'
+            artifactName: 'linux-x64-tests'
+            targetPath: $(testsFolder)
+        - task: DownloadPipelineArtifact@2
+          displayName: Download Build Artifact
+          inputs:
+            buildType: 'current'
+            artifactName: Packages
+            itemPattern: '**/$(pattern)'
+            targetPath: $(Build.ArtifactStagingDirectory)
+        - task: ExtractFiles@1
+          inputs:
+            archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/**/$(pattern)'
+            destinationFolder: '$(Build.ArtifactStagingDirectory)/bin'
+          displayName: Extract Package
+        - bash: |
+            mkdir -p ./bin/
+            cp -r -v ${BUILD_ARTIFACTSTAGINGDIRECTORY}/bin/Prowlarr/. ./bin/
+          displayName: Move Package Contents
+        - bash: |
+            docker run -d --name=postgres18 \
+            -e POSTGRES_PASSWORD=prowlarr \
+            -e POSTGRES_USER=prowlarr \
+            -p 5432:5432/tcp \
+            -v /usr/share/zoneinfo/America/Chicago:/etc/localtime:ro \
+            postgres:18
+          displayName: Start postgres
+        - bash: |
+            chmod a+x ${TESTSFOLDER}/test.sh
+            ${TESTSFOLDER}/test.sh Linux Integration Test
+          displayName: Run Integration Tests
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'NUnit'
+            testResultsFiles: '**/TestResult.xml'
+            testRunTitle: 'Integration LinuxCore Postgres18 Database Integration Tests'
             failTaskOnFailedTests: true
             failTaskOnMissingResultsFile: true
           displayName: Publish Test Results
@@ -1168,8 +1289,8 @@ stages:
             sonar.cs.cobertura.reportsPaths=$(Build.SourcesDirectory)/CoverageResults/**/coverage.cobertura.xml
             sonar.cs.nunit.reportsPaths=$(Build.SourcesDirectory)/TestResult.xml
       - bash: |
-          ./build.sh --backend -f net8.0 -r win-x64
-          TEST_DIR=_tests/net8.0/win-x64/publish/ ./test.sh Windows Unit Coverage
+          ./build.sh --backend -f net10.0 -r win-x64
+          TEST_DIR=_tests/net10.0/win-x64/publish/ ./test.sh Windows Unit Coverage
         displayName: Coverage Unit Tests
       - task: SonarCloudAnalyze@3
         condition: eq(variables['System.PullRequest.IsFork'], 'False')

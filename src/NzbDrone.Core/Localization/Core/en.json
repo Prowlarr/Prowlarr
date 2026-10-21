@@ -54,6 +54,8 @@
   "ApplicationAuthUsernameHelpText": "HTTP Basic Auth username used by {appName} when accessing this application. Set if the application sits behind a Basic-auth-protected reverse proxy.",
   "ApplicationLongTermStatusCheckAllClientMessage": "All applications are unavailable due to failures for more than 6 hours",
   "ApplicationLongTermStatusCheckSingleClientMessage": "Applications unavailable due to failures for more than 6 hours: {0}",
+  "ApplicationSettingsSyncFailDownloads": "Sync Fail Downloads",
+  "ApplicationSettingsSyncFailDownloadsHelpText": "Sync the 'Fail Downloads' option to the application's indexers so downloads containing executables or potentially dangerous files are marked as failed. Leave empty to keep each indexer's current setting.",
   "ApplicationSettingsSyncRejectBlocklistedTorrentHashes": "Sync Reject Blocklisted Torrent Hashes While Grabbing",
   "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText": "If a torrent is blocked by hash it may not properly be rejected during RSS/Search for some indexers, enabling this will allow it to be rejected after the torrent is grabbed, but before it is sent to the client.",
   "ApplicationStatusCheckAllClientMessage": "All applications are unavailable due to failures",

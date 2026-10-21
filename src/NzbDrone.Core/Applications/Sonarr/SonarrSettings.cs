@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FluentValidation;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Indexers;
@@ -26,6 +27,7 @@ namespace NzbDrone.Core.Applications.Sonarr
             BaseUrl = "http://localhost:8989";
             SyncCategories = new[] { 5000, 5010, 5020, 5030, 5040, 5045, 5050, 5090 };
             AnimeSyncCategories = new[] { 5070 };
+            SyncFailDownloads = Enumerable.Empty<int>();
         }
 
         [FieldDefinition(0, Label = "Prowlarr Server", HelpText = "Prowlarr server URL as Sonarr sees it, including http(s)://, port, and urlbase if needed", Placeholder = "http://localhost:9696")]
@@ -54,6 +56,9 @@ namespace NzbDrone.Core.Applications.Sonarr
 
         [FieldDefinition(8, Type = FieldType.Checkbox, Label = "ApplicationSettingsSyncRejectBlocklistedTorrentHashes", HelpText = "ApplicationSettingsSyncRejectBlocklistedTorrentHashesHelpText", Advanced = true)]
         public bool SyncRejectBlocklistedTorrentHashesWhileGrabbing { get; set; }
+
+        [FieldDefinition(9, Type = FieldType.Select, SelectOptions = typeof(ApplicationFailDownloads), Label = "ApplicationSettingsSyncFailDownloads", HelpText = "ApplicationSettingsSyncFailDownloadsHelpText", Advanced = true)]
+        public IEnumerable<int> SyncFailDownloads { get; set; }
 
         public NzbDroneValidationResult Validate()
         {

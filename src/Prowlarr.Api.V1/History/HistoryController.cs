@@ -68,12 +68,7 @@ namespace Prowlarr.Api.V1.History
         [Produces("application/json")]
         public List<HistoryResource> GetIndexerHistory(int indexerId, HistoryEventType? eventType = null, int? limit = null)
         {
-            if (limit.HasValue)
-            {
-                return _historyService.GetByIndexerId(indexerId, eventType).Select(MapToResource).Take(limit.Value).ToList();
-            }
-
-            return _historyService.GetByIndexerId(indexerId, eventType).Select(MapToResource).ToList();
+            return _historyService.GetByIndexerId(indexerId, eventType, limit).Select(MapToResource).ToList();
         }
 
         protected HistoryResource MapToResource(NzbDrone.Core.History.History model)

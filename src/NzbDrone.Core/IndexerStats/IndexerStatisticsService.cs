@@ -24,9 +24,7 @@ namespace NzbDrone.Core.IndexerStats
 
         public CombinedStatistics IndexerStatistics(DateTime start, DateTime end, List<int> indexerIds)
         {
-            var history = _historyService.Between(start, end);
-
-            var filteredHistory = history.Where(h => indexerIds.Contains(h.IndexerId)).ToArray();
+            var filteredHistory = _historyService.Between(start, end, indexerIds).ToArray();
 
             var groupedByIndexer = filteredHistory.GroupBy(h => h.IndexerId).ToArray();
             var groupedByUserAgent = filteredHistory

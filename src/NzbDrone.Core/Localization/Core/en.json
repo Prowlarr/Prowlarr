@@ -193,6 +193,7 @@
   "Directory": "Directory",
   "Disabled": "Disabled",
   "DisabledForLocalAddresses": "Disabled for Local Addresses",
+  "DisabledForLocalhost": "Disabled for Localhost",
   "DisabledUntil": "Disabled Until",
   "Discord": "Discord",
   "Docker": "Docker",

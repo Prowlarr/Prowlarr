@@ -262,6 +262,7 @@ FormInputGroup.propTypes = {
   min: PropTypes.number,
   max: PropTypes.number,
   unit: PropTypes.string,
+  readOnly: PropTypes.bool,
   buttons: PropTypes.oneOfType([PropTypes.node, PropTypes.arrayOf(PropTypes.node)]),
   helpText: PropTypes.string,
   helpTexts: PropTypes.arrayOf(PropTypes.string),
@@ -274,7 +275,8 @@ FormInputGroup.propTypes = {
   pending: PropTypes.bool,
   errors: PropTypes.arrayOf(PropTypes.object),
   warnings: PropTypes.arrayOf(PropTypes.object),
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  onFocus: PropTypes.func
 };
 
 FormInputGroup.defaultProps = {

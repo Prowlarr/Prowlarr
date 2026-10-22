@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.5.4" />
     <PackageReference Include="ImpromptuInterface" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.27" />
     <PackageReference Include="NLog" Version="5.5.1" />
   </ItemGroup>
   <ItemGroup>

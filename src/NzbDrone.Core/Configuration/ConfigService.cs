@@ -88,6 +88,20 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("LogIndexerResponse", value); }
         }
 
+        public bool SearchCacheEnabled
+        {
+            get { return GetValueBoolean("SearchCacheEnabled", false); }
+
+            set { SetValue("SearchCacheEnabled", value); }
+        }
+
+        public int SearchCacheTtl
+        {
+            get { return GetValueInt("SearchCacheTtl", 5); }
+
+            set { SetValue("SearchCacheTtl", value); }
+        }
+
         public int FirstDayOfWeek
         {
             get { return GetValueInt("FirstDayOfWeek", (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek); }

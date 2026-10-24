@@ -54,6 +54,10 @@ namespace NzbDrone.Core.Configuration
         // Indexers
         bool LogIndexerResponse { get; set; }
 
+        // Search cache
+        bool SearchCacheEnabled { get; set; }
+        int SearchCacheTtl { get; set; }
+
         CertificateValidationType CertificateValidation { get; }
         string ApplicationUrl { get; }
     }

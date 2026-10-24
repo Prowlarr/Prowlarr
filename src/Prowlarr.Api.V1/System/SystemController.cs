@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Internal;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Datastore;
 using NzbDrone.Core.Lifecycle;
@@ -20,6 +21,7 @@ namespace Prowlarr.Api.V1.System
         private readonly IRuntimeInfo _runtimeInfo;
         private readonly IPlatformInfo _platformInfo;
         private readonly IOsInfo _osInfo;
+        private readonly IUserAgentBuilder _userAgentBuilder;
         private readonly IConfigFileProvider _configFileProvider;
         private readonly IMainDatabase _database;
         private readonly ILifecycleService _lifecycleService;
@@ -32,6 +34,7 @@ namespace Prowlarr.Api.V1.System
                                 IRuntimeInfo runtimeInfo,
                                 IPlatformInfo platformInfo,
                                 IOsInfo osInfo,
+                                IUserAgentBuilder userAgentBuilder,
                                 IConfigFileProvider configFileProvider,
                                 IMainDatabase database,
                                 ILifecycleService lifecycleService,
@@ -44,6 +47,7 @@ namespace Prowlarr.Api.V1.System
             _runtimeInfo = runtimeInfo;
             _platformInfo = platformInfo;
             _osInfo = osInfo;
+            _userAgentBuilder = userAgentBuilder;
             _configFileProvider = configFileProvider;
             _database = database;
             _lifecycleService = lifecycleService;
@@ -71,6 +75,7 @@ namespace Prowlarr.Api.V1.System
                 AppData = _appFolderInfo.GetAppDataPath(),
                 OsName = _osInfo.Name,
                 OsVersion = _osInfo.Version,
+                UserAgent = _userAgentBuilder.GetUserAgent(),
                 IsNetCore = true,
                 IsLinux = OsInfo.IsLinux,
                 IsOsx = OsInfo.IsOsx,

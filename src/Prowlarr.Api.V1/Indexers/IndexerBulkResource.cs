@@ -13,6 +13,7 @@ namespace Prowlarr.Api.V1.Indexers
         public int? SeedTime { get; set; }
         public int? PackSeedTime { get; set; }
         public bool? PreferMagnetUrl { get; set; }
+        public string UserAgent { get; set; }
     }
 
     public class IndexerBulkResourceMapper : ProviderBulkResourceMapper<IndexerBulkResource, IndexerDefinition>
@@ -29,6 +30,7 @@ namespace Prowlarr.Api.V1.Indexers
                 existing.Enable = resource.Enable ?? existing.Enable;
                 existing.AppProfileId = resource.AppProfileId ?? existing.AppProfileId;
                 existing.Priority = resource.Priority ?? existing.Priority;
+                existing.UserAgent = resource.UserAgent ?? existing.UserAgent;
 
                 if (existing.Protocol == DownloadProtocol.Torrent)
                 {

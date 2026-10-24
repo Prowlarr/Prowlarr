@@ -31,6 +31,7 @@ namespace Prowlarr.Api.V1.Indexers
         public IndexerCapabilityResource Capabilities { get; set; }
         public int Priority { get; set; }
         public int DownloadClientId { get; set; }
+        public string UserAgent { get; set; }
         public DateTime Added { get; set; }
         public IndexerStatusResource Status { get; set; }
         public string SortName { get; set; }
@@ -98,6 +99,7 @@ namespace Prowlarr.Api.V1.Indexers
             resource.Privacy = definition.Privacy;
             resource.Priority = definition.Priority;
             resource.DownloadClientId = definition.DownloadClientId;
+            resource.UserAgent = definition.UserAgent ?? string.Empty;
             resource.Added = definition.Added;
             resource.SortName = definition.Name.NormalizeTitle();
 
@@ -154,6 +156,7 @@ namespace Prowlarr.Api.V1.Indexers
             definition.Priority = resource.Priority;
             definition.Privacy = resource.Privacy;
             definition.DownloadClientId = resource.DownloadClientId;
+            definition.UserAgent = resource.UserAgent.IsNullOrWhiteSpace() ? null : resource.UserAgent;
             definition.Added = resource.Added;
 
             return definition;

@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -63,6 +65,56 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             torrentInfo.Seeders.Should().Be(12);
 
             releases.Any(t => t.IndexerFlags.Contains(IndexerFlag.Internal)).Should().Be(true);
+        }
+
+        [Test]
+        public async Task should_retry_on_httprequestexception_and_succeed()
+        {
+            var recentFeed = ReadAllText(@"Files/Indexers/FileList/recentfeed.json");
+            var attempts = 0;
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .Returns((HttpRequest r, IndexerDefinition _) =>
+                {
+                    attempts++;
+                    if (attempts == 1)
+                    {
+                        throw new HttpRequestException("An error occurred while sending the request.",
+                            new IOException("Unable to read data from the transport connection: Connection reset by peer.",
+                                new SocketException((int)SocketError.ConnectionReset)));
+                    }
+
+                    return Task.FromResult(new HttpResponse(r,
+                        new HttpHeader { { "Content-Type", "application/json" } },
+                        new CookieCollection(),
+                        recentFeed));
+                });
+
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = [2000] })).Releases;
+
+            attempts.Should().Be(2);
+            releases.Should().HaveCount(4);
+        }
+
+        [Test]
+        public async Task should_fail_after_max_retries_on_persistent_httprequestexception()
+        {
+            var attempts = 0;
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.IsAny<HttpRequest>(), Subject.Definition))
+                .Returns(() =>
+                {
+                    attempts++;
+                    throw new HttpRequestException("Connection reset by peer");
+                });
+
+            var releases = (await Subject.Fetch(new MovieSearchCriteria { Categories = [2000] })).Releases;
+
+            // 1 initial attempt + 2 retries = 3 total attempts
+            attempts.Should().Be(3);
+            releases.Should().BeEmpty();
         }
     }
 }

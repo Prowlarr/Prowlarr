@@ -13,6 +13,7 @@ namespace NzbDrone.Core.Notifications
         List<INotification> OnGrabEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnHealthIssueEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnHealthRestoredEnabled(bool filterBlockedNotifications = true);
+        List<INotification> OnVipExpirationEnabled(bool filterBlockedNotifications = true);
         List<INotification> OnApplicationUpdateEnabled(bool filterBlockedNotifications = true);
     }
 
@@ -63,6 +64,16 @@ namespace NzbDrone.Core.Notifications
             return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnHealthRestored).ToList();
         }
 
+        public List<INotification> OnVipExpirationEnabled(bool filterBlockedNotifications = true)
+        {
+            if (filterBlockedNotifications)
+            {
+                return FilterBlockedNotifications(GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnVipExpiration)).ToList();
+            }
+
+            return GetAvailableProviders().Where(n => ((NotificationDefinition)n.Definition).OnVipExpiration).ToList();
+        }
+
         public List<INotification> OnApplicationUpdateEnabled(bool filterBlockedNotifications = true)
         {
             if (filterBlockedNotifications)
@@ -96,6 +107,7 @@ namespace NzbDrone.Core.Notifications
             definition.SupportsOnGrab = provider.SupportsOnGrab;
             definition.SupportsOnHealthIssue = provider.SupportsOnHealthIssue;
             definition.SupportsOnHealthRestored = provider.SupportsOnHealthRestored;
+            definition.SupportsOnVipExpiration = provider.SupportsOnHealthIssue;
             definition.SupportsOnApplicationUpdate = provider.SupportsOnApplicationUpdate;
         }
 

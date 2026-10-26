@@ -63,6 +63,30 @@ namespace NzbDrone.Core.Test.IndexerTests.IPTorrentsTests
         }
 
         [Test]
+        public void should_search_by_imdb_id_by_default()
+        {
+            var results = Subject.GetSearchRequests(_movieSearchCriteria);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.FullUri.Should().Contain("tt0076759");
+            page.Url.FullUri.Should().Contain("qf=all");
+        }
+
+        [Test]
+        public void should_not_search_by_imdb_id_when_disabled()
+        {
+            Subject.Settings.DisableImdbSearch = true;
+
+            var results = Subject.GetSearchRequests(_movieSearchCriteria);
+
+            var page = results.GetAllTiers().First().First();
+
+            page.Url.FullUri.Should().NotContain("tt0076759");
+            page.Url.FullUri.Should().NotContain("qf=all");
+        }
+
+        [Test]
         public void should_not_sort_rss_feed_even_when_enabled()
         {
             Subject.Settings.SearchSortBy = (int)IPTorrentsSort.Seeders;

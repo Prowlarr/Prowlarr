@@ -100,7 +100,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
             var movie = (TorrentInfo)releases.Single(r => r.Title == "Matrix (1999) 2160p SPANISH");
             movie.Guid.Should().Be("WolfMax4K-peliculas-b8r7m6");
             movie.InfoUrl.Should().Be("https://wolftorrent.com/pelicula/b8r7m6");
-            movie.DownloadUrl.Should().Be("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6");
+            movie.DownloadUrl.Should().Be("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6&info=%2Fpelicula%2Fb8r7m6");
             movie.Size.Should().Be(60333553090);
             movie.PublishDate.Should().Be(new DateTime(2021, 6, 21, 0, 0, 0, DateTimeKind.Utc));
             movie.Year.Should().Be(1999);
@@ -239,9 +239,10 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
                 "{\"success\":true,\"verification\":{\"provider\":\"turnstile\",\"sitekey\":\"key\",\"action\":\"download\"},\"challenge\":\"wolfmax4k-test-challenge\"}",
                 "{\"success\":false,\"status\":\"turnstile_required\"}");
 
-            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6")));
+            var ex = Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://wolftorrent.com/api/descargas?tabla=peliculas&code=b8r7m6&info=%2Fpelicula%2Fb8r7m6")));
 
             ex.Message.Should().Contain("Turnstile");
+            ex.Message.Should().Contain("https://wolftorrent.com/pelicula/b8r7m6");
 
             Mocker.GetMock<IIndexerHttpClient>()
                 .Verify(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Post && Encoding.UTF8.GetString(r.ContentData).Contains("\"validate\"")), Subject.Definition), Times.Never());

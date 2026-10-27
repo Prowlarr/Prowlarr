@@ -286,12 +286,16 @@ public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
             throw new ReleaseUnavailableException("Outdated or invalid WolfMax4K download link, search again: {0}", link.AbsoluteUri);
         }
 
-        var torrentUrl = await GetTorrentUrl(code, tabla).ConfigureAwait(false);
+        // The release page travels as a relative path, so grab errors can point to it on the current domain.
+        var info = query["info"];
+        var releasePage = info.IsNotNullOrWhiteSpace() && info.StartsWith('/') && !info.StartsWith("//", StringComparison.Ordinal) ? new Uri(new Uri(GetBaseUrl()), info).AbsoluteUri : GetBaseUrl();
+
+        var torrentUrl = await GetTorrentUrl(code, tabla, releasePage).ConfigureAwait(false);
 
         return await base.Download(new Uri(torrentUrl)).ConfigureAwait(false);
     }
 
-    private async Task<string> GetTorrentUrl(string code, string tabla)
+    private async Task<string> GetTorrentUrl(string code, string tabla, string releasePage)
     {
         var generate = await PostDownloadApi(new { action = "generate", code, tabla }).ConfigureAwait(false);
 
@@ -301,7 +305,7 @@ public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
         }
 
         ThrowIfLimited(generate);
-        ThrowIfHumanCheck(generate.Result);
+        ThrowIfHumanCheck(generate.Result, releasePage);
 
         if (!generate.Result.Success || generate.Result.Challenge.IsNullOrWhiteSpace())
         {
@@ -314,7 +318,7 @@ public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
         var validate = await PostDownloadApi(new { action = "validate", challenge = generate.Result.Challenge, nonce }).ConfigureAwait(false);
 
         ThrowIfLimited(validate);
-        ThrowIfHumanCheck(validate.Result);
+        ThrowIfHumanCheck(validate.Result, releasePage);
 
         if (!validate.Result.Success || validate.Result.DownloadUrl.IsNullOrWhiteSpace())
         {
@@ -328,23 +332,23 @@ public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
         // that has to be completed by a person; it is not followed automatically.
         if (validate.Result.External == true || !torrentUrl.Host.Equals(new Uri(baseUrl).Host, StringComparison.OrdinalIgnoreCase))
         {
-            throw new ReleaseDownloadException("WolfMax4K only offers this release through an external verification page ({0}) that has to be completed in a browser, it can't be grabbed automatically", torrentUrl.Host);
+            throw new ReleaseDownloadException("WolfMax4K only offers this release through an external verification page ({0}) that has to be completed in a browser, it can't be grabbed automatically. Download it from {1}", torrentUrl.Host, releasePage);
         }
 
         return torrentUrl.AbsoluteUri;
     }
 
-    private void ThrowIfHumanCheck(WolfMax4KApiResult result)
+    private static void ThrowIfHumanCheck(WolfMax4KApiResult result, string releasePage)
     {
         // Captchas and Cloudflare Turnstile checks are deliberately left to a human in a browser.
         if (result.Status == "captcha_required")
         {
-            throw new ReleaseDownloadException("WolfMax4K is asking for a captcha. Open {0} in a browser, download any release once to solve it, then retry.", GetBaseUrl());
+            throw new ReleaseDownloadException("WolfMax4K is asking for a captcha. Open {0} in a browser, download the release once to solve it, then retry.", releasePage);
         }
 
         if (result.Status == "turnstile_required" || result.Verification != null)
         {
-            throw new ReleaseDownloadException("WolfMax4K asks for a human verification (Cloudflare Turnstile) on every download, it can't be grabbed automatically. Download the release from {0} in a browser.", GetBaseUrl());
+            throw new ReleaseDownloadException("WolfMax4K asks for a human verification (Cloudflare Turnstile) on every download, it can't be grabbed automatically. Download the release in a browser from {0}", releasePage);
         }
     }
 
@@ -616,14 +620,21 @@ public class WolfMax4KParser : IParseIndexerResponse
 
         var parsed = WolfMax4KTitleBuilder.Build(tabla, card.Title, card.Year, label, qualityLabel);
         var sizeText = row.QuerySelector("span.wolf-card-size")?.TextContent;
+        var infoUrl = GetAbsoluteUrl(format?.GetAttribute("href")) ?? card.InfoUrl;
+        var downloadUrl = $"{_baseUrl.TrimEnd('/')}/api/descargas?tabla={Uri.EscapeDataString(tabla)}&code={Uri.EscapeDataString(contentId)}";
+
+        if (infoUrl != null)
+        {
+            downloadUrl += $"&info={Uri.EscapeDataString(new Uri(infoUrl).PathAndQuery)}";
+        }
 
         return new TorrentInfo
         {
             // Domain independent, so releases stay the same when the site moves.
             Guid = $"WolfMax4K-{tabla}-{contentId}",
             Title = parsed.Title,
-            InfoUrl = GetAbsoluteUrl(format?.GetAttribute("href")) ?? card.InfoUrl,
-            DownloadUrl = $"{_baseUrl.TrimEnd('/')}/api/descargas?tabla={Uri.EscapeDataString(tabla)}&code={Uri.EscapeDataString(contentId)}",
+            InfoUrl = infoUrl,
+            DownloadUrl = downloadUrl,
             Categories = GetCategories(tabla, parsed),
             Size = sizeText.IsNotNullOrWhiteSpace() ? ParseUtil.GetBytes(sizeText) : null,
             PublishDate = card.PublishDate,

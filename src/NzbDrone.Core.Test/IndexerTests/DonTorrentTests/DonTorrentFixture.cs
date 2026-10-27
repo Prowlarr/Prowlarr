@@ -21,7 +21,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
     [TestFixture]
     public class DonTorrentFixture : CoreTest<DonTorrent>
     {
-        private const string BaseUrl = "https://dontorrent.meme/";
+        private const string BaseUrl = "https://dontorrent.diy/";
 
         [SetUp]
         public void Setup()
@@ -92,8 +92,8 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
 
             var movie = (TorrentInfo)releases.Single(r => r.Title == "Matrix (1999) 2160p SPANISH");
             movie.Guid.Should().Be("DonTorrent-peliculas-23404");
-            movie.InfoUrl.Should().Be("https://dontorrent.meme/pelicula/23404/Matrix-4K");
-            movie.DownloadUrl.Should().Be("https://dontorrent.meme/api_validate_pow.php?tabla=peliculas&content_id=23404");
+            movie.InfoUrl.Should().Be("https://dontorrent.diy/pelicula/23404/Matrix-4K");
+            movie.DownloadUrl.Should().Be("https://dontorrent.diy/api_validate_pow.php?tabla=peliculas&content_id=23404");
             movie.Year.Should().Be(1999);
             movie.Size.Should().BeGreaterThan(0);
             movie.Categories.Select(c => c.Id).Should().Contain(new[] { NewznabStandardCategory.Movies.Id, NewznabStandardCategory.MoviesUHD.Id });
@@ -105,8 +105,37 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
             episodes.Categories.Select(c => c.Id).Should().Contain(new[] { NewznabStandardCategory.TV.Id, NewznabStandardCategory.TVSD.Id });
 
             var documentary = releases.Single(r => r.Title == "Desmontando el cosmos S02E02 HDTV 720p SPANISH");
-            documentary.DownloadUrl.Should().Be("https://dontorrent.meme/api_validate_pow.php?tabla=documentales&content_id=2065");
+            documentary.DownloadUrl.Should().Be("https://dontorrent.diy/api_validate_pow.php?tabla=documentales&content_id=2065");
             documentary.Categories.Select(c => c.Id).Should().Contain(NewznabStandardCategory.TVDocumentary.Id);
+        }
+
+        [Test]
+        public async Task should_parse_paged_search_results()
+        {
+            GivenSite();
+
+            var firstPage = ReadAllText("Files/Indexers/DonTorrent/search-paged.html");
+            var secondPage = ReadAllText("Files/Indexers/DonTorrent/search-paged-2.html");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Path == "/buscar" && r.Method == HttpMethod.Post), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => Html(r, firstPage));
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxied(It.Is<HttpRequest>(r => r.Url.Path == "/buscar" && Encoding.UTF8.GetString(r.ContentData).Contains("p=2")), Subject.Definition))
+                .Returns((HttpRequest r, IndexerDefinition _) => Html(r, secondPage));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria { SearchTerm = "the boys" })).Releases;
+
+            releases.Select(r => r.Title).Should().Equal(
+                "The Boys of Ghost Town (2008) DVDRip VOSE [Clave WWW.PCTNEW ORG cocineros]",
+                "The Boys S01E01 HDTV SPANISH",
+                "The Boys S01E02-E04 HDTV SPANISH [Clave WWW.PCTNEW ORG malotes]",
+                "The Boys S01E05-E08 HDTV SPANISH",
+                "Matrix (1999) 2160p SPANISH");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Verify(o => o.ExecuteProxied(It.Is<HttpRequest>(r => r.Url.Path == "/buscar"), Subject.Definition), Times.Once());
         }
 
         [Test]
@@ -139,7 +168,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
             var request = Subject.GetRequestGenerator().GetSearchRequests(new MovieSearchCriteria { SearchTerm = "Matrix 1999" }).GetAllTiers().First().First();
 
             request.HttpRequest.Method.Should().Be(HttpMethod.Post);
-            request.Url.FullUri.Should().Be("https://dontorrent.meme/buscar");
+            request.Url.FullUri.Should().Be("https://dontorrent.diy/buscar");
             Encoding.UTF8.GetString(request.HttpRequest.ContentData).Should().Be("valor=Matrix&Buscar=Buscar");
         }
 
@@ -155,7 +184,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                     var body = Encoding.UTF8.GetString(r.ContentData);
                     var json = body.Contains("\"generate\"")
                         ? "{\"success\":true,\"challenge\":\"wolfmax4k-test-challenge\"}"
-                        : "{\"success\":true,\"download_url\":\"https://dontorrent.meme/torrents/series/The-Boys-1-1-HDTV.torrent\"}";
+                        : "{\"success\":true,\"download_url\":\"https://dontorrent.diy/torrents/series/The-Boys-1-1-HDTV.torrent\"}";
 
                     return new HttpResponse(r, new HttpHeader { { "Content-Type", "application/json" } }, new CookieCollection(), json);
                 });
@@ -164,7 +193,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                 .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Method == HttpMethod.Get && r.Url.Path.StartsWith("/torrents/")), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "application/x-bittorrent" } }, new CookieCollection(), torrent));
 
-            var response = await Subject.Download(new Uri("https://dontorrent.meme/api_validate_pow.php?tabla=series&content_id=62315"));
+            var response = await Subject.Download(new Uri("https://dontorrent.diy/api_validate_pow.php?tabla=series&content_id=62315"));
 
             response.Data.Should().Equal(torrent);
 
@@ -187,7 +216,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
                     return new HttpResponse(r, new HttpHeader(), new CookieCollection(), json);
                 });
 
-            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://dontorrent.meme/api_validate_pow.php?tabla=peliculas&content_id=970")));
+            Assert.ThrowsAsync<ReleaseDownloadException>(() => Subject.Download(new Uri("https://dontorrent.diy/api_validate_pow.php?tabla=peliculas&content_id=970")));
         }
 
         [Test]
@@ -199,7 +228,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
 
             var episodes = releases.Single(r => r.Title.StartsWith("The Boys S01E02-E04"));
             episodes.Description.Should().Be("Contraseña / password: WWW.PCTNEW ORG malotes");
-            episodes.DownloadUrl.Should().Be("https://dontorrent.meme/api_validate_pow.php?tabla=series&content_id=62316&clave=WWW.PCTNEW%20ORG%20malotes");
+            episodes.DownloadUrl.Should().Be("https://dontorrent.diy/api_validate_pow.php?tabla=series&content_id=62316&clave=WWW.PCTNEW%20ORG%20malotes");
 
             var free = releases.Single(r => r.Title == "The Boys S01E01 HDTV SPANISH");
             free.Description.Should().BeNull();
@@ -241,7 +270,7 @@ namespace NzbDrone.Core.Test.IndexerTests.DonTorrentTests
             GivenSite();
 
             Mocker.GetMock<IIndexerHttpClient>()
-                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "dontorrent.meme" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "dontorrent.diy" && r.Url.Path == "/ultimos"), Subject.Definition))
                 .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Location", "https://dontorrent.newtld/ultimos" } }, new CookieCollection(), string.Empty, statusCode: HttpStatusCode.MovedPermanently));
 
             var latest = ReadAllText("Files/Indexers/DonTorrent/ultimos.html");

@@ -50,8 +50,8 @@ public class DonTorrent : TorrentIndexerBase<DonTorrentSettings>
 
     // The site moves to a new domain whenever the current one is blocked; old domains redirect to the
     // current one while they last, and /dominios lists the current domain ("Dominio Actual").
-    public override string[] IndexerUrls => new[] { "https://dontorrent.meme/" };
-    public override string[] LegacyUrls => new[] { "https://dontorrent.moi/" };
+    public override string[] IndexerUrls => new[] { "https://dontorrent.diy/" };
+    public override string[] LegacyUrls => new[] { "https://dontorrent.moi/", "https://dontorrent.meme/", "https://dontorrent.channel/" };
     public override string Description => "DonTorrent is a SPANISH public site for movies, TV series and documentaries";
     public override string Language => "es-ES";
     public override Encoding Encoding => Encoding.UTF8;
@@ -547,6 +547,7 @@ public class DonTorrentRequestGenerator : IIndexerRequestGenerator
 public class DonTorrentParser : IParseIndexerResponse
 {
     private const int MaxDetailPages = 30;
+    private const int MaxSearchPages = 3;
 
     private static readonly Regex ItemPathRegex = new(@"^/?(?<kind>pelicula|serie|documental)/(?<id>\d+)(?:/(?<first>\d+))?/", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex FormatInParenthesesRegex = new(@"^\s*\((?<format>[^)]+)\)\s*$", RegexOptions.Compiled);
@@ -590,7 +591,7 @@ public class DonTorrentParser : IParseIndexerResponse
         var parser = new HtmlParser();
         using var dom = parser.ParseDocument(indexerResponse.Content);
 
-        var items = isLatest ? ParseLatest(dom) : ParseSearch(dom);
+        var items = isLatest ? ParseLatest(dom) : ParseSearch(dom).Concat(FetchMoreSearchPages(dom).SelectMany(ParseSearch));
         var releases = new List<ReleaseInfo>();
         var seen = new HashSet<string>();
 
@@ -627,9 +628,17 @@ public class DonTorrentParser : IParseIndexerResponse
 
     private IEnumerable<DonTorrentItem> ParseSearch(IHtmlDocument dom)
     {
-        foreach (var row in dom.QuerySelectorAll("div.card-body > p"))
+        // Current layout is li.search-result; the older one used plain paragraphs.
+        var rows = dom.QuerySelectorAll("li.search-result");
+
+        if (rows.Length == 0)
         {
-            var link = row.QuerySelector("a[href]");
+            rows = dom.QuerySelectorAll("div.card-body > p");
+        }
+
+        foreach (var row in rows)
+        {
+            var link = row.QuerySelector("a.search-result-link[href]") ?? row.QuerySelector("a[href]");
             var item = CreateItem(link?.GetAttribute("href"), link?.TextContent);
 
             if (item == null)
@@ -637,10 +646,68 @@ public class DonTorrentParser : IParseIndexerResponse
                 continue;
             }
 
-            var format = link.ParentElement?.QuerySelectorAll("span").Select(s => FormatInParenthesesRegex.Match(s.TextContent)).FirstOrDefault(m => m.Success);
+            var formatSpans = row.QuerySelectorAll("span.search-result-format");
+
+            if (formatSpans.Length == 0 && link.ParentElement != null)
+            {
+                formatSpans = link.ParentElement.QuerySelectorAll("span");
+            }
+
+            var format = formatSpans.Select(s => FormatInParenthesesRegex.Match(s.TextContent)).FirstOrDefault(m => m.Success);
             item.Format = format?.Groups["format"].Value.Trim();
 
             yield return item;
+        }
+    }
+
+    // The site shows 10 results per page; the next pages are requested by re-posting the search form with p=N.
+    private IEnumerable<IHtmlDocument> FetchMoreSearchPages(IHtmlDocument firstPage)
+    {
+        var term = firstPage.QuerySelector("form#paginationForm input[name='valor']")?.GetAttribute("value");
+        var lastPage = firstPage.QuerySelectorAll("button.page-link[name='p']")
+            .Select(b => int.TryParse(b.GetAttribute("value"), NumberStyles.None, CultureInfo.InvariantCulture, out var p) ? p : 0)
+            .DefaultIfEmpty(1)
+            .Max();
+
+        if (term.IsNullOrWhiteSpace())
+        {
+            yield break;
+        }
+
+        var parser = new HtmlParser();
+
+        for (var page = 2; page <= Math.Min(lastPage, MaxSearchPages); page++)
+        {
+            var request = new HttpRequestBuilder($"{_baseUrl.TrimEnd('/')}/buscar")
+                .Accept(HttpAccept.Html)
+                .SetHeader("Referer", _baseUrl)
+                .WithRateLimit(_rateLimit.TotalSeconds)
+                .Build();
+
+            request.Method = HttpMethod.Post;
+            request.Headers.ContentType = "application/x-www-form-urlencoded";
+            request.SetContent($"valor={Uri.EscapeDataString(term)}&Buscar=Buscar&p={page}");
+            request.SuppressHttpError = true;
+
+            HttpResponse response;
+
+            try
+            {
+                response = _httpClient.ExecuteProxied(request, _definition);
+            }
+            catch (Exception ex) when (ex is HttpException or WebException)
+            {
+                _logger.Debug(ex, "Could not load DonTorrent search page {0}", page);
+                yield break;
+            }
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                _logger.Debug("Could not load DonTorrent search page {0}: HTTP {1}", page, response.StatusCode);
+                yield break;
+            }
+
+            yield return parser.ParseDocument(response.Content);
         }
     }
 
@@ -840,7 +907,8 @@ public class DonTorrentParser : IParseIndexerResponse
 
         var details = new DonTorrentDetails
         {
-            Title = dom.QuerySelector("h2.descargarTitulo")?.TextContent.Trim()
+            // Movies use <h1>, series and documentaries <h2>.
+            Title = dom.QuerySelector(".descargarTitulo")?.TextContent.Trim()
         };
 
         foreach (var info in dom.QuerySelectorAll("p"))

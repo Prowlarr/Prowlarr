@@ -127,6 +127,17 @@ public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
                 return await base.FetchIndexerResponse(request).ConfigureAwait(false);
             }
 
+            // The site also moves pages around on the same domain (/buscar?q=x became /buscar/x), follow that once.
+            var sameSiteTarget = GetSameSiteRedirectUrl(response.HttpResponse);
+
+            if (sameSiteTarget != null)
+            {
+                _logger.Debug("WolfMax4K redirected {0} to {1}", request.Url.FullUri, sameSiteTarget);
+                request.HttpRequest.Url = new HttpUri(sameSiteTarget);
+
+                return await base.FetchIndexerResponse(request).ConfigureAwait(false);
+            }
+
             if (LooksLikeSite(response.HttpResponse))
             {
                 return response;
@@ -170,6 +181,26 @@ public class WolfMax4K : TorrentIndexerBase<WolfMax4KSettings>
         }
 
         return $"{target.Scheme}://{target.Host}/";
+    }
+
+    // Returns the full target when the response redirects to another page on the same domain.
+    private static string GetSameSiteRedirectUrl(HttpResponse response)
+    {
+        if ((int)response.StatusCode is < 300 or > 399 || response.RedirectUrl.IsNullOrWhiteSpace())
+        {
+            return null;
+        }
+
+        var source = new Uri(response.Request.Url.FullUri);
+
+        if (!Uri.TryCreate(source, response.RedirectUrl, out var target) ||
+            !target.Host.Equals(source.Host, StringComparison.OrdinalIgnoreCase) ||
+            target.AbsoluteUri.Equals(source.AbsoluteUri, StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        return target.AbsoluteUri;
     }
 
     private void SwitchBaseUrl(string baseUrl, string oldHost)
@@ -502,7 +533,7 @@ public class WolfMax4KRequestGenerator : IIndexerRequestGenerator
 
         var url = term.IsNullOrWhiteSpace()
             ? $"{_settings.BaseUrl.TrimEnd('/')}/ultimos"
-            : $"{_settings.BaseUrl.TrimEnd('/')}/buscar?q={Uri.EscapeDataString(term)}";
+            : $"{_settings.BaseUrl.TrimEnd('/')}/buscar/{Uri.EscapeDataString(term)}";
 
         var request = new HttpRequestBuilder(url)
             .Accept(HttpAccept.Html)

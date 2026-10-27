@@ -138,7 +138,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
         {
             var requests = Subject.GetRequestGenerator().GetSearchRequests(new MovieSearchCriteria { SearchTerm = "Matrix 1999" });
 
-            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/buscar?q=Matrix");
+            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/buscar/Matrix");
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
         {
             var requests = Subject.GetRequestGenerator().GetSearchRequests(new TvSearchCriteria { SearchTerm = "The Boys", Season = 1, Episode = "5" });
 
-            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/buscar?q=The%20Boys");
+            requests.GetAllTiers().First().First().Url.FullUri.Should().Be("https://wolftorrent.com/buscar/The%20Boys");
         }
 
         [Test]
@@ -268,6 +268,25 @@ namespace NzbDrone.Core.Test.IndexerTests.WolfMax4KTests
             var requests = Subject.GetRequestGenerator().GetSearchRequests(new BasicSearchCriteria());
 
             requests.GetAllTiers().First().First().Url.Host.Should().Be("wolftorrent.example");
+        }
+
+        [Test]
+        public async Task should_follow_redirect_on_the_same_domain()
+        {
+            var html = ReadAllText("Files/Indexers/WolfMax4K/search.html");
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolftorrent.com" && r.Url.Path == "/ultimos"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Location", "/novedades" } }, new CookieCollection(), string.Empty, statusCode: HttpStatusCode.MovedPermanently));
+
+            Mocker.GetMock<IIndexerHttpClient>()
+                .Setup(o => o.ExecuteProxiedAsync(It.Is<HttpRequest>(r => r.Url.Host == "wolftorrent.com" && r.Url.Path == "/novedades"), Subject.Definition))
+                .ReturnsAsync((HttpRequest r, IndexerDefinition _) => new HttpResponse(r, new HttpHeader { { "Content-Type", "text/html; charset=utf-8" } }, new CookieCollection(), html));
+
+            var releases = (await Subject.Fetch(new BasicSearchCriteria())).Releases;
+
+            releases.Should().NotBeEmpty();
+            Subject.GetBaseUrl().Should().Be("https://wolftorrent.com/");
         }
 
         [Test]

@@ -20,6 +20,7 @@ namespace Prowlarr.Api.V1.System
         public string AppData { get; set; }
         public string OsName { get; set; }
         public string OsVersion { get; set; }
+        public string UserAgent { get; set; }
         public bool IsNetCore { get; set; }
         public bool IsLinux { get; set; }
         public bool IsOsx { get; set; }

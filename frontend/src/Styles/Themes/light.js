@@ -3,28 +3,28 @@ const prowlarrOrange = '#e66000';
 module.exports = {
   textColor: '#515253',
   defaultColor: '#333',
-  disabledColor: '#999',
+  disabledColor: '#716f6f',
   dimColor: '#555',
   black: '#000',
   white: '#fff',
   primaryColor: '#5d9cec',
   selectedColor: '#f9be03',
-  successColor: '#27c24c',
-  dangerColor: '#f05050',
-  warningColor: '#ffa500',
+  successColor: '#007a39',
+  dangerColor: '#d03e3e',
+  warningColor: '#9d6602',
   infoColor: '#5d9cec',
   purple: '#7a43b6',
   prowlarrOrange,
-  helpTextColor: '#909293',
+  helpTextColor: '#707070',
   darkGray: '#888',
   gray: '#adadad',
 
   // Theme Colors
 
-  themeBlue: prowlarrOrange,
+  themeBlue: '#ff700a',
   themeRed: '#c4273c',
   themeDarkColor: '#595959',
-  themeLightColor: '#707070',
+  themeLightColor: '#e00000',
   pageBackground: '#f5f7fa',
   pageFooterBackgroud: '#f1f1f1',
 
@@ -33,11 +33,11 @@ module.exports = {
 
   // Labels
   inverseLabelColor: '#ddd',
-  inverseLabelTextColor: '#333',
+  inverseLabelTextColor: '#a34400',
 
   // Links
   defaultLinkHoverColor: '#fff',
-  linkColor: '#5d9cec',
+  linkColor: '#3e72b6',
   linkHoverColor: '#1b72e2',
 
   // Header
@@ -50,11 +50,11 @@ module.exports = {
   sidebarActiveBackgroundColor: '#333333',
 
   // Toolbar
-  toolbarColor: '#e1e2e3',
+  toolbarColor: '#f4f5f5',
   toolbarBackgroundColor: '#707070',
   toolbarMenuItemBackgroundColor: '#606060',
   toolbarMenuItemHoverBackgroundColor: '#515151',
-  toolbarLabelColor: '#e1e2e3',
+  toolbarLabelColor: '#f4f5f6',
 
   // Accents
   borderColor: '#e5e5e5',
@@ -78,7 +78,7 @@ module.exports = {
   defaultHoverBackgroundColor: '#f5f5f5',
   defaultHoverBorderColor: '#d6d6d6',
 
-  primaryBackgroundColor: '#5d9cec',
+  primaryBackgroundColor: '#4b76af',
   primaryBorderColor: '#5899eb',
   primaryHoverBackgroundColor: '#4b91ea',
   primaryHoverBorderColor: '#3483e7',
@@ -143,7 +143,7 @@ module.exports = {
   alertDangerColor: '#a94442',
 
   alertInfoBorderColor: '#bce8f1',
-  alertInfoBackgroundColor: '#d9edf7',
+  alertInfoBackgroundColor: '#f5f8f9',
   alertInfoColor: '#31708f',
 
   alertSuccessBorderColor: '#d6e9c6',

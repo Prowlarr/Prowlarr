@@ -49,7 +49,7 @@
     "DeleteTagMessageText": "Er du sikker på at du vil slette formattaggen {0}?",
     "ClientPriority": "Klientprioritet",
     "Close": "Lukk",
-    "Enabled": "Aktiver",
+    "Enabled": "Aktivert",
     "Title": "Tittel",
     "UI": "Grensesnitt",
     "ConnectionLost": "Tilkobling mistet",
@@ -210,5 +210,8 @@
     "AuthenticationRequiredPasswordConfirmationHelpTextWarning": "Gjenta nytt passord",
     "AuthenticationRequiredPasswordHelpTextWarning": "Oppgi nytt passord",
     "AuthenticationRequiredUsernameHelpTextWarning": "Oppgi nytt bruernavn",
-    "AuthenticationRequiredWarning": "For å forhindre ekstern tilgang uten pålogging, krever {appName} nå at autentisering er aktivert. Du kan velge å deaktivere autentisering for lokale adresser."
+    "AuthenticationRequiredWarning": "For å forhindre ekstern tilgang uten pålogging, krever {appName} nå at autentisering er aktivert. Du kan velge å deaktivere autentisering for lokale adresser.",
+    "EnableInteractiveSearch": "Aktiver Interaktive Søk",
+    "Ended": "Avsluttet",
+    "HideAdvanced": "Skjul avanserte"
 }

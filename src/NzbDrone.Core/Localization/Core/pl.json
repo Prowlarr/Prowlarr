@@ -809,7 +809,7 @@
     "DownloadClientSettingsDefaultCategoryHelpText": "Domyślna kategoria zapasowa, jeśli dla wydania nie istnieje zmapowana kategoria. Dodanie kategorii specyficznej dla {appName} pozwala uniknąć konfliktów z niepowiązanymi pobraniami spoza {appName}. Użycie kategorii jest opcjonalne, ale zdecydowanie zalecane.",
     "HealthMessagesInfoBox": "Więcej informacji o przyczynie tych komunikatów kontroli stanu znajdziesz, klikając link wiki (ikona książki) na końcu wiersza lub sprawdzając [logi]({link}). Jeśli masz trudność z interpretacją tych komunikatów, możesz skontaktować się z naszym wsparciem przez linki poniżej.",
     "IndexerIPTorrentsSettingsSearchSortByHelpText": "Wybierz sposób sortowania wyników wyszukiwania",
-    "IndexerIPTorrentsSettingsSearchSortBy": "Sortuj według",
+    "IndexerIPTorrentsSettingsSearchSortBy": "Sortuj wyniki według",
     "AllowedHosts": "Dozwolone hosty",
     "TrustedNetworks": "Zaufane sieci",
     "AllowedHostsNotConfiguredHealthCheckMessage": "Dozwolone hosty nie są skonfigurowane, {appName} będzie akceptować żądania dla dowolnej nazwy hosta lub adresu IP. Ustaw Dozwolone hosty w ustawieniach ogólnych, aby ograniczyć nazwy hostów, za pomocą których można połączyć się z {appName}.",

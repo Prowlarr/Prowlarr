@@ -3,7 +3,7 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="1.8.6" />
+    <PackageReference Include="AngleSharp" Version="1.9.0" />
     <PackageReference Include="AngleSharp.Xml" Version="1.2.0" />
     <PackageReference Include="Dapper" Version="2.1.89" />
     <PackageReference Include="Diacritical.Net" Version="1.0.5" />
@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.14" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
-    <PackageReference Include="Polly" Version="8.8.0" />
+    <PackageReference Include="Polly" Version="8.9.0" />
     <PackageReference Include="FluentMigrator.Runner.Core" Version="8.0.1" />
     <PackageReference Include="FluentMigrator.Runner.Postgres" Version="8.0.1" />
     <PackageReference Include="FluentMigrator.Runner.SQLite" Version="8.0.1" />

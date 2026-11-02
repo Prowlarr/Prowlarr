@@ -139,6 +139,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             caps.Categories.AddCategoryMapping("printedtype[manhwa]", NewznabStandardCategory.BooksComics, "Manhwa");
             caps.Categories.AddCategoryMapping("printedtype[light_novel]", NewznabStandardCategory.BooksComics, "Light Novel");
             caps.Categories.AddCategoryMapping("printedtype[artbook]", NewznabStandardCategory.BooksComics, "Artbook");
+            caps.Categories.AddCategoryMapping("", NewznabStandardCategory.XXX, "Hentai");
 
             return caps;
         }
@@ -245,9 +246,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 parameters.Set("freeleech", "1");
             }
 
-            if (_settings.ExcludeHentai && searchType == "anime")
+            if (searchType == "anime")
             {
-                parameters.Set("hentai", "0");
+                parameters.Set("hentai", _settings.ShowHentai.ToString());
             }
 
             searchUrl += "?" + parameters.GetQueryString();
@@ -720,7 +721,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             Passkey = "";
             FreeleechOnly = false;
             ExcludeRaw = false;
-            ExcludeHentai = false;
+            ShowHentai = (int)AnimeBytesHentaiAction.Include;
             SearchByYear = false;
             EnableSonarrCompatibility = true;
             UseFilenameForSingleEpisodes = true;
@@ -741,8 +742,8 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(5, Label = "Exclude RAW", Type = FieldType.Checkbox, HelpText = "Exclude RAW torrents from results")]
         public bool ExcludeRaw { get; set; }
 
-        [FieldDefinition(6, Label = "Exclude Hentai", Type = FieldType.Checkbox, HelpText = "Exclude Hentai torrents from results")]
-        public bool ExcludeHentai { get; set; }
+        [FieldDefinition(6, Label = "Search Hentai", Type = FieldType.Select, SelectOptions = typeof(AnimeBytesHentaiAction), HelpText = "Exclude, include, or include only Hentai in search")]
+        public int ShowHentai { get; set; }
 
         [FieldDefinition(7, Label = "Search By Year", Type = FieldType.Checkbox, HelpText = "Makes Prowlarr to search by year as a different argument in the request.")]
         public bool SearchByYear { get; set; }
@@ -766,6 +767,21 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             return new NzbDroneValidationResult(Validator.Validate(this));
         }
+    }
+
+    public enum AnimeBytesHentaiAction
+    {
+        [FieldOption(Label = "Include", Hint = "Include hentai in the search results")]
+        Include = 2,
+
+        [FieldOption(Label = "Exclude", Hint = "Exclude hentai from the search results")]
+        Preferred = 0,
+
+        [FieldOption(Label = "Include Only", Hint = "Include only hentai in the search results")]
+        IncludeOnly = 1,
+
+        [FieldOption(Label = "Include Uncensored Only", Hint = "Include only uncensored hentai in the search results")]
+        IncludeUncensoredOnly = 3,
     }
 
     public class AnimeBytesResponse

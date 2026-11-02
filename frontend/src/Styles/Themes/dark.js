@@ -182,7 +182,8 @@ module.exports = {
   //
   // Table
 
-  tableRowHoverBackgroundColor: 'rgba(255, 255, 255, 0.08)',
+  tableRowHoverBackgroundColor: 'rgba(255, 255, 255, 0.16)',
+  tableRowAlternateBackgroundColor: 'rgba(255, 255, 255, 0.04)',
 
   //
   // Charts

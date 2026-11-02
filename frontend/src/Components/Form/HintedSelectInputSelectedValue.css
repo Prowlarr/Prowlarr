@@ -18,7 +18,7 @@
 
   flex: 1 10 0;
   margin-left: 15px;
-  color: var(--gray);
+  color: #757575;
   text-align: right;
   font-size: $smallFontSize;
 }

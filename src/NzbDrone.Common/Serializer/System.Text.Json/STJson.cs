@@ -28,6 +28,7 @@ namespace NzbDrone.Common.Serializer
             serializerSettings.PropertyNameCaseInsensitive = true;
             serializerSettings.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
             serializerSettings.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            serializerSettings.NumberHandling = JsonNumberHandling.AllowReadingFromString;
             serializerSettings.WriteIndented = true;
 
             serializerSettings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true));

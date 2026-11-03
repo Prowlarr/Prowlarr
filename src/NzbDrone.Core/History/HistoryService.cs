@@ -23,9 +23,9 @@ namespace NzbDrone.Core.History
         History Get(int historyId);
         List<History> Find(string downloadId, HistoryEventType eventType);
         List<History> FindByDownloadId(string downloadId);
-        List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType);
+        List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType, int? limit = null);
         void UpdateMany(List<History> toUpdate);
-        List<History> Between(DateTime start, DateTime end);
+        List<History> Between(DateTime start, DateTime end, List<int> indexerIds);
         List<History> Since(DateTime date, HistoryEventType? eventType);
         int CountSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes);
         History FindFirstForIndexerSince(int indexerId, DateTime date, List<HistoryEventType> eventTypes, int limit);
@@ -80,9 +80,9 @@ namespace NzbDrone.Core.History
             return _historyRepository.FindByDownloadId(downloadId);
         }
 
-        public List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType)
+        public List<History> GetByIndexerId(int indexerId, HistoryEventType? eventType, int? limit = null)
         {
-            return _historyRepository.GetByIndexerId(indexerId, eventType);
+            return _historyRepository.GetByIndexerId(indexerId, eventType, limit);
         }
 
         public void UpdateMany(List<History> toUpdate)
@@ -90,9 +90,9 @@ namespace NzbDrone.Core.History
             _historyRepository.UpdateMany(toUpdate);
         }
 
-        public List<History> Between(DateTime start, DateTime end)
+        public List<History> Between(DateTime start, DateTime end, List<int> indexerIds)
         {
-            return _historyRepository.Between(start, end);
+            return _historyRepository.Between(start, end, indexerIds);
         }
 
         public List<History> Since(DateTime date, HistoryEventType? eventType)

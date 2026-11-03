@@ -324,7 +324,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
-            var response = STJson.Deserialize<AnimeBytesResponse>(indexerResponse.Content);
+            var response = STJson.Deserialize<AnimeBytesResponse>(indexerResponse.HttpResponse.ResponseData);
 
             if (response.Error.IsNotNullOrWhiteSpace())
             {

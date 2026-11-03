@@ -270,7 +270,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 throw new IndexerAuthException("API Key invalid or not authorized");
             }
 
-            var jsonResponse = STJson.Deserialize<BeyondHDResponse>(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<BeyondHDResponse>(indexerResponse.HttpResponse.ResponseData);
 
             if (jsonResponse.StatusCode == 0)
             {

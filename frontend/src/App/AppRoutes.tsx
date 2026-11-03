@@ -10,7 +10,7 @@ import ApplicationSettings from 'Settings/Applications/ApplicationSettings';
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
 import DownloadClientSettingsConnector from 'Settings/DownloadClients/DownloadClientSettingsConnector';
 import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
-import IndexerSettings from 'Settings/Indexers/IndexerSettings';
+import IndexerSettingsConnector from 'Settings/Indexers/IndexerSettingsConnector';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
 import TagSettings from 'Settings/Tags/TagSettings';
@@ -67,7 +67,7 @@ function AppRoutes() {
 
       <Route exact={true} path="/settings" component={Settings} />
 
-      <Route path="/settings/indexers" component={IndexerSettings} />
+      <Route path="/settings/indexers" component={IndexerSettingsConnector} />
 
       <Route path="/settings/applications" component={ApplicationSettings} />
 

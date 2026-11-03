@@ -20,6 +20,7 @@ interface SavePayload {
   seedTime?: number;
   packSeedTime?: number;
   preferMagnetUrl?: boolean;
+  userAgent?: string;
 }
 
 interface EditIndexerModalContentProps {
@@ -69,6 +70,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
   const [preferMagnetUrl, setPreferMagnetUrl] = useState<
     null | string | boolean
   >(null);
+  const [userAgent, setUserAgent] = useState<null | string>(null);
 
   const save = useCallback(() => {
     let hasChanges = false;
@@ -114,6 +116,11 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
       payload.preferMagnetUrl = preferMagnetUrl === 'true';
     }
 
+    if (userAgent !== null) {
+      hasChanges = true;
+      payload.userAgent = userAgent;
+    }
+
     if (hasChanges) {
       onSavePress(payload);
     }
@@ -128,6 +135,7 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
     seedTime,
     packSeedTime,
     preferMagnetUrl,
+    userAgent,
     onSavePress,
     onModalClose,
   ]);
@@ -158,6 +166,9 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
           break;
         case 'preferMagnetUrl':
           setPreferMagnetUrl(value);
+          break;
+        case 'userAgent':
+          setUserAgent(value);
           break;
         default:
           console.warn(`EditIndexersModalContent Unknown Input: '${name}'`);
@@ -276,6 +287,18 @@ function EditIndexerModalContent(props: EditIndexerModalContentProps) {
             name="preferMagnetUrl"
             value={preferMagnetUrl}
             values={enableOptions}
+            onChange={onInputChange}
+          />
+        </FormGroup>
+
+        <FormGroup size={sizes.MEDIUM}>
+          <FormLabel>{translate('IndexerUserAgent')}</FormLabel>
+
+          <FormInputGroup
+            type={inputTypes.TEXT}
+            name="userAgent"
+            value={userAgent}
+            helpText={translate('IndexerUserAgentHelpText')}
             onChange={onInputChange}
           />
         </FormGroup>

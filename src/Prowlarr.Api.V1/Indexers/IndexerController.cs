@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Net.Http;
 using FluentValidation;
 using FluentValidation.Results;
+using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Validation;
 using NzbDrone.SignalR;
@@ -24,7 +26,21 @@ namespace Prowlarr.Api.V1.Indexers
                 .SetValidator(appProfileExistsValidator);
 
             SharedValidator.RuleFor(c => c.Priority).InclusiveBetween(1, 50);
+
+            // Rejected at save time rather than on every request: an unparseable value otherwise saves
+            // cleanly and then fails each fetch as "Unable to connect to indexer", which points at the
+            // indexer instead of at the User-Agent that was just entered.
+            SharedValidator.RuleFor(c => c.UserAgent)
+                .Must(userAgent => userAgent.IsNullOrWhiteSpace() || IsValidUserAgent(userAgent))
+                .WithMessage("Is not a valid User-Agent");
             SharedValidator.RuleFor(c => c.DownloadClientId).SetValidator(downloadClientExistsValidator);
+        }
+
+        private static bool IsValidUserAgent(string userAgent)
+        {
+            using var request = new HttpRequestMessage();
+
+            return request.Headers.UserAgent.TryParseAdd(userAgent);
         }
 
         protected override void Validate(IndexerDefinition definition, bool includeWarnings)

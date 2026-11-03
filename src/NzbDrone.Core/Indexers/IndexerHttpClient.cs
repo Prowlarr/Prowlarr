@@ -8,6 +8,7 @@ using NzbDrone.Common.Extensions;
 using NzbDrone.Common.Http;
 using NzbDrone.Common.Http.Dispatchers;
 using NzbDrone.Common.TPL;
+using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerProxies;
 using NzbDrone.Core.IndexerProxies.FlareSolverr;
 using NzbDrone.Core.ThingiProvider;
@@ -23,7 +24,10 @@ namespace NzbDrone.Core.Indexers
     public class IndexerHttpClient : HttpClient, IIndexerHttpClient
     {
         private readonly IIndexerProxyFactory _indexerProxyFactory;
+        private readonly IConfigService _configService;
+
         public IndexerHttpClient(IIndexerProxyFactory indexerProxyFactory,
+            IConfigService configService,
             IEnumerable<IHttpRequestInterceptor> requestInterceptors,
             ICacheManager cacheManager,
             IRateLimitService rateLimitService,
@@ -32,13 +36,14 @@ namespace NzbDrone.Core.Indexers
             : base(requestInterceptors, cacheManager, rateLimitService, httpDispatcher, logger)
         {
             _indexerProxyFactory = indexerProxyFactory;
+            _configService = configService;
         }
 
         public async Task<HttpResponse> ExecuteProxiedAsync(HttpRequest request, ProviderDefinition definition)
         {
             var selectedProxies = GetProxies(definition);
 
-            request = PreRequest(request, selectedProxies);
+            request = PreRequest(ApplyUserAgent(request, definition), selectedProxies);
 
             return PostResponse(await ExecuteAsync(request), selectedProxies);
         }
@@ -47,9 +52,25 @@ namespace NzbDrone.Core.Indexers
         {
             var selectedProxies = GetProxies(definition);
 
-            request = PreRequest(request, selectedProxies);
+            request = PreRequest(ApplyUserAgent(request, definition), selectedProxies);
 
             return PostResponse(Execute(request), selectedProxies);
+        }
+
+        // Applied before the proxies get the request so that a configured User-Agent wins over the one
+        // FlareSolverr caches per host, which it only injects when the request has none.
+        private HttpRequest ApplyUserAgent(HttpRequest request, ProviderDefinition definition)
+        {
+            var userAgent = definition is IndexerDefinition indexerDefinition && indexerDefinition.UserAgent.IsNotNullOrWhiteSpace()
+                ? indexerDefinition.UserAgent
+                : _configService.IndexerUserAgent;
+
+            if (userAgent.IsNotNullOrWhiteSpace())
+            {
+                request.Headers.UserAgent = userAgent;
+            }
+
+            return request;
         }
 
         private IList<IIndexerProxy> GetProxies(ProviderDefinition definition)

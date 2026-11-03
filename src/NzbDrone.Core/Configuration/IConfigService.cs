@@ -53,6 +53,7 @@ namespace NzbDrone.Core.Configuration
 
         // Indexers
         bool LogIndexerResponse { get; set; }
+        string IndexerUserAgent { get; set; }
 
         CertificateValidationType CertificateValidation { get; }
         string ApplicationUrl { get; }

@@ -138,6 +138,8 @@ public class AnimeZRequestGenerator : AvistazRequestGenerator
             parameters.Add("freeleech", "1");
         }
 
+        AddLanguageParameters(parameters);
+
         return parameters;
     }
 }

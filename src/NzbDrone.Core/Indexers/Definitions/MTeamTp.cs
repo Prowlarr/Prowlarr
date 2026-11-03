@@ -70,7 +70,7 @@ public class MTeamTp : TorrentIndexerBase<MTeamTpSettings>
 
         var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
-        if (!STJson.TryDeserialize<MTeamTpApiDownloadTokenResponse>(response.Content, out var jsonResponse))
+        if (!STJson.TryDeserialize<MTeamTpApiDownloadTokenResponse>(response.ResponseData, out var jsonResponse))
         {
             throw new ReleaseDownloadException("Invalid response received from M-Team, not a valid JSON");
         }
@@ -327,7 +327,7 @@ public class MTeamTpParser : IParseIndexerResponse
             throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
         }
 
-        if (!STJson.TryDeserialize<MTeamTpApiResponse>(indexerResponse.Content, out var jsonResponse))
+        if (!STJson.TryDeserialize<MTeamTpApiResponse>(indexerResponse.HttpResponse.ResponseData, out var jsonResponse))
         {
             throw new IndexerException(indexerResponse, "Invalid response received from M-Team, not a valid JSON");
         }

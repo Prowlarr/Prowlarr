@@ -91,8 +91,9 @@ namespace NzbDrone.Core.Indexers.Torznab
         {
             get
             {
-                yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", settings: GetSettings("https://feed.animetosho.org"), categories: new[] { 2020, 5070 });
-                yield return GetDefinition("Torrent Network", "Torrent Network (TN) is a GERMAN Private site for TV / MOVIES / GENERAL", language: "de-DE", settings: GetSettings("https://tntracker.org", apiPath: @"/api/torznab/api"));
+                yield return GetDefinition("AnimeTosho", "Anime NZB/DDL mirror", settings: GetSettings("https://feed.animetosho.org"), categories: [2020, 5070]);
+                yield return GetDefinition("Anthelion", "Anthelion (ANT) is a Private Torrent Tracker for MOVIES", settings: GetSettings("https://anthelion.me", apiPath: "/api.php", additionalParameters: "&usetoken=none&freetorrent="), categories: [2000]);
+                yield return GetDefinition("Torrent Network", "Torrent Network (TN) is a GERMAN Private site for TV / MOVIES / GENERAL", language: "de-DE", settings: GetSettings("https://tntracker.org", apiPath: "/api/torznab/api"));
                 yield return GetDefinition("Generic Torznab", "A Newznab-like api for torrents.", settings: GetSettings(""));
             }
         }
@@ -137,13 +138,18 @@ namespace NzbDrone.Core.Indexers.Torznab
             };
         }
 
-        private TorznabSettings GetSettings(string url, string apiPath = null)
+        private static TorznabSettings GetSettings(string url, string apiPath = null, string additionalParameters = null)
         {
             var settings = new TorznabSettings { BaseUrl = url };
 
             if (apiPath.IsNotNullOrWhiteSpace())
             {
                 settings.ApiPath = apiPath;
+            }
+
+            if (additionalParameters.IsNotNullOrWhiteSpace())
+            {
+                settings.AdditionalParameters = additionalParameters;
             }
 
             return settings;

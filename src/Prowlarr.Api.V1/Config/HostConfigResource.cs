@@ -49,6 +49,8 @@ namespace Prowlarr.Api.V1.Config
         public int BackupRetention { get; set; }
         public int HistoryCleanupDays { get; set; }
         public bool TrustCgnatIpAddresses { get; set; }
+        public bool SearchCacheEnabled { get; set; }
+        public int SearchCacheTtl { get; set; }
     }
 
     public static class HostConfigResourceMapper
@@ -96,7 +98,9 @@ namespace Prowlarr.Api.V1.Config
                 BackupInterval = configService.BackupInterval,
                 BackupRetention = configService.BackupRetention,
                 ApplicationUrl = configService.ApplicationUrl,
-                HistoryCleanupDays = configService.HistoryCleanupDays
+                HistoryCleanupDays = configService.HistoryCleanupDays,
+                SearchCacheEnabled = configService.SearchCacheEnabled,
+                SearchCacheTtl = configService.SearchCacheTtl
             };
         }
     }

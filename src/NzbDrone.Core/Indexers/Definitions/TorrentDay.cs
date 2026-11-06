@@ -67,11 +67,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 TvSearchParams = new List<TvSearchParam>
                 {
-                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.ImdbId
+                    TvSearchParam.Q, TvSearchParam.Season, TvSearchParam.Ep, TvSearchParam.TmdbId
                 },
                 MovieSearchParams = new List<MovieSearchParam>
                 {
-                    MovieSearchParam.Q, MovieSearchParam.ImdbId
+                    MovieSearchParam.Q, MovieSearchParam.TmdbId
                 },
                 MusicSearchParams = new List<MusicSearchParam>
                 {
@@ -146,7 +146,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         public TorrentDaySettings Settings { get; set; }
         public IndexerCapabilities Capabilities { get; set; }
 
-        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, string imdbId = null)
+        private IEnumerable<IndexerRequest> GetPagedRequests(string term, int[] categories, int? tmdbId = null)
         {
             var searchUrl = Settings.BaseUrl + "t.json";
 
@@ -166,9 +166,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             searchUrl += ";q=";
 
-            if (imdbId.IsNotNullOrWhiteSpace())
+            if (tmdbId.HasValue && tmdbId != 0)
             {
-                searchUrl += imdbId + " ".UrlEncode(Encoding.UTF8);
+                searchUrl += tmdbId + " ".UrlEncode(Encoding.UTF8);
             }
 
             searchUrl += term.UrlEncode(Encoding.UTF8);
@@ -182,7 +182,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SearchTerm), searchCriteria.Categories, searchCriteria.TmdbId));
 
             return pageableRequests;
         }
@@ -200,7 +200,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var pageableRequests = new IndexerPageableRequestChain();
 
-            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.FullImdbId));
+            pageableRequests.Add(GetPagedRequests(string.Format("{0}", searchCriteria.SanitizedTvSearchString), searchCriteria.Categories, searchCriteria.TmdbId));
 
             return pageableRequests;
         }
@@ -265,11 +265,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var torrentId = (long)row.t;
                 var details = new Uri(_settings.BaseUrl + "details.php?id=" + torrentId);
                 var seeders = (int)row.seeders;
-                var imdbId = (string)row["imdb-id"];
+                var tmdb = row["tmdb-id"] ?? 0;
                 var downloadMultiplier = (double?)row["download-multiplier"] ?? 1;
                 var link = new Uri(_settings.BaseUrl + "download.php/" + torrentId + "/" + torrentId + ".torrent");
                 var publishDate = DateTimeUtil.UnixTimestampToDateTime((long)row.ctime).ToLocalTime();
-                var imdb = ParseUtil.GetImdbId(imdbId) ?? 0;
 
                 var release = new TorrentInfo
                 {
@@ -284,7 +283,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     Grabs = (int)row.completed,
                     Seeders = seeders,
                     Peers = seeders + (int)row.leechers,
-                    ImdbId = imdb,
+                    TmdbId = tmdb,
                     DownloadVolumeFactor = downloadMultiplier,
                     UploadVolumeFactor = 1,
                     MinimumRatio = 1,

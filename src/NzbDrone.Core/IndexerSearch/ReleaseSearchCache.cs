@@ -47,7 +47,6 @@ namespace NzbDrone.Core.IndexerSearch
                 ttlMinutes = DefaultTtlMinutes;
             }
 
-            
             var hit = await _cache.GetOrCreateAsync(
                 BuildKey(request, indexerIds, interactiveSearch),
                 async _ => new CachedSearchHit(await search()),

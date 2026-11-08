@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -45,7 +46,11 @@ namespace NzbDrone.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHybridCache();
+            // DryIoc cannot construct HybridCache because it asks for keyed services (so built here).
+            // Provider is also registered so it can be cleaned on shutdown...
+            var hybridCacheProvider = new ServiceCollection().AddHybridCache().Services.BuildServiceProvider();
+            services.AddSingleton(hybridCacheProvider);
+            services.AddSingleton(hybridCacheProvider.GetRequiredService<HybridCache>());
 
             services.AddLogging(b =>
             {

@@ -24,29 +24,32 @@ namespace NzbDrone.Core.IndexerSearch
         private readonly IIndexerLimitService _indexerLimitService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IIndexerFactory _indexerFactory;
+        private readonly IReleaseSearchCache _releaseSearchCache;
         private readonly Logger _logger;
 
         public ReleaseSearchService(IEventAggregator eventAggregator,
                                 IIndexerFactory indexerFactory,
                                 IIndexerLimitService indexerLimitService,
+                                IReleaseSearchCache releaseSearchCache,
                                 Logger logger)
         {
             _eventAggregator = eventAggregator;
             _indexerFactory = indexerFactory;
             _indexerLimitService = indexerLimitService;
+            _releaseSearchCache = releaseSearchCache;
             _logger = logger;
         }
 
-        public Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
+        public async Task<NewznabResults> Search(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
         {
-            return request.t switch
+            return await _releaseSearchCache.GetOrSearch(request, indexerIds, interactiveSearch, () => request.t switch
             {
                 "movie" => MovieSearch(request, indexerIds, interactiveSearch),
                 "music" => MusicSearch(request, indexerIds, interactiveSearch),
                 "tvsearch" => TvSearch(request, indexerIds, interactiveSearch),
                 "book" => BookSearch(request, indexerIds, interactiveSearch),
                 _ => BasicSearch(request, indexerIds, interactiveSearch)
-            };
+            });
         }
 
         private async Task<NewznabResults> MovieSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)

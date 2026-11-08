@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Dapper;
@@ -42,6 +43,12 @@ namespace NzbDrone.Core.Datastore
 
         public SqlBuilder OrderBy(string sql, dynamic parameters = null) =>
             AddClause("orderby", sql, parameters, " , ", "ORDER BY ", "\n", false);
+
+        public SqlBuilder Limit(int limit) =>
+            AddClause("limit", limit.ToString(CultureInfo.InvariantCulture), null, "", "LIMIT ", "\n", false);
+
+        public SqlBuilder Offset(int offset) =>
+            AddClause("offset", offset.ToString(CultureInfo.InvariantCulture), null, "", "OFFSET ", "\n", false);
 
         public SqlBuilder Select(string sql, dynamic parameters = null) =>
             AddClause("select", sql, parameters, " , ", "", "\n", false);

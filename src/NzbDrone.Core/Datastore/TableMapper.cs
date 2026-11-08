@@ -107,7 +107,7 @@ namespace NzbDrone.Core.Datastore
 
         public string SelectTemplate(Type x)
         {
-            return $"SELECT /**select**/ FROM \"{TableMap[x]}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/ /**orderby**/";
+            return $"SELECT /**select**/ FROM \"{TableMap[x]}\" /**join**/ /**innerjoin**/ /**leftjoin**/ /**where**/ /**groupby**/ /**having**/ /**orderby**/ /**limit**/ /**offset**/";
         }
 
         public string DeleteTemplate(Type x)

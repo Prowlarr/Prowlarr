@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.89" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.11.0" />
     <PackageReference Include="NBuilder" Version="6.1.0" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>

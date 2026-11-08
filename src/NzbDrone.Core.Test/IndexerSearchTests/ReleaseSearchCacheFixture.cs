@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
-using NzbDrone.Common.Cache;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.IndexerSearch;
 using NzbDrone.Core.Parser.Model;
@@ -15,6 +16,7 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
     public class ReleaseSearchCacheFixture
     {
         private Mock<IConfigService> _configService;
+        private ServiceProvider _provider;
         private ReleaseSearchCache _subject;
         private NewznabRequest _request;
 
@@ -25,7 +27,11 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             _configService.SetupGet(c => c.SearchCacheEnabled).Returns(true);
             _configService.SetupGet(c => c.SearchCacheTtl).Returns(5);
 
-            _subject = new ReleaseSearchCache(_configService.Object, new CacheManager());
+            var services = new ServiceCollection();
+            services.AddHybridCache();
+            _provider = services.BuildServiceProvider();
+
+            _subject = new ReleaseSearchCache(_configService.Object, _provider.GetRequiredService<HybridCache>());
             _request = new NewznabRequest
             {
                 t = "tvsearch",
@@ -35,6 +41,12 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
                 ep = "2",
                 source = "Sonarr"
             };
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _provider.Dispose();
         }
 
         [Test]
@@ -92,28 +104,14 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         {
             _configService.SetupGet(c => c.SearchCacheTtl).Returns(15);
 
-            var cache = CaptureCache();
-            var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
+            var cache = new RecordingHybridCache();
+            var subject = new ReleaseSearchCache(_configService.Object, cache);
 
             await subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
 
-            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(15)), Times.Once);
-        }
-
-        [Test]
-        public async Task should_not_extend_ttl_on_cache_hit()
-        {
-            var cache = CaptureCache();
-            cache.Cached.Setup(c => c.Find(It.IsAny<string>())).Returns(new NewznabResults
-            {
-                Releases = new List<ReleaseInfo> { new() { Title = "A" } }
-            });
-
-            var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
-
-            await subject.GetOrSearch(_request, new List<int> { 1 }, false, ShouldNotSearch);
-
-            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), It.IsAny<TimeSpan>()), Times.Never);
+            cache.LastOptions.Expiration.Should().Be(TimeSpan.FromMinutes(15));
+            cache.LastOptions.Flags.Should().NotBeNull();
+            cache.LastOptions.Flags.Value.Should().HaveFlag(HybridCacheEntryFlags.DisableDistributedCache);
         }
 
         [Test]
@@ -121,12 +119,14 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         {
             _configService.SetupGet(c => c.SearchCacheTtl).Returns(0);
 
-            var cache = CaptureCache();
-            var subject = new ReleaseSearchCache(_configService.Object, cache.Manager);
+            var cache = new RecordingHybridCache();
+            var subject = new ReleaseSearchCache(_configService.Object, cache);
 
             await subject.GetOrSearch(_request, new List<int> { 1 }, false, () => SearchResults("A"));
 
-            cache.Cached.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<NewznabResults>(), TimeSpan.FromMinutes(5)), Times.Once);
+            cache.LastOptions.Expiration.Should().Be(TimeSpan.FromMinutes(5));
+            cache.LastOptions.Flags.Should().NotBeNull();
+            cache.LastOptions.Flags.Value.Should().HaveFlag(HybridCacheEntryFlags.DisableDistributedCache);
         }
 
         [Test]
@@ -185,6 +185,33 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
         }
 
         [Test]
+        public async Task should_preserve_torrent_info_across_cache_hits()
+        {
+            await _subject.GetOrSearch(_request, new List<int> { 1 }, false, () =>
+            {
+                return Task.FromResult(new NewznabResults
+                {
+                    Releases = new List<ReleaseInfo>
+                    {
+                        new TorrentInfo
+                        {
+                            Title = "A",
+                            DownloadUrl = "http://indexer/dl",
+                            InfoHash = "abc123",
+                            Seeders = 7
+                        }
+                    }
+                });
+            });
+
+            var cached = await _subject.GetOrSearch(_request, new List<int> { 1 }, false, ShouldNotSearch);
+            var torrent = cached.Releases[0].Should().BeOfType<TorrentInfo>().Subject;
+
+            torrent.InfoHash.Should().Be("abc123");
+            torrent.Seeders.Should().Be(7);
+        }
+
+        [Test]
         public async Task should_run_one_search_for_concurrent_identical_requests()
         {
             var searchStarted = new TaskCompletionSource<bool>();
@@ -226,13 +253,30 @@ namespace NzbDrone.Core.Test.IndexerSearchTests
             throw new InvalidOperationException("indexer search should not run");
         }
 
-        private static (ICacheManager Manager, Mock<ICached<NewznabResults>> Cached) CaptureCache()
+        private sealed class RecordingHybridCache : HybridCache
         {
-            var cached = new Mock<ICached<NewznabResults>>();
-            var manager = new Mock<ICacheManager>();
-            manager.Setup(c => c.GetCache<NewznabResults>(It.IsAny<Type>(), It.IsAny<string>())).Returns(cached.Object);
+            public HybridCacheEntryOptions LastOptions { get; private set; }
 
-            return (manager.Object, cached);
+            public override ValueTask<T> GetOrCreateAsync<TState, T>(string key, TState state, Func<TState, CancellationToken, ValueTask<T>> factory, HybridCacheEntryOptions options = null, IEnumerable<string> tags = null, CancellationToken cancellationToken = default)
+            {
+                LastOptions = options;
+                return factory(state, cancellationToken);
+            }
+
+            public override ValueTask SetAsync<T>(string key, T value, HybridCacheEntryOptions options = null, IEnumerable<string> tags = null, CancellationToken cancellationToken = default)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override ValueTask RemoveAsync(string key, CancellationToken cancellationToken = default)
+            {
+                return ValueTask.CompletedTask;
+            }
+
+            public override ValueTask RemoveByTagAsync(string tag, CancellationToken cancellationToken = default)
+            {
+                return ValueTask.CompletedTask;
+            }
         }
     }
 }

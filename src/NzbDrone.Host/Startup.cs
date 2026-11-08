@@ -45,6 +45,8 @@ namespace NzbDrone.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHybridCache();
+
             services.AddLogging(b =>
             {
                 b.ClearProviders();

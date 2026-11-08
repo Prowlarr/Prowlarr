@@ -8,6 +8,7 @@
     <PackageReference Include="Dapper" Version="2.1.89" />
     <PackageReference Include="Diacritical.Net" Version="1.0.5" />
     <PackageReference Include="MailKit" Version="4.18.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.14" />
     <PackageReference Include="NLog.Targets.Syslog" Version="7.0.0" />

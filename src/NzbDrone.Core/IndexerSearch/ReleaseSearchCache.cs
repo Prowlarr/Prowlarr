@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Hybrid;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NzbDrone.Common;
-using NzbDrone.Common.Cache;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Parser.Model;
@@ -27,13 +26,12 @@ namespace NzbDrone.Core.IndexerSearch
         private static readonly string[] MetadataFields = { "source", "host", "server" };
 
         private readonly IConfigService _configService;
-        private readonly ICached<NewznabResults> _cache;
-        private readonly ConcurrentDictionary<string, Lazy<Task<NewznabResults>>> _inFlight = new();
+        private readonly HybridCache _cache;
 
-        public ReleaseSearchCache(IConfigService configService, ICacheManager cacheManager)
+        public ReleaseSearchCache(IConfigService configService, HybridCache cache)
         {
             _configService = configService;
-            _cache = cacheManager.GetCache<NewznabResults>(GetType(), "searchResults");
+            _cache = cache;
         }
 
         public async Task<NewznabResults> GetOrSearch(NewznabRequest request, List<int> indexerIds, bool interactiveSearch, Func<Task<NewznabResults>> search)
@@ -43,56 +41,29 @@ namespace NzbDrone.Core.IndexerSearch
                 return await search();
             }
 
-            var key = BuildKey(request, indexerIds, interactiveSearch);
-            var cached = _cache.Find(key);
-
-            // Callers rewrite DownloadUrl on the releases they receive, so never hand out the cached instances.
-            if (cached != null)
-            {
-                return Clone(cached);
-            }
-
-            var mine = new Lazy<Task<NewznabResults>>(search, LazyThreadSafetyMode.ExecutionAndPublication);
-
-            // Identical searches that arrive while one is running can share its result.
-            var inFlight = _inFlight.GetOrAdd(key, mine);
-            var isOwner = ReferenceEquals(inFlight, mine);
-
-            try
-            {
-                var results = await inFlight.Value;
-
-                if (results?.Releases == null)
-                {
-                    return results;
-                }
-
-                if (isOwner)
-                {
-                    _cache.ClearExpired();
-                    _cache.Set(key, Clone(results), Ttl());
-                }
-
-                return Clone(results);
-            }
-            finally
-            {
-                if (isOwner)
-                {
-                    _inFlight.TryRemove(key, out _);
-                }
-            }
-        }
-
-        private TimeSpan Ttl()
-        {
             var ttlMinutes = _configService.SearchCacheTtl;
             if (ttlMinutes <= 0)
             {
                 ttlMinutes = DefaultTtlMinutes;
             }
 
-            return TimeSpan.FromMinutes(ttlMinutes);
+            
+            var hit = await _cache.GetOrCreateAsync(
+                BuildKey(request, indexerIds, interactiveSearch),
+                async _ => new CachedSearchHit(await search()),
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(ttlMinutes),
+                    Flags = HybridCacheEntryFlags.DisableDistributedCache
+                });
+
+            if (hit.Results?.Releases == null)
+            {
+                return hit.Results;
+            }
+
+            // Callers rewrite DownloadUrl on the releases they receive, so never hand out the cached instances.
+            return Clone(hit.Results);
         }
 
         internal static string BuildKey(NewznabRequest request, List<int> indexerIds, bool interactiveSearch)
@@ -118,6 +89,19 @@ namespace NzbDrone.Core.IndexerSearch
             {
                 Releases = results.Releases.Select(r => (ReleaseInfo)r.Clone()).ToList()
             };
+        }
+
+        // Since results hold usenet or torrent releases and HybridCache serialises to/from JSON, we need this wrapper to hold the original objects (Immutable & seal allow the original object to be returned, but skipping json also prevents distributed cache option)
+        [ImmutableObject(true)]
+        private sealed class CachedSearchHit
+        {
+            public CachedSearchHit(NewznabResults results)
+            {
+                Results = results;
+            }
+
+            [System.Text.Json.Serialization.JsonIgnore]
+            public NewznabResults Results { get; }
         }
     }
 }

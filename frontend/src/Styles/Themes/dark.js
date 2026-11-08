@@ -3,14 +3,14 @@ const prowlarrOrange = '#e66000';
 module.exports = {
   textColor: '#ccc',
   defaultColor: '#ccc',
-  disabledColor: '#999',
+  disabledColor: '#9c9c9c',
   dimColor: '#555',
   black: '#000',
   white: '#fff',
   primaryColor: '#5d9cec',
   selectedColor: '#f9be03',
-  successColor: '#00853d',
-  dangerColor: '#f05050',
+  successColor: '#007a39',
+  dangerColor: '#d03e3e',
   warningColor: '#ffa500',
   infoColor: '#5d9cec',
   purple: '#7a43b6',
@@ -21,10 +21,10 @@ module.exports = {
 
   // Theme Colors
 
-  themeBlue: prowlarrOrange,
+  themeBlue: '#ff700a',
   themeRed: '#c4273c',
   themeDarkColor: '#595959',
-  themeLightColor: prowlarrOrange,
+  themeLightColor: '#e00000',
   pageBackground: '#202020',
   pageFooterBackgroud: 'rgba(0, 0, 0, .25)',
 
@@ -33,7 +33,7 @@ module.exports = {
 
   // Labels
   inverseLabelColor: '#ddd',
-  inverseLabelTextColor: prowlarrOrange,
+  inverseLabelTextColor: '#a34400',
 
   // Links
   defaultLinkHoverColor: '#fff',
@@ -78,7 +78,7 @@ module.exports = {
   defaultHoverBackgroundColor: '#444',
   defaultHoverBorderColor: '#5a6265',
 
-  primaryBackgroundColor: '#5d9cec',
+  primaryBackgroundColor: '#4b76af',
   primaryBorderColor: '#5899eb',
   primaryHoverBackgroundColor: '#4b91ea',
   primaryHoverBorderColor: '#3483e7',

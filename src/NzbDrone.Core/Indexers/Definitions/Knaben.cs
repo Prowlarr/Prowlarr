@@ -272,7 +272,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var releaseInfos = new List<ReleaseInfo>();
 
-            var jsonResponse = STJson.Deserialize<KnabenResponse>(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<KnabenResponse>(indexerResponse.HttpResponse.ResponseData);
 
             if (jsonResponse?.Hits == null)
             {

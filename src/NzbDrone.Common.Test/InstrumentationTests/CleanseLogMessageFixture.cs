@@ -63,6 +63,9 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         [TestCase(@"<link rel=""alternate"" type=""application/rss+xml"" href=""/feeds.php?feed=torrents_notify_2b51db35e1910123321025a12b9933d2&amp;user=(removed)&amp;auth=(removed)&amp;passkey=(removed)&amp;authkey=(removed) title=""MoreThanTV - P.T.N."" />")]
         [TestCase(@"href=""/torrents.php?action=download&amp;id=(removed)&amp;authkey=(removed)&amp;torrent_pass=2b51db35e1910123321025a12b9933d2"" title=""Download Torrent""")]
 
+        // JSON-escaped query string
+        [TestCase(@"{""value"":""http://127.0.0.1:9696/1/api?t=caps\u0026apikey=mySecret\u0026extended=1""}")]
+
         // Sabnzbd
         [TestCase(@"http://127.0.0.1:1234/api/call?vv=1&apikey=mySecret")]
         [TestCase(@"http://127.0.0.1:1234/api/call?vv=1&ma_username=mySecret&ma_password=mySecret")]

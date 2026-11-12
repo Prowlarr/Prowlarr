@@ -1488,6 +1488,16 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         public IndexerPageableRequestChain GetSearchRequests(TvSearchCriteria searchCriteria)
         {
+            // Anime packs commonly use [TV] and episode counts, not the Russian season syntax.
+            // Broaden only anime-only season searches; the request does not identify a result's season.
+            if (searchCriteria.Season > 0 &&
+                searchCriteria.Episode.IsNullOrWhiteSpace() &&
+                searchCriteria.Categories is { Length: > 0 } &&
+                searchCriteria.Categories.All(category => category == NewznabStandardCategory.TVAnime.Id))
+            {
+                return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories);
+            }
+
             return GetPageableRequests(searchCriteria.SearchTerm, searchCriteria.Categories, searchCriteria.Season ?? 0);
         }
 
@@ -1729,6 +1739,8 @@ namespace NzbDrone.Core.Indexers.Definitions
             // replace double 4K quality in title
             title = Regex.Replace(title, @"\b(2160p), 4K\b", "$1", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+            var isAnime = categories.Contains(NewznabStandardCategory.TVAnime);
+
             if (IsAnyTvCategory(categories))
             {
                 title = _tvTitleCommaRegex.Replace(title, " $1-$2");
@@ -1739,8 +1751,10 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title = _tvTitleRusSeasonRegex.Replace(title, "S$1");
                 title = _tvTitleRusEpisodeOfRegex.Replace(title, "E$1 of $2");
                 title = _tvTitleRusEpisodeRegex.Replace(title, "E$1");
-                title = _tvTitleRusSeasonAnimeRegex.Replace(title, "S$1");
-                title = _tvTitleRusEpisodeAnimeOfRegex.Replace(title, "E$1 of $3");
+
+                // A tracker TV ordinal need not be a catalog season, and a count is not an episode number.
+                title = _tvTitleRusSeasonAnimeRegex.Replace(title, isAnime ? "TV-$1" : "S$1");
+                title = _tvTitleRusEpisodeAnimeOfRegex.Replace(title, isAnime ? "[$1 of $3]" : "E$1 of $3");
             }
             else if (IsAnyMovieCategory(categories))
             {
@@ -1768,8 +1782,8 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title = Regex.Replace(title, @"(\bSub\b[^+]*\b|\b[\+]*Sub[\+]*\b)", string.Empty);
             }
 
-            // language fix: all rutracker releases contains russian track
-            if (addRussianToTitle && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.Match(title, "\bRUS\b", RegexOptions.IgnoreCase).Success)
+            // Preserve the opt-in hint for ordinary TV/movies, but never invent Russian audio for anime.
+            if (addRussianToTitle && !isAnime && (IsAnyTvCategory(categories) || IsAnyMovieCategory(categories)) && !Regex.Match(title, "\bRUS\b", RegexOptions.IgnoreCase).Success)
             {
                 title += " RUS";
             }
@@ -1884,7 +1898,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(5, Label = "Use Magnet Links", Type = FieldType.Checkbox, HelpText = "When enabled this option will disable torrent links")]
         public bool UseMagnetLinks { get; set; }
 
-        [FieldDefinition(6, Label = "Add RUS to titles", Type = FieldType.Checkbox, HelpText = "Add RUS to end of all titles to improve language detection by Sonarr and Radarr. Will cause English-only results to be misidentified.")]
+        [FieldDefinition(6, Label = "Add RUS to titles", Type = FieldType.Checkbox, HelpText = "Add RUS to end of non-anime titles to improve language detection by Sonarr and Radarr. Will cause English-only results to be misidentified.")]
         public bool AddRussianToTitle { get; set; }
 
         [FieldDefinition(7, Label = "Move first tags to end of release title", Type = FieldType.Checkbox)]

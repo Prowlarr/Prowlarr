@@ -42,13 +42,17 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
 
             var btnOffset = searchCriteria.Offset.GetValueOrDefault(0);
 
-            if (searchCriteria.TvdbId > 0)
+            if (searchCriteria.TvdbId is > 0)
             {
-                parameters.Tvdb = $"{searchCriteria.TvdbId}";
+                parameters.Tvdb = searchCriteria.TvdbId.Value.ToString(CultureInfo.InvariantCulture);
             }
-            else if (searchCriteria.RId > 0)
+            else if (searchCriteria.FullImdbId.IsNotNullOrWhiteSpace())
             {
-                parameters.Tvrage = $"{searchCriteria.RId}";
+                parameters.Imdb = searchCriteria.FullImdbId;
+            }
+            else if (searchCriteria.RId is > 0)
+            {
+                parameters.Tvrage = searchCriteria.RId.Value.ToString(CultureInfo.InvariantCulture);
             }
 
             if (searchTerm.IsNotNullOrWhiteSpace())
@@ -87,7 +91,7 @@ namespace NzbDrone.Core.Indexers.BroadcastheNet
                 parameters.Category = "Episode";
                 pageableRequests.Add(GetPagedRequests(parameters, btnResults, btnOffset));
             }
-            else if (searchTerm.IsNotNullOrWhiteSpace() && int.TryParse(searchTerm, out _) && (searchCriteria.TvdbId > 0 || searchCriteria.RId > 0))
+            else if (searchTerm.IsNotNullOrWhiteSpace() && int.TryParse(searchTerm, out _) && (searchCriteria.TvdbId is > 0 || searchCriteria.FullImdbId.IsNotNullOrWhiteSpace() || searchCriteria.RId is > 0))
             {
                 // Disable ID-based searches for episodes with absolute episode number
                 return new IndexerPageableRequestChain();

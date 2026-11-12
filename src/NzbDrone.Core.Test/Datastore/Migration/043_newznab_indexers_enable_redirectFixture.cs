@@ -17,14 +17,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 1,
                     Name = "Test",
                     Implementation = "Newznab",
                     Settings = "{\"baseUrl\":\"https://example.com\",\"apiKey\":\"testapikey\"}",
                     ConfigContract = "NewznabSettings",
                     Enable = true,
                     Priority = 1,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = false,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -46,14 +45,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 1,
                     Name = "Test",
                     Implementation = "Newznab",
                     Settings = "{\"baseUrl\":\"https://example.com\",\"apiKey\":\"testapikey\"}",
                     ConfigContract = "NewznabSettings",
                     Enable = true,
                     Priority = 2,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = true,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -75,14 +73,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 1,
                     Name = "Test",
                     Implementation = "OtherIndexer",
                     Settings = "{\"baseUrl\":\"https://otherindexer.com\"}",
                     ConfigContract = "OtherIndexerSettings",
                     Enable = true,
                     Priority = 3,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = false,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -104,14 +101,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             {
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 1,
                     Name = "Test 1",
                     Implementation = "Newznab",
                     Settings = "{\"baseUrl\":\"https://example1.com\",\"apiKey\":\"testapikey1\"}",
                     ConfigContract = "NewznabSettings",
                     Enable = true,
                     Priority = 4,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = false,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -119,14 +115,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 2,
                     Name = "Test 2",
                     Implementation = "Newznab",
                     Settings = "{\"baseUrl\":\"https://example2.com\",\"apiKey\":\"testapikey2\"}",
                     ConfigContract = "NewznabSettings",
                     Enable = true,
                     Priority = 5,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = false,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -134,14 +129,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 3,
                     Name = "Test 3",
                     Implementation = "Newznab",
                     Settings = "{\"baseUrl\":\"https://example3.com\",\"apiKey\":\"testapikey3\"}",
                     ConfigContract = "NewznabSettings",
                     Enable = true,
                     Priority = 6,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = true,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -149,14 +143,13 @@ namespace NzbDrone.Core.Test.Datastore.Migration
                 });
                 c.Insert.IntoTable("Indexers").Row(new
                 {
-                    Id = 4,
                     Name = "Test 4",
                     Implementation = "OtherIndexer",
                     Settings = "{\"baseUrl\":\"https://otherindexer.com\"}",
                     ConfigContract = "OtherIndexerSettings",
                     Enable = true,
                     Priority = 7,
-                    Added = System.DateTime.UtcNow,
+                    Added = DateTime.UtcNow,
                     Redirect = false,
                     AppProfileId = 1,
                     Tags = "[]",
@@ -167,10 +160,10 @@ namespace NzbDrone.Core.Test.Datastore.Migration
             var items = db.Query<IndexerDefinition043>("SELECT * FROM \"Indexers\"");
 
             items.Should().HaveCount(4);
-            items.First(i => i.Id == 1).Redirect.Should().BeTrue(); // Validate Redirect is updated
-            items.First(i => i.Id == 2).Redirect.Should().BeTrue(); // Validate Redirect is updated
-            items.First(i => i.Id == 3).Redirect.Should().BeTrue(); // Validate Redirect remains true
-            items.First(i => i.Id == 4).Redirect.Should().BeFalse(); // Validate Redirect is not changed
+            items.First(i => i.Name == "Test 1").Redirect.Should().BeTrue(); // Validate Redirect is updated
+            items.First(i => i.Name == "Test 2").Redirect.Should().BeTrue(); // Validate Redirect is updated
+            items.First(i => i.Name == "Test 3").Redirect.Should().BeTrue(); // Validate Redirect remains true
+            items.First(i => i.Name == "Test 4").Redirect.Should().BeFalse(); // Validate Redirect is not changed
         }
     }
 

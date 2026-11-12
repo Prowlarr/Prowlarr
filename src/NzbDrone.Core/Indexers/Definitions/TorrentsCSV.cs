@@ -146,7 +146,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         {
             var releaseInfos = new List<ReleaseInfo>();
 
-            var jsonResponse = STJson.Deserialize<TorrentsCSVResponse>(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<TorrentsCSVResponse>(indexerResponse.HttpResponse.ResponseData);
 
             foreach (var torrent in jsonResponse.Torrents)
             {

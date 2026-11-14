@@ -76,6 +76,12 @@ namespace Prowlarr.Api.V1.Search
             {
                 await _downloadService.SendReportToClient(releaseInfo, source, host, indexerDef.Redirect, release.DownloadClientId);
             }
+            catch (DownloadClientRejectedReleaseException ex)
+            {
+                _logger.Warn(ex, "Download client rejected release");
+
+                throw new NzbDroneClientException(HttpStatusCode.Conflict, $"Download client rejected release: {ex.Message}");
+            }
             catch (ReleaseDownloadException ex)
             {
                 _logger.Error(ex, "Getting release from indexer failed");

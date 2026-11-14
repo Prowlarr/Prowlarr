@@ -43,7 +43,7 @@ namespace NzbDrone.Core.Indexers
                     { Exception: HttpException { Response.HasHttpServerError: true } } => PredicateResult.True(),
                     _ => PredicateResult.False()
                 },
-                Delay = RateLimit,
+                Delay = GetResolvedRateLimit(),
                 MaxRetryAttempts = 2,
                 BackoffType = DelayBackoffType.Exponential,
                 UseJitter = true,
@@ -80,6 +80,31 @@ namespace NzbDrone.Core.Indexers
         public override IndexerCapabilities Capabilities { get; protected set; }
         public virtual int PageSize => 0;
         public virtual TimeSpan RateLimit => TimeSpan.FromSeconds(2);
+
+        private TimeSpan GetResolvedRateLimit(TimeSpan? requestDelay = null)
+        {
+            var systemDelay = requestDelay ?? TimeSpan.Zero;
+
+            if (systemDelay < RateLimit)
+            {
+                systemDelay = RateLimit;
+            }
+
+            if (Settings?.BaseSettings?.RequestDelay is null or < 2 or > 60)
+            {
+                return systemDelay;
+            }
+
+            var userDelay = TimeSpan.FromSeconds(Settings.BaseSettings.RequestDelay.Value);
+
+            if (userDelay > systemDelay)
+            {
+                _logger.Trace("Using user defined request delay of {0} seconds for indexer {1}", userDelay.TotalSeconds, Definition.Name);
+                return userDelay;
+            }
+
+            return systemDelay;
+        }
 
         public abstract IIndexerRequestGenerator GetRequestGenerator();
         public abstract IParseIndexerResponse GetParser();
@@ -236,11 +261,7 @@ namespace NzbDrone.Core.Indexers
                 return new IndexerDownloadResponse(Encoding.UTF8.GetBytes(request.Url.FullUri));
             }
 
-            if (request.RateLimit < RateLimit)
-            {
-                request.RateLimit = RateLimit;
-            }
-
+            request.RateLimit = GetResolvedRateLimit(request.RateLimit);
             request.AllowAutoRedirect = false;
 
             byte[] fileData;
@@ -641,10 +662,7 @@ namespace NzbDrone.Core.Indexers
         {
             _logger.Debug("Downloading Feed " + request.HttpRequest.ToString(false));
 
-            if (request.HttpRequest.RateLimit < RateLimit)
-            {
-                request.HttpRequest.RateLimit = RateLimit;
-            }
+            request.HttpRequest.RateLimit = GetResolvedRateLimit(request.HttpRequest.RateLimit);
 
             if (_configService.LogIndexerResponse)
             {
@@ -721,11 +739,7 @@ namespace NzbDrone.Core.Indexers
                 request.RequestTimeout = TimeSpan.FromSeconds(15);
             }
 
-            if (request.RateLimit < RateLimit)
-            {
-                request.RateLimit = RateLimit;
-            }
-
+            request.RateLimit = GetResolvedRateLimit(request.RateLimit);
             var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
 
             _eventAggregator.PublishEvent(new IndexerAuthEvent(Definition.Id, !response.HasHttpError, response.ElapsedTime));

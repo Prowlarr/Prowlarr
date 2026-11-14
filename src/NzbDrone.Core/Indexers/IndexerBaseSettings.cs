@@ -16,6 +16,10 @@ namespace NzbDrone.Core.Indexers
                 .GreaterThan(0)
                 .When(c => c.GrabLimit.HasValue)
                 .WithMessage("Should be greater than zero");
+
+            RuleFor(c => c.RequestDelay)
+                .InclusiveBetween(2, 60)
+                .When(c => c.RequestDelay.HasValue);
         }
     }
 
@@ -29,6 +33,9 @@ namespace NzbDrone.Core.Indexers
 
         [FieldDefinition(3, Type = FieldType.Select, Label = "IndexerSettingsLimitsUnit", SelectOptions = typeof(IndexerLimitsUnit), HelpText = "IndexerSettingsLimitsUnitHelpText", Advanced = true)]
         public int LimitsUnit { get; set; } = (int)IndexerLimitsUnit.Day;
+
+        [FieldDefinition(4, Type = FieldType.Number, Label = "IndexerSettingsRequestDelay", HelpText = "IndexerSettingsRequestDelayHelpText", Advanced = true)]
+        public double? RequestDelay { get; set; }
     }
 
     public enum IndexerLimitsUnit

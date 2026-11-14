@@ -121,7 +121,7 @@
     "NoLinks": "Žádné odkazy",
     "Presets": "Předvolby",
     "Priority": "Přednost",
-    "Grabbed": "Získáno",
+    "Grabbed": "Zachyceno",
     "Health": "Zdraví",
     "LogLevelTraceHelpTextWarning": "Trasování protokolování by mělo být povoleno pouze dočasně",
     "ProxyBadRequestHealthCheckMessage": "Nepodařilo se otestovat proxy. StatusCode: {statusCode}",

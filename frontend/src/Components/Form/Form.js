@@ -79,6 +79,7 @@ function Form(props) {
 }
 
 Form.propTypes = {
+  id: PropTypes.string,
   children: PropTypes.node.isRequired,
   validationErrors: PropTypes.arrayOf(PropTypes.object).isRequired,
   validationWarnings: PropTypes.arrayOf(PropTypes.object).isRequired

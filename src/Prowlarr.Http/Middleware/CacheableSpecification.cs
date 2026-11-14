@@ -39,6 +39,14 @@ namespace Prowlarr.Http.Middleware
                 return false;
             }
 
+            if (request.Path.StartsWithSegments("/login", StringComparison.CurrentCultureIgnoreCase) ||
+                request.Path.StartsWithSegments("/logout", StringComparison.CurrentCultureIgnoreCase) ||
+                request.Path.StartsWithSegments("/loggedout", StringComparison.CurrentCultureIgnoreCase) ||
+                request.Path.StartsWithSegments("/reset-password", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return false;
+            }
+
             var path = request.Path.Value ?? "";
 
             if (path.EndsWith("/index.js"))

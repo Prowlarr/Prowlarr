@@ -460,6 +460,14 @@ namespace NzbDrone.Core.Indexers.Definitions
         private readonly Regex _tvTitleEngEpisodeOfRegex = new(@"(?:Episodes?)+\s*[:]*\s+(\d+(?:-\d+)?)\s*of\s*([\w?])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _tvTitleEngEpisodeRegex = new(@"(?:Episodes?)+\s*[:]+\s*[:]*\s+(\d+(?:-\d+)?)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        // "S3, C 1-9", "S3, EP 1-9", "S3, E 10", "S3 Серії 1-9" -> "S3E1-9" / "S3E10"
+        private readonly Regex _tvTitleSeasonEpisodeAbbreviationRegex = new(@"\bS(\d{1,2})\s*[,;]?\s*(?:EP|E|C|С|Серії|Серія|Серій)\.?\s*(\d{1,3})(?:\s*-\s*(\d{1,3}))?\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        // "S3E1-9" -> "S03E01-09", "S2" -> "S02"; multi-season ranges such as "S1-8" are left alone
+        private readonly Regex _tvTitleSeasonEpisodePaddingRegex = new(@"\bS(?<season>\d{1,2})(?:E(?<episode>\d{1,3})(?:-E?(?<lastEpisode>\d{1,3}))?)?\b(?!-\d)", RegexOptions.Compiled);
+
+        private static readonly Regex SeasonTagRegex = new(@"\((?<tag>S(?<season>\d{2,4})(?<episodes>E\d{2,3}(?:-\d{2,3})?)?(?: of \d+)?)\)", RegexOptions.Compiled);
+
         private readonly Regex _stripCyrillicRegex = new(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true)
@@ -486,6 +494,9 @@ namespace NzbDrone.Core.Indexers.Definitions
                 title = _tvTitleEngSeasonRegex.Replace(title, "S$1");
                 title = _tvTitleEngEpisodeOfRegex.Replace(title, "E$1 of $2");
                 title = _tvTitleEngEpisodeRegex.Replace(title, "E$1");
+
+                title = _tvTitleSeasonEpisodeAbbreviationRegex.Replace(title, JoinSeasonAndEpisodes);
+                title = _tvTitleSeasonEpisodePaddingRegex.Replace(title, PadSeasonAndEpisodes);
             }
 
             if (stripCyrillicLetters)
@@ -500,6 +511,11 @@ namespace NzbDrone.Core.Indexers.Definitions
             title = Regex.Replace(title, @"\bWEBDL\b", "WEB-DL", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             title = MoveFirstTagsToEndOfReleaseTitle(title);
+
+            if (IsAnyTvCategory(categories))
+            {
+                title = ReconcileSeasonTags(title);
+            }
 
             title = Regex.Replace(title, @"\(\s*\/\s*", "(", RegexOptions.Compiled);
             title = Regex.Replace(title, @"\s*\/\s*\)", ")", RegexOptions.Compiled);
@@ -517,6 +533,68 @@ namespace NzbDrone.Core.Indexers.Definitions
         private static bool IsAnyTvCategory(ICollection<IndexerCategory> category)
         {
             return category.Contains(NewznabStandardCategory.TV) || NewznabStandardCategory.TV.SubCategories.Any(subCategory => category.Contains(subCategory));
+        }
+
+        private static string JoinSeasonAndEpisodes(Match match)
+        {
+            var result = $"S{match.Groups[1].Value}E{match.Groups[2].Value}";
+
+            if (match.Groups[3].Success)
+            {
+                result += $"-{match.Groups[3].Value}";
+            }
+
+            return result;
+        }
+
+        private static string PadSeasonAndEpisodes(Match match)
+        {
+            var result = $"S{match.Groups["season"].Value.PadLeft(2, '0')}";
+
+            if (match.Groups["episode"].Success)
+            {
+                result += $"E{match.Groups["episode"].Value.PadLeft(2, '0')}";
+
+                if (match.Groups["lastEpisode"].Success)
+                {
+                    result += $"-{match.Groups["lastEpisode"].Value.PadLeft(2, '0')}";
+                }
+            }
+
+            return result;
+        }
+
+        // Toloka titles carry the season tag twice (Ukrainian and English part), and the Ukrainian one is moved to
+        // the end of the title. Keep the most specific tag next to the series title and drop repeated tags, so that
+        // "Silo (S03) ... (S03E01-09)" becomes "Silo (S03E01-09) ..." which Sonarr parses as an episode range.
+        private static string ReconcileSeasonTags(string title)
+        {
+            var tags = SeasonTagRegex.Matches(title).Cast<Match>().ToList();
+
+            if (tags.Count < 2)
+            {
+                return title;
+            }
+
+            foreach (var bareTag in tags.Where(t => !t.Groups["episodes"].Success))
+            {
+                var specificTag = tags.FirstOrDefault(t => t.Groups["episodes"].Success && t.Groups["season"].Value == bareTag.Groups["season"].Value);
+
+                if (specificTag != null)
+                {
+                    title = title.Replace(bareTag.Value, specificTag.Value);
+                }
+            }
+
+            foreach (var tag in SeasonTagRegex.Matches(title).Cast<Match>().Select(m => m.Value).Distinct().ToList())
+            {
+                var firstIndex = title.IndexOf(tag, StringComparison.Ordinal);
+                var afterFirst = firstIndex + tag.Length;
+
+                title = title.Substring(0, afterFirst) + title.Substring(afterFirst).Replace(tag, string.Empty);
+            }
+
+            return title;
         }
 
         private static string MoveFirstTagsToEndOfReleaseTitle(string input)

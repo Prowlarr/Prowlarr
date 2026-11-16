@@ -666,6 +666,11 @@ namespace NzbDrone.Core.Indexers
             request.HttpRequest.SuppressHttpError = true;
             request.HttpRequest.Encoding ??= Encoding;
 
+            if (request.HttpRequest.RequestTimeout == TimeSpan.Zero && Settings?.BaseSettings is { QueryTimeout: > 0 } baseSettings)
+            {
+                request.HttpRequest.RequestTimeout = TimeSpan.FromSeconds(Math.Clamp(baseSettings.QueryTimeout.Value, IndexerBaseSettings.MinQueryTimeout, IndexerBaseSettings.MaxQueryTimeout));
+            }
+
             var response = await RetryStrategy
                 .ExecuteAsync(static async (state, _) => await state._httpClient.ExecuteProxiedAsync(state.HttpRequest, state.Definition), (_httpClient, request.HttpRequest, Definition))
                 .ConfigureAwait(false);

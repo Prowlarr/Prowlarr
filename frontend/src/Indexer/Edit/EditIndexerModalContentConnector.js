@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { saveIndexer, setIndexerFieldValue, setIndexerValue, testIndexer } from 'Store/Actions/indexerActions';
-import { fetchDownloadClients, toggleAdvancedSettings } from 'Store/Actions/settingsActions';
+import { fetchDownloadClients, fetchIndexerConfig, toggleAdvancedSettings } from 'Store/Actions/settingsActions';
 import createIndexerSchemaSelector from 'Store/Selectors/createIndexerSchemaSelector';
 import EditIndexerModalContent from './EditIndexerModalContent';
 
@@ -11,8 +11,10 @@ function createMapStateToProps() {
   return createSelector(
     (state) => state.settings.advancedSettings,
     (state) => state.settings.downloadClients,
+    (state) => state.system.status.item.userAgent,
+    (state) => state.settings.indexerConfig.item.indexerUserAgent,
     createIndexerSchemaSelector(),
-    (advancedSettings, downloadClients, indexer) => {
+    (advancedSettings, downloadClients, builtInUserAgent, globalUserAgent, indexer) => {
       const usenetDownloadClients = downloadClients.items.filter((downloadClient) => downloadClient.protocol === 'usenet');
       const torrentDownloadClients = downloadClients.items.filter((downloadClient) => downloadClient.protocol === 'torrent');
 
@@ -20,6 +22,7 @@ function createMapStateToProps() {
         advancedSettings,
         hasUsenetDownloadClients: usenetDownloadClients.length > 0,
         hasTorrentDownloadClients: torrentDownloadClients.length > 0,
+        defaultUserAgent: globalUserAgent || builtInUserAgent,
         ...indexer
       };
     }
@@ -32,7 +35,8 @@ const mapDispatchToProps = {
   saveIndexer,
   testIndexer,
   toggleAdvancedSettings,
-  dispatchFetchDownloadClients: fetchDownloadClients
+  dispatchFetchDownloadClients: fetchDownloadClients,
+  dispatchFetchIndexerConfig: fetchIndexerConfig
 };
 
 class EditIndexerModalContentConnector extends Component {
@@ -42,6 +46,7 @@ class EditIndexerModalContentConnector extends Component {
 
   componentDidMount() {
     this.props.dispatchFetchDownloadClients();
+    this.props.dispatchFetchIndexerConfig();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -102,7 +107,8 @@ EditIndexerModalContentConnector.propTypes = {
   saveIndexer: PropTypes.func.isRequired,
   testIndexer: PropTypes.func.isRequired,
   onModalClose: PropTypes.func.isRequired,
-  dispatchFetchDownloadClients: PropTypes.func.isRequired
+  dispatchFetchDownloadClients: PropTypes.func.isRequired,
+  dispatchFetchIndexerConfig: PropTypes.func.isRequired
 };
 
 export default connect(createMapStateToProps, mapDispatchToProps)(EditIndexerModalContentConnector);

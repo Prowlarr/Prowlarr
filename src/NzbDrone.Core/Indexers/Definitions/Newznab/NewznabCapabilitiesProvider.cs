@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Xml;
@@ -80,6 +81,7 @@ namespace NzbDrone.Core.Indexers.Newznab
             {
                 ex.WithData(response, 128 * 1024);
                 _logger.Trace("Unexpected Response content ({0} bytes): {1}", response.ResponseData.Length, response.Content);
+                _logger.Error(ex, "Failed to determine newznab api capabilities for {0}, using the defaults instead till Prowlarr restarts", indexerSettings.BaseUrl);
             }
 
             return capabilities;
@@ -108,8 +110,8 @@ namespace NzbDrone.Core.Indexers.Newznab
             var xmlLimits = xmlRoot.Element("limits");
             if (xmlLimits != null)
             {
-                capabilities.LimitsDefault = int.Parse(xmlLimits.Attribute("default").Value);
-                capabilities.LimitsMax = int.Parse(xmlLimits.Attribute("max").Value);
+                capabilities.LimitsDefault = int.Parse(xmlLimits.Attribute("default").Value, CultureInfo.InvariantCulture);
+                capabilities.LimitsMax = int.Parse(xmlLimits.Attribute("max").Value, CultureInfo.InvariantCulture);
             }
 
             var xmlSearching = xmlRoot.Element("searching");
@@ -224,7 +226,7 @@ namespace NzbDrone.Core.Indexers.Newznab
                 foreach (var xmlCategory in xmlCategories.Elements("category"))
                 {
                     var parentName = xmlCategory.Attribute("name").Value;
-                    var parentId = int.Parse(xmlCategory.Attribute("id").Value);
+                    var parentId = int.Parse(xmlCategory.Attribute("id").Value, CultureInfo.InvariantCulture);
 
                     var mappedCat = NewznabStandardCategory.ParentCats.FirstOrDefault(x => parentName.Equals(x.Name, StringComparison.OrdinalIgnoreCase));
 
@@ -254,24 +256,24 @@ namespace NzbDrone.Core.Indexers.Newznab
                     foreach (var xmlSubcat in xmlCategory.Elements("subcat"))
                     {
                         var subName = xmlSubcat.Attribute("name").Value;
-                        var subId = int.Parse(xmlSubcat.Attribute("id").Value);
+                        var subId = int.Parse(xmlSubcat.Attribute("id").Value, CultureInfo.InvariantCulture);
 
                         var mappingName = $"{mappedCat.Name}/{subName}";
-                        var mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == mappingName.ToLower());
+                        var mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => string.Equals(x.Name, mappingName, StringComparison.OrdinalIgnoreCase));
 
-                        if (mappedSubCat == null)
+                        if (mappedSubCat is null)
                         {
                             // Try by child id if name fails
                             mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Id == subId);
                         }
 
-                        if (mappedSubCat == null && mappedCat.Id != NewznabStandardCategory.Other.Id)
+                        if (mappedSubCat is null && mappedCat.Id != NewznabStandardCategory.Other.Id)
                         {
                             // Try by Parent/Other if parent is not other
-                            mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => x.Name.ToLower() == $"{mappedCat.Name.ToLower()}/other");
+                            mappedSubCat = NewznabStandardCategory.AllCats.FirstOrDefault(x => string.Equals(x.Name, $"{mappedCat.Name}/Other", StringComparison.OrdinalIgnoreCase));
                         }
 
-                        if (mappedSubCat == null)
+                        if (mappedSubCat is null)
                         {
                             // Fallback to Misc Other
                             mappedSubCat = NewznabStandardCategory.OtherMisc;

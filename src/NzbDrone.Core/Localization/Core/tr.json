@@ -811,5 +811,8 @@
     "ApplicationAuthPassword": "Kimlik Doğrulama Parolası",
     "ApplicationAuthPasswordHelpText": "{appName} tarafından bu uygulamaya erişim sırasında kullanılacak HTTP Basic Auth parolası. Bu uygulama, HTTP Basic Auth koruması bulunan bir ters proxy arkasında yer alıyorsa yapılandırılmalıdır.",
     "ApplicationAuthUsername": "Kimlik Doğrulama Kullanıcı Adı",
-    "ApplicationAuthUsernameHelpText": "{appName} tarafından bu uygulamaya erişim sırasında kullanılacak HTTP Basic Auth kullanıcı adı. Bu uygulama, HTTP Basic Auth koruması bulunan bir ters proxy arkasında yer alıyorsa yapılandırılmalıdır."
+    "ApplicationAuthUsernameHelpText": "{appName} tarafından bu uygulamaya erişim sırasında kullanılacak HTTP Basic Auth kullanıcı adı. Bu uygulama, HTTP Basic Auth koruması bulunan bir ters proxy arkasında yer alıyorsa yapılandırılmalıdır.",
+    "AllowedHosts": "İzin Verilen Sunucular",
+    "TrustedNetworks": "Güvenilen Ağlar",
+    "TrustedNetworksHelpText": "Güvenilen ters vekillerin (reverse proxy) üzerinde bulunduğu, CIDR gösterimindeki IP adreslerinin veya ağların virgülle ayrılmış listesi. Örneğin: 172.17.0.1, 10.0.0.0/8 veya fc00::/7. Yalnızca doğru üstbilgileri (header) gönderecek şekilde düzgün yapılandırılmış vekilleri ekleyin."
 }

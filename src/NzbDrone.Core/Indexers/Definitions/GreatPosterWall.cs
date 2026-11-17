@@ -149,7 +149,7 @@ public class GreatPosterWallParser : GazelleParser
                 throw new IndexerException(indexerResponse, $"Redirected to {indexerResponse.HttpResponse.RedirectUrl} from indexer request");
             }
 
-            STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.Content, out var errorResponse);
+            STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.HttpResponse.ResponseData, out var errorResponse);
 
             throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request: {errorResponse?.Error ?? "Check the logs for more information."}");
         }

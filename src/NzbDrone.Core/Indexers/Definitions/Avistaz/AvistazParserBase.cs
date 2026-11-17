@@ -34,7 +34,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
 
             if (indexerResponse.HttpResponse.StatusCode == HttpStatusCode.Unauthorized)
             {
-                STJson.TryDeserialize<AvistazErrorResponse>(indexerResponse.HttpResponse.Content, out var errorResponse);
+                STJson.TryDeserialize<AvistazErrorResponse>(indexerResponse.HttpResponse.ResponseData, out var errorResponse);
                 throw new IndexerAuthException(errorResponse?.Message ?? "Unauthorized request to indexer");
             }
 
@@ -48,7 +48,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
-            var jsonResponse = STJson.Deserialize<AvistazResponse>(indexerResponse.HttpResponse.Content);
+            var jsonResponse = STJson.Deserialize<AvistazResponse>(indexerResponse.HttpResponse.ResponseData);
 
             foreach (var row in jsonResponse.Data)
             {

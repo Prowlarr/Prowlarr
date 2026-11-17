@@ -153,12 +153,30 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
         }
 
         [Test]
-        public void should_use_pagesize_reported_by_caps()
+        public void should_use_best_pagesize_reported_by_caps()
         {
             _caps.LimitsMax = 30;
             _caps.LimitsDefault = 25;
 
-            Subject.PageSize.Should().Be(25);
+            Subject.PageSize.Should().Be(30);
+        }
+
+        [Test]
+        public void should_not_use_pagesize_over_100_even_if_reported_in_caps()
+        {
+            _caps.LimitsMax = 250;
+            _caps.LimitsDefault = 25;
+
+            Subject.PageSize.Should().Be(100);
+        }
+
+        [Test]
+        public void should_use_pagesize_over_100_if_reported_in_caps()
+        {
+            _caps.LimitsMax = 250;
+            _caps.LimitsDefault = 200;
+
+            Subject.PageSize.Should().Be(200);
         }
     }
 }

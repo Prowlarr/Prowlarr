@@ -33,7 +33,7 @@ public class GazelleParser : IParseIndexerResponse
             // Remove cookie cache
             CookiesUpdater(null, null);
 
-            STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.Content, out var errorResponse);
+            STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.HttpResponse.ResponseData, out var errorResponse);
 
             throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request: {errorResponse?.Error ?? "Check the logs for more information."}");
         }

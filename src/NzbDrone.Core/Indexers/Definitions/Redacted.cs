@@ -253,7 +253,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (indexerResponse.HttpResponse.StatusCode != HttpStatusCode.OK)
             {
-                STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.Content, out var errorResponse);
+                STJson.TryDeserialize<GazelleErrorResponse>(indexerResponse.HttpResponse.ResponseData, out var errorResponse);
 
                 throw new IndexerException(indexerResponse, $"Unexpected response status {indexerResponse.HttpResponse.StatusCode} code from indexer request: {errorResponse?.Error ?? "Check the logs for more information."}");
             }

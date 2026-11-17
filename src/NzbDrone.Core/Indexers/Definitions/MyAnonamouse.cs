@@ -4,11 +4,11 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Results;
-using Newtonsoft.Json;
 using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Extensions;
@@ -255,7 +255,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             {
                 foreach (var (language, index) in _settings.SearchLanguages.Select((value, index) => (value, index)))
                 {
-                    parameters.Set($"tor[browse_lang][{index}]", language.ToString());
+                    parameters.Set($"tor[browse_lang][{index}]", language.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
@@ -275,12 +275,12 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             if (searchCriteria.MinSize is > 0)
             {
-                parameters.Set("tor[minSize]", searchCriteria.MinSize.Value.ToString());
+                parameters.Set("tor[minSize]", searchCriteria.MinSize.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             if (searchCriteria.MaxSize is > 0)
             {
-                parameters.Set("tor[maxSize]", searchCriteria.MaxSize.Value.ToString());
+                parameters.Set("tor[maxSize]", searchCriteria.MaxSize.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             if (searchCriteria.MinSize is > 0 || searchCriteria.MaxSize is > 0)
@@ -397,7 +397,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             var releaseInfos = new List<ReleaseInfo>();
 
-            var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseResponse>(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<MyAnonamouseResponse>(indexerResponse.HttpResponse.ResponseData);
 
             var error = jsonResponse.Error;
             if (error.IsNotNullOrWhiteSpace() && error.StartsWithIgnoreCase("Nothing returned, out of"))
@@ -424,9 +424,9 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                 release.BookTitle = item.Title;
 
-                if (item.AuthorInfo != null)
+                if (item.AuthorInfo.IsNotNullOrWhiteSpace())
                 {
-                    var authorInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.AuthorInfo);
+                    var authorInfo = STJson.Deserialize<Dictionary<string, string>>(item.AuthorInfo);
                     var author = authorInfo?.Take(5).Select(v => WebUtility.HtmlDecode(v.Value)).Join(", ");
 
                     if (author.IsNotNullOrWhiteSpace())
@@ -447,7 +447,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 var filetype = item.Filetype;
                 if (!string.IsNullOrEmpty(filetype))
                 {
-                    flags.Add(filetype.ToUpper());
+                    flags.Add(filetype.ToUpperInvariant());
                 }
 
                 if (flags.Count > 0)
@@ -465,7 +465,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                 release.DownloadUrl = GetDownloadUrl(id, !isFreeLeech);
                 release.InfoUrl = $"{_settings.BaseUrl}t/{id}";
                 release.Guid = release.InfoUrl;
-                release.Categories = _categories.MapTrackerCatToNewznab(item.Category);
+                release.Categories = _categories.MapTrackerCatToNewznab(item.Category.ToString(CultureInfo.InvariantCulture));
                 release.PublishDate = DateTime.ParseExact(item.Added, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal).ToLocalTime();
                 release.Grabs = item.Grabs;
                 release.Files = item.NumFiles;
@@ -518,7 +518,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
                     var response = _httpClient.ExecuteProxied(request, _definition);
 
-                    var jsonResponse = JsonConvert.DeserializeObject<MyAnonamouseUserDataResponse>(response.Content);
+                    var jsonResponse = STJson.Deserialize<MyAnonamouseUserDataResponse>(response.ResponseData);
 
                     _logger.Trace("Current user class: '{0}'", jsonResponse.UserClass);
 
@@ -551,7 +551,7 @@ namespace NzbDrone.Core.Indexers.Definitions
             SearchInDescription = false;
             SearchInSeries = false;
             SearchInFilenames = false;
-            SearchLanguages = Array.Empty<int>();
+            SearchLanguages = [];
         }
 
         [FieldDefinition(2, Type = FieldType.Textbox, Label = "Mam Id", HelpText = "Mam Session Id (Created Under Preferences -> Security)")]
@@ -798,21 +798,21 @@ namespace NzbDrone.Core.Indexers.Definitions
     {
         public int Id { get; init; }
         public string Title { get; init; }
-        [JsonProperty(PropertyName = "author_info")]
+        [JsonPropertyName("author_info")]
         public string AuthorInfo { get; init; }
         public string Description { get; init; }
-        [JsonProperty(PropertyName = "lang_code")]
+        [JsonPropertyName("lang_code")]
         public string LanguageCode { get; init; }
         public string Filetype { get; init; }
         public bool Vip { get; init; }
         public bool Free { get; init; }
-        [JsonProperty(PropertyName = "personal_freeleech")]
+        [JsonPropertyName("personal_freeleech")]
         public bool PersonalFreeLeech { get; init; }
-        [JsonProperty(PropertyName = "fl_vip")]
+        [JsonPropertyName("fl_vip")]
         public bool FreeVip { get; init; }
-        public string Category { get; init; }
+        public int Category { get; init; }
         public string Added { get; init; }
-        [JsonProperty(PropertyName = "times_completed")]
+        [JsonPropertyName("times_completed")]
         public int Grabs { get; init; }
         public int Seeders { get; init; }
         public int Leechers { get; init; }
@@ -829,7 +829,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
     internal class MyAnonamouseUserDataResponse
     {
-        [JsonProperty(PropertyName = "classname")]
+        [JsonPropertyName("classname")]
         public string UserClass { get; init; }
     }
 }

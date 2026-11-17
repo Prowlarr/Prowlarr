@@ -684,6 +684,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     case "toupper":
                         data = data.ToUpper();
                         break;
+                    case "base64decode":
+                        data = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(data));
+                        break;
+                    case "base64encode":
+                        data = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(data));
+                        break;
                     case "urldecode":
                         data = data.UrlDecode(_encoding);
                         break;

@@ -513,9 +513,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                         _logger.Warn("The \"noappend\" modifier is deprecated. Please switch to \"default\". See the Definition Format in the Wiki for more information.");
                     }
 
-                    var cats = _categories.MapTrackerCatToNewznab(value);
+                    var cats = value.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                        .SelectMany(_categories.MapTrackerCatToNewznab)
+                        .Distinct()
+                        .ToList();
 
-                    if (cats.Any())
+                    if (cats.Count > 0)
                     {
                         release.Categories = release.Categories == null || fieldModifiers.Contains("noappend")
                             ? cats
@@ -528,7 +531,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
                     else
                     {
-                        value = release.Categories.ToString();
+                        value = string.Join(",", release.Categories.Select(cat => cat.Id.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     break;
@@ -538,9 +541,12 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                         _logger.Warn("The \"noappend\" modifier is deprecated. Please switch to \"default\". See the Definition Format in the Wiki for more information.");
                     }
 
-                    var catsDesc = _categories.MapTrackerCatDescToNewznab(value);
+                    var catsDesc = value.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                        .SelectMany(_categories.MapTrackerCatDescToNewznab)
+                        .Distinct()
+                        .ToList();
 
-                    if (catsDesc.Any())
+                    if (catsDesc.Count > 0)
                     {
                         release.Categories = release.Categories == null || fieldModifiers.Contains("noappend")
                             ? catsDesc
@@ -553,7 +559,7 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
                     }
                     else
                     {
-                        value = release.Categories.ToString();
+                        value = string.Join(",", release.Categories.Select(cat => cat.Id.ToString(CultureInfo.InvariantCulture)));
                     }
 
                     break;

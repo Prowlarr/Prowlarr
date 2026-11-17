@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Indexers.Definitions.PassThePopcorn
                 throw new IndexerException(indexerResponse, $"Unexpected response header {indexerResponse.HttpResponse.Headers.ContentType} from indexer request, expected {HttpAccept.Json.Value}");
             }
 
-            var jsonResponse = STJson.Deserialize<PassThePopcornResponse>(indexerResponse.Content);
+            var jsonResponse = STJson.Deserialize<PassThePopcornResponse>(indexerResponse.HttpResponse.ResponseData);
 
             if (jsonResponse.TotalResults == "0" ||
                 jsonResponse.TotalResults.IsNullOrWhiteSpace() ||

@@ -256,11 +256,11 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             try
             {
-                jsonResponse = STJson.Deserialize<NebulanceResponse>(indexerResponse.HttpResponse.Content);
+                jsonResponse = STJson.Deserialize<NebulanceResponse>(indexerResponse.HttpResponse.ResponseData);
             }
             catch (Exception ex)
             {
-                STJson.TryDeserialize<JsonRpcResponse<string>>(indexerResponse.HttpResponse.Content, out var response);
+                STJson.TryDeserialize<JsonRpcResponse<string>>(indexerResponse.HttpResponse.ResponseData, out var response);
 
                 throw new IndexerException(indexerResponse, "Unexpected response from indexer request: {0}", ex, response?.Result ?? ex.Message);
             }

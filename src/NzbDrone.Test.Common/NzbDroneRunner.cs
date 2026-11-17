@@ -55,8 +55,7 @@ namespace NzbDrone.Test.Common
 
             if (BuildInfo.IsDebug)
             {
-                var frameworkFolder = "net8.0";
-                Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", frameworkFolder, consoleExe));
+                Start(Path.Combine(TestContext.CurrentContext.TestDirectory, "..", "..", "_output", "net10.0", consoleExe));
             }
             else
             {

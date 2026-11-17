@@ -117,9 +117,15 @@ namespace NzbDrone.Core.HealthCheck
                     }
                     else
                     {
-                        if (_healthCheckResults.Find(result.Source.Name) == null)
+                        var previous = _healthCheckResults.Find(result.Source.Name);
+
+                        if (previous == null)
                         {
                             _eventAggregator.PublishEvent(new HealthCheckFailedEvent(result, !_hasRunHealthChecksAfterGracePeriod));
+                        }
+                        else if (!HaveSameIndexerTags(previous, result))
+                        {
+                            _eventAggregator.PublishEvent(new HealthCheckUpdatedEvent(previous, result, !_hasRunHealthChecksAfterGracePeriod));
                         }
 
                         _healthCheckResults.Set(result.Source.Name, result);
@@ -132,6 +138,20 @@ namespace NzbDrone.Core.HealthCheck
             }
 
             _eventAggregator.PublishEvent(new HealthCheckCompleteEvent());
+        }
+
+        /// <summary>
+        /// Whether two results of the same check concern indexers with the same tags, which is
+        /// all that decides which tag-scoped notifications they apply to.
+        /// </summary>
+        private static bool HaveSameIndexerTags(HealthCheck previous, HealthCheck current)
+        {
+            if (previous.IndexerTags == null || current.IndexerTags == null)
+            {
+                return previous.IndexerTags == current.IndexerTags;
+            }
+
+            return previous.IndexerTags.SetEquals(current.IndexerTags);
         }
 
         public void Execute(CheckHealthCommand message)

@@ -47,7 +47,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                     HealthCheckResult.Error,
                     HealthCheckReason.IndexerStatusAllUnavailable,
                     _localizationService.GetLocalizedString("IndexerStatusAllUnavailableHealthCheckMessage"),
-                    "#indexers-are-unavailable-due-to-failures");
+                    "#indexers-are-unavailable-due-to-failures").WithIndexers(backOffProviders.Select(v => v.Provider.Definition));
             }
 
             return new HealthCheck(GetType(),
@@ -57,7 +57,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                 {
                     { "indexerNames", string.Join(", ", backOffProviders.Select(v => v.Provider.Definition.Name)) }
                 }),
-                "#indexers-are-unavailable-due-to-failures");
+                "#indexers-are-unavailable-due-to-failures").WithIndexers(backOffProviders.Select(v => v.Provider.Definition));
         }
     }
 }

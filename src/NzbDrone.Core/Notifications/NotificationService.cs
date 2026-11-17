@@ -15,6 +15,7 @@ namespace NzbDrone.Core.Notifications
     public class NotificationService
         : IHandle<HealthCheckFailedEvent>,
           IHandle<HealthCheckRestoredEvent>,
+          IHandle<HealthCheckUpdatedEvent>,
           IHandleAsync<HealthCheckCompleteEvent>,
           IHandle<UpdateInstalledEvent>,
           IHandle<IndexerDownloadEvent>
@@ -85,7 +86,8 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings) &&
+                        ShouldHandleHealthCheck(notification.Definition, message.HealthCheck))
                     {
                         notification.OnHealthIssue(message.HealthCheck);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
@@ -110,8 +112,65 @@ namespace NzbDrone.Core.Notifications
             {
                 try
                 {
-                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings))
+                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings) &&
+                        ShouldHandleHealthCheck(notification.Definition, message.PreviousCheck))
                     {
+                        notification.OnHealthRestored(message.PreviousCheck);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnHealthRestored notification to: " + notification.Definition.Name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Keeps tag-scoped notifications in step with a failing check whose indexer tags changed:
+        /// a notification whose tags match the check for the first time gets a health issue, and
+        /// one whose tags no longer match gets a health restored. Notifications without tags, and
+        /// checks not tied to indexers, match both results, so this event changes nothing for them.
+        /// </summary>
+        public void Handle(HealthCheckUpdatedEvent message)
+        {
+            if (message.IsInStartupGracePeriod)
+            {
+                return;
+            }
+
+            foreach (var notification in _notificationFactory.OnHealthIssueEnabled())
+            {
+                try
+                {
+                    if (ShouldHandleHealthFailure(message.HealthCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings) &&
+                        MatchesTags(notification.Definition, message.HealthCheck) &&
+                        !MatchesTags(notification.Definition, message.PreviousCheck))
+                    {
+                        _logger.Debug("Health check {0} now affects indexer(s) tagged for {1}, notification will be sent.", message.HealthCheck.Source.Name, notification.Definition.Name);
+
+                        notification.OnHealthIssue(message.HealthCheck);
+                        _notificationStatusService.RecordSuccess(notification.Definition.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _notificationStatusService.RecordFailure(notification.Definition.Id);
+                    _logger.Warn(ex, "Unable to send OnHealthIssue notification to: " + notification.Definition.Name);
+                }
+            }
+
+            foreach (var notification in _notificationFactory.OnHealthRestoredEnabled())
+            {
+                try
+                {
+                    if (ShouldHandleHealthFailure(message.PreviousCheck, ((NotificationDefinition)notification.Definition).IncludeHealthWarnings) &&
+                        MatchesTags(notification.Definition, message.PreviousCheck) &&
+                        !MatchesTags(notification.Definition, message.HealthCheck))
+                    {
+                        _logger.Debug("Health check {0} no longer affects indexer(s) tagged for {1}, notification will be sent.", message.HealthCheck.Source.Name, notification.Definition.Name);
+
                         notification.OnHealthRestored(message.PreviousCheck);
                         _notificationStatusService.RecordSuccess(notification.Definition.Id);
                     }
@@ -220,6 +279,33 @@ namespace NzbDrone.Core.Notifications
             _logger.Debug("{0} does not have any intersecting tags with {1}. Notification will not be sent.", definition.Name, indexer.Name);
 
             return false;
+        }
+
+        /// <summary>
+        /// Whether a health check notification should go to a notification, logging when tags exclude it.
+        /// </summary>
+        private bool ShouldHandleHealthCheck(ProviderDefinition definition, HealthCheck.HealthCheck healthCheck)
+        {
+            if (MatchesTags(definition, healthCheck))
+            {
+                return true;
+            }
+
+            _logger.Debug("{0} does not have any intersecting tags with the indexer(s) of health check {1}. Notification will not be sent.", definition.Name, healthCheck.Source.Name);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Whether a notification applies to a health check: the notification has no tags, the
+        /// check is not tied to indexers, or the tags of the affected indexers intersect the
+        /// notification's. Checks not tied to indexers (e.g. system checks) are not tag-scoped, so
+        /// tagged notifications still receive them rather than silently missing application-wide
+        /// health issues.
+        /// </summary>
+        private static bool MatchesTags(ProviderDefinition definition, HealthCheck.HealthCheck healthCheck)
+        {
+            return definition.Tags.Empty() || healthCheck.IndexerTags == null || definition.Tags.Overlaps(healthCheck.IndexerTags);
         }
     }
 }

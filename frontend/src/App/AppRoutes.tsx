@@ -9,7 +9,7 @@ import SearchIndexConnector from 'Search/SearchIndexConnector';
 import ApplicationSettings from 'Settings/Applications/ApplicationSettings';
 import DevelopmentSettingsConnector from 'Settings/Development/DevelopmentSettingsConnector';
 import DownloadClientSettingsConnector from 'Settings/DownloadClients/DownloadClientSettingsConnector';
-import GeneralSettingsConnector from 'Settings/General/GeneralSettingsConnector';
+import GeneralSettings from 'Settings/General/GeneralSettings';
 import IndexerSettings from 'Settings/Indexers/IndexerSettings';
 import NotificationSettings from 'Settings/Notifications/NotificationSettings';
 import Settings from 'Settings/Settings';
@@ -80,7 +80,7 @@ function AppRoutes() {
 
       <Route path="/settings/tags" component={TagSettings} />
 
-      <Route path="/settings/general" component={GeneralSettingsConnector} />
+      <Route path="/settings/general" component={GeneralSettings} />
 
       <Route path="/settings/ui" component={UISettingsConnector} />
 

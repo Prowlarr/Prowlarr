@@ -30,6 +30,9 @@ namespace NzbDrone.Common.Instrumentation
             new(@"""C:\\Users\\(?<secret>[^\""]+?)(\\|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
             new(@"""/(home|Users)/(?<secret>[^/""]+?)(/|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
+            // Email
+            new(@"\b(?<secret>[a-z0-9._%+-]+)@[a-z0-9.-]+\.[a-z]{2,}\b", RegexOptions.Compiled | RegexOptions.IgnoreCase),
+
             // Trackers Announce Keys; Designed for Qbit Json; should work for all in theory
             new(@"announce(\.php)?(/|%2f|%3fpasskey%3d)(?<secret>[a-z0-9]{16,})|(?<secret>[a-z0-9]{16,})(/|%2f)announce", RegexOptions.Compiled | RegexOptions.IgnoreCase),
 

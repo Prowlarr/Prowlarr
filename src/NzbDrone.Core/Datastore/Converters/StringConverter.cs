@@ -8,17 +8,12 @@ namespace NzbDrone.Core.Datastore.Converters
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonTokenType.Number)
+            return reader.TokenType switch
             {
-                var stringValue = reader.GetInt32();
-                return stringValue.ToString();
-            }
-            else if (reader.TokenType == JsonTokenType.String)
-            {
-                return reader.GetString();
-            }
-
-            throw new System.Text.Json.JsonException();
+                JsonTokenType.Number => JsonDocument.ParseValue(ref reader).RootElement.GetRawText(),
+                JsonTokenType.String => reader.GetString(),
+                _ => throw new JsonException()
+            };
         }
 
         public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)

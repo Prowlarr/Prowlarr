@@ -16,6 +16,7 @@ using NzbDrone.Common.Http;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Core.Annotations;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Datastore.Converters;
 using NzbDrone.Core.Indexers.Exceptions;
 using NzbDrone.Core.Indexers.Settings;
 using NzbDrone.Core.IndexerSearch.Definitions;
@@ -797,7 +798,10 @@ namespace NzbDrone.Core.Indexers.Definitions
     internal class MyAnonamouseTorrent
     {
         public int Id { get; init; }
+
+        [JsonConverter(typeof(StringConverter))]
         public string Title { get; init; }
+
         [JsonPropertyName("author_info")]
         public string AuthorInfo { get; init; }
         public string Description { get; init; }

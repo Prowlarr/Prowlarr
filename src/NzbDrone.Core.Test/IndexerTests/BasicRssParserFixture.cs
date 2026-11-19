@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -25,6 +26,26 @@ namespace NzbDrone.Core.Test.IndexerTests
             var result = RssParser.ParseSize(sizeString, true);
 
             result.Should().Be(expectedSize);
+        }
+
+        [TestCase("5.54 GIB", 5948529705)]
+        [TestCase("398.62 MIB", 417983365)]
+        [TestCase("7,162,100.0 KIB", 7333990400)]
+        [TestCase("5.64 GB", 6055903887)]
+        public void should_parse_size_with_turkish_culture(string sizeString, long expectedSize)
+        {
+            var currentCulture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo("tr-TR");
+
+                RssParser.ParseSize(sizeString, true).Should().Be(expectedSize);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = currentCulture;
+            }
         }
 
         [TestCase("100 Kbps")]

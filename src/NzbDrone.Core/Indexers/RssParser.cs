@@ -378,7 +378,7 @@ namespace NzbDrone.Core.Indexers
         }
 
         private static readonly Regex ParseSizeRegex = new Regex(@"(?<value>(?<!\.\d*)(?:\d+,)*\d+(?:\.\d{1,3})?)\W?(?<unit>[KMG]i?B)(?![\w/])",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
         public static long ParseSize(string sizeString, bool defaultToBinaryPrefix)
         {
@@ -398,7 +398,7 @@ namespace NzbDrone.Core.Indexers
             {
                 var value = decimal.Parse(Regex.Replace(match[0].Groups["value"].Value, "\\,", ""), CultureInfo.InvariantCulture);
 
-                var unit = match[0].Groups["unit"].Value.ToLower();
+                var unit = match[0].Groups["unit"].Value.ToLowerInvariant();
 
                 switch (unit)
                 {

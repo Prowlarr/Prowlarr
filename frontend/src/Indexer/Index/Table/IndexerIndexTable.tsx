@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { throttle } from 'lodash';
 import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -62,7 +63,7 @@ function Row({ index, style, data }: ListChildComponentProps<RowItemData>) {
         justifyContent: 'space-between',
         ...style,
       }}
-      className={styles.row}
+      className={classNames(styles.row, index % 2 === 1 && styles.alternateRow)}
     >
       <IndexerIndexRow
         indexerId={indexer.id}

@@ -4669,9 +4669,7 @@
             "type": "string",
             "nullable": true
           },
-          "value": {
-            "nullable": true
-          },
+          "value": { },
           "type": {
             "type": "string",
             "nullable": true
@@ -4855,6 +4853,10 @@
           "authenticationRequired": {
             "$ref": "#/components/schemas/AuthenticationRequiredType"
           },
+          "allowedHosts": {
+            "type": "string",
+            "nullable": true
+          },
           "analyticsEnabled": {
             "type": "boolean"
           },
@@ -4899,6 +4901,10 @@
             "nullable": true
           },
           "urlBase": {
+            "type": "string",
+            "nullable": true
+          },
+          "trustedNetworks": {
             "type": "string",
             "nullable": true
           },
@@ -6015,6 +6021,9 @@
           "isDocker": {
             "type": "boolean"
           },
+          "isContainerized": {
+            "type": "boolean"
+          },
           "mode": {
             "$ref": "#/components/schemas/RuntimeMode"
           },
@@ -6351,6 +6360,110 @@
     },
     {
       "apikey": [ ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "ApiInfo"
+    },
+    {
+      "name": "Application"
+    },
+    {
+      "name": "AppProfile"
+    },
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "StaticResource"
+    },
+    {
+      "name": "Backup"
+    },
+    {
+      "name": "Command"
+    },
+    {
+      "name": "CustomFilter"
+    },
+    {
+      "name": "DevelopmentConfig"
+    },
+    {
+      "name": "DownloadClient"
+    },
+    {
+      "name": "DownloadClientConfig"
+    },
+    {
+      "name": "FileSystem"
+    },
+    {
+      "name": "Health"
+    },
+    {
+      "name": "History"
+    },
+    {
+      "name": "HostConfig"
+    },
+    {
+      "name": "Indexer"
+    },
+    {
+      "name": "IndexerDefaultCategories"
+    },
+    {
+      "name": "IndexerProxy"
+    },
+    {
+      "name": "IndexerStats"
+    },
+    {
+      "name": "IndexerStatus"
+    },
+    {
+      "name": "Localization"
+    },
+    {
+      "name": "Log"
+    },
+    {
+      "name": "LogFile"
+    },
+    {
+      "name": "Newznab"
+    },
+    {
+      "name": "Notification"
+    },
+    {
+      "name": "Ping"
+    },
+    {
+      "name": "Search"
+    },
+    {
+      "name": "System"
+    },
+    {
+      "name": "Tag"
+    },
+    {
+      "name": "TagDetails"
+    },
+    {
+      "name": "Task"
+    },
+    {
+      "name": "UiConfig"
+    },
+    {
+      "name": "Update"
+    },
+    {
+      "name": "UpdateLogFile"
     }
   ]
 }

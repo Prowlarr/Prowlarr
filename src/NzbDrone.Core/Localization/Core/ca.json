@@ -818,5 +818,7 @@
     "IndexerIPTorrentsSettingsSearchSortBy": "Ordena la cerca per",
     "IndexerIPTorrentsSettingsSearchSortByHelpText": "Selecciona l'ordre en què s'han d'ordenar els resultats de la cerca",
     "TrustedNetworks": "Xarxes de confiança",
-    "TrustedNetworksHelpText": "Llista separada per comes d'adreces IP o de xarxes en notació CIDR on hi ha els proxies inversos de confiança. Per exemple: 172.17.0.1, 10.0.0.0/8 o fc00::/7. Afegeix-hi només proxies configurats correctament per enviar les capçaleres adequades."
+    "TrustedNetworksHelpText": "Llista separada per comes d'adreces IP o de xarxes en notació CIDR on hi ha els proxies inversos de confiança. Per exemple: 172.17.0.1, 10.0.0.0/8 o fc00::/7. Afegeix-hi només proxies configurats correctament per enviar les capçaleres adequades.",
+    "IndexerSettingsQueryTimeout": "Temps d'espera de la consulta",
+    "IndexerSettingsQueryTimeoutHelpText": "Quant de temps s'ha d'esperar una resposta d'aquest indexador abans de desistir. Deixeu-ho buit per utilitzar el valor per defecte ({defaultTimeoutSeconds} segons)"
 }

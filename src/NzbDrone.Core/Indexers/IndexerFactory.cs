@@ -96,7 +96,7 @@ namespace NzbDrone.Core.Indexers
         {
             var settings = (CardigannSettings)definition.Settings;
             var defFile = _definitionService.GetCachedDefinition(settings.DefinitionFile);
-            definition.ExtraFields = defFile.Settings;
+            definition.ExtraFields = defFile.Settings.ToList();
 
             if (defFile.Login?.Captcha != null && !definition.ExtraFields.Any(x => x.Type == "cardigannCaptcha"))
             {

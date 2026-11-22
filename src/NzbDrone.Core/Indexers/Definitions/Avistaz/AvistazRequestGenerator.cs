@@ -52,6 +52,8 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
                 qc.Add("tags", genre);
             }
 
+            AddLanguageParameters(qc);
+
             // resolution filter to improve the search
             if (!categories.Contains(NewznabStandardCategory.Movies.Id) &&
                 !categories.Contains(NewznabStandardCategory.TV.Id) &&
@@ -76,6 +78,19 @@ namespace NzbDrone.Core.Indexers.Definitions.Avistaz
             }
 
             return qc;
+        }
+
+        protected void AddLanguageParameters(List<KeyValuePair<string, string>> parameters)
+        {
+            foreach (var languageId in Settings.SearchAudioLanguages.Distinct())
+            {
+                parameters.Add("language[]", languageId.ToString());
+            }
+
+            foreach (var languageId in Settings.SearchSubtitleLanguages.Distinct())
+            {
+                parameters.Add("subtitle[]", languageId.ToString());
+            }
         }
 
         private IEnumerable<IndexerRequest> GetRequest(List<KeyValuePair<string, string>> searchParameters)

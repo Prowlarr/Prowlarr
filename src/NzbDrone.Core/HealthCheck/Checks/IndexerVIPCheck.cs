@@ -56,7 +56,7 @@ namespace NzbDrone.Core.HealthCheck.Checks
                     {
                         { "indexerNames", string.Join(", ", expiringProviders.Select(v => v.Definition.Name).ToArray()) }
                     }),
-                    "#indexer-vip-expiring");
+                    "#indexer-vip-expiring").WithIndexers(expiringProviders.Select(v => v.Definition));
             }
 
             return new HealthCheck(GetType());

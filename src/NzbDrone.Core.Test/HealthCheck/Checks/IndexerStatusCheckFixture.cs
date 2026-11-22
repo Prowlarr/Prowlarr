@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using NzbDrone.Core.HealthCheck.Checks;
@@ -18,6 +19,9 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
         [SetUp]
         public void SetUp()
         {
+            _indexers = new List<IIndexer>();
+            _blockedIndexers = new List<IndexerStatus>();
+
             Mocker.GetMock<IIndexerFactory>()
                   .Setup(v => v.GetAvailableProviders())
                   .Returns(_indexers);
@@ -31,12 +35,12 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
                   .Returns("Some Warning Message");
         }
 
-        private Mock<IIndexer> GivenIndexer(int i, double backoffHours, double failureHours)
+        private Mock<IIndexer> GivenIndexer(int i, double backoffHours, double failureHours, params int[] tags)
         {
             var id = i;
 
             var mockIndexer = new Mock<IIndexer>();
-            mockIndexer.SetupGet(s => s.Definition).Returns(new IndexerDefinition { Id = id });
+            mockIndexer.SetupGet(s => s.Definition).Returns(new IndexerDefinition { Id = id, Tags = new HashSet<int>(tags) });
             mockIndexer.SetupGet(s => s.SupportsSearch).Returns(true);
 
             _indexers.Add(mockIndexer.Object);
@@ -87,6 +91,32 @@ namespace NzbDrone.Core.Test.HealthCheck.Checks
             GivenIndexer(3, 0.0, 0.0);
 
             Subject.Check().ShouldBeWarning();
+        }
+
+        [Test]
+        public void should_capture_tags_of_unavailable_indexers_only()
+        {
+            GivenIndexer(1, 2.0, 4.0, 1);
+            GivenIndexer(2, 2.0, 4.0, 2, 3);
+            GivenIndexer(3, 0.0, 0.0, 4);
+
+            Subject.Check().IndexerTags.Should().BeEquivalentTo(new[] { 1, 2, 3 });
+        }
+
+        [Test]
+        public void should_capture_tags_when_all_indexers_unavailable()
+        {
+            GivenIndexer(1, 2.0, 4.0, 1);
+
+            Subject.Check().IndexerTags.Should().BeEquivalentTo(new[] { 1 });
+        }
+
+        [Test]
+        public void should_not_be_scoped_to_indexers_when_ok()
+        {
+            GivenIndexer(1, 0.0, 0.0, 1);
+
+            Subject.Check().IndexerTags.Should().BeNull();
         }
     }
 }

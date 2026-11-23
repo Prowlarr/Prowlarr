@@ -128,6 +128,13 @@ namespace NzbDrone.Common.Test.InstrumentationTests
         // Discord
         [TestCase(@"https://discord.com/api/webhooks/mySecret")]
         [TestCase(@"https://discord.com/api/webhooks/mySecret/01233210")]
+
+        // Telegram
+        [TestCase(@"https://api.telegram.org/bot1234567890:mySecret/sendmessage: chat_id=123456&parse_mode=HTML&text=<text>")]
+        [TestCase(@"https://api.telegram.org/bot1234567890:mySecret/")]
+
+        // Slack
+        [TestCase(@"https://hooks.slack.com/services/T01233210/B01233210/mySecret: 404.NotFound")]
         public void should_clean_message(string message)
         {
             var cleansedMessage = CleanseLogMessage.Cleanse(message);

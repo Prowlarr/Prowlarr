@@ -238,5 +238,7 @@
     "UpdateAutomaticallyHelpText": "Last ned og installer oppdateringer automatisk. Du kan fortsatt installere fra System: Oppdateringer",
     "UpdateAppDirectlyLoadError": "Kunne ikke oppdatere {appName} direkte,",
     "UnselectAll": "Avmarker alle",
-    "UnsavedChanges": "Ulagrede endringer"
+    "UnsavedChanges": "Ulagrede endringer",
+    "DownloadClientPneumaticSettingsNzbFolder": "Nzb-mappe",
+    "UpdateUiNotWritableHealthCheckMessage": "Oppdateringen kunne ikke installeres fordi UI mappa \"{uiFolder}\" ikke er skrivbar av brukeren \"{userName}\"."
 }

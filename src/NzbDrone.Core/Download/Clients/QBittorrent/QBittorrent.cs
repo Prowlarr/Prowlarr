@@ -6,7 +6,9 @@ using NLog;
 using NzbDrone.Common.Cache;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Extensions;
+using NzbDrone.Common.Http;
 using NzbDrone.Core.Configuration;
+using NzbDrone.Core.Exceptions;
 using NzbDrone.Core.Indexers;
 using NzbDrone.Core.Localization;
 using NzbDrone.Core.Parser.Model;
@@ -56,7 +58,14 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
             var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            Proxy.AddTorrentFromUrl(magnetLink, addHasSetShareLimits && setShareLimits ? release.SeedConfiguration : null, Settings, category);
+            try
+            {
+                Proxy.AddTorrentFromUrl(magnetLink, addHasSetShareLimits && setShareLimits ? release.SeedConfiguration : null, Settings, category);
+            }
+            catch (DownloadClientException ex) when (ex.InnerException is HttpException httpException && httpException.Response.StatusCode is HttpStatusCode.Conflict)
+            {
+                throw new DownloadClientRejectedReleaseException(release, "QBittorrent rejected the magnet link due to a conflict", ex);
+            }
 
             if ((!addHasSetShareLimits && setShareLimits) || moveToTop || forceStart)
             {
@@ -113,7 +122,14 @@ namespace NzbDrone.Core.Download.Clients.QBittorrent
             var forceStart = (QBittorrentState)Settings.InitialState == QBittorrentState.ForceStart;
             var category = GetCategoryForRelease(release) ?? Settings.Category;
 
-            Proxy.AddTorrentFromFile(filename, fileContent, addHasSetShareLimits ? release.SeedConfiguration : null, Settings, category);
+            try
+            {
+                Proxy.AddTorrentFromFile(filename, fileContent, addHasSetShareLimits ? release.SeedConfiguration : null, Settings, category);
+            }
+            catch (DownloadClientException ex) when (ex.InnerException is HttpException httpException && httpException.Response.StatusCode is HttpStatusCode.Conflict)
+            {
+                throw new DownloadClientRejectedReleaseException(release, "QBittorrent rejected the torrent file due to a conflict", ex);
+            }
 
             if ((!addHasSetShareLimits && setShareLimits) || moveToTop || forceStart)
             {

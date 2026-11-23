@@ -818,5 +818,7 @@
     "TotalQueries": "Totaal query's",
     "TotalUserAgentGrabs": "Totaal ophalingen user agents",
     "TotalUserAgentQueries": "Totaal user agent-query's",
-    "ApplicationSettingsSyncRejectBlocklistedTorrentHashes": "Sync Weiger Geblokkeerde Torrent Hashes tijdens downloaden"
+    "ApplicationSettingsSyncRejectBlocklistedTorrentHashes": "Sync Weiger Geblokkeerde Torrent Hashes tijdens downloaden",
+    "IndexerSettingsQueryTimeout": "Query-timeout",
+    "IndexerSettingsQueryTimeoutHelpText": "Hoe lang wachten op een reactie van deze indexer voordat er opgegeven wordt. Laat leeg om de standaardwaarde te gebruiken ({defaultTimeoutSeconds} seconden)"
 }

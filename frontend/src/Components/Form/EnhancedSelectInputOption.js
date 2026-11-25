@@ -40,6 +40,7 @@ class EnhancedSelectInputOption extends Component {
       isHidden,
       isMultiSelect,
       isMobile,
+      isFocused,
       children
     } = this.props;
 
@@ -50,7 +51,8 @@ class EnhancedSelectInputOption extends Component {
           isSelected && !isMultiSelect && styles.isSelected,
           isDisabled && !isMultiSelect && styles.isDisabled,
           isHidden && styles.isHidden,
-          isMobile && styles.isMobile
+          isMobile && styles.isMobile,
+          isFocused && styles.isFocused
         )}
         component="div"
         isDisabled={isDisabled}
@@ -98,6 +100,7 @@ EnhancedSelectInputOption.propTypes = {
   isHidden: PropTypes.bool.isRequired,
   isMultiSelect: PropTypes.bool.isRequired,
   isMobile: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
   onSelect: PropTypes.func.isRequired
 };
@@ -107,7 +110,8 @@ EnhancedSelectInputOption.defaultProps = {
   depth: 0,
   isDisabled: false,
   isHidden: false,
-  isMultiSelect: false
+  isMultiSelect: false,
+  isFocused: false
 };
 
 export default EnhancedSelectInputOption;

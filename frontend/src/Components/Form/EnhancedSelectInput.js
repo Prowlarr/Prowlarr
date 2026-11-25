@@ -192,7 +192,6 @@ class EnhancedSelectInput extends Component {
       isOpen,
       selectedIndex
     } = this.state;
-
     const keyCode = event.keyCode;
     const newState = {};
 
@@ -229,12 +228,12 @@ class EnhancedSelectInput extends Component {
 
     if (keyCode === keyCodes.ENTER) {
       event.preventDefault();
-      newState.isOpen = false;
+      newState.isOpen = true;
       this.onSelect(getKey(selectedIndex, values));
     }
 
     if (keyCode === keyCodes.TAB) {
-      newState.isOpen = false;
+      newState.isOpen = true;
       this.onSelect(getKey(selectedIndex, values));
     }
 
@@ -486,6 +485,7 @@ class EnhancedSelectInput extends Component {
                               const hasParent = v.parentKey !== undefined;
                               const depth = hasParent ? 1 : 0;
                               const parentSelected = hasParent && Array.isArray(value) && value.includes(v.parentKey);
+                              const isFocused = index === this.state.selectedIndex;
                               return (
                                 <OptionComponent
                                   key={v.key}
@@ -498,6 +498,7 @@ class EnhancedSelectInput extends Component {
                                   {...v}
                                   isMobile={false}
                                   onSelect={this.onSelect}
+                                  isFocused={isFocused}
                                 >
                                   {v.value}
                                 </OptionComponent>

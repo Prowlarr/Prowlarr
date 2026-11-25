@@ -14,6 +14,7 @@ function HintedSelectInputOption(props) {
     isDisabled,
     isMultiSelect,
     isMobile,
+    isFocused,
     ...otherProps
   } = props;
 
@@ -26,6 +27,7 @@ function HintedSelectInputOption(props) {
       isHidden={isDisabled}
       isMultiSelect={isMultiSelect}
       isMobile={isMobile}
+      isFocused={isFocused}
       {...otherProps}
     >
       <div className={classNames(
@@ -54,13 +56,15 @@ HintedSelectInputOption.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   isDisabled: PropTypes.bool.isRequired,
   isMultiSelect: PropTypes.bool.isRequired,
-  isMobile: PropTypes.bool.isRequired
+  isMobile: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired
 };
 
 HintedSelectInputOption.defaultProps = {
   isDisabled: false,
   isHidden: false,
-  isMultiSelect: false
+  isMultiSelect: false,
+  isFocused: false
 };
 
 export default HintedSelectInputOption;

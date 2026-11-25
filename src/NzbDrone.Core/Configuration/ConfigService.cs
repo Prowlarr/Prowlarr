@@ -88,6 +88,13 @@ namespace NzbDrone.Core.Configuration
             set { SetValue("LogIndexerResponse", value); }
         }
 
+        public string IndexerUserAgent
+        {
+            get { return GetValue("IndexerUserAgent", string.Empty); }
+
+            set { SetValue("IndexerUserAgent", value); }
+        }
+
         public int FirstDayOfWeek
         {
             get { return GetValueInt("FirstDayOfWeek", (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek); }

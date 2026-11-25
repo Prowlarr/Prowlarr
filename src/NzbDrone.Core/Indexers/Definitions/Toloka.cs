@@ -462,6 +462,8 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private readonly Regex _stripCyrillicRegex = new(@"(\([\p{IsCyrillic}\W]+\))|(^[\p{IsCyrillic}\W\d]+\/ )|([\p{IsCyrillic} \-]+,+)|([\p{IsCyrillic}]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private readonly Regex _strandedTokenRegex = new(@"^[^a-zA-Z\[\(]*(\((?:S|E)[^)]+\))\s*/\s*", RegexOptions.Compiled);
+
         public string Parse(string title, ICollection<IndexerCategory> categories, bool stripCyrillicLetters = true)
         {
             // https://www.fileformat.info/info/unicode/category/Pd/list.htm
@@ -491,6 +493,15 @@ namespace NzbDrone.Core.Indexers.Definitions
             if (stripCyrillicLetters)
             {
                 title = _stripCyrillicRegex.Replace(title, string.Empty).Trim(' ', '-');
+
+                // When the stripped Cyrillic title contained converted season/episode tokens
+                // they are left stranded before the foreign title (e.g. "' (S1) / Spy x Family ...",
+                // "0 (S2E01-23 of 23) / Steins;Gate 0 ..."), relocate them to the end of the release title.
+                var strandedMatch = _strandedTokenRegex.Match(title);
+                if (strandedMatch.Success)
+                {
+                    title = $"{_strandedTokenRegex.Replace(title, string.Empty)} {strandedMatch.Groups[1].Value}".Trim();
+                }
             }
 
             title = Regex.Replace(title, @"\b-Rip\b", "Rip", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -506,7 +517,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
             title = Regex.Replace(title, @"[\[\(]\s*[\)\]]", "", RegexOptions.Compiled);
 
-            title = title.Trim(' ', '&', ',', '.', '!', '?', '+', '-', '_', '|', '/', '\\', ':', ';', 'ʼ', '`');
+            title = title.Trim(' ', '&', ',', '.', '!', '?', '+', '-', '_', '|', '/', '\\', ':', ';', '\'', 'ʼ', '`');
 
             // replace multiple spaces with a single space
             title = Regex.Replace(title, @"\s+", " ");
@@ -521,7 +532,7 @@ namespace NzbDrone.Core.Indexers.Definitions
 
         private static string MoveFirstTagsToEndOfReleaseTitle(string input)
         {
-            var output = input.Trim(' ', '&', ',', '.', '!', '?', '+', '-', '_', '|', '/', '\\', ':', ';', 'ʼ', '`');
+            var output = input.Trim(' ', '&', ',', '.', '!', '?', '+', '-', '_', '|', '/', '\\', ':', ';', '\'', 'ʼ', '`');
             foreach (var findTagsRegex in FindTagsInTitlesRegexList)
             {
                 var expectedIndex = 0;

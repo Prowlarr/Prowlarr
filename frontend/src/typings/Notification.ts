@@ -16,11 +16,13 @@ interface Notification extends ModelBase {
   onGrab: boolean;
   onHealthIssue: boolean;
   onHealthRestored: boolean;
+  onVipExpiration: boolean;
   includeHealthWarnings: boolean;
   onApplicationUpdate: boolean;
   supportsOnGrab: boolean;
   supportsOnHealthIssue: boolean;
   supportsOnHealthRestored: boolean;
+  supportsOnVipExpiration: boolean;
   supportsOnApplicationUpdate: boolean;
   fields: Field[];
   implementationName: string;

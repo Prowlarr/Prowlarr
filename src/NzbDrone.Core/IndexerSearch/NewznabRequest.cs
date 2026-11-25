@@ -42,6 +42,7 @@ namespace NzbDrone.Core.IndexerSearch
         public string source { get; set; }
         public string host { get; set; }
         public string server { get; set; }
+        public string searchMode { get; set; }
 
         public void QueryToParams()
         {

@@ -169,6 +169,7 @@ namespace Prowlarr.Api.V1.Search
                     cat = string.Join(",", payload.Categories),
                     server = Request.GetServerUrl(),
                     host = Request.GetHostName(),
+                    searchMode = payload.SearchMode,
                     limit = payload.Limit,
                     offset = payload.Offset
                 };

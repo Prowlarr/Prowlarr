@@ -342,6 +342,7 @@ namespace NzbDrone.Core.Indexers.Definitions
         [FieldDefinition(3, Label = "Products Only", Type = FieldType.Checkbox, HelpText = "Limit search to torrents linked to a product")]
         public bool ProductsOnly { get; set; }
 
+        [SearchConstraint]
         [FieldDefinition(4, Label = "Release Types", Type = FieldType.Select, SelectOptions = typeof(TorrentSyndikatReleaseTypes))]
         public IEnumerable<int> ReleaseTypes { get; set; }
 

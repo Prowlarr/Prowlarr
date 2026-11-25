@@ -150,6 +150,7 @@ namespace NzbDrone.Core.IndexerSearch
             spec.MaxSize = query.maxsize;
             spec.Source = query.source;
             spec.Host = query.host;
+            spec.SearchMode = IndexerSearchModeParser.Parse(query.searchMode);
 
             spec.IndexerIds = indexerIds;
 
@@ -173,6 +174,11 @@ namespace NzbDrone.Core.IndexerSearch
 
                     throw new SearchFailedException("Search failed due to all selected indexers being unavailable");
                 }
+            }
+
+            if (criteriaBase.SearchMode == IndexerSearchMode.Raw)
+            {
+                indexers = indexers.Select(CreateRawSearchIndexer).ToList();
             }
 
             if (criteriaBase.Categories is { Length: > 0 })
@@ -199,6 +205,17 @@ namespace NzbDrone.Core.IndexerSearch
             _logger.ProgressDebug("Total of {0} reports were found for {1} from {2} indexer(s)", reports.Count, criteriaBase, indexers.Count);
 
             return reports;
+        }
+
+        private IIndexer CreateRawSearchIndexer(IIndexer indexer)
+        {
+            if (indexer.Definition is not IndexerDefinition definition)
+            {
+                return indexer;
+            }
+
+            var rawDefinition = IndexerRawSearchDefinitionBuilder.Build(definition);
+            return _indexerFactory.GetInstance(rawDefinition);
         }
 
         private async Task<IList<ReleaseInfo>> DispatchIndexer(Func<IIndexer, Task<IndexerPageableQueryResult>> searchAction, IIndexer indexer, SearchCriteriaBase criteriaBase)

@@ -142,6 +142,20 @@ namespace NzbDrone.Core.Indexers.Definitions
             _settings = settings;
         }
 
+        private static string GetSearchTerm(string term)
+        {
+            // Remove season and episode info from search term cause it breaks search
+            var searchTerm = Regex.Replace(term, @"(?:[SsEe]?\d{1,4}){1,2}$", "").TrimEnd();
+
+            // The site's DLE full-text search is unreliable for multi-word phrases:
+            // e.g. "Sousou no Frieren" and "Sousou Frieren" both return zero results
+            // while "Sousou" and "Frieren" each match. Search by the longest word
+            // and let the apps match the full release title.
+            var words = searchTerm.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            return words.Length > 1 ? words.OrderByDescending(w => w.Length).First() : searchTerm;
+        }
+
         private IEnumerable<IndexerRequest> GetPagedRequests(string term)
         {
             string requestUrl;
@@ -168,9 +182,7 @@ namespace NzbDrone.Core.Indexers.Definitions
                     { "search_start", "1" },
                     { "full_search", "1" },
                     { "result_from", "1" },
-
-                    // Remove season and episode info from search term cause it breaks search
-                    { "story", Regex.Replace(term, @"(?:[SsEe]?\d{1,4}){1,2}$", "").TrimEnd() },
+                    { "story", GetSearchTerm(term) },
                     { "titleonly", "3" },
                     { "searchuser", "" },
                     { "replyless", "0" },

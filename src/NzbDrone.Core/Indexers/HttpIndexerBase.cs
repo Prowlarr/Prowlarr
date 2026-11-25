@@ -4,7 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
 using FluentValidation.Results;
 using MonoTorrent;
 using NLog;
@@ -29,6 +32,7 @@ namespace NzbDrone.Core.Indexers
     {
         protected const int MaxNumResultsPerQuery = 1000;
         private const int MaxRedirects = 5;
+        private const int MaxDownloadWaitSeconds = 120;
 
         protected readonly IIndexerHttpClient _httpClient;
         protected readonly IEventAggregator _eventAggregator;
@@ -228,6 +232,16 @@ namespace NzbDrone.Core.Indexers
         {
             Cookies = GetCookies();
 
+            DownloadWaitPolicy waitPolicy;
+            try
+            {
+                waitPolicy = GetDownloadWaitPolicy();
+            }
+            catch (WebException ex)
+            {
+                throw new ReleaseDownloadException("Download failed", ex);
+            }
+
             var request = await GetDownloadRequest(link);
 
             if (request.Url.Scheme == "magnet")
@@ -248,9 +262,29 @@ namespace NzbDrone.Core.Indexers
 
             try
             {
-                var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                HttpResponse response;
+                if (waitPolicy != null)
+                {
+                    // Configured cookies move into a single jar that is the source of truth for the whole download.
+                    var downloadCookies = CreateDownloadCookieContainer(request.Cookies, new Uri(request.Url.FullUri));
+                    request.Cookies.Clear();
+                    request.CookieContainer = downloadCookies;
 
-                if (response.StatusCode is HttpStatusCode.MovedPermanently
+                    response = await ExecuteDownloadRequest(request, downloadCookies);
+                    if (response.HasHttpError)
+                    {
+                        throw new HttpException(request, response, "Download request failed.");
+                    }
+
+                    request.AllowAutoRedirect = false;
+                    response = await HandleDownloadWait(request, response, waitPolicy, downloadCookies);
+                }
+                else
+                {
+                    response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+                }
+
+                if (waitPolicy == null && response.StatusCode is HttpStatusCode.MovedPermanently
                     or HttpStatusCode.Found
                     or HttpStatusCode.SeeOther
                     or HttpStatusCode.TemporaryRedirect
@@ -292,7 +326,7 @@ namespace NzbDrone.Core.Indexers
 
                 _logger.Debug("Downloaded for release finished ({0} bytes from {1})", fileData.Length, link.AbsoluteUri);
 
-                if (response.Headers?.ContentType?.Contains("text/html", StringComparison.OrdinalIgnoreCase) == true)
+                if (waitPolicy == null && response.Headers?.ContentType?.Contains("text/html", StringComparison.OrdinalIgnoreCase) == true)
                 {
                     throw new HttpException(request, response, "Site responded with html content.");
                 }
@@ -346,6 +380,343 @@ namespace NzbDrone.Core.Indexers
             var request = requestBuilder.Build();
 
             return Task.FromResult(request);
+        }
+
+        protected virtual DownloadWaitPolicy GetDownloadWaitPolicy() => null;
+
+        protected virtual Task WaitForDownloadAsync(TimeSpan delay) => Task.Delay(delay);
+
+        private async Task<HttpResponse> HandleDownloadWait(HttpRequest request, HttpResponse response, DownloadWaitPolicy policy, CookieContainer cookies)
+        {
+            var originalUri = new Uri(request.Url.FullUri);
+            var redirectChain = new List<string> { originalUri.AbsoluteUri };
+            var waited = false;
+
+            while (true)
+            {
+                if (!HasSameOrigin(originalUri, new Uri(response.Request.Url.FullUri)))
+                {
+                    throw new WebException("Download response changed origin; refusing to forward authentication material.");
+                }
+
+                if (response.HasHttpError)
+                {
+                    throw new HttpException(request, response, "Download request failed.");
+                }
+
+                if (response.HasHttpRedirect)
+                {
+                    var redirectUrl = response.RedirectUrl;
+                    if (redirectUrl.IsNullOrWhiteSpace())
+                    {
+                        throw new WebException("Remote website tried to redirect without providing a location.");
+                    }
+
+                    var redirectUri = new Uri(originalUri, redirectUrl);
+                    if (!HasSameOrigin(originalUri, redirectUri))
+                    {
+                        throw new WebException("Cross-origin redirect rejected for configured download wait.");
+                    }
+
+                    redirectChain.Add(redirectUri.AbsoluteUri);
+                    if (redirectChain.Count > MaxRedirects)
+                    {
+                        throw new WebException("Too many download redirections were attempted.", WebExceptionStatus.ProtocolError);
+                    }
+
+                    request.Url = new HttpUri(redirectUri.AbsoluteUri);
+                    response = await ExecuteDownloadRequest(request, cookies);
+                    continue;
+                }
+
+                if (waited || !IsHtml(response))
+                {
+                    if (waited && IsHtml(response))
+                    {
+                        throw new WebException("Configured download continuation returned HTML instead of torrent data.");
+                    }
+
+                    return response;
+                }
+
+                var delay = ParseDownloadWait(response.Content, policy);
+                try
+                {
+                    await WaitForDownloadAsync(TimeSpan.FromSeconds(delay));
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    throw new WebException("Configured download wait did not complete.", ex);
+                }
+
+                waited = true;
+
+                request.Url = new HttpUri(originalUri.AbsoluteUri);
+                request.Method = HttpMethod.Get;
+                request.ContentData = null;
+                request.ContentSummary = null;
+                request.Headers.Set("Referer", originalUri.AbsoluteUri);
+                request.AllowAutoRedirect = false;
+
+                response = await ExecuteDownloadRequest(request, cookies);
+            }
+        }
+
+        /// <summary>
+        /// Sends one download request with the shared cookie jar, then records what it learned.
+        /// Each response is merged exactly once here, so Max-Age is evaluated when the response arrives.
+        /// </summary>
+        private async Task<HttpResponse> ExecuteDownloadRequest(HttpRequest request, CookieContainer cookies)
+        {
+            var response = await _httpClient.ExecuteProxiedAsync(request, Definition);
+
+            // Proxies such as FlareSolverr add cookies to the request object after it was sent. Keep them.
+            SyncProxyAddedCookies(request, cookies);
+            MergeResponseCookieHeaders(cookies, response);
+
+            return response;
+        }
+
+        private static void SyncProxyAddedCookies(HttpRequest request, CookieContainer cookies)
+        {
+            var uri = new Uri(request.Url.FullUri);
+            foreach (var cookie in request.Cookies)
+            {
+                if (cookie.Value == null)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    cookies.Add(uri, new Cookie(cookie.Key, cookie.Value, "/"));
+                }
+                catch (CookieException)
+                {
+                    // Invalid proxy cookies are ignored by the underlying HTTP layer.
+                }
+            }
+
+            request.Cookies.Clear();
+        }
+
+        private static CookieContainer CreateDownloadCookieContainer(IDictionary<string, string> cookies, Uri uri)
+        {
+            var container = new CookieContainer();
+            if (cookies == null)
+            {
+                return container;
+            }
+
+            foreach (var cookie in cookies)
+            {
+                try
+                {
+                    container.Add(uri, new Cookie(cookie.Key, cookie.Value ?? string.Empty, "/"));
+                }
+                catch (CookieException)
+                {
+                    // Invalid configured cookies are ignored by the underlying HTTP layer.
+                }
+            }
+
+            return container;
+        }
+
+        private static void MergeResponseCookieHeaders(CookieContainer container, HttpResponse response)
+        {
+            var uri = new Uri(response.Request.Url.FullUri);
+            foreach (var header in response.GetCookieHeaders())
+            {
+                try
+                {
+                    container.SetCookies(uri, header);
+                }
+                catch (CookieException)
+                {
+                    // Invalid response cookies are ignored by the underlying HTTP layer.
+                }
+            }
+        }
+
+        private static bool IsHtml(HttpResponse response)
+        {
+            var content = response.Content.TrimStart('\uFEFF', ' ', '\t', '\r', '\n');
+            return Regex.IsMatch(content, @"\A(?:<!doctype\s+html\b|<!--|<[a-z][a-z0-9:-]*(?:\s|/|>))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        }
+
+        private static bool HasSameOrigin(Uri left, Uri right)
+        {
+            return string.Equals(left.Scheme, right.Scheme, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(left.Host, right.Host, StringComparison.OrdinalIgnoreCase) &&
+                   left.Port == right.Port;
+        }
+
+        private static int ParseDownloadWait(string html, DownloadWaitPolicy policy)
+        {
+            if (html.Length > 1024 * 1024)
+            {
+                throw new WebException("Configured download wait page is too large to parse.");
+            }
+
+            using var document = new HtmlParser().ParseDocument(html);
+            var title = document.QuerySelector("title")?.TextContent?.Trim();
+            if (!string.Equals(title, policy.Title, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new WebException("Configured download wait page marker was not recognized.");
+            }
+
+            // The value must be a complete integer literal ended by ';' on the same statement.
+            // "1\n+ 120;" is therefore not read as 1, and text inside a regex literal is removed before matching.
+            var assignment = new Regex($@"(?<![A-Za-z0-9_$.]){Regex.Escape(policy.DelayVariable)}\s*=(?!=|>)\s*([0-9]+)\s*;", RegexOptions.CultureInvariant);
+            var matches = document.QuerySelectorAll("script")
+                .SelectMany(script => assignment.Matches(StripJavaScriptCommentsAndStrings(script.TextContent)).Cast<Match>())
+                .ToList();
+            if (matches.Count != 1)
+            {
+                throw new WebException("Configured download wait page has a missing or ambiguous delay assignment.");
+            }
+
+            var value = matches[0].Groups[1].Value;
+            if (!int.TryParse(value, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var seconds) || seconds <= 0)
+            {
+                throw new WebException("Configured download wait page has an invalid delay.");
+            }
+
+            if (seconds > MaxDownloadWaitSeconds)
+            {
+                throw new WebException("Configured download wait delay exceeds the 120 second limit.");
+            }
+
+            return seconds;
+        }
+
+        private static string StripJavaScriptCommentsAndStrings(string script)
+        {
+            var result = new StringBuilder(script.Length);
+            var quote = '\0';
+            var regexLiteral = false;
+            var regexCharacterClass = false;
+            var lineComment = false;
+            var blockComment = false;
+
+            // The last significant character decides whether '/' starts a regex literal (operator position)
+            // or is a division (operand position).
+            var lastSignificant = '\0';
+
+            for (var i = 0; i < script.Length; i++)
+            {
+                var current = script[i];
+                var next = i + 1 < script.Length ? script[i + 1] : '\0';
+
+                if (lineComment)
+                {
+                    result.Append(current is '\r' or '\n' ? current : ' ');
+                    lineComment = current is not '\r' and not '\n';
+                    continue;
+                }
+
+                if (blockComment)
+                {
+                    result.Append(current is '\r' or '\n' ? current : ' ');
+                    if (current == '*' && next == '/')
+                    {
+                        result.Append(' ');
+                        i++;
+                        blockComment = false;
+                    }
+
+                    continue;
+                }
+
+                if (quote != '\0')
+                {
+                    result.Append(current is '\r' or '\n' ? current : ' ');
+                    if (current == '\\' && i + 1 < script.Length)
+                    {
+                        result.Append(' ');
+                        i++;
+                    }
+                    else if (current == quote)
+                    {
+                        quote = '\0';
+                        lastSignificant = 'a';
+                    }
+
+                    continue;
+                }
+
+                if (regexLiteral)
+                {
+                    result.Append(current is '\r' or '\n' ? current : ' ');
+                    if (current == '\\' && i + 1 < script.Length)
+                    {
+                        result.Append(' ');
+                        i++;
+                    }
+                    else if (current == '[')
+                    {
+                        regexCharacterClass = true;
+                    }
+                    else if (current == ']')
+                    {
+                        regexCharacterClass = false;
+                    }
+                    else if (current == '/' && !regexCharacterClass)
+                    {
+                        regexLiteral = false;
+                        lastSignificant = 'a';
+                    }
+
+                    continue;
+                }
+
+                if (char.IsWhiteSpace(current))
+                {
+                    result.Append(current);
+                    continue;
+                }
+
+                if (current == '/' && next == '/')
+                {
+                    result.Append("  ");
+                    i++;
+                    lineComment = true;
+                }
+                else if (current == '/' && next == '*')
+                {
+                    result.Append("  ");
+                    i++;
+                    blockComment = true;
+                }
+                else if (current == '/' && IsRegexLiteralStart(lastSignificant))
+                {
+                    result.Append(' ');
+                    regexLiteral = true;
+                    regexCharacterClass = false;
+                }
+                else if (current is '\'' or '"' or '`')
+                {
+                    quote = current;
+                    result.Append(' ');
+                }
+                else
+                {
+                    result.Append(current);
+                    lastSignificant = current;
+                }
+            }
+
+            return result.ToString();
+        }
+
+        private static bool IsRegexLiteralStart(char previous)
+        {
+            return previous == '\0' || "(,=:[!&|?{};+-*%<>~^".Contains(previous);
         }
 
         protected virtual void ValidateDownloadData(byte[] fileData)
@@ -863,6 +1234,18 @@ namespace NzbDrone.Core.Indexers
             }
 
             return null;
+        }
+    }
+
+    public sealed class DownloadWaitPolicy
+    {
+        public string Title { get; }
+        public string DelayVariable { get; }
+
+        public DownloadWaitPolicy(string title, string delayVariable)
+        {
+            Title = title;
+            DelayVariable = delayVariable;
         }
     }
 }

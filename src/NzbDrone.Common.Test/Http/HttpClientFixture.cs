@@ -470,6 +470,22 @@ namespace NzbDrone.Common.Test.Http
             cookie.Should().Contain("my=cookie");
         }
 
+        [Test]
+        public void should_send_cookies_from_cookie_container_with_their_path()
+        {
+            var request = new HttpRequest($"https://{_httpBinHost}/get");
+            request.CookieContainer = new CookieContainer();
+            request.CookieContainer.Add(new Uri(request.Url.FullUri), new Cookie("my", "scoped", "/get"));
+            request.CookieContainer.Add(new Uri(request.Url.FullUri), new Cookie("my", "other", "/other"));
+
+            var response = Subject.Get<HttpBinResource>(request);
+
+            var cookie = response.Resource.Headers["Cookie"].ToString();
+
+            cookie.Should().Contain("my=scoped");
+            cookie.Should().NotContain("my=other");
+        }
+
         public void GivenOldCookie()
         {
             if (_httpBinHost == _httpBinHost2)

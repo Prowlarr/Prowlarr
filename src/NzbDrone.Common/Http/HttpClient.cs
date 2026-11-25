@@ -236,6 +236,12 @@ namespace NzbDrone.Common.Http
                     }
                 }
 
+                if (request.CookieContainer != null)
+                {
+                    // Only cookies that are still valid for this URL (path, domain and expiry) are returned here.
+                    sourceContainer.Add(request.CookieContainer.GetCookies((Uri)request.Url));
+                }
+
                 return sourceContainer;
             }
         }

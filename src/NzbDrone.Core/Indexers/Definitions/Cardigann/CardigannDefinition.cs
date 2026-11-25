@@ -187,6 +187,13 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
         public BeforeBlock Before { get; set; }
         public InfohashBlock Infohash { get; set; }
         public Dictionary<string, List<string>> Headers { get; set; }
+        public DownloadWaitBlock Wait { get; set; }
+    }
+
+    public class DownloadWaitBlock
+    {
+        public string Title { get; set; }
+        public string DelayVariable { get; set; }
     }
 
     public class InfohashBlock

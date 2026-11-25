@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using NLog;
@@ -201,6 +203,25 @@ namespace NzbDrone.Core.Indexers.Definitions.Cardigann
             request.AllowAutoRedirect = true;
 
             return request;
+        }
+
+        protected override DownloadWaitPolicy GetDownloadWaitPolicy()
+        {
+            var definition = _definitionService.GetCachedDefinition(Settings.DefinitionFile);
+            var wait = definition?.Download?.Wait;
+
+            if (wait == null)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(wait.Title) || string.IsNullOrWhiteSpace(wait.DelayVariable) ||
+                !Regex.IsMatch(wait.DelayVariable, @"^[A-Za-z_$][A-Za-z0-9_$]*$"))
+            {
+                throw new WebException("Cardigann download wait configuration requires a title and valid delay variable name.");
+            }
+
+            return new DownloadWaitPolicy(wait.Title, wait.DelayVariable);
         }
 
         protected override async Task Test(List<ValidationFailure> failures)

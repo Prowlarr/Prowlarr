@@ -240,5 +240,7 @@
     "UnselectAll": "Avmarker alle",
     "UnsavedChanges": "Ulagrede endringer",
     "DownloadClientPneumaticSettingsNzbFolder": "Nzb-mappe",
-    "UpdateUiNotWritableHealthCheckMessage": "Oppdateringen kunne ikke installeres fordi UI mappa \"{uiFolder}\" ikke er skrivbar av brukeren \"{userName}\"."
+    "UpdateUiNotWritableHealthCheckMessage": "Oppdateringen kunne ikke installeres fordi UI mappa \"{uiFolder}\" ikke er skrivbar av brukeren \"{userName}\".",
+    "SelectAll": "Avmarker alle",
+    "InteractiveSearch": "Interaktive Søk"
 }

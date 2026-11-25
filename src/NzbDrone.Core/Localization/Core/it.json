@@ -813,5 +813,6 @@
     "IndexerSettingsSeedRatioHelpText": "Il rapporto che un torrent dovrebbe raggiungere prima di fermarsi, vuoto usa il predefinito del client di download. Il rapporto deve essere almeno 1.0 e seguire le regole dell'indice",
     "IndexerSettingsSeedTime": "Tempo Seed",
     "DownloadClientSettingsPriorityItemHelpText": "Priorità da usare durante il prelievo",
-    "FailedToFetchSettings": "Impossibile recuperare le impostazioni"
+    "FailedToFetchSettings": "Impossibile recuperare le impostazioni",
+    "IndexerSettingsQueryTimeoutHelpText": "Quanto tempo attendere una risposta da questo indexer prima di rinunciare. Lascia vuoto per utilizzare il valore predefinito ({defaultTimeoutSeconds} secondi)"
 }

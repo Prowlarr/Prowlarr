@@ -25,7 +25,7 @@
     "AppDataLocationHealthCheckMessage": "No será posible actualizar para evitar la eliminación de AppData al actualizar",
     "Analytics": "Analíticas",
     "All": "Todo",
-    "About": "Acerca de",
+    "About": "ESP",
     "View": "Vista",
     "Updates": "Actualizaciones",
     "UpdateUiNotWritableHealthCheckMessage": "No se puede instalar la actualización porque la carpeta de interfaz de usuario '{uiFolder}' no es modificable por el usuario '{userName}'.",

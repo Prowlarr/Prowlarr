@@ -1,0 +1,12 @@
+[
+  { "id": 100, "alias": "test-tv-pack", "type": { "value": "TV" } },
+  { "id": 200, "alias": "test-movie", "type": { "value": "MOVIE" } },
+  { "id": 300, "alias": "test-ova", "type": { "value": "OVA" } },
+  { "id": 400, "alias": null, "type": null },
+  { "id": 500, "alias": "test-unknown", "type": { "value": "UNKNOWN" } },
+  { "id": 600, "alias": "test-dorama", "type": { "value": "DORAMA" } },
+  { "id": 700, "alias": "test-ona", "type": { "value": "ONA" } },
+  { "id": 800, "alias": "test-oad", "type": { "value": "OAD" } },
+  { "id": 900, "alias": "test-special", "type": { "value": "SPECIAL" } },
+  { "id": 1000, "alias": "test-web", "type": { "value": "WEB" } }
+]

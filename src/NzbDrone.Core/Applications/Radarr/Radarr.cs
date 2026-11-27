@@ -231,6 +231,11 @@ namespace NzbDrone.Core.Applications.Radarr
             var schemas = _schemaCache.Get(cacheKey, () => _radarrV3Proxy.GetIndexerSchema(Settings), TimeSpan.FromDays(7));
             var syncFields = new List<string> { "baseUrl", "apiPath", "apiKey", "categories", "minimumSeeders", "seedCriteria.seedRatio", "seedCriteria.seedTime", "rejectBlocklistedTorrentHashesWhileGrabbing" };
 
+            if (Settings.SyncFailDownloads?.Any() == true)
+            {
+                syncFields.Add("failDownloads");
+            }
+
             if (id == 0)
             {
                 // Ensuring backward compatibility with older versions on first sync
@@ -262,6 +267,11 @@ namespace NzbDrone.Core.Applications.Radarr
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiPath").Value = "/api";
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "apiKey").Value = _configFileProvider.ApiKey;
             radarrIndexer.Fields.FirstOrDefault(x => x.Name == "categories").Value = JArray.FromObject(indexerCapabilities.Categories.SupportedCategories(Settings.SyncCategories.ToArray()));
+
+            if (radarrIndexer.Fields.Any(x => x.Name == "failDownloads"))
+            {
+                radarrIndexer.Fields.First(x => x.Name == "failDownloads").Value = JArray.FromObject(Settings.SyncFailDownloads.ToArray());
+            }
 
             if (indexer.Protocol == DownloadProtocol.Torrent)
             {

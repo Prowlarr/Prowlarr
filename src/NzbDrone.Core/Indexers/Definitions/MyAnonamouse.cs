@@ -808,11 +808,15 @@ namespace NzbDrone.Core.Indexers.Definitions
         [JsonPropertyName("lang_code")]
         public string LanguageCode { get; init; }
         public string Filetype { get; init; }
+        [JsonConverter(typeof(TolerantBooleanConverter))]
         public bool Vip { get; init; }
+        [JsonConverter(typeof(TolerantBooleanConverter))]
         public bool Free { get; init; }
         [JsonPropertyName("personal_freeleech")]
+        [JsonConverter(typeof(TolerantBooleanConverter))]
         public bool PersonalFreeLeech { get; init; }
         [JsonPropertyName("fl_vip")]
+        [JsonConverter(typeof(TolerantBooleanConverter))]
         public bool FreeVip { get; init; }
         public int Category { get; init; }
         public string Added { get; init; }

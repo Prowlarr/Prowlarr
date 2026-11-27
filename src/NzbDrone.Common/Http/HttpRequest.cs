@@ -50,6 +50,14 @@ namespace NzbDrone.Common.Http
         public bool LogResponseContent { get; set; }
         public bool LogHttpError { get; set; }
         public Dictionary<string, string> Cookies { get; private set; }
+
+        /// <summary>
+        /// Optional cookie jar that is sent with this request in addition to <see cref="Cookies"/>.
+        /// Keeps cookie name, path and expiry intact, so cookies that share a name but differ in path
+        /// are both sent, and cookies that have expired are not sent.
+        /// </summary>
+        public CookieContainer CookieContainer { get; set; }
+
         public bool StoreRequestCookie { get; set; }
         public bool StoreResponseCookie { get; set; }
         public TimeSpan RequestTimeout { get; set; }

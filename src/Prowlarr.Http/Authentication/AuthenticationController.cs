@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
@@ -5,6 +6,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
@@ -30,6 +32,26 @@ namespace Prowlarr.Http.Authentication
             _configFileProvider = configFileProvider;
             _appFolderInfo = appFolderInfo;
             _logger = logger;
+        }
+
+        [HttpGet("login/sso")]
+        public IActionResult LoginSso([FromQuery] string returnUrl = null)
+        {
+            if (_configFileProvider.AuthenticationMethod != AuthenticationType.Oidc)
+            {
+                return Redirect(_configFileProvider.UrlBase + "/login");
+            }
+
+            if (!_configFileProvider.IsOidcConfigured())
+            {
+                _logger.Error("OIDC authentication is enabled, but Authority, Client ID, Client Secret, User and Scopes are not all configured");
+
+                return Redirect(_configFileProvider.UrlBase + "/login");
+            }
+
+            return Challenge(
+                new AuthenticationProperties { RedirectUri = GetRedirectUrl(returnUrl) },
+                nameof(AuthenticationType.Oidc));
         }
 
         [HttpPost("login")]
@@ -72,25 +94,64 @@ namespace Prowlarr.Http.Authentication
                 return Unauthorized();
             }
 
-            if (returnUrl.IsNullOrWhiteSpace() || !Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(_configFileProvider.UrlBase + "/");
-            }
-
-            if (_configFileProvider.UrlBase.IsNullOrWhiteSpace() || returnUrl.StartsWith(_configFileProvider.UrlBase))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return Redirect(_configFileProvider.UrlBase + returnUrl);
+            return Redirect(GetRedirectUrl(returnUrl));
         }
 
         [HttpGet("logout")]
         public async Task<IActionResult> Logout()
         {
             _authService.Logout(HttpContext);
+
+            if (_configFileProvider.EffectiveAuthenticationMethod() == AuthenticationType.Oidc)
+            {
+                var loggedOutUrl = _configFileProvider.UrlBase + "/loggedout";
+                var signedOut = false;
+
+                try
+                {
+                    await HttpContext.SignOutAsync(nameof(AuthenticationType.Oidc), new AuthenticationProperties { RedirectUri = loggedOutUrl });
+
+                    signedOut = true;
+                }
+                catch (Exception e)
+                {
+                    _logger.Warn(e, "Unable to sign out of the OIDC provider, signing out locally only");
+                }
+
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignOutAsync(AuthenticationType.Forms.ToString());
+
+                if (signedOut || Response.HasStarted)
+                {
+                    return new EmptyResult();
+                }
+
+                return Redirect(loggedOutUrl);
+            }
+
             await HttpContext.SignOutAsync(AuthenticationType.Forms.ToString());
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             return Redirect(_configFileProvider.UrlBase + "/");
+        }
+
+        private string GetRedirectUrl(string returnUrl)
+        {
+            var urlBase = _configFileProvider.UrlBase;
+
+            if (returnUrl.IsNullOrWhiteSpace() || !Url.IsLocalUrl(returnUrl))
+            {
+                return urlBase + "/";
+            }
+
+            if (urlBase.IsNullOrWhiteSpace() ||
+                returnUrl.Equals(urlBase, StringComparison.OrdinalIgnoreCase) ||
+                returnUrl.StartsWith(urlBase + "/", StringComparison.OrdinalIgnoreCase))
+            {
+                return returnUrl;
+            }
+
+            return urlBase + returnUrl;
         }
     }
 }

@@ -45,6 +45,7 @@ export interface NotificationAppState
 export type UiSettingsAppState = AppSectionItemState<UiSettings>;
 
 interface SettingsAppState {
+  advancedSettings: boolean;
   appProfiles: AppProfileAppState;
   applications: ApplicationAppState;
   downloadClients: DownloadClientAppState;

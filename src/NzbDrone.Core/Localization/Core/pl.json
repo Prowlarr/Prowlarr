@@ -818,5 +818,7 @@
     "ApplicationAuthPassword": "Hasło uwierzytelniania",
     "ApplicationAuthPasswordHelpText": "Hasło HTTP Basic Auth używane przez {appName} podczas łączenia się z tą aplikacją. Ustaw, jeśli aplikacja znajduje się za odwrotnym proxy zabezpieczonym uwierzytelnianiem Basic.",
     "ApplicationAuthUsername": "Nazwa użytkownika uwierzytelniania",
-    "ApplicationAuthUsernameHelpText": "Nazwa użytkownika HTTP Basic Auth używana przez {appName} podczas łączenia się z tą aplikacją. Ustaw, jeśli aplikacja znajduje się za odwrotnym proxy zabezpieczonym uwierzytelnianiem Basic."
+    "ApplicationAuthUsernameHelpText": "Nazwa użytkownika HTTP Basic Auth używana przez {appName} podczas łączenia się z tą aplikacją. Ustaw, jeśli aplikacja znajduje się za odwrotnym proxy zabezpieczonym uwierzytelnianiem Basic.",
+    "IndexerSettingsQueryTimeout": "Limit czasu zapytania",
+    "IndexerSettingsQueryTimeoutHelpText": "Czas oczekiwania na odpowiedź z tego indeksera przed przerwaniem połączenia. Pozostaw puste, aby użyć wartości domyślnej ({defaultTimeoutSeconds} s)"
 }

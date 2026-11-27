@@ -2,53 +2,42 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NzbDrone.Common.Serializer
+namespace NzbDrone.Common.Serializer;
+
+public class TolerantBooleanConverter : JsonConverter<bool>
 {
-    /// <summary>
-    /// Reads booleans that indexers publish in inconsistent shapes, such as true/false, 0/1,
-    /// "1"/"0", "" and null. One unexpected value therefore cannot fail a whole response.
-    /// </summary>
-    public class TolerantBooleanConverter : JsonConverter<bool>
+    public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        return reader.TokenType switch
         {
-            switch (reader.TokenType)
+            JsonTokenType.True => true,
+            JsonTokenType.False => false,
+            JsonTokenType.Null => false,
+            JsonTokenType.Number => reader.GetInt64() switch
             {
-                case JsonTokenType.True:
-                    return true;
-                case JsonTokenType.False:
-                case JsonTokenType.Null:
-                    return false;
-                case JsonTokenType.Number:
-                    return reader.GetInt64() != 0;
-                case JsonTokenType.String:
-                    return ParseString(reader.GetString());
-                default:
-                    reader.Skip();
-                    return false;
-            }
+                1 => true,
+                0 => false,
+                _ => throw new JsonException()
+            },
+            JsonTokenType.String => ParseString(reader.GetString()),
+            _ => throw new JsonException()
+        };
+    }
+
+    public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+    {
+        writer.WriteBooleanValue(value);
+    }
+
+    private static bool ParseString(string value)
+    {
+        var trimmed = value?.Trim();
+
+        if (string.IsNullOrEmpty(trimmed))
+        {
+            return false;
         }
 
-        public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
-        {
-            writer.WriteBooleanValue(value);
-        }
-
-        private static bool ParseString(string value)
-        {
-            var trimmed = value?.Trim();
-
-            if (string.IsNullOrEmpty(trimmed))
-            {
-                return false;
-            }
-
-            if (bool.TryParse(trimmed, out var parsed))
-            {
-                return parsed;
-            }
-
-            return trimmed == "1";
-        }
+        return bool.TryParse(trimmed, out var parsed) ? parsed : trimmed == "1";
     }
 }

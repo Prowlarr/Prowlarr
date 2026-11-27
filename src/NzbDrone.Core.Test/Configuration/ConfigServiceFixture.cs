@@ -35,6 +35,18 @@ namespace NzbDrone.Core.Test.Configuration
         }
 
         [Test]
+        public void search_cache_should_be_disabled_by_default()
+        {
+            Subject.SearchCacheEnabled.Should().BeFalse();
+        }
+
+        [Test]
+        public void search_cache_ttl_should_default_to_five_minutes()
+        {
+            Subject.SearchCacheTtl.Should().Be(5);
+        }
+
+        [Test]
         public void get_value_with_persist_should_store_default_value()
         {
             var salt = Subject.HmacSalt;

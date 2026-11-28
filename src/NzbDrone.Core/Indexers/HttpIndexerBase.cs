@@ -668,7 +668,10 @@ namespace NzbDrone.Core.Indexers
 
             if (request.HttpRequest.RequestTimeout == TimeSpan.Zero && Settings?.BaseSettings is { QueryTimeout: > 0 } baseSettings)
             {
-                request.HttpRequest.RequestTimeout = TimeSpan.FromSeconds(Math.Clamp(baseSettings.QueryTimeout.Value, IndexerBaseSettings.MinQueryTimeout, IndexerBaseSettings.MaxQueryTimeout));
+                var queryTimeout = TimeSpan.FromSeconds(Math.Clamp(baseSettings.QueryTimeout.Value, IndexerBaseSettings.MinQueryTimeout, IndexerBaseSettings.MaxQueryTimeout));
+
+                request.HttpRequest.RequestTimeout = queryTimeout;
+                request.HttpRequest.MaxProxySolveTime = queryTimeout;
             }
 
             var response = await RetryStrategy

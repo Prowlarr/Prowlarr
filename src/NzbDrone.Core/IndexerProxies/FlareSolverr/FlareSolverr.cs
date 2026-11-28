@@ -100,12 +100,26 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             }
         }
 
+        // The indexer's Query Timeout (when set) also limits how long FlareSolverr may spend solving a challenge.
+        internal int GetSolveTimeoutSeconds(HttpRequest request)
+        {
+            if (request.MaxProxySolveTime <= TimeSpan.Zero)
+            {
+                return Settings.RequestTimeout;
+            }
+
+            var requested = (int)Math.Ceiling(request.MaxProxySolveTime.TotalSeconds);
+
+            return Math.Max(1, Math.Min(Settings.RequestTimeout, requested));
+        }
+
         private HttpRequest GenerateFlareSolverrRequest(HttpRequest request)
         {
             FlareSolverrRequest req;
 
             var url = request.Url.ToString();
-            var maxTimeout = Settings.RequestTimeout * 1000;
+            var solveTimeoutSeconds = GetSolveTimeoutSeconds(request);
+            var maxTimeout = solveTimeoutSeconds * 1000;
 
             var proxySettings = _proxySettingsProvider.GetProxySettings();
             var proxyUrl = proxySettings != null ? GetProxyUri(proxySettings) : null;
@@ -172,7 +186,7 @@ namespace NzbDrone.Core.IndexerProxies.FlareSolverr
             newRequest.Headers.ContentType = "application/json";
             newRequest.Method = HttpMethod.Post;
             newRequest.LogResponseContent = true;
-            newRequest.RequestTimeout = TimeSpan.FromSeconds(Settings.RequestTimeout + 5);
+            newRequest.RequestTimeout = TimeSpan.FromSeconds(solveTimeoutSeconds + 5);
             newRequest.SetContent(req.ToJson());
             newRequest.ContentSummary = req.ToJson(Formatting.None);
 

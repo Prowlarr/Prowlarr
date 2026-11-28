@@ -53,6 +53,9 @@ namespace NzbDrone.Common.Http
         public bool StoreRequestCookie { get; set; }
         public bool StoreResponseCookie { get; set; }
         public TimeSpan RequestTimeout { get; set; }
+
+        // Upper bound for a proxy (e.g. FlareSolverr) solving a challenge for this request. Zero means no extra cap.
+        public TimeSpan MaxProxySolveTime { get; set; }
         public TimeSpan RateLimit { get; set; }
         public Stream ResponseStream { get; set; }
 

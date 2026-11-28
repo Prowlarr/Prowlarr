@@ -78,6 +78,28 @@ namespace NzbDrone.Core.Test.IndexerTests
             _requests.Should().OnlyContain(r => r.RequestTimeout == TimeSpan.FromSeconds(seconds));
         }
 
+        [Test]
+        public async Task should_cap_proxy_solve_time_with_query_timeout()
+        {
+            _settings.BaseSettings.QueryTimeout = 20;
+
+            await FetchAsync();
+
+            _requests.Should().NotBeEmpty();
+            _requests.Should().OnlyContain(r => r.MaxProxySolveTime == TimeSpan.FromSeconds(20));
+        }
+
+        [Test]
+        public async Task should_not_cap_proxy_solve_time_when_query_timeout_is_not_set()
+        {
+            _settings.BaseSettings.QueryLimit = 10;
+
+            await FetchAsync();
+
+            _requests.Should().NotBeEmpty();
+            _requests.Should().OnlyContain(r => r.MaxProxySolveTime == TimeSpan.Zero);
+        }
+
         [TestCase(0)]
         [TestCase(-5)]
         public async Task should_ignore_non_positive_query_timeout(int seconds)
